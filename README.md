@@ -2,7 +2,8 @@
 
 Pilot replication package for **"Measuring Pre-Execution Responsibility Projection in Multi-Agent LLM Orchestration"** (Hwang, Geum, Han — Kyungpook National University, 2026).
 
-> arXiv: *(link added on submission)*
+> **DOI**: [10.5281/zenodo.20088555](https://doi.org/10.5281/zenodo.20088555)
+> Archived snapshot of release [`v1.4-pilot`](https://github.com/Samdasu1/rbd-pilot/releases/tag/v1.4-pilot).
 
 ## What's here
 
@@ -49,12 +50,14 @@ Estimated total cost at panel pricing (2026-05): ≈ \$130 (within the $1{,}000 
 ## Citation
 
 ```bibtex
-@article{hwang2026rbd,
-  title   = {Measuring Pre-Execution Responsibility Projection in Multi-Agent LLM Orchestration},
-  author  = {Hwang, Younggyu and Geum, Seungho and Han, Sekyung},
-  journal = {arXiv preprint},
-  year    = {2026},
-  note    = {arXiv:XXXX.XXXXX}
+@misc{hwang2026rbd,
+  title     = {Measuring Pre-Execution Responsibility Projection in Multi-Agent LLM Orchestration},
+  author    = {Hwang, Younggyu and Geum, Seungho and Han, Sekyung},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.20088555},
+  url       = {https://doi.org/10.5281/zenodo.20088555},
+  note      = {Code and data: \url{https://github.com/Samdasu1/rbd-pilot}}
 }
 ```
 
