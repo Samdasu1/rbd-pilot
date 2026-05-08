@@ -1,6 +1,6 @@
 # RBD Pilot — Pre-Execution Responsibility Projection in Multi-Agent LLM Orchestration
 
-Pilot replication package for **"When Responsibility Guidance Hurts: A Pilot Study of Pre-Execution Projection in LLM Agents"** (Hwang, Geum, Han — Kyungpook National University, 2026).
+Pilot replication package for **"When Responsibility Guidance Hurts: A Pilot Study of Pre-Execution Projection in LLM Agents"** (Hwang and Han — Kyungpook National University, 2026).
 
 > **DOI**: [10.5281/zenodo.20088555](https://doi.org/10.5281/zenodo.20088555)
 > Archived snapshot of release [`v1.4-pilot`](https://github.com/Samdasu1/rbd-pilot/releases/tag/v1.4-pilot).
@@ -52,7 +52,7 @@ Estimated total cost at panel pricing (2026-05): ≈ \$130 (within the $1{,}000 
 ```bibtex
 @misc{hwang2026rbd,
   title     = {When Responsibility Guidance Hurts: A Pilot Study of Pre-Execution Projection in LLM Agents},
-  author    = {Hwang, Younggyu and Geum, Seungho and Han, Sekyung},
+  author    = {Hwang, Younggyu and Han, Sekyung},
   year      = {2026},
   publisher = {Zenodo},
   doi       = {10.5281/zenodo.20088555},
