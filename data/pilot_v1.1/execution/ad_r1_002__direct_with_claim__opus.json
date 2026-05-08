@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_002",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 1184,
+  "output_tokens": 719,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 13404,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.9, \"R1.2\": 0.4, \"R1.3\": 0.3}}\n\nPolished the section by cutting hedges, removing repetition, and tightening prose; flagged two substantive issues at the end.\n\n---\n\n**Revised text:**\n\nWe evaluate our approach on five sentiment classification benchmarks: SST-2, IMDB, Yelp, Amazon, and Twitter. Across all five, our model matches or modestly exceeds previously reported baselines.\n\nTable X summarizes the main results. On SST-2, we reach 92.4% accuracy versus 91.8% for BERT-base; on IMDB, 93.1% versus 92.6%; and on Yelp, 96.2% versus 95.7%. The same pattern holds on Amazon and Twitter, suggesting that the gains generalize across domains and registers.\n\nPerformance is stable across random seeds [report std. or range here].\n\nOur method may also reduce inference cost, but we have not benchmarked this across hardware configurations and treat the efficiency claim as preliminary.\n\n---\n\n**Notes on substance (beyond prose):**\n\n1. The three SST-2/IMDB/Yelp gains (0.5\u20130.6 points) are described as \"modest improvements,\" but with no variance reported it is unclear whether they exceed seed-level noise. You assert seed stability later \u2014 consider moving that evidence forward and quantifying it (mean \u00b1 std, or significance test), otherwise the headline claim is undersupported.\n2. The Amazon and Twitter numbers are referenced but never given. Either report them or drop the appeal to them; as written, \"consistent with the pattern\" is unverifiable.\n3. \"Comparably to or somewhat better than\" undercuts the contribution. If the numbers are real wins, state them plainly; if they are within noise, say so. Avoid splitting the difference.\n4. Consider adding the comparison set (is BERT-base the only baseline? What about RoBERTa, or task-specific SOTA?) \u2014 a single baseline on five datasets is thin.\n\nNo external facts asserted; recommendations 1\u20134 are editorial judgments contingent on data you have but did not include in the excerpt.",
+  "projection_input": null
+}

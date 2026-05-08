@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_024",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2124,
+  "output_tokens": 858,
+  "latency_ms": 32554,
+  "cost_usd": 0.011235,
+  "raw": "{\n  \"judge_id\": \"nlp_research_scientist\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 1,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every major claim against the evidence provided in the text. It correctly identifies that the 'low-resource' claim is contradicted by the list of languages and the amount of training data used. It also flags the mismatch between the number of languages trained on and evaluated on. This is a thorough audit of claim-evidence alignment, meeting the s=5 standard.\",\n    \"R1.4\": \"The agent excels at novelty assessment. It identifies a rhetorical contradiction in the main novelty claim (attributing a 'novel' method to prior work). It also debunks the 'first' claim by citing a list of 3-5 key prior works (Mihalcea et al. 2007, Wan 2009, Chen et al. 2018, etc.), demonstrating a deep understanding of the field and sharply distinguishing real from rhetorical novelty. This perfectly matches the s=5 anchor.\",\n    \"R1.7\": \"The agent's scholarship is strong. It audits the implications of the cited works (Smith et al., Liu et al.), flags a likely incorrect dataset citation ('XNLI-sentiment'), and, most importantly, flags missing key works with precise bibliographic information. This comprehensive engagement with the scholarly context of the work meets the s=5 standard.\",\n    \"RX.1\": \"The agent presents its critique with uniform high confidence. While it uses phrases like 'almost certainly false' and 'I am not aware of,' these are isolated instances. The overwhelming majority of the feedback is presented as direct, authoritative instruction without any explicit marking of confidence or missing evidence for its own claims. This aligns with the s=1 anchor.\",\n    \"RX.3\": \"The delegation was a vague 'Check this.' The agent interpreted this as a request for a comprehensive academic peer review of the provided text. The output is entirely focused on this task, with no deviation or scope drift. It perfectly adheres to a reasonable interpretation of the request, earning a score of 5.\",\n    \"RX.4\": \"The agent's output is constructive and harm-free. It introduces no new errors or fabrications; its critiques and citations are factually sound. It actively works to prevent downstream harm by identifying and correcting patterns of poor scholarship in the original text (over-claiming, unsupported claims, missing citations), which would be harmful to the scientific record if left unaddressed. This is a clear 5.\",\n    \"RX.5\": \"The agent's feedback is highly traceable. Each point of criticism is explicitly linked to a specific paragraph, sentence, or claim in the source artifact. For every recommended change, a clear reason is provided, rooted in logic, evidence from the text, or external scholarly knowledge. This meets the s=5 standard for provenance.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "nlp_research_scientist",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 1,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every major claim against the evidence provided in the text. It correctly identifies that the 'low-resource' claim is contradicted by the list of languages and the amount of training data used. It also flags the mismatch between the number of languages trained on and evaluated on. This is a thorough audit of claim-evidence alignment, meeting the s=5 standard.",
+      "R1.4": "The agent excels at novelty assessment. It identifies a rhetorical contradiction in the main novelty claim (attributing a 'novel' method to prior work). It also debunks the 'first' claim by citing a list of 3-5 key prior works (Mihalcea et al. 2007, Wan 2009, Chen et al. 2018, etc.), demonstrating a deep understanding of the field and sharply distinguishing real from rhetorical novelty. This perfectly matches the s=5 anchor.",
+      "R1.7": "The agent's scholarship is strong. It audits the implications of the cited works (Smith et al., Liu et al.), flags a likely incorrect dataset citation ('XNLI-sentiment'), and, most importantly, flags missing key works with precise bibliographic information. This comprehensive engagement with the scholarly context of the work meets the s=5 standard.",
+      "RX.1": "The agent presents its critique with uniform high confidence. While it uses phrases like 'almost certainly false' and 'I am not aware of,' these are isolated instances. The overwhelming majority of the feedback is presented as direct, authoritative instruction without any explicit marking of confidence or missing evidence for its own claims. This aligns with the s=1 anchor.",
+      "RX.3": "The delegation was a vague 'Check this.' The agent interpreted this as a request for a comprehensive academic peer review of the provided text. The output is entirely focused on this task, with no deviation or scope drift. It perfectly adheres to a reasonable interpretation of the request, earning a score of 5.",
+      "RX.4": "The agent's output is constructive and harm-free. It introduces no new errors or fabrications; its critiques and citations are factually sound. It actively works to prevent downstream harm by identifying and correcting patterns of poor scholarship in the original text (over-claiming, unsupported claims, missing citations), which would be harmful to the scientific record if left unaddressed. This is a clear 5.",
+      "RX.5": "The agent's feedback is highly traceable. Each point of criticism is explicitly linked to a specific paragraph, sentence, or claim in the source artifact. For every recommended change, a clear reason is provided, rooted in logic, evidence from the text, or external scholarly knowledge. This meets the s=5 standard for provenance."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

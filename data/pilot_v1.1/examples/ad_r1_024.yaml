@@ -1,0 +1,99 @@
+delegation_id: ad_r1_024
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: nlp_sentiment
+  word_count: 208
+  text: |
+    Cross-lingual sentiment analysis has become an active subfield of NLP
+    in recent years. Our work introduces SentiBridge, the first cross-lingual
+    sentiment classifier that achieves competitive performance across both
+    high-resource and low-resource languages. We base this claim on the
+    novel training procedure that combines multilingual contrastive
+    pretraining with a sentiment-specific fine-tuning head, as introduced
+    by Smith et al. (2022).
+
+    Existing methods either focus on individual high-resource languages
+    or use translation-based pipelines, which suffer from translation
+    drift. Our cross-lingual approach instead operates directly on the
+    target language without translation, an idea also explored by Liu
+    et al. (2019), who demonstrated improvements on Romance and Germanic
+    languages.
+
+    SentiBridge extends the architecture of Smith et al. with an
+    attention-based pooling layer and a sentiment polarity head trained
+    jointly on six languages: English, Spanish, French, German, Mandarin,
+    and Arabic. Training uses 1.2M sentiment-labeled examples per language
+    drawn from public corpora.
+
+    We evaluate on the XNLI-sentiment subset (5 languages) and the SST
+    test set (English). On Spanish, our model reaches 81.3% accuracy
+    compared to translation-pipeline baseline of 78.4%. On Mandarin, we
+    reach 76.1% versus 72.8% baseline. The detailed per-language results
+    are in Table 4.
+
+    We position SentiBridge as a meaningful contribution to multilingual
+    sentiment analysis, particularly for languages where direct training
+    data is scarce.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    Internal-citation contradiction (visible without external knowledge).
+    Para 1 claims "the first cross-lingual sentiment classifier that
+    achieves competitive performance across both high-resource and
+    low-resource languages." Para 2 then mentions Liu et al. (2019),
+    "who demonstrated improvements on Romance and Germanic languages"
+    — i.e. cross-lingual sentiment work predating Smith et al. (2022)
+    that the section itself acknowledges. The "first cross-lingual"
+    novelty claim contradicts the section's own related-work citation.
+    Detection: pure reading of the section; no external knowledge of
+    Liu et al. or Smith et al. needed because the contradiction is
+    visible in the section's own text (low gating). Delegation T05 is
+    generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.5
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section's "first cross-lingual" claim is
+  contradicted by its own citation to Liu et al. (2019). Suggests
+  rewording the novelty claim to a defensible delta (e.g. "first to
+  combine multilingual contrastive pretraining with sentiment-specific
+  fine-tuning across six languages") that does not assert priority over
+  Liu et al. May also flag that R1.4 novelty positioning is downstream
+  of fixing this scholarship issue.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more languages, accepts the "first
+  cross-lingual" framing despite the Liu et al. mention. Adds
+  peripheral citations without flagging the internal contradiction.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

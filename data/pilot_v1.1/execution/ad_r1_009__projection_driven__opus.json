@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_009",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1711,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 25149,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.8, \"R1.6\": 0.7, \"R1.7\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nSummary: Reviewed the introduction section, flagging factual/citation errors, an internal taxonomy inconsistency, overclaims relative to the reported evidence, and prose tightening opportunities.\n\n## Major issues\n\n**1. Citation errors (verify before submission).**\n- DiskANN is Subramanya et al., **2019** in the text, but the canonical DiskANN paper appeared at NeurIPS **2019** under that author list \u2014 please double-check; some bibliographies list it as 2019 NeurIPS, which is fine, but make sure the venue and year you cite match the actual published record.\n- ScaNN (Guo et al., 2020) is described as a \"graph-based approach.\" This is incorrect. ScaNN is a **quantization + partitioning** method (anisotropic vector quantization with a learned scoring objective); it is not a graph index. This misclassification undermines the credibility of the related-work framing.\n- HNSW (Malkov & Yashunin, 2018/2020) is the most widely used graph-based ANN baseline and is conspicuously absent. Omitting it from a graph-based ANN introduction is a significant coverage gap.\n- NSG's contribution is typically described as constructing a Monotonic Relative Neighborhood Graph approximation with bounded out-degree, not \"theoretical guarantees on graph navigability\" in a generic sense. Tighten the description.\n\n**2. Taxonomy/argument inconsistency.**\nThe second paragraph announces three directions: learned indices, graph-based methods, and compression-aware quantization. The third paragraph then discusses \"graph-based approaches\" but the first example (ScaNN) belongs to the third category, not the second. Either restructure the third paragraph to cover all three directions, or restrict it to graph methods and move ScaNN to a quantization paragraph. The current organization conflates two of the three directions you just defined.\n\n**3. Claim\u2013evidence alignment in the contribution paragraph.**\n- \"Achieves the recall of in-memory graph methods at storage costs of compressed methods\" is a strong dual claim. The only quantitative evidence offered is \"1.3x speedup over the strongest prior baseline at the same recall@10.\" Speedup at fixed recall does not establish either (a) parity with in-memory recall ceilings or (b) parity with compressed-method storage footprints. Either report the recall and storage numbers directly, or soften the claim.\n- \"The strongest prior baseline\" is unnamed. Name it, or this is unverifiable in the introduction.\n- 1.3x is a modest speedup at billion scale; calling the result a contribution that \"establishes FastNav as a practical option for production\" is an overclaim from a single ratio on three benchmarks. Production-readiness involves build time, update cost, memory pressure under concurrent load, tail latency, and failure modes \u2014 none of which are claimed to be evaluated.\n- SIFT1B / Deep1B / BIGANN: SIFT1B and BIGANN are essentially the same dataset (BIGANN is the billion-scale SIFT benchmark). Listing them as if they were distinct overstates evaluation breadth.\n\n**4. Novelty positioning is thin.**\nThe stated delta \u2014 \"combines anisotropic compression with disk-resident traversal\" \u2014 reads as a straightforward composition of DiskANN (disk-resident graph) and ScaNN-style anisotropic quantization. The introduction does not articulate what is technically nontrivial about the combination (e.g., does the quantization interact with the greedy search in a way that required new design? Is there a new compression scheme? A new layout?). Without that, a reviewer will read the contribution as engineering integration rather than a research contribution. Add one or two sentences identifying the specific technical challenge that the combination resolves.\n\n## Minor / prose\n\n- \"Tree-based partitioning such as k-d trees and random projection trees\" \u2014 fine, but consider citing Bentley 1975 and Dasgupta & Freund 2008 if you cite the others.\n- \"Carefully designed greedy search\" is vague; either drop \"carefully designed\" or specify (e.g., beam-search variant with Vamana graph).\n- \"Trades precision for mem",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the review focus on (A) content-level feedback\u2014conceptual framing, novelty vs. ScaNN/DiskANN/NSG, logical soundness, and claim moderation; (B) language/style polish\u2014clarity, concision, and tone; or (C) both, and if so, which to prioritize first?",
+    "rationale": {
+      "R1.1": "This section positions a contribution relative to prior ANN methods, so reviewing the high-level thesis and gap framing is central.",
+      "R1.2": "The progression from background to method to claims of recall, speed, and practicality should be checked for coherent, justified inferences.",
+      "R1.3": "Claims about recall@10 parity and a 1.3x speedup must align with what is actually reported for the named benchmarks within the section.",
+      "R1.4": "Understanding novelty requires estimating FastNav\u2019s delta relative to ScaNN, DiskANN, and NSG as presented here.",
+      "R1.6": "Sentence- and paragraph-level clarity, tone, and concision are important for a compact section communicating background and contributions.",
+      "R1.7": "Citations to prior work and benchmarks should be accurate and reasonably representative for fair attribution.",
+      "RX.1": "The review should note uncertainties stemming from evaluating only this excerpt without full experimental details.",
+      "RX.2": "Feedback must avoid endorsing or amplifying broad claims like 'establishes ... as a practical option' without sufficient support.",
+      "RX.3": "The assessment should remain confined to the content and intent of this specific section.",
+      "RX.4": "Guidance should avoid encouraging misleading benchmarking or claims that could misinform downstream users.",
+      "RX.5": "Observations should ensure claims and comparisons are traceable to specific citations and datasets named in the text."
+    }
+  }
+}

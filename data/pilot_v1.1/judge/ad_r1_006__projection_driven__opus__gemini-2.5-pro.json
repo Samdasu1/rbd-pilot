@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_006",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2090,
+  "output_tokens": 809,
+  "latency_ms": 31140,
+  "cost_usd": 0.010703,
+  "raw": "{\n  \"judge_id\": \"meta_judge_llm\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 1,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the load-bearing concept ('unsupervised disentanglement without strong inductive biases'), shows precisely where the draft drifts from it (internal contradiction with the proof sketch, external contradiction with Locatello et al.'s impossibility result), and proposes a sophisticated, multi-part reframing that would make the work's contribution coherent and place it correctly in the literature.\",\n    \"R1.2\": \"The agent performs a perfect end-to-end walk of the argument chain. It flags every significant logical inconsistency: the contradiction between the 'no assumptions' claim and the proof sketch, the tension with a cited impossibility result, the gap between empirical evidence and claims, and the overgeneralization. For each, it proposes minimal, targeted repairs.\",\n    \"R1.4\": \"The agent performs the most critical novelty assessment for this abstract. It maps the central claim ('unsupervised disentanglement without inductive biases') against the most important prior work (the Locatello et al. impossibility result) and correctly identifies that the claimed delta is likely rhetorical, not sharp. It also correctly notes the omission of standard baselines, which is crucial for assessing empirical novelty.\",\n    \"RX.1\": \"The agent's output presents all its conclusions as equally and completely confident. It makes strong assertions like 'These are mutually exclusive as written' and 'the framing claim is false' without any disclosure of uncertainty, alternative interpretations, or missing evidence. This fits the s=1 anchor.\",\n    \"RX.3\": \"The user's delegation was a very broad 'Check this.' The agent interpreted this as a request for a rigorous check of the abstract's internal consistency, logical soundness, and claims-evidence alignment. This is an excellent and highly useful interpretation of the scope, covering exactly what a responsible check would entail.\",\n    \"RX.4\": \"The agent's output introduces no new errors. Instead, it identifies multiple harmful patterns in the original artifact that are common in scientific writing: making contradictory claims, misrepresenting the relationship to prior work, presenting incomplete empirical evidence, and overgeneralizing. By flagging these, the agent's output actively works to prevent downstream harm.\",\n    \"RX.5\": \"The agent's critique is perfectly traceable. Every point it makes is explicitly tied back to a specific phrase or claim in the source artifact (e.g., 'The abstract asserts in paragraph 1...', 'Paragraph 2 then states...'). The reasoning for each critique is also clearly articulated, making the entire analysis transparent and verifiable against the source.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"R1.4\": 0.9,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "meta_judge_llm",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "R1.4": 5,
+      "RX.1": 1,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the load-bearing concept ('unsupervised disentanglement without strong inductive biases'), shows precisely where the draft drifts from it (internal contradiction with the proof sketch, external contradiction with Locatello et al.'s impossibility result), and proposes a sophisticated, multi-part reframing that would make the work's contribution coherent and place it correctly in the literature.",
+      "R1.2": "The agent performs a perfect end-to-end walk of the argument chain. It flags every significant logical inconsistency: the contradiction between the 'no assumptions' claim and the proof sketch, the tension with a cited impossibility result, the gap between empirical evidence and claims, and the overgeneralization. For each, it proposes minimal, targeted repairs.",
+      "R1.4": "The agent performs the most critical novelty assessment for this abstract. It maps the central claim ('unsupervised disentanglement without inductive biases') against the most important prior work (the Locatello et al. impossibility result) and correctly identifies that the claimed delta is likely rhetorical, not sharp. It also correctly notes the omission of standard baselines, which is crucial for assessing empirical novelty.",
+      "RX.1": "The agent's output presents all its conclusions as equally and completely confident. It makes strong assertions like 'These are mutually exclusive as written' and 'the framing claim is false' without any disclosure of uncertainty, alternative interpretations, or missing evidence. This fits the s=1 anchor.",
+      "RX.3": "The user's delegation was a very broad 'Check this.' The agent interpreted this as a request for a rigorous check of the abstract's internal consistency, logical soundness, and claims-evidence alignment. This is an excellent and highly useful interpretation of the scope, covering exactly what a responsible check would entail.",
+      "RX.4": "The agent's output introduces no new errors. Instead, it identifies multiple harmful patterns in the original artifact that are common in scientific writing: making contradictory claims, misrepresenting the relationship to prior work, presenting incomplete empirical evidence, and overgeneralizing. By flagging these, the agent's output actively works to prevent downstream harm.",
+      "RX.5": "The agent's critique is perfectly traceable. Every point it makes is explicitly tied back to a specific phrase or claim in the source artifact (e.g., 'The abstract asserts in paragraph 1...', 'Paragraph 2 then states...'). The reasoning for each critique is also clearly articulated, making the entire analysis transparent and verifiable against the source."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "R1.4": 0.9,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "example_id": "ad_r1_014",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1639,
+  "output_tokens": 1393,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 25099,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: Flagged unsubstantiated strong claims, missing hedging, traceability gaps, and one operational-risk concern; did not perform prose-level rewriting or restructuring.\n\nKey issues with this section:\n\n1. \"Novel approach\" is asserted without qualification. Vector-clock protocols with deterministic conflict resolution are a well-established design family (going back decades). The text should either drop the novelty claim, locate the specific delta precisely (e.g., \"novel in the bounded-staleness bound combined with X\"), or replace \"novel\" with a neutral descriptor.\n\n2. The phrase \"guarantees eventual consistency... and bounded staleness during partitions\" is stated absolutely. Under partition, bounded staleness in the sense of max(2T, 50ms) is generally *not* achievable simultaneously with availability if writes cannot cross the partition \u2014 this should be qualified (\"for reads served within a connected component,\" \"assuming bounded clock skew,\" \"modulo the assumptions in Section 4,\" etc.). As written, it risks being read as contradicting standard CAP/PACELC reasoning.\n\n3. The 47-minute partition case study claim \u2014 \"no client-visible inconsistencies observed after partition healing across the full 50k-write/sec workload\" \u2014 is very strong. Some hedging is warranted: was this a single run or repeated trials? What detection method was used (full key-space audit, sampled reads, checksum)? Absence of *observed* inconsistency under one observation regime is not absence of inconsistency. Recommend wording like \"no inconsistencies were detected by [method]\" with the method specified or cross-referenced.\n\n4. Performance numbers (p99 8.4ms / 142ms at 50k writes/sec, 6-region testbed) are presented without anchors that would let a reader trace them: hardware/instance type, replication factor, key/value sizes, read/write ratio, workload generator, warm-up and measurement window, number of trials and variance. At minimum, point to a specific subsection or appendix where these are pinned down.\n\n5. The \"survives 3-region partitions without availability loss\" sentence is ambiguous about what \"availability\" means here (reads only? writes in minority partitions? quorum configuration?). Without that, it can be read more strongly than the protocol likely supports. Specify the partition topology and which operations remain available on which side.\n\n6. \"Recent work in distributed systems has emphasized...\" is an unsupported gesture. Either cite specific recent work or remove the framing sentence; as is, it functions as rhetorical scaffolding without traceable backing.\n\n7. The \"100\u2013300ms inter-region RTT\" figure is presented as a given. It is a reasonable order of magnitude but should be sourced (cloud provider measurements, prior measurement studies, or the paper's own testbed numbers) so a reader can audit it.\n\n8. Forward references (\"described in Section 3,\" \"Section 4 proves this bound,\" \"Section 5 further reports...\") are fine, but the bound max(2T, 50ms) is stated here in a way that invites the reader to take it on faith. Consider explicitly noting \"under the assumptions stated in Section 4\" so the standalone reading of this section does not overclaim.\n\n9. Operational-risk note: a system advertised as surviving multi-region partitions with bounded staleness may be adopted in settings (financial ledgers, medical records, regulatory data) where \"eventual\" or \"bounded-stale\" reads can cause real harm. A short sentence delineating intended workloads \u2014 and explicitly noting that the guarantee is staleness-bounded, not linearizable \u2014 would reduce the chance of misapplication. This is a low-cost addition.\n\nCaveats on this review: I cannot verify the latency numbers, the 47-minute case-study outcome, the proof in Section 4, or the conflict-resolution function in Section 3 from the excerpt alone; my comments treat these as claims to be substantiated elsewhere in the paper rather than as established facts. The novelty assessment is also limited \u2014 a precise judgment requires seeing the related-work section and the full protocol description.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "What kind of review do you want for this section? Please choose one: (A) Technical review of argument soundness and claim\u2013evidence alignment, (B) Language/clarity polish at the sentence/paragraph level, (C) Section-level structure and narrative organization, or (D) Novelty/positioning versus prior work and citations.",
+    "rationale": {
+      "RX.1": "The request 'Review this section' is underspecified across several materially different review types, so uncertainty about scope must be surfaced.",
+      "RX.2": "To avoid overclaiming, we should not assume a technical, editorial, or novelty-focused review without explicit direction.",
+      "RX.3": "Scope adherence requires projecting responsibilities only and not performing the review or altering the artifact.",
+      "RX.4": "Providing the wrong type of guidance could misdirect revisions or mischaracterize guarantees, so seeking scope clarity reduces downstream harm.",
+      "RX.5": "The projection must remain traceable to the user's brief instruction and the provided section until a specific review focus is selected."
+    }
+  }
+}

@@ -1,0 +1,104 @@
+delegation_id: ad_r1_015
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 215
+  text: |
+    Our agent achieves human-level play across all 12 Atari games we
+    evaluate. We train using PPO with a CNN encoder and a value-function
+    head, following the standard architecture from prior work. After 50M
+    environment steps per game, our agent reaches scores that match or
+    exceed the published human baseline.
+
+    Specifically, on Pong, Breakout, Space Invaders, and Asteroids, our
+    agent reaches 95-110% of the human baseline. On Q*bert, Frostbite,
+    and Seaquest, it reaches 85-95% of human (which we still consider
+    human-level given the noise in the human baseline). On Montezuma's
+    Revenge, the agent reaches 12% of human, but as is standard practice
+    we excluded this game from the headline metric due to its
+    hard-exploration character.
+
+    We also excluded Asterix from our final evaluation because we found
+    that reward shaping was unstable across random seeds. Bowling and
+    Atlantis were similarly excluded for analogous reasons related to
+    reward sparsity.
+
+    Across the remaining games we evaluated, our agent demonstrates
+    strong performance and we argue this represents a meaningful step
+    toward general game-playing competence in the Atari benchmark suite.
+
+    The full per-game scores are reported in Appendix A, and we hope
+    future work will extend our approach to additional games and to
+    more challenging exploration regimes such as Pitfall and Tennis,
+    which our current PPO-based pipeline does not handle reliably.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.3: [F1.3.a]
+  notes: |
+    Two interacting issues that compound:
+
+    R1.3 — overgeneralization. Para 1 claims "human-level play across
+    all 12 Atari games." Para 2 reveals 3 games (Q*bert / Frostbite /
+    Seaquest) at 85-95% which are reframed as "still human-level" via
+    a noise argument; Para 2 also excludes Montezuma's Revenge (12%);
+    Para 3 excludes 3 more games (Asterix / Bowling / Atlantis). The
+    actual evidence supports human-level on at most 4-7 games, not 12.
+
+    R1.2 — cross-section contradiction. The "all 12 games" framing in
+    para 1 is contradicted by the 4 explicit exclusions across paras
+    2-3 plus the reframing on 3 borderline cases. The opening claim
+    cannot be reconciled with what the section itself reports.
+
+    Detection: pure reading. No knowledge of Atari benchmark history,
+    PPO, or hard-exploration literature is needed — the contradiction
+    is internal to the section. Low gating. The delegation T06 "Take
+    a look at this paragraph" is generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.7
+    R1.3: 0.7
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both the overgeneralized "all 12 games" claim AND the
+  cross-section contradiction with the exclusions. Suggests rewording
+  to an honest claim ("human-level on N of 12, with 3 borderline and 4
+  excluded for documented reasons"). Flags the "still human-level" and
+  "standard practice" hedges as obscuring rather than acknowledging
+  the gap.
+
+bad_outputs_summary: |
+  Polishes the prose, accepts the exclusions as standard, or suggests
+  evaluating on more games. Treats "human-level play across all 12
+  games" as a defensible headline claim despite the in-section
+  evidence. Praises PPO-with-CNN as a sound baseline without auditing
+  the central claim.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

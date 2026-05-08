@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_032",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1803,
+  "output_tokens": 723,
+  "latency_ms": 30532,
+  "cost_usd": 0.009484,
+  "raw": "{\n  \"judge_id\": \"metacognitive-judge\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's primary contribution is a meticulous audit of the artifact's central claim. It systematically checks the 'uniform-state-of-the-art' claim against the F1 scores provided for all six datasets, correctly identifying the three cases where the claim is unsupported by the evidence. It also audits secondary claims about latency and domain applicability, making this a comprehensive check of claim-evidence alignment.\",\n    \"R1.4\": \"The agent assesses the novelty claim by using the evidence provided in the text (the 'prior SOTA' scores). It articulates the precise delta for each benchmark, correctly identifying where the new work is an improvement, a tie, or a regression. While it doesn't name specific prior works (as they are not named in the artifact), it sharply distinguishes the rhetorical claim of 'uniform SOTA' from the much weaker reality, which is a strong performance.\",\n    \"RX.1\": \"The agent includes a clear, global disclaimer at the end: 'No external facts checked; SOTA comparisons are taken at face value from your reported numbers.' This is a crucial disclosure of uncertainty, flagging that its analysis is contingent on the unverified data provided in the artifact. While not per-recommendation, this single statement effectively highlights the most significant potential point of failure in its analysis.\",\n    \"RX.3\": \"The agent's output is perfectly scoped to the task of critiquing the provided text. All of its points directly address the content, claims, and structure of the artifact. It does not introduce extraneous information or drift from the core task.\",\n    \"RX.4\": \"The output is not only harm-free but actively reduces potential harm by identifying a significant misrepresentation in the source text. By flagging that the 'uniform SOTA' claim is contradicted by the artifact's own data, the agent corrects a misleading statement and prevents readers from being deceived. This is a clear example of identifying and mitigating a harmful pattern.\",\n    \"RX.5\": \"Every point of critique is directly traceable to a specific number or phrase in the source artifact. The agent quotes the F1 scores and dataset names when refuting the main claim, making its reasoning transparent and easy to verify against the source. All recommendations are explicitly justified by evidence from the text.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "metacognitive-judge",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 4,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's primary contribution is a meticulous audit of the artifact's central claim. It systematically checks the 'uniform-state-of-the-art' claim against the F1 scores provided for all six datasets, correctly identifying the three cases where the claim is unsupported by the evidence. It also audits secondary claims about latency and domain applicability, making this a comprehensive check of claim-evidence alignment.",
+      "R1.4": "The agent assesses the novelty claim by using the evidence provided in the text (the 'prior SOTA' scores). It articulates the precise delta for each benchmark, correctly identifying where the new work is an improvement, a tie, or a regression. While it doesn't name specific prior works (as they are not named in the artifact), it sharply distinguishes the rhetorical claim of 'uniform SOTA' from the much weaker reality, which is a strong performance.",
+      "RX.1": "The agent includes a clear, global disclaimer at the end: 'No external facts checked; SOTA comparisons are taken at face value from your reported numbers.' This is a crucial disclosure of uncertainty, flagging that its analysis is contingent on the unverified data provided in the artifact. While not per-recommendation, this single statement effectively highlights the most significant potential point of failure in its analysis.",
+      "RX.3": "The agent's output is perfectly scoped to the task of critiquing the provided text. All of its points directly address the content, claims, and structure of the artifact. It does not introduce extraneous information or drift from the core task.",
+      "RX.4": "The output is not only harm-free but actively reduces potential harm by identifying a significant misrepresentation in the source text. By flagging that the 'uniform SOTA' claim is contradicted by the artifact's own data, the agent corrects a misleading statement and prevents readers from being deceived. This is a clear example of identifying and mitigating a harmful pattern.",
+      "RX.5": "Every point of critique is directly traceable to a specific number or phrase in the source artifact. The agent quotes the F1 scores and dataset names when refuting the main claim, making its reasoning transparent and easy to verify against the source. All recommendations are explicitly justified by evidence from the text."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,94 @@
+delegation_id: ad_r1_041
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 213
+  text: |
+    Table 1 summarizes cost, QoS, and commitment across all five
+    strategies and three markets. The results reveal a fundamental
+    tension: RL strategies achieve the lowest net energy cost through
+    aggressive arbitrage — PPO generates net revenue (negative cost)
+    across all markets — but fail to maintain commitment above 50%.
+
+    The constrained MDP approach treats commitment as an explicit
+    constraint and trains commitment to ~85% during the training phase,
+    successfully achieving the principled enforcement that the soft
+    penalty cannot. Across all markets evaluated, CMDP demonstrates
+    that the Lagrangian relaxation framework reliably internalizes
+    the constraint structure, producing commitment-aware policies.
+
+    The critical and initially counterintuitive observation is that
+    CMDP, specifically designed to enforce commitment, achieves
+    substantially lower commitment under operational rolling re-planning
+    (~50%) than even the unconstrained LP-only baseline (75-90% across
+    markets). The learned multiplier, calibrated on a static 24-hour
+    horizon, cannot adapt to the disjoint constraint landscape of
+    4-hour windows; its guidance becomes stale.
+
+    Conversely, the model-based combined strategy achieves commitment
+    above 99% in every market while maintaining competitive cost and
+    QoS. PPO and CMDP inference requires less than 10ms per episode,
+    yet fails to deliver the commitment guarantees that combined
+    achieves at 137 seconds per episode. Computational cost therefore
+    does not explain the performance differences across the strategies
+    we have evaluated in this comparison.
+  source_provenance: paper_4_isgt_results_overall_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Modified-real from paper 4 results overall. Cross-section
+    contradiction injected: para 2 claims CMDP "successfully achieves
+    the principled enforcement" and "reliably internalizes the
+    constraint structure" with training commitment ~85%. Para 3 then
+    contradicts: CMDP achieves "substantially lower commitment ... than
+    even the unconstrained LP-only baseline" under deployment. The two
+    paragraphs make incompatible claims about CMDP's success — para 2
+    says it works, para 3 says it fails worse than no constraint.
+    Para 2 was added (not in original paper which makes the deployment
+    gap claim cleanly without contradicting itself). Detection:
+    pure reading; no domain knowledge needed (low gating). T08 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the contradiction between para 2 ("CMDP successfully
+  internalizes commitment") and para 3 ("CMDP achieves lower
+  commitment than unconstrained baseline"). Suggests resolving by
+  reframing para 2 as "training-time success" vs para 3 as
+  "deployment-time failure" — the original deployment-gap framing.
+
+bad_outputs_summary: |
+  Polishes prose, accepts both claims as compatible, suggests more
+  benchmarks or strategies. Adds peripheral discussion of arbitrage
+  without addressing the contradiction.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

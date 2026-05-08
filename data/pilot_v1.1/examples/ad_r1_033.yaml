@@ -1,0 +1,87 @@
+delegation_id: ad_r1_033
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 205
+  text: |
+    Vehicle-to-grid technology turns electric-vehicle fleets into distributed
+    energy assets that can provide ancillary services to power systems. To
+    participate in day-ahead energy markets, frequency containment reserves,
+    or demand response programs, an aggregator must commit to a power
+    schedule in advance and deliver it reliably during operation; failure
+    to honor committed schedules triggers financial penalties. Commitment
+    reliability is therefore not merely desirable but a hard prerequisite
+    for commercial V2G operation.
+
+    Reinforcement learning has emerged as an attractive paradigm for V2G
+    scheduling because it adapts to stochastic fleet arrivals and volatile
+    prices without explicit system models. Our work introduces a constrained
+    RL approach that, to our knowledge, is the first to evaluate commitment
+    reliability under operational rolling re-planning conditions across
+    multiple electricity markets. Existing studies treat commitment as a
+    soft reward penalty; we instead treat it as an explicit constraint
+    via Lagrangian relaxation.
+
+    Our experiments confirm that soft penalties are dominated by arbitrage
+    incentives — PPO agents achieve only modest commitment under rolling
+    re-planning, indistinguishable from a commitment-agnostic policy. The
+    constrained MDP formulation drives training commitment toward 90%
+    in some markets, though deployment performance differs substantially
+    from training performance. We position this work as the first study
+    to quantify the deployment gap in constrained V2G reinforcement
+    learning.
+  source_provenance: paper_4_isgt_intro_paras_1_2_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  notes: |
+    Modified-real from paper 4 introduction (paras 1-2). Original cited
+    \cite{kempton2005vehicle} for V2G + several ML-RL surveys. Anonymization
+    + flaw injection: removed all citations and added a "first to evaluate
+    commitment under rolling re-planning" claim with no reference to
+    constrained RL prior work (Achiam, Paternain, etc.) that the original
+    related_work cites. Two "first" claims now sit unsupported by any
+    prior-work contrast within the section. Detection: visible from the
+    section's own text (the section names "constrained MDP" and
+    "Lagrangian relaxation" without citing originators) — low gating.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the unsupported "first to" claims and names missing
+  prior-work contrast (constrained RL literature, deployment-gap
+  literature). Suggests rewording to defensible delta.
+
+bad_outputs_summary: |
+  Polishes prose, accepts the "first" framing, suggests more markets.
+  Adds peripheral citations without questioning novelty positioning.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

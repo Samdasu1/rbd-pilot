@@ -1,0 +1,92 @@
+delegation_id: ad_r1_003
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 220
+  text: |
+    Cloud storage systems have long struggled with balancing replication
+    overhead and read latency. Existing approaches either replicate
+    aggressively (causing high write amplification) or rely on erasure coding
+    (causing high read latency on degraded paths). We introduce ChainSync,
+    the first storage system to dynamically adjust replication factor based
+    on observed access patterns at the file level.
+
+    ChainSync monitors a sliding window of read frequency for each file and
+    migrates between replication factor 2, 3, and erasure-coded states based
+    on a learned threshold policy. Files that exceed the access threshold
+    are upgraded to higher replication; cold files are demoted. The
+    migration is performed asynchronously to avoid impacting foreground I/O.
+
+    Our evaluation on a 12-node cluster shows that ChainSync reduces aggregate
+    storage cost by 31% compared to fixed replication factor 3, while keeping
+    p99 read latency within 4ms of the replicated baseline. This demonstrates
+    that adaptive replication is a practical alternative to static policies.
+
+    We also show that ChainSync's policy is robust to workload shifts: when
+    we transition from a YCSB-A workload to YCSB-C mid-experiment, the
+    policy converges to the new optimal within 12 minutes. This is the first
+    demonstration of online policy adaptation for storage replication. Our
+    results, taken together, demonstrate that learned tiering policies are
+    deployment-ready for production-scale clusters and offer a clean break
+    from the static-policy era of distributed storage.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a, F1.4.b]    # unsupported novelty + missing nearest neighbor
+  notes: |
+    Two strong novelty claims with no citation contrast: "the first storage
+    system to dynamically adjust replication factor based on observed access
+    patterns" and "the first demonstration of online policy adaptation for
+    storage replication." Both claims sit in well-trodden territory: tiered
+    storage with access-pattern migration (e.g. EC-Cache, AutoTier, Pelican,
+    f4) is decades old; online policy learning for replication has been
+    studied. The artifact does not name a single nearest-neighbor prior
+    work for either claim. The conceptual object (adaptive tiering) is
+    well-defined and the experiments are clean — only the novelty
+    positioning is broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9     # load-bearing — novelty claim is unsupported
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.5     # citation gap is downstream of R1.4 — flagging missing prior work
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the unsupported "first" claims and names at least one
+  nearest-neighbor prior work the section should be contrasted against
+  (e.g. tiered storage systems, EC-Cache-style migration, autotuning
+  replication). Suggests rewording the novelty claim to a defensible
+  delta (e.g. "first to combine X and Y" rather than "first to do X").
+  May flag the missing citations as a related R1.7 issue.
+
+bad_outputs_summary: |
+  Accepts the "first" claims at face value and suggests strengthening the
+  experiments, polishing the prose, or restructuring the section. Adds
+  citations to vaguely related work without questioning the novelty
+  framing. Praises the contribution as innovative.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

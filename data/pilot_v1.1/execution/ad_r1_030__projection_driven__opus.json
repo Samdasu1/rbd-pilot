@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_030",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1641,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 26353,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 1.0, \"R1.3\": 0.7, \"R1.4\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: I read the draft as a technical claim and found several serious internal contradictions that need to be resolved before this is \"solid.\" The draft as written is not defensible.\n\n**Major problem 1: The method described is plain steepest descent, not a new solver.**\n\nThe update rule x_{k+1} = x_k + \u03b1_k r_k with \u03b1_k = (r_k\u1d40 r_k)/(r_k\u1d40 A r_k) is the textbook steepest-descent (Richardson with optimal step) iteration for SPD systems. This has been known since the 1950s (Kantorovich). The introduction frames the contribution as a \"curvature-adaptive step-size schedule,\" but the formula given is exactly the classical optimal step, which already uses the Rayleigh quotient of A \u2014 i.e., curvature information. There is no visible delta from prior work in what is shown. Either:\n- the actual novel step rule is different from what is written and the formula is a typo/oversimplification, or\n- there is no novelty and the framing has to be withdrawn.\n\nThis needs to be resolved at the source. As written, the \"key insight\" is not an insight.\n\n**Major problem 2: The convergence-rate claim contradicts the method.**\n\nSteepest descent on an SPD system converges at rate ((\u03ba\u22121)/(\u03ba+1))^k in the A-norm, which gives an iteration complexity of O(\u03ba \u00b7 log(1/\u03b5)) \u2014 that part is correct. But the draft then says this \"matches the convergence rate of PCG.\" It does not. PCG's worst-case rate is O(\u221a\u03ba \u00b7 log(1/\u03b5)), quadratically better in \u03ba. The draft is conflating steepest descent with CG. This claim must be corrected; otherwise the paper is wrong on a textbook fact.\n\n**Major problem 3: The empirical claim is inconsistent with the theory and the method.**\n\nIf the method really is steepest descent, it cannot beat Jacobi-PCG in iteration count on a generic SPD benchmark \u2014 the gap is typically large and grows with \u03ba. A reported result showing steepest descent beating PCG on a finite-element stiffness matrix and a graph Laplacian would be extraordinary and almost certainly indicates one of: (a) PCG was misconfigured (e.g., wrong stopping criterion, wrong preconditioner application), (b) the comparison metric is not what is stated, (c) the benchmarks are degenerate (e.g., the 200\u00d7200 \"dense correlation matrix\" may be extremely well-conditioned, where iteration counts become uninformative), or (d) the method is not actually what is written. The draft gives no setup details \u2014 tolerance, stopping criterion, initial guess, condition numbers of the test matrices, iteration counts, wall-clock \u2014 so the claim cannot be evaluated and should not be made in this form.\n\n**Major problem 4: The monotonicity claim is over-stated.**\n\n\"The residual norm decreases at every iteration\" is asserted as a property and then \"verified empirically.\" For steepest descent on SPD systems, the A-norm of the error decreases monotonically; the Euclidean residual norm \u2016r_k\u2016\u2082 is *not* guaranteed to decrease monotonically. Empirical observation on three problems is not a proof, and presenting a non-theorem as if it were a verified property is misleading. Either prove it in the appropriate norm and state the norm explicitly, or downgrade to \"we observe monotone decrease in our experiments\" with the norm named.\n\n**Other issues**\n\n- The benchmark suite is too small and too heterogeneous to support the \"range of benchmark problems\" framing in the opening sentence. Three matrices, one of which is 200\u00d7200 and dense, is not a range.\n- \"Iteration count is the limiting cost\" is rarely true in practice; per-iteration cost (especially preconditioner application vs. a single matvec) usually dominates. Positioning the method on iteration count alone, without wall-clock or flop comparison, is not a fair practical claim.\n- No condition numbers, tolerances, or iteration counts are reported. None of the empirical claims are currently checkable from the text.\n- No citations at all. At minimum, prior work on steepest descent, CG, PCG, and adaptive/Polyak-style step sizes should be cited so the delta is visible.\n\n**What I'd recommend before",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 1.0,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "To \u201cmake sure this is solid,\u201d should the primary focus be (A) technical rigor\u2014verifying the internal argument, convergence claims versus PCG, and the claimed novelty/identity of the method\u2014or (B) writing polish and section-level structure, assuming the technical claims stand? Please choose A or B.",
+    "rationale": {
+      "R1.1": "The high-level thesis and positioning (a 'new' solver with curvature-adaptive steps versus PCG) may require precise conceptual framing to ensure the contribution claim is sound.",
+      "R1.2": "The chain from algorithm definition to stated convergence rate and its relation to baselines must be logically consistent and free of contradictions.",
+      "R1.3": "Claims about fewer iterations, monotonic residual decrease, and benchmark outcomes should be directly supported by the reported experimental details and results.",
+      "R1.4": "The asserted novelty should be assessed relative to established methods (e.g., steepest descent and CG/PCG) to estimate the true delta.",
+      "RX.1": "Uncertainties and assumptions (e.g., SPD requirement, preconditioning choice, and benchmark representativeness) should be disclosed to bound claims.",
+      "RX.2": "Language and conclusions should avoid overclaiming superiority or equivalence without qualified evidence and precise scope.",
+      "RX.3": "The effort should adhere to assessing the draft's argument and claims without drifting into out-of-scope tasks.",
+      "RX.4": "Care is needed to prevent downstream harm from potentially misleading or overstated claims that could misdirect practitioner effort.",
+      "RX.5": "All claims should be traceable to explicit formulas, theorems, and benchmark descriptions so provenance and reproducibility are clear."
+    }
+  }
+}

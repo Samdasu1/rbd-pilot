@@ -1,0 +1,94 @@
+delegation_id: ad_r1_006
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 207
+  text: |
+    We propose FlexVAE, a variational autoencoder framework for unsupervised
+    disentanglement that operates without imposing assumptions on the
+    smoothness or geometry of the data manifold. FlexVAE learns latent
+    factors of variation by minimizing a modified ELBO that includes a
+    divergence term between the aggregated posterior and a learnable
+    factorized prior. Crucially, FlexVAE makes no assumptions about the
+    Lipschitz continuity of the generator network or about the geometric
+    structure of the latent space, distinguishing it from prior approaches
+    that impose strong inductive biases.
+
+    We prove that FlexVAE recovers ground-truth factors of variation with
+    high probability under standard regularity conditions. The proof
+    proceeds by bounding the gradient of the divergence term by a Lipschitz
+    constant of the generator, which we then use to invoke a stochastic
+    approximation argument. Combined with the smoothness of the encoder
+    network, this yields convergence in O(1/sqrt(T)) iterations.
+
+    Our experiments on dSprites, 3DShapes, and MPI3D-Real demonstrate that
+    FlexVAE outperforms FactorVAE by 8% and beta-TCVAE by 12% on the
+    disentanglement metric proposed by Locatello et al.
+
+    A key advantage of our approach is that, unlike methods requiring strong
+    inductive biases on the latent space, FlexVAE applies broadly to
+    natural image and 3D data without architectural modification. This
+    generality is what enables the strong empirical results we report.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]    # cross-section contradiction
+  notes: |
+    Paragraph 1 explicitly states FlexVAE "makes no assumptions about the
+    Lipschitz continuity of the generator network." Paragraph 2's proof
+    sketch then "bounds the gradient of the divergence term by a Lipschitz
+    constant of the generator" — the proof relies on exactly the
+    assumption that paragraph 1 disclaimed. This is a direct internal
+    contradiction (F1.2.b): the contribution claim and the technical
+    derivation are inconsistent. Subtlety: a careful reader notices the
+    contradiction, but a reader who reads paragraphs in isolation
+    (Method then Theory then Experiment) may not link the two
+    statements. The conceptual object, novelty positioning, and
+    citations are all internally fine — only the logical chain across
+    paragraphs is broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.9     # load-bearing — internal contradiction
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the contradiction: the section claims "no Lipschitz assumption"
+  but the proof relies on a Lipschitz constant of the generator. Suggests
+  resolving by either (a) acknowledging the assumption and adjusting the
+  novelty claim, or (b) replacing the proof technique with one that does
+  not invoke Lipschitz continuity. Does not focus on prose polish or on
+  novelty positioning against FactorVAE / beta-TCVAE.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more datasets or ablations, or
+  questions the novelty without addressing the internal contradiction.
+  Praises the "no assumption" framing without checking the proof. Suggests
+  citing more disentanglement papers without flagging the inconsistency.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

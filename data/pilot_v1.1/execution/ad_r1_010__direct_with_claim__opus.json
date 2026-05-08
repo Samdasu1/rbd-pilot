@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_010",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 1161,
+  "output_tokens": 835,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 12620,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.6, \"R1.6\": 0.9, \"R1.5\": 0.5}}\n\nCleaned up the prose: tightened sentences, removed filler (\"In this work,\" \"We believe\"), sharpened claims, and adjusted ordering so the contribution statement leads, technical insight follows, and metatheory/implementation close the section.\n\n---\n\nType-and-effect systems extend conventional type systems by tracking computational effects\u2014state mutation, exceptions, non-determinism\u2014in the type itself. The classical formulation, due to Lucassen and Gifford, has since branched in several directions. Two prominent contemporary approaches are handlers, which model effects as algebraic operations, and capability-based systems, which track effect access through linearly typed permissions.\n\nWe present Linot, a row-polymorphic effect calculus that accommodates both handlers and capabilities under a single typing discipline. Linot is parameterized by a row of effect labels and introduces a form of row subtyping that supports both effect inheritance and capability narrowing.\n\nThe central technical insight is that capability-based effect tracking can be encoded as a row constraint with linear cardinality. This encoding retains the static guarantees of capability systems while inheriting the compositional reasoning of handler-based ones, clarifying the relationship between the two design directions.\n\nWe give a contextual operational semantics for Linot, prove preservation, progress, and effect soundness via a logical relation, and provide a small OCaml implementation that exercises the approach on example programs using exceptions and mutable references.\n\n---\n\nNotes on changes worth your attention:\n- Merged the original paragraph 4 (semantics/metatheory/implementation) with the metatheory claim from paragraph 2, since stating \"we prove preservation, progress, and effect soundness\" twice (once as a claim, once as a method) was redundant.\n- Removed \"novel\" before \"form of subtyping\"\u2014reviewers tend to read self-declared novelty as a tell; let the technical content carry it.\n- \"a few example programs\" \u2192 \"example programs\"; the hedge undersells the implementation without adding information.\n- \"We believe this insight clarifies\u2026\" \u2192 \"\u2026clarifying the relationship\u2026\": same claim, less hedging.\n\nUnverified: I assumed the implementation actually covers exceptions and mutable references as stated, and that the metatheory uses a logical relation as claimed. If the logical relation is only used for one of the three theorems (e.g., effect soundness) rather than all of them, the third paragraph should be adjusted.",
+  "projection_input": null
+}

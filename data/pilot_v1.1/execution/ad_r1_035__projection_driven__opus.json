@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_035",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1651,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 25628,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 1.0, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: Tightened prose, restructured into a clearer problem\u2192method\u2192finding\u2192implication arc, removed hedging filler and unsupported generalizations, and flagged claims whose grounding I cannot verify from the draft alone.\n\n---\n\n**Revised draft**\n\nReinforcement learning is increasingly applied to vehicle-to-grid (V2G) fleet scheduling, but its ability to honor *commitment* \u2014 the binding obligation to deliver a pre-agreed power schedule \u2014 has not been systematically tested under operational re-planning conditions.\n\nWe evaluate five scheduling strategies on day-ahead price traces from three European electricity markets, with 4-hour rolling re-planning to emulate deployment. Two findings stand out. First, constrained Lagrangian RL agents that reach roughly 85% commitment during training fall to roughly 50% under rolling re-planning, a drop of 22\u201342 percentage points across the three markets. Unconstrained PPO reaches only about 45%. Second, a model-based combined strategy that pairs LP planning with reachability-based dispatch and inter-window schedule coupling sustains above 99.6% commitment in all three markets.\n\nWe read these results as evidence that market-viable V2G commitment requires inter-window coupling to be integrated into the planning objective itself, rather than enforced post hoc by a learned policy. Under the training recipes evaluated here, standalone RL \u2014 constrained or not \u2014 does not appear suitable for commitment-binding markets. We do not claim this rules out RL approaches in general: alternative constraint formulations, longer training, or richer state representations were not tested, and the evaluation covers three markets and a single re-planning horizon.\n\n---\n\n**Notes on changes and residual concerns**\n\n1. *Structure.* The original mixed gap-statement, results, and interpretation within single sentences. I split into: (a) gap, (b) setup and quantitative results, (c) interpretation with explicit scope limits.\n\n2. *Hedging.* Phrases like \"which we believe,\" \"fairly substantial,\" \"somewhat,\" and \"going forward\" were removed. Calibrated hedges (\"appears,\" \"we read these results as evidence\") are retained where the inference goes beyond the measurement.\n\n3. *Claim tightening.*\n   - \"commitment collapse of 22 to 42 percentage points in constrained RL\" was ambiguous in the original (it conflated the collapse range with the 85%\u219250% figures). I rephrased so the 22\u201342 pp range is explicitly the across-market spread of the train-to-deploy drop. Please verify this matches your data; if 22\u201342 pp refers instead to absolute commitment levels at deployment, the sentence needs adjusting.\n   - \"may be the right approach\" was softened to a structural claim about *where* coupling must live (in the planner), which is what the >99.6% result actually supports. Calling the combined strategy \"the right approach\" overreaches given only three markets.\n   - Added an explicit non-claim (\"we do not claim this rules out RL approaches in general\") to forestall a reading that the paper dismisses RL for V2G wholesale.\n\n4. *Scope statement.* The closing now names what was *not* varied (constraint formulations, training length, re-planning horizon, market count). This protects against the abstract being cited as a stronger negative result than the experiments support.\n\n5. *Items I cannot verify from the draft:*\n   - Whether \"approximately 85%\" and \"approximately 50%\" are means, medians, or representative values, and across what aggregation (markets, seeds, episodes).\n   - Whether the >99.6% figure is a worst-case across markets or an average.\n   - Whether PPO's ~45% is train-time, deploy-time, or both.\n   These should be made precise in the body of the paper; the abstract-level phrasing above assumes deploy-time numbers for all three strategies, which is the comparison that matters for the argument.\n\n6. *Deployment framing.* I kept the practical recommendation (\"standalone RL \u2026 not suitable for commitment-binding markets\") because it follows from the reported numbers, but bounded it to \"the training recipes evaluated here.\" A stronger prescriptive claim would risk being read as guidance to grid operators on a basis of three markets and one re-planning cad",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft entails clarifying the thesis and gap statement at a conceptual level to sharpen the paper\u2019s main contribution.",
+      "R1.2": "The argument chain connecting training performance, deployment conditions, and conclusions about market suitability must be logically coherent.",
+      "R1.3": "Claims about commitment percentages and comparative performance should align precisely with the reported figures and conditions.",
+      "R1.5": "Section- or paragraph-level reordering may be needed to create a clear narrative from problem, method comparison, to implications.",
+      "R1.6": "Editing for grammar, concision, and flow is load-bearing due to multiple long sentences and dense constructions.",
+      "RX.1": "Edits should preserve and appropriately signal uncertainties and limitations already present in the draft.",
+      "RX.2": "Revisions must avoid overstating generality or causality beyond what the presented results support.",
+      "RX.3": "Work must remain within the scope of improving the given draft without introducing new analyses or external content.",
+      "RX.4": "Language should avoid encouraging unsafe operational interpretations or misuses in power system contexts.",
+      "RX.5": "Changes should remain traceable to the provided text and clearly grounded in the artifact\u2019s content."
+    }
+  }
+}

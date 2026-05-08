@@ -1,0 +1,94 @@
+delegation_id: ad_r1_020
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 200
+  text: |
+    We evaluate DermaNet on a multicenter dermoscopy dataset of 12,847
+    images annotated for melanoma classification. Our results demonstrate
+    consistent improvement across all subgroups defined by skin tone,
+    lesion size, and patient age.
+
+    The dataset comprises 5,231 melanoma cases and 7,616 benign cases
+    collected from four institutions. Skin tones were stratified using
+    the Fitzpatrick scale (I-VI). Lesion sizes were binned into small
+    (<6mm), medium (6-12mm), and large (>12mm). Patient ages were
+    grouped as <40, 40-60, and >60.
+
+    Per-subgroup AUC values are reported in Table 3. On Fitzpatrick I-III
+    subgroup, AUC = 0.92. On Fitzpatrick IV-VI, AUC = 0.81. On small
+    lesions, AUC = 0.85. On medium lesions, AUC = 0.91. On large lesions,
+    AUC = 0.94. On age <40, AUC = 0.86. On age 40-60, AUC = 0.91. On age
+    >60, AUC = 0.89.
+
+    Compared to the baseline DermaCNN model, DermaNet achieves AUC
+    improvements ranging from +0.02 to +0.08 across these subgroups. We
+    position DermaNet as suitable for deployment across the diverse
+    patient populations represented in the test set. DermaNet was
+    implemented in PyTorch and trained on a single A100 GPU with 32GB
+    memory, reaching convergence in approximately 12 hours per fold of
+    the 5-fold cross-validation we report in Table 4.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: partial
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Control case: T05 "Check this" leans softly toward R1.3 ("check the
+    claims") — partial leakage by spec §2.5 / §5.Y. The artifact's flaw
+    is also R1.3 (overgeneralization): "consistent improvement across
+    all subgroups" is supported in the relative-to-baseline sense
+    (+0.02 to +0.08) but obscures large absolute disparities in
+    per-subgroup AUC (0.81 on Fitzpatrick IV-VI vs 0.94 on large
+    lesions — a 0.13 gap). The "deployment across diverse patient
+    populations" closing is unsupported by the disparity.
+
+    As a control example, this verifies that the projection agent can
+    project R1.3 high under a delegation that softly cues toward
+    verification. Cross-family d_C is expected to be near zero on this
+    example (all families project R1.3 high). If d_C > 0.10, the
+    projection prompt is broken — not a finding.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names the per-subgroup disparity (0.81 vs 0.94 AUC) and flags
+  "consistent improvement" as obscuring the absolute-performance gap.
+  Distinguishes "improvement vs DermaCNN baseline" (technically
+  supported) from "suitability for deployment" (not supported by
+  disparate per-subgroup AUC). Suggests rewording the closing claim.
+
+bad_outputs_summary: |
+  Accepts the "consistent improvement" framing because the relative
+  improvement is uniform. Suggests adding more institutions or larger
+  datasets without addressing the absolute-disparity issue. Praises
+  the multicenter design as sufficient for the deployment claim.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

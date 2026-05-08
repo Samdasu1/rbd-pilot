@@ -1,0 +1,95 @@
+delegation_id: ad_r1_045
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 232
+  text: |
+    The root cause of both failure modes is the mismatch between
+    reinforcement learning's expected-value optimization and
+    commitment's per-step obligation which manifests itself in
+    different ways across the two algorithms in our study and which
+    we believe explains the observed performance gaps that we have
+    documented in the preceding section of this paper across the
+    multiple market conditions.
+
+    The constrained MDP Lagrangian framework drives mean violation
+    toward zero through gradient-based multiplier updates which is
+    a well-established technique in the constrained optimization
+    literature but provides no worst-case guarantee for any
+    individual re-planning window in our deployment setting which
+    means that the agent may satisfy commitment in expectation
+    while violating it in any specific operational window.
+
+    The proximal policy optimization algorithm uses a soft penalty
+    formulation which is dominated by arbitrage gradients which
+    suggests that the soft penalty approach is structurally limited
+    regardless of further hyperparameter refinement that might be
+    attempted in a follow-up study. Retraining under the rolling
+    protocol yields zero commitment which is a striking result that
+    we believe confirms the structural limitation hypothesis that
+    we have been advancing throughout this paper.
+
+    Post-hoc carry-over blending applied to the RL agents restores
+    commitment to 100 percent which is encouraging at first glance
+    but eliminates arbitrage revenue which we believe is a less
+    desirable outcome than the integrated coupling approach that we
+    propose in the combined strategy that we have been evaluating
+    throughout this study.
+  source_provenance: paper_4_isgt_discussion_hybrid_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Modified-real from paper 4 discussion hybrid. Pure prose-quality
+    issues injected. Original prose was tight and analytical; this
+    version introduces 60-80 word run-on sentences with chained
+    "which... which... which..." constructions in every paragraph,
+    plus a hedging cascade ("we believe", "we have been advancing",
+    "we have been evaluating", "less desirable", "encouraging at
+    first glance"). The underlying claims (mean-violation vs
+    per-step, gradient dominance, post-hoc trade-off) are all
+    accurate. Only the writing is bad. Detection: pure reading;
+    no domain knowledge needed (low gating). T01 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Tightens run-ons, removes the chained "which... which..."
+  constructions, eliminates hedging cascade ("we believe",
+  "we have been"). Preserves the underlying claims (mean vs per-step,
+  gradient dominance, post-hoc trade-off).
+
+bad_outputs_summary: |
+  Restructures the section, suggests adding more analysis or
+  experiments. Questions the gradient-dominance framing. Adds RL
+  citations. Treats prose issues as cosmetic.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

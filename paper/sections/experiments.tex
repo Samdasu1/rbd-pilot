@@ -1,0 +1,29 @@
+\section{Experimental Setup}
+\label{sec:experiments}
+
+This section describes the apparatus that produces the empirical evidence reported in Section~\ref{sec:results}. We restrict the pilot to a single delegation category (R1, paper-research) and a closed taxonomy of $|J_{v1.1}| = 12$ dimensions; the full main-run setup is documented in our long-term plan and outside this paper's scope.
+
+\subsection{Pilot dataset}
+\label{sec:experiments:dataset}
+
+\textbf{AmbiguousDelegation-50-R1.} Fifty examples drawn from a frozen 10-template delegation pool, paired with artifact sections of $200$--$500$ words after \texttt{wc -w} canonicalization. Each example carries an \texttt{engineered\_flaws} annotation listing per-dimension flaw codes from a 21-flaw catalog covering R1.1 through R1.7. Source mix is $32$ synthetic and $18$ modified-real (the latter sliced from one author-owned domain submission, anonymized of author, institution, and identifying results). Coverage matrix is $30$ single-dim load-bearing ($\geq 4$ per R1 dim), $10$ dual-dim, $5$ ambiguous (clarification expected), and $5$ control (delegation explicitly invokes the dim). Two annotation tags additionally classify each example: \texttt{knowledge\_gating} $\in \{\text{low, moderate, high}\}$ and \texttt{delegation\_dim\_leakage} $\in \{\text{no, partial, yes}\}$. Pilot distribution is $45/2/3$ for gating and $44/3/3$ across the leakage levels.
+
+\subsection{Annotation protocol}
+\label{sec:experiments:annotation}
+
+Pass-1 records $r^*_{\text{author}}$ at construction time; pass-2 obtains independent weights from two LLM annotators of different families operating at temperature $0$ (claude-sonnet-4.5 and gemini-2.5-flash, after a documented swap from gpt-4o-mini --- see Section~\ref{sec:results:dataset:annotation}); pass-3 was planned as a human subset of 20 stratified examples with 2 annotators on R1.1 / R1.4 / R1.7, attempted, partially executed, and superseded by the boundary-condition finding reported in Section~\ref{sec:results:limitations:specifiability} and discussed in Section~\ref{sec:discussion:specifiability}. The operational ground truth $r^*_{\text{median}}$ is the per-dimension median across the three pass-1 + pass-2 tracks. Krippendorff's $\alpha$ at interval level is the headline reliability metric; the boundary-fragility test counts swap cases on the R1.4 $\leftrightarrow$ R1.7 pair.
+
+\subsection{Projection runs}
+\label{sec:experiments:projection}
+
+\textbf{Cross-family} (Experiment 1) runs each of three model families --- claude-sonnet-4.5, gpt-4o-mini, gemini-2.5-flash --- once per example at temperature $0$ under the strict-JSON projection prompt. Total: $50 \times 3 = 150$ calls. \textbf{Within-model} (Experiment 1B) runs claude-sonnet-4.5 five times per example at temperature $0.5$ for stochastic-variance estimation. Total: $50 \times 5 = 250$ calls. The asymmetry is intentional: $T = 0$ removes within-family stochasticity from the cross-family signal, and $T = 0.5$ inflates the within-model baseline against the noise-confound objection.
+
+\subsection{Experiment 2 (pilot scope)}
+\label{sec:experiments:exp2}
+
+We compare three execution conditions on all 50 pilot examples (per the redesigned measurement layer): \textbf{direct\_naive} (claude-opus-4-7 receives delegation $+$ artifact only), \textbf{direct\_with\_claim} (direct\_naive plus a single self-claim line at the start of the output, used to ablate the priming effect), and \textbf{projection\_driven} (the same executor receives delegation $+$ artifact $+$ projected weight vector $+$ active set $+$ self-claim line). The full four-condition design with task-aware routing and CLAMBER-style generic clarification is deferred to the main run. Each (example, condition) pair is judged by a 12-judge Anthropic-excluded tier-stratified panel (3 frontier API + 4 mid-tier open-weight + 5 light open-weight) using the per-dimension 1--5 anchor rubric; the headline weighted-R1 settlement loss $L_{\text{settlement}}^{R1}$ aggregates judge-median scores per Equation~(\ref{eq:L_settle_R1}).
+
+\subsection{Statistical tests}
+\label{sec:experiments:stats}
+
+We use paired bootstrap confidence intervals (5000 resamples by default; the Experiment 2 paired settlement comparisons use 10,000 resamples with seed 42) for paired-difference quantities, the Wilcoxon signed-rank test (one-sided, alternative=greater) for direction-of-effect tests~\cite{wilcoxon1945}, Krippendorff's $\alpha$ at the interval level for inter-rater reliability~\cite{krippendorff2011alpha, hayes2007standard}, and standard descriptive statistics for stratified analysis. The 12-judge tier-stratified Anthropic-excluded panel design follows the LLM-as-judge bias-mitigation literature~\cite{zheng2023mtbench, panickssery2024selfpref, stureborg2024inconsistent}; family-exclusion is the recommended mitigation when the executor is itself an LLM, and the panel-of-juries paradigm~\cite{verga2024juries} motivates aggregating across diverse judges rather than relying on a single judge model. All tests are pre-registered through the experiment-design specification before pilot data collection, following benchmarking-hygiene recommendations~\cite{bowman2022benchmarking}.

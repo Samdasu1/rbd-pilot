@@ -1,0 +1,115 @@
+delegation_id: ad_r1_010
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 210
+  text: |
+    Type-and-effect systems extend conventional type systems by tracking
+    computational effects, such as state mutation, exceptions, or
+    non-determinism, in the type itself. The classical formulation goes
+    back to Lucassen and Gifford and has been extended in many directions:
+    handlers (which model effects as algebraic operations) and
+    capability-based systems (which track effect access through linearly
+    typed permissions) are two prominent contemporary approaches.
+
+    In this work, we develop a row-polymorphic effect calculus that
+    accommodates both handlers and capabilities under a single typing
+    discipline. Our calculus, Linot, is parameterized by a row of effect
+    labels and uses a novel form of subtyping over rows that supports
+    both effect inheritance and capability narrowing. We prove that Linot
+    enjoys preservation, progress, and effect soundness.
+
+    The key technical insight is that capability-based effect tracking can
+    be encoded as a row constraint with linear cardinality. This encoding
+    allows us to retain the static guarantees of capability systems while
+    inheriting the compositional reasoning of handler-based effect
+    systems. We believe this insight clarifies the relationship between
+    the two design directions.
+
+    We give an operational semantics in the style of contextual operational
+    semantics, prove the metatheory using a logical relation, and present
+    a small implementation in OCaml that demonstrates the approach on a
+    few example programs involving exceptions and mutable references.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]    # misplaced section: implementation paragraph deflates after the technical insight
+  R1.7: [F1.7.b]    # missing canonical handler / capability papers
+  notes: |
+    Two interacting flaws:
+
+    R1.5 — structural ordering. The section's load-bearing technical
+    contribution is the encoding insight in paragraph 3 ("capability-based
+    effect tracking can be encoded as a row constraint with linear
+    cardinality"). Paragraph 4 then drops to operational semantics and
+    OCaml implementation details, which is engineering-level material
+    that deflates rather than lands the contribution. The natural
+    section ordering is: claim → insight → metatheory → implementation as
+    *one* paragraph, with the closing paragraph returning to the
+    contribution's significance. Subtlety: paragraph 4 reads naturally
+    on its own; the issue is only visible at the section level.
+
+    R1.7 — missing canonical citations. The section names Lucassen and
+    Gifford (correct, classical reference) but omits the canonical handler
+    paper Plotkin & Power "Algebraic operations and generic effects"
+    (and the more practitioner-facing Bauer & Pretnar "Programming with
+    algebraic effects and handlers"). It also omits canonical
+    capability-based effect work (e.g. Brachthäuser et al. on Effekt).
+    A field reader sees these gaps immediately when both directions are
+    explicitly named in paragraph 1. Subtlety: the section names the
+    *concepts* (handlers, capabilities) but does not cite the *papers*
+    that established them.
+
+    Combined: fixing R1.5 alone (re-ordering) is incomplete because the
+    re-ordered section still cites the wrong canonical anchors. Fixing
+    R1.7 alone leaves a section that ends on engineering details. Both
+    must be addressed.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.7     # load-bearing
+    R1.6: 0.1
+    R1.7: 0.7     # load-bearing
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For R1.5, proposes a section reorder
+  in which the contribution is established near the front, the technical
+  insight is the section's pivot, and metatheory + implementation are
+  consolidated as supporting material so the section closes on
+  significance rather than engineering details. For R1.7, names the
+  missing canonical references — Plotkin & Power for handlers, Bauer &
+  Pretnar for the practitioner side, and a canonical capability-based
+  effect work — and indicates where each should be inserted. Recognizes
+  that fixing one without the other leaves the section incomplete.
+
+bad_outputs_summary: |
+  Polishes the prose or suggests adding type-system jargon. Praises the
+  inclusion of operational semantics and the OCaml implementation.
+  Addresses only one of the two issues (e.g. only adds citations without
+  reordering, or only reorders without fixing the citations).
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_005",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1663,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24574,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: I rewrote the draft to tighten framing, hedge the claims that the reported evidence does not fully support, restructure the sections in standard order (claim \u2192 method \u2192 validation \u2192 limitations \u2192 deployment outlook), and remove or qualify statements that overreach the experimental design.\n\n---\n\n**Revised draft**\n\nWe present a model-based estimator for lithium plating onset in NCM cells during fast charging. The estimator couples an electrochemical reduced-order model (ROM) with a Kalman filter that fuses terminal voltage, current, and surface-temperature measurements. On the cell fleet studied here, the estimator flags plating-consistent conditions 4\u20137 minutes earlier than a terminal-voltage-inflection baseline, though we caution that this lead-time figure reflects the comparison against a single baseline on 14 cells and should not yet be read as a general performance bound.\n\n**Method.** The ROM is a single-particle formulation with electrolyte dynamics, tracking lithium concentration in the negative electrode. We define the estimated plating-onset event as the time at which the estimated negative-electrode surface overpotential crosses zero. We emphasize that this is a model-internal trigger: it is a proxy for plating, not a direct measurement of plated lithium.\n\n**Validation.** We evaluated the estimator on 14 cells cycled at 2C, 3C, and 4C. Two indirect validation signals were used:\n\n1. Estimator-predicted onset timestamps correlate with post-mortem capacity loss at r = 0.78 (n = 14).\n2. After 200 cycles, cells in which the estimator's warning fired in the \"early\" group retained, on average, 12 percentage points more capacity than cells in the \"late\" group.\n\nWe did not perform differential-voltage (dV/dQ) cross-validation, because per-cell instrumentation did not meet the resolution required; this is the primary gap in our validation chain. Onset timestamps were therefore extracted purely by thresholding the estimated overpotential at zero, which means our \"ground truth\" for onset timing is partially circular with the estimator output. The capacity-retention split between early- and late-warning cells is the strongest independent signal we report, but with n = 14 and an observational (not interventional) split, it should be treated as suggestive rather than confirmatory.\n\n**Limitations.**\n- Sample size is small (14 cells, single chemistry, single form factor).\n- No direct plating quantification (e.g., dV/dQ, reference-electrode, or teardown lithium inventory) is reported.\n- The 4\u20137 minute lead-time is measured against one baseline family; comparisons against incremental capacity analysis or relaxation-based detectors are not included.\n- Generalization to other NCM variants, temperatures outside the tested band, and aged cells is untested.\n\n**Deployment outlook.** The estimator runs at sub-millisecond cost per timestep on representative automotive-grade microcontrollers in our bench profiling, making online deployment computationally feasible. We note that any safety-critical use would require validation beyond what is reported here, including direct plating ground truth and broader operating envelopes; premature deployment based on a proxy trigger could give false assurance during aggressive fast-charge protocols. Integration with cell-balancing controllers for fleet-level retention is a natural extension but is not evaluated in this work and is left for future study.\n\n---\n\n**Specific edits and rationale**\n\n1. *Lead claim hedged.* \"Detects plating events 4\u20137 minutes earlier\" was rewritten as \"flags plating-consistent conditions\" against a specific baseline. The original phrasing implied ground-truth detection; the experiment supports only proxy-vs-proxy timing.\n\n2. *Onset definition clarified.* The overpotential-zero-crossing is now explicitly labeled a model-internal proxy, which prevents the reader from conflating it with measured plating.\n\n3. *Circularity flagged.* Because onset timestamps come from the same model whose accuracy is being evaluated, correlating them with post-mortem capacity is not an independent validation of the trigger. This is now stated rather than implied.\n\n4. *r = 0.78 left as reported* but contextualized with n; consider adding a confidence inter",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which scope do you want: (A) light copyediting only, (B) substantive abstract revision with reframing/reordering and claim\u2013evidence checks (no novelty positioning), or (C) same as B plus brief novelty positioning vs terminal-voltage-based methods?",
+    "rationale": {
+      "R1.1": "Reframing the thesis and gap can sharpen the contribution claim beyond the current voltage-based baseline comparison.",
+      "R1.2": "Ensuring the chain from model definition to validation and practical value is logically consistent will strengthen credibility.",
+      "R1.3": "Claims about earlier detection, correlation (r=0.78), and capacity retention need to align tightly with the reported evidence and scope.",
+      "R1.5": "The abstract can benefit from a clearer narrative arc (problem, method, validation, key results, implications).",
+      "R1.6": "Sentence-level clarity, concision, and flow are central to improving readability of this draft.",
+      "RX.1": "Any improvements should preserve or clarify uncertainties and limitations (e.g., sample size, instrumentation limits).",
+      "RX.2": "Avoiding generalized or deployment-wide claims beyond the presented evidence is essential.",
+      "RX.3": "Work must stay within improving the draft without adding unsubstantiated data or conducting new analyses.",
+      "RX.4": "Wording should not encourage unsafe fast-charging practices or misrepresent safety implications.",
+      "RX.5": "Edits should maintain traceability to the original claims and not introduce unsupported facts."
+    }
+  }
+}

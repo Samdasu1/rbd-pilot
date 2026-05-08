@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_049",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1601,
+  "output_tokens": 1451,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 21505,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.5\": 0.3, \"R1.6\": 1.0, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.2, \"RX.5\": 0.8}}\n\nSummary: Light prose cleanup with two internal contradictions flagged; I did not rewrite past those contradictions because resolving them requires authorial input.\n\n---\n\n**Revised text (conservative edit \u2014 prose only):**\n\nThe constrained MDP approach treats commitment as an explicit constraint via Lagrangian relaxation. Each training episode spans a full 24-hour horizon, and the multiplier is calibrated against episode-level violations over that horizon. This horizon-matched calibration distinguishes our formulation from soft-penalty approaches.\n\nTraining alternates policy improvement on the augmented reward with multiplier ascent, converging to a value that reflects the marginal cost of the commitment constraint. Across markets, the learned multiplier ranges from 5 to 80, depending on the constraint stringency implied by local price dynamics.\n\nUnder operational 4-hour rolling re-planning, this calibration breaks down; the empirical gap is quantified in the results section. The shorter replanning window truncates the calibration horizon, state resets erase cumulative commitment history, and the fixed learned multiplier does not adapt to the disjoint-window constraint landscape.\n\nOur constrained MDP implementation operates within the standard safe-RL framework. The success of static-horizon training confirms that Lagrangian methods can internalize commitment structure when the calibration horizon matches the operational protocol. Under protocol mismatch, however, this calibration no longer holds.\n\n---\n\n**Issues that need author attention before this is publishable:**\n\n1. **Internal contradiction on contribution framing.** The first paragraph calls the method \"the first principled approach to commitment-aware V2G scheduling.\" I removed this phrase in the revision because (a) such priority claims need a citation survey to back them, and (b) it sits oddly next to the later admission that the method fails under realistic 4-hour replanning. Please reinstate a more measured version only if you can support it \u2014 e.g., \"the first horizon-matched Lagrangian formulation for V2G commitment, to our knowledge.\"\n\n2. **Internal contradiction on what the contribution actually is.** Paragraphs 3 and 4 disagree. Paragraph 3 says the calibration \"breaks\" under 4-hour replanning. Paragraph 4 then says the \"deployment failure ... is well-handled by our learned-multiplier framework which automatically detects and adapts to operational horizon changes through online recalibration.\" These cannot both describe the same method. Either:\n   - the constrained-MDP method described here is a *baseline that fails*, and the online-recalibration framework is a separate contribution introduced elsewhere \u2014 in which case paragraph 4 should explicitly name it as a different method and forward-reference the section that introduces it; or\n   - the online recalibration is part of *this* method, in which case paragraph 3's \"this calibration breaks\" needs to be rewritten as a motivation rather than a failure mode.\n   \n   I left paragraph 4 truncated in the revision rather than guess. Please rewrite to make the method boundary explicit.\n\n3. **\"Well-handled ... automatically detects and adapts\"** is a strong functional claim. If retained, it should point to the specific experimental result that demonstrates detection and adaptation, rather than asserting the capability in prose.\n\n4. Minor: \"does internalize\" \u2192 \"can internalize\" (the empirical claim is existence, not universality); \"varies from 5 to 80\" \u2192 \"ranges from 5 to 80\" reads more naturally for a numerical interval.\n\n5. Minor structural note: the fourth paragraph mixes a positioning statement (safe-RL framework), a retrospective claim about the static-horizon result, and a forward claim about a different method. Splitting these once the method boundary in issue 2 is resolved would help the reader.\n\n---\n\nI cannot verify the priority claim in issue 1, the multiplier range (5\u201380), or whether the online-recalibration framework referenced in paragraph 4 is described elsewhere in the manuscript \u2014 these depend on context I do not have. The recommendation to remove or qualify the priority claim is conservative given that uncertainty; if a literature check supports it, reinstate.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.7,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Do you want a copyedit only (clarity/grammar/concision without changing claims or logic), or a copyedit plus resolving inconsistencies and moderating claim strength where needed?",
+    "rationale": {
+      "R1.2": "The excerpt contains apparent contradictions (e.g., failure under protocol mismatch vs. automatic adaptation) that a cleanup may need to resolve for internal consistency.",
+      "R1.6": "The request to 'Clean this up' most directly implies sentence- and paragraph-level polishing for clarity, concision, and tone.",
+      "RX.1": "Edits should transparently signal uncertainty where results are referenced but not shown here.",
+      "RX.2": "Phrases like 'first principled approach' and strong success/failure claims should be tempered to avoid overclaiming absent explicit evidence.",
+      "RX.3": "Work must stay within cleanup scope and avoid introducing new analysis, results, or conceptual reframing.",
+      "RX.4": "Language should not mislead about deployment safety or operational guarantees given the noted calibration mismatch.",
+      "RX.5": "Any edits must preserve the provenance and traceability of the original claims and distinctions made in the text."
+    }
+  }
+}

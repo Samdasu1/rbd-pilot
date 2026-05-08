@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_016",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.6",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2112,
+  "output_tokens": 850,
+  "latency_ms": 34788,
+  "cost_usd": 0.01114,
+  "raw": "{\n  \"judge_id\": \"me\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.6\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.6\": 5,\n    \"R1.7\": 1,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every load-bearing claim made in the text against the evidence described in the text. It flags and corrects multiple instances of overclaiming, such as changing \\\"supporting Wang et al.'s stability findings\\\" to \\\"consistent with\\\" and noting that smooth curves are not direct proof of a theoretical result. It also flags the \\\"no manual tuning\\\" claim as potentially under-supported by the described evidence. This is an excellent audit, meeting the s=5 anchor as much as possible without access to the actual figures.\",\n    \"R1.6\": \"The agent performs a thorough and professional copy-edit. The changes are numerous, well-justified, and consistently improve the clarity, flow, and precision of the text. The final output reads like a careful pass by a human editor, with no loss of meaning. This aligns perfectly with the s=5 anchor.\",\n    \"R1.7\": \"The agent explicitly states it \\\"did not ... touch citations.\\\" It makes no changes to the citation and does not flag any potential issues or missing works. This is a clear example of no citation-level engagement, matching the s=1 anchor.\",\n    \"RX.1\": \"The agent excels at uncertainty disclosure. It systematically identifies and corrects claims that are too strong for the evidence presented (e.g., \\\"removing\\\" -> \\\"reducing\\\", \\\"supporting\\\" -> \\\"consistent with\\\"). It also explicitly flags claims it did not edit but which may be out-of-reach, such as the \\\"no manual tuning\\\" claim, and explains what evidence would be needed. This goes far beyond flagging one or two issues and constitutes a comprehensive review of uncertainty, matching the s=5 anchor.\",\n    \"RX.3\": \"The delegation was a general \\\"Clean this up.\\\" The agent interpreted this as a detailed copy-edit and scientific prose check, which is a reasonable and well-scoped response. It stuck to the provided text and did not drift into unrelated tasks. The output covers exactly the requested scope. This is a s=5.\",\n    \"RX.4\": \"The agent's output introduces no new errors or harms. Furthermore, it actively identifies and mitigates a harmful pattern in the original text: scientific overclaiming. By softening language, adding qualifiers, and removing unsubstantiated claims, the agent improves the scientific integrity of the text, preventing potential downstream harm of misrepresenting the work's contribution. This aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent provides an exhaustive, bulleted list detailing every significant change made to the text. Each item includes a \\\"before\\\" and \\\"after\\\" and a clear rationale for the edit. This makes the agent's process fully transparent and traceable, perfectly matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.6\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "me",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.6": 5,
+      "R1.7": 1,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every load-bearing claim made in the text against the evidence described in the text. It flags and corrects multiple instances of overclaiming, such as changing \"supporting Wang et al.'s stability findings\" to \"consistent with\" and noting that smooth curves are not direct proof of a theoretical result. It also flags the \"no manual tuning\" claim as potentially under-supported by the described evidence. This is an excellent audit, meeting the s=5 anchor as much as possible without access to the actual figures.",
+      "R1.6": "The agent performs a thorough and professional copy-edit. The changes are numerous, well-justified, and consistently improve the clarity, flow, and precision of the text. The final output reads like a careful pass by a human editor, with no loss of meaning. This aligns perfectly with the s=5 anchor.",
+      "R1.7": "The agent explicitly states it \"did not ... touch citations.\" It makes no changes to the citation and does not flag any potential issues or missing works. This is a clear example of no citation-level engagement, matching the s=1 anchor.",
+      "RX.1": "The agent excels at uncertainty disclosure. It systematically identifies and corrects claims that are too strong for the evidence presented (e.g., \"removing\" -> \"reducing\", \"supporting\" -> \"consistent with\"). It also explicitly flags claims it did not edit but which may be out-of-reach, such as the \"no manual tuning\" claim, and explains what evidence would be needed. This goes far beyond flagging one or two issues and constitutes a comprehensive review of uncertainty, matching the s=5 anchor.",
+      "RX.3": "The delegation was a general \"Clean this up.\" The agent interpreted this as a detailed copy-edit and scientific prose check, which is a reasonable and well-scoped response. It stuck to the provided text and did not drift into unrelated tasks. The output covers exactly the requested scope. This is a s=5.",
+      "RX.4": "The agent's output introduces no new errors or harms. Furthermore, it actively identifies and mitigates a harmful pattern in the original text: scientific overclaiming. By softening language, adding qualifiers, and removing unsubstantiated claims, the agent improves the scientific integrity of the text, preventing potential downstream harm of misrepresenting the work's contribution. This aligns with the s=5 anchor.",
+      "RX.5": "The agent provides an exhaustive, bulleted list detailing every significant change made to the text. Each item includes a \"before\" and \"after\" and a clear rationale for the edit. This makes the agent's process fully transparent and traceable, perfectly matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.6": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

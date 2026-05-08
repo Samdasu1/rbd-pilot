@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_044",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1635,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 23056,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nReviewed the paragraph for internal logical coherence, prose quality, and any overreach in claims. Below are the issues I see and a suggested revision.\n\n## Key issues\n\n**1. A logical inconsistency in the moderate-commitment regime.**\nThe section is framed around thresholds in the moderate range (e.g., 0.90, between the 0.95 high-commitment cutoff and some lower bound). But the CMDP numbers cited \u2014 feasibility of 20% at threshold 0.55 and zero at threshold 0.70 \u2014 refer to thresholds that appear to fall *below* the moderate band, not within it. If 0.70 already yields zero feasibility for CMDP, then CMDP is not a viable option anywhere in the moderate-commitment regime as defined, and citing its 0.55 number is informative but should be framed as \"CMDP fails to qualify even at the lower edge of moderate commitment\" rather than presented as parallel evidence to Predictive LP at 0.90. As written, the reader has to reconcile two different threshold scales.\n\n**2. The three regimes are asserted but never bounded.**\nThe opening says \"three regimes based on the commitment threshold,\" but only the high-commitment regime has an explicit cutoff (0.95). The moderate and no-commitment regimes are introduced qualitatively. For the taxonomy claim in the final sentence to land, the regime boundaries should be stated (even approximately) up front.\n\n**3. \"Operational risk \u2026 is substantial\" is an editorial aside, not an inference.**\nThe sentence \"The operational risk of deploying a strategy with sub-50 percent feasibility is substantial\" doesn't follow from anything stated and isn't supported in the paragraph itself. Either drop it or attribute it (\"we treat sub-50% feasibility as operationally unacceptable, following [X]\").\n\n**4. \"Only \u2026 without commitment risk\" is slightly overstated.**\n\"The only regime where RL strategies can operate without commitment risk\" is true tautologically (no commitment \u21d2 no commitment risk) but obscures the real claim, which is that RL is *competitive* only here. Suggest: \"the only regime where RL strategies are competitive on their own terms.\"\n\n**5. \"Superior arbitrage capability\" is asserted without qualification.**\nSuperior to what, and on what metric? If this was established earlier in the paper, a brief back-reference would help; otherwise it reads as an unsupported claim inside what is otherwise a careful comparison.\n\n**6. The contribution sentence is doing too much work.**\nIt is one sentence containing: (a) the taxonomy itself, (b) a reframing of a prior debate, (c) a claim of practical utility, and (d) a count of strategies evaluated. Splitting it would reduce density and make the reframing claim \u2014 which is the strongest one \u2014 more visible.\n\n**7. Minor prose points.**\n- \"We identify three regimes based on the commitment threshold that a market imposes\" is wordy; \"We identify three regimes by the commitment threshold a market imposes\" is tighter.\n- \"declining to 63 percent at threshold 0.90\" \u2014 using digits (\"63%\") is more readable in a quantitative paragraph and consistent with the threshold notation.\n- \"though its variance across markets limits its reliability\" \u2014 \"variance\" is doing double duty (statistical and informal). If you mean cross-market dispersion of feasibility, say so.\n- \"negligible inference cost\" \u2014 \"negligible\" is strong; \"low\" or \"near-zero amortized\" is safer unless you have measured numbers.\n\n## Suggested revision\n\n> The commitment reliability frontier provides a principled basis for matching scheduling strategies to market requirements. We distinguish three regimes by the level of schedule adherence a market enforces.\n>\n> *High-commitment* markets require near-certain adherence (threshold \u2265 0.95). In this regime, only the combined strategy with model-based constraints achieves non-zero feasibility; all RL strategies we evaluate are excluded.\n>\n> *Moderate-commitment* markets tolerate bounded deviation (roughly 0.70\u20130.95). Predictive LP retains partial feasibility across this range, reaching 63% at threshold 0.90, though its dispersion across markets limits the reliability of that figure as a deployment guide. CMDP fails to qualify even at the lower edge of",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which focus should I prioritize for this paragraph: (1) writing polish and clarity, (2) logical consistency and overclaim checks within the paragraph, or (3) conceptual reframing of the contribution claim? Please choose one number.",
+    "rationale": {
+      "R1.2": "Check that the paragraph\u2019s premises, regime definitions, and conclusions follow a coherent internal logic.",
+      "R1.6": "Improve sentence- and paragraph-level clarity, grammar, and concision appropriate to a single paragraph.",
+      "RX.1": "Explicitly note uncertainties due to working from one paragraph without access to underlying data or figures.",
+      "RX.2": "Avoid endorsing or amplifying claims that exceed what the paragraph itself supports.",
+      "RX.3": "Keep work confined to this paragraph and avoid broader restructuring or new analysis outside scope.",
+      "RX.4": "Steer clear of guidance that might encourage risky operational interpretations without sufficient evidence.",
+      "RX.5": "Reference only information present in the provided paragraph and keep provenance clear."
+    }
+  }
+}

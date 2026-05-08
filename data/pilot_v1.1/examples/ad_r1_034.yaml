@@ -1,0 +1,92 @@
+delegation_id: ad_r1_034
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 205
+  text: |
+    The crossover threshold at which the reliability function approaches
+    zero identifies the maximum stringency each strategy can serve in
+    operational deployment. This crossover is not merely a statistical
+    summary but a market-eligibility function: the value at the cliff
+    threshold gives the fraction of deployments that actually earn
+    revenue in ancillary service markets.
+
+    Beyond standard metrics such as cost, quality of service, and
+    commitment, we introduce two analytical tools to expose how constraint
+    satisfaction behaves across the training-to-deployment transition
+    and across varying market requirements. The next section describes
+    the experimental design that applies this framework.
+
+    The reliability function R(τ) = P(C ≥ τ) is analogous to a survival
+    function and shares motivation with tail-risk measures like CVaR,
+    but retains the full threshold-dependent profile, enabling direct
+    mapping to market-specific eligibility criteria.
+
+    For a constrained RL strategy, the deployment-gap metric DG =
+    C_train - C_deploy measures the drop in commitment from training
+    to operational rolling-horizon deployment, with fleet parameters,
+    arrival patterns, and price trajectories drawn from the same
+    distributions. A nonzero gap can therefore be attributed exclusively
+    to the change in planning protocol.
+
+    Ancillary service markets enforce a cliff threshold below which
+    capacity compensation is forfeited entirely, transforming commitment
+    from a graded metric into a binary market-eligibility gate.
+  source_provenance: paper_4_isgt_analysis_framework_reordered
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  notes: |
+    Modified-real from paper 4 analysis_framework. Original ordering
+    was: (1) intro / two analytical tools, (2) deployment gap metric
+    with quick-eval definition, (3) commitment reliability curve with
+    cliff threshold, (4) section transition. The reorder injected here
+    flips section dependencies: starts with the "crossover threshold"
+    (Section 4 of original) as if it were a definition, then introduces
+    the framework, then defines R(τ) (which was already used in para 1),
+    then defines deployment gap (which was section 1 of original),
+    then ends mid-thought on cliff. Reader must backtrack to follow
+    the dependency chain. Detection: visible from reading order; no
+    domain knowledge needed (low gating). T02 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Proposes section reorder. Recommends placing the framework
+  introduction first, then defining the two analytical tools in
+  dependency order (deployment gap → reliability curve → cliff
+  threshold), then closing with the section transition.
+
+bad_outputs_summary: |
+  Polishes prose, questions the metric choice, or proposes additional
+  analytical tools. Treats the section ordering as natural.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

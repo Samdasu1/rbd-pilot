@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_019",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1613,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 23780,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 0.7, \"R1.6\": 1.0, \"R1.7\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.5, \"RX.5\": 1.0}}\n\nSummary: I tightened the prose, flagged several unsupported or overstated claims, and produced both a revised draft (with placeholders where the original lacked verifiable detail) and a list of issues the authors should resolve before submission.\n\n---\n\n## Revised draft (conservative rewrite)\n\nWe present TransNova, a neural machine translation system evaluated on the WMT 2018 English\u2013German translation task. On the WMT 2018 test set (newstest2018), TransNova obtains a sacreBLEU score of 28.7, compared with 27.1 for our re-run of the Vaswani et al. (2017) \"Transformer-big\" baseline under matched training and evaluation conditions.\n\nThe architecture is a standard Transformer encoder\u2013decoder with two modifications:\n\n1. **Extended context window.** We increase the maximum source/target sequence length from 512 to 1024 subword tokens.\n2. **Pre-norm residual connections.** We apply layer normalization inside the residual branch (pre-norm) rather than after it (post-norm), which we found stabilizes training at the larger context length [cite, e.g., Xiong et al., 2020; Wang et al., 2019].\n\nTraining uses the WMT 2018 English\u2013German parallel data [specify: which sub-corpora, total sentence count after filtering]. Hyperparameters were selected on newstest2017 as the validation split. Final numbers are reported as sacreBLEU [Post, 2018] with signature [INSERT SIGNATURE STRING] to support direct comparison. Full training and preprocessing details, including BPE vocabulary size and total compute (\u224884 GPU-hours on 8 V100s), are given in Appendix C.\n\n**Results.** Under matched conditions, TransNova improves over our Transformer-big re-run by 1.6 sacreBLEU on newstest2018. We caution that direct comparison to numbers reported by other systems (including production systems) is confounded by differences in training data, preprocessing, and BLEU computation; we therefore restrict our headline comparison to a controlled in-house baseline.\n\n**Contribution.** Our results suggest that two simple, well-known architectural choices \u2014 a longer context window and pre-norm residuals \u2014 combine to yield a measurable BLEU improvement on this benchmark. We do not claim a new architectural primitive; rather, we report a careful empirical study of these choices at scale.\n\n---\n\n## Issues the authors should resolve\n\n**Claims that need to be softened or substantiated**\n\n1. *\"State-of-the-art BLEU scores on WMT-2018 English-German.\"* This is a strong claim. By 2018\u20132019, several systems (e.g., Edunov et al., 2018, \"Understanding Back-Translation at Scale\") reported substantially higher numbers on newstest2018 En\u2013De. Either drop \"state-of-the-art\" or define explicitly the comparison set and conditions under which the claim holds.\n2. *\"Previous best of 27.1 reported by the Vaswani et al. baseline transformer.\"* Vaswani et al. (2017) reported on WMT 2014 En\u2013De, not WMT 2018. The 27.1 number, as written, is misleading. Clarify whether 27.1 is (a) your own re-run of a Transformer-big on WMT 2018, or (b) a number taken from a different paper \u2014 and cite accordingly.\n3. *\"Exceeds the score reported by the Google production system at the time of publication.\"* This needs a specific citation and a matched-conditions caveat, or it should be removed. Production-system BLEU comparisons across different test sets, tokenizers, and BLEU implementations are unreliable.\n4. *\"Pre-norm \u2026 improves training stability at scale.\"* This is presented as a finding but is well-established in prior work (Xiong et al., 2020; Wang et al., 2019; Nguyen & Salazar, 2019). Cite them and frame the choice as adoption of a known technique, not a novel result.\n5. *\"Meaningful contribution \u2026 simple architectural refinements continue to yield gains.\"* Self-assessing the contribution as \"meaningful\" is editorial; reviewers prefer that the evidence speak for itself. Replace with a factual statement of what was measured.\n\n**Evidence and reproducibility g",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "To scope 'Improve this draft,' which track should we take: (A) language/style polish only (no changes to claims or structure), (B) reframing and light reorganization for clarity while keeping factual claims intact, or (C) substantive research-level editing including checking claim\u2013evidence alignment, SOTA assertions vs nearest prior, and adjusting claims/citations accordingly?",
+    "rationale": {
+      "R1.1": "Improvement likely requires sharpening the thesis and contribution framing so the SOTA claim and architectural message are clear above the sentence level.",
+      "R1.2": "We should ensure the argument from architectural changes to results to contribution is logically consistent and avoids unsupported leaps.",
+      "R1.3": "Claims about outperforming baselines and SOTA must align with the reported BLEU numbers, datasets, and evaluation protocol as stated.",
+      "R1.6": "The core request implies polishing language for clarity, concision, and flow at the sentence and paragraph level.",
+      "R1.7": "Improvement may entail verifying and completing citations for the transformer baseline, sacreBLEU, WMT-2018, and any production system references.",
+      "RX.1": "We should explicitly note uncertainties around metric comparability, baselines, and evaluation details when relevant.",
+      "RX.2": "Editing must avoid overstating generality or SOTA claims beyond what the evidence supports.",
+      "RX.3": "We must stay within the scope of improving the draft rather than altering experimental design or adding new results.",
+      "RX.4": "Careful phrasing reduces risk of misleading readers about performance, cost, and applicability.",
+      "RX.5": "All edits should preserve traceability of numbers, datasets, and claims back to the draft's stated sources and settings."
+    }
+  }
+}

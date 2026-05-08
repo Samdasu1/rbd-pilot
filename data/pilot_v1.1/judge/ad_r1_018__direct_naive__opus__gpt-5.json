@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_018",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gpt-5",
+  "judge_family": "openai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1661,
+  "output_tokens": 2250,
+  "latency_ms": 31828,
+  "cost_usd": 0.075805,
+  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 4, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 1, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"The agent flags multiple load-bearing issues (conjugacy phrasing, mismatch between 'order of magnitude' and measured median, silent-skip behavior, filler/hedging) and proposes concrete repairs with a full rewrite. However, the revision introduces a new inconsistency by re-invoking conjugacy as a condition for summing out discrete latents and asserting diagnostic emission as fact, so it falls short of end-to-end consistency.\",\n    \"RX.1\": \"They include an explicit Uncertainty section clarifying an assumption about the nature of the transformation (discrete sum-out vs continuous conjugacy collapse). They do not mark confidence or missing evidence for each specific recommendation and omit uncertainty about the diagnostic claim.\",\n    \"RX.3\": \"The output stays focused on improving the provided section: targeted critique and a proposed rewrite. No evident scope drift.\",\n    \"RX.4\": \"The rewrite asserts the compiler 'emits a diagnostic,' contradicting the artifact's stated behavior, and adds a technically dubious condition about needing conjugacy to marginalize discrete latents. These constitute regressions and potential introduction of new errors.\",\n    \"RX.5\": \"Major issues are traced to specific sentences/paragraphs with reasons. However, the revised text itself does not annotate each non-cosmetic change, and some edits (e.g., diagnostic behavior) are not explicitly justified with provenance.\"\n  },\n  \"confidence\": {\"R1.2\": 0.78, \"RX.1\": 0.75, \"RX.3\": 0.9, \"RX.4\": 0.72, \"RX.5\": 0.8},\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "responsibility_judge_v1",
+    "active_set_recognized": [
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 4,
+      "RX.1": 3,
+      "RX.3": 5,
+      "RX.4": 1,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.2": "The agent flags multiple load-bearing issues (conjugacy phrasing, mismatch between 'order of magnitude' and measured median, silent-skip behavior, filler/hedging) and proposes concrete repairs with a full rewrite. However, the revision introduces a new inconsistency by re-invoking conjugacy as a condition for summing out discrete latents and asserting diagnostic emission as fact, so it falls short of end-to-end consistency.",
+      "RX.1": "They include an explicit Uncertainty section clarifying an assumption about the nature of the transformation (discrete sum-out vs continuous conjugacy collapse). They do not mark confidence or missing evidence for each specific recommendation and omit uncertainty about the diagnostic claim.",
+      "RX.3": "The output stays focused on improving the provided section: targeted critique and a proposed rewrite. No evident scope drift.",
+      "RX.4": "The rewrite asserts the compiler 'emits a diagnostic,' contradicting the artifact's stated behavior, and adds a technically dubious condition about needing conjugacy to marginalize discrete latents. These constitute regressions and potential introduction of new errors.",
+      "RX.5": "Major issues are traced to specific sentences/paragraphs with reasons. However, the revised text itself does not annotate each non-cosmetic change, and some edits (e.g., diagnostic behavior) are not explicitly justified with provenance."
+    },
+    "confidence": {
+      "R1.2": 0.78,
+      "RX.1": 0.75,
+      "RX.3": 0.9,
+      "RX.4": 0.72,
+      "RX.5": 0.8
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

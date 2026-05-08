@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_004",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2162,
+  "output_tokens": 886,
+  "latency_ms": 33706,
+  "cost_usd": 0.011562,
+  "raw": "{\n  \"judge_id\": \"optimization_expert_1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 1,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent names multiple load-bearing concepts where the draft is weak: the 'consensus' view on SGD, the definition of a 'first-order method' when Hessian-vector products are used, and the role of noise. For each, it shows how the draft's framing is inaccurate and proposes specific, tighter reframings (e.g., attribute the consensus claim or soften it, make the HVP taxonomy explicit, reframe as 'deterministic correction'). This is a textbook example of the s=5 anchor.\",\n    \"R1.2\": \"The agent walks the argument chain end-to-end and flags multiple load-bearing inconsistencies. It correctly identifies the logical flaw in comparing a proposed deterministic/low-noise method to a strawman version of noise-driven SGD. It also flags the critical inconsistency of conflating local escape rates (O(log(1/epsilon))) with global complexity bounds, a common but serious error. The proposed repairs are minimal and precise.\",\n    \"R1.4\": \"The agent performs an excellent novelty assessment. It maps the artifact's claims against the nearest 3-5 works and lines of research (Ge et al., Jin et al., Neon/Neon2, etc.). It correctly identifies that the primary novelty claim ('first first-order method') is likely a rhetorical delta based on a mischaracterization of prior art and a fuzzy definition, rather than a sharp technical delta.\",\n    \"RX.1\": \"The agent's output is presented with a uniform, high level of confidence. It does not flag any uncertainty in its own assessments or identify what evidence might be missing to confirm its critiques. Phrases like 'This is not an accurate summary' and 'This conflation will be flagged by reviewers' are authoritative assertions, not qualified statements. This aligns with the s=1 anchor.\",\n    \"RX.3\": \"The delegation was to 'Review this section.' The agent provided a detailed review of the section's framing, logic, and claims. The output is perfectly aligned with the requested scope and does not drift into other tasks.\",\n    \"RX.4\": \"The agent's output is not only free of new errors but actively identifies harmful patterns in the original text. The mischaracterizations of prior work and overclaims identified by the agent would be damaging to the author's academic credibility if published. By flagging these issues, the agent helps prevent significant downstream harm. This is a strong s=5.\",\n    \"RX.5\": \"The agent's critique demonstrates excellent provenance. Every major recommended change is annotated with a source and reason. For example, the critique of the novelty claim is sourced to specific papers (e.g., Allen-Zhu & Li 2018), and the critique of the 'consensus' view is sourced to the entire perturbed-SGD line of work. This allows the user to trace and verify every piece of feedback.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"R1.4\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "optimization_expert_1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "R1.4": 5,
+      "RX.1": 1,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent names multiple load-bearing concepts where the draft is weak: the 'consensus' view on SGD, the definition of a 'first-order method' when Hessian-vector products are used, and the role of noise. For each, it shows how the draft's framing is inaccurate and proposes specific, tighter reframings (e.g., attribute the consensus claim or soften it, make the HVP taxonomy explicit, reframe as 'deterministic correction'). This is a textbook example of the s=5 anchor.",
+      "R1.2": "The agent walks the argument chain end-to-end and flags multiple load-bearing inconsistencies. It correctly identifies the logical flaw in comparing a proposed deterministic/low-noise method to a strawman version of noise-driven SGD. It also flags the critical inconsistency of conflating local escape rates (O(log(1/epsilon))) with global complexity bounds, a common but serious error. The proposed repairs are minimal and precise.",
+      "R1.4": "The agent performs an excellent novelty assessment. It maps the artifact's claims against the nearest 3-5 works and lines of research (Ge et al., Jin et al., Neon/Neon2, etc.). It correctly identifies that the primary novelty claim ('first first-order method') is likely a rhetorical delta based on a mischaracterization of prior art and a fuzzy definition, rather than a sharp technical delta.",
+      "RX.1": "The agent's output is presented with a uniform, high level of confidence. It does not flag any uncertainty in its own assessments or identify what evidence might be missing to confirm its critiques. Phrases like 'This is not an accurate summary' and 'This conflation will be flagged by reviewers' are authoritative assertions, not qualified statements. This aligns with the s=1 anchor.",
+      "RX.3": "The delegation was to 'Review this section.' The agent provided a detailed review of the section's framing, logic, and claims. The output is perfectly aligned with the requested scope and does not drift into other tasks.",
+      "RX.4": "The agent's output is not only free of new errors but actively identifies harmful patterns in the original text. The mischaracterizations of prior work and overclaims identified by the agent would be damaging to the author's academic credibility if published. By flagging these issues, the agent helps prevent significant downstream harm. This is a strong s=5.",
+      "RX.5": "The agent's critique demonstrates excellent provenance. Every major recommended change is annotated with a source and reason. For example, the critique of the novelty claim is sourced to specific papers (e.g., Allen-Zhu & Li 2018), and the critique of the 'consensus' view is sourced to the entire perturbed-SGD line of work. This allows the user to trace and verify every piece of feedback."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "R1.4": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

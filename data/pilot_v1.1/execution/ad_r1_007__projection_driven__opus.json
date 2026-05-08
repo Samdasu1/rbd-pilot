@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_007",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1747,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24720,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 1.0, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 1.0}}\n\nSummary: I checked the passage for internal consistency, claim-evidence alignment, and overstatement; several claims do not hold up against what the passage itself reports, and several others rest on unverifiable external numbers.\n\n**Issues that need to be fixed before this passage is solid**\n\n1. \"Consistent state-of-the-art performance across all benchmarks\" is contradicted by the passage's own numbers.\n   - On Pascal-Context, the method *matches* the previous SOTA (67.4 vs 67.4) \u2014 that is not surpassing it.\n   - On COCO-Stuff, the passage reports 47.9 mIoU but never states the prior SOTA, so \"state-of-the-art\" is asserted without evidence in-text.\n   - Recommend softening to \"state-of-the-art or matching state-of-the-art on three of four benchmarks\" and adding the COCO-Stuff comparison number, or removing the COCO-Stuff SOTA implication.\n\n2. The \"strongest unified segmentation model on standard benchmarks\" claim is stronger than the evidence supports.\n   - Matching (not beating) Pascal-Context, plus an unsupported COCO-Stuff comparison, plus four benchmarks total, does not justify a global \"strongest \u2026 on standard benchmarks\" framing. Suggest: \"competitive with or exceeding prior state-of-the-art on the four benchmarks evaluated.\"\n\n3. The panoptic result is presented as cross-task validation but the logic is shaky.\n   - \"PQ of 49.3, consistent with our segmentation results\" \u2014 consistency is asserted, not shown. PQ and mIoU are different metrics; without a baseline PQ comparison, 49.3 is an isolated number. Either add the comparison baseline or drop the \"consistent with\" framing.\n   - Also: \"panoptic segmentation track of COCO-Stuff\" \u2014 COCO-Stuff is typically a semantic-segmentation benchmark; panoptic evaluation is usually associated with COCO Panoptic. Verify the benchmark name; if the intended dataset is COCO Panoptic, the current wording is incorrect.\n\n4. The ablation claim and the mechanistic claim are not the same claim, but the text treats them as if one supports the other.\n   - \"Selectively attends to high-confidence boundary regions and ignores ambiguous interior pixels\" is a mechanistic interpretation. A 1.2 mIoU drop from removing the module shows the module helps; it does not show *why*. Either point to the specific ablation/visualization that supports the boundary-vs-interior interpretation, or weaken to \"we hypothesize that \u2026\".\n\n5. The \"plug-compatible with Swin-V2 and InternImage\" claim needs a citation to whatever experiment shows this.\n   - As written, it appears in the results section with no supporting result. If no such experiment exists in the paper, this should be removed or moved to a clearly speculative future-work sentence.\n\n6. \"Broader deployment potential beyond the four benchmarks evaluated\" is an extrapolation past the evidence and should be tempered or removed. Same for the medical-imaging future-work sentence \u2014 as currently phrased (\"similar refinement strategies have shown promise\") it implies external support without citing it.\n\n7. Numerical/comparison hygiene:\n   - State the metric protocol once (single-scale vs multi-scale, test-set vs val) \u2014 current numbers are not protocol-qualified, which makes the head-to-head deltas (0.7, 0.8) ambiguous.\n   - \"1.2 mIoU on average across the four benchmarks\" \u2014 confirm this is a simple mean and that per-benchmark drops are reported in Section 5; otherwise an average can hide a benchmark where the module hurts.\n   - The comparison baselines (InternImage-H 83.5, ViT-Adapter 55.3) need citations on first mention.\n\n**Suggested revision sketch (conservative rewrite of the overclaiming parts)**\n\n- Opening: \"We evaluate SegMaster on four semantic segmentation benchmarks \u2026 Our method matches or exceeds prior state-of-the-art on three of these four benchmarks under the protocol described in Section 4.\"\n- Pascal-Context: \"matches the previous state-of-the-art (67.4 mIoU).\"\n- COCO-Stuff: report the",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "Check that the reasoning from reported benchmark results to broader takeaways (e.g., generality, unified strength) is coherent and internally consistent.",
+      "R1.3": "Confirm each stated claim (e.g., state-of-the-art status, magnitude of gains, generality) is directly supported by the metrics and ablation references reported in the excerpt.",
+      "RX.1": "Identify where caveats or qualifiers are warranted when evidence is partial or conditional (such as ties or missing direct comparisons).",
+      "RX.2": "Guard against overbroad conclusions that exceed what the presented numbers and comparisons justify.",
+      "RX.3": "Restrict the work to assessing the solidity of claims in this excerpt without rewriting or expanding the content or scope.",
+      "RX.4": "Avoid guidance or implications that could mislead readers about deployment readiness or applicability in sensitive domains.",
+      "RX.5": "Ensure every conclusion can be traced to specific statements and quantitative results present in the passage."
+    }
+  }
+}

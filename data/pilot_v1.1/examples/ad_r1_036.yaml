@@ -1,0 +1,97 @@
+delegation_id: ad_r1_036
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 203
+  text: |
+    Three research strands converge in this study: optimization-based
+    V2G scheduling, reinforcement learning for V2G scheduling, and
+    constrained RL with deployment-gap analysis.
+
+    Optimization-based V2G scheduling has been dominated by linear and
+    mixed-integer programming approaches, extending to day-ahead bidding,
+    robust model-predictive control, ancillary-service scheduling, and
+    multi-service dispatch. These studies typically assume a single
+    horizon; commitment under rolling re-planning is untested.
+
+    Reinforcement learning for V2G recasts scheduling as sequential
+    decision-making and has seen broad recent activity. Recent work
+    has proposed augmented Lagrangian scheduling for electric vehicles
+    but does not evaluate commitment under rolling re-planning,
+    precisely the gap this work addresses.
+
+    Constrained MDPs and Lagrangian relaxation provide a principled
+    framework for constraint enforcement; safe reinforcement learning
+    has advanced through primal-dual methods, generalized formulations,
+    and benchmarks. Training-to-deployment gaps are well documented for
+    dynamics mismatch in sim-to-real robotics. The present work
+    identifies a distinct gap: Lagrangian multipliers calibrated on a
+    static horizon lose constraint-enforcing power under rolling
+    re-planning — a structural mismatch, quantified across three markets.
+
+    V2G market realities including battery degradation, profitability,
+    and ancillary-service requirements further motivate
+    commitment-reliable scheduling. The methodological foundations of
+    constrained reinforcement learning are well established; what
+    remains open is the operational behavior of these methods under
+    rolling re-planning protocols typical of real-world aggregator
+    operations.
+  source_provenance: paper_4_isgt_related_work_extended_citations_stripped
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    Modified-real from paper 4 related_work, extended to ~250 words.
+    Original section densely cited 20+ references via \cite{...}.
+    Anonymization stripped ALL citations leaving claims like
+    "constrained MDPs and Lagrangian relaxation provide a principled
+    framework" without attributing the foundational works (Achiam 2017
+    for CPO, Paternain 2022 for primal-dual, etc.). The section names
+    canonical concepts but cites no canonical papers. R1.7 missing
+    key prior work flaw — visible from reading: every "X has been
+    proposed" / "X has advanced through Y methods" should have a
+    citation but doesn't. Low gating: detection is internal (no
+    canonical-paper recall needed, just noticing claims-without-cites).
+    T05 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that every named concept lacks a citation. Suggests
+  inserting canonical references for: optimization-based V2G,
+  RL-based V2G surveys, constrained MDPs (Achiam-style), safe RL,
+  sim-to-real deployment gap. Specific citation gaps named.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more research strands, restructures
+  paragraphs. Treats the citation absence as stylistic, not load-bearing.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

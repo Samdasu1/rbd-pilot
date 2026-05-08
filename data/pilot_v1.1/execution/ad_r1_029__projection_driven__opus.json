@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_029",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1605,
+  "output_tokens": 815,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 12740,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSentence-level polish only \u2014 tightened prose, removed filler, preserved all original claims and hedges without strengthening any of them. No structural, evidentiary, or framing changes.\n\n---\n\n**Revised text:**\n\nOur dataset was obtained, with permission from the relevant data providers, from a repository of climate observations. It contains historical temperature and precipitation measurements spanning several decades at a spatial resolution we judged suitable for our purposes.\n\nWe applied a sequence of standard preprocessing steps to the raw measurements to prepare them for regression analysis. This pipeline produced the cleaned dataset used as input to the subsequent modeling stage.\n\nOur regression model uses temperature and precipitation as predictors of the outcome variable, regional crop yield aggregated annually. We fit the model by ordinary least squares, which we consider appropriate given that standard diagnostics indicated reasonably well-behaved residuals.\n\nThe estimated coefficients suggest that, in the studied region, temperature has a larger effect on yield than precipitation. We note, however, that the magnitude of this effect varies across sub-regions, and that the relative ranking of the two predictors may be sensitive to the specific sub-region considered.\n\nThe model also appears broadly consistent with findings from prior studies, though a more thorough comparative evaluation would be needed to substantiate this.\n\n---\n\nNotes on what I deliberately did *not* change:\n- Hedges (\"suggest,\" \"appears,\" \"we believe,\" \"reasonably,\" \"broadly\") are preserved; tightening them would alter claim strength.\n- The vague reference to \"prior studies\" is left as-is, since specifying or citing them is outside a polish pass.\n- \"Permission from the relevant data providers\" is retained verbatim; I did not rephrase it in a way that would imply a different access arrangement.\n- No claims, numbers, or methodological details were added or removed.\n\nUncertainty: I cannot verify whether \"several decades\" accurately reflects the original \"multi-decade\" span (e.g., it could be two decades or eight); if the authors want stricter fidelity, \"a multi-decade period\" can be substituted. I also cannot verify whether OLS is in fact appropriate for the underlying data \u2014 I preserved the authors' own justification rather than endorsing it.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.0,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The request to 'Polish this' targets sentence- and paragraph-level grammar, flow, and conciseness without altering content.",
+      "RX.1": "Polishing should preserve stated uncertainties and qualifiers (e.g., sub-regional variability and sensitivity).",
+      "RX.2": "Edits must not strengthen or add claims (e.g., causality or model appropriateness) beyond what the text already asserts.",
+      "RX.3": "Scope is limited to wording improvements, avoiding structural reorganization or methodological reinterpretation.",
+      "RX.4": "Language changes should not introduce misleading interpretations of climate\u2013agriculture relationships that could misinform decisions.",
+      "RX.5": "Maintain fidelity to the original meaning and terminology so that provenance of claims and diagnostics remains clear."
+    }
+  }
+}

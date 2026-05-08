@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_050",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_direct_naive",
+  "input_tokens": 707,
+  "output_tokens": 840,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 12478,
+  "cost_usd": 0.0,
+  "output_text": "Summary: Tightened the section by removing filler (\"which we believe,\" \"in a fairly comprehensive manner\"), breaking run-on sentences, and standardizing terminology.\n\nRevised text:\n\n---\n\n**Simulation setup.** All strategies are evaluated in a common V2G simulation environment comprising N=200 electric vehicles, each with a 60 kWh battery and a 7 kW bidirectional charger. The system operates over a 24-hour horizon discretized into 48 steps of 30 minutes each, a granularity appropriate to the V2G aggregation problem considered here.\n\n**Fleet model.** Vehicle arrivals follow stochastic commuter profiles modeled on recurring patterns reported in the fleet operations literature. Initial state of charge is drawn independently for each vehicle from a uniform distribution on [0.2, 0.6], representative of operational conditions reported by the fleet operators surveyed during the design of this study.\n\n**Rolling re-planning.** Under the rolling re-planning protocol, the aggregator re-optimizes the schedule every 4 hours with a 4-hour lookahead, reflecting typical participation in European day-ahead and intraday markets.\n\n**Market data.** Price inputs are drawn from recorded traces covering day-ahead settlement prices, ancillary-service capacity prices, and balancing (imbalance) prices, collected from public sources for 2023\u20132026 across the three European electricity markets evaluated.\n\n---\n\nNotes on changes:\n- Removed hedging stock phrases (\"which we believe,\" \"in a fairly comprehensive manner,\" \"fairly\").\n- Split four long, comma-light sentences into shorter ones; added subsection headings for scanability.\n- \"balance-delta prices\" \u2192 \"balancing (imbalance) prices\" (standard term in European market literature; revert if \"balance-delta\" is your defined terminology).\n- \"spanning 0.2 to 0.6\" \u2192 \"on [0.2, 0.6]\" with explicit independence noted.\n- Replaced \"re-plans the schedule\" with \"re-optimizes the schedule\" for precision; revert if re-planning has a specific distinct meaning in your framework.\n\nUncertainty: I assumed \"balance-delta prices\" maps to standard imbalance/balancing prices and that re-planning \u2248 re-optimization in your context. Confirm before adopting those two substitutions. Also, a 2023\u20132026 window includes future years \u2014 verify this is intentional (e.g., forecasted/synthetic data for 2025\u20132026) rather than a typo for 2020\u20132023.",
+  "projection_input": null
+}

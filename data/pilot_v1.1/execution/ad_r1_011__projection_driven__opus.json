@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_011",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1535,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 27356,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 1.0, \"R1.4\": 0.7, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: A review of the three-paragraph methods/results passage, focused on what the contribution actually is, where claims outrun the reported evidence, vague comparisons, prose tightening, and a couple of items the authors should disclose before this is publishable.\n\n## The core problem: the contribution is unclear\n\nAfter three paragraphs I cannot tell what is new. The text describes \"a pipeline\" that (a) ingests VCFs, (b) ensembles existing annotation tools, and (c) was applied to 1,234 samples. None of (a)\u2013(c) is by itself a contribution. The reader needs an explicit answer to: *what does this pipeline do that existing pipelines (VEP, ANNOVAR, snpEff, Ensembl VEP plugins, Nirvana, OpenCRAVAT, etc.) do not?* Candidate answers visible in the text \u2014 the ensembling scheme, robustness across depths, or scale of application \u2014 are each gestured at but never named as the contribution.\n\nRecommendation: open the section with a one-sentence statement of the delta. For example: \"We present an ensemble annotation pipeline whose novel component is X; relative to tool Y it offers Z.\" If the contribution is engineering/integration rather than methodological, say so plainly \u2014 that is a legitimate framing but should not be disguised as a method.\n\n## Claims that are not supported by what is reported\n\nSeveral statements are stronger than the evidence shown:\n\n1. **\"comparable to or somewhat better than what previous studies have reported.\"** This is the central performance claim and it is unanchored. Which studies? Which metric (precision/recall on which variant class \u2014 SNVs, indels, splice, regulatory)? On what truth set (GIAB, synthetic, clinically curated)? \"Somewhat better\" is not a quantitative claim and should be replaced with numbers and confidence intervals, or removed.\n\n2. **\"relatively robust under different sequencing depths.\"** No depth range, no metric, no degradation curve is reported. Either show the depth-titration result (e.g., concordance at 10\u00d7, 20\u00d7, 30\u00d7, 50\u00d7) or downgrade to \"we did not observe substantial degradation across the depth range present in our cohort, which spans D1\u2013D2\u00d7.\"\n\n3. **\"an advantage over some of the alternatives we considered.\"** Which alternatives, on which axis, by how much? As written this is an unfalsifiable comparative claim. If a head-to-head was not run, the sentence should be deleted rather than softened.\n\n4. **\"benchmarked \u2026 on a held-out set of 100 samples.\"** Held out from what? If the pipeline is an ensemble of pre-trained external tools with no training step of your own, \"held-out\" is the wrong word \u2014 there is nothing to hold out from. If you did fit weights or thresholds, say so and describe the split.\n\n5. **\"variant annotation accuracy.\"** Annotation accuracy is not a single quantity. Specify whether you mean functional consequence agreement, pathogenicity classification, gene assignment, etc., and against what gold standard.\n\n## Items that should be disclosed but are not\n\n- **Cohort provenance and ethics.** \"1,234 patient samples \u2026 from our collaborators at the medical center\" needs IRB/ethics approval, consent status, and de-identification statement. For a clinical cohort this is not optional.\n- **Tool versions and reference build.** Which annotation tools, which versions, which reference genome (GRCh37/38), which transcript set (RefSeq/Ensembl/MANE)? Annotation results are not reproducible without these.\n- **Variant caller(s) upstream.** The pipeline's behavior depends on the caller; the input distribution should be characterized.\n- **Code and data availability.** Implied by \"pipeline we developed\" but not stated.\n- **Limitations of the 100-sample benchmark.** Composition, ancestry, variant-class breakdown, truth-set source.\n\n## Structure\n\nThe current order (description \u2192 ensemble rationale \u2192 benchmark \u2192 robustness aside) buries the evaluation. A cleaner order:\n\n1. One-sentence statement of contribution.\n2. Inputs, reference, tool versions, ensembling rule (the method).\n3. Application to the 1,234-sample cohort (with ethics statement).",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "To focus the feedback, which do you want first: (A) high-level contribution framing and section structure (R1.1/R1.5), (B) claim\u2013evidence and logical checks with overclaim tuning (R1.2/R1.3 + RX.2), (C) line-level wording/clarity edits (R1.6), or (D) novelty/positioning versus prior work at a coarse level (R1.4/R1.7)?",
+    "rationale": {
+      "R1.1": "The open-ended request suggests feedback on the core contribution and gap articulation at the section level.",
+      "R1.2": "The passage makes performance and robustness assertions that call for checking the internal argument chain from premises to conclusions.",
+      "R1.3": "Claims about accuracy and robustness should be aligned to the reported cohort and benchmarking setup, making this load-bearing.",
+      "R1.4": "Stated advantages over alternatives make a novelty estimate versus nearby prior approaches relevant.",
+      "R1.5": "The excerpt interleaves methods and results, so section-level ordering and narrative arc may need attention.",
+      "R1.6": "As a draft, sentence-level clarity, flow, and concision are likely important for readability.",
+      "RX.1": "Feedback should explicitly flag where evidence is limited or tentative to maintain appropriate uncertainty signaling.",
+      "RX.2": "Guidance must avoid reinforcing or introducing overstatements about performance or robustness.",
+      "RX.3": "Work should stay within writing-focused responsibilities and not drift into executing analyses or redesigning experiments.",
+      "RX.4": "Given the biomedical context, feedback should avoid suggestions that could enable misuse or misinterpretation with downstream harm.",
+      "RX.5": "Any guidance should be traceable to specific passages or claims to preserve provenance and auditability."
+    }
+  }
+}

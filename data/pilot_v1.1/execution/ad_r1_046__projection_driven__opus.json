@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_046",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1630,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24706,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 0.8, \"R1.6\": 0.7, \"R1.7\": 0.4, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.5, \"RX.5\": 0.8}}\n\nSummary: Reviewed the passage for internal argument coherence, claim-vs-evidence fit, prose, and overclaiming. Several material problems identified, particularly two citations that appear miscast or anachronistic, plus a logical gap in the central architectural contrast.\n\n**Substantive issues**\n\n1. **Citation of Achiam et al. (2017) appears miscast.** The well-known Achiam et al. 2017 paper is *Constrained Policy Optimization* (CPO). CPO is itself a Lagrangian/trust-region method for CMDPs; it does not \"formalize horizon-invariant hard constraint enforcement,\" nor does it provide a theoretical basis for a model-based reachability dispatcher. As written, the citation is being used to lend theoretical authority to a claim the cited work does not actually make. I recommend either (a) removing the citation and stating the horizon-invariance property directly as a structural consequence of per-step state inspection, or (b) replacing it with a reference that genuinely concerns per-step (state-wise / instantaneous) safety constraints rather than expected-cumulative CMDP constraints. Please verify against the actual reference you intended.\n\n2. **Citation of Chen et al. (2025) cannot be verified from the passage and the framing risks overclaim.** The phrase \"which we extend to the rolling-horizon setting\" asserts a specific lineage. If the carry-over mechanism with commitment margins was developed independently, this framing overstates the dependency; if it was genuinely derived from that augmented-Lagrangian formulation, the extension step should be described concretely (what is inherited, what is new). I cannot verify the reference itself.\n\n3. **Logical gap in the closing contrast.** The final paragraph contrasts \"model-based state inspection at every time step\" with \"a learned parameter that encodes the constraint landscape of the training environment.\" This is presented as the *explanation* for the deployment gap, but the passage has not actually shown that the Lagrangian multiplier's failure stems from training-environment encoding rather than from, e.g., the soft (expected-value) nature of the constraint, multiplier non-stationarity under re-planning, or distribution shift. The conclusion is plausible but stronger than what the ablation alone supports. Either weaken to \"is consistent with\" / \"suggests,\" or add the intermediate evidence.\n\n4. **Numerical-claim coherence \u2014 please double-check.** \"Increases commitment by 44.1 percentage points from 55 percent to 99 percent\" is arithmetically 44.0, not 44.1. Minor, but if the underlying numbers are 55.0 and 99.1 (or 54.9 and 99.0), state them; otherwise correct to 44.0.\n\n5. **\"Without altering commitment\" vs \"commitment remains unchanged near 55 percent.\"** The first ablation step is said to leave commitment unaltered; the second also leaves it \"unchanged near 55 percent.\" If the dispatcher truly does not alter commitment, the baseline-and-dispatcher commitment value should be stated explicitly (is it also ~55%?), so the reader can see the carry-over mechanism is the sole driver of the 44-point jump. Right now the reader has to infer this.\n\n6. **\"The ablation study \u2026 reveals why model-based constraints succeed where learned constraints fail.\"** This is a strong epistemic claim (\"reveals why\"). The ablation demonstrates *that* swapping a model-based component in produces the gain; it does not by itself isolate the *mechanism* (model-based vs learned) as the causal factor \u2014 confounded with hard-vs-soft and per-step-vs-cumulative. Consider \"is consistent with the hypothesis that \u2026\" or explicitly enumerate the confounds controlled.\n\n7. **Prose tightening.**\n   - \"operates as a horizon-invariant hard constraint\" \u2014 good; but \"priority vehicle identification operates as a \u2026 constraint\" conflates the *mechanism* (identification) with the *property it confers*. Suggest: \"the dispatcher's priority-vehicle identification *enforces* a horizon-invariant hard constraint.\"\n   - \"The decisive commitment improvement comes from \u2026\" \u2014 fine, but \"decisive\" pre-empts the reader's judgment; \"the largest comm",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "When you say \u201cCheck this,\u201d which primary focus should I use? Please choose one: (A) logic and claim-evidence consistency (minimal wording edits), (B) language/grammar polish only, (C) citation/attribution accuracy and novelty positioning, or (D) section-level restructuring suggestions.",
+    "rationale": {
+      "R1.2": "A generic \u2018check\u2019 strongly suggests verifying the internal argument chain connecting each claim about mechanisms and outcomes.",
+      "R1.3": "The passage reports specific percentage deltas, so checking that the stated conclusions follow from the reported numbers is central.",
+      "R1.6": "A quick check commonly includes surface-level grammar and clarity improvements for readability in the given excerpt.",
+      "RX.1": "Flagging assumptions and limits of claims helps communicate appropriate uncertainty in performance and theoretical attributions.",
+      "RX.2": "Guarding against causal or theoretical overreach (e.g., guarantees implied by citations) is critical to a responsible check.",
+      "RX.3": "The review should remain confined to evaluating this excerpt at the requested depth without expanding scope.",
+      "RX.4": "Care is needed to avoid inadvertently endorsing misleading guidance in safety\u2011relevant optimization contexts.",
+      "RX.5": "Claims tied to Achiam et al. (2017) and Chen et al. (2025) should be traceable to those sources to maintain provenance clarity."
+    }
+  }
+}

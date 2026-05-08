@@ -1,0 +1,92 @@
+delegation_id: ad_r1_022
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 203
+  text: |
+    We introduce SonicNet, a streaming speech recognition model that
+    achieves consistent improvements across all major benchmarks compared
+    to the previous state-of-the-art Whisper-medium baseline. Our key
+    innovation is a novel chunked-attention mechanism that maintains
+    streaming latency below 250ms while preserving accuracy comparable
+    to non-streaming models.
+
+    We evaluate SonicNet on five standard ASR benchmarks: LibriSpeech-clean,
+    LibriSpeech-other, TED-LIUM-3, CommonVoice English, and CallHome. The
+    evaluation uses standard word-error-rate (WER) metrics at the
+    utterance level, computed against held-out test sets.
+
+    On LibriSpeech-clean, SonicNet achieves a WER of 2.4% compared to
+    Whisper-medium's 2.8%, a relative improvement of 14%. On TED-LIUM-3,
+    SonicNet reaches 5.1% WER compared to Whisper-medium's 5.0%, a
+    marginal regression of 0.1%. On LibriSpeech-other, SonicNet matches
+    Whisper-medium at 5.6% WER. On CommonVoice English, SonicNet achieves
+    8.2% versus Whisper-medium's 7.9%, slightly worse. On CallHome,
+    SonicNet achieves 18.4% versus Whisper-medium's 17.8%, also worse.
+
+    Our chunked-attention mechanism uses a sliding window of 8 attention
+    chunks of 16 tokens each. Latency on a single A100 GPU averages
+    220ms per utterance, well within the 250ms streaming target. Memory
+    consumption remains constant per chunk, supporting deployment on
+    memory-constrained edge devices.
+
+    We position SonicNet as a meaningful contribution to streaming speech
+    recognition, addressing the long-standing tradeoff between streaming
+    latency and accuracy in the ASR literature.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. Para 1 claims "consistent improvements across all
+    major benchmarks." Para 3 reports actual numbers across five
+    benchmarks: 1 improvement (LS-clean), 1 match (LS-other), 3
+    regressions (TED-LIUM-3, CommonVoice, CallHome). The claim "consistent
+    improvements across all major benchmarks" is not supported by the
+    in-section evidence — three of five benchmarks show regressions.
+    Detection: pure reading; no domain knowledge needed (low gating).
+    Delegation T10 is generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits per-benchmark numbers against the "consistent improvements across
+  all" claim. Identifies that 3 of 5 benchmarks show regressions and
+  suggests rewording to "improvement on LS-clean, parity or regression
+  elsewhere." Flags the framing as not supported by the table.
+
+bad_outputs_summary: |
+  Polishes prose, accepts "consistent improvements" framing, suggests
+  more benchmarks or stronger model. Adds peripheral discussion of
+  streaming latency without auditing the central claim against the
+  reported evidence.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

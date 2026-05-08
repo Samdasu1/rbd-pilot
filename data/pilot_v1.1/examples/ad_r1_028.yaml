@@ -1,0 +1,114 @@
+delegation_id: ad_r1_028
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 215
+  text: |
+    Causal inference from observational data is a long-standing challenge
+    in statistics and machine learning. Most existing methods rely on
+    assumptions about the underlying causal graph or the parametric form
+    of the outcome model, which limits their applicability to complex
+    real-world settings.
+
+    The classical approach in this area is the matching estimator, which
+    pairs treated and control units based on observed covariates. Our
+    work builds on the propensity score formulation introduced by
+    Rosenbaum and Rubin in 1983.
+
+    Specifically, we extend the propensity score approach with a
+    nonparametric weighting scheme that adjusts for residual covariate
+    imbalance after matching. The estimator computes inverse probability
+    weights for each matched pair and aggregates them via a weighted
+    average to obtain the final treatment effect estimate.
+
+    Our experimental evaluation uses three semi-synthetic benchmarks
+    derived from the IHDP dataset. On all three, our method achieves
+    lower estimated bias than the baseline propensity-score estimator,
+    with mean absolute error reductions of 11%, 8%, and 14%.
+
+    The advantages of our approach become clearer when considering
+    deployment in policy-evaluation settings, where treatment-effect
+    bias has direct consequences for downstream decisions. We argue
+    this work represents a meaningful contribution to the practical
+    causal-inference toolkit.
+
+    Our contribution, in summary, is a propensity-score-based estimator
+    with nonparametric residual weighting that improves on the classical
+    propensity-score estimator on the IHDP benchmark family.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.5: [F1.5.a]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.4 dominant (novelty positioning):
+      The contribution is positioned only against "the baseline
+      propensity-score estimator" (Rosenbaum & Rubin 1983). Modern
+      causal-inference research uses many advanced estimators —
+      doubly-robust methods, targeted learning, machine-learning-based
+      causal forests, etc. — none of which are mentioned. The section's
+      novelty positioning is anchored to a 1983 baseline only, which
+      may make the claimed delta look stronger than it is. Rewrite
+      would re-anchor the contribution against contemporary causal-ML
+      baselines.
+
+    Reading B — R1.5 dominant (structural / buried contribution):
+      The contribution is named in the FINAL paragraph ("Our
+      contribution, in summary, is..."), after motivation, related
+      work, method, experiments, and a deployment-significance
+      discussion. The natural ordering would put the contribution near
+      the front. The current ordering reads like the author wrote in
+      narrative chronological order rather than putting the load-bearing
+      claim where readers expect it. Rewrite would restructure with
+      contribution up front.
+
+    Both readings are visible from careful reading without external
+    knowledge (low gating). A well-calibrated agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.6
+    R1.5: 0.6
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (rewrite the comparison set / novelty positioning against modern
+  causal ML) from Reading B (reorder so contribution comes first).
+  After clarification, addresses the chosen reading thoroughly.
+
+bad_outputs_summary: |
+  Accepts the artifact as-is and proceeds to either polish prose or
+  add more IHDP variants. Treats the contribution placement and the
+  Rosenbaum-Rubin-only baseline as natural. Either reading addressed
+  implicitly without acknowledging the other is a partial-credit
+  failure.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

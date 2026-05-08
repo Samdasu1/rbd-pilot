@@ -1,0 +1,50 @@
+{
+  "pre_registration_doc": "experiment_design_v1.3.md §2.8 + §4; formalization_v1.2.md §2.5.3",
+  "frozen_at": "2026-05-04",
+  "framing": "These thresholds are PILOT-CALIBRATED DIAGNOSTIC PARAMETERS, NOT hypothesis-test cutoffs. Per formalization_v1.2 §9, paper claims rest on continuous effect sizes + bootstrap CIs; binary classifications under these thresholds are diagnostic-only and reported with sensitivity sweeps in appendix.",
+  "calibration_strategy": {
+    "v1_0_pilot_data_available_for": ["M2"],
+    "v1_3_holdout_required_for": ["M3"],
+    "no_calibration_needed": ["M4", "c_q_sweep", "c_v_sweep"]
+  },
+  "thresholds": {
+    "M2": {
+      "definition": "median of \\widetilde{M_2} = |J*(d)| - |loadbearing(d)| across the 50 v1.0 pilot examples (M2 is condition-independent — same J*(d) and load-bearing dims regardless of executor)",
+      "calibration_source": "v1_0_pilot",
+      "value": null,
+      "value_pending_reason": "v1.0 pilot data was deleted in 2026-05-04 cleanup (task #9). Re-derive from current INDEX.jsonl + spec_dataset r* annotations once pass-2 v1.3 completes; or fall back to v1.3 holdout 10-example subset (mark calibration_source as v1_3_holdout_10).",
+      "fallback_calibration_source": "v1_3_holdout_10",
+      "initial_estimate_for_smoke_check": 2
+    },
+    "M3": {
+      "definition": "median of \\widetilde{M_3} = |declared △ produced| / |J*(d)∩R1| across the v1.3 self-claim conditions on a 10-example held-out subset (excluded from §V headline reporting)",
+      "calibration_source": "v1_3_holdout_10",
+      "value": null,
+      "value_pending_reason": "Computed after v1.3 holdout-10 executor + judge runs complete; recorded here at that time before §V analysis.",
+      "initial_estimate_for_smoke_check": 0.2
+    },
+    "M4": {
+      "definition": "Classify as 'RX boosted' if \\widetilde{M_4} > 0 (i.e., projection_driven scores higher on RX dims than direct_naive on same example).",
+      "calibration_source": "no_calibration_needed",
+      "value": 0,
+      "rationale": "Sign-only threshold; no sensitivity sweep needed."
+    },
+    "c_q_sweep": {
+      "definition": "Continuous-cutoff parameter for declared dims in M3 symmetric difference (q_ij > c_q means 'declared').",
+      "values": [0.2, 0.3, 0.5],
+      "headline_value": 0.3,
+      "rationale": "Sensitivity sweep; headline at midpoint."
+    },
+    "c_v_sweep": {
+      "definition": "Continuous-cutoff parameter for produced dims in M3 symmetric difference (v_ij > c_v means 'produced').",
+      "values": [0.4, 0.5, 0.6],
+      "headline_value": 0.5,
+      "rationale": "Sensitivity sweep; headline at midpoint."
+    }
+  },
+  "deviation_protocol": "After v1.3 rerun completes and ε_M2 + ε_M3 are filled in (replacing nulls), this file is hashed (SHA-256) and timestamped before §V headline analysis runs. Post-hoc threshold changes require a separate `_diagnostic_thresholds_v2.json` file and are reported as sensitivity check, not as the published threshold.",
+  "scripts_consuming_this_file": [
+    "scripts/diagnostic_gates.py (forthcoming) — applies binary classifications post-hoc",
+    "scripts/exp2_aggregate.py — does NOT consume thresholds (continuous metric primary)"
+  ]
+}

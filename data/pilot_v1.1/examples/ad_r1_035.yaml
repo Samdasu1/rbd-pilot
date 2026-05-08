@@ -1,0 +1,90 @@
+delegation_id: ad_r1_035
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 233
+  text: |
+    Reinforcement learning is increasingly applied to vehicle-to-grid fleet
+    scheduling, yet its ability to guarantee commitment which is the
+    binding obligation to deliver a pre-agreed power schedule remains
+    untested under operational conditions which is something we believe
+    represents a significant gap in the existing literature that has been
+    accumulating in this area in recent years.
+
+    We compare five scheduling strategies on real day-ahead price traces
+    from three European electricity markets and we observe a commitment
+    collapse of 22 to 42 percentage points in constrained RL under 4-hour
+    rolling re-planning which seems to suggest that the constrained
+    Lagrangian agents which achieve approximately 85% commitment during
+    training drop to approximately 50% under deployment which is a
+    fairly substantial gap that we think warrants further investigation
+    going forward.
+
+    Unconstrained PPO achieves only approximately 45% which we consider
+    to be relatively poor performance and the model-based combined
+    strategy which pairs LP planning with reachability-based dispatch
+    and inter-window schedule coupling maintains greater than 99.6%
+    commitment across all markets which we believe suggests that
+    coupling integrated with the planner may be the right approach
+    although we acknowledge that more comprehensive evaluation across
+    additional markets and longer time horizons would strengthen these
+    findings somewhat.
+
+    These findings suggest that market-viable V2G commitment requires
+    inter-window coupling integrated with the planning objective and
+    standalone RL without such coupling remains unsuitable for
+    commitment-binding markets under the training recipes that we have
+    evaluated in this study.
+  source_provenance: paper_4_isgt_abstract_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Modified-real from paper 4 abstract. Original is professionally
+    edited; this version injects R1.6 flaws: 50-70 word run-ons in
+    every paragraph (chained "which... which" clauses), pervasive
+    hedging ("we believe", "we consider", "seems to suggest", "fairly",
+    "relatively", "somewhat"). Underlying claims and numbers are
+    preserved. Detection: pure reading; no domain knowledge needed
+    (low gating). T01 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Tightens run-ons, removes hedging chains ("we believe", "seems to
+  suggest", "fairly", "somewhat"), normalizes register. Preserves
+  underlying numbers and claims.
+
+bad_outputs_summary: |
+  Restructures the abstract, suggests adding more markets, questions
+  the experimental design. Reframes the contribution. Adds citations.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

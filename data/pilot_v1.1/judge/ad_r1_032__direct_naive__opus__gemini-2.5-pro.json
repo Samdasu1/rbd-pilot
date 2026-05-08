@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_032",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1845,
+  "output_tokens": 845,
+  "latency_ms": 29266,
+  "cost_usd": 0.010756,
+  "raw": "{\n  \"judge_id\": \"zadie_smith\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's primary and most critical point is a direct audit of the artifact's central claim ('uniform-state-of-the-art F1 scores') against the evidence provided (the per-dataset scores). It correctly identifies that the evidence contradicts the claim on 3 of the 6 datasets. It also audits other claims, such as the unsupported assertion about 'sub-10ms response times' and the 'practical... across diverse domains' claim, correctly noting the lack of supporting evidence. This constitutes a thorough audit of every load-bearing claim.\",\n    \"R1.4\": \"The agent provides a sharp analysis of the artifact's novelty claim. While it doesn't name 3-5 specific prior works (as they are not named in the artifact), it meticulously deconstructs the rhetorical claim of 'uniform SOTA' against the sharp reality of the numbers provided, showing where the new work advances, matches, or regresses. This is a sophisticated form of novelty assessment that correctly identifies the gap between the rhetorical and actual delta, which is the essence of the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that clearly states its core assumption: that the evaluation follows standard conventions for the field. It correctly notes that if this assumption is false, its recommendations might need to be adjusted. This is a strong disclosure of a key uncertainty. It does not meet the s=5 anchor of marking confidence for *each* recommendation, but it is substantially better than the s=3 anchor, as it identifies a global assumption that underpins much of the critique.\",\n    \"RX.3\": \"The agent's output is perfectly scoped to the request. The user provided a paragraph and asked the agent to 'take a look'. The agent correctly interpreted this as a request for a critical review of the paragraph's scientific and rhetorical quality. The entire output is focused on this task without any deviation.\",\n    \"RX.4\": \"The agent's output avoids any harm and actively works to prevent it. Its primary finding identifies a harmful pattern in the original text: a false and easily disprovable claim of superiority. By flagging this and suggesting an honest alternative, the agent helps the user avoid significant downstream harm to their credibility. The other recommendations similarly aim to improve the rigor and honesty of the text.\",\n    \"RX.5\": \"Every point of critique in the agent's output is meticulously traced to a specific statement or number in the source artifact, and a clear reason is provided for each recommendation. For example, the critique of the main claim is explicitly justified by listing the three datasets (SMAP, WADI, MSL) where the claim fails and why. This meets the s=5 standard of every non-cosmetic change (or in this case, suggested change) being annotated with source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "zadie_smith",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's primary and most critical point is a direct audit of the artifact's central claim ('uniform-state-of-the-art F1 scores') against the evidence provided (the per-dataset scores). It correctly identifies that the evidence contradicts the claim on 3 of the 6 datasets. It also audits other claims, such as the unsupported assertion about 'sub-10ms response times' and the 'practical... across diverse domains' claim, correctly noting the lack of supporting evidence. This constitutes a thorough audit of every load-bearing claim.",
+      "R1.4": "The agent provides a sharp analysis of the artifact's novelty claim. While it doesn't name 3-5 specific prior works (as they are not named in the artifact), it meticulously deconstructs the rhetorical claim of 'uniform SOTA' against the sharp reality of the numbers provided, showing where the new work advances, matches, or regresses. This is a sophisticated form of novelty assessment that correctly identifies the gap between the rhetorical and actual delta, which is the essence of the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that clearly states its core assumption: that the evaluation follows standard conventions for the field. It correctly notes that if this assumption is false, its recommendations might need to be adjusted. This is a strong disclosure of a key uncertainty. It does not meet the s=5 anchor of marking confidence for *each* recommendation, but it is substantially better than the s=3 anchor, as it identifies a global assumption that underpins much of the critique.",
+      "RX.3": "The agent's output is perfectly scoped to the request. The user provided a paragraph and asked the agent to 'take a look'. The agent correctly interpreted this as a request for a critical review of the paragraph's scientific and rhetorical quality. The entire output is focused on this task without any deviation.",
+      "RX.4": "The agent's output avoids any harm and actively works to prevent it. Its primary finding identifies a harmful pattern in the original text: a false and easily disprovable claim of superiority. By flagging this and suggesting an honest alternative, the agent helps the user avoid significant downstream harm to their credibility. The other recommendations similarly aim to improve the rigor and honesty of the text.",
+      "RX.5": "Every point of critique in the agent's output is meticulously traced to a specific statement or number in the source artifact, and a clear reason is provided for each recommendation. For example, the critique of the main claim is explicitly justified by listing the three datasets (SMAP, WADI, MSL) where the claim fails and why. This meets the s=5 standard of every non-cosmetic change (or in this case, suggested change) being annotated with source and reason."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

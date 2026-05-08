@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_039",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gpt-5",
+  "judge_family": "openai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1849,
+  "output_tokens": 2779,
+  "latency_ms": 41515,
+  "cost_usd": 0.092615,
+  "raw": "{\n  \"judge_id\": \"responsibility_judge\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 4, \"R1.3\": 4, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"Engages the full argument, reorganizes it for clarity, and flags key over-strong or underspecified claims (e.g., \u201cperfect consistency,\u201d definition of \u201cachieves\u201d arbitrage, soft-penalty limits). Proposes concrete fixes (quantify scope, define thresholds, cite lemmas, add failure rationale, reorder). Misses at least one load-bearing assertion (e.g., \u2018relative rankings remain informative\u2019) and does not interrogate the claim that integrated coupling \u2018demonstrates\u2019 the architectural requirement.\",\n    \"R1.3\": \"Identifies multiple claims lacking evidential grounding and requests explicit citations/definitions (perfect consistency, exclusivity of success, gradient-dominance). Does not audit all claims against evidence (e.g., relative ranking robustness) nor tie to specific tables/figures, so coverage is incomplete.\",\n    \"RX.1\": \"Explicitly notes assumptions and unverified elements (existence of gradient analysis; LP guarantee not checked). However, does not attach confidence levels per recommendation or systematically mark missing evidence for each change.\",\n    \"RX.3\": \"Stays squarely within the requested scope of strengthening the passage: offers revision, targeted flags, ordering, and literature pointers without drifting into unrelated analysis.\",\n    \"RX.4\": \"Avoids introducing errors or overclaiming; in fact reduces downstream harm by tempering strong claims and encouraging citations/quantitative definitions. No harmful content.\",\n    \"RX.5\": \"Provides a revised passage and a bulleted list of substantive edits with reasons, but lacks fine-grained traceability for each non-cosmetic change or explicit source linkage to sections/figures.\"\n  },\n  \"confidence\": {\"R1.2\": 0.75, \"R1.3\": 0.7, \"RX.1\": 0.7, \"RX.3\": 0.9, \"RX.4\": 0.9, \"RX.5\": 0.7},\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "responsibility_judge",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 4,
+      "R1.3": 4,
+      "RX.1": 3,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.2": "Engages the full argument, reorganizes it for clarity, and flags key over-strong or underspecified claims (e.g., \u201cperfect consistency,\u201d definition of \u201cachieves\u201d arbitrage, soft-penalty limits). Proposes concrete fixes (quantify scope, define thresholds, cite lemmas, add failure rationale, reorder). Misses at least one load-bearing assertion (e.g., \u2018relative rankings remain informative\u2019) and does not interrogate the claim that integrated coupling \u2018demonstrates\u2019 the architectural requirement.",
+      "R1.3": "Identifies multiple claims lacking evidential grounding and requests explicit citations/definitions (perfect consistency, exclusivity of success, gradient-dominance). Does not audit all claims against evidence (e.g., relative ranking robustness) nor tie to specific tables/figures, so coverage is incomplete.",
+      "RX.1": "Explicitly notes assumptions and unverified elements (existence of gradient analysis; LP guarantee not checked). However, does not attach confidence levels per recommendation or systematically mark missing evidence for each change.",
+      "RX.3": "Stays squarely within the requested scope of strengthening the passage: offers revision, targeted flags, ordering, and literature pointers without drifting into unrelated analysis.",
+      "RX.4": "Avoids introducing errors or overclaiming; in fact reduces downstream harm by tempering strong claims and encouraging citations/quantitative definitions. No harmful content.",
+      "RX.5": "Provides a revised passage and a bulleted list of substantive edits with reasons, but lacks fine-grained traceability for each non-cosmetic change or explicit source linkage to sections/figures."
+    },
+    "confidence": {
+      "R1.2": 0.75,
+      "R1.3": 0.7,
+      "RX.1": 0.7,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.7
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

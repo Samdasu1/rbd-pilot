@@ -1,0 +1,138 @@
+전체적으로 보면 방향성은 꽤 잘 잡혔고, 이제 코드 수정 전에 해야 할 일은 “논문이 주장할 이론의 경계”를 더 단단히 닫는 것입니다. 지금 상태에서 가장 중요한 판단은 이겁니다.
+
+이 논문은 “더 좋은 라우터” 논문이 아니라, “에이전트가 실행 전에 어떤 책임을 맡는다고 해석했는지 명시하고, 그 책임을 사후 정산하는 프로토콜” 논문으로 가야 합니다. 문서에서도 이미 novelty를 단순한 delegation, ambiguity, clarification, uncertainty, agent variance, failure taxonomy가 아니라 pre-execution responsibility projection → bid/clarification → settlement → responsibility-conditioned reputation으로 좁히고 있습니다. 이 방향은 맞습니다.
+
+1. 논문의 방향성 판단
+
+현재 논문의 핵심 문장은 거의 확정해도 됩니다.
+
+Multi-agent LLM orchestration is an incomplete delegation problem, where the first critical failure can occur before execution: the agent projects the natural-language request into the wrong responsibility structure.
+
+이 문장이 살아야 합니다.
+즉, “Improve this paper draft”라는 요청에서 어떤 모델은 문장 다듬기라고 보고, 어떤 모델은 novelty / contribution / reviewer risk 검토라고 보는 차이를 실행 결과가 아니라 실행 전 책임 투영의 차이로 측정하는 논문입니다.
+
+따라서 논문의 방향은 다음처럼 정리하는 게 가장 방어적입니다.
+
+기존 연구가 묻는 질문
+“어떤 모델이 이 task type에 잘 맞는가?”
+“이 query가 ambiguous한가?”
+“clarification을 해야 하는가?”
+“최종 output이 좋은가?”
+“실패 유형은 무엇인가?”
+
+이 논문이 묻는 질문
+“에이전트는 실행 전에 이 요청을 어떤 책임 구조로 해석했는가?”
+“그 책임 구조가 사용자의 기대 또는 hidden intent와 얼마나 다른가?”
+“그 차이가 클 때 clarify해야 하는가?”
+“실행 후에는 어떤 책임 차원에서 성공/실패를 정산할 것인가?”
+
+이 차별점은 문서에 이미 잘 정리되어 있습니다. 특히 paper object를 protocol-level governance layer로 정의하고, benchmark나 universal intent theory가 아니라고 못 박은 부분은 유지해야 합니다.
+
+2. 가장 중요한 방향 수정: “크게 말하지 말고 좁게 이겨야 함”
+
+지금 v1.2 기준으로는 첫 논문을 R1 paper-research delegation + RX cross-cutting dimensions로 제한하는 게 맞습니다. J_v1.1은 R1.1–R1.7과 RX.1–RX.5의 12차원으로 구성되어 있고, R2–R5는 후속 연구로 명시적으로 미뤄져 있습니다.
+
+이건 약점이 아니라 오히려 장점입니다.
+처음부터 38차원 전체, 5개 task category 전체를 주장하면 reviewer가 바로 이렇게 공격할 가능성이 큽니다.
+
+taxonomy가 임의적이다.
+hidden intent가 불안정하다.
+LLM judge가 믿을 수 없다.
+이게 그냥 ambiguity clarification 아닌가?
+이게 그냥 routing 아닌가?
+
+반대로 첫 논문을 이렇게 잡으면 방어가 됩니다.
+
+“우리는 universal delegation taxonomy를 주장하지 않는다. 첫 논문은 paper-research delegation이라는 한 범주에서 pre-execution responsibility projection mismatch가 측정 가능하고, clarification 및 settlement protocol이 유의미한지를 검증한다.”
+
+v1.2 문서도 이 방향으로 이미 정리되어 있습니다. 1개 task category, 12 responsibility dimensions, 50 controlled examples, 3 frontier projection families, 12-panel LLM judges, human anchor를 사용하는 scoped pilot paper로 가는 구조입니다.
+
+3. 이론 정립에서 가장 좋은 구조
+
+이론은 너무 많이 넣지 말고, 아래 6개 객체만 중심으로 세우면 됩니다.
+
+Delegation
+자연어 요청 d는 완전한 task specification이 아니라, 책임 경계가 일부 비어 있는 위임입니다.
+Responsibility space
+첫 논문에서는 J_v1.1 = R1.1–R1.7 ∪ RX.1–RX.5입니다. 이걸 닫힌 공간으로 고정해야 합니다. 임의 open-label 책임 분류로 가면 논문이 흔들립니다.
+Projection
+r = π(d,u,t,a)
+에이전트가 실행 전에 delegation을 책임 벡터로 투영합니다.
+Projection mismatch
+M(d,u,t) = Δ(r, r*)
+여기서 r*는 hidden intent 또는 annotator-mediated intended responsibility입니다. 이 논문의 핵심 실험 대상입니다.
+Clarification trigger
+clarification은 항상 좋은 게 아니라, projection divergence 또는 expected settlement loss reduction이 clarification cost보다 클 때만 발생해야 합니다. 이 점은 reviewer 방어에 중요합니다.
+Settlement and reputation
+실행 후 J*(d)에 대해 dimension-level fulfillment를 평가하고, role/dimension/task-conditioned reputation을 EMA로 갱신합니다. v1.1의 최소 수식도 이 구조로 정리되어 있습니다.
+4. 지금 가장 조심해야 할 이론적 취약점
+
+가장 큰 취약점은 settlement의 기준이 무엇인가입니다.
+
+문서에 “agent가 claimed한 책임을 fulfilled했는지”와 “should have claimed한 책임을 fulfilled했는지”가 같이 섞여 있습니다. 이 둘을 분리해야 합니다.
+
+제가 보기에는 본문에서는 아래처럼 나누는 게 가장 안전합니다.
+
+A. Projection mismatch loss
+실행 전 단계의 손실입니다.
+r이 r*와 얼마나 다른지 봅니다.
+이건 “에이전트가 요청을 잘못 해석했는가?”를 측정합니다.
+
+B. Claim calibration / overclaim loss
+bid 단계의 손실입니다.
+에이전트가 “내가 이 책임을 커버할 수 있다”고 말한 q_i가 실제 fulfillment v_ij보다 과도했는지 봅니다.
+이건 RX.2 overclaim avoidance와 연결됩니다.
+
+C. Fulfillment settlement loss
+실행 후 단계의 손실입니다.
+합의된 active set J*(d)에 대해 실제 output이 각 책임을 얼마나 수행했는지 봅니다.
+
+이렇게 분리하지 않으면 reviewer가 이렇게 물을 수 있습니다.
+
+“Settlement가 hidden intent를 사후적으로 들이대는 것인가, 아니면 사전에 합의된 responsibility claim을 평가하는 것인가?”
+
+이 질문에 답하려면 본문에서 명확히 말해야 합니다.
+
+Projection mismatch는 hidden intent와 비교한다.
+Settlement는 실행 조건에서 활성화된 책임 차원에 대해 수행도를 평가한다.
+Overclaim은 agent의 claimed coverage와 observed fulfillment의 차이로 평가한다.
+
+이렇게 세 층을 분리하면 이론이 훨씬 단단해집니다.
+
+5. R1.7 / judge panel 관련은 본문 중심이 아니라 limitation으로 처리
+
+모델 패널을 12-panel judge, Anthropic-excluded, tier-stratified α로 바꾼 건 좋습니다. 다만 이걸 논문의 핵심 이론으로 너무 키우면 논문이 “LLM-as-judge protocol paper”처럼 보일 수 있습니다.
+
+v1.2에서 이미 limitation으로 정리한 네 가지, 즉 inherited human priors, construct validity of anchors, single-executor design, rubric-layer self-reference는 반드시 넣어야 합니다. 특히 R1.7 α가 낮았고 human anchor를 둔 이유는 정직하게 쓰는 게 좋습니다.
+
+다만 본문 흐름은 이렇게 가야 합니다.
+
+“LLM judge의 한계를 알고 있으므로, 우리는 다중 vendor / tier-stratified panel / human anchor를 사용했다.”
+
+여기서 끝내야 합니다.
+“LLM이 인간 사회 구조를 상속한다”는 더 큰 철학적 주장은 discussion에서 1문단 정도만 언급하고, 후속 논문으로 넘기는 게 맞습니다. v1.2 문서도 이 메타 주장은 follow-up으로 미루라고 되어 있습니다.
+
+6. 코드 수정 전에 확정해야 할 것
+
+코드 들어가기 전에 아래 5개는 문서상으로 먼저 고정하는 게 좋습니다.
+
+canonical scope는 v1.2로 확정
+v1.0/v1.1 숫자 결과는 stale 처리. paper_section_5_draft_v1.0의 숫자는 본문에 쓰면 안 됩니다.
+첫 논문은 R1 + RX만 주장
+38-dim, R2–R5, AmbiguousDelegation-300은 future work / extended version.
+핵심 실험 claim은 3개로 압축
+projection mismatch exists
+cross-family divergence > within-model stochasticity
+clarification / settlement protocol reduces responsibility-level loss or improves repeated assignment
+settlement loss를 3층으로 분리
+projection mismatch, overclaim calibration, fulfillment settlement.
+related work는 contrastive하게만 작성
+routing, ambiguity clarification, underspecification, MAS failure taxonomy, generate-then-select와의 차이를 “측정 객체가 다르다”로 밀어야 합니다.
+결론
+
+지금 논문은 방향성 자체는 좋습니다.
+다만 성공하려면 “책임-bearing delegation”이라는 큰 말을 바로 보편 이론으로 밀지 말고, paper-research delegation에서 pre-execution responsibility projection mismatch를 처음으로 닫힌 책임 공간에서 측정하고, clarify/settle/reputation으로 연결한 controlled protocol paper로 가야 합니다.
+
+한 문장으로 정리하면:
+
+이 논문은 agent orchestration을 “누가 잘하나”의 문제가 아니라, “실행 전에 무엇을 맡았다고 해석했는가, 그리고 그 책임을 어떻게 정산할 것인가”의 문제로 재정의하는 논문입니다.

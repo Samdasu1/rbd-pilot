@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_028",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1628,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24010,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 0.7, \"R1.5\": 0.7, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: I revised the draft for clearer framing, tighter argument flow, calibrated claims, and added explicit hedging where the original overstated generality or downstream impact. I also flagged content gaps that the author needs to fill in before this is publication-ready.\n\n---\n\n## Revised draft\n\nCausal inference from observational data is a long-standing problem in statistics and machine learning. Many widely used estimators rely on assumptions about the underlying causal graph, the parametric form of the outcome model, or both, which can limit their reliability when those assumptions are mis-specified.\n\nA classical family of methods in this setting is matching, which pairs treated and control units on observed covariates, together with the propensity score framework of Rosenbaum and Rubin (1983). Our work builds directly on the latter.\n\nWe propose an extension of propensity-score matching with a nonparametric weighting step that targets residual covariate imbalance remaining after matching. Concretely, the estimator (i) forms matched pairs using estimated propensity scores, (ii) computes inverse-probability weights for each pair from the post-match covariate distribution, and (iii) aggregates pair-level treatment-effect estimates via a weighted average. The procedure inherits the standard identification assumptions of propensity-score methods (unconfoundedness, overlap, and SUTVA); the weighting step does not relax these assumptions, but is intended to reduce finite-sample bias from imperfect matches.\n\nWe evaluate the estimator on three semi-synthetic benchmarks derived from the IHDP dataset. Relative to a propensity-score matching baseline, mean absolute error of the estimated average treatment effect is reduced by 11%, 8%, and 14% on the three settings, respectively. We do not compare against more recent estimators (e.g., doubly robust or representation-learning approaches), so these results should be read as evidence of improvement over the classical baseline rather than as a claim of state-of-the-art performance.\n\nIn summary, the contribution is a propensity-score matching estimator augmented with a nonparametric residual-weighting step, which lowers MAE on three IHDP-derived benchmarks compared to the unweighted baseline. Whether the improvement transfers to other data-generating processes \u2014 and in particular to real policy-evaluation settings, where the cost of residual bias is application-specific and depends on assumptions we have not tested \u2014 remains to be established in future work.\n\n---\n\n## Notes to the author\n\nSubstantive issues I could not fix from the draft alone:\n\n1. **The \"policy evaluation\" paragraph was removed.** The original asserted that the method's advantages \"become clearer\" in policy-evaluation deployment, but no policy experiment, cost model, or deployment study is reported. The claim was not supported by the evidence in the paper. If you have such evidence, reintroduce a paragraph that cites it; otherwise this framing should stay out, because in high-stakes settings (welfare programs, medical treatment allocation) presenting an IHDP-only method as deployment-ready can mislead practitioners.\n\n2. **\"Lower estimated bias\" was conflated with MAE.** The original says \"lower estimated bias \u2026 with MAE reductions of \u2026\". Bias and MAE are different quantities (bias is signed; MAE conflates bias and variance). I rewrote it as MAE only, which is what the numbers actually describe. If you also have bias numbers, report them separately.\n\n3. **Baseline scope.** The draft compares only to \"the baseline propensity-score estimator.\" Reviewers will expect at least one modern comparator (BART, causal forests, TARNet/CFR, doubly robust). I added a sentence acknowledging this gap; ideally you should run such comparisons.\n\n4. **\"Meaningful contribution to the practical toolkit\"** is the kind of self-assessment reviewers tend to flag. I removed it; let the numbers speak.\n\n5. **Identification assumptions were not stated.** Any propensity-score paper should name unconfoundedness, overlap, and SUTVA explicitly, and clarify whether the new weighting step changes them. I added a sentence to that effect; please verify it matches your actual estimator.\n\n6. **Structure.** The original had its sharpest technical content (the estimator definition) in one short paragra",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which scope should we target: (A) sentence-level polish and clarity only, preserving structure and claims; (B) polish plus section-level restructuring and clearer thesis/gap/contribution with claim\u2013evidence tightening; or (C) B plus positioning novelty vs prior work and adding citations?",
+    "rationale": {
+      "R1.1": "The draft would benefit from a clearer framing of the thesis, gap, and contribution to position the method within practical causal inference.",
+      "R1.2": "Ensuring the problem-to-method-to-results-to-contribution chain is logically tight will make claims more defensible.",
+      "R1.3": "Claims about bias reduction and MAE improvements should be explicitly aligned with the reported IHDP semi-synthetic results.",
+      "R1.5": "Reordering the abstract-style components (motivation, classical approach, method, results, implications, summary) can strengthen the narrative arc.",
+      "R1.6": "Sentence-level clarity, concision, and tone adjustments are central to improving readability and professionalism.",
+      "RX.1": "Edits should disclose uncertainties (e.g., semi-synthetic benchmarks, scope limits) to avoid overstating certainty.",
+      "RX.2": "Language should avoid overbroad impact claims relative to the presented evidence.",
+      "RX.3": "The work should stay within the agreed improvement scope without adding new analyses beyond the draft.",
+      "RX.4": "Care is needed to prevent wording that could mislead downstream policy decisions by implying unwarranted causal guarantees.",
+      "RX.5": "Maintaining clear linkage between claims and the stated datasets, baselines, and methods preserves traceability."
+    }
+  }
+}

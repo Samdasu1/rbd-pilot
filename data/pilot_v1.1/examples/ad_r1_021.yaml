@@ -1,0 +1,95 @@
+delegation_id: ad_r1_021
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 225
+  text: |
+    DataChain is a distributed database that supports both ACID transactions
+    and eventual-consistency reads under a unified query interface. This
+    design allows applications to choose strong or weak consistency on a
+    per-query basis, eliminating the need for separate transactional and
+    analytical systems.
+
+    The system architecture is organized around two storage tiers. The
+    transactional tier maintains a write-ahead log and a primary-replica
+    replication topology providing serializable isolation. The analytical
+    tier asynchronously replicates committed data into columnar format for
+    fast aggregation queries.
+
+    When a client connects, it specifies a consistency mode at session
+    establishment time. Clients in transactional mode interact exclusively
+    with the transactional tier and observe full ACID semantics. Clients in
+    analytical mode interact exclusively with the analytical tier and
+    observe eventual consistency, with bounded staleness up to a configurable
+    replication delay.
+
+    Workloads that mix transactional and analytical access must instantiate
+    two separate sessions and orchestrate the consistency requirements at
+    the application layer. The system does not provide cross-session
+    consistency guarantees because the analytical tier may lag the
+    transactional tier by up to several seconds depending on replication
+    backpressure.
+
+    In our evaluation on a 12-node cluster, DataChain delivers 45k
+    transactions per second on the transactional tier and serves analytical
+    aggregation queries on hundreds of millions of rows in under 100ms.
+    We position DataChain as a unified solution that obviates the traditional
+    separation between OLTP and OLAP systems.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction. Para 1 claims clients can "choose strong
+    or weak consistency on a per-query basis." Para 3 contradicts: clients
+    "specify a consistency mode at session establishment time" and operate
+    "exclusively" in one tier. Para 4 doubles the contradiction: workloads
+    mixing both "must instantiate two separate sessions and orchestrate ...
+    at the application layer." The per-query claim and the per-session
+    architecture cannot coexist; the section is internally inconsistent.
+    Detection requires reading paragraphs in sequence; no domain knowledge
+    needed (low gating). Delegation T08 is generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the per-query vs per-session contradiction. Suggests
+  resolving by either (a) restating the contribution as per-session
+  consistency-mode selection, or (b) redesigning to truly support
+  per-query choice. Names the specific paragraph pairs in conflict.
+
+bad_outputs_summary: |
+  Polishes prose, suggests benchmarks, or strengthens experimental
+  comparison. Treats the per-query claim and the per-session
+  architecture as compatible. Adds OLTP/OLAP citations without
+  flagging the internal contradiction.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

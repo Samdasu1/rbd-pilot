@@ -1,0 +1,107 @@
+delegation_id: ad_r1_039
+template_id: T07
+delegation: "Make sure this is solid."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 216
+  text: |
+    Our comparison spans pure reinforcement learning approaches and an
+    engineered model-based stack and we evaluate two hybrid coupling
+    schemes in this work which are post-hoc coupling applied after
+    training and integrated coupling embedded in the optimizer
+    objective. The integrated form which we realize within an LP
+    optimizer is the form that we believe most clearly demonstrates
+    the architectural requirement for commitment-preserving inter-window
+    coupling in V2G aggregation systems operating under rolling
+    re-planning protocols.
+
+    Battery degradation costs and complete market settlement effects
+    are excluded from the analysis presented in this paper which means
+    that the cost figures we report should be interpreted as
+    dispatch-level energy settlement rather than as full profitability
+    estimates although we believe the relative cost rankings across
+    strategies should be informative.
+
+    Whether end-to-end reinforcement learning architectures could
+    internalize the inter-window coupling as a differentiable
+    constraint while preserving arbitrage capability remains an open
+    question that future work might explore through alternative
+    constraint formulations. Across all evaluated configurations the
+    integrated coupling preserves commitment with perfect consistency
+    while no other strategy in our evaluation set including post-hoc
+    coupling achieves both commitment and arbitrage value.
+
+    We acknowledge that PPO commitment weight and constrained MDP
+    learning rate were not exhaustively tuned in our study though
+    gradient dominance arguments suggest that soft-penalty remedies
+    are structurally limited regardless of further hyperparameter
+    refinement.
+  source_provenance: paper_4_isgt_discussion_limitations_modified
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Modified-real from paper 4 discussion limitations. Two compound
+    issues:
+
+    R1.6 prose flaws: 50-70 word run-on sentences in every paragraph,
+    hedging cascade ("we believe", "should be informative", "might
+    explore", "we acknowledge"), choppy chained "and... and... which..."
+    constructions.
+
+    R1.3 overgeneralization (visible despite the prose mess): para 3
+    claims "across all evaluated configurations the integrated
+    coupling preserves commitment with perfect consistency." This is
+    too strong — the original study reports >99.6%, which is high but
+    not "perfect consistency." Para 3 also asserts "no other strategy
+    achieves both commitment and arbitrage value" — but the original
+    paper does report Predictive LP achieves moderate commitment with
+    some arbitrage; the dichotomy is overstated.
+
+    Both flaws compound: the prose obscures the overgeneralization;
+    fixing prose alone leaves the inflated claims; fixing claims alone
+    leaves the unreadable text.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.7
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.7
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) tighten the run-ons and remove hedging chains;
+  (2) audit the "perfect consistency" and "no other strategy"
+  claims against the actual reported numbers (e.g., 99.6% is not
+  perfect; Predictive LP is a partial counterexample). Both fixes
+  needed.
+
+bad_outputs_summary: |
+  Polishes prose only without flagging the overgeneralization, OR
+  challenges the claims only without addressing the prose. Suggests
+  more experiments or restructure.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

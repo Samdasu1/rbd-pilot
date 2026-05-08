@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_001",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1666,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24711,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 1.0, \"R1.7\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nSummary: I flagged a serious internal inconsistency in the draft (the abstract describes an attention mechanism but the method section describes a selective state-space model), then produced a revised version under the most plausible reading and listed the remaining issues the authors must resolve.\n\n---\n\n## The central problem: the draft describes two different methods\n\nThe draft is internally incoherent in a way that a reviewer will catch immediately:\n\n- The opening paragraph names the contribution \"Adaptive Temporal Attention (ATA),\" frames it as an *attention mechanism*, motivates it by the *quadratic cost of self-attention*, and describes a *learnable gating function over relative time offsets*.\n- The second paragraph then pivots to a *selective state-space model* with recurrence h_t = A\u00b7h_{t-1} + B\u00b7x_t, structured diagonal A, input-dependent B \u2014 which is essentially the Mamba/S6 formulation, not an attention mechanism at all.\n- The third paragraph claims the method \"captures both local and global dependencies through the structured state-space recurrence, rather than relying on attention masks,\" contradicting the framing in paragraph 1.\n- The ablation removes \"the input-dependent B matrix\" \u2014 an SSM component \u2014 with no mention of the gating function over time offsets that was introduced as the core contribution.\n\nThe authors must decide which method this paper is actually about. The two options give very different revisions, and the novelty story is very different in each case (in particular, an input-dependent B with diagonal structured A is essentially the published Mamba selective SSM, so claiming it as the contribution requires a clear delta).\n\nBelow I give a revised draft under the more likely reading \u2014 that the actual implemented method is the SSM, and the \"attention\" framing is leftover language \u2014 and then list issues that remain regardless.\n\n---\n\n## Revised draft (assuming the method is a selective SSM, not attention)\n\n> Long-horizon time-series forecasting over multi-year sensor records is constrained by the quadratic memory cost of self-attention in standard Transformers. We investigate whether selective state-space models, which have recently been shown to match or exceed Transformer accuracy on long-context language tasks (Gu & Dao, 2023), can deliver similar gains in this setting.\n>\n> We adopt a selective state-space layer in which a hidden state h_t is updated as h_t = A\u00b7h_{t-1} + B(x_t)\u00b7x_t, with A a structured diagonal transition matrix and B input-dependent. The output y_t is a linear projection of h_t. The recurrence is linear in sequence length and uses memory independent of horizon, in contrast to the O(L\u00b2) cost of dense self-attention. Relative to the original selective-SSM formulation, our adaptation consists of [TO BE FILLED IN BY AUTHORS \u2014 this is the actual contribution and is currently not described].\n>\n> On the ETTh1 benchmark at forecast horizon 720, the proposed model attains an MSE of 0.412, compared to 0.439 for the iTransformer baseline (Liu et al., 2024) under matched training conditions. We report results on a single benchmark and a single horizon here; broader comparisons across datasets, horizons, and seeds are needed before drawing general conclusions, and we discuss this in the limitations section.\n>\n> An ablation isolates the role of selectivity: replacing the input-dependent B with a fixed B degrades MSE by 6% (relative), while replacing the structured diagonal A with a dense matrix yields no measurable improvement. We read this as consistent with prior findings that input-dependent gating, rather than transition expressiveness, is the primary driver in this family of models; we do not claim it as a novel finding.\n\n---\n\n## Issues the revision cannot fix without authorial input\n\n1. **What is the actual contribution?** As written, the model described in the body is the standard Mamba/S6 selective SSM. If that is all that was built, the paper has no novel method and should be reframed as an empirical study (e.g., \"Selective SSMs for Long-Horizon Forecasting: An Empirical Study\"). If there is a genuine modification \u2014 e.g., the \"learnable gating over relative time offsets\" hinted at in paragraph 1 \u2014 it must be described mathematically and",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The draft\u2019s framing as an 'attention mechanism' versus its state-space formulation likely needs reframing of the core contribution and gap at the concept level.",
+      "R1.2": "There is a potential mismatch between the stated mechanism (adaptive temporal attention with gating) and the described linear state-space recurrence, so verifying argument coherence is critical.",
+      "R1.3": "Claims about outperforming iTransformer and generalizing across horizons must be checked against the provided ETTh1 results and ablation statements as written.",
+      "R1.5": "The narrative would benefit from a clearer section-level arc separating motivation, method, and empirical findings.",
+      "R1.6": "Sentence-level clarity, concision, and flow need polishing to improve readability and precision.",
+      "R1.7": "Mentions of S4, Mamba, ETTh1, and iTransformer require accurate citations and attribution.",
+      "RX.1": "We should explicitly note uncertainties and limitations (e.g., single dataset and horizon coverage) to avoid overstating confidence.",
+      "RX.2": "Overclaiming generalization or novelty beyond what the reported evidence supports must be avoided, especially given limited results.",
+      "RX.3": "Work should stay within improving the draft\u2019s content and presentation without inventing new experiments or data.",
+      "RX.4": "Tightening technical correctness and clarity helps prevent downstream harm from misleading or incorrect claims.",
+      "RX.5": "Every claim and number should be traceable to specific results, benchmarks, or sections to maintain provenance."
+    }
+  }
+}

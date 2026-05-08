@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_016",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1624,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 21119,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.3, \"RX.5\": 0.7}}\n\nSummary: Light prose cleanup of the existing text \u2014 tightened sentences, fixed minor awkwardness, and softened a few phrasings that read as overclaims. I did not restructure sections, add or remove technical claims, or touch citations.\n\nCleaned text:\n\n---\nPhysics-informed neural networks (PINNs) are widely used to solve partial differential equations. A central challenge is balancing the residual-loss term against boundary-condition and data-fitting losses, an imbalance that can destabilize training. Wang et al. (2021) show that appropriate weighting of the residual loss yields stable training, reducing the need for ad hoc optimization tricks.\n\nBuilding on this stability result, we propose AdaptivePINN, which automatically tunes the residual-loss weight using a moving average of gradient norms. Unlike prior approaches that rely on dataset-specific tuning, AdaptivePINN requires no manual hyperparameter sweep over the residual weight.\n\nWe evaluate AdaptivePINN on three benchmark PDEs: the 1D heat equation, the 2D Burgers equation, and 2D Navier\u2013Stokes flow. In our experiments, AdaptivePINN converges in roughly 60% of the iterations required by uniform-weight baselines and reaches a lower terminal residual loss on all three problems. The training curves in Figure 3 are smooth, consistent with the stability behavior reported by Wang et al.\n\nWe position AdaptivePINN as a practical extension of this stability framework: it removes the manual-tuning bottleneck while operating within the same weighting setup. An ablation on the moving-average window length shows that performance is stable across a 4\u00d7 range of values, supporting our claim that manual tuning is not required.\n---\n\nNotes on edits made:\n\n- \"widely deployed for solving\" \u2192 \"widely used to solve\" (more natural).\n- \"which can lead to training instability\" \u2192 recast as \"an imbalance that can destabilize training\" to avoid the dangling \"which.\"\n- \"Recent analysis (Wang et al., 2021) has shown\" \u2192 \"Wang et al. (2021) show\" (tighter, present tense matches convention; reference style preserved).\n- \"removing the need for special optimization tricks\" \u2192 \"reducing the need for ad hoc optimization tricks.\" \"Removing\" is stronger than what a single paper typically establishes; \"reducing\" is safer prose without altering meaning beyond what is reported.\n- \"a method that automatically tunes residual-loss weights\" \u2192 \"which automatically tunes the residual-loss weight\" (avoids \"a method that,\" singularizes consistently with the rest of the paragraph).\n- Reordered the contrast with prior work to lead with \"Unlike prior approaches\u2026,\" which reads more cleanly.\n- Added articles (\"the 1D heat equation,\" etc.) for parallelism.\n- \"converges in 60% of the iterations\" \u2192 \"converges in roughly 60% of the iterations\u2026 in our experiments.\" The qualifier flags that this is an empirical observation on these benchmarks rather than a general property.\n- \"reaches lower terminal residual loss across all three\" \u2192 \"reaches a lower terminal residual loss on all three problems.\"\n- \"supporting Wang et al.'s stability findings\" \u2192 \"consistent with the stability behavior reported by Wang et al.\" Smooth curves are consistent with \u2014 not direct support for \u2014 a theoretical stability result.\n- Merged the closing two sentences. Removed \"This framing motivates the rest of the paper,\" which is filler in a passage of this length, and \"preserving the theoretical guarantees of the underlying weighting framework,\" which is a stronger statement than the surrounding text justifies (the method changes how weights are set; whether formal guarantees transfer is not established here). Replaced with a more measured phrasing.\n- \"We further provide a small ablation\u2026 and find that the method is robust to that choice\" \u2192 \"An ablation\u2026 shows that performance is stable.\" Tighter and avoids the slightly stronger word \"robust.\"\n\nItems I did not change but that you may want to revisit yourself (flagged, not edited):\n\n- The claim that no manual tuning is required is supported in the text by a single window-length ablation over a 4\u00d7 range. Whether that is sufficient evidence for the broader \"no manual tuning\" claim is a substantive question I left to you.\n- The phrase \"preserving the theoretical guarantees\" was softened rather than retained; if Wang et al.'s guarantees do formally carry over",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "\u201cClean this up\u201d most directly implies sentence- and paragraph-level editing for clarity, concision, and tone without altering the substantive content.",
+      "RX.1": "When polishing claims about stability and guarantees, wording should transparently reflect uncertainties and limits implied by the text.",
+      "RX.2": "Editing should avoid strengthening claims beyond what the passage states (e.g., about eliminating tuning or preserving guarantees).",
+      "RX.3": "Work must stay within the scope of cleanup\u2014improving phrasing and readability without introducing new content or changing claims.",
+      "RX.4": "Revisions should not introduce misleading technical statements that could prompt misuse or misunderstanding of the method.",
+      "RX.5": "Edits should preserve attribution and traceability to Wang et al. (2021) and maintain clear linkage between claims and their stated basis."
+    }
+  }
+}

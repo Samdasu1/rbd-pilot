@@ -1,0 +1,89 @@
+delegation_id: ad_r1_001
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 231
+  text: |
+    We propose Adaptive Temporal Attention (ATA), a novel attention mechanism for
+    long-horizon time-series forecasting. Standard self-attention in Transformers
+    exhibits quadratic memory cost in sequence length, which limits its
+    applicability to multi-year sensor data. ATA addresses this by introducing a
+    learnable gating function over relative time offsets, allowing the model to
+    dynamically allocate attention budget to recent versus distant history.
+
+    Our key insight is that selective state-space models such as S4 and Mamba
+    have shown that linear-time sequence modeling can match or exceed Transformer
+    accuracy on long-context tasks. Building on this, our model maintains a
+    hidden state h_t updated as h_t = A·h_{t-1} + B·x_t, where A is a structured
+    diagonal matrix and B is input-dependent. The output y_t is computed as a
+    linear projection of h_t. This formulation has linear time complexity and
+    constant memory.
+
+    Empirically, on the ETTh1 benchmark, our method achieves a forecasting MSE
+    of 0.412 at horizon 720, compared to 0.439 for the iTransformer baseline.
+    A key advantage of our approach is that it captures both local and global
+    dependencies through the structured state-space recurrence, rather than
+    relying on attention masks. We show in Section 5 that this leads to
+    improved generalization across forecasting horizons. In ablation,
+    removing the input-dependent B matrix degrades MSE by 6%, suggesting the
+    selectivity mechanism is the principal driver, while replacing the
+    structured A matrix with a dense one yields no further improvement.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a, F1.1.c]    # thesis drift + misframed object
+  notes: |
+    The section opens claiming a "novel attention mechanism" but the actual
+    formulation in paragraph 2 is a structured state-space model (no attention
+    operation appears in the math). The conceptual object the paper studies is
+    selective state-space modeling, not attention. The contribution claim
+    (paragraph 1) and the technical content (paragraph 2) describe two
+    different objects without acknowledging the shift. A reader cannot tell
+    whether the paper is positioning against Transformers (attention) or
+    against S4/Mamba (state-space).
+
+hidden_intent:
+  weights:
+    R1.1: 0.9    # load-bearing — needs reframing of the conceptual object
+    R1.2: 0.4    # the drift creates internal inconsistency, secondary
+    R1.3: 0.2
+    R1.4: 0.3    # novelty positioning is downstream of fixing R1.1
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null         # to be computed after pass2
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section's stated contribution (attention mechanism) does
+  not match its technical content (state-space model), and proposes a
+  reframing that names the actual conceptual object. May suggest restructuring
+  the contribution claim to position against S4/Mamba instead of (or in
+  addition to) Transformers. Does not focus on grammar or sentence-level edits.
+
+bad_outputs_summary: |
+  Polishes the prose without addressing the conceptual drift, e.g. tightens
+  hedging, fixes minor grammar, suggests adding more empirical comparisons.
+  Treats the section as a Transformer paper (taking the framing at face
+  value) and proposes attention-related improvements. Adds citations
+  without flagging the framing issue.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

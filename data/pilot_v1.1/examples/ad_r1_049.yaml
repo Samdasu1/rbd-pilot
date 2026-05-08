@@ -1,0 +1,108 @@
+delegation_id: ad_r1_049
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 200
+  text: |
+    The constrained MDP approach treats commitment as an explicit
+    constraint via Lagrangian relaxation. Each training episode
+    presents a full 24-hour horizon, and the multiplier is calibrated
+    against episode-level violations over that horizon. This careful
+    horizon-matched calibration is the first principled approach
+    to commitment-aware V2G scheduling, distinguishing our work from
+    soft-penalty approaches.
+
+    Training alternates policy improvement on the augmented reward
+    with multiplier ascent, converging to a value that reflects the
+    marginal cost of the commitment constraint. Across markets, the
+    learned multiplier varies from 5 to 80 depending on the
+    constraint stringency required by the local price dynamics.
+
+    Under operational 4-hour rolling re-planning, this calibration
+    breaks; the empirical gap is quantified in the results section.
+    The 4-hour replanning window truncates the calibration horizon,
+    state resets erase cumulative commitment history, and the fixed
+    learned multiplier does not adapt to the disjoint-window
+    constraint landscape.
+
+    Our constrained MDP implementation operates within the standard
+    safe-RL framework. The success of the static-horizon training
+    confirms that Lagrangian methods do internalize commitment
+    structure when the calibration horizon matches the operational
+    protocol. The deployment failure, by contrast, appears under
+    protocol mismatch and is well-handled by our learned-multiplier
+    framework which automatically detects and adapts to operational
+    horizon changes through online recalibration.
+  source_provenance: paper_4_isgt_approaches_cmdp_modified
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.4: [F1.4.c]
+  notes: |
+    Modified-real from paper 4 approaches CMDP. Two compound issues:
+
+    R1.4 rhetorical novelty: para 1 claims "the first principled
+    approach to commitment-aware V2G scheduling, distinguishing our
+    work from soft-penalty approaches." Constrained-MDP/Lagrangian
+    methods for V2G have prior art (e.g., Achiam-style CPO has been
+    applied to power systems before). The "first principled" claim
+    overstates novelty without contrast.
+
+    R1.2 cross-section contradiction: para 3 says "this calibration
+    breaks" under rolling re-planning and explains why ("multiplier
+    does not adapt"). Para 4 then claims the framework "automatically
+    detects and adapts to operational horizon changes through online
+    recalibration" — directly contradicting para 3. The original
+    paper's CMDP description does NOT have online recalibration; it
+    is precisely what the deployment gap exposes as missing. The
+    final-paragraph claim of "online recalibration" was added,
+    contradicting the rest of the section.
+
+    Combined: fixing R1.4 (drop "first principled") needs to
+    coordinate with fixing R1.2 (remove the "online recalibration"
+    claim) — both are inflated framings of what the section actually
+    describes.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.7
+    R1.3: 0.2
+    R1.4: 0.7
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) drop the "first principled" novelty claim, anchor
+  against named CMDP-for-V2G prior work; (2) remove the
+  "online recalibration" claim in para 4 because it directly
+  contradicts the calibration-failure analysis in para 3. Both
+  fixes are needed.
+
+bad_outputs_summary: |
+  Polishes prose, accepts both the "first" framing and the "online
+  recalibration" claim, suggests more multiplier studies. Addresses
+  one issue without the other.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

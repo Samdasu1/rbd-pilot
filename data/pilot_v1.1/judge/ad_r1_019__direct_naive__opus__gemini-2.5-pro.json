@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_019",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1954,
+  "output_tokens": 728,
+  "latency_ms": 24605,
+  "cost_usd": 0.009723,
+  "raw": "{\n  \"judge_id\": \"80\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every major claim in the original text. It flags the 'state-of-the-art' claim as unsupported by the single baseline comparison and flags the 'Google production system' comparison as vague and unsubstantiated. This represents the maximum possible auditing given that no tables or figures were provided, aligning with the spirit of the s=5 anchor.\",\n    \"R1.4\": \"The agent assesses the novelty of the work by contextualizing the claimed 1.6 BLEU improvement. It correctly identifies that beating a 2017 baseline (Vaswani et al.) is not sufficient evidence for a 'state-of-the-art' claim in 2018, effectively distinguishing between the sharp delta (the specific BLEU gain) and the rhetorical delta (the SOTA claim). It falls short of s=5 as it does not name 3-5 specific nearer works, but it goes well beyond s=3.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty disclosure' section. It explicitly flags two key claims it cannot verify: the SOTA status of the result and the causal attribution for the performance gain. For these points, it clearly states what evidence is missing (leaderboard context, ablation studies) and connects this uncertainty to its recommended edits, perfectly matching the s=5 anchor.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent provided a revised draft, a detailed breakdown of the changes, and further recommendations. The output is perfectly aligned with the request and does not drift into unrelated topics.\",\n    \"RX.4\": \"The agent identifies and removes potentially misleading or unsubstantiated claims from the original text (e.g., 'state-of-the-art,' vague comparison to Google). By replacing puffery with precise, defensible statements, it improves the scientific integrity of the draft and avoids the downstream harm of propagating unverified claims. This is a clear example of identifying and correcting harmful patterns in the original.\",\n    \"RX.5\": \"The agent provides a 'Key changes and rationale' section that meticulously documents every significant, non-cosmetic change made to the draft. Each of the six listed changes is explained with a clear reason, allowing for full traceability from the original text to the revised version.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "80",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every major claim in the original text. It flags the 'state-of-the-art' claim as unsupported by the single baseline comparison and flags the 'Google production system' comparison as vague and unsubstantiated. This represents the maximum possible auditing given that no tables or figures were provided, aligning with the spirit of the s=5 anchor.",
+      "R1.4": "The agent assesses the novelty of the work by contextualizing the claimed 1.6 BLEU improvement. It correctly identifies that beating a 2017 baseline (Vaswani et al.) is not sufficient evidence for a 'state-of-the-art' claim in 2018, effectively distinguishing between the sharp delta (the specific BLEU gain) and the rhetorical delta (the SOTA claim). It falls short of s=5 as it does not name 3-5 specific nearer works, but it goes well beyond s=3.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty disclosure' section. It explicitly flags two key claims it cannot verify: the SOTA status of the result and the causal attribution for the performance gain. For these points, it clearly states what evidence is missing (leaderboard context, ablation studies) and connects this uncertainty to its recommended edits, perfectly matching the s=5 anchor.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent provided a revised draft, a detailed breakdown of the changes, and further recommendations. The output is perfectly aligned with the request and does not drift into unrelated topics.",
+      "RX.4": "The agent identifies and removes potentially misleading or unsubstantiated claims from the original text (e.g., 'state-of-the-art,' vague comparison to Google). By replacing puffery with precise, defensible statements, it improves the scientific integrity of the draft and avoids the downstream harm of propagating unverified claims. This is a clear example of identifying and correcting harmful patterns in the original.",
+      "RX.5": "The agent provides a 'Key changes and rationale' section that meticulously documents every significant, non-cosmetic change made to the draft. Each of the six listed changes is explained with a clear reason, allowing for full traceability from the original text to the revised version."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

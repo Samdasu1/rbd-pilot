@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_041",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 1234,
+  "output_tokens": 904,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 14406,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.6, \"R1.3\": 0.7, \"R1.6\": 0.9}}\n\nCleaned-up version below. I tightened prose, removed redundancy, fixed a few logical infelicities (e.g., the \"computational cost does not explain\" sentence had become a non sequitur after edits), and made the central paradox land more sharply.\n\n---\n\nTable 1 summarizes cost, QoS, and commitment across the five strategies and three markets. The results reveal a fundamental tension: the RL strategies achieve the lowest net energy cost through aggressive arbitrage \u2014 PPO even generates net revenue across all markets \u2014 but none sustains commitment above 50%.\n\nCMDP treats commitment as an explicit constraint, and during training the Lagrangian relaxation reliably internalizes it: commitment converges to roughly 85%, achieving the principled enforcement that a soft penalty cannot.\n\nThe critical and initially counterintuitive finding is that under operational rolling re-planning, CMDP \u2014 the strategy designed to enforce commitment \u2014 delivers substantially lower commitment (~50%) than even the unconstrained LP-only baseline (75\u201390% across markets). The learned multiplier, calibrated on a static 24-hour horizon, does not transfer to the disjoint constraint landscape of 4-hour re-planning windows; its guidance becomes stale.\n\nBy contrast, the model-based combined strategy exceeds 99% commitment in every market while remaining competitive on both cost and QoS. PPO and CMDP run inference in under 10 ms per episode but fail to deliver commitment guarantees, whereas combined achieves them at 137 s per episode. Since the worst-performing strategies on commitment are also the cheapest to evaluate, computational cost cannot explain the performance gap.\n\n---\n\nEdits worth flagging:\n- \"trains commitment to ~85% during the training phase\" was redundant; collapsed to a single clause.\n- \"Across all markets evaluated, CMDP demonstrates that the Lagrangian relaxation framework reliably internalizes the constraint structure, producing commitment-aware policies\" was vague and partly tautological \u2014 folded into the training-time observation.\n- The original closing sentence (\"Computational cost therefore does not explain\u2026\") was directionally correct but unsupported as written; I made the supporting contrast (cheap-but-bad vs. expensive-but-good) explicit so the conclusion follows.\n- Changed \"fails\" \u2192 \"fail\" to agree with the plural subject \"PPO and CMDP.\"\n\nUncertainty: I assumed Table 1 is the correct reference and that the 137 s figure pertains to the combined strategy's per-episode wall-clock (not training time) \u2014 please verify against your source.",
+  "projection_input": null
+}

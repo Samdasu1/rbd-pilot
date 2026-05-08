@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_047",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1687,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24995,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.4, \"RX.5\": 1.0}}\n\nSummary: Reviewed the scaling section for argument coherence, claim-evidence support, and prose; flagged several places where the wording outruns what the reported numbers can establish.\n\n**Substantive issues**\n\n1. *\"100 percent commitment and full market eligibility at all fleet sizes\"* combined with *\"structurally fleet-size-invariant\"* is a strong claim. The empirical sweep goes up to N=10,000, but the structural argument (operating on aggregate distribution / per-vehicle state) is offered as an explanation rather than a proof. I would soften to: \"remains at 100 percent commitment across the tested range (N up to 10,000), consistent with the fact that none of its components \u2014 \u2026  \u2014 depends on absolute fleet size.\" Reserve \"invariant\" for a formal statement, or qualify as \"empirically invariant over the tested range.\"\n\n2. The second paragraph contains an internal tension. You write that PPO/CMDP commitment \"remains at 40 to 50 percent regardless of fleet size\" and then immediately describe a \"slight decline at large N.\" Rephrase as: \"stays in a 40\u201350 percent band across all fleet sizes, with a slight downward drift at large N.\" This avoids the \"regardless \u2026 except\" pattern.\n\n3. The mechanism offered for that slight decline (\"larger fleets produce more deterministic aggregate trajectories, lowering the probability that an arbitrage-driven policy accidentally matches prior commitments\") is a plausible story but reads as asserted rather than demonstrated. If you have not measured trajectory determinism or the match-rate channel directly, mark it as a conjecture: \"We conjecture this reflects \u2026\" or \"A plausible explanation is \u2026\".\n\n4. The predictive-LP claim \u2014 *\"sharp degradation from 91 percent to 40 percent between N=200 and N=1000\"* \u2014 is good and concrete. But the explanation has two parts that are stated as if equivalent: (a) extrapolation beyond the 50\u2013400 training range, and (b) qualitative change in transition dynamics as the aggregate smooths. (a) is a property of the model's training set; (b) is a property of the environment. They are compatible but not the same thing. Consider: \"At N \u2265 1000 the transition model extrapolates beyond its 50\u2013400 training range, and the aggregate dynamics in this regime differ qualitatively (smoother distribution), so extrapolation error is large.\" This makes the causal chain explicit.\n\n5. Closing paragraph: \"the Lagrangian is fragile to horizon shift while the transition model is fragile to fleet-size shift.\" The horizon-shift result is presumably established earlier in the paper (it is not in this excerpt). A brief back-reference (\"as shown in \u00a7X\") would help the reader and tighten the logical bridge between the two failure modes you are unifying.\n\n6. Minor prose:\n   - \"operate on the aggregate distribution or per-vehicle state inspection\" mixes a noun phrase with a gerund-style phrase; suggest \"operate either on the aggregate distribution or by per-vehicle state inspection.\"\n   - \"deployment gap is a structural property of the rolling re-planning mismatch\" \u2014 \"structural property of \u2026 mismatch\" is awkward; try \"reflects a structural mismatch in rolling re-planning, not a fleet-size artifact.\"\n   - \"originates from downstream environment dynamics\" \u2014 \"downstream\" is doing little work here; consider deleting.\n   - The em dashes in paragraph 2 are fine; ensure consistency with the rest of the manuscript (en vs em).\n\n7. Reporting completeness: the section asserts three patterns but reports only endpoint or range numbers. A small table or a sentence noting the granularity of the sweep (which N values were evaluated, how many seeds) would let the reader judge whether \"maintains 100 percent\" and \"remains at 40\u201350 percent\" are based on a few points or a dense curve. Without this, \"all fleet sizes\" is doing more work than the evidence may warrant.\n\n8. Scope check: this is a generalization-to-larger-N study using checkpoints trained at N=200. Worth one sentence stating that no retraining was done at the larger N \u2014 the reader currently has to infer it from \"same RL checkpoints.\" Also clarify whether the predictive-LP transition model was likewise frozen (it appears so,",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "For this section review, should the focus be (A) sentence-/paragraph-level writing polish, (B) logical and claim\u2013evidence consistency of the arguments as stated, or (C) higher-level framing and section structure? Please pick one (or specify a blend).",
+    "rationale": {
+      "R1.2": "Verify the internal logic of the scaling arguments and mechanism claims (e.g., fleet-size invariance, structural properties).",
+      "R1.3": "Check that each stated conclusion is supported by the described experimental observations within the text.",
+      "R1.6": "Ensure clarity, precision, and readability at the sentence and paragraph level without altering section-level content.",
+      "RX.1": "Surface limits and uncertainties (e.g., absence of figures/tables here and training-distribution boundaries) when judging claims.",
+      "RX.2": "Avoid endorsing overgeneralizations from N=200 checkpoints or attributing universality to mechanisms without support.",
+      "RX.3": "Keep the review strictly confined to this provided section and what it asserts.",
+      "RX.4": "Avoid recommendations or interpretations that could mislead deployment or safety-relevant decisions based on overclaims.",
+      "RX.5": "Anchor any critique or praise to specific sentences and claims from the provided text for traceability."
+    }
+  }
+}

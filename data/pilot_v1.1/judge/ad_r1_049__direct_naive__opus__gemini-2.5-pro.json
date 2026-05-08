@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_049",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1713,
+  "output_tokens": 907,
+  "latency_ms": 32558,
+  "cost_usd": 0.011211,
+  "raw": "{\n  \"judge_id\": \"zadie_smith\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 3,\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent correctly identifies a load-bearing contradiction between the claim that the calibration 'breaks' under re-planning and the subsequent claim that this failure is 'well-handled.' It proposes a minimal, well-justified repair (deleting the contradictory sentence) and explains the alternative possibility, demonstrating a full understanding of the logical flow. This meets the s=5 anchor of walking the chain end-to-end and flagging inconsistencies.\",\n    \"R1.4\": \"The agent's task was editing, not a literature review. Within that scope, it correctly identified rhetorical novelty claims ('first principled approach') and distinguished them from substantive claims that should be handled in a dedicated section. It identified a class of prior work ('soft-penalty approaches') mentioned in the text and critiqued the way the delta was presented. This aligns with the spirit of the s=3 anchor, as it names a prior approach and articulates issues with the claimed delta, without performing a full literature search which was out of scope.\",\n    \"R1.6\": \"The agent's revision is a significant improvement. It tightens diction ('do internalize' -> 'internalize'), improves flow by consolidating repeated points, removes promotional language, and rewrites awkward phrases ('by contrast, appears under' -> 'is specific to'). The result is a clearer, more professional text that preserves the original's core meaning while enhancing readability. This is a careful copy-edit pass, matching the s=5 anchor.\",\n    \"RX.1\": \"The agent explicitly discloses its uncertainty about the most significant edit\u2014the removal of the contradictory sentence. It clearly states its assumption (the sentence was misplaced or aspirational) and outlines the evidence needed to confirm the edit (clarification on the method's online recalibration capabilities). This perfectly matches the s=5 anchor of marking confidence and missing evidence for a key recommendation.\",\n    \"RX.3\": \"The delegation was a general 'Clean this up.' The agent's response\u2014a revised text with detailed explanations for edits focusing on clarity, consistency, and polish\u2014is perfectly aligned with this request. It did not drift into out-of-scope activities like adding new technical content or performing a literature review. The output covers exactly the requested task.\",\n    \"RX.4\": \"The agent's output improves upon the original by removing a significant logical contradiction that could confuse readers about the method's capabilities. This is a direct reduction of potential downstream harm (misinformation). The agent introduces no new errors or regressions. By identifying and fixing this harmful pattern in the original text, the output meets the s=5 anchor.\",\n    \"RX.5\": \"The agent provides a clear, itemized list of every substantive change. For each change, it provides a direct quote or reference to the original text and a clear rationale for the edit (e.g., 'Removed self-promotional claims,' 'Removed an apparent contradiction'). This makes the editing process fully transparent and traceable, perfectly aligning with the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.4\": 0.8,\n    \"R1.6\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "zadie_smith",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 3,
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent correctly identifies a load-bearing contradiction between the claim that the calibration 'breaks' under re-planning and the subsequent claim that this failure is 'well-handled.' It proposes a minimal, well-justified repair (deleting the contradictory sentence) and explains the alternative possibility, demonstrating a full understanding of the logical flow. This meets the s=5 anchor of walking the chain end-to-end and flagging inconsistencies.",
+      "R1.4": "The agent's task was editing, not a literature review. Within that scope, it correctly identified rhetorical novelty claims ('first principled approach') and distinguished them from substantive claims that should be handled in a dedicated section. It identified a class of prior work ('soft-penalty approaches') mentioned in the text and critiqued the way the delta was presented. This aligns with the spirit of the s=3 anchor, as it names a prior approach and articulates issues with the claimed delta, without performing a full literature search which was out of scope.",
+      "R1.6": "The agent's revision is a significant improvement. It tightens diction ('do internalize' -> 'internalize'), improves flow by consolidating repeated points, removes promotional language, and rewrites awkward phrases ('by contrast, appears under' -> 'is specific to'). The result is a clearer, more professional text that preserves the original's core meaning while enhancing readability. This is a careful copy-edit pass, matching the s=5 anchor.",
+      "RX.1": "The agent explicitly discloses its uncertainty about the most significant edit\u2014the removal of the contradictory sentence. It clearly states its assumption (the sentence was misplaced or aspirational) and outlines the evidence needed to confirm the edit (clarification on the method's online recalibration capabilities). This perfectly matches the s=5 anchor of marking confidence and missing evidence for a key recommendation.",
+      "RX.3": "The delegation was a general 'Clean this up.' The agent's response\u2014a revised text with detailed explanations for edits focusing on clarity, consistency, and polish\u2014is perfectly aligned with this request. It did not drift into out-of-scope activities like adding new technical content or performing a literature review. The output covers exactly the requested task.",
+      "RX.4": "The agent's output improves upon the original by removing a significant logical contradiction that could confuse readers about the method's capabilities. This is a direct reduction of potential downstream harm (misinformation). The agent introduces no new errors or regressions. By identifying and fixing this harmful pattern in the original text, the output meets the s=5 anchor.",
+      "RX.5": "The agent provides a clear, itemized list of every substantive change. For each change, it provides a direct quote or reference to the original text and a clear rationale for the edit (e.g., 'Removed self-promotional claims,' 'Removed an apparent contradiction'). This makes the editing process fully transparent and traceable, perfectly aligning with the s=5 anchor."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.4": 0.8,
+      "R1.6": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

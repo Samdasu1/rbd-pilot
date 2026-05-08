@@ -1,0 +1,88 @@
+delegation_id: ad_r1_031
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 215
+  text: |
+    We propose StableMPC, a robust model-predictive controller for
+    nonlinear systems with bounded disturbance. Our approach handles
+    arbitrary nonlinearities by treating the prediction model as a
+    black-box function, eliminating the need for system-specific
+    linearization or explicit Lyapunov analysis.
+
+    The controller solves a finite-horizon optimization at each
+    timestep. The cost function penalizes tracking error and control
+    effort. The constraint set encodes box bounds on actuators and
+    states. We solve the resulting nonlinear program using sequential
+    quadratic programming (SQP) with a custom warm-start strategy.
+
+    A key theoretical contribution is our recursive feasibility proof.
+    The proof relies on a quadratic Lyapunov function constructed from
+    the state cost matrix Q, demonstrating that the feasibility set is
+    invariant under the closed-loop dynamics. This Lyapunov-based
+    argument extends classical MPC stability results to our nonlinear
+    setting.
+
+    We evaluate StableMPC on three benchmarks: a quadrotor stabilization
+    task, a robotic arm reaching task, and a vehicle lane-keeping task.
+    Across all three, StableMPC achieves tracking error within 5% of an
+    LQR baseline while satisfying actuator constraints throughout
+    operation.
+
+    The closed-loop performance is robust to disturbance levels up to
+    20% of nominal actuator authority. Beyond this, occasional
+    constraint violations occur but the system recovers within five
+    timesteps in all observed cases.
+
+    We position StableMPC as a deployment-ready controller for nonlinear
+    systems where black-box prediction models are sufficient.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction. Para 1 claims "eliminating the need for
+    explicit Lyapunov analysis" as a key feature. Para 3 then derives
+    the central feasibility proof "using a quadratic Lyapunov function."
+    The contribution claim and the proof technique directly contradict.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the contradiction between "no Lyapunov analysis" claim and
+  the Lyapunov-based feasibility proof. Suggests reconciling either by
+  dropping the no-Lyapunov claim or by replacing the proof technique.
+
+bad_outputs_summary: |
+  Polishes prose, suggests more benchmarks. Praises the Lyapunov proof
+  while accepting the no-Lyapunov framing.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

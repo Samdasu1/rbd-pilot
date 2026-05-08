@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_018",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1565,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 25468,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 0.7, \"R1.5\": 0.7, \"R1.6\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Identified issues with framing, argument flow, an unsupported quantitative claim, a user-facing safety gap, and prose-level redundancy; provide a revised draft followed by issue-by-issue notes.\n\n---\n\n### Revised draft (suggested)\n\n> We present a probabilistic programming interface that compiles models written in a high-level DSL into inference code. The compiler's central optimization \u2014 and the main technical contribution of this work \u2014 is an automatic marginalization transformation for discrete latent variables.\n>\n> When the model's conditional structure exhibits conjugacy between a discrete latent and its observation model, the compiler rewrites the latent into marginalized form, eliminating it from the sampled state. A static analysis over the model graph determines where this rewrite is sound and applies it automatically; cases that fail the analysis are left unchanged.\n>\n> On a benchmark suite of 23 user-written models, the transformation applied to 17 and produced end-to-end inference speedups from 1.2\u00d7 to 18\u00d7 (median 3.4\u00d7) under our experimental setup (described in Section 5). We do not claim these speedups generalize beyond this suite.\n>\n> A current limitation is that when the analysis determines the transformation is unsafe, inference proceeds correctly but the user receives no compile-time diagnostic indicating that the optimization was skipped. Section 4 details the static checks themselves; we discuss this missing-diagnostic issue as future work in Section 7.\n\n---\n\n### Notes on the issues I addressed\n\n**Framing / contribution.** The original paragraph 1 hedges (\"which we believe represents\u2026\") and separates the contribution claim from a description of what the contribution actually is. Folding the claim into the same sentence as the transformation's name makes the contribution legible on first read.\n\n**Argument flow and ordering.** The original sequence is: transformation \u2192 assumption \u2192 \"practitioners write models anyway\" \u2192 analysis \u2192 results \u2192 safety gap. The \"practitioners write models anyway\" sentence is a motivational aside dropped in the middle of a technical exposition; either move it to the introduction or cut it. I cut it. The natural order is: what the transformation does \u2192 when it's sound \u2192 how the compiler decides \u2192 measured effect \u2192 limitations. The revision follows that order.\n\n**An unsupported quantitative claim.** The sentence \"the inference cost reduces by an order of magnitude\" is stated as if it were a general property of the transformation, but the experimental section reports a *range* of 1.2\u00d7\u201318\u00d7 with median 3.4\u00d7 \u2014 which is not an order of magnitude in the typical sense. These two claims are in tension. I removed the \"order of magnitude\" sentence; the empirical numbers speak for themselves and are defensible. If you want to keep a theoretical complexity statement, it should be phrased as an asymptotic claim about a specific model class, not a blanket cost reduction.\n\n**The silent-skip behavior is a real concern, not just a writing issue.** The original text notes that when conjugacy is violated, \"the user is not warned about this fact during compilation.\" This is a usability and arguably a correctness-perception problem: a user who expects the optimization may silently get unoptimized inference and attribute slowness elsewhere. I'd recommend (a) being explicit in the paper that this is a known limitation rather than burying it, and (b) considering whether to emit at least an informational compile-time message listing skipped sites. If you implement (b) before submission, the limitation paragraph can be replaced with a one-line description of the diagnostic.\n\n**Scope of the conjugacy claim.** \"A common case in probabilistic graphical models\" is vague. Either name the families covered (e.g., Dirichlet\u2013categorical, beta\u2013Bernoulli, etc.) or drop the claim. The revision drops it; insert a concrete list if you have one.\n\n**Prose-level edits.** \"compiles user models\" \u2192 \"compiles models\" (the \"user\" is implied by the DSL framing). \"applies it where it is safe\" duplicates \"determine applicability\"; merged into one clause. \"We discuss \u2026 in more detail in Section 4, where we describe \u2026\" is doubly self-referential; tightened to a single forward pointer. Speedup notation standardized to \"\u00d7\".\n\n**Section pointer.** The original points to Section 4 for the safety analysis. I added a Section 5",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which primary focus do you want for this section? (A) Tighten language and clarity only, leaving structure and claims intact; (B) Rework the section\u2019s structure and sharpen the statement of the main contribution while preserving technical content; or (C) Audit claims vs. evidence and adjust tone to avoid overclaiming (e.g., around \u201corder of magnitude\u201d vs. reported results).",
+    "rationale": {
+      "R1.1": "Because the section asserts a main technical contribution, reframing and clarifying the thesis and its preconditions may be needed.",
+      "R1.2": "The reasoning linking conjugacy-based marginalization to speedups and applicability should be checked for internal consistency.",
+      "R1.3": "The benchmark numbers (17/23 models; 1.2x\u201318x; median 3.4x) should be aligned with the broader claims made in the prose.",
+      "R1.5": "Reordering may improve the narrative arc from motivation to transformation, applicability/safety, and then empirical results.",
+      "R1.6": "Sentence-level polishing can improve clarity, concision, and tone without changing technical meaning.",
+      "RX.1": "Edits should make limitations and conditions (e.g., when conjugacy fails and no warning is emitted) explicit.",
+      "RX.2": "Language should avoid overgeneralization, especially around claims like 'order of magnitude' speedups.",
+      "RX.3": "Work should remain confined to this section\u2019s content and not introduce external material beyond scope.",
+      "RX.4": "Careful phrasing reduces the risk of readers misapplying the transformation or misunderstanding safety guarantees.",
+      "RX.5": "Any changes should be traceable to specific sentences in the provided text and avoid inventing unverifiable details."
+    }
+  }
+}

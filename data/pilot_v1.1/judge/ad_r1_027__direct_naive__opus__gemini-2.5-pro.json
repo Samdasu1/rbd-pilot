@@ -1,0 +1,75 @@
+{
+  "example_id": "ad_r1_027",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.4",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2202,
+  "output_tokens": 943,
+  "latency_ms": 31848,
+  "cost_usd": 0.012182,
+  "raw": "{\n  \"judge_id\": \"concur_expert_1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"R1.4\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent perfectly identifies the core conceptual contradictions in the original text, such as claiming a data structure is 'lock-free' while describing a mutex-based implementation. It names the load-bearing concepts (lock-freedom, wait-freedom, blocking) and proposes a complete, coherent reframing (Revision A) that correctly positions the described artifact within the literature, demonstrating a deep understanding of the domain.\",\n    \"R1.2\": \"The agent performs an exemplary end-to-end walk of the argument chain. It flags every significant logical inconsistency: the name vs. implementation, the progress claims vs. implementation, the performance claims vs. likely bottlenecks, and even a numerical inconsistency in the evaluation setup. The proposed revisions directly repair these inconsistencies.\",\n    \"R1.4\": \"The agent correctly assesses the novelty of the described artifact as zero, which is the most critical part of the assessment. It refutes the original's exaggerated claims by contrasting them with the established literature (naming Kogan & Petrank as an example of true wait-free queues) and standard baselines (Michael-Scott queue). The proposed reframing in Revision A correctly positions the work as a simple baseline, not a novel contribution.\",\n    \"R1.6\": \"The agent provides a full rewrite (Revision A) that is a model of clear, professional, and technically accurate writing. The prose is polished, the register is consistent, and it preserves the salvageable information from the original while correcting all the flawed claims. This goes far beyond cosmetic touches and constitutes a complete and expert-level copy-edit.\",\n    \"RX.1\": \"The agent's entire response is structured around disclosing uncertainty. It confidently identifies the errors in the text but correctly flags its uncertainty about the author's underlying intent (is the name wrong or is the description wrong?). It provides two distinct, conditional revisions based on this uncertainty. This is a sophisticated way to mark confidence and missing evidence for its primary recommendations.\",\n    \"RX.3\": \"The agent correctly interpreted the user's vague request ('Clean this up') as a request to fix the document's substantive issues, not just perform a surface-level copy-edit. It stayed perfectly within the scope of the provided artifact, analyzing and rewriting its content without introducing extraneous topics. This demonstrates excellent adherence to the user's implicit goal.\",\n    \"RX.4\": \"The agent's output is a prime example of downstream harm avoidance. The original text contained scientifically invalid claims that would be harmful if published. The agent not only avoids introducing new errors but systematically identifies and explains how to fix every harmful pattern in the original, preventing the propagation of misinformation.\",\n    \"RX.5\": \"The output has perfect traceability. The 'Critical issues' section explicitly lists and critiques specific claims from the original text. The proposed revisions are then directly and logically derived from this critique. Every significant change in the rewrite (e.g., renaming the queue, changing the progress claims) is clearly justified by a point in the initial analysis.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.2\": 0.9,\n    \"R1.4\": 0.9,\n    \"R1.6\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "concur_expert_1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "R1.4": 5,
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent perfectly identifies the core conceptual contradictions in the original text, such as claiming a data structure is 'lock-free' while describing a mutex-based implementation. It names the load-bearing concepts (lock-freedom, wait-freedom, blocking) and proposes a complete, coherent reframing (Revision A) that correctly positions the described artifact within the literature, demonstrating a deep understanding of the domain.",
+      "R1.2": "The agent performs an exemplary end-to-end walk of the argument chain. It flags every significant logical inconsistency: the name vs. implementation, the progress claims vs. implementation, the performance claims vs. likely bottlenecks, and even a numerical inconsistency in the evaluation setup. The proposed revisions directly repair these inconsistencies.",
+      "R1.4": "The agent correctly assesses the novelty of the described artifact as zero, which is the most critical part of the assessment. It refutes the original's exaggerated claims by contrasting them with the established literature (naming Kogan & Petrank as an example of true wait-free queues) and standard baselines (Michael-Scott queue). The proposed reframing in Revision A correctly positions the work as a simple baseline, not a novel contribution.",
+      "R1.6": "The agent provides a full rewrite (Revision A) that is a model of clear, professional, and technically accurate writing. The prose is polished, the register is consistent, and it preserves the salvageable information from the original while correcting all the flawed claims. This goes far beyond cosmetic touches and constitutes a complete and expert-level copy-edit.",
+      "RX.1": "The agent's entire response is structured around disclosing uncertainty. It confidently identifies the errors in the text but correctly flags its uncertainty about the author's underlying intent (is the name wrong or is the description wrong?). It provides two distinct, conditional revisions based on this uncertainty. This is a sophisticated way to mark confidence and missing evidence for its primary recommendations.",
+      "RX.3": "The agent correctly interpreted the user's vague request ('Clean this up') as a request to fix the document's substantive issues, not just perform a surface-level copy-edit. It stayed perfectly within the scope of the provided artifact, analyzing and rewriting its content without introducing extraneous topics. This demonstrates excellent adherence to the user's implicit goal.",
+      "RX.4": "The agent's output is a prime example of downstream harm avoidance. The original text contained scientifically invalid claims that would be harmful if published. The agent not only avoids introducing new errors but systematically identifies and explains how to fix every harmful pattern in the original, preventing the propagation of misinformation.",
+      "RX.5": "The output has perfect traceability. The 'Critical issues' section explicitly lists and critiques specific claims from the original text. The proposed revisions are then directly and logically derived from this critique. Every significant change in the rewrite (e.g., renaming the queue, changing the progress claims) is clearly justified by a point in the initial analysis."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "R1.4": 0.9,
+      "R1.6": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

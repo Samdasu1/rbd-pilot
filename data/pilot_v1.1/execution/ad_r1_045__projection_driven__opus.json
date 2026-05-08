@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_045",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1601,
+  "output_tokens": 1099,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 17138,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.6\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Tightened sentence-level prose and argument flow without altering the technical claims or introducing new content; flagged a few phrases where the original wording risks overclaiming.\n\n---\n\n**Revised draft:**\n\nBoth failure modes stem from a single mismatch: reinforcement learning optimizes expected value, whereas commitment imposes a per-step obligation. This mismatch manifests differently in the two algorithms studied, and we argue it accounts for the performance gaps reported in the preceding section across the market conditions we evaluated.\n\nThe constrained-MDP Lagrangian framework drives mean violation toward zero via gradient-based multiplier updates \u2014 a standard technique in constrained optimization. However, it offers no worst-case guarantee for any individual re-planning window in our deployment setting. The agent can therefore satisfy commitment in expectation while violating it in specific operational windows.\n\nThe PPO variant uses a soft-penalty formulation that is dominated by arbitrage gradients, suggesting that the soft-penalty approach is structurally limited rather than merely under-tuned; further hyperparameter refinement seems unlikely to close the gap, though we have not exhaustively tested this. Retraining under the rolling protocol yields zero commitment, a result consistent with the structural-limitation hypothesis advanced throughout the paper.\n\nApplying post-hoc carry-over blending to the RL agents restores commitment to 100%. While encouraging on its face, this comes at the cost of eliminating arbitrage revenue, which we view as inferior to the integrated coupling proposed in our combined strategy.\n\n---\n\n**Notes on the edits and limits of this revision:**\n\n- I removed redundancies (\"that we have been advancing throughout this paper,\" \"that we have been evaluating throughout this study,\" \"in the preceding section of this paper\") and split the long opening sentence into a claim plus an elaboration so the causal chain (mismatch \u2192 differential manifestation \u2192 observed gaps) reads cleanly.\n- I softened two phrases that read as stronger than the evidence likely supports: \"confirms\" became \"is consistent with,\" and the claim that no hyperparameter tuning could help was qualified (\"seems unlikely \u2026 though we have not exhaustively tested this\"). If your experiments do include a hyperparameter sweep that rules this out, you can restore the stronger wording; without seeing that evidence I cannot verify it.\n- \"Less desirable\" was sharpened to \"inferior,\" but only as a comparative judgment about the trade-off you describe (commitment vs. arbitrage revenue). Whether that ranking holds depends on the operator's utility weighting, which the paper presumably justifies elsewhere.\n- I did not reorder sections, add or remove citations, or re-examine whether the cited evidence supports each claim \u2014 those were outside the scope you flagged. I also did not introduce new technical content; every substantive claim in the revision is present in the original.\n- I have no visibility into the surrounding sections, so cross-references (\"preceding section,\" \"combined strategy\") are preserved as-is on the assumption they are accurate in context. Please verify.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "What scope of improvement do you want for this passage? Choose one: (A) Light copyedit only (grammar, concision, readability), (B) Copyedit plus tightening logical links and tone without changing claims, or (C) Substantive rewrite that may reframe claims and restructure the argument.",
+    "rationale": {
+      "R1.2": "Ensure the argument chain within the passage is coherent and that premises lead cleanly to conclusions without internal contradiction.",
+      "R1.6": "The primary task is sentence-level clarity, grammar, concision, and register improvements.",
+      "RX.1": "Edits should preserve and appropriately signal uncertainty where claims are probabilistic or expectation-based.",
+      "RX.2": "Avoid strengthening claims beyond what the current text supports to prevent overstatement.",
+      "RX.3": "Limit changes strictly to improving the provided passage without adding new content, results, or external context.",
+      "RX.4": "Avoid phrasing that could mislead readers about safety-critical guarantees or encourage risky deployment practices.",
+      "RX.5": "Maintain traceability to the original text by not introducing external facts and by preserving intended meaning."
+    }
+  }
+}

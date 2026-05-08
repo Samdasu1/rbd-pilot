@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_011",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1890,
+  "output_tokens": 779,
+  "latency_ms": 28482,
+  "cost_usd": 0.010153,
+  "raw": "{\n  \"judge_id\": \"a_judge\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the argument chain end-to-end, identifying the central logical flaw: the ambiguity of whether the pipeline is a contribution or just infrastructure. It also flags other load-bearing inconsistencies, such as making a claim about robustness while simultaneously admitting it hasn't been properly evaluated. This is a comprehensive logical audit that proposes minimal, clear repairs.\",\n    \"R1.3\": \"The agent audits every load-bearing claim against the (missing) evidence. It systematically questions the claims about accuracy ('comparable to or somewhat better'), the definition of the metric ('variant annotation accuracy'), and the robustness ('robust under different sequencing depths'), pointing out precisely what evidence is needed for each. This is a perfect example of the s=5 anchor.\",\n    \"R1.6\": \"The agent's feedback constitutes a careful copy-edit pass. It addresses cosmetic issues (commas), sentence-level problems (run-ons, first-person overuse), and high-level structural organization. The suggestions are specific, actionable, and would substantially improve the clarity and professionalism of the text without losing meaning.\",\n    \"RX.1\": \"The agent clearly discloses the limits of its knowledge at the end of its critique: 'I have not verified which annotation tools you actually used or what prior benchmarks are most relevant; the citation suggestions above are illustrative.' This is an excellent example of flagging uncertainty and marking its own recommendations as conditional.\",\n    \"RX.3\": \"The user's request was a very open-ended 'What do you think?'. The agent correctly interpreted this as a request for a comprehensive critique of the provided text, covering the dimensions specified in the active set. The output is perfectly aligned with the scope of the task.\",\n    \"RX.4\": \"The output introduces no new errors or regressions. Instead, it identifies and explains harmful patterns in the original text, such as making unsubstantiated claims ('Claims outrun evidence'). Correcting these issues would prevent downstream harm, such as having a scientific paper rejected for lack of rigor.\",\n    \"RX.5\": \"As the output is a critique rather than a rewrite, traceability means linking each point of critique to the source text. The agent does this exceptionally well by quoting or precisely paraphrasing the problematic phrases from the artifact (e.g., 'standard ensemble approach,' 'somewhat better') before explaining why they are an issue. Every point is clearly sourced.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"R1.6\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "a_judge",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the argument chain end-to-end, identifying the central logical flaw: the ambiguity of whether the pipeline is a contribution or just infrastructure. It also flags other load-bearing inconsistencies, such as making a claim about robustness while simultaneously admitting it hasn't been properly evaluated. This is a comprehensive logical audit that proposes minimal, clear repairs.",
+      "R1.3": "The agent audits every load-bearing claim against the (missing) evidence. It systematically questions the claims about accuracy ('comparable to or somewhat better'), the definition of the metric ('variant annotation accuracy'), and the robustness ('robust under different sequencing depths'), pointing out precisely what evidence is needed for each. This is a perfect example of the s=5 anchor.",
+      "R1.6": "The agent's feedback constitutes a careful copy-edit pass. It addresses cosmetic issues (commas), sentence-level problems (run-ons, first-person overuse), and high-level structural organization. The suggestions are specific, actionable, and would substantially improve the clarity and professionalism of the text without losing meaning.",
+      "RX.1": "The agent clearly discloses the limits of its knowledge at the end of its critique: 'I have not verified which annotation tools you actually used or what prior benchmarks are most relevant; the citation suggestions above are illustrative.' This is an excellent example of flagging uncertainty and marking its own recommendations as conditional.",
+      "RX.3": "The user's request was a very open-ended 'What do you think?'. The agent correctly interpreted this as a request for a comprehensive critique of the provided text, covering the dimensions specified in the active set. The output is perfectly aligned with the scope of the task.",
+      "RX.4": "The output introduces no new errors or regressions. Instead, it identifies and explains harmful patterns in the original text, such as making unsubstantiated claims ('Claims outrun evidence'). Correcting these issues would prevent downstream harm, such as having a scientific paper rejected for lack of rigor.",
+      "RX.5": "As the output is a critique rather than a rewrite, traceability means linking each point of critique to the source text. The agent does this exceptionally well by quoting or precisely paraphrasing the problematic phrases from the artifact (e.g., 'standard ensemble approach,' 'somewhat better') before explaining why they are an issue. Every point is clearly sourced."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.6": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

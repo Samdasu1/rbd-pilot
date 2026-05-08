@@ -1,0 +1,138 @@
+{
+  "panel_version": "spec_models_v1.0_iter2",
+  "spec_doc": "docs/spec_models_v1.0.md",
+  "anthropic_excluded_from_judge_panel": true,
+  "models": [
+    {
+      "id": "claude-opus-4-7",
+      "family": "anthropic",
+      "tier": "executor",
+      "host": "claude_code_session",
+      "role": "executor"
+    },
+    {
+      "id": "gpt-5",
+      "family": "openai",
+      "tier": "frontier",
+      "host": "api",
+      "client": "openai"
+    },
+    {
+      "id": "gemini-2.5-pro",
+      "family": "google",
+      "tier": "frontier",
+      "host": "api",
+      "client": "google_genai"
+    },
+    {
+      "id": "grok-4",
+      "family": "xai",
+      "tier": "frontier",
+      "host": "api",
+      "client": "xai"
+    },
+    {
+      "id": "llama-3.1-70b-instruct",
+      "family": "meta",
+      "tier": "mid",
+      "host": "ollama",
+      "ollama_tag": "llama3.1:70b-instruct-q4_K_M"
+    },
+    {
+      "id": "qwen-2.5-72b-instruct",
+      "family": "alibaba",
+      "tier": "mid",
+      "host": "ollama",
+      "ollama_tag": "qwen2.5:72b-instruct-q4_K_M"
+    },
+    {
+      "id": "mistral-large-2-2407",
+      "family": "mistral",
+      "tier": "mid",
+      "host": "ollama",
+      "ollama_tag": "mistral-large:123b-instruct-2407-q4_K_M"
+    },
+    {
+      "id": "deepseek-v3-distill-70b",
+      "family": "deepseek",
+      "tier": "mid",
+      "host": "ollama",
+      "ollama_tag": "deepseek-r1:70b"
+    },
+    {
+      "id": "llama-3.1-8b-instruct",
+      "family": "meta",
+      "tier": "light",
+      "host": "ollama",
+      "ollama_tag": "llama3.1:8b-instruct-q4_K_M"
+    },
+    {
+      "id": "qwen-2.5-7b-instruct",
+      "family": "alibaba",
+      "tier": "light",
+      "host": "ollama",
+      "ollama_tag": "qwen2.5:7b-instruct-q4_K_M"
+    },
+    {
+      "id": "gemma-2-9b-it",
+      "family": "google_open",
+      "tier": "light",
+      "host": "ollama",
+      "ollama_tag": "gemma2:9b-instruct-q4_K_M"
+    },
+    {
+      "id": "phi-3-medium-14b-instruct",
+      "family": "microsoft",
+      "tier": "light",
+      "host": "ollama",
+      "ollama_tag": "phi3:14b-medium-4k-instruct-q4_K_M"
+    },
+    {
+      "id": "mistral-7b-instruct-v0.3",
+      "family": "mistral",
+      "tier": "light",
+      "host": "ollama",
+      "ollama_tag": "mistral:7b-instruct-v0.3-q4_K_M"
+    }
+  ],
+  "roles": {
+    "executor": ["claude-opus-4-7"],
+    "projection_cross_family": ["gpt-5", "gemini-2.5-pro", "grok-4"],
+    "projection_within_model": ["gpt-5"],
+    "pass2_annotator": [
+      "llama-3.1-70b-instruct",
+      "qwen-2.5-72b-instruct",
+      "mistral-large-2-2407"
+    ],
+    "judge": [
+      "gpt-5",
+      "gemini-2.5-pro",
+      "grok-4",
+      "llama-3.1-70b-instruct",
+      "qwen-2.5-72b-instruct",
+      "mistral-large-2-2407",
+      "deepseek-v3-distill-70b",
+      "llama-3.1-8b-instruct",
+      "qwen-2.5-7b-instruct",
+      "gemma-2-9b-it",
+      "phi-3-medium-14b-instruct",
+      "mistral-7b-instruct-v0.3"
+    ]
+  },
+  "tiers_by_id": {
+    "frontier": ["gpt-5", "gemini-2.5-pro", "grok-4"],
+    "mid": [
+      "llama-3.1-70b-instruct",
+      "qwen-2.5-72b-instruct",
+      "mistral-large-2-2407",
+      "deepseek-v3-distill-70b"
+    ],
+    "light": [
+      "llama-3.1-8b-instruct",
+      "qwen-2.5-7b-instruct",
+      "gemma-2-9b-it",
+      "phi-3-medium-14b-instruct",
+      "mistral-7b-instruct-v0.3"
+    ]
+  }
+}

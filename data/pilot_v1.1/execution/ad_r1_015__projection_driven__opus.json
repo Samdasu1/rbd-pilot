@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_015",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1594,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24364,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nSummary: I flag a central inconsistency between the opening claim and the body, identify several overclaims and undisclosed exclusions, and propose a rewritten paragraph that aligns claims with the reported evidence.\n\n## Core problem\n\nThe paragraph's headline claim is self-contradicting against its own body. The opening says \"human-level play across all 12 Atari games we evaluate.\" The body then:\n\n1. Reports only 8 games at or near human level (4 in the 95\u2013110% band, 3 in the 85\u201395% band, plus Montezuma's Revenge at 12%).\n2. Explicitly excludes Montezuma's Revenge, Asterix, Bowling, and Atlantis from the \"final evaluation.\"\n3. Mentions Pitfall and Tennis as games the pipeline \"does not handle reliably.\"\n\nSo the set of games actually backing the headline claim is at most 7 (the 95\u2013110% and 85\u201395% buckets), not 12. \"All 12 games we evaluate\" is inconsistent with the four explicit exclusions, and the opening sentence cannot stand as written.\n\nA second logical problem: the 85\u201395% band is rebranded as \"human-level given the noise in the human baseline,\" but no noise estimate or confidence interval is reported. Without that, the rebranding is a definitional move, not an evidence-backed one.\n\n## Specific issues\n\n**Headline\u2013body mismatch.** \"Human-level play across all 12\" vs. exclusion of 4 games is the most damaging issue and will be the first thing a reviewer flags.\n\n**Selective exclusion without justification.** Three different exclusion reasons are given (hard exploration, seed instability under reward shaping, reward sparsity). Calling all of these \"standard practice\" is only defensible for Montezuma's Revenge in some lineages of work; excluding Asterix, Bowling, and Atlantis because results were unstable is a results-conditioned exclusion and should be labeled as such. As written, the exclusions read as cherry-picking.\n\n**\"Match or exceed the published human baseline.\"** This is contradicted two sentences later by the 85\u201395% bucket, which by definition does not match or exceed the baseline. Pick one framing.\n\n**\"Published human baseline\" is under-specified.** Which human baseline? (Mnih et al. 2015? Badia et al. 2020? Human world records?) Different baselines give very different \"human-level\" thresholds. This needs to be named.\n\n**Number of seeds, variance.** No mention of how many seeds were run or what the variance looks like, yet seed instability is invoked as a reason to exclude Asterix. The reader cannot tell whether the reported 95\u2013110% / 85\u201395% bands are means, single runs, or best-of-n.\n\n**\"Following the standard architecture from prior work.\"** Vague; should cite the specific architecture (e.g., the Nature DQN CNN, IMPALA encoder, etc.).\n\n**\"Meaningful step toward general game-playing competence in the Atari benchmark suite.\"** Given that the Atari suite is 57 games (ALE) and the evaluation covers 12 (with 4 excluded), this generalization claim is too strong. \"General game-playing competence\" should be softened or dropped.\n\n**Forward-looking sentence buries a limitation.** Saying the pipeline \"does not handle reliably\" Pitfall and Tennis is a limitation, not just future work, and should appear in a limitations framing rather than as an aside in a \"we hope future work\" sentence.\n\n## Suggested rewrite\n\n> We evaluate a PPO agent with a CNN encoder and value-function head (architecture following [cite]) on 12 Atari games, training for 50M environment steps per game with N seeds. Relative to the human baseline reported in [cite specific source], the agent reaches 95\u2013110% of human on 4 games (Pong, Breakout, Space Invaders, Asteroids) and 85\u201395% on 3 games (Q\\*bert, Frostbite, Seaquest). On the remaining 5 games, the agent does not reach human-level performance: it scores 12% of human on Montezuma's Revenge (a known hard-exploration game), and we observed high seed variance on Asterix, Bowling, and Atlantis that we attribute to reward-shaping sensitivity and reward sparsity; we report these results in Appendix A",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which focus should we take: (A) sentence-level polish and clarity, (B) checking internal consistency and evidence support for the \u2018human-level\u2019 claims within this paragraph, or (C) higher-level reframing of the claim scope and metric definitions?",
+    "rationale": {
+      "R1.2": "There are potential internal inconsistencies (e.g., \u2018human-level across all 12\u2019 vs exclusions and a 12% of human case), so verifying the argument chain is central.",
+      "R1.3": "The paragraph makes quantitative claims that must align with the reported per-game results and stated evaluation exclusions.",
+      "R1.6": "As a single paragraph intended for publication-style prose, clarity, tone, and concision at the sentence level are likely needed.",
+      "RX.1": "Uncertainty around human baselines, noise, and excluded cases should be transparently communicated.",
+      "RX.2": "Strong terms like \u2018human-level\u2019 risk overclaiming and should be checked against the evidence presented.",
+      "RX.3": "Work should stay within the paragraph\u2019s scope (content and claims here) without venturing into experimental redesign or literature audit.",
+      "RX.4": "Avoiding misleading benchmarking claims reduces potential downstream harm to readers and the research community.",
+      "RX.5": "Claims should be traceable to the stated sources (e.g., Appendix A scores and defined baselines) for verification."
+    }
+  }
+}

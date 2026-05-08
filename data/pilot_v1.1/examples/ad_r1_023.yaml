@@ -1,0 +1,93 @@
+delegation_id: ad_r1_023
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 257
+  text: |
+    In this section we describe the methodology that we developed for
+    analyzing the photometric transit data that we obtained from the
+    multiple telescope facilities that participated in our observation
+    campaign. The pipeline that we built takes as input the raw photometric
+    time series and produces as output the estimated planet parameters
+    that we then use for downstream characterization studies.
+
+    The first stage of the pipeline performs detrending and outlier
+    removal which is necessary because the raw photometric data contains
+    a variety of systematic effects that arise from instrumental drift
+    and atmospheric variability that we needed to remove before any
+    meaningful transit analysis could be performed. The detrending step
+    uses a standard Gaussian process regression approach with kernels
+    that we selected based on prior experience with similar datasets.
+
+    Following the detrending we apply a transit-fitting model that
+    includes parameters for planet radius and orbital period and limb
+    darkening coefficients and we use a Markov chain Monte Carlo sampler
+    to obtain posterior distributions over these parameters and through
+    this process we recover well-constrained estimates with appropriate
+    uncertainty quantification on each parameter of interest.
+
+    We benchmarked the pipeline on a sample of 47 known transiting
+    exoplanets with previously published parameters and found that our
+    pipeline recovers the published values within their reported error
+    bars in approximately 89% of cases which we consider to be reasonable
+    agreement given the heterogeneity of the input data.
+
+    Furthermore the pipeline appears to be relatively robust to variations
+    in observation cadence although we acknowledge that more comprehensive
+    evaluation would strengthen this aspect of our methodology.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Pure prose-quality issues. Multiple 50-60 word run-on sentences
+    (paras 1 / 2 / 3 / 4). Hedging chains throughout: "approximately",
+    "we consider to be reasonable", "relatively robust", "appears to be",
+    "we acknowledge that more comprehensive evaluation would strengthen."
+    Repetition of "we" subject-clauses. Underlying methodology, numbers,
+    and structure are intact — only the writing is bad. Detection: pure
+    reading; no domain knowledge needed (low gating). Delegation T01 is
+    generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Tightens run-ons into shorter sentences, removes hedging chains,
+  normalizes register, breaks up the chained "and" clauses. Does not
+  change underlying methodology, numbers, or section structure.
+
+bad_outputs_summary: |
+  Restructures the section, suggests additional benchmarks, questions
+  the GP regression choice, or proposes new MCMC settings. Reframes
+  the contribution. Adds astronomy citations. Treats prose issues as
+  cosmetic and instead provides scope-expanded feedback.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

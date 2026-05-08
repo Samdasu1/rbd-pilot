@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_038",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1694,
+  "output_tokens": 1263,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 17124,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.9}}\n\nCleaned the prose for sentence-level clarity and reordered paragraphs so the headline result precedes caveats; preserved all original claims, hedges, and numbers without introducing new content.\n\n---\n\n**Revised text:**\n\nThis paper quantifies a substantial commitment collapse in constrained reinforcement learning for V2G fleet aggregation across three European markets. None of the tested RL variants achieves market-viable commitment under rolling re-planning: soft penalties (PPO) reach approximately 45%, Lagrangian relaxation under a static horizon (CMDP) approximately 50%, and horizon-matched retraining (CMDP rolling-trained) 0%.\n\nBy contrast, the model-based combined strategy maintains greater than 99.6% commitment by integrating inter-window coupling directly into its LP objective. Supplementary experiments clarify the mechanism: post-hoc coupling applied to RL restores commitment to 100% but eliminates arbitrage revenue, indicating that the coupling must be embedded in the planning objective rather than added afterward.\n\nThe comparison spans pure RL, an engineered model-based stack, and two hybrid coupling schemes (post-hoc and integrated). The integrated form is realized inside an LP optimizer; whether end-to-end RL architectures can internalize inter-window coupling as a differentiable constraint while preserving arbitrage capability remains open, and we suggest this as the natural next step.\n\nSeveral caveats apply. Historical day-ahead prices are replayed, but fleet dynamics remain simulated, so absolute cost figures should be read as relative comparisons rather than deployment-grade projections. The PPO commitment weight and the CMDP learning rate were not exhaustively tuned, though the observed gradient dominance suggests that soft-penalty remedies are structurally limited rather than merely under-tuned. Battery degradation is not modeled, and heterogeneous fleets would alter the constraint landscape. Training under the rolling protocol was evaluated on all three markets and yielded zero commitment in every case.\n\n---\n\n**Notes on edits made:**\n\n- Moved the strong positive result (model-based, >99.6%) and the post-hoc coupling diagnostic ahead of the limitations paragraph, so the narrative runs: failure of RL \u2192 success of integrated coupling \u2192 scope of comparison \u2192 caveats. The original interleaved these.\n- Rewrote the opening \"Neither\u2026 nor\u2026\" sentence, which was grammatically strained (three items joined by \"neither/nor\"), into a clean enumeration.\n- Tightened \"absolute cost figures are relative rather than deployment-grade projections\" into a clearer hedge.\n- Folded the standalone \"Future work\" sentence into the open-question paragraph to avoid a one-line orphan.\n- Preserved the qualifier \"suggests\u2026 are structurally limited\" rather than strengthening it, since it was originally hedged.\n\n**Items I could not fully verify:**\n\n- Whether \"approximately 45%\" and \"approximately 50%\" are the authors' preferred phrasing or whether the paper reports tighter figures; I kept the originals.\n- Whether the rolling-protocol evaluation truly covered all three markets with 0% in each, or whether \"yielded zero commitment\" was an aggregate statement; I retained the original wording's scope.\n- Whether \"greater than 99.6%\" is the across-market minimum or a single-market figure \u2014 the original is ambiguous and I did not disambiguate.\n\nIf any of these reflect stronger or weaker claims than the underlying results support, the wording should be adjusted before submission.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Do you want (A) sentence-level polish only\u2014clarity, grammar, concision while preserving content and ordering\u2014or (B) deeper cleanup that also allows light restructuring of the paragraph order and limited reframing of claims for coherence (without adding new results)?",
+    "rationale": {
+      "R1.5": "\u2018Clean this up\u2019 may include reordering sentences/clauses for a clearer narrative flow across this abstract-style block.",
+      "R1.6": "The phrasing implies primary responsibility for grammar, clarity, and concision at the sentence/paragraph level.",
+      "RX.1": "Edits should preserve and, if needed, clarify the stated caveats and uncertainties (e.g., simulation, non-modeled degradation).",
+      "RX.2": "Polishing must not strengthen claims beyond what the provided evidence supports.",
+      "RX.3": "Work should stay within cleanup/editing and avoid introducing new analyses, results, or literature.",
+      "RX.4": "Edits should avoid removing safety-relevant caveats or adding language that could mislead stakeholders about deployment readiness.",
+      "RX.5": "Revisions must remain traceable to the original text and avoid introducing unverifiable content."
+    }
+  }
+}

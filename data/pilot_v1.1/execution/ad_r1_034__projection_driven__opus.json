@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_034",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1594,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 25092,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.6\": 0.8, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.5\": 0.7}}\n\nReviewed the section for argument flow, framing clarity, prose quality, and claim calibration. Recommendations follow, with a suggested reordering and targeted rewrites; I have not modified the underlying technical content or introduced new claims.\n\n## Main issues\n\n**1. Ordering inverts the dependency chain.** The paragraph opens by interpreting \"the crossover threshold\" of \"the reliability function\" before either object has been defined. The reader meets R(\u03c4) only in paragraph 3, and the cliff threshold (which gives the crossover its market meaning) only in paragraph 5. The natural exposition order is the reverse of what is written:\n\n   1. Market context: ancillary services impose a cliff threshold (current \u00b65).\n   2. Definition: reliability function R(\u03c4) and its analogy to survival / CVaR (current \u00b63).\n   3. Interpretation: crossover threshold and its reading as market-eligibility fraction (current \u00b61).\n   4. Second tool: deployment-gap metric DG (current \u00b64).\n   5. Transition to experiments (current \u00b62, second sentence).\n\n   This puts motivation \u2192 definition \u2192 interpretation \u2192 second metric \u2192 transition, which is the order the prose seems to assume the reader already has.\n\n**2. The framing sentence is buried.** \"Beyond standard metrics such as cost, quality of service, and commitment, we introduce two analytical tools\u2026\" is the topic sentence for the whole subsection and should appear early, not as the second paragraph. Consider promoting it to the opening, then unfolding the two tools (R(\u03c4) and DG) in turn.\n\n**3. \"Crossover threshold\" is used before it is defined.** The phrase \"the crossover threshold at which the reliability function approaches zero\" presupposes a curve the reader has not yet seen. Either define R(\u03c4) first, or, on first mention, gloss it inline (e.g., \"the threshold \u03c4\\* at which R(\u03c4) falls to zero \u2014 the most stringent requirement the strategy can still meet\").\n\n## Calibration concerns\n\n**4. \"Earn revenue\" is stronger than the setup supports.** The sentence \"the value at the cliff threshold gives the fraction of deployments that actually earn revenue in ancillary service markets\" equates clearing the cliff with earning revenue. Clearing the eligibility gate is necessary but typically not sufficient (clearing prices, activation, penalties). Suggest softening to \"the fraction of deployments that are eligible for capacity compensation\" or \"that clear the market-eligibility gate.\"\n\n**5. \"Attributed exclusively to the change in planning protocol\" is a strong causal claim.** It rests on the parenthetical that fleet parameters, arrivals, and prices are drawn from the same distributions. Same-distribution sampling controls these factors in expectation, not exclusively per realization; residual variance from finite-sample draws and any stochasticity in the deployment protocol itself also contribute. Recommend hedging: \"can therefore be attributed to the change in planning protocol, up to sampling variation across the matched distributions.\"\n\n**6. \"Not merely a statistical summary but a market-eligibility function\" is rhetorical overreach.** R(\u03c4) *is* a statistical summary (a tail probability); what's new is its interpretation against an exogenous threshold. Consider: \"Read against the cliff threshold, this crossover acquires an operational meaning: \u2026\".\n\n## Prose-level suggestions\n\n- \"shares motivation with tail-risk measures like CVaR, but retains the full threshold-dependent profile\" \u2014 clearer as \"unlike scalar tail-risk measures such as CVaR, R(\u03c4) retains the full threshold-dependent profile, \u2026\".\n- \"operational rolling-horizon deployment\" \u2014 \"rolling-horizon deployment\" alone suffices; \"operational\" is redundant given the surrounding context.\n- \"transforming commitment from a graded metric into a binary market-eligibility gate\" \u2014 good sentence; it should arrive earlier, since it motivates why R(\u03c4) and the crossover matter.\n- \"The next section describes the experimental design that applies this framework.\" \u2014 fine as a closer; keep at the very end after reordering.\n\n## Suggested rewrite of the opening\n\n> Beyond standard metrics \u2014 cost, quality of service, and commitment \u2014 we introduce two analytical tools that expose how constraint satisfaction behaves across",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "For this review, should we prioritize (A) conceptual/logic critique of definitions and claims, (B) language/clarity polish, (C) structural framing and section flow, or (D) novelty/related-work positioning\u2014please choose one or two letters?",
+    "rationale": {
+      "R1.1": "The section introduces core constructs and mappings to markets, so the review should assess whether the conceptual framing is coherent at the paragraph level.",
+      "R1.2": "Verifying internal logical consistency is critical given strong causal attributions and equivalences stated in the text.",
+      "R1.6": "Clear, precise wording and consistent terminology are essential to ensure the definitions and thresholds are unambiguous.",
+      "RX.1": "The review should explicitly note assumptions and limits of generality where they appear uncertain or unstated.",
+      "RX.2": "Strong claims should be checked for potential overstatement and guided toward appropriately cautious phrasing.",
+      "RX.3": "Keep feedback within the scope of reviewing this section without performing analysis beyond what a review entails.",
+      "RX.4": "Ensure recommendations do not inadvertently encourage misleading market-facing claims or risky interpretations.",
+      "RX.5": "Comments should be traceable to specific sentences or phrases and clearly indicate their provenance."
+    }
+  }
+}

@@ -1,0 +1,111 @@
+delegation_id: ad_r1_027
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 216
+  text: |
+    We present LockFreeQ, a lock-free concurrent queue designed for
+    high-throughput multi-producer multi-consumer workloads on modern
+    multi-core processors. Our key innovation is a wait-free enqueue
+    operation that linearizes correctly even under heavy contention,
+    achieving the strongest progress guarantee in the literature.
+
+    The data structure is implemented as a singly linked list of nodes,
+    with head and tail pointers. The enqueue operation acquires a mutex
+    on the tail pointer, allocates a new node, links it into the list,
+    and releases the mutex. The dequeue operation similarly acquires
+    a mutex on the head pointer.
+
+    Crucially, the operations are linearizable: any concurrent execution
+    of enqueues and dequeues is equivalent to some sequential execution
+    that respects the real-time order. We prove this property in
+    Section 4 using a standard reduction argument.
+
+    The implementation uses standard pthread mutexes available in any
+    POSIX-compliant runtime. No memory fences or atomic compare-and-swap
+    instructions are required, which simplifies portability across
+    architectures.
+
+    We evaluate LockFreeQ on a 64-core AMD EPYC machine with 16 producer
+    and 16 consumer threads. Throughput reaches 12 million operations
+    per second under uniform workload, with linear scaling up to 32
+    threads of each role. Latency at the 99th percentile remains under
+    8 microseconds across all evaluated configurations.
+
+    We position LockFreeQ as a practical primitive for concurrent
+    systems requiring strong progress and ordering guarantees.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  R1.2: [F1.2.b]
+  notes: |
+    Two compound issues:
+
+    R1.1 — conceptual object misframing. Para 1 names the contribution
+    as a "lock-free concurrent queue" with "wait-free enqueue." Para 2
+    describes the actual algorithm: "acquires a mutex on the tail
+    pointer." A mutex-based queue is by definition NOT lock-free
+    (lock-free means no mutex / no thread-blocking primitive). The
+    contribution claim and the algorithm description are
+    fundamentally inconsistent on the conceptual object.
+
+    R1.2 — internal logical contradiction. Para 4 claims "no memory
+    fences or atomic compare-and-swap instructions are required," but
+    pthread mutex acquire/release inherently involves memory fences
+    (mutexes provide their ordering via fences). The "no fences"
+    claim contradicts the use of mutexes from para 2.
+
+    Combined: the section is internally inconsistent in two ways that
+    interact — the wrong conceptual frame (lock-free vs lock-based)
+    and the wrong technical claim (no fences vs mutex-based ordering).
+    Detection: a reader who knows what "lock-free" means at the term
+    level catches both — but the contradiction is visible in the
+    section's own text (low gating: no canonical paper recall needed,
+    just understanding of standard concurrency terminology).
+
+hidden_intent:
+  weights:
+    R1.1: 0.7
+    R1.2: 0.7
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the "lock-free" framing contradicts the mutex-based
+  algorithm; (2) the "no memory fences" claim contradicts pthread
+  mutex usage. Suggests rewording either to (a) actually present a
+  CAS-based lock-free algorithm, or (b) drop the "lock-free" /
+  "no fences" framing and present as a high-performance mutex-based
+  queue with appropriate positioning.
+
+bad_outputs_summary: |
+  Polishes prose, suggests more thread counts, or strengthens
+  experimental analysis. Accepts both the "lock-free" framing and the
+  mutex-based implementation as compatible. Adds concurrent-data-
+  structures citations without flagging the conceptual mismatch.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

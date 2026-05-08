@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_008",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1594,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 23740,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 1.0}}\n\nLight prose polish plus flags on claims that the paragraph itself does not support.\n\n**Polished prose (sentence-level only, no structural changes):**\n\n> The remote-collaboration literature has consistently identified turn-taking as a primary determinant of perceived team performance. Wallace et al. reported that explicit turn-taking cues reduced miscommunication by 32% in distributed teams. Park and Liu extended this finding to multimodal settings, and Chen et al. showed that automated cue presentation preserved these benefits in larger teams of up to 12 participants.\n>\n> To build on this line of work, we conducted a four-week field study with 24 distributed software-engineering teams across three organizations. Each team was instrumented with a meeting-analysis tool that captured speaker turns, interruptions, and silence intervals, yielding approximately 480 hours of meeting audio together with the accompanying chat transcripts.\n>\n> We applied a hidden Markov model to the speaker-turn sequence to identify discourse states, and used regression models to relate state-transition patterns to weekly team self-reported satisfaction scores.\n>\n> Teams using a structured turn-taking protocol showed a 23% reduction in interruption rate relative to teams without the protocol, and reported satisfaction scores 0.6 points higher on a five-point scale.\n>\n> In summary, our contribution is a deployment-validated automated turn-cue system that improves self-reported team satisfaction in distributed software-engineering teams, with effect sizes comparable to those reported in prior controlled studies.\n\nMinor edits made: removed the redundant \"found that \u2026 extended this finding\" cadence; merged the two short sentences about instrumentation; replaced \"quantitatively improves team satisfaction\" with \"improves self-reported team satisfaction\" (see issues below); softened \"match\" to \"comparable to.\"\n\n**Issues you should look at before publishing:**\n\n1. The closing sentence calls the system \"deployment-validated\" and \"automated,\" but the methods paragraph only describes a passive measurement instrument (capturing turns, interruptions, silences). Nothing in the text says a cue system was actually deployed to participants, nor that any condition was randomly assigned. As written, the contribution claim is not supported by the study described \u2014 readers will assume an intervention that the methods do not document. Either add the missing intervention/assignment details or restate the contribution as observational.\n\n2. Relatedly, \"23% reduction \u2026 compared to teams without the protocol\" implies a between-condition contrast. The methods paragraph does not describe how teams were assigned to \"with protocol\" vs. \"without protocol,\" whether the comparison is between-team or within-team over time, or whether confounds (team size, org, tenure) were controlled. Without that, the 23% and 0.6-point numbers should be presented as associations, not effects.\n\n3. \"Improves team satisfaction\" overstates what a self-reported weekly score on a 5-point scale measures. \"Improves self-reported satisfaction\" is the defensible phrasing.\n\n4. \"Effect sizes that match prior controlled-study findings\" is a strong comparative claim; the paragraph reports a percentage and a raw score difference but no standardized effect size, and the prior work cited reports a different outcome (miscommunication reduction, not satisfaction). The comparison is not apples-to-apples as currently written.\n\n5. Citations are given as author names without years or venues; if this is a draft for a venue that requires inline cites, they will need to be filled in. (Flagging only \u2014 not in the active scope to fix.)\n\n6. Audio + chat transcripts from real engineering meetings carry confidentiality and consent considerations. The paragraph does not mention IRB/ethics review, consent, or data handling. For a field deployment across three organizations this is usually expected in the paper.\n\n**What I am not certain about:**\n- Whether items 1 and 2 reflect missing exposition (the study did have an intervention and assignment, just not described in this paragraph) or genuine overclaiming. I read the paragraph literally; the authors will know which.\n- Whether the \"prior controlled-study findings\" being matched refers to the 32% miscommunication number or to other unreported satisfaction outcomes in the cited work \u2014 I cannot verify the cited papers from the excerpt alone.\n- I did not assess novelty, citation accuracy, structural ordering, or the statistical appropriateness of the HMM",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Do you want me to focus on (A) sentence- and paragraph-level wording/clarity (R1.6), (B) checking argument and evidence alignment within the paragraph (R1.2/R1.3), or (C) higher-level reframing/structure of the claims and contribution (R1.1/R1.5)?",
+    "rationale": {
+      "R1.6": "Given the brief request to 'take a look at this paragraph,' sentence- and paragraph-level polish is the most likely immediate need.",
+      "RX.1": "The user's intent is ambiguous across editing, argument checking, and higher-level framing, so uncertainty should be surfaced.",
+      "RX.2": "The projection should avoid assuming tasks like reanalysis or novelty auditing that were not explicitly requested.",
+      "RX.3": "Scope must remain at projecting responsibilities for this paragraph rather than performing edits or new analyses.",
+      "RX.4": "We should avoid recommending actions that could inadvertently distort reported findings or misattribute prior work.",
+      "RX.5": "All responsibilities should be grounded strictly in the provided text and delegation for traceability."
+    }
+  }
+}

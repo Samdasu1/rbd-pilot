@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_024",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1646,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 25556,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.4\": 0.7, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.6}}\n\nSummary: Identified several internal contradictions, unsupported claims, and overclaims in the artifact, and flagged what would need to change for the claims to be defensible.\n\n## Major issues\n\n**1. The \"first\" claim is not supported and likely false.**\nThe opening states SentiBridge is \"the first cross-lingual sentiment classifier that achieves competitive performance across both high-resource and low-resource languages.\" The text gives no survey, no defined criterion for \"competitive,\" and no definition of \"low-resource\" \u2014 and indeed the six training languages listed (English, Spanish, French, German, Mandarin, Arabic) are all high-resource by standard usage. The paper does not actually evaluate on a low-resource language, so the headline claim is unsupported by the evidence presented and should be removed or substantially weakened.\n\n**2. Internal contradiction about novelty.**\nThe abstract grounds the contribution in \"the novel training procedure ... as introduced by Smith et al. (2022).\" A procedure introduced by prior work cannot be the novel contribution of this paper. Either (a) Smith et al. introduced the procedure and this paper's contribution lies elsewhere (the attention pooling + joint sentiment head + multilingual joint training), or (b) the procedure is genuinely new here and the Smith et al. attribution is wrong. Pick one and rewrite. As written, the novelty story is incoherent.\n\n**3. Contradiction with Liu et al. (2019).**\nThe text says existing methods \"either focus on individual high-resource languages or use translation-based pipelines,\" and then immediately says the no-translation cross-lingual idea was \"also explored by Liu et al. (2019).\" If Liu et al. already did direct cross-lingual (no translation) work, then the dichotomy in the previous sentence is false, and the methodological novelty is further reduced. Reconcile: state precisely what Liu et al. did and what is different here (e.g., language coverage, joint training, sentiment-specific head).\n\n**4. Evaluation does not match the framing.**\n- The model is trained on six languages but evaluated on \"XNLI-sentiment subset (5 languages) and SST (English).\" Which five? Is Arabic evaluated? If a training language is dropped from evaluation, say why.\n- \"XNLI-sentiment\" is not a standard benchmark name \u2014 XNLI is a natural language inference dataset. Either this is a custom subset (then describe its construction) or the benchmark is misnamed. Clarify.\n- Only two languages' numbers are reported in prose (Spanish, Mandarin); the rest are deferred to a Table 4 that the reader cannot see. The general claim of \"competitive performance across \u2026 languages\" rests on numbers not shown in the text. At minimum, summarize the range or mean across all evaluated languages.\n- The \"translation-pipeline baseline\" is not specified (which translator? which monolingual classifier? same training data?). Without this, the +2.9 / +3.3 point gains are not interpretable. No statistical significance, no variance across seeds, no other baselines (e.g., XLM-R fine-tuned, mBERT).\n\n**5. Data provenance is vague.**\n\"1.2M sentiment-labeled examples per language drawn from public corpora\" \u2014 which corpora, with which labels, under which licenses? For Mandarin and Arabic in particular, 1.2M sentiment-labeled examples from public sources is a strong claim and should be enumerated. This matters both for reproducibility and to let readers judge label quality (auto-labeled vs. human-labeled changes the interpretation of all results).\n\n**6. Closing positioning overclaims.**\n\"Particularly for languages where direct training data is scarce\" is asserted in the conclusion, but the paper's evaluation contains no scarce-data language and no low-resource ablation (e.g., training on five languages and zero-shot transferring to a held-out sixth). Either run that experiment or remove the claim.\n\n## Smaller logical points\n\n- \"Translation drift\" is invoked as the failure mode of translation pipelines but never defined or measured. If it is the motivating problem, at least one piece of evidence (yours or cited) should quantify it.\n- \"Competitive performance\" is undefined. Compared to what reference point? Translation baselines, monolingual SOTA, or other multiling",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.7,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the check focus primarily on (A) content-level validation (logic, claim\u2013evidence alignment, novelty and overclaiming) or (B) language/structure polish (phrasing, clarity, and section reorganization)?",
+    "rationale": {
+      "R1.2": "A core part of 'checking' a research claim is validating that the argumentative chain from premises to conclusions is coherent and internally consistent.",
+      "R1.3": "The excerpt makes quantitative performance claims, so we must verify that stated results and datasets actually support the claims as written.",
+      "R1.4": "The text asserts 'first' and positions novelty versus prior work, requiring an assessment of delta relative to the cited approaches.",
+      "RX.1": "Given limited context and potential ambiguities, we should explicitly flag uncertainties and limits of what can be checked from the excerpt alone.",
+      "RX.2": "Strong claims (e.g., 'first' and 'competitive across languages') warrant careful avoidance of overstatement without sufficient support.",
+      "RX.3": "We need to confine the check to what the user asked and what the provided excerpt enables, avoiding expansion beyond scope.",
+      "RX.4": "Evaluations and claims in cross-lingual sentiment analysis can affect downstream uses, so the check should avoid endorsing potentially harmful misinterpretations.",
+      "RX.5": "Any judgments should be traceable to specific lines, tables, or citations in the excerpt to maintain provenance and auditability."
+    }
+  }
+}

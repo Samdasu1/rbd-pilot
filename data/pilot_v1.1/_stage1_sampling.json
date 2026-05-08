@@ -1,0 +1,71 @@
+{
+  "pre_registration_doc": "experiment_design_v1.3.md §2.6",
+  "frozen_at": "2026-05-04",
+  "rng_seed": 42,
+  "stratification_rule": "All load-bearing examples per dim are included if count == 9. If count > 9, we drop excess via random.Random(42).choice() applied to the over-represented stratum (synthetic vs modified-real) until balance is closer to 50/50 within each batch.",
+  "batches": {
+    "R1.7": {
+      "n_examples": 9,
+      "load_bearing_count": 9,
+      "selection_method": "all_load_bearing",
+      "selected_ids": [
+        "ad_r1_009",
+        "ad_r1_010",
+        "ad_r1_016",
+        "ad_r1_024",
+        "ad_r1_026",
+        "ad_r1_036",
+        "ad_r1_040",
+        "ad_r1_046",
+        "ad_r1_047"
+      ],
+      "source_split": {"synthetic": 5, "modified-real": 4}
+    },
+    "R1.4": {
+      "n_examples": 9,
+      "load_bearing_count": 10,
+      "selection_method": "drop_one_synthetic_via_seed42",
+      "dropped_ids": ["ad_r1_028"],
+      "selected_ids": [
+        "ad_r1_003",
+        "ad_r1_004",
+        "ad_r1_013",
+        "ad_r1_019",
+        "ad_r1_026",
+        "ad_r1_033",
+        "ad_r1_040",
+        "ad_r1_043",
+        "ad_r1_049"
+      ],
+      "source_split": {"synthetic": 5, "modified-real": 4}
+    },
+    "R1.1": {
+      "n_examples": 9,
+      "load_bearing_count": 9,
+      "selection_method": "all_load_bearing",
+      "selected_ids": [
+        "ad_r1_001",
+        "ad_r1_004",
+        "ad_r1_005",
+        "ad_r1_012",
+        "ad_r1_025",
+        "ad_r1_027",
+        "ad_r1_037",
+        "ad_r1_038",
+        "ad_r1_048"
+      ],
+      "source_split": {"synthetic": 6, "modified-real": 3}
+    }
+  },
+  "conditions_evaluated_per_example": ["direct_naive", "projection_driven"],
+  "raters_per_batch": 5,
+  "ratings_per_batch": 90,
+  "total_ratings": 270,
+  "estimated_prolific_cost_usd": 300,
+  "notes": [
+    "direct_with_claim is excluded from Stage 1 (per paper_master_v1.3 §6) — it is for L_calibration measurement, not for human anchor validation.",
+    "Note: ad_r1_004 appears in both R1.4 and R1.1 batches (dual load-bearing). Same agent output is rated under different anchor texts.",
+    "Note: ad_r1_026 appears in both R1.4 and R1.7 batches (dual load-bearing).",
+    "Note: ad_r1_040 appears in both R1.4 and R1.7 batches (ambiguous coverage class)."
+  ]
+}

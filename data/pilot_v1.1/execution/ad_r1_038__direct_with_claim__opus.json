@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_038",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 1288,
+  "output_tokens": 879,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 12024,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.7, \"R1.5\": 0.8, \"R1.6\": 0.9}}\n\nCleaned up the conclusion: tightened prose, regrouped paragraphs by topic (findings \u2192 mechanism \u2192 limitations \u2192 future work), and removed redundancy.\n\n---\n\nThis paper quantifies a substantial commitment collapse in constrained reinforcement learning for V2G fleet aggregation across three European markets. Under rolling re-planning, none of the RL variants achieves market-viable commitment: soft penalties (PPO) reach ~45%, Lagrangian relaxation with a static horizon (CMDP) ~50%, and horizon-matched retraining (CMDP rolling-trained) 0%. By contrast, a model-based strategy that embeds inter-window coupling directly in its LP objective sustains commitment above 99.6%.\n\nSupplementary experiments isolate the mechanism. Post-hoc coupling applied to RL restores commitment to 100% but eliminates arbitrage revenue, indicating that the coupling constraint must enter the planning objective rather than be patched onto its outputs. Our comparison spans pure RL, an engineered model-based stack, and two hybrid coupling schemes (post-hoc and integrated), with the integrated form realized inside the LP optimizer.\n\nSeveral limitations bound these conclusions. Historical day-ahead prices are replayed, but fleet dynamics remain simulated, so absolute cost figures should be read as relative rather than deployment-grade projections. PPO's commitment weight and CMDP's learning rate were not exhaustively tuned, although the observed gradient dominance suggests soft-penalty remedies are structurally limited rather than a tuning artifact. Battery degradation is not modeled, and heterogeneous fleets would alter the constraint landscape.\n\nWhether end-to-end RL architectures can internalize inter-window coupling as a differentiable constraint while preserving arbitrage capability remains open, and is the natural direction for future work.\n\n---\n\nChanges made: moved the headline quantitative result and the model-based contrast into the opening paragraph; consolidated the mechanism finding (post-hoc vs. integrated coupling) into one paragraph; grouped all limitations together; ended with a single forward-looking sentence rather than splitting it across the opening and closing. Removed the redundant sentence stating rolling-protocol training was evaluated on all three markets (already implied by the headline result).\n\nNo factual claims were altered; if the ~45% / ~50% / 99.6% figures or the three-market scope are stated differently elsewhere in the paper, reconcile accordingly.",
+  "projection_input": null
+}

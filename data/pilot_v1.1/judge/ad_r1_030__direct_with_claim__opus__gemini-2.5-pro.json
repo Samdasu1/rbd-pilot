@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_030",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2134,
+  "output_tokens": 697,
+  "latency_ms": 27899,
+  "cost_usd": 0.009638,
+  "raw": "{\n  \"judge_id\": \"numerical_methods_expert_1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 3,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the artifact's argument chain from end-to-end, identifying multiple load-bearing inconsistencies. It flags contradictions between the claimed novelty and the described method, the claimed convergence rate and the known theoretical rate, and the claimed empirical results and the method's established performance. The proposed repairs are minimal and directly address these core issues.\",\n    \"R1.4\": \"The agent provides an excellent novelty assessment. It correctly identifies the proposed method as the classical steepest descent method, which is the most critical piece of prior art. It then maps the work against other key missing citations (Hestenes & Stiefel for CG, Saad for theory, Barzilai-Borwein for related methods), clearly articulating that the claimed delta is non-existent.\",\n    \"RX.1\": \"The agent's tone is highly confident, which is appropriate given the textbook nature of the errors it identifies. However, it does disclose uncertainty about the *cause* of the erroneous empirical claims, proposing several alternative explanations (e.g., mis-measurement, pathological benchmarks). This aligns with the s=3 anchor of flagging uncertainty for specific out-of-reach claims.\",\n    \"RX.3\": \"The agent's output is a detailed critique that directly addresses the user's request to 'Make sure this is solid.' The entire response is focused on identifying and correcting flaws in the provided artifact, which is exactly within the scope of the delegation.\",\n    \"RX.4\": \"The agent's output is exemplary in avoiding downstream harm. It identifies multiple severe technical errors in the original artifact (e.g., misrepresenting a classical method as novel, stating incorrect convergence rates, making unsubstantiated performance claims) that would be highly damaging if published. The output contains no new errors or regressions.\",\n    \"RX.5\": \"The agent's critique provides excellent provenance for its claims. Each identified issue is explained with a clear technical reason. Furthermore, the agent suggests specific, canonical citations (e.g., Hestenes & Stiefel, Saad's textbook) that serve as the authoritative sources for its corrections, making its reasoning fully traceable.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.8,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "numerical_methods_expert_1",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 5,
+      "RX.1": 3,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the artifact's argument chain from end-to-end, identifying multiple load-bearing inconsistencies. It flags contradictions between the claimed novelty and the described method, the claimed convergence rate and the known theoretical rate, and the claimed empirical results and the method's established performance. The proposed repairs are minimal and directly address these core issues.",
+      "R1.4": "The agent provides an excellent novelty assessment. It correctly identifies the proposed method as the classical steepest descent method, which is the most critical piece of prior art. It then maps the work against other key missing citations (Hestenes & Stiefel for CG, Saad for theory, Barzilai-Borwein for related methods), clearly articulating that the claimed delta is non-existent.",
+      "RX.1": "The agent's tone is highly confident, which is appropriate given the textbook nature of the errors it identifies. However, it does disclose uncertainty about the *cause* of the erroneous empirical claims, proposing several alternative explanations (e.g., mis-measurement, pathological benchmarks). This aligns with the s=3 anchor of flagging uncertainty for specific out-of-reach claims.",
+      "RX.3": "The agent's output is a detailed critique that directly addresses the user's request to 'Make sure this is solid.' The entire response is focused on identifying and correcting flaws in the provided artifact, which is exactly within the scope of the delegation.",
+      "RX.4": "The agent's output is exemplary in avoiding downstream harm. It identifies multiple severe technical errors in the original artifact (e.g., misrepresenting a classical method as novel, stating incorrect convergence rates, making unsubstantiated performance claims) that would be highly damaging if published. The output contains no new errors or regressions.",
+      "RX.5": "The agent's critique provides excellent provenance for its claims. Each identified issue is explained with a clear technical reason. Furthermore, the agent suggests specific, canonical citations (e.g., Hestenes & Stiefel, Saad's textbook) that serve as the authoritative sources for its corrections, making its reasoning fully traceable."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 0.8,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_040",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1806,
+  "output_tokens": 743,
+  "latency_ms": 31296,
+  "cost_usd": 0.009687,
+  "raw": "{\n  \"judge_id\": \"text_improver_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent correctly identifies a critical logical inconsistency between two paragraphs of the original text: whether the 'inter-window coupling' is part of the LP objective or a constraint. It flags this clearly and proposes a tentative resolution in the revised text while asking the author for verification. This is a perfect example of walking the argument chain, flagging a load-bearing inconsistency, and proposing a minimal repair.\",\n    \"R1.4\": \"The agent identifies the strong, unsupported novelty claim ('first model-based scheduling method...') as a rhetorical delta. It does not map against prior work (as it lacks the context to do so), but it correctly prescribes the two valid paths forward: either provide specific contrasts to prior work to establish a sharp delta, or soften the claim to 'to our knowledge' and provide context. This goes beyond simply naming a prior work (s=3) by diagnosing the nature of the claim itself.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty' section. It explicitly states that it cannot verify the two most critical substantive claims (the nature of the coupling mechanism and the novelty claim) because it lacks the necessary context from outside the provided excerpt. This is a model of uncertainty disclosure, flagging missing evidence for its key recommendations.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the delegation 'Improve this draft.' It provides a rewritten, clearer version of the text and a separate, actionable list of deeper issues for the author to consider. This is a comprehensive and highly effective way to fulfill the request.\",\n    \"RX.4\": \"The agent's revision introduces no new errors. Crucially, it identifies and flags several harmful patterns in the original text: a logical inconsistency, an unsupported novelty claim (academic over-claiming), and a potentially misleading 'marketing claim' ('deployment-ready') in a technical methods section. By flagging these, it actively works to prevent downstream harm.\",\n    \"RX.5\": \"The agent provides excellent traceability. While not a line-by-line annotation, the 'Substantive issues' section serves as a clear rationale for every significant, non-cosmetic change made in the revised draft (e.g., re-phrasing the coupling mechanism, softening the novelty claim). This separation of the revised text from the justification for the changes makes the reasoning clear and traceable.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "text_improver_judge_1",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent correctly identifies a critical logical inconsistency between two paragraphs of the original text: whether the 'inter-window coupling' is part of the LP objective or a constraint. It flags this clearly and proposes a tentative resolution in the revised text while asking the author for verification. This is a perfect example of walking the argument chain, flagging a load-bearing inconsistency, and proposing a minimal repair.",
+      "R1.4": "The agent identifies the strong, unsupported novelty claim ('first model-based scheduling method...') as a rhetorical delta. It does not map against prior work (as it lacks the context to do so), but it correctly prescribes the two valid paths forward: either provide specific contrasts to prior work to establish a sharp delta, or soften the claim to 'to our knowledge' and provide context. This goes beyond simply naming a prior work (s=3) by diagnosing the nature of the claim itself.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty' section. It explicitly states that it cannot verify the two most critical substantive claims (the nature of the coupling mechanism and the novelty claim) because it lacks the necessary context from outside the provided excerpt. This is a model of uncertainty disclosure, flagging missing evidence for its key recommendations.",
+      "RX.3": "The agent's output is perfectly aligned with the delegation 'Improve this draft.' It provides a rewritten, clearer version of the text and a separate, actionable list of deeper issues for the author to consider. This is a comprehensive and highly effective way to fulfill the request.",
+      "RX.4": "The agent's revision introduces no new errors. Crucially, it identifies and flags several harmful patterns in the original text: a logical inconsistency, an unsupported novelty claim (academic over-claiming), and a potentially misleading 'marketing claim' ('deployment-ready') in a technical methods section. By flagging these, it actively works to prevent downstream harm.",
+      "RX.5": "The agent provides excellent traceability. While not a line-by-line annotation, the 'Substantive issues' section serves as a clear rationale for every significant, non-cosmetic change made in the revised draft (e.g., re-phrasing the coupling mechanism, softening the novelty claim). This separation of the revised text from the justification for the changes makes the reasoning clear and traceable."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

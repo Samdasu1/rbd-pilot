@@ -1,0 +1,29 @@
+{
+  "example_id": "ad_r1_020",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "phi-3-medium-14b-instruct",
+  "judge_family": "microsoft",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2169,
+  "output_tokens": 318,
+  "latency_ms": 54133,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"Judge001\",\n  \"active_set_recognized\": [\"R1.3\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.3\": 2,\n    \"RX.1\": 0,\n    \"RX.3\": 3,\n    \"RX.4\": 2,\n    \"RX.5\": 1\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent output correctly flags all claims with evidence-claim linkage.\",\n    \"RX.1\": \"No uncertainty disclosure is present in the output.\",\n    \"RX.3\": \"Output mostly aligns with scope, but lacks minor drift on one dimension.\",\n    \"RX.4\": \"The agent's output avoids new errors and identifies harmful patterns; however, it does not explicitly address all potential harms in the original text.\",\n    \"RX.5\": \"Sources are traceable but lacking.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.8,\n    \"rationale\": \"The agent output aligns with source-based claims and justifications provided for each change.\",\n    \"confidence\": 2\n  }\n}",
+  "parsed": null,
+  "validation": {
+    "passed": false,
+    "error": "confidence keys mismatch: missing ['RX.1', 'RX.3', 'RX.4', 'RX.5']; extra ['confidence', 'rationale']"
+  }
+}

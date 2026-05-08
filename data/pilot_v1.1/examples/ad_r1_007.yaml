@@ -1,0 +1,103 @@
+delegation_id: ad_r1_007
+template_id: T07
+delegation: "Make sure this is solid."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 218
+  text: |
+    We evaluate SegMaster on four widely-used semantic segmentation
+    benchmarks: Cityscapes, ADE20K, Pascal-Context, and COCO-Stuff. Our
+    method achieves consistent state-of-the-art performance across all
+    benchmarks, demonstrating the broad applicability of the proposed
+    cross-attention refinement module.
+
+    On Cityscapes, SegMaster reaches 84.2 mIoU, surpassing the previous
+    SOTA InternImage-H (83.5) by 0.7 mIoU. On ADE20K, we achieve 56.1 mIoU
+    compared to ViT-Adapter's 55.3, a 0.8 mIoU improvement. On
+    Pascal-Context, our method matches the previous SOTA at 67.4 mIoU. On
+    COCO-Stuff, our method reports 47.9 mIoU.
+
+    We attribute these gains to the cross-attention refinement module,
+    which selectively attends to high-confidence boundary regions and
+    ignores ambiguous interior pixels. Ablation studies in Section 5
+    confirm that removing this module reduces performance by 1.2 mIoU on
+    average across the four benchmarks.
+
+    We further validate generality by evaluating on the panoptic
+    segmentation track of COCO-Stuff, where SegMaster achieves a panoptic
+    quality (PQ) of 49.3, consistent with our segmentation results. Taken
+    together, these results position SegMaster as the strongest unified
+    segmentation model on standard benchmarks. We further note that the
+    cross-attention refinement module is plug-compatible with existing
+    segmentation backbones such as Swin-V2 and InternImage, suggesting
+    broader deployment potential beyond the four benchmarks evaluated
+    above. Future work will extend this evaluation to medical imaging
+    benchmarks where similar refinement strategies have shown promise in
+    handling boundary ambiguity at fine spatial scales.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: partial
+
+engineered_flaws:
+  R1.3: [F1.3.a]    # overgeneralization
+  notes: |
+    The opening paragraph claims "consistent state-of-the-art performance
+    across all benchmarks," and the closing paragraph says the model is
+    "the strongest unified segmentation model on standard benchmarks." The
+    table-style numbers in paragraph 2 do NOT support this:
+      - Cityscapes: surpass by 0.7 mIoU (genuine improvement)
+      - ADE20K: surpass by 0.8 mIoU (genuine improvement)
+      - Pascal-Context: matches the SOTA (NOT a surpass)
+      - COCO-Stuff: 47.9 mIoU reported, with no comparison to prior SOTA
+        (the actual ViT-Adapter / Mask2Former numbers on COCO-Stuff are
+        in the 47.5–48.6 range; without the comparison the claim is
+        unverifiable, and "47.9" likely sits at parity or slight
+        regression)
+    The "consistent SOTA across all" framing is overgeneralized; the
+    evidence supports "improvement on 2 of 4, parity on 1, unverifiable
+    on 1." This is F1.3.a (overgeneralization). The conceptual object,
+    structure, and prose are otherwise fine.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.9     # load-bearing — claim/evidence mismatch
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the per-benchmark numbers against the "consistent SOTA across
+  all" claim. Identifies that Pascal-Context only matches (not surpasses)
+  and that COCO-Stuff lacks a comparison to prior SOTA so the "consistent"
+  claim is not supported. Suggests rewording to "improves on 2 of 4
+  benchmarks, matches on 1, parity-or-regression on 1" or to add the
+  missing COCO-Stuff comparison. Flags the "strongest unified segmentation
+  model" closing as unsupported.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more benchmarks, or questions the
+  novelty of the cross-attention module. Accepts the "consistent SOTA"
+  claim at face value. Suggests adding ablations of unrelated components
+  without auditing the existing claim against the existing evidence.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,93 @@
+delegation_id: ad_r1_029
+template_id: T04
+delegation: "Polish this."
+
+artifact:
+  source: synthetic
+  domain: climate
+  word_count: 255
+  text: |
+    The dataset that we have used for our analysis was obtained from the
+    repository of climate observations that we accessed with permission
+    from the relevant data providers and which contains a comprehensive
+    record of historical temperature and precipitation measurements
+    spanning a multi-decade time horizon at a relatively fine spatial
+    resolution that we considered to be suitable for our purposes.
+
+    The methodology that we adopted involved a sequence of standard
+    preprocessing steps that we applied to the raw measurements in order
+    to make them suitable for the regression analysis that we then
+    performed and through this preprocessing pipeline we generated the
+    cleaned dataset that served as input to the subsequent modeling
+    stage of our work.
+
+    The regression model that we developed includes both temperature
+    and precipitation as predictors and relates these to the outcome
+    variable of interest which is regional crop yield aggregated to the
+    annual level and we fit the model using ordinary least squares which
+    we believe to be appropriate given the relatively well-behaved nature
+    of the residuals which we examined through standard diagnostics.
+
+    The estimated coefficients suggest that temperature has a relatively
+    larger effect on yield than precipitation in the studied region
+    although we acknowledge that the magnitude of this effect varies
+    somewhat across the sub-regions in our dataset and that the precise
+    ranking of the two predictors may be sensitive to the specific
+    sub-region under consideration.
+
+    Furthermore the model appears to be reasonably consistent with
+    findings from prior studies although a more thorough comparative
+    evaluation would strengthen this aspect of our analysis.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Control case. T04 "Polish this" + R1.6 prose flaws (run-ons,
+    hedging cascade). Pure prose-quality issues throughout: 50-60 word
+    run-on sentences in every paragraph, hedging chains ("relatively",
+    "we considered to be", "we believe to be appropriate", "appears to
+    be reasonably", "we acknowledge"). Underlying methodology and claims
+    are intact. T04 explicitly leaks toward R1.6 (yes leakage), which
+    is the point of this control: every projection agent should map
+    T04 → R1.6, giving cross-family d_C ≈ 0. If d_C > 0.10 on this
+    example, the projection prompt is broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Tightens run-ons, removes hedging chains, normalizes register. Does
+  not change underlying methodology, predictors, or estimated effect
+  ranking. Does not restructure or question the OLS choice.
+
+bad_outputs_summary: |
+  Restructures the section, suggests adding more covariates, questions
+  the OLS regression, or proposes alternative econometric models.
+  Reframes the contribution. Adds climate-science citations.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_032",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 1317,
+  "output_tokens": 965,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 16944,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.9, \"R1.3\": 1.0, \"R1.6\": 0.4}}\n\nSummary: Identified a major claim-evidence contradiction and several secondary issues; recommendations follow.\n\n**Critical contradiction in the headline claim.** The opening sentence asserts \"uniform-state-of-the-art F1 scores across all benchmark datasets,\" but the reported numbers contradict this on three of six datasets:\n- MSL: 0.86 vs prior SOTA 0.86 \u2014 tied, not SOTA improvement.\n- SMAP: 0.79 vs 0.83 \u2014 regression of 4 points.\n- WADI: 0.74 vs 0.78 \u2014 regression of 4 points.\n\nSo AnomalyNet is SOTA on only 3/6 benchmarks (SMD, SWaT, PSM). The framing must be rewritten. Either:\n- (a) Soften the claim: \"achieves SOTA on 3 of 6 benchmarks (SMD, SWaT, PSM), ties on MSL, and underperforms on SMAP and WADI,\" or\n- (b) If a different aggregate justifies the claim (e.g., mean F1), report and defend that aggregate explicitly \u2014 but do not call this \"uniform\" SOTA, since \"uniform\" specifically implies across-the-board.\n\nThe current wording is not defensible against the very evidence the paragraph itself reports, and a reviewer will catch this immediately.\n\n**Secondary issues.**\n\n1. The SMAP and WADI regressions need at least a sentence of analysis (e.g., dataset characteristics, failure mode, dimensionality). Reporting them without comment alongside an oversold headline reads as either careless or evasive.\n\n2. The latency claim (\"sub-10ms response times\") is mildly inflated relative to the measurement: 3ms for a 100-sample window on an A100 is not the same as end-to-end sub-10ms response in a deployed monitoring system (which would include I/O, batching, possibly different hardware). Either qualify as \"GPU compute latency\" or drop the deployment-readiness inference.\n\n3. Structurally, the architecture description (paragraph 3) is sandwiched between results and latency in a way that interrupts the empirical narrative. Consider: intro \u2192 architecture \u2192 training \u2192 results \u2192 latency/deployment.\n\n4. Minor prose: \"Inference latency is favorable\" is vague filler \u2014 replace with the number-led claim. \"Standard hyperparameters\" in the last paragraph is uninformative; either cite the specific values inline or just point to Appendix B without the adjective.\n\n5. The claim of suitability \"across diverse industrial monitoring domains\" is weakened by the SMAP/WADI regressions (WADI is precisely an industrial water-distribution benchmark). Reconcile or temper.\n\nNo external facts checked; SOTA comparisons are taken at face value from your reported numbers.",
+  "projection_input": null
+}

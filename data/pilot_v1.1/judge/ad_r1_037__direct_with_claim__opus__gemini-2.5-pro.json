@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_037",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2099,
+  "output_tokens": 877,
+  "latency_ms": 36766,
+  "cost_usd": 0.011394,
+  "raw": "{\n  \"judge_id\": \"a_human_judge\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.4\": 1,\n    \"RX.1\": 1,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the core conceptual problem: the artifact conflates problem formulation with methodology and contribution statements. It proposes a clear and effective reframing based on the standard structure of a formal problem definition (notation, state/action, cost, constraints, objective), which represents a significant conceptual improvement. This meets the s=5 anchor by naming the load-bearing concept ('problem formulation'), showing the drift, and proposing a strong reframing.\",\n    \"R1.2\": \"The agent performs an end-to-end analysis of the artifact's logical structure. It flags multiple load-bearing inconsistencies, including the central contradiction of claiming to 'formalize' without providing any formalism, the use of undefined symbols, and a subtle but important conflict between the claims that strategies only differ in `p(t)` computation while also allowing objective weights to be learned. The proposed fixes are minimal and precise. This aligns with the s=5 anchor.\",\n    \"R1.4\": \"The agent's output does not contain a novelty assessment. It correctly identifies that the artifact's own novelty claims are misplaced, but it does not contrast the artifact's ideas with any prior work. The task was a review of a single section, making a novelty assessment difficult, but based on the rubric, the output does not meet the criteria for a score higher than 1 as it does not engage with assessing novelty against external work.\",\n    \"RX.1\": \"The agent presents all its critiques and recommendations with a uniform, high level of confidence. It makes declarative statements without expressing any uncertainty about its judgments. While the confidence is likely justified by the nature of the task (analyzing a self-contained text), this style maps directly to the s=1 anchor: 'All output presented as equally confident.'\",\n    \"RX.3\": \"The user's delegation was to 'Review this section.' The agent provided a detailed, structured critique of the provided text, which is precisely what was requested. The output is entirely focused on the artifact and the task. This is a perfect adherence to the requested scope, earning a score of 5.\",\n    \"RX.4\": \"The agent's critique is constructive and free of errors or fabrications. It identifies and explains harmful patterns in the original text, such as making unsubstantiated claims and mixing problem definition with methodology, which can confuse readers. The proposed changes would significantly improve the artifact's quality, introducing no regressions. This meets the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique is exceptionally well-traced. Every major and minor point is explicitly linked back to a specific paragraph, sentence, or phrase in the source artifact. The reason for each criticism is clearly articulated. This allows a reader to easily verify every claim the agent makes against the original text, fulfilling the s=5 criteria for provenance.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.2\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "a_human_judge",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "R1.4": 1,
+      "RX.1": 1,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the core conceptual problem: the artifact conflates problem formulation with methodology and contribution statements. It proposes a clear and effective reframing based on the standard structure of a formal problem definition (notation, state/action, cost, constraints, objective), which represents a significant conceptual improvement. This meets the s=5 anchor by naming the load-bearing concept ('problem formulation'), showing the drift, and proposing a strong reframing.",
+      "R1.2": "The agent performs an end-to-end analysis of the artifact's logical structure. It flags multiple load-bearing inconsistencies, including the central contradiction of claiming to 'formalize' without providing any formalism, the use of undefined symbols, and a subtle but important conflict between the claims that strategies only differ in `p(t)` computation while also allowing objective weights to be learned. The proposed fixes are minimal and precise. This aligns with the s=5 anchor.",
+      "R1.4": "The agent's output does not contain a novelty assessment. It correctly identifies that the artifact's own novelty claims are misplaced, but it does not contrast the artifact's ideas with any prior work. The task was a review of a single section, making a novelty assessment difficult, but based on the rubric, the output does not meet the criteria for a score higher than 1 as it does not engage with assessing novelty against external work.",
+      "RX.1": "The agent presents all its critiques and recommendations with a uniform, high level of confidence. It makes declarative statements without expressing any uncertainty about its judgments. While the confidence is likely justified by the nature of the task (analyzing a self-contained text), this style maps directly to the s=1 anchor: 'All output presented as equally confident.'",
+      "RX.3": "The user's delegation was to 'Review this section.' The agent provided a detailed, structured critique of the provided text, which is precisely what was requested. The output is entirely focused on the artifact and the task. This is a perfect adherence to the requested scope, earning a score of 5.",
+      "RX.4": "The agent's critique is constructive and free of errors or fabrications. It identifies and explains harmful patterns in the original text, such as making unsubstantiated claims and mixing problem definition with methodology, which can confuse readers. The proposed changes would significantly improve the artifact's quality, introducing no regressions. This meets the s=5 anchor.",
+      "RX.5": "The agent's critique is exceptionally well-traced. Every major and minor point is explicitly linked back to a specific paragraph, sentence, or phrase in the source artifact. The reason for each criticism is clearly articulated. This allows a reader to easily verify every claim the agent makes against the original text, fulfilling the s=5 criteria for provenance."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

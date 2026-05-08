@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_004",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1630,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 23723,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.3, \"R1.4\": 0.7, \"R1.5\": 0.2, \"R1.6\": 0.2, \"R1.7\": 0.0, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.9}}\n\nSummary: Reviewed the introduction for framing accuracy, internal logical coherence, novelty positioning, and overclaim risk. The section reads as strongly written but contains several load-bearing claims that are either misrepresented, internally inconsistent, or oversold relative to what a first-order method can plausibly deliver.\n\n**Major issues**\n\n1. **Mischaracterization of the prior literature.** The opening paragraph asserts a \"consensus\" that SGD escapes saddles only with noise large enough to \"dominate the local Hessian's negative curvature.\" This is not an accurate summary of the standard results (Ge et al. 2015; Jin et al. 2017, 2021; Daneshmand et al. 2018; Fang et al. 2019). The perturbed-SGD line of work shows escape with *isotropic perturbations of modest magnitude*, and the dimension dependence in modern results is polylogarithmic, not linear. The claim that \"noise variance must scale at least linearly with dimension d at every iteration, leading to step-size bounds of O(1/d\u00b2)\" should be cited to a specific theorem; otherwise the contrast you draw is built on a strawman. I would either (a) attribute the claim precisely or (b) soften the framing.\n\n2. **The \"first first-order method\" claim is likely an overclaim.** Several existing first-order methods escape saddles in $\\tilde{O}(\\log(1/\\varepsilon))$ or near-linear rates without large noise injection \u2014 e.g., Neon/Neon2 (Allen-Zhu & Li 2018), which extract negative curvature directions via Hessian-vector products built from gradient differences, and the line of work on accelerated saddle escape. Note also that a method using a one-step Hessian-vector product is on the boundary of what is commonly called \"first-order\"; HVPs are typically classified as *Hessian-free* second-order information. The claim of being \"the first first-order method to achieve this rate\" should be tightened, and the HVP-vs-first-order taxonomy needs to be explicit. As written, this is the most exposed sentence in the section.\n\n3. **Internal inconsistency on the role of noise.** Paragraph 1 frames the problem as \"noise must be large to escape.\" Paragraph 2 says CA-SGD escapes \"without requiring large noise injection.\" Paragraph 3 then says the analysis avoids \"concentration over noise trajectories.\" It is unclear whether CA-SGD is a *deterministic* curvature-aware step, a stochastic method with small noise, or stochastic with structured noise. If it is deterministic given the HVP, then the comparison to SGD's noise-driven escape is apples-to-oranges, and the contribution should be reframed as \"curvature-aware deterministic correction\" rather than as beating SGD at its own game. Please clarify in paragraph 2.\n\n4. **Rate claim needs a curvature/Hessian-Lipschitz qualifier.** \"Escapes saddle points in $O(\\log(1/\\varepsilon))$ iterations\" is rate-language usually reserved for *local* escape from a strict saddle under a negative-eigenvalue lower bound and Hessian-Lipschitz assumptions, not for global convergence to an $\\varepsilon$-second-order stationary point. As stated, a reader will compare it to global complexity bounds like $\\tilde{O}(\\varepsilon^{-7/4})$ and conclude something far stronger than you mean. State the assumption set and whether $\\varepsilon$ refers to gradient norm, the saddle gap, or something else.\n\n5. **\"Matching the rate of trust-region methods at first-order cost.\"** Trust-region methods for second-order stationarity typically have iteration complexity $\\tilde{O}(\\varepsilon^{-3/2})$ for $\\varepsilon$-SOSP, not $O(\\log(1/\\varepsilon))$. The matched quantity here is presumably the *local* linear escape rate, not the global complexity. This conflation will be flagged by reviewers; please disambiguate.\n\n6. **\"Returning the field to a clean SGD-style analysis.\"** This is rhetorically large.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.3,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the review focus primarily on (A) content-level evaluation of the claims (conceptual framing, internal logic, and novelty), (B) writing/structure polish, or (C) both with priority on A then B?",
+    "rationale": {
+      "R1.1": "The section makes high-level contribution and positioning claims that benefit from conceptual restatement to ensure the thesis and gap are clear.",
+      "R1.2": "The argument chain linking curvature detection, step scaling, and saddle-escape rates should be checked for internal logical coherence given the claims made.",
+      "R1.4": "Assessing the stated 'first' status and delta versus prevailing views requires a novelty-focused lens even without a full scholarship audit.",
+      "RX.1": "Any review must note limits of certainty given only this excerpt and absence of proofs or empirical evidence here.",
+      "RX.2": "Bold claims (e.g., first-order rates and obviating momentum) should be treated cautiously to avoid endorsing overstatements.",
+      "RX.3": "Feedback should stay within the scope of this section rather than speculate about unprovided proofs or experiments.",
+      "RX.4": "Comments should avoid encouraging phrasing that could mislead practitioners about guarantees in settings not covered here.",
+      "RX.5": "Observations should be traceable to specific sentences/claims in the provided text for verifiability."
+    }
+  }
+}

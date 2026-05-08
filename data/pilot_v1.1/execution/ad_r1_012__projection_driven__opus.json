@@ -1,0 +1,47 @@
+{
+  "example_id": "ad_r1_012",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1597,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 27208,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.2, \"R1.2\": 0.2, \"R1.3\": 0.2, \"R1.4\": 0.2, \"R1.5\": 0.2, \"R1.6\": 0.2, \"R1.7\": 0.2, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Flagging mismatches between what the text claims and what it actually demonstrates, plus safety-relevant caveats that should be made explicit before this is shown to readers or used as a basis for downstream decisions.\n\nKey concerns\n\n1. The name and the method do not match.\nThe system is called \"ModelPredictiveSafety\" and the opening paragraph describes \"model-predictive control\" that \"reasons about future trajectories under uncertainty.\" However, the actual control loop described is a *reactive* threshold-based decelerator: observe current state \u2192 compute current minimum distance from the current depth frame \u2192 if below threshold, decelerate; else, follow nominal controller. There is no prediction horizon, no forward rollout, no optimization over future inputs, and no uncertainty model visible in the described loop. Either the method description is incomplete (and the predictive component needs to be added), or the framing/name overclaims what the system does. This needs to be reconciled before anything else.\n\n2. The ablation undermines the headline claim, rather than supporting it.\nThe ablation disables \"the depth-based safety check\" \u2014 i.e., the reactive component \u2014 and collision rate rises sharply. Given point 1, this is evidence that the *reactive* threshold is what's doing the safety work. It is not evidence for any predictive/MPC contribution. The current sentence (\"confirming the role of the safety threshold in determining the framework's overall behavior\") is technically true but obscures that no ablation isolates a predictive component.\n\n3. The 23%-fewer-stops comparison is under-specified.\n\"Compared with reactive-only baselines\" \u2014 which baseline(s), with what threshold, what controller, what task-completion criterion? Without this, the 23% number is not interpretable, and the claim of \"smoother human-robot interaction\" is not supported by what's reported (no smoothness metric, no user study, no jerk/path-length data).\n\n4. Evaluation scope is narrow; generalization claims should be trimmed.\n- 200 trials, single 6-DoF arm, tabletop, *simulated* human, single reaching motion pattern.\n- \"Shared workspaces\" and \"human-robot interaction\" in the conclusion overreach this setup. The text should say \"in this simulated tabletop setting\" and avoid implying validation with real humans.\n\n5. The failure analysis needs to be foregrounded, not buried.\n3/200 failures at human speeds >1.2 m/s is a safety-critical finding, not a footnote. Adult hand/arm motions routinely exceed 1.2 m/s in reaching and gesturing; pediatric motions can be faster and less predictable. The current text frames this as \"the safety envelope was insufficient,\" which understates it: the system has a known failure mode in a regime that overlaps normal human motion. This must be stated plainly, with an explicit \"not validated for deployment near humans\" caveat given (a) simulation-only evaluation and (b) the observed failure regime.\n\n6. \"Learned safety threshold\" is mentioned once and never explained.\nLearned from what data, with what objective, validated how, and how does it behave out-of-distribution (e.g., novel clothing, lighting, occlusion of the depth sensor)? A learned threshold gating a safety behavior is itself a safety-critical component and currently has zero provenance in the text.\n\n7. Sensing assumptions are not stated.\nThe minimum-distance computation depends entirely on the depth camera. Failure modes \u2014 occlusion (the human's own body occluding their hand), reflective/dark surfaces, sensor latency, frame dropouts, field-of-view limits \u2014 are not discussed. For a paper whose central claim is collision avoidance, the conditions under which the sensor input is trustworthy must be stated.\n\nSuggested revisions to the text itself\n\n- Rename or re-scope: either describe the actual predictive horizon and optimization (and re-run an ablation that disables *prediction*, not the reactive check), or drop \"model-predictive\" from the name and frame the contribution as a tuned reactive safety layer with a learned threshold.\n- Replace \"demonstrates that model-predictive reasoning yields smoother human-robot interaction in shared workspaces\" with a claim matched to the evid",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the check focus primarily on (A) technical/argument review (conceptual framing, logical consistency, and evidence\u2013claim alignment), (B) language and style polish, or (C) section-level structure and scholarship positioning?",
+    "rationale": {
+      "RX.1": "The review should explicitly surface uncertainties and assumptions given the brief request and limited context.",
+      "RX.2": "The projection must avoid endorsing stronger claims than the artifact can support, especially for safety results.",
+      "RX.3": "This task will stay strictly within projecting responsibilities without executing edits or analyses beyond scope.",
+      "RX.4": "Because the content concerns human\u2013robot safety, the projection must avoid encouraging unsafe interpretations or deployment overconfidence.",
+      "RX.5": "Any future execution of these responsibilities should maintain clear linkage between checks and specific parts of the provided text for traceability."
+    }
+  }
+}

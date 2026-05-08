@@ -1,0 +1,104 @@
+delegation_id: ad_r1_008
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 209
+  text: |
+    The remote-collaboration literature has consistently shown that
+    turn-taking is a primary determinant of perceived team performance.
+    Wallace et al. found that explicit turn-taking cues reduced
+    miscommunication by 32% in distributed teams. Subsequent work by Park
+    and Liu extended this finding to multimodal settings, and Chen et al.
+    demonstrated that automated cue presentation maintained these benefits
+    in larger teams of up to 12 participants.
+
+    To extend this line of work, we conducted a four-week field study with
+    24 distributed software engineering teams across three organizations.
+    Each team was instrumented with a meeting-analysis tool that captured
+    speaker turns, interruptions, and silence intervals. We collected
+    approximately 480 hours of meeting audio and accompanying chat
+    transcripts.
+
+    Our analysis applied a hidden Markov model to the speaker-turn
+    sequence to identify discourse states and used regression models to
+    relate state-transition patterns to team self-reported satisfaction
+    scores collected at the end of each week.
+
+    We found that teams using a structured turn-taking protocol exhibited
+    a 23% reduction in interruption rate compared to teams without the
+    protocol, and reported satisfaction scores 0.6 points higher on a
+    five-point scale.
+
+    Our contribution, in summary, is a deployment-validated automated
+    turn-cue system that quantitatively improves team satisfaction in real
+    distributed software engineering teams, with effect sizes that match
+    prior controlled-study findings.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]    # buried contribution
+  notes: |
+    The actual contribution claim — that this work is a
+    deployment-validated automated turn-cue system — is stated only in
+    the FINAL paragraph, after four paragraphs of related work,
+    methodology, and results. A reader entering the section does not
+    know what the paper does until paragraph 5 of 5. The natural
+    section structure for a contribution-style write-up would be:
+      contribution claim (1) → context / RW (2) → method (3) → result (4)
+    Here the order is:
+      RW (1) → method (2) → analysis (3) → result (4) → contribution (5)
+    Subtlety: the section reads naturally if you read it linearly to the
+    end, but the contribution is genuinely buried — a section-level
+    reorder is required, not just a sentence-level move. Many ML/HCI
+    sections do bury contribution and not all readers consider this a
+    flaw, which is why the example is intentionally subtle. The
+    conceptual object, evidence, novelty, and prose are otherwise
+    intact.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2     # could mildly invoke conceptual reframing but not load-bearing
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9     # load-bearing — contribution buried
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the contribution is buried at the end and proposes a
+  section-level reorder so the contribution is stated up front (e.g. in
+  paragraph 1 or 2). Provides a concrete reordered structure such as
+  "contribution → context → method → result" and explains why the
+  current order forces the reader to wait too long to learn what the
+  paper does. Does not focus on prose polish or on questioning the
+  empirical findings.
+
+bad_outputs_summary: |
+  Polishes the prose, questions the statistical analysis, or suggests
+  adding more participants. Accepts the section ordering as-is and
+  comments only on local sentence flow. Suggests adding more cited
+  works to the related-work paragraph. Treats the buried contribution
+  as a stylistic choice rather than a structural issue.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

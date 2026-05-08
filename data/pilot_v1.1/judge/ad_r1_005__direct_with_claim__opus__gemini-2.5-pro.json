@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_005",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2167,
+  "output_tokens": 973,
+  "latency_ms": 38904,
+  "cost_usd": 0.012439,
+  "raw": "{\n  \"judge_id\": \"pie_piscis\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent names multiple load-bearing concepts where the draft is weak: validation against a ground truth, circularity in cohort analysis, and novelty positioning. It shows precisely where the draft's claims drift from these concepts (e.g., claiming a specific lead time without a ground-truth measurement). The proposed reframing is a significant improvement that removes unsupported claims and forces the author to address the conceptual gaps, clearly meeting the s=5 anchor.\",\n    \"R1.2\": \"The agent walks the draft's argument chain from claim to evidence to conclusion. It flags every load-bearing inconsistency, most notably the disconnect between the headline quantitative claim ('4\u20137 minutes') and the indirect, correlational evidence provided. It also identifies a potential logical flaw (circularity) within one of the evidence pillars. The proposed repairs are minimal and precise, fixing the logical chain by replacing the unsupported claim with heavily-caveated, evidence-aligned statements. This is a perfect example of an end-to-end audit with minimal repairs.\",\n    \"R1.3\": \"The agent audits every significant claim in the draft against the described evidence. It correctly identifies that the main claim ('4\u20137 minutes earlier') is entirely unsupported. It further scrutinizes the supported claims (the r=0.78 correlation, the 12% cohort advantage) and points out the weakness of the evidence (small sample size, weak proxy, potential circularity). The revised draft meticulously realigns all claims to what the evidence can actually support. This is a comprehensive audit that exceeds the s=5 standard.\",\n    \"RX.1\": \"The agent's primary contribution is to introduce proper uncertainty disclosure into a draft that had none. The revised text adds a statistical confidence interval for the correlation, introduces a new paragraph explicitly stating two major experimental caveats (lack of ground truth, weakness of the proxy metric), and uses placeholders to flag where missing evidence creates uncertainty for the reader. This systematically marks the confidence and missing evidence for every key result, fully satisfying the s=5 anchor.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent provided a detailed critique followed by a revised draft that directly addresses the identified issues. The output is entirely focused on the provided artifact and the implicit goal of making it more scientifically rigorous. There is no scope drift. The agent's response is a perfect execution of the user's request.\",\n    \"RX.4\": \"The agent's output introduces no errors or regressions; the revised draft is a strict improvement. Crucially, the agent identifies a harmful pattern in the original text: scientific overclaiming. The original draft's unsupported headline claim is misleading and could cause downstream harm by misrepresenting the technology's maturity. The agent's critique and revision directly address and correct this harmful pattern, aligning with the highest standard for this dimension.\",\n    \"RX.5\": \"The agent's output structure provides perfect traceability. The 'Key issues' section serves as a detailed, point-by-point rationale for every non-cosmetic change made in the 'Revised draft'. For example, issue #1 justifies removing the '4-7 minute' claim, issue #2 justifies adding the '[SPECIFY...]' placeholder, and issue #3 justifies adding the confidence interval. Every change is annotated with its reason.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.2\": 0.9,\n    \"R1.3\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "pie_piscis",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent names multiple load-bearing concepts where the draft is weak: validation against a ground truth, circularity in cohort analysis, and novelty positioning. It shows precisely where the draft's claims drift from these concepts (e.g., claiming a specific lead time without a ground-truth measurement). The proposed reframing is a significant improvement that removes unsupported claims and forces the author to address the conceptual gaps, clearly meeting the s=5 anchor.",
+      "R1.2": "The agent walks the draft's argument chain from claim to evidence to conclusion. It flags every load-bearing inconsistency, most notably the disconnect between the headline quantitative claim ('4\u20137 minutes') and the indirect, correlational evidence provided. It also identifies a potential logical flaw (circularity) within one of the evidence pillars. The proposed repairs are minimal and precise, fixing the logical chain by replacing the unsupported claim with heavily-caveated, evidence-aligned statements. This is a perfect example of an end-to-end audit with minimal repairs.",
+      "R1.3": "The agent audits every significant claim in the draft against the described evidence. It correctly identifies that the main claim ('4\u20137 minutes earlier') is entirely unsupported. It further scrutinizes the supported claims (the r=0.78 correlation, the 12% cohort advantage) and points out the weakness of the evidence (small sample size, weak proxy, potential circularity). The revised draft meticulously realigns all claims to what the evidence can actually support. This is a comprehensive audit that exceeds the s=5 standard.",
+      "RX.1": "The agent's primary contribution is to introduce proper uncertainty disclosure into a draft that had none. The revised text adds a statistical confidence interval for the correlation, introduces a new paragraph explicitly stating two major experimental caveats (lack of ground truth, weakness of the proxy metric), and uses placeholders to flag where missing evidence creates uncertainty for the reader. This systematically marks the confidence and missing evidence for every key result, fully satisfying the s=5 anchor.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent provided a detailed critique followed by a revised draft that directly addresses the identified issues. The output is entirely focused on the provided artifact and the implicit goal of making it more scientifically rigorous. There is no scope drift. The agent's response is a perfect execution of the user's request.",
+      "RX.4": "The agent's output introduces no errors or regressions; the revised draft is a strict improvement. Crucially, the agent identifies a harmful pattern in the original text: scientific overclaiming. The original draft's unsupported headline claim is misleading and could cause downstream harm by misrepresenting the technology's maturity. The agent's critique and revision directly address and correct this harmful pattern, aligning with the highest standard for this dimension.",
+      "RX.5": "The agent's output structure provides perfect traceability. The 'Key issues' section serves as a detailed, point-by-point rationale for every non-cosmetic change made in the 'Revised draft'. For example, issue #1 justifies removing the '4-7 minute' claim, issue #2 justifies adding the '[SPECIFY...]' placeholder, and issue #3 justifies adding the confidence interval. Every change is annotated with its reason."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "R1.3": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

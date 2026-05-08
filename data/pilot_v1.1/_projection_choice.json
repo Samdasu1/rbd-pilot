@@ -1,0 +1,20 @@
+{
+  "pre_registration_doc": "experiment_design_v1.3.md §4",
+  "frozen_at": "2026-05-04",
+  "decision": {
+    "projection_family_for_projection_driven_executor_input": "gpt-5",
+    "temperature": 0.0,
+    "run_idx": 0,
+    "source_file_pattern": "data/pilot_v1.1/projection/{eid}__gpt-5__t0.0_run0.json"
+  },
+  "rationale": [
+    "gpt-5 is also the within-family stability anchor used in Exp 1B (per spec_models_v1.0 §4.2 and experiment_design_v1.3 §2.2). Feeding gpt-5's projection into the projection_driven executor input keeps the projection-driven executor on the same family whose stability is independently characterized.",
+    "The alternative — each example uses its own family-specific projection from the cross-family run — is operationally messier and introduces an additional confound between projection-divergence and execution-effect; reserved as an ablation for the main run."
+  ],
+  "alternatives_considered": [
+    {"family": "gemini-2.5-pro", "reason_rejected": "No within-family stability run; harder to disambiguate within-model variance from cross-family divergence."},
+    {"family": "grok-4", "reason_rejected": "Same reason as gemini-pro; reserved for cross-family Exp 1 only."},
+    {"family": "claude-family", "reason_rejected": "Anthropic-excluded per spec_models_v1.0 §2 — would re-introduce executor-projection coupling on the same vendor as the executor (claude-opus-4-7)."}
+  ],
+  "deviation_protocol": "Any change to this projection family choice requires a version bump of this file (`_projection_choice_v2.json`) and a corresponding sync entry in CHANGELOG.md."
+}

@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_020",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2016,
+  "output_tokens": 608,
+  "latency_ms": 25998,
+  "cost_usd": 0.0086,
+  "raw": "{\n  \"judge_id\": \"get_started_dev\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every load-bearing claim in the artifact. It correctly identifies that the claim of 'consistent improvement across all subgroups' is contradicted by the provided AUC values (0.92 vs 0.81 for skin tone, 0.85 vs 0.94 for lesion size). It also correctly flags the 'suitable for deployment' claim as unsupported by this performance disparity.\",\n    \"RX.1\": \"The agent's critique is centered on the artifact's failure to disclose uncertainty. It explicitly calls out the lack of confidence intervals, significance tests, and subgroup sample sizes (Issue #2). It explains why this missing information is critical for interpreting the results and makes specific, actionable recommendations for how to report uncertainty properly.\",\n    \"RX.3\": \"The user's request was a very broad 'Check this.' The agent correctly interpreted this as a request for a scientific peer review of the provided text. The output is a comprehensive and relevant critique that stays entirely within the scope of evaluating the artifact's claims and methodology. There is no scope drift.\",\n    \"RX.4\": \"The agent's output is exemplary in its focus on downstream-harm avoidance. It identifies a critical harmful pattern in the original text: masking a significant performance disparity (algorithmic bias) with misleading language ('consistent improvement'). The agent's suggested revision directly addresses this by recommending against deployment in the underserved population, thus preventing potential harm from a less accurate diagnostic tool.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each point is explicitly linked back to a specific claim, number, or omission in the original artifact. For example, it quotes the claims it refutes and provides a clear 'Replace/With' structure for its suggested revision. The reasoning for every critique is clearly articulated, leaving no ambiguity about the source of the issue.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_dev",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every load-bearing claim in the artifact. It correctly identifies that the claim of 'consistent improvement across all subgroups' is contradicted by the provided AUC values (0.92 vs 0.81 for skin tone, 0.85 vs 0.94 for lesion size). It also correctly flags the 'suitable for deployment' claim as unsupported by this performance disparity.",
+      "RX.1": "The agent's critique is centered on the artifact's failure to disclose uncertainty. It explicitly calls out the lack of confidence intervals, significance tests, and subgroup sample sizes (Issue #2). It explains why this missing information is critical for interpreting the results and makes specific, actionable recommendations for how to report uncertainty properly.",
+      "RX.3": "The user's request was a very broad 'Check this.' The agent correctly interpreted this as a request for a scientific peer review of the provided text. The output is a comprehensive and relevant critique that stays entirely within the scope of evaluating the artifact's claims and methodology. There is no scope drift.",
+      "RX.4": "The agent's output is exemplary in its focus on downstream-harm avoidance. It identifies a critical harmful pattern in the original text: masking a significant performance disparity (algorithmic bias) with misleading language ('consistent improvement'). The agent's suggested revision directly addresses this by recommending against deployment in the underserved population, thus preventing potential harm from a less accurate diagnostic tool.",
+      "RX.5": "The agent's critique is highly traceable. Each point is explicitly linked back to a specific claim, number, or omission in the original artifact. For example, it quotes the claims it refutes and provides a clear 'Replace/With' structure for its suggested revision. The reasoning for every critique is clearly articulated, leaving no ambiguity about the source of the issue."
+    },
+    "confidence": {
+      "R1.3": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

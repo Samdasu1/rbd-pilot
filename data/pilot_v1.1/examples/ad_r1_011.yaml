@@ -1,0 +1,88 @@
+delegation_id: ad_r1_011
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 212
+  text: |
+    In this section we describe the genomic variant annotation pipeline that
+    we developed during this study. The pipeline takes as input variant call
+    format files which are produced by upstream variant callers and which
+    contain genomic positions alleles and quality scores and the pipeline
+    then enriches these positions with functional annotations. We applied
+    the pipeline to a cohort of 1,234 patient samples that we had received
+    from our collaborators at the medical center and through this process
+    we generated annotated variant calls for downstream analysis.
+
+    The annotation step was implemented using a standard ensemble approach
+    that combined predictions from multiple existing annotation tools and
+    the implementation choices that we made during development were guided
+    by our practical experience with variant calling and annotation in
+    similar studies that we had been involved with previously. We
+    benchmarked the pipeline on a held-out set of 100 samples and found
+    that the variant annotation accuracy that we achieved was comparable
+    to or somewhat better than what previous studies have reported.
+
+    Furthermore the pipeline appears to be relatively robust under different
+    sequencing depths and we believe that this represents an advantage over
+    some of the alternatives that we considered during the design phase of
+    this study although we acknowledge that more comprehensive evaluation
+    would strengthen this claim.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Pure prose-quality issues. Para 1 contains a 50-word run-on
+    ("In this section... downstream analysis.") with mixed tense and
+    chained "and" clauses. Para 2 is structurally similar — one mega
+    sentence per paragraph. Hedging chains: "comparable to or somewhat
+    better", "appears to be relatively robust", "we believe that this
+    represents", "we acknowledge that more comprehensive evaluation
+    would strengthen". Underlying claims (numbers, methodology, novelty
+    positioning) are intact. The delegation T09 "What do you think?"
+    does NOT signal R1.6 specifically — it could invite any kind of
+    feedback. R1.6 dominance comes from the artifact, not the
+    delegation.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Tightens run-ons, removes hedging chains, breaks mega-sentences into
+  shorter ones, normalizes register. Does not change underlying methodology
+  or numbers. Does not restructure section or question novelty.
+
+bad_outputs_summary: |
+  Restructures the section, suggests adding more datasets, questions
+  novelty positioning, or proposes new ablations. Reframes the contribution.
+  Adds citations. Treats prose-quality issues as cosmetic and instead
+  provides scope-expanded feedback.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

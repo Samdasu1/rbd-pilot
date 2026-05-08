@@ -1,0 +1,108 @@
+delegation_id: ad_r1_017
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: information_retrieval
+  word_count: 213
+  text: |
+    On the four datasets that we have evaluated namely MS-MARCO and
+    Natural Questions and TriviaQA and HotpotQA we have observed
+    performance numbers that we believe to be reasonably competitive with
+    prior published baselines although the comparison is somewhat indirect
+    because some of the prior baselines used slightly different evaluation
+    protocols which we attempt to reproduce as faithfully as possible
+    given the available resources.
+
+    We propose RetrieveCascade, a hybrid sparse-dense retrieval approach
+    that uses a learned re-ranking step.
+
+    The implementation of the cascade involves several components which we
+    now describe. First we have the sparse retrieval stage which uses BM25
+    with default parameters. Second we have the dense retrieval stage
+    which uses a sentence-transformer model fine-tuned on a 1M
+    query-passage dataset that we curated. Third we have the re-ranking
+    stage that combines the top-100 from each retrieval method using a
+    learned scoring function.
+
+    Concretely the BM25 stage retrieves K1=1000 candidates per query. The
+    dense stage retrieves K2=1000 candidates per query. The re-ranker
+    scores all up to 2000 unique candidates and returns the top-10.
+
+    For our experiments we used the standard splits from each dataset and
+    report MRR and recall@10 in Table 2. We additionally report nDCG@10
+    and the per-dataset breakdown in Appendix B for readers interested in
+    dataset-specific behavior across the four evaluation corpora.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  R1.6: [F1.6.a, F1.6.c]
+  notes: |
+    Two compound issues:
+
+    R1.5 — out-of-order structure. Section flow is:
+      (1) experimental observations / hedge about indirect comparison
+      (2) contribution: "we propose RetrieveCascade" (one sentence)
+      (3) detailed implementation (BM25 / dense / re-ranker)
+      (4) hyperparameters (K1, K2)
+      (5) experimental setup (splits, metrics)
+    The natural ordering is: contribution → method → setup →
+    experiments. Currently the contribution sits as a single sentence
+    sandwiched between empirical observations and implementation.
+    Para 1 (observations) belongs in or near the experiments
+    paragraph, not before the contribution claim.
+
+    R1.6 — prose issues. Para 1 is a single 50+-word run-on. Para 3
+    uses mechanical "First / Second / Third" repetition over three
+    short clauses. Hedging cascade in para 1 ("reasonably competitive",
+    "somewhat indirect", "as faithfully as possible given the available
+    resources").
+
+    Detection: both issues visible from careful reading without external
+    knowledge. Low gating. Delegation T01 "Improve this draft" is
+    maximally generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.7
+    R1.6: 0.7
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) propose a section reorder where the contribution
+  comes first, followed by method, then setup, then results; (2)
+  rewrite para 1 to remove the run-on and hedging cascade, and
+  rewrite para 3 to drop the "First / Second / Third" mechanical
+  repetition. Provides concrete reordered structure and tightened
+  prose for at least one paragraph.
+
+bad_outputs_summary: |
+  Polishes only the prose without addressing the structural issue, OR
+  reorders only without addressing the run-ons and hedging. Suggests
+  adding more datasets or a stronger re-ranker. Accepts the section
+  ordering as natural for IR papers.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

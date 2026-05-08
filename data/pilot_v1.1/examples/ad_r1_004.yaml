@@ -1,0 +1,99 @@
+delegation_id: ad_r1_004
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 220
+  text: |
+    A central question in non-convex optimization is whether stochastic
+    gradient descent (SGD) can escape saddle points efficiently. The current
+    consensus in the optimization community is that SGD provably converges
+    to second-order stationary points only when the noise injected at each
+    step is large enough to dominate the local Hessian's negative curvature,
+    which requires impractically large noise scales. In particular, the
+    prevailing view holds that noise variance must scale at least linearly
+    with dimension d at every iteration, leading to step-size bounds of
+    O(1/d^2) and effective slowdowns in modern overparameterized regimes.
+    As a result, most practical implementations rely on momentum or
+    adaptive methods that circumvent the saddle problem entirely.
+
+    We challenge this view. Our work introduces Curvature-Aware SGD (CA-SGD),
+    which detects local curvature using a one-step Hessian-vector product
+    and dynamically scales the gradient step. We prove that CA-SGD escapes
+    saddle points in O(log(1/ε)) iterations, matching the rate of trust-region
+    methods at first-order cost. This is the first first-order method to
+    achieve this rate without requiring large noise injection.
+
+    By directly attacking the saddle escape problem, CA-SGD obviates the
+    need for momentum or adaptive learning rate schedules, returning the
+    field to a clean SGD-style analysis with provable second-order
+    guarantees. Our analysis simplifies the proof technique substantially:
+    the saddle escape can be bounded through standard Lyapunov arguments
+    without requiring concentration over noise trajectories.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]    # misframed object: positions against a strawman
+  R1.4: [F1.4.b, F1.4.c]    # missing nearest neighbor + rhetorical delta
+  notes: |
+    The "current consensus" framing is a strawman. Established results
+    (Jin et al. 2017, Ge et al. 2015, Lee et al. 2016) show polynomial-time
+    saddle escape for perturbed SGD with mild noise — not "impractically
+    large noise scales." The artifact's contribution is positioned against
+    this misrepresentation of the field, so:
+    (a) the conceptual object the paper claims to attack is a phantom (R1.1
+        — the actual delta vs PGD-style analyses is unclear);
+    (b) the "first first-order method to achieve this rate" claim is
+        contestable (R1.4 — Jin et al.'s perturbed GD achieves comparable
+        rates).
+    Both flaws compound: the novelty claim is broken because the framing
+    of what the field believes is broken. Fixing R1.4 alone (citing PGD)
+    requires rewriting R1.1 (what is the actual delta?).
+
+hidden_intent:
+  weights:
+    R1.1: 0.8     # load-bearing — strawman positioning
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.8     # load-bearing — novelty claim unsupported by accurate field state
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.5     # citation gap is consequence of R1.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names the strawman: states what the field actually shows (perturbed SGD
+  with polynomial-time saddle escape, PGD-style results) and points out
+  that the artifact's "consensus" claim misrepresents this. Identifies that
+  the contribution's novelty delta — defined against the strawman —
+  collapses or shrinks once the framing is corrected. Suggests a rewrite
+  that positions CA-SGD against PGD (Jin et al.) and similar with a
+  precise delta (e.g. constants, dependence on dimension, explicit
+  curvature use vs implicit perturbation).
+
+bad_outputs_summary: |
+  Accepts the strawman framing and suggests strengthening the proof, adding
+  experiments, or polishing the prose. Praises the "clean SGD-style
+  analysis" framing without questioning what it is contrasting against.
+  Adds tangential citations (e.g. Adam, momentum analysis) without
+  addressing the missing nearest-neighbor (PGD).
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

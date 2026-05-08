@@ -1,0 +1,92 @@
+\section{Problem Formulation}
+\label{sec:problem}
+
+We formulate multi-agent LLM orchestration as an \emph{incomplete delegation} problem: a user issues a natural-language delegation that does not fully specify the operational responsibilities the executing agent must assume, and the agent's pre-execution responsibility commitment determines downstream success or failure. Section~\ref{sec:problem:notation} fixes notation. Section~\ref{sec:problem:space} introduces the closed responsibility space $J_{v1.1}$ that this paper instantiates and evaluates. Section~\ref{sec:problem:projection} defines the projection $\pi$ from delegations to responsibility weight vectors, and Section~\ref{sec:problem:mismatch} defines the projection-mismatch quantity $M(d, u, t)$ that the experiments measure. Section~\ref{sec:problem:cross_family} connects projection mismatch across model families to the empirical pilot in Section~\ref{sec:results:exp1}.
+
+\subsection{Notation}
+\label{sec:problem:notation}
+
+Let $d \in \mathcal{D}$ denote a natural-language delegation, $u$ the delegator, $t$ the task category or context, and $a$ the artifact supplied with the delegation. Let $A = \{a_1, \dots, a_n\}$ be the candidate agent set and $y_i$ the role assigned to agent $i$. We write $J$ for the closed responsibility space, $|J|$ for its size, and $J_X \subseteq J$ for the cross-cutting subset. A weight vector $r \in [0, 1]^{|J|}$ over $J$ is a \emph{responsibility projection}; its $j$-th coordinate $r_j$ is the projected importance of dimension $j$. We write $r^*$ for the hidden, annotated, or later-preferred responsibility vector that serves as the operational ground truth in controlled evaluation.
+
+\subsection{Closed responsibility space $J_{v1.1}$}
+\label{sec:problem:space}
+
+This paper instantiates the protocol on $J_{v1.1}$, a closed taxonomy of $|J| = 12$ dimensions partitioned as
+\begin{equation}
+J_{v1.1} \;=\; J_{R1} \;\cup\; J_X,
+\quad |J_{R1}| = 7,\; |J_X| = 5.
+\label{eq:taxonomy}
+\end{equation}
+The category subset $J_{R1}$ enumerates seven dimensions of paper-research delegation:
+\begin{itemize}
+    \item R1.1 \emph{Conceptual reconstruction} --- reframe the thesis, gap statement, or contribution claim above the sentence level.
+    \item R1.2 \emph{Logical consistency} --- verify the argument chain (premises, intermediates, conclusions, and cross-section coherence).
+    \item R1.3 \emph{Evidence-claim alignment} --- check whether claims are supported by the experiments, tables, and figures as reported.
+    \item R1.4 \emph{Novelty assessment} --- estimate the delta between the contribution and the nearest prior work.
+    \item R1.5 \emph{Structural reorganization} --- section-level ordering and narrative arc.
+    \item R1.6 \emph{Writing polish} --- sentence- and paragraph-level prose quality.
+    \item R1.7 \emph{Citation and scholarship} --- reference accuracy, coverage of the relevant literature, and attribution.
+\end{itemize}
+The cross-cutting subset $J_X$ is treated as always-active by construction, regardless of $r$, because the five dimensions apply to any delegated work:
+\begin{itemize}
+    \item RX.1 Uncertainty disclosure
+    \item RX.2 Overclaim avoidance
+    \item RX.3 Scope adherence
+    \item RX.4 Downstream-harm avoidance
+    \item RX.5 Provenance and traceability
+\end{itemize}
+\textbf{Why a closed taxonomy.} Open-vocabulary responsibility projection is unstable across raters and across model families: agreement on free-form ``responsibility labels'' is poor and the resulting $r$ vectors are not directly comparable. Closing the taxonomy at $|J| = 12$ converts projection from open generation to multi-label weight prediction over a fixed index set, enabling cosine and Jaccard distances between projections from different families to be computed and aggregated. Sections~\ref{sec:results:exp1} and \ref{sec:results:exp1b} report these cross-family and within-model distances on the pilot dataset.
+
+\textbf{Scope of the closure.} $J_{v1.1}$ is the operational scope of this paper, not a universal taxonomy claim. The five additional task categories listed in our long-term plan (R2 code review and bug-fix, R3 result interpretation, R4 proposal improvement, R5 technical summarization) and any additional cross-cutting dimensions are reserved for future cycles. Section~\ref{sec:results:limitations} discusses the implications of this scoping for the paper's claims.
+
+\subsection{Responsibility projection $\pi$}
+\label{sec:problem:projection}
+
+A projection agent maps the delegation context to a weight vector:
+\begin{equation}
+r \;=\; \pi(d, u, t, a), \qquad r \in [0, 1]^{|J|}.
+\label{eq:projection}
+\end{equation}
+Each weight $r_j$ takes values calibrated by four anchors --- $0.0$ ``not requested,'' $0.3$ ``peripheral,'' $0.7$ ``central expected responsibility,'' $1.0$ ``load-bearing.'' Continuous values between anchors are permitted; the anchors fix the calibration. From $r$ the protocol derives the active set as the union of supra-threshold R1 dimensions and the always-active cross-cutting block,
+\begin{equation}
+J^*(d) \;=\; \{\, j \in J_{R1} : r_j > \tau_r \,\} \;\cup\; J_X,
+\label{eq:active_set_problem}
+\end{equation}
+with $\tau_r = 0.3$. The active set is the input to subsequent steps of the protocol (Section~\ref{sec:protocol}); its precision directly affects whether the executor concentrates on the true load-bearing dimensions or spreads attention across spuriously activated ones. Section~\ref{sec:results:mechanism:prior_retest} reports a prior hypothesis that a broader-than-engineered active set degrades execution quality, tested in the redesigned panel of this pilot; the active-set breadth excess turns out to be approximately equal across all three conditions and does not differentially explain the projection-injection effect. Section~\ref{sec:protocol:risks} discusses mitigations.
+
+\subsection{Projection mismatch}
+\label{sec:problem:mismatch}
+
+For controlled evaluation we suppose access to a hidden responsibility vector $r^*$ that may be operationally annotated, derived from clarification, or constructed as a later-preferred ground truth. \emph{Projection mismatch} between an agent's projection $r$ and $r^*$ is
+\begin{equation}
+M(d, u, t) \;=\; \Delta(r,\, r^*),
+\label{eq:mismatch}
+\end{equation}
+with $\Delta$ a composite distance that penalizes the components a reviewer cares about. We use a four-component decomposition,
+\begin{multline}
+\Delta(r, r^*) \;=\; \alpha_{\cos}\bigl(1 - \cos(r, r^*)\bigr) + \alpha_{\text{jac}}\,\text{Jac}\bigl(J^*(r), J^*(r^*)\bigr) \\
++ \alpha_{u}\,\text{UnderProj} + \alpha_{o}\,\text{OverProj},
+\label{eq:delta}
+\end{multline}
+with under- and over-projection defined on R1 dimensions only (RX is always active by construction):
+\begin{equation}
+\text{UnderProj}(r, r^*) \;=\; \frac{|\{ j \in J_{R1} : r_j \leq \tau_r \,\land\, r^*_j > \tau_{\text{high}} \}|}{|\{ j \in J_{R1} : r^*_j > \tau_{\text{high}} \}|},
+\label{eq:under}
+\end{equation}
+\begin{equation}
+\text{OverProj}(r, r^*) \;=\; \frac{|\{ j \in J_{R1} : r_j > \tau_r \,\land\, r^*_j \leq \tau_{\text{low}} \}|}{|\{ j \in J_{R1} : r_j > \tau_r \}|},
+\label{eq:over}
+\end{equation}
+with $\tau_{\text{high}} = 0.7$ and $\tau_{\text{low}} = 0.2$. \textbf{Operational $r^*$, not metaphysical intent.} We do not claim $r^*$ recovers a user's true mental intent; $r^*$ is an annotation track defined by the dataset construction protocol (Section~\ref{sec:results:dataset:annotation}), and the paper's claims are about whether observed projections agree on it.
+
+\subsection{Cross-family projection mismatch}
+\label{sec:problem:cross_family}
+
+For ambiguous delegations, several projections may be plausible. Let $\mathcal{R}(d) = \{ r^{(1)}, \dots, r^{(M)} \}$ be the set of projections elicited from $M$ distinct projection agents (e.g., one per model family at temperature $0$). The cross-family projection divergence is
+\begin{equation}
+D_\pi(d) \;=\; \frac{1}{\binom{M}{2}} \sum_{m_1 < m_2} \Delta\bigl( r^{(m_1)},\, r^{(m_2)} \bigr),
+\label{eq:dpi}
+\end{equation}
+which serves as one of the conditions in the clarification trigger of the protocol (Section~\ref{sec:protocol:clarify}) and as the headline measurement in Experiment 1 (Section~\ref{sec:results:exp1}).
+
+\textbf{The empirical question this paper asks.} For natural-language delegations sampled from a controlled distribution, how much does $D_\pi(d)$ exceed the within-family stochastic variance under repeated sampling at non-zero temperature? Section~\ref{sec:results:exp1b} shows an order-of-magnitude gap on the pilot dataset; the protocol of Section~\ref{sec:protocol} is the deployment-side response to that empirical fact.

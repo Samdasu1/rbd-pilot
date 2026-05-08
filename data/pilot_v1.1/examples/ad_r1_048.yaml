@@ -1,0 +1,105 @@
+delegation_id: ad_r1_048
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 210
+  text: |
+    The central finding of this study is the dramatic collapse in
+    constrained MDP commitment between training and deployment. Three
+    observations establish the gap as systematic.
+
+    First, the constrained MDP framework is a well-known generalization
+    of standard MDPs that explicitly handles inequality constraints
+    through Lagrangian methods. Our constrained MDP implementation
+    drives training commitment to approximately 90 percent in two of
+    three markets. Under operational rolling deployment, however,
+    commitment collapses across all three markets.
+
+    Second, quick evaluation under the same static 24-hour horizon
+    yields commitment matching the training value, isolating the
+    rolling re-planning protocol as the dominant deployment-stage
+    cause. This finding contributes to the growing literature on
+    constrained reinforcement learning robustness, where our methods
+    extend the safe RL paradigm to encompass operational protocol
+    shifts as a distinct distribution-shift axis.
+
+    Third, the candidate mechanism traces to the multiplier's
+    horizon dependence: the 4-hour replanning window truncates the
+    calibration horizon, state resets erase cumulative commitment
+    history, and the fixed multiplier does not adapt to the
+    disjoint-window constraint landscape.
+
+    Our deployment-gap framework, then, is a contribution to safe
+    reinforcement learning more broadly than to V2G specifically. It
+    formalizes a new failure mode for any constrained policy
+    deployed under protocol mismatch and provides empirical evidence
+    via the V2G scheduling case study. The framework generalizes
+    beyond power-systems applications.
+  source_provenance: paper_4_isgt_results_deployment_gap_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Modified-real from paper 4 results deployment gap. Conceptual
+    object misframing injected. The original section describes a
+    specific empirical result: constrained-MDP V2G commitment
+    collapses 22-42 pp under rolling deployment in three markets.
+    The modified version reframes the contribution as "a contribution
+    to safe reinforcement learning more broadly than to V2G
+    specifically" — claiming the deployment-gap framework
+    "formalizes a new failure mode" and "generalizes beyond
+    power-systems applications". The section does not actually
+    formalize anything (it reports an empirical observation), and
+    the "framework" is a single metric definition (DG = C_train -
+    C_deploy) plus the rolling-protocol observation. The conceptual
+    object slides from "empirical V2G result" to "general safe-RL
+    framework contribution" without justification. F1.1.c misframed
+    object — visible from the section text (the section does not
+    contain a formal generalization, just empirical observations).
+    Low gating. T05 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section reports an empirical V2G result but
+  reframes it as "a contribution to safe RL more broadly" without
+  the formalization needed to support that reframing. Suggests
+  either (a) presenting a more general formal framework with
+  proofs, or (b) keeping the contribution narrow to V2G empirical
+  observation.
+
+bad_outputs_summary: |
+  Polishes prose, accepts the broader-framework framing, suggests
+  applying the framework to other RL domains. Praises the
+  generalization without questioning whether the section actually
+  proves it.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

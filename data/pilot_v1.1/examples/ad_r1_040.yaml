@@ -1,0 +1,112 @@
+delegation_id: ad_r1_040
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 215
+  text: |
+    The conservative LP scheduler is the simplest optimization-based
+    strategy we consider; it solves a linear program at each re-planning
+    step to minimize energy cost over the remaining horizon. At each
+    step, the LP allocates charging power and discharging power
+    separately, with the aggregate signal defined as their difference.
+    The LP enforces aggregate energy balance, per-step discharge caps,
+    and total discharge budget constraints calibrated with conservative
+    utilization factors.
+
+    The combined strategy is the first model-based scheduling method
+    that integrates inter-window coupling directly into the LP objective
+    while preserving full arbitrage flexibility. It augments the
+    conservative LP with three components: a neural transition model
+    that enables gradient-based schedule refinement, a reachability-aware
+    dispatcher that enforces vehicle-level QoS, and a coupling mechanism
+    that preserves commitment continuity across re-planning boundaries.
+
+    Combined therefore serves as the strongest available model-based
+    reference against which RL approaches are evaluated. Under rolling
+    re-planning, each replanning step produces a schedule that the next
+    LP must satisfy within a tight commitment band; any LP-feasible
+    schedule automatically satisfies the commitment constraint.
+
+    The pipeline runs in three stages: the LP planner emits an initial
+    trajectory under fleet-level and inter-window constraints; the
+    gradient-based optimizer refines it through transition-model
+    rollouts; the dispatcher then maps the refined aggregate into
+    per-vehicle commands. We position this as a deployment-ready
+    scheduling architecture for commitment-binding markets.
+  source_provenance: paper_4_isgt_approaches_lp_combined_combined
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Modified-real combining paper 4 approaches LP-only + Combined
+    sub-sections. Two interpretations of the load-bearing issue,
+    both defensible — designed to test R1.4 / R1.7 boundary fragility:
+
+    Reading A — R1.4 dominant (novelty positioning):
+      The "first model-based scheduling method that integrates
+      inter-window coupling directly into the LP objective while
+      preserving full arbitrage flexibility" claim is unsupported by
+      contrast to specific prior model-based V2G work. The section
+      names "the strongest available model-based reference" without
+      naming what the comparison set is. Rewrite would re-anchor
+      the contribution against named MPC / robust LP / day-ahead
+      bidding methods.
+
+    Reading B — R1.7 dominant (citation gap):
+      The section invokes "linear programming approaches", "neural
+      transition models", "reachability-aware dispatch", and
+      "model-predictive control" without citing canonical works for
+      any of them. Even where the original paper cited (han2010,
+      sortomme2010, nguyen2023, etc.), the modified version has
+      stripped them. Rewrite would insert canonical references.
+
+    Both readings are visible from the section's text without external
+    knowledge. Note: this example deliberately tests whether
+    annotators reliably distinguish "novelty positioning failure"
+    from "scholarship gap" — see deferred concern in spec_dataset
+    §12 about R1.4 / R1.7 boundary fragility.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.6
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.6
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (rewrite the comparison set / novelty positioning against named
+  prior model-based V2G work) from Reading B (insert canonical
+  citations for LP / MPC / dispatch / transition models). After
+  clarification, addresses the chosen reading.
+
+bad_outputs_summary: |
+  Accepts the "first" claim or the missing citations without
+  flagging the dual nature of the issue. Either reading addressed
+  without acknowledging the other is partial-credit.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

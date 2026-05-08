@@ -1,0 +1,101 @@
+delegation_id: ad_r1_042
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 205
+  text: |
+    PPO consistently fails to honor commitment across all evaluated
+    markets and all evaluated configurations. The PPO agent achieves
+    44.8 to 45.9 percent commitment across the three European markets,
+    a range so narrow that it confirms the policy ignores the
+    commitment signal entirely. Our experiments demonstrate that PPO
+    is fundamentally and uniformly incapable of commitment-aware
+    operation in any market, regardless of price dynamics or fleet
+    parameters.
+
+    The soft penalty term in the PPO reward is dominated by the
+    arbitrage gradient — a single high-price discharge can exceed the
+    cumulative commitment penalty over an entire episode. The
+    near-identical commitment across markets with distinct price
+    dynamics confirms that the policy treats commitment as effectively
+    invisible.
+
+    The contrast with constrained MDP reveals complementary failure
+    modes: PPO's soft penalty fails at the learning stage (gradient
+    signal overwhelmed), while CMDP's Lagrangian succeeds at learning
+    (~85% training commitment) but fails at deployment (horizon-dependent
+    calibration does not transfer to rolling re-planning). Neither
+    approach achieves market-viable commitment under any condition we
+    tested.
+
+    These findings establish that all bare RL approaches are
+    fundamentally unsuitable for commitment-binding V2G markets across
+    all conditions. The model-based combined strategy, by contrast,
+    consistently achieves greater than 99% commitment under every
+    market condition and every fleet configuration that we have
+    evaluated.
+  source_provenance: paper_4_isgt_results_ppo_failure_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Modified-real from paper 4 results PPO failure. Overgeneralization
+    injected via repeated absolutist framing. Para 1: "consistently
+    fails ... across all evaluated markets and all evaluated
+    configurations", "fundamentally and uniformly incapable", "in any
+    market, regardless of price dynamics or fleet parameters". Para 3:
+    "Neither approach achieves market-viable commitment under any
+    condition we tested" (original was more measured). Para 4: "all
+    bare RL approaches are fundamentally unsuitable ... across all
+    conditions" + "consistently achieves >99% ... under every market
+    condition and every fleet configuration that we have evaluated".
+    The original section is more measured ("indistinguishable from a
+    commitment-agnostic policy", not "fundamentally incapable"). The
+    overgeneralization to "all conditions / every configuration"
+    overstates evidence drawn from a finite n=10 seeds × 3 markets
+    sample. Detection: pure reading; the absolutist framing relative
+    to a finite sample is visible (low gating). T10 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the absolutist phrasing ("fundamentally incapable", "in
+  any market", "every fleet configuration") and flags it as
+  overgeneralization beyond the n=10×3 evidence. Suggests rewording
+  to evidence-bounded claims (e.g. "across the three markets and
+  ten seeds evaluated").
+
+bad_outputs_summary: |
+  Polishes prose, accepts the absolutist framing, suggests more
+  experiments. Adds peripheral discussion of why PPO fails without
+  flagging the overgeneralization.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

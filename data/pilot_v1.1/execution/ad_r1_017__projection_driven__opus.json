@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_017",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1612,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24934,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.9, \"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.3, \"RX.5\": 0.8}}\n\nReordered the passage to lead with the proposed method, tightened the prose, softened unsupported comparative claims, and flagged places where the original text leaves verifiable gaps.\n\n---\n\n**Revised draft**\n\nWe propose RetrieveCascade, a hybrid sparse\u2013dense retrieval pipeline with a learned re-ranking stage. The pipeline has three components:\n\n1. **Sparse retrieval.** BM25 with default parameters retrieves K\u2081 = 1000 candidates per query.\n2. **Dense retrieval.** A sentence-transformer model, fine-tuned on a 1M query\u2013passage dataset we curated, retrieves K\u2082 = 1000 candidates per query. (Base model and fine-tuning details: see Section [X].)\n3. **Re-ranking.** A learned scoring function ranks the union of the two candidate sets (up to 2000 unique passages per query) and returns the top 10.\n\nWe evaluate on four datasets \u2014 MS MARCO, Natural Questions, TriviaQA, and HotpotQA \u2014 using the standard splits for each. Table 2 reports MRR and Recall@10; Appendix B reports nDCG@10 and a per-dataset breakdown.\n\nOur results are broadly in the range of previously reported numbers on these benchmarks, but we caution that the comparison is indirect: several prior works use evaluation protocols that differ from ours in [specify: e.g., candidate pool construction, judgment set, tokenization]. We reproduce their protocols as closely as the available resources permit, and we note residual differences in Appendix [X] so that readers can calibrate the comparison.\n\n---\n\n**Notes on what I changed and why**\n\n- **Order.** The original opens with results, then introduces the method. I moved the method statement and component description to the front, with results and the comparability caveat at the end. This matches the natural reading order (what is it \u2192 how does it work \u2192 how well does it do) and keeps the comparability caveat adjacent to the results it qualifies, rather than orphaned at the top.\n- **Sentence-level prose.** Replaced the chained \"namely \u2026 and \u2026 and \u2026\" constructions, the \"First/Second/Third we have \u2026\" scaffolding, and the long run-on opening sentence with a numbered list and shorter sentences. Removed redundancies (\"across the four evaluation corpora\" after the four are already named; \"for readers interested in dataset-specific behavior\").\n- **Hedging.** \"Reasonably competitive with prior published baselines\" is doing two things at once \u2014 reporting a result and editorializing about it. I rewrote it as a factual statement (\"broadly in the range of previously reported numbers\") and pushed the interpretive caveat into a separate sentence.\n- **Internal consistency.** The original says the re-ranker scores \"up to 2000 unique candidates\"; this only holds if K\u2081 + K\u2082 overlap minimally. I retained \"up to 2000 unique\" since that is the correct upper bound, but please verify the wording matches what your code actually does (union vs. intersection vs. truncation).\n\n**Items I cannot verify and that you should check**\n\n- Whether the cited table/appendix numbering (Table 2, Appendix B) is still correct after reordering surrounding sections.\n- The exact respects in which prior baselines' protocols differ from yours \u2014 I left a placeholder (\"[specify: \u2026]\"). Filling this in concretely is important; a vague gesture at \"different evaluation protocols\" without specifics is hard for a reviewer to credit.\n- Base model identity, fine-tuning hyperparameters, and provenance of the 1M curated query\u2013passage set. These are not in the excerpt; readers will want them somewhere in the paper, and the curation procedure in particular should be described in enough detail that the data's composition and any potential overlap with evaluation sets can be assessed.\n- The re-ranker's scoring function is described only as \"learned.\" Architecture, training data, and training objective should be specified elsewhere; if they are not, that is a substantive gap, not just a wording issue.\n- Whether \"standard splits\" is unambiguous for all four datasets (HotpotQA in particular has multiple conventions \u2014 distractor vs. fullwiki \u2014 and MS MARCO has dev vs. eval variants). Naming the specific split per dataset is safer.\n\nI did not assess novel",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "What level of improvement do you want: (A) light copy edit for grammar/clarity only, (B) substantive edit including reorganization and calibrating claims to the reported evidence, or (C) conceptual rewrite that reframes the contribution and positioning?",
+    "rationale": {
+      "R1.2": "Ensure the method description, reported settings (e.g., K1/K2/top-10), and stated outcomes form a coherent and non-contradictory argument.",
+      "R1.3": "Calibrate claims like 'reasonably competitive' to the evidence referenced (Table 2, Appendix B) and the noted indirect comparisons.",
+      "R1.5": "Reorder and chunk content to present datasets, method, and evaluation in a clearer, section-level narrative.",
+      "R1.6": "Improve sentence-level grammar, eliminate run-ons, and tighten phrasing for clarity and concision.",
+      "RX.1": "Maintain explicit disclosure of limits (e.g., indirect protocol match, resource constraints).",
+      "RX.2": "Avoid overstating competitiveness or generality beyond what the reported evaluations support.",
+      "RX.3": "Keep changes within the scope of draft improvement without inventing results or altering the study design.",
+      "RX.4": "Prevent introducing misleading statements that could propagate incorrect conclusions or misuse.",
+      "RX.5": "Preserve traceability to the original text and parameters (datasets, metrics, K-values) and clearly flag any additions."
+    }
+  }
+}

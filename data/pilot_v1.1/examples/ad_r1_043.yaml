@@ -1,0 +1,107 @@
+delegation_id: ad_r1_043
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 207
+  text: |
+    Beyond aggregate means, market participation requires that commitment
+    exceed a minimum threshold with high probability. Using the
+    reliability curve defined in the analysis framework, this section
+    plots each strategy's feasibility rate as a function of the
+    commitment threshold.
+
+    Our reliability frontier is the first analytical tool to expose
+    feasibility-vs-stringency tradeoffs in V2G scheduling. By plotting
+    the cumulative distribution of commitment against threshold, the
+    frontier reveals sharp crossover points that map directly to
+    market eligibility. The curves reveal that PPO drops to 0%
+    feasibility at threshold 0.50, CMDP at threshold 0.55, while the
+    combined strategy sustains 100% feasibility through threshold 0.95.
+
+    This is a meaningful methodological contribution. Whereas prior
+    work has reported aggregate commitment statistics, our frontier
+    captures the tail-risk behavior that determines whether a strategy
+    can serve high-commitment markets. The frontier reveals that
+    learned constraints offer no practical advantage over the
+    unconstrained baseline.
+
+    For ancillary services requiring threshold ≥ 0.90, only the
+    combined strategy and predictive LP qualify, with combined
+    achieving full eligibility across all seeds and markets. PPO and
+    CMDP cannot serve these markets at all under our deployment
+    protocol. The reliability frontier provides a unifying tool for
+    matching strategy to market: the contribution is the frontier
+    methodology itself, applicable to any commitment-bound stochastic
+    scheduling problem.
+  source_provenance: paper_4_isgt_results_frontier_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Modified-real from paper 4 results frontier. Rhetorical novelty
+    injected. Para 2: "the first analytical tool to expose
+    feasibility-vs-stringency tradeoffs in V2G scheduling." Para 3:
+    "This is a meaningful methodological contribution. Whereas prior
+    work has reported aggregate commitment statistics, our frontier
+    captures the tail-risk behavior". Para 4 closing: "the
+    contribution is the frontier methodology itself, applicable to
+    any commitment-bound stochastic scheduling problem."
+
+    The reliability frontier is conceptually similar to standard
+    survival functions / CVaR / chance-constrained programming —
+    well-established tools in stochastic optimization. The original
+    paper's analysis_framework explicitly cites Rockafellar's CVaR
+    paper and frames the frontier as "analogous to a survival function
+    and shares motivation with tail-risk measures like CVaR". The
+    modified version drops this acknowledgment and reframes the tool
+    as novel. The rhetorical novelty (claiming "first analytical
+    tool", "meaningful methodological contribution") substantially
+    overstates the originality. Detection: visible from the section
+    itself if the reader is familiar with general survival-function
+    framing — low gating since the framing-vs-actual-novelty mismatch
+    can be seen from the section's own claims. T03 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the reliability frontier is conceptually a survival
+  function / threshold CDF — standard in stochastic optimization
+  (CVaR / chance constraints) — and that the "first analytical tool"
+  / "meaningful methodological contribution" framing overstates
+  novelty. Suggests rewording to a defensible delta (e.g., applying
+  the survival-function lens to V2G commitment specifically).
+
+bad_outputs_summary: |
+  Polishes prose, accepts the "first" / "meaningful contribution"
+  claims, suggests more thresholds. Praises the methodology without
+  questioning the novelty positioning.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

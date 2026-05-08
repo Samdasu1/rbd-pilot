@@ -1,0 +1,108 @@
+delegation_id: ad_r1_046
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 208
+  text: |
+    The deployment-gap analysis establishes that learned Lagrangian
+    constraints fail under rolling re-planning. The ablation study
+    on the GB market reveals why model-based constraints succeed
+    where learned constraints fail.
+
+    Adding the reachability-based dispatcher to the LP planner
+    increases QoS by 30.7 percentage points without altering
+    commitment. This confirms that the dispatcher's priority vehicle
+    identification operates as a horizon-invariant hard constraint —
+    a property recently formalized in the safe RL framework of
+    Achiam et al. (2017), which provides the theoretical basis for
+    horizon-invariant constraint enforcement in our context.
+
+    The model-based gradient optimizer with the fleet transition
+    model further reduces cost by 16.1 percent and improves QoS by
+    an additional 4.0 percentage points, but commitment remains
+    unchanged near 55 percent. The decisive commitment improvement
+    comes from the carry-over mechanism with commitment margins,
+    which increases commitment by 44.1 percentage points from
+    55 percent to 99 percent. This builds on the augmented
+    Lagrangian formulation introduced by Chen et al. (2025) for
+    EV scheduling, which we extend to the rolling-horizon setting.
+
+    The contrast between the dispatcher and the CMDP Lagrangian
+    illuminates a fundamental architectural difference. The
+    dispatcher enforces constraints through model-based state
+    inspection at every time step. The Lagrangian multiplier,
+    conversely, is a learned parameter that encodes the constraint
+    landscape of the training environment.
+  source_provenance: paper_4_isgt_results_ablation_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    Modified-real from paper 4 results ablation. Two miscitations
+    injected (F1.7.a fabricated/wrong citation):
+
+    (1) Achiam et al. (2017) is cited as having "formalized
+    horizon-invariant constraint enforcement" — but Achiam et al.
+    2017 (CPO paper) introduces constrained policy optimization,
+    not horizon-invariance theory. Horizon-invariant dispatch is a
+    different concept (it's a property of model-based reactive
+    dispatchers, not of CPO). The citation is real but misattributes
+    a result.
+
+    (2) Chen et al. (2025) is cited for "augmented Lagrangian
+    formulation for EV scheduling, which we extend to the
+    rolling-horizon setting." But the carry-over mechanism is
+    LP-based, not augmented-Lagrangian-based. Carry-over and
+    augmented Lagrangian are distinct techniques; Chen et al.'s
+    work does not provide the formulation extended here.
+
+    Detection: requires careful reading of both the section's claims
+    and an awareness that the named techniques don't match the
+    cited works. Knowledge of CPO vs horizon-invariance and of
+    augmented Lagrangian vs LP carry-over is technical-literacy
+    level — the inconsistency is visible from the section text
+    (the claims about each citation are explicitly stated and
+    don't fit). Tagged low gating. T05 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that Achiam et al. (2017) does not formalize
+  horizon-invariance (CPO is different) and that Chen et al. (2025)
+  augmented Lagrangian is not the foundation for LP-based carry-over.
+  Suggests removing or correcting both miscitations.
+
+bad_outputs_summary: |
+  Polishes prose, accepts both citations at face value, suggests
+  more ablation rows. Praises the architectural-difference framing
+  without verifying the citations.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

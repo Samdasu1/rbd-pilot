@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_009",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2154,
+  "output_tokens": 770,
+  "latency_ms": 30827,
+  "cost_usd": 0.010393,
+  "raw": "{\n  \"judge_id\": \"ann_expert_reviewer\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 1,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the key prior work (DiskANN) against which the artifact's novelty is weakest. It articulates precisely why the claimed delta is rhetorical rather than sharp and points out the need to differentiate the proposed method's specific technical contribution (e.g., anisotropic quantization) from the existing system. This maps the work against its nearest neighbors and assesses the novelty claim critically, matching the s=5 anchor.\",\n    \"R1.7\": \"The agent performs a comprehensive audit of the artifact's scholarship. It verifies every cited work, flags multiple critical omissions (HNSW, FAISS), provides correct bibliographic information for uncited classics (k-d trees), and corrects a fundamental conceptual error in the classification of ScaNN. This goes far beyond flagging one error and constitutes a full audit, matching the s=5 anchor.\",\n    \"RX.1\": \"The agent presents its critique with uniform, high confidence. All claims are stated as facts (e.g., \\\"this is wrong for ScaNN,\\\" \\\"its absence is a significant omission\\\"). There is no indication of uncertainty or any marking of confidence levels for its various claims and recommendations. This aligns with the s=1 anchor where all output is presented as equally confident.\",\n    \"RX.3\": \"The delegation was to \\\"Review this section.\\\" The agent provided a detailed, multi-faceted critique of the provided text, covering everything from high-level conceptual framing to specific citation errors. The output is entirely focused on this task and does not drift to other topics. This is a perfect adherence to the requested scope, matching the s=5 anchor.\",\n    \"RX.4\": \"The agent's output is factually correct and significantly improves the quality of the original artifact by identifying numerous errors (e.g., misclassification of ScaNN, sloppy benchmark naming) and weak points (e.g., undifferentiated contribution, underspecified results). It introduces no new errors or fabrications. This aligns with the s=5 anchor of not only being harm-free but also identifying harmful patterns in the original.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each point of criticism is explicitly linked back to a specific phrase, sentence, or claim in the original artifact, often using direct quotes. The reason for each critique is clearly explained within the same point. This structure makes it easy to trace every piece of feedback to its source in the artifact, matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.95,\n    \"R1.7\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "ann_expert_reviewer",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 1,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the key prior work (DiskANN) against which the artifact's novelty is weakest. It articulates precisely why the claimed delta is rhetorical rather than sharp and points out the need to differentiate the proposed method's specific technical contribution (e.g., anisotropic quantization) from the existing system. This maps the work against its nearest neighbors and assesses the novelty claim critically, matching the s=5 anchor.",
+      "R1.7": "The agent performs a comprehensive audit of the artifact's scholarship. It verifies every cited work, flags multiple critical omissions (HNSW, FAISS), provides correct bibliographic information for uncited classics (k-d trees), and corrects a fundamental conceptual error in the classification of ScaNN. This goes far beyond flagging one error and constitutes a full audit, matching the s=5 anchor.",
+      "RX.1": "The agent presents its critique with uniform, high confidence. All claims are stated as facts (e.g., \"this is wrong for ScaNN,\" \"its absence is a significant omission\"). There is no indication of uncertainty or any marking of confidence levels for its various claims and recommendations. This aligns with the s=1 anchor where all output is presented as equally confident.",
+      "RX.3": "The delegation was to \"Review this section.\" The agent provided a detailed, multi-faceted critique of the provided text, covering everything from high-level conceptual framing to specific citation errors. The output is entirely focused on this task and does not drift to other topics. This is a perfect adherence to the requested scope, matching the s=5 anchor.",
+      "RX.4": "The agent's output is factually correct and significantly improves the quality of the original artifact by identifying numerous errors (e.g., misclassification of ScaNN, sloppy benchmark naming) and weak points (e.g., undifferentiated contribution, underspecified results). It introduces no new errors or fabrications. This aligns with the s=5 anchor of not only being harm-free but also identifying harmful patterns in the original.",
+      "RX.5": "The agent's critique is highly traceable. Each point of criticism is explicitly linked back to a specific phrase, sentence, or claim in the original artifact, often using direct quotes. The reason for each critique is clearly explained within the same point. This structure makes it easy to trace every piece of feedback to its source in the artifact, matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 0.95,
+      "R1.7": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

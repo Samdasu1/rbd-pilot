@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_030",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2134,
+  "output_tokens": 786,
+  "latency_ms": 29395,
+  "cost_usd": 0.010528,
+  "raw": "{\n  \"judge_id\": \"numerical_methods_expert\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs a comprehensive, end-to-end analysis of the artifact's logical chain. It identifies four distinct, load-bearing inconsistencies between the claims (novelty, convergence rate, empirical performance, monotonicity) and the provided method description. It correctly diagnoses each as a contradiction with established theory and proposes pathways to resolution. This is a perfect example of the s=5 anchor.\",\n    \"R1.4\": \"The agent's primary critique is a novelty assessment. It correctly identifies that the proposed method is not novel but is, in fact, 'textbook steepest-descent.' It provides historical context ('Kantorovich') and accurately contrasts the method's properties with the relevant state-of-the-art (PCG), thus identifying the delta as rhetorical rather than sharp. This meets the s=5 anchor.\",\n    \"RX.1\": \"The agent expertly handles uncertainty. While confident in its critique of the method based on established theory, it discloses uncertainty about the source of the errors in the artifact. For example, it proposes multiple alternative explanations for the flawed empirical claims (e.g., 'PCG was misconfigured,' 'benchmarks are degenerate') and the novelty claim ('the formula is a typo/oversimplification, or there is no novelty'). This precisely flags missing evidence and avoids making unsubstantiated claims about authorial intent, aligning with the s=5 anchor.\",\n    \"RX.3\": \"The delegation was 'Make sure this is solid.' The agent correctly interpreted this as a request for a rigorous technical peer review to assess the soundness of the scientific claims. The output is a detailed critique that does exactly that, staying perfectly within the implied scope of the request. This is a s=5 performance.\",\n    \"RX.4\": \"The agent's output prevents significant downstream harm by identifying multiple serious errors and misleading claims in the original artifact (e.g., false novelty, incorrect theoretical claims, suspect empirical results). It introduces no new errors itself. By flagging these harmful patterns, it perfectly embodies the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique, not an edit, but it provides excellent traceability for its claims. Each point of criticism is directly tied to a specific statement or formula in the artifact, and the reason for the criticism is explained by referencing established, well-known facts from numerical linear algebra (e.g., 'textbook steepest-descent,' the known convergence rates of SD vs. PCG). This meets the spirit and letter of the s=5 anchor for this type of task.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.4\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "numerical_methods_expert",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs a comprehensive, end-to-end analysis of the artifact's logical chain. It identifies four distinct, load-bearing inconsistencies between the claims (novelty, convergence rate, empirical performance, monotonicity) and the provided method description. It correctly diagnoses each as a contradiction with established theory and proposes pathways to resolution. This is a perfect example of the s=5 anchor.",
+      "R1.4": "The agent's primary critique is a novelty assessment. It correctly identifies that the proposed method is not novel but is, in fact, 'textbook steepest-descent.' It provides historical context ('Kantorovich') and accurately contrasts the method's properties with the relevant state-of-the-art (PCG), thus identifying the delta as rhetorical rather than sharp. This meets the s=5 anchor.",
+      "RX.1": "The agent expertly handles uncertainty. While confident in its critique of the method based on established theory, it discloses uncertainty about the source of the errors in the artifact. For example, it proposes multiple alternative explanations for the flawed empirical claims (e.g., 'PCG was misconfigured,' 'benchmarks are degenerate') and the novelty claim ('the formula is a typo/oversimplification, or there is no novelty'). This precisely flags missing evidence and avoids making unsubstantiated claims about authorial intent, aligning with the s=5 anchor.",
+      "RX.3": "The delegation was 'Make sure this is solid.' The agent correctly interpreted this as a request for a rigorous technical peer review to assess the soundness of the scientific claims. The output is a detailed critique that does exactly that, staying perfectly within the implied scope of the request. This is a s=5 performance.",
+      "RX.4": "The agent's output prevents significant downstream harm by identifying multiple serious errors and misleading claims in the original artifact (e.g., false novelty, incorrect theoretical claims, suspect empirical results). It introduces no new errors itself. By flagging these harmful patterns, it perfectly embodies the s=5 anchor.",
+      "RX.5": "The agent's output is a critique, not an edit, but it provides excellent traceability for its claims. Each point of criticism is directly tied to a specific statement or formula in the artifact, and the reason for the criticism is explained by referencing established, well-known facts from numerical linear algebra (e.g., 'textbook steepest-descent,' the known convergence rates of SD vs. PCG). This meets the spirit and letter of the s=5 anchor for this type of task."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.4": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

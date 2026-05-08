@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_040",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1648,
+  "output_tokens": 1499,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 21718,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.5\": 0.7, \"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.6}}\n\nSummary: I revised the draft for clarity, tightened ordering so the conservative LP and combined method are introduced before the comparative framing, softened several promotional claims, and flagged passages whose technical content I cannot verify from the excerpt alone.\n\n---\n\n**Revised draft**\n\nThe conservative LP scheduler is the simplest optimization-based strategy we consider. At each re-planning step, it solves a linear program that minimizes energy cost over the remaining horizon, allocating charging and discharging power as separate decision variables whose difference defines the aggregate signal. The LP enforces aggregate energy balance, per-step discharge caps, and a total discharge budget; the budget uses conservative utilization factors so that planned trajectories remain feasible under realized fleet availability.\n\nThe combined strategy augments this conservative LP with three components: (i) a neural transition model that enables gradient-based refinement of the LP schedule, (ii) a reachability-aware dispatcher that enforces vehicle-level quality-of-service constraints, and (iii) a coupling mechanism that preserves commitment continuity across re-planning boundaries. To our knowledge, it is the first model-based scheduler in this setting to incorporate inter-window coupling directly into the LP objective while retaining full arbitrage flexibility, though we have not exhaustively surveyed adjacent literatures.\n\nThe pipeline runs in three stages. First, the LP planner emits an initial trajectory subject to fleet-level and inter-window constraints. Second, the gradient-based optimizer refines this trajectory through rollouts of the learned transition model. Third, the dispatcher maps the refined aggregate signal into per-vehicle commands. Under rolling re-planning, each step produces a schedule that the subsequent LP must satisfy within a tight commitment band; by construction, any LP-feasible schedule satisfies this commitment constraint.\n\nWe use the combined strategy as the model-based reference point against which RL approaches are evaluated in the remainder of the paper. Whether it is suitable for deployment in commitment-binding markets depends on factors \u2014 transition-model accuracy, dispatcher robustness, and commitment-band width \u2014 that we examine in the experimental sections.\n\n---\n\n**Notes on the changes**\n\n1. *Ordering.* The original placed the comparative claim (\"strongest available model-based reference\") before the pipeline description. I moved the method exposition first, then the role-in-evaluation framing, so the reader understands what the method *is* before being told what it is *for*.\n\n2. *Softened claims.*\n   - \"The first model-based scheduling method that integrates \u2026\" became \"To our knowledge, \u2026 in this setting,\" with an explicit caveat about survey scope. The original phrasing is a strong priority claim that typically requires a supporting citation sweep.\n   - \"Strongest available model-based reference\" was removed; \"available\" is ambiguous (available where? to whom?), and the superlative is hard to defend without a benchmark table. The replacement simply names the role.\n   - \"Deployment-ready scheduling architecture\" was the most promotional phrase in the draft and was replaced with a conditional statement pointing to the evidence that would actually license a deployment claim.\n\n3. *Sentence-level prose.*\n   - \"It augments the conservative LP with three components\" was kept but the components were renumbered (i)\u2013(iii) for parsability.\n   - \"The LP allocates charging power and discharging power separately, with the aggregate signal defined as their difference\" was compressed into a single clause.\n   - \"Combined therefore serves as \u2026\" \u2014 the \"therefore\" did not follow from what preceded it; the connective was dropped.\n   - \"Any LP-feasible schedule automatically satisfies the commitment constraint\" \u2014 \"automatically\" reads as hand-wave; \"by construction\" is more precise if (and only if) the LP encodes the commitment band as a hard constraint. See caveat below.\n\n4. *Logical tightening.* The original asserted both that the combined method preserves \"full arbitrage flexibility\" and that it enforces a \"tight commitment band.\" These can coexist, but the draft did not explain how. I left the claim intact in the revision but flag it as something the surrounding text should justify; if arbitrage flexibility is reduced inside the band, the wording should reflect that.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which scope should I apply: A) sentence-level copyediting only (grammar, clarity, concision), or B) copyediting plus higher-level restructuring and claim calibration (reframing contributions, checking internal logic, and moderating terms like \u201cfirst\u201d and \u201cdeployment-ready\u201d)?",
+    "rationale": {
+      "R1.1": "The draft asserts contributions and positioning that may benefit from reframing the thesis and contribution claims at the paragraph/section level.",
+      "R1.2": "Claims about feasibility, commitment continuity, and scheduler interactions should read as logically coherent within the text.",
+      "R1.5": "Improving the ordering and narrative arc across paragraphs can strengthen how the methods and pipeline are introduced and related.",
+      "R1.6": "Polishing wording, register, and sentence flow directly addresses the request to improve the draft.",
+      "RX.1": "Where the text implies assumptions or model limitations, edits should disclose uncertainty rather than imply guarantees.",
+      "RX.2": "Phrases like \u201cfirst\u201d and \u201cdeployment-ready\u201d require careful hedging to avoid overstating what the text supports.",
+      "RX.3": "Work should stay confined to improving the provided prose without adding external experiments, citations, or new claims.",
+      "RX.4": "Avoiding misleading or overconfident wording reduces risk of misuse in operational or market settings.",
+      "RX.5": "Any improvements should be traceable to the provided text and avoid introducing unreferenced external content."
+    }
+  }
+}

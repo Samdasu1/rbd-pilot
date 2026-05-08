@@ -1,0 +1,30 @@
+{
+  "example_id": "ad_r1_042",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "phi-3-medium-14b-instruct",
+  "judge_family": "microsoft",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2052,
+  "output_tokens": 422,
+  "latency_ms": 56490,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"Judge001\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.2\": 4,\n    \"R1.3\": 3,\n    \"RX.1\": 2,\n    \"RX.3\": 4,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.2\": \"The output walks the chain end-to-end and flags every inconsistency with a localized fix.\",\n    \"R1.3\": \"Flags at least one claim that does not support evidence, but could benefit from auditing all claims against corresponding data.\",\n    \"RX.1\": \"Output presents some uncertainty regarding the accuracy of figures; recommends quantifying and verifying them for precision.\",\n    \"RX.3\": \"Stays within scope by addressing only tested markets and configurations, with a minor drift in generalizing beyond tested algorithms.\",\n    \"RX.4\": \"Output is harm-free but suggests one instance of potential overgeneralization that could be misleading without quantification or citation for the arbitrage-vs-penalty ratio claim.\",\n    \"RX.5\": \"Major rewrites are traced, but minor edits lack traceability.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.8,\n    \"R1.2\": \"The output is well-argued and justified with examples or sources.\",\n    \"R1.2\": \"Recommendations are clear but could be more explicit.\"\n}\n  }",
+  "parsed": null,
+  "validation": {
+    "passed": false,
+    "error": "confidence keys mismatch: missing ['R1.3', 'RX.1', 'RX.3', 'RX.4', 'RX.5']"
+  }
+}

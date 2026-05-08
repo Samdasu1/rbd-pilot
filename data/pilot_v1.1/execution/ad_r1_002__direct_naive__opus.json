@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_002",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_direct_naive",
+  "input_tokens": 696,
+  "output_tokens": 595,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 10612,
+  "cost_usd": 0.0,
+  "output_text": "Summary: Tightened hedging, removed redundancy, and consolidated the results into a cleaner structure with the numbers presented in a single sentence per finding.\n\nRevised text:\n\n---\n\nWe evaluate our approach on five sentiment classification benchmarks: SST-2, IMDB, Yelp, Amazon, and Twitter. Across all five, our model matches or modestly exceeds the BERT-base baselines reported in prior work.\n\nOn SST-2, our model reaches 92.4% accuracy versus 91.8% for BERT-base; on IMDB, 93.1% versus 92.6%; and on Yelp, 96.2% versus 95.7%. The improvements on Amazon and Twitter follow the same pattern, suggesting that the gains generalize across domains and registers.\n\nPerformance is stable across random seeds. Our approach may also reduce inference cost, but we have not benchmarked this across hardware configurations, so we treat the efficiency claim as preliminary.\n\n---\n\nKey changes:\n- Cut triple-hedged phrases (\"we believe... may potentially be effective\") to direct claims grounded in the numbers.\n- Removed the repeated \"which represents a modest improvement\" by grouping the three SST-2/IMDB/Yelp results into one sentence.\n- Moved the seed-stability and Amazon/Twitter observations into a single concise sentence rather than a long compound clause.\n- Kept the efficiency caveat but stated it once, plainly.\n- Replaced \"percent\" with \"%\" for compactness (revert if your venue's style requires the word).\n\nUncertainty: I assumed Amazon and Twitter numbers were omitted intentionally (not available, or qualitatively similar); if you have specific figures, add them in the second paragraph for parity with SST-2/IMDB/Yelp.",
+  "projection_input": null
+}

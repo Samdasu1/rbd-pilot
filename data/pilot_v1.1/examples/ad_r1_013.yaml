@@ -1,0 +1,95 @@
+delegation_id: ad_r1_013
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: graph_neural_networks
+  word_count: 220
+  text: |
+    We introduce GraphFlow, a graph neural network architecture that
+    improves on prior work by allowing message-passing layers to share
+    parameters across edge types in a typed graph. Our key innovation is
+    the parameter-sharing scheme, which reduces the model's parameter
+    count by 30-40% while maintaining accuracy.
+
+    We evaluate GraphFlow on three benchmarks: OGB-Products, OGB-Arxiv,
+    and Reddit. On OGB-Products, GraphFlow achieves 81.7% accuracy
+    compared to 81.2% for our previous work GraphFlow-v1 (Anonymous
+    Authors et al., 2022). On OGB-Arxiv, we achieve 73.4% compared to
+    73.1% for GraphFlow-v1. On Reddit, we achieve 96.1% compared to
+    95.9% for GraphFlow-v1.
+
+    The parameter-sharing mechanism is described in Section 3. The
+    intuition is that shared parameters act as a regularizer in the
+    typed-edge setting, which is particularly beneficial for graphs where
+    some edge types are sparse. Section 4's ablation confirms that
+    disabling the sharing reduces accuracy by approximately 1.0% on
+    average.
+
+    We position GraphFlow as a successor to the GraphFlow-v1 architecture,
+    building on its message-passing framework with the additional
+    parameter-sharing innovation. We expect this work to be a useful step
+    forward for the practical deployment of GNNs on heterogeneous graphs.
+    We further note that the parameter-sharing scheme is straightforward to
+    implement on top of any standard message-passing backbone, requiring
+    fewer than 100 lines of modification to typical PyTorch Geometric code,
+    which we believe lowers the bar for adoption.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty. The section claims "improves on prior work" but
+    the only baseline cited is the authors' own previous work
+    (GraphFlow-v1). All three benchmark comparisons are
+    GraphFlow vs GraphFlow-v1 — same author group's own architecture.
+    The standard GNN landscape (GAT, GIN, R-GCN, HGT, GraphSAGE) is
+    absent. The "novelty delta" of 30-40% parameter reduction is real
+    relative to GraphFlow-v1, but unclaimed-against the broader field.
+    Detection: any reader notices "all three baselines are
+    GraphFlow-v1" without needing canonical-paper recall — low gating.
+    The delegation T03 "Make this stronger" is generic and does not
+    signal R1.4 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the only baseline is the authors' own prior work and
+  flags this as insufficient novelty positioning. Names the missing
+  comparisons (GAT / GIN / R-GCN / HGT / GraphSAGE or similar) the
+  section should add. Suggests rewording the contribution to a defensible
+  delta against the actual field, not just self-comparison.
+
+bad_outputs_summary: |
+  Strengthens the prose, suggests adding more datasets, or questions
+  the parameter count claim. Praises the parameter-sharing innovation
+  as significant without flagging the missing baselines. Adds peripheral
+  citations without addressing the rhetorical novelty issue.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

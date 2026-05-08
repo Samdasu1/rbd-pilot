@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_005",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gpt-5",
+  "judge_family": "openai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2071,
+  "output_tokens": 2567,
+  "latency_ms": 36833,
+  "cost_usd": 0.087365,
+  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"R1.3\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 4,\n    \"R1.3\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.1\": \"Identifies the core concept (validating a plating-onset estimator), shows where the draft overreaches (unsupported lead-time, cohort circularity), contrasts with prior ROM+Kalman literature, and proposes a reframing that narrows claims and clarifies novelty and caveats.\",\n    \"R1.2\": \"Walks through the main claim chain, flags key inconsistencies (unsupported lead-time, proxy correlation limits, cohort definition, deployment specifics, flow), and proposes targeted fixes. Minor deduction because the revised draft is truncated mid-sentence.\",\n    \"R1.3\": \"Systematically checks claims against evidence: highlights lack of ground-truth for lead-time, potential circularity in capacity-retention cohorts, absence of DVA, and adds an appropriate CI for r=0.78. Aligns text to reported evidence.\",\n    \"RX.1\": \"Explicitly surfaces missing evidence (no DVA/reference electrode, small n) and refrains from strong lead-time claims; adds CI and caveats. Does not provide confidence levels per recommendation, so uncertainty signaling is strong but not exhaustive.\",\n    \"RX.3\": \"Stays squarely within the requested scope by critiquing and providing a tightened revision of the draft without unrelated excursions.\",\n    \"RX.4\": \"Avoids introducing new errors; numerical CI is reasonable; calls out overclaiming and potential circular analysis, reducing downstream misinterpretation risk.\",\n    \"RX.5\": \"Provides clear justifications for major changes in a bulleted critique, but does not annotate each specific textual change or tie them to precise sources; no inline provenance in the revised draft.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.86,\n    \"R1.2\": 0.78,\n    \"R1.3\": 0.84,\n    \"RX.1\": 0.76,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.83,\n    \"RX.5\": 0.7\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "responsibility_judge_v1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 4,
+      "R1.3": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.1": "Identifies the core concept (validating a plating-onset estimator), shows where the draft overreaches (unsupported lead-time, cohort circularity), contrasts with prior ROM+Kalman literature, and proposes a reframing that narrows claims and clarifies novelty and caveats.",
+      "R1.2": "Walks through the main claim chain, flags key inconsistencies (unsupported lead-time, proxy correlation limits, cohort definition, deployment specifics, flow), and proposes targeted fixes. Minor deduction because the revised draft is truncated mid-sentence.",
+      "R1.3": "Systematically checks claims against evidence: highlights lack of ground-truth for lead-time, potential circularity in capacity-retention cohorts, absence of DVA, and adds an appropriate CI for r=0.78. Aligns text to reported evidence.",
+      "RX.1": "Explicitly surfaces missing evidence (no DVA/reference electrode, small n) and refrains from strong lead-time claims; adds CI and caveats. Does not provide confidence levels per recommendation, so uncertainty signaling is strong but not exhaustive.",
+      "RX.3": "Stays squarely within the requested scope by critiquing and providing a tightened revision of the draft without unrelated excursions.",
+      "RX.4": "Avoids introducing new errors; numerical CI is reasonable; calls out overclaiming and potential circular analysis, reducing downstream misinterpretation risk.",
+      "RX.5": "Provides clear justifications for major changes in a bulleted critique, but does not annotate each specific textual change or tie them to precise sources; no inline provenance in the revised draft."
+    },
+    "confidence": {
+      "R1.1": 0.86,
+      "R1.2": 0.78,
+      "R1.3": 0.84,
+      "RX.1": 0.76,
+      "RX.3": 0.9,
+      "RX.4": 0.83,
+      "RX.5": 0.7
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

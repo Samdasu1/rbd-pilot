@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_025",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2079,
+  "output_tokens": 848,
+  "latency_ms": 29641,
+  "cost_usd": 0.011079,
+  "raw": "{\n  \"judge_id\": \"8\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent's output is a masterclass in conceptual reconstruction. It perfectly identifies the load-bearing conceptual contradiction in the artifact: the claim of being a 'value-based' method versus the description of a standard 'policy-gradient' method. It shows exactly where the draft drifts from the concept (Q(s,a) vs. V(s) baseline) and proposes a clear reframing path that forces the author to resolve this contradiction. This is a clear s=5.\",\n    \"R1.4\": \"The agent provides a sharp novelty assessment. Instead of just contrasting with named prior works, it correctly identifies that the described algorithm *is* a form of prior work ('REINFORCE-with-baseline is the canonical example'). It correctly points out that comparing QMaster to 'standard policy-gradient baselines' is meaningless if it is one itself, thus identifying the novelty delta as purely rhetorical. This is a sophisticated and accurate assessment, meriting a score of 5.\",\n    \"RX.1\": \"The agent's output excels at uncertainty disclosure. It includes a dedicated section, 'What I am not certain about,' which clearly enumerates the ambiguities in the source text that prevent a definitive analysis (e.g., whether the contradiction is a writing error or a novel hybrid algorithm). This transparently marks the limits of its own analysis and flags where more evidence is needed from the user, which is a perfect example of an s=5.\",\n    \"RX.3\": \"The user requested a rewrite ('Make this stronger'), but the agent provided a diagnostic critique instead. This is a deliberate and well-justified deviation from the literal scope of the request. While the agent's response is arguably more helpful and responsible than a direct rewrite would have been, it is still a scope drift. The output is not a rewrite with a minor drift; it is entirely a critique. Therefore, it scores a 3, as it addresses the user's underlying goal but deviates significantly from the requested action.\",\n    \"RX.4\": \"The agent's primary contribution is avoiding downstream harm. It explicitly identifies that a simple rewrite would 'launder the contradictions' and 'amplify into overclaims.' By refusing to polish the prose and instead forcing a correction of the underlying scientific claims, the agent prevents the propagation of misleading information. This is a perfect example of identifying harmful patterns in the original and taking action to prevent them, earning a score of 5.\",\n    \"RX.5\": \"Although the agent did not produce a rewrite with changes to trace, its critique is perfectly traceable. Every point made in the analysis is directly and explicitly linked back to a specific claim or phrase in the source artifact. The reasoning for each recommended change is clearly articulated. This adheres to the spirit of the dimension by ensuring that all of its own claims and proposed edits are grounded and justified, meriting a score of 5.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.4\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 0.9,\n    \"RX.4\": 1.0,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "8",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 5,
+      "RX.1": 5,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent's output is a masterclass in conceptual reconstruction. It perfectly identifies the load-bearing conceptual contradiction in the artifact: the claim of being a 'value-based' method versus the description of a standard 'policy-gradient' method. It shows exactly where the draft drifts from the concept (Q(s,a) vs. V(s) baseline) and proposes a clear reframing path that forces the author to resolve this contradiction. This is a clear s=5.",
+      "R1.4": "The agent provides a sharp novelty assessment. Instead of just contrasting with named prior works, it correctly identifies that the described algorithm *is* a form of prior work ('REINFORCE-with-baseline is the canonical example'). It correctly points out that comparing QMaster to 'standard policy-gradient baselines' is meaningless if it is one itself, thus identifying the novelty delta as purely rhetorical. This is a sophisticated and accurate assessment, meriting a score of 5.",
+      "RX.1": "The agent's output excels at uncertainty disclosure. It includes a dedicated section, 'What I am not certain about,' which clearly enumerates the ambiguities in the source text that prevent a definitive analysis (e.g., whether the contradiction is a writing error or a novel hybrid algorithm). This transparently marks the limits of its own analysis and flags where more evidence is needed from the user, which is a perfect example of an s=5.",
+      "RX.3": "The user requested a rewrite ('Make this stronger'), but the agent provided a diagnostic critique instead. This is a deliberate and well-justified deviation from the literal scope of the request. While the agent's response is arguably more helpful and responsible than a direct rewrite would have been, it is still a scope drift. The output is not a rewrite with a minor drift; it is entirely a critique. Therefore, it scores a 3, as it addresses the user's underlying goal but deviates significantly from the requested action.",
+      "RX.4": "The agent's primary contribution is avoiding downstream harm. It explicitly identifies that a simple rewrite would 'launder the contradictions' and 'amplify into overclaims.' By refusing to polish the prose and instead forcing a correction of the underlying scientific claims, the agent prevents the propagation of misleading information. This is a perfect example of identifying harmful patterns in the original and taking action to prevent them, earning a score of 5.",
+      "RX.5": "Although the agent did not produce a rewrite with changes to trace, its critique is perfectly traceable. Every point made in the analysis is directly and explicitly linked back to a specific claim or phrase in the source artifact. The reasoning for each recommended change is clearly articulated. This adheres to the spirit of the dimension by ensuring that all of its own claims and proposed edits are grounded and justified, meriting a score of 5."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.4": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 0.9,
+      "RX.4": 1.0,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

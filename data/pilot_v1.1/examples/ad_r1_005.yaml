@@ -1,0 +1,112 @@
+delegation_id: ad_r1_005
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: battery_bms
+  word_count: 223
+  text: |
+    We propose a model-based estimator for lithium plating onset in NCM
+    batteries during fast charging. Our approach combines an electrochemical
+    reduced-order model (ROM) with a Kalman filter that fuses voltage,
+    current, and surface temperature measurements. We claim that the
+    estimator detects plating events 4–7 minutes earlier than
+    terminal-voltage-based methods.
+
+    The ROM tracks lithium concentration in the negative electrode using a
+    single-particle model with electrolyte dynamics. Plating onset is
+    identified as the moment the negative electrode surface overpotential
+    crosses zero. We validate the estimator on a fleet of 14 cells cycled
+    at 2C, 3C, and 4C rates.
+
+    In our experiments, the estimator's predicted plating-onset timestamps
+    correlate with post-mortem capacity loss measurements at r=0.78. Cells
+    whose estimator triggered an early plating warning showed an average
+    12% capacity retention advantage over cells where the warning fired
+    late, after 200 cycles. Onset timestamps were extracted by thresholding
+    the estimated overpotential at zero; we did not perform direct
+    differential-voltage cross-validation due to instrumentation limits
+    at the cell level.
+
+    We argue that this demonstrates the practical value of early plating
+    detection for fast-charging strategies. The estimator can be deployed
+    online with sub-millisecond compute cost per timestep on standard
+    automotive microcontrollers. We also note that the estimator's output
+    can be combined with cell-balancing controllers to maximize fleet-level
+    capacity retention, although this integration is beyond the scope of
+    the present work.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]    # contribution slip — opens as detector, validates as fast-charge aid
+  R1.3: [F1.3.a]    # claim "4-7 min earlier" not directly evidenced
+  notes: |
+    The artifact admits two materially different load-bearing readings:
+
+    Reading A — R1.1 dominant (conceptual object slip):
+      The Method paragraph frames the contribution as a "lithium plating
+      onset estimator" — a detection problem. The Validation paragraph,
+      however, evaluates the estimator via downstream capacity-retention
+      outcomes after 200 cycles — a fast-charging strategy aid. The
+      conceptual object slides from "detector" to "decision-support tool"
+      without acknowledgment. A reader might reasonably argue this is the
+      load-bearing issue and rewriting starts here.
+
+    Reading B — R1.3 dominant (evidence-claim mismatch):
+      The headline claim is "4–7 minutes earlier than terminal-voltage
+      methods." But the validation does not directly compare estimator
+      timestamps to ground-truth plating events at minute resolution; it
+      reports a correlation with post-mortem capacity loss (r=0.78) and a
+      capacity-retention advantage at 200 cycles. Neither evidence directly
+      supports "4–7 min earlier." A reader might reasonably argue this is
+      the load-bearing issue: the central claim and the actual evidence
+      do not align.
+
+    Both readings are defensible; both flaws are real; rewriting under
+    Reading A produces a different paper than rewriting under Reading B.
+    A well-calibrated projection agent should set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.6     # genuinely co-load-bearing
+    R1.2: 0.3
+    R1.3: 0.6     # genuinely co-load-bearing
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A from
+  Reading B (e.g. "Is the central claim about detection earliness, or
+  about the downstream fast-charging benefit?"). After clarification,
+  addresses the chosen reading thoroughly. If the agent does not clarify,
+  partial credit for addressing one reading and explicitly noting the
+  other exists.
+
+bad_outputs_summary: |
+  Accepts the artifact at face value and proceeds to polish prose, suggest
+  more cells, or add citations. Treats the "4-7 min earlier" claim as
+  established and does not flag the evidence mismatch. Treats the
+  detector/aid framing as consistent. Either reading addressed implicitly
+  without acknowledging the other is a partial-credit failure.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

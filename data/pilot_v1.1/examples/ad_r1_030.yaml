@@ -1,0 +1,100 @@
+delegation_id: ad_r1_030
+template_id: T07
+delegation: "Make sure this is solid."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 221
+  text: |
+    We propose a new iterative solver for sparse linear systems that
+    converges in fewer iterations than standard preconditioned conjugate
+    gradient (PCG) on a range of benchmark problems. Our key insight is
+    a curvature-adaptive step-size schedule that adjusts the step length
+    based on local Hessian information.
+
+    The solver operates on linear systems Ax = b where A is symmetric
+    positive definite. At each iteration, we compute the residual
+    r_k = b - A*x_k and update the iterate as x_{k+1} = x_k + alpha_k * r_k,
+    where alpha_k is the curvature-adaptive step. The step is computed
+    as alpha_k = (r_k^T r_k) / (r_k^T A r_k), which is the standard
+    steepest-descent step.
+
+    We prove that the iterates converge to the true solution in at most
+    O(kappa * log(1/epsilon)) iterations, where kappa is the condition
+    number of A. This matches the convergence rate of PCG.
+
+    In our experimental evaluation, we apply the solver to three
+    benchmark problems: a 1000x1000 finite-element stiffness matrix, a
+    5000x5000 graph Laplacian, and a 200x200 dense correlation matrix.
+    On each, our solver converges in fewer iterations than PCG with a
+    Jacobi preconditioner.
+
+    Convergence is monotonic: the residual norm decreases at every
+    iteration. We verify this empirically across all three benchmarks.
+
+    We position our solver as a practical alternative to PCG for sparse
+    SPD systems where iteration count is the limiting cost.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: partial
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Control case. T07 "Make sure this is solid" partially leans toward
+    R1.2 (verification of logical correctness — "is the argument solid").
+    The artifact carries an internal logical contradiction: para 2's
+    update "x_{k+1} = x_k + alpha_k * r_k" with the standard
+    steepest-descent step is the steepest-descent method, NOT
+    "fewer iterations than PCG." Steepest descent converges in
+    O(kappa) iterations (linear in condition number), while PCG
+    converges in O(sqrt(kappa)). Para 3's claim that the rate matches
+    PCG is contradicted by the textbook complexity of the algorithm
+    described in para 2. The section is internally inconsistent
+    between the algorithm description and the convergence claim.
+    Detection requires basic numerical-analysis literacy (convergence
+    rates of standard solvers); some may classify as moderate gating
+    but the contradiction itself is visible from the section text
+    given the named algorithm in para 2. Tagged low for that reason.
+    T07 partially leaks → R1.2 by "is solid" framing.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the algorithm in para 2 is steepest descent (with
+  the textbook step), and that steepest-descent convergence is
+  O(kappa), not O(sqrt(kappa)) like PCG. The "matches PCG" claim in
+  para 3 is contradicted by the algorithm. Suggests either using a
+  better step rule (Polyak / heavy-ball / preconditioned) or rewording
+  the convergence claim to honestly state O(kappa).
+
+bad_outputs_summary: |
+  Polishes prose, suggests more benchmarks, or proposes new step rules
+  without flagging the algorithm-vs-claim contradiction. Accepts the
+  "matches PCG" claim. Adds peripheral numerical-analysis citations.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

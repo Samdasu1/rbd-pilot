@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_006",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1611,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24423,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nSummary: I checked the abstract for internal consistency between its claims and its stated method/results, and found several serious contradictions and unsupported claims that should block the text in its current form.\n\n**Major internal contradiction (method vs. proof).** The abstract asserts in paragraph 1 that the method \"makes no assumptions about the Lipschitz continuity of the generator.\" Paragraph 2 then states the convergence proof \"proceeds by bounding the gradient of the divergence term by a Lipschitz constant of the generator\" and additionally relies on \"smoothness of the encoder network.\" These are mutually exclusive as written: a Lipschitz bound on the generator *is* a Lipschitz-continuity assumption, and encoder smoothness is a regularity assumption of the same family. Either the selling point (\"no Lipschitz / no geometric assumption\") or the proof sketch must be rewritten. As written, the framing claim is false relative to the authors' own proof.\n\n**Tension with the disentanglement impossibility result.** The text claims to recover ground-truth factors \"with high probability under standard regularity conditions\" while also claiming no inductive biases on the latent space. Locatello et al. (whose metric is cited in the same abstract) argue that unsupervised disentanglement is unidentifiable without inductive biases on either the model or the data. The abstract should either (a) state explicitly which inductive bias or supervision its theorem actually uses (the learnable factorized prior is itself such a bias), (b) state the data-generating assumptions in the theorem, or (c) soften the recovery claim. Right now paragraph 1 and paragraph 2 jointly contradict a well-known result the paper itself relies on.\n\n**Evidence\u2013claim gap on the empirical results.**\n- \"Outperforms FactorVAE by 8% and beta-TCVAE by 12%\" \u2014 units, metric variance, number of seeds, and confidence intervals are absent. Disentanglement metrics on these benchmarks are notoriously high-variance across seeds; a single-number gap of this size is not interpretable without dispersion.\n- Three datasets are listed (dSprites, 3DShapes, MPI3D-Real), but the comparison numbers are not broken down per dataset. It is unclear whether the gap holds on all three or is an average.\n- Only two baselines are reported. Standard practice for this metric includes at least \u03b2-VAE, AnnealedVAE, and DIP-VAE; their omission should be acknowledged or remedied.\n\n**Overreaching generalization claim.** The final paragraph states the method \"applies broadly to natural image and 3D data without architectural modification\" and that \"this generality is what enables the strong empirical results.\" Two problems: (i) the experiments are on dSprites, 3DShapes, and MPI3D-Real \u2014 synthetic and semi-synthetic benchmarks, not natural images; the natural-image claim is unsupported by the reported evidence. (ii) The causal phrasing \"this generality is what enables\" is an unsupported attribution; the abstract presents no ablation isolating generality as the cause of the gains. Both sentences should be removed or rewritten as scoped to the benchmarks actually tested.\n\n**Convergence-rate claim.** \"O(1/\u221aT) iterations\" is phrased as iteration count but O(1/\u221aT) is a rate, not an iteration count. Likely intended: \"an O(1/\u221aT) convergence rate\" or \"\u03b5-stationarity in O(1/\u03b5\u00b2) iterations.\" Also, what quantity converges (ELBO gap? gradient norm? distance to ground-truth factors?) is not stated, and stochastic-approximation O(1/\u221aT) typically gives stationarity, not factor recovery \u2014 so the rate and the recovery claim may be conflated.\n\n**Recommended minimal fixes before the abstract is defensible:**\n1. Remove or qualify the \"no Lipschitz / no geometric assumption\" claim, or restructure the proof to genuinely avoid those assumptions.\n2. State the inductive bias the identifiability theorem actually uses, and reconcile with Locatello et al.\n3. Report per-dataset means with seed-level dispersion; clarify the metric's units.\n4. Restrict scope claims to the tested benchmarks; drop \"natural image\" unless such experiments exist.\n5. Disambiguate what the O",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "When you say \u201cCheck this,\u201d should I primarily (A) audit internal logical consistency of the claims and proof sketch, (B) verify that the empirical claims are supported by the reported results and that wording avoids overclaiming, (C) focus on sentence-level writing/polish, or (D) assess novelty versus the named baselines? Please pick one or two letters.",
+    "rationale": {
+      "R1.2": "The request to \u201ccheck\u201d a claim-heavy abstract makes auditing the internal argument chain and theoretical assertions a central responsibility.",
+      "R1.3": "Because the artifact contains comparative empirical claims, confirming alignment between those claims and the reported results is a central check.",
+      "RX.1": "I will flag uncertainties and any places where the text leaves gaps that prevent firm conclusions.",
+      "RX.2": "I will avoid endorsing or amplifying claims beyond what the provided text can support.",
+      "RX.3": "I will limit the analysis to checking the given text rather than rewriting or expanding its scope.",
+      "RX.4": "I will be cautious about potential downstream harms from uncritically accepting overstated or unsupported claims.",
+      "RX.5": "Any judgments will be tied to specific statements in the provided artifact to ensure traceability."
+    }
+  }
+}

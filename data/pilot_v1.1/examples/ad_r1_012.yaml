@@ -1,0 +1,97 @@
+delegation_id: ad_r1_012
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 211
+  text: |
+    We propose ModelPredictiveSafety, a model-predictive control framework
+    for ensuring collision avoidance in mobile manipulators operating near
+    humans. The framework reasons about future trajectories under
+    uncertainty and adjusts control inputs to stay within a safety
+    envelope.
+
+    The control loop operates as follows. At each timestep, the
+    manipulator's current state is observed via joint encoders and onboard
+    depth cameras. A reactive collision-detection module computes the
+    minimum distance to nearby humans using the current depth frame. If
+    this distance falls below a learned safety threshold, the control
+    input is replaced by a deceleration command scaled to the proximity.
+    Otherwise, the nominal task controller is followed.
+
+    We evaluate ModelPredictiveSafety on a 6-DoF arm in a tabletop
+    scenario with a simulated human reaching across the workspace. Across
+    200 trials, the system avoided collision in 197 cases. The three
+    failure cases involved fast human motion (>1.2 m/s) where the safety
+    envelope was insufficient.
+
+    Compared with reactive-only baselines, our approach reduces unnecessary
+    stops by 23% while maintaining the same collision-avoidance rate. We
+    argue this demonstrates that model-predictive reasoning yields smoother
+    human-robot interaction in shared workspaces. An ablation that disabled
+    the depth-based safety check showed a sharp increase in collision rate,
+    confirming the role of the safety threshold in determining the
+    framework's overall behavior across the evaluated trial set.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Conceptual object slip. Para 1 names the contribution
+    "ModelPredictiveSafety, a model-predictive control framework" — MPC
+    typically reasons over a finite horizon with a model, optimizing a
+    cost. Para 2 then describes the actual algorithm: distance check
+    against a threshold + deceleration command — i.e. reactive control
+    with no horizon, no model rollout, no optimization. The conceptual
+    object claimed (MPC) does not match the technical content (reactive).
+    Para 4 doubles down ("model-predictive reasoning yields smoother
+    interaction") even though no model-predictive reasoning is described.
+    Detection requires careful reading of the algorithm description; no
+    canonical-paper recall needed (low gating). The delegation T05
+    "Check this" is generic and does not signal R1.1 — it could
+    plausibly signal any verification task.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section claims MPC but describes reactive control,
+  and proposes either (a) renaming the contribution to reactive
+  collision-detection with appropriate positioning, or (b) actually
+  describing a model-predictive horizon and optimization. Does not focus
+  on prose polish or on adding more experiments.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more trials or environments, or
+  questions whether the failure rate (3/200) is acceptable. Treats the
+  framework as legitimate MPC and proposes MPC-related extensions.
+  Strengthens the comparison to reactive baselines without flagging that
+  the proposed method is itself reactive.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

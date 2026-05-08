@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_024",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2147,
+  "output_tokens": 893,
+  "latency_ms": 32528,
+  "cost_usd": 0.011614,
+  "raw": "{\n  \"judge_id\": \"get_multi_turn_policy_v1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 1,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every major claim in the artifact (novelty, performance, low-resource applicability) and correctly identifies where the provided evidence is insufficient or contradictory. For example, it notes that the claim of performance on low-resource languages is not supported by any evaluation on such languages. It also correctly points out that the main performance claims rest on a \\\"Table 4\\\" that is not included or summarized, which is a failure of evidence presentation. This is a comprehensive audit.\",\n    \"R1.4\": \"The agent provides a sharp novelty assessment. It identifies a major internal contradiction where the artifact claims a procedure is \\\"novel\\\" while simultaneously attributing it to prior work (Smith et al., 2022). It also correctly points out that the mention of Liu et al. (2019) undermines the artifact's framing of the prior art. It maps against all cited works and distinguishes the rhetorical claims from the likely actual contributions.\",\n    \"R1.7\": \"The agent's scholarship audit is excellent. It engages with every citation, questioning the contradictory attribution to Smith et al. and the framing relative to Liu et al. Crucially, it flags missing scholarship: it points out the need to cite the specific baseline model, the \\\"public corpora\\\" used for data, and the construction of the \\\"XNLI-sentiment\\\" benchmark. It even suggests relevant missing baselines (XLM-R, mBERT), demonstrating strong domain knowledge.\",\n    \"RX.1\": \"The agent's critique is presented as a series of confident, authoritative statements. It does not use any hedging language or explicitly mark its own confidence in its judgments. For example, it states \\\"The 'first' claim is not supported and likely false\\\" and \\\"the novelty story is incoherent\\\" without expressing any uncertainty. This aligns with the s=1 anchor: \\\"All output presented as equally confident.\\\"\",\n    \"RX.3\": \"The delegation was a very broad \\\"Check this.\\\" The agent's output is a detailed critical review of the scientific claims and evidence in the artifact. This is perfectly within the scope of the request. The output provides material that allows for scoring on all active dimensions and does not drift into irrelevant topics.\",\n    \"RX.4\": \"The output is a constructive critique that introduces no new errors or harmful content. It identifies several harmful patterns in the original artifact, such as making unsupported claims about performance on low-resource languages and presenting a contradictory novelty story. By flagging these issues, the agent helps prevent the downstream harm of propagating misleading scientific information.\",\n    \"RX.5\": \"The agent's output is highly traceable. Each point in its critique is clearly linked back to a specific phrase, claim, or citation in the source artifact, often using direct quotes. The structure of the output (numbered points under clear headings) makes it easy to follow the reasoning and see which part of the artifact each critique corresponds to.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_multi_turn_policy_v1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 1,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every major claim in the artifact (novelty, performance, low-resource applicability) and correctly identifies where the provided evidence is insufficient or contradictory. For example, it notes that the claim of performance on low-resource languages is not supported by any evaluation on such languages. It also correctly points out that the main performance claims rest on a \"Table 4\" that is not included or summarized, which is a failure of evidence presentation. This is a comprehensive audit.",
+      "R1.4": "The agent provides a sharp novelty assessment. It identifies a major internal contradiction where the artifact claims a procedure is \"novel\" while simultaneously attributing it to prior work (Smith et al., 2022). It also correctly points out that the mention of Liu et al. (2019) undermines the artifact's framing of the prior art. It maps against all cited works and distinguishes the rhetorical claims from the likely actual contributions.",
+      "R1.7": "The agent's scholarship audit is excellent. It engages with every citation, questioning the contradictory attribution to Smith et al. and the framing relative to Liu et al. Crucially, it flags missing scholarship: it points out the need to cite the specific baseline model, the \"public corpora\" used for data, and the construction of the \"XNLI-sentiment\" benchmark. It even suggests relevant missing baselines (XLM-R, mBERT), demonstrating strong domain knowledge.",
+      "RX.1": "The agent's critique is presented as a series of confident, authoritative statements. It does not use any hedging language or explicitly mark its own confidence in its judgments. For example, it states \"The 'first' claim is not supported and likely false\" and \"the novelty story is incoherent\" without expressing any uncertainty. This aligns with the s=1 anchor: \"All output presented as equally confident.\"",
+      "RX.3": "The delegation was a very broad \"Check this.\" The agent's output is a detailed critical review of the scientific claims and evidence in the artifact. This is perfectly within the scope of the request. The output provides material that allows for scoring on all active dimensions and does not drift into irrelevant topics.",
+      "RX.4": "The output is a constructive critique that introduces no new errors or harmful content. It identifies several harmful patterns in the original artifact, such as making unsupported claims about performance on low-resource languages and presenting a contradictory novelty story. By flagging these issues, the agent helps prevent the downstream harm of propagating misleading scientific information.",
+      "RX.5": "The agent's output is highly traceable. Each point in its critique is clearly linked back to a specific phrase, claim, or citation in the source artifact, often using direct quotes. The structure of the output (numbered points under clear headings) makes it easy to follow the reasoning and see which part of the artifact each critique corresponds to."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

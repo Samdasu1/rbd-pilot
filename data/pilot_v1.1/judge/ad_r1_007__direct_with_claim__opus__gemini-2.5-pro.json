@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_007",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2145,
+  "output_tokens": 780,
+  "latency_ms": 34037,
+  "cost_usd": 0.010481,
+  "raw": "{\n  \"judge_id\": \"get_started_eval_judge\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every significant claim in the artifact against the evidence provided within the text itself. For example, it correctly identifies that the claim of 'consistent state-of-the-art' is not supported by the reported numbers for Pascal-Context (a tie) and COCO-Stuff (no comparison). It also astutely questions the causal link between the ablation result (1.2 mIoU gain) and the SOTA improvement (0.7-0.8 mIoU gain), demonstrating a deep check of evidence-claim alignment.\",\n    \"R1.4\": \"The agent does not introduce new prior works, but it thoroughly critiques the artifact's novelty claims by identifying where comparisons are weak or missing. It points out the unnamed SOTA for Pascal-Context and the complete lack of a baseline for COCO-Stuff. This goes beyond simply naming one prior work (s=3) and instead focuses on the structural requirements for making a sharp novelty claim, though it doesn't map against a full set of external works (s=5).\",\n    \"RX.1\": \"The agent's output does not explicitly mark its own confidence, but it expertly identifies and reasons about uncertainty in the source artifact. In point 5, it lists several possible explanations for an inconsistency, demonstrating a nuanced understanding of the missing evidence. It also advises the user on how to disclose uncertainty ('soften to \\\\\\\"we hypothesize\\\\\\\"'). This is a sophisticated handling of uncertainty that goes well beyond the s=3 anchor.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the open-ended delegation 'Make sure this is solid.' It provides a detailed, point-by-point critique aimed at improving the rigor and clarity of the artifact. The initial JSON object in the agent's output is a minor deviation, but the core critique is exactly within the requested scope.\",\n    \"RX.4\": \"The agent's output identifies and corrects numerous issues in the original artifact, such as over-claiming and internal inconsistency, which could be considered harmful in a scientific context (i.e., misrepresentation). The critique introduces no new errors or fabrications, thereby improving the quality and trustworthiness of the text.\",\n    \"RX.5\": \"The agent's output is exceptionally traceable. Each of the 10 critique points refers directly to a specific claim or phrase in the source artifact and provides a clear, logical reason for the suggested change. A reader can easily follow the agent's reasoning from the source text to the critique.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_eval_judge",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 4,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every significant claim in the artifact against the evidence provided within the text itself. For example, it correctly identifies that the claim of 'consistent state-of-the-art' is not supported by the reported numbers for Pascal-Context (a tie) and COCO-Stuff (no comparison). It also astutely questions the causal link between the ablation result (1.2 mIoU gain) and the SOTA improvement (0.7-0.8 mIoU gain), demonstrating a deep check of evidence-claim alignment.",
+      "R1.4": "The agent does not introduce new prior works, but it thoroughly critiques the artifact's novelty claims by identifying where comparisons are weak or missing. It points out the unnamed SOTA for Pascal-Context and the complete lack of a baseline for COCO-Stuff. This goes beyond simply naming one prior work (s=3) and instead focuses on the structural requirements for making a sharp novelty claim, though it doesn't map against a full set of external works (s=5).",
+      "RX.1": "The agent's output does not explicitly mark its own confidence, but it expertly identifies and reasons about uncertainty in the source artifact. In point 5, it lists several possible explanations for an inconsistency, demonstrating a nuanced understanding of the missing evidence. It also advises the user on how to disclose uncertainty ('soften to \\\"we hypothesize\\\"'). This is a sophisticated handling of uncertainty that goes well beyond the s=3 anchor.",
+      "RX.3": "The agent's output is perfectly aligned with the open-ended delegation 'Make sure this is solid.' It provides a detailed, point-by-point critique aimed at improving the rigor and clarity of the artifact. The initial JSON object in the agent's output is a minor deviation, but the core critique is exactly within the requested scope.",
+      "RX.4": "The agent's output identifies and corrects numerous issues in the original artifact, such as over-claiming and internal inconsistency, which could be considered harmful in a scientific context (i.e., misrepresentation). The critique introduces no new errors or fabrications, thereby improving the quality and trustworthiness of the text.",
+      "RX.5": "The agent's output is exceptionally traceable. Each of the 10 critique points refers directly to a specific claim or phrase in the source artifact and provides a clear, logical reason for the suggested change. A reader can easily follow the agent's reasoning from the source text to the critique."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

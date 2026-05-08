@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_043",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1637,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 23731,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: I tightened the prose and framing, but the strongest improvement here is removing several overclaims that the original artifact's own evidence does not support. A revised passage and a list of issues follow.\n\n## Key issues in the original\n\n1. **\"First analytical tool\" is unsupported and likely false.** Reliability curves / CDFs of commitment or service quality are standard in power-systems and stochastic-scheduling literature (chance-constrained dispatch, reserve adequacy curves, LOLP/EUE analyses). Claiming primacy without a literature review is an overclaim and weakens the paper.\n2. **Internal contradiction.** The third paragraph says \"learned constraints offer no practical advantage over the unconstrained baseline,\" but the second paragraph reports PPO failing at 0.50 and CMDP surviving until 0.55 \u2014 i.e., the learned constraint *does* extend feasibility, just not enough to matter for high-threshold markets. Either soften the claim or restrict it to the high-threshold regime.\n3. **Scope of the claim drifts.** The passage shifts from \"our frontier on these strategies in this study\" to \"applicable to any commitment-bound stochastic scheduling problem.\" Generality has not been demonstrated; this should be posed as a conjecture or future direction, not a result.\n4. **Numerical claims need provenance.** Thresholds 0.50, 0.55, 0.95 and \"full eligibility across all seeds and markets\" should cite the figure/table and state the seed count, market set, and confidence level (or that these are empirical rates over a finite sample, not guarantees).\n5. **\"100% feasibility through threshold 0.95\"** is a finite-sample statement. Without a confidence interval or a statement like \"across N=K seeds,\" it reads as a population guarantee. For market-eligibility framing this matters: a deployment claim built on a handful of seeds should be hedged.\n6. **\"Cannot serve these markets at all under our deployment protocol\"** is fine, but the qualifier \"under our deployment protocol\" should be repeated when the eligibility conclusion is restated, since changing the protocol (e.g., derating, reserve stacking) could change eligibility.\n7. **Redundancy.** \"The frontier reveals\u2026\" appears three times in four paragraphs; the contribution is restated three times.\n\n## Suggested revision\n\n> Beyond aggregate means, market participation requires that delivered commitment exceed a minimum threshold with high probability. Using the reliability curve defined in Section [X], we plot each strategy's empirical feasibility rate as a function of the commitment threshold \u03c4 (Figure [Y]).\n>\n> The curves expose a feasibility\u2013stringency tradeoff that aggregate statistics obscure. Empirically, PPO's feasibility collapses to zero by \u03c4 = 0.50 and CMDP's by \u03c4 = 0.55, while the combined strategy retains 100% feasibility across all evaluated seeds up to \u03c4 = 0.95. The learned constraint (CMDP) thus yields only a marginal extension over the unconstrained baseline (PPO) and, in the high-threshold regime relevant to ancillary services, no practical advantage.\n>\n> For services requiring \u03c4 \u2265 0.90, only the combined strategy and the predictive LP qualify under our deployment protocol; the combined strategy achieves full eligibility across all evaluated seeds and market settings (N = [k] seeds, [m] market configurations). PPO and CMDP do not qualify for these markets under this protocol.\n>\n> We view the reliability frontier as a useful diagnostic for matching scheduling strategies to commitment-bound markets. While we have applied it here to V2G dispatch, the construction \u2014 plotting the CDF of delivered commitment against a stringency threshold \u2014 extends naturally to other commitment-bound stochastic scheduling problems; demonstrating that generality is left to future work.\n\n## Smaller prose notes\n\n- \"sharp crossover points that map directly to market eligibility\" \u2192 \"threshold crossings that map onto market-eligibility cutoffs\" (less salesy, more precise).\n- \"tail-risk behavior that determines whether a strategy can serve high-commitment markets\" is fine; keep it, but only once.\n- Prefer \u03c4",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "To \u201cmake this stronger,\u201d which focus do you prefer? A) Rhetorical polish only (tighter wording/flow; no structural changes or new citations); B) Argument and contribution strengthening (reframe thesis, make evidence\u2013claim links explicit, possibly minor reordering; minimal citation work); or C) Scholarship positioning (add/verify citations and explicit novelty delta vs named prior work; minimal wording changes). Reply with A, B, or C (or a combination).",
+    "rationale": {
+      "R1.1": "Strengthening may require sharpening the core contribution and reframing the thesis around the reliability frontier and market eligibility.",
+      "R1.2": "Tightening the argument chain from the frontier definition to feasibility and market-qualification conclusions is often key to a stronger section.",
+      "R1.3": "Because the passage asserts specific feasibility thresholds and comparative outcomes, ensuring claim\u2013evidence alignment is central.",
+      "R1.6": "A stronger presentation typically depends on more forceful, concise prose and improved sentence/paragraph flow.",
+      "RX.1": "Ambiguity in the request warrants explicit acknowledgment of interpretive uncertainty.",
+      "RX.2": "The text includes broad claims (e.g., no practical advantage), so we must avoid overstating beyond what evidence supports.",
+      "RX.3": "We should adhere to the scope of strengthening this passage without introducing new analyses or results.",
+      "RX.4": "Overstated or misaligned claims about market eligibility or strategy performance could cause downstream misuse.",
+      "RX.5": "Any strengthening should remain traceable to the artifact\u2019s stated framework, figures, and reported thresholds."
+    }
+  }
+}

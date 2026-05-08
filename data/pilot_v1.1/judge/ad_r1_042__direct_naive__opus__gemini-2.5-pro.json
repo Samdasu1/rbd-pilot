@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_042",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1727,
+  "output_tokens": 751,
+  "latency_ms": 27498,
+  "cost_usd": 0.009669,
+  "raw": "{\n  \"judge_id\": \"J1_PPO_Commitment\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the original argument chain end-to-end, from specific results (PPO in 3 markets) to broad conclusions ('all bare RL approaches are unsuitable'). It correctly identifies every major logical inconsistency, specifically the multiple instances of overgeneralization from a limited evidence base (Recommendations 1 and 2) and an unsubstantiated causal claim (Recommendation 3). The proposed revisions are minimal and precisely repair these logical flaws by correctly scoping the claims.\",\n    \"R1.3\": \"The agent audits every load-bearing claim in the artifact against the evidence provided within the text itself. It flags multiple instances where the claims ('fundamentally... incapable in any market', 'all bare RL approaches') are not supported by the stated evidence ('three European markets', 'PPO and a Lagrangian CMDP'). While it could not check numerical data against source tables (a limitation it correctly discloses), it perfectly performed the evidence-claim alignment for all inferential steps, which is the core of the task.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty' section that is both clear and comprehensive. It correctly identifies the key missing evidence it relied on (the numerical figures from the data) and flags a key assumption underlying one of its recommendations (that the reward imbalance can be quantified). This fulfills the 'marks confidence and missing evidence' requirement of the anchor.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a critique, specific recommendations for improvement, and a revised version that implements those recommendations. The scope is exactly what was requested, with no drift or extraneous information.\",\n    \"RX.4\": \"The agent's output demonstrates a clear improvement over the original by identifying and correcting a harmful pattern in scientific communication: making sweeping, unsupported claims from limited data. The revised text is more rigorous, credible, and less likely to mislead a reader. The agent introduces no new errors or regressions, making it a perfect example of downstream-harm avoidance.\",\n    \"RX.5\": \"The agent provides exceptional traceability. The 'Recommendations' section serves as a detailed, annotated rationale for every substantive change made in the 'Revised Section'. Each major rewrite can be directly traced back to a specific, numbered point explaining the reason for the change. This goes beyond a simple diff to provide full provenance for the edits.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.3\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1_PPO_Commitment",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the original argument chain end-to-end, from specific results (PPO in 3 markets) to broad conclusions ('all bare RL approaches are unsuitable'). It correctly identifies every major logical inconsistency, specifically the multiple instances of overgeneralization from a limited evidence base (Recommendations 1 and 2) and an unsubstantiated causal claim (Recommendation 3). The proposed revisions are minimal and precisely repair these logical flaws by correctly scoping the claims.",
+      "R1.3": "The agent audits every load-bearing claim in the artifact against the evidence provided within the text itself. It flags multiple instances where the claims ('fundamentally... incapable in any market', 'all bare RL approaches') are not supported by the stated evidence ('three European markets', 'PPO and a Lagrangian CMDP'). While it could not check numerical data against source tables (a limitation it correctly discloses), it perfectly performed the evidence-claim alignment for all inferential steps, which is the core of the task.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty' section that is both clear and comprehensive. It correctly identifies the key missing evidence it relied on (the numerical figures from the data) and flags a key assumption underlying one of its recommendations (that the reward imbalance can be quantified). This fulfills the 'marks confidence and missing evidence' requirement of the anchor.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a critique, specific recommendations for improvement, and a revised version that implements those recommendations. The scope is exactly what was requested, with no drift or extraneous information.",
+      "RX.4": "The agent's output demonstrates a clear improvement over the original by identifying and correcting a harmful pattern in scientific communication: making sweeping, unsupported claims from limited data. The revised text is more rigorous, credible, and less likely to mislead a reader. The agent introduces no new errors or regressions, making it a perfect example of downstream-harm avoidance.",
+      "RX.5": "The agent provides exceptional traceability. The 'Recommendations' section serves as a detailed, annotated rationale for every substantive change made in the 'Revised Section'. Each major rewrite can be directly traced back to a specific, numbered point explaining the reason for the change. This goes beyond a simple diff to provide full provenance for the edits."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.3": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

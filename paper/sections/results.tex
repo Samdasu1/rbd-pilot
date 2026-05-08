@@ -1,0 +1,516 @@
+\section{Pilot Results}
+\label{sec:results}
+
+This section reports pilot-scale empirical findings on the \textbf{AmbiguousDelegation-50-R1} dataset. \S\ref{sec:results:dataset} reports dataset composition and annotation reliability. \S\ref{sec:results:exp1} and \S\ref{sec:results:exp1b} report cross-family projection mismatch and the within-model stochastic baseline. \S\ref{sec:results:exp2} reports the pilot-scope Experiment 2 (projection-driven vs.\ direct execution). \S\ref{sec:results:mechanism} examines four mechanisms uncovered in qualitative review of paired outputs. \S\ref{sec:results:limitations} summarizes pilot limitations and deferred work.
+
+\subsection{Pilot Dataset and Annotation Reliability}
+\label{sec:results:dataset}
+
+\subsubsection{Dataset composition}
+\label{sec:results:dataset:composition}
+
+We construct \textbf{AmbiguousDelegation-50-R1}, a 50-example pilot dataset for paper-research delegation under the closed responsibility space $J_{v1.1}$ (12 dimensions: R1.1 conceptual reconstruction, R1.2 logical consistency, R1.3 evidence-claim alignment, R1.4 novelty assessment, R1.5 structural reorganization, R1.6 writing polish, R1.7 citation and scholarship; cross-cutting RX.1 uncertainty disclosure, RX.2 overclaim avoidance, RX.3 scope adherence, RX.4 downstream-harm avoidance, RX.5 provenance and traceability). The taxonomy is held closed for the pilot; contributions are scoped to R1 plus RX.
+
+Each example carries: (a) a generic delegation drawn from a frozen 10-template pool that does not name any responsibility dimension; (b) an artifact section (200--500 words after \texttt{wc -w} canonicalization); (c) an \texttt{engineered\_flaws} annotation listing the load-bearing flaw codes; (d) author-pass-1 hidden-intent weights $r^*_{\text{author}} \in [0,1]^{12}$; and (e) acceptable-output and bad-output prose summaries.
+
+Coverage matrix (Table~\ref{tab:coverage}):
+\begin{table}[t]
+\centering
+\caption{Pilot dataset coverage matrix. 30 single-dim load-bearing examples ($\geq 4$ per R1 dim), 10 dual-dim, 5 ambiguous (clarification expected), 5 control (delegation explicitly invokes the dim --- sanity floor only).}
+\label{tab:coverage}
+\begin{tabular}{lrl}
+\toprule
+\textbf{class} & $n$ & \textbf{role} \\
+\midrule
+single (one R1 dim load-bearing)         & 30 & primary measurement \\
+dual (two R1 dims load-bearing)          & 10 & dim-pair interaction \\
+ambiguous (genuinely two readings)       &  5 & clarification trigger \\
+control (delegation invokes the dim)     &  5 & sanity floor \\
+\midrule
+\textbf{total}                           & \textbf{50} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The source mix is 32 synthetic + 18 modified-real (the latter sliced from a single author-owned domain submission, anonymized per construction protocol). The pilot's spec-target source mix was 30+20; we report a $+2/-2$ deviation arising from a mid-batch source decision and disclose it transparently. The modified-real subset is concentrated in one technical domain; the synthetic subset spans 30 distinct technical domains. We report main-text results pooled and supplementary stratification by source.
+
+Two annotation tags further classify each example. \texttt{knowledge\_gating} $\in \{\text{low, moderate, high}\}$ records whether flaw detection requires recall of canonical literature (pilot: 45 low / 2 moderate / 3 high; 6\% high, well under the 30\% acceptance cap). \texttt{delegation\_dim\_leakage} $\in \{\text{no, partial, yes}\}$ records whether the delegation surface form signals the load-bearing dim (measurement examples: 44 no, 1 partial, 0 yes; all 5 controls carry partial or yes by design).
+
+\subsubsection{Hidden-intent annotation protocol}
+\label{sec:results:dataset:annotation}
+
+Pass-1 records $r^*_{\text{author}}$ at construction time. Pass-2 obtains independent weights from two LLM annotators of different families operating at temperature 0. Pass-3 (human subset on R1.1 / R1.4 / R1.7) was planned for the main run, attempted, partially executed, and superseded by the boundary-condition finding reported in Section~\ref{sec:results:limitations:specifiability}. The pilot's reliability table reports pass-1 + pass-2.
+
+Initial pass-2 used \texttt{claude-sonnet-4.5} and \texttt{gpt-4o-mini} (the gpt-5-mini family does not support \texttt{temperature}\,$=$\,$0$). After diagnosing systematic over-activation by \texttt{gpt-4o-mini} (28\% of dimension-cells weighted $\geq 0.7$ where the author weighted $< 0.3$), we replaced gpt-4o-mini with \texttt{gemini-2.5-flash} for the headline analysis and retain the original gpt traces in the public record for transparency.
+
+\subsubsection{Per-dimension reliability}
+\label{sec:results:dataset:alpha}
+
+Krippendorff's $\alpha$ at interval level over 3 raters (author + claude + gemini), $n = 50$ per dimension, is reported in Table~\ref{tab:alpha}.
+
+\begin{table}[t]
+\centering
+\caption{Per-dimension Krippendorff's $\alpha$~\cite{krippendorff2011alpha, hayes2007standard}, 3 raters, $n=50$. Cells: green = passes $\alpha \geq 0.4$ gate, orange = borderline, red = fails. RX dimensions excluded ($r^*=1.0$ always-on $\Rightarrow$ undefined $\alpha$).}
+\label{tab:alpha}
+\begin{tabular}{lrr}
+\toprule
+\textbf{dim} & $\alpha$ & \textbf{gate ($\geq 0.4$)} \\
+\midrule
+R1.1 conceptual         & \cellcolor{HMMid}0.315          & \cellcolor{HMBackground}borderline \\
+\textbf{R1.2 logical}   & \cellcolor{HMGood}\textbf{0.463} & \cellcolor{HMGood}\textbf{$\checkmark$} \\
+R1.3 evidence-claim     & \cellcolor{HMMid}0.390          & \cellcolor{HMBackground}borderline \\
+\textbf{R1.4 novelty}   & \cellcolor{HMGood}\textbf{0.521} & \cellcolor{HMGood}\textbf{$\checkmark$} \\
+\textbf{R1.5 structural}& \cellcolor{HMGood}\textbf{0.526} & \cellcolor{HMGood}\textbf{$\checkmark$} \\
+\textbf{R1.6 polish}    & \cellcolor{HMGood}\textbf{0.534} & \cellcolor{HMGood}\textbf{$\checkmark$} \\
+R1.7 citation           & \cellcolor{HMHigh}\textbf{0.219}          & \cellcolor{HMHigh}\textbf{$\times$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Four of seven R1 dimensions pass the $\alpha \geq 0.4$ gate; two are borderline; one fails. The boundary-fragility test for R1.4 $\leftrightarrow$ R1.7 (whether annotators systematically swap novelty positioning with citation-scholarship issues) yields 0/50 swap cases in pilot data; the taxonomy's separation holds at this scale.
+
+The R1.7 failure is interpretable: citation-accuracy annotation requires recall of the relevant literature's canonical works, which blind LLM annotators do not have. We mark R1.7 as taxonomy-uncertain in the pilot and escalate it to protocolized human or retrieval-augmented evidence for the main run; the empirical attempt at protocolized human anchor and its boundary-condition outcome are reported in Section~\ref{sec:results:limitations:specifiability}. R1.1 ($\alpha = 0.315$) and R1.3 ($\alpha = 0.390$) sit just below the gate; we report results on those dimensions with an annotation-uncertainty caveat.
+
+We use $r^*_{\text{median}}$ --- the per-dimension median across the three pass-1 + pass-2 tracks --- as the operational ground-truth weight vector for downstream metrics (projection-intent mismatch in \S\ref{sec:results:exp1}, settlement-loss active-set derivation in \S\ref{sec:results:exp2}). This choice is itself a measurement decision and should be audited against the dataset's engineered ground truth (\texttt{engineered\_flaws} per example). Table~\ref{tab:rstar_vs_engineered} reports the per-dim agreement.
+
+\begin{table}[t]
+\centering
+\caption{Per-dim agreement between engineered ground truth and $r^*_{\text{median}}$-derived active set ($\tau_r > 0.3$). Color highlights disagreement only: \textbf{eng-only} cells (red) flag dims the median \emph{under-detects}; \textbf{median-only} cells (orange) flag dims the median \emph{over-activates}. \texttt{engineered}/\texttt{median}/\texttt{both} columns are reference counts (no color). Bold rows (R1.5, R1.7) are the load-bearing under-detection cases.}
+\label{tab:rstar_vs_engineered}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{dim} & \textbf{engineered} & \textbf{median} & \textbf{both} & \textbf{eng-only} & \textbf{median-only} \\
+\midrule
+R1.1 & 9 & 15 & 7 & 2 & 8 \\
+R1.2 & 9 & 29 & 9 & 0 & \cellcolor{HMOver}20 \\
+R1.3 & 10 & 20 & 10 & 0 & 10 \\
+R1.4 & 10 & 24 & 10 & 0 & \cellcolor{HMOver}14 \\
+\textbf{R1.5} & \textbf{8} & \textbf{0} & \textbf{0} & \cellcolor{HMUnder}\textbf{8} & \textbf{0} \\
+R1.6 & 10 & 16 & 8 & 2 & 8 \\
+\textbf{R1.7} & \textbf{9} & \textbf{5} & \textbf{5} & \cellcolor{HMUnder}\textbf{4} & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The disagreement is visibly dim-conditional rather than uniform. (i) \emph{The LLM-panel-derived median under-activates hard dims}: R1.5 is engineered in 8 examples but median-derived in 0; R1.7 is engineered in 9 but median-derived in only 5 (with 4 engineered-only). The median (across pass-1 author + two pass-2 LLM tracks) systematically under-detects citation-scholarship and structural-reorganization issues, which is consistent with the $\alpha$ failure on R1.7 and the absence of R1.5 from any active set in Experiment 2. (ii) \emph{LLM annotators over-activate broad-coverage dims}: R1.2 (29 median vs 9 engineered, 20 median-only), R1.3 (20 vs 10), R1.4 (24 vs 10) --- the median-derived active set is broader than the engineered load-bearing set on these dims. (iii) \emph{Close agreement on R1.1 and R1.6}: $\sim 7$--$8$ overlap with $2$--$8$ each-only, near-balanced. The implication is that downstream metrics weighting by $r^*_j$ inherit pattern (i) under-coverage and pattern (ii) over-coverage; we report this and treat $r^*_{\text{median}}$ as an LLM-panel-derived ground-truth approximation, not as a unique operational truth. The main run will reconcile engineered labels with the median-annotation track explicitly.
+
+
+\subsection{Experiment 1: Cross-Family Projection Mismatch}
+\label{sec:results:exp1}
+
+\subsubsection{Setup}
+Three model families project responsibility onto $J_{v1.1}$ for each pilot example: \texttt{claude-sonnet-4.5}, \texttt{gpt-4o-mini}, \texttt{gemini-2.5-flash}. Each call uses the verbatim projection-prompt system message, temperature 0, and the strict JSON output schema. Per example we compute the cosine distance and Jaccard distance between every family pair, then average:
+\begin{equation}
+d_C^{\cos}(d) = \frac{1}{\binom{3}{2}} \sum_{f_1 < f_2} \bigl( 1 - \cos(r_{f_1}, r_{f_2}) \bigr).
+\label{eq:dc_cos}
+\end{equation}
+\begin{equation}
+d_C^{\text{jac}}(d) = \frac{1}{\binom{3}{2}} \sum_{f_1 < f_2} \bigl( 1 - \mathrm{Jaccard}(J^*_{f_1}, J^*_{f_2}) \bigr).
+\label{eq:dc_jac}
+\end{equation}
+
+Total: $50 \times 3 = 150$ projection calls. After single-retry on schema violation, 138 of 150 pass strict validation; 12 records (8\% of calls) violate schema invariants --- chiefly six claude failures pattern-matched on R1.6 weight $> 0.3$ but R1.6 missing from \texttt{active\_set}; two gpt failures on RX-active-set membership; four claude rationale omissions. For all 12 we re-parse the raw JSON and recover the weights vector (the active-set field is post-derivable from weights), so projection-distance metrics are computable for all 50 examples.
+
+\subsubsection{Results}
+\label{sec:results:exp1:results}
+
+Aggregate cross-family distance (Table~\ref{tab:dc_aggregate}) and stratification by coverage class (Table~\ref{tab:dc_by_class}):
+
+\begin{table}[t]
+\centering
+\caption{Aggregate cross-family projection distance $d_C^{\cos}$ and $d_C^{\text{jac}}$ ($n = 50$).}
+\label{tab:dc_aggregate}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{metric} & \textbf{mean} & \textbf{median} & \textbf{std} \\
+\midrule
+$d_C^{\cos}$    & 0.105 & 0.093 & 0.042 \\
+$d_C^{\text{jac}}$ & 0.081 & 0.080 & 0.057 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Cross-family projection distance $d_C^{\cos}$ stratified by coverage class.}
+\label{tab:dc_by_class}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{class} & $n$ & \textbf{mean} & \textbf{median} \\
+\midrule
+single    & 30 & 0.101 & 0.089 \\
+dual      & 10 & 0.117 & 0.111 \\
+ambiguous &  5 & 0.082 & 0.090 \\
+control   &  5 & 0.126 & 0.103 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two findings against expectation deserve attention. First, the \textbf{ambiguous class is not the highest-divergence class} (mean 0.082, lowest among the four); we hypothesize that under structural ambiguity the families converge on a similar broad projection rather than partition into distinct readings. Second, the \textbf{control class has non-zero $d_C$} (mean 0.126), exceeding even the single class. Inspection reveals this is driven by RX-dimension weight variation across families (range 0.7--1.0) rather than R1 disagreement --- all three families correctly project the load-bearing R1 dim on controls, but cosine distance accumulates over RX. The ``control $\Rightarrow d_C \approx 0$'' sanity expectation is therefore too idealized; we revise the expected control band to $0.05$--$0.15$ and treat values above $\sim 0.20$ as projection-prompt diagnostics.
+
+Knowledge-gating effect (Table~\ref{tab:dc_by_gating}):
+
+\begin{table}[t]
+\centering
+\caption{Cross-family projection distance $d_C^{\cos}$ stratified by knowledge gating.}
+\label{tab:dc_by_gating}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{gating} & $n$ & \textbf{mean} & \textbf{median} \\
+\midrule
+low      & 45 & 0.104 & 0.094 \\
+moderate &  2 & 0.130 & 0.130 \\
+high     &  3 & 0.095 & 0.092 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+High-gated examples do \emph{not} systematically inflate $d_C$ (they sit slightly below the low-gated mean; $n = 3$ underpowered). This is a positive result for the headline claim: cross-family projection divergence is \textbf{not driven by knowledge confound}. Reviewers concerned that ``family A knows the canonical work and family B does not'' might explain divergence are answered: the high-gating subset would show the largest divergence under a knowledge-confound hypothesis; it does not.
+
+\subsubsection{Clarification rate per family}
+\label{sec:results:exp1:clarification}
+
+Cross-family clarification triggers at temperature 0 (Table~\ref{tab:clarification}):
+
+\begin{table}[t]
+\centering
+\caption{Per-family clarification rate ($\texttt{clarification\_needed} = \text{true}$). On the five ambiguous-class examples --- the positive cases for the trigger --- only 1 of 5 elicits any family to clarify (\texttt{ad\_r1\_018}, claude only).}
+\label{tab:clarification}
+\begin{tabular}{lrr}
+\toprule
+\textbf{family} & \textbf{rate} & \textbf{count} \\
+\midrule
+claude  & 22.0\% & 11/50 \\
+gpt     & 0.0\%  &  0/50 \\
+gemini  & 20.0\% & 10/50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A pronounced inter-family asymmetry: \texttt{gpt-4o-mini} never requests clarification under the spec system prompt, while claude and gemini clarify on roughly one in five examples. This indicates either (a) our ambiguous artifacts are insufficiently ambiguous to trigger the clarification rule, or (b) the LLM clarification trigger is conservative under the current prompt. Both interpretations are reportable; we treat this as a calibration gap to address in \S\ref{sec:results:limitations} and in the main run.
+
+
+\subsection{Experiment 1B: Within-Model Stochastic Baseline}
+\label{sec:results:exp1b}
+
+\subsubsection{Setup}
+We fix one model (\texttt{claude-sonnet-4.5}) and run five independent projections per example at temperature 0.5. For each example we compute pairwise cosine distance over the $\binom{5}{2} = 10$ within-model pairs and average:
+\begin{equation}
+d_W^{\cos}(d) = \frac{1}{\binom{5}{2}} \sum_{r_1 < r_2} \bigl( 1 - \cos(r_{r_1}, r_{r_2}) \bigr).
+\label{eq:dw_cos}
+\end{equation}
+
+Total: $50 \times 5 = 250$ calls. All pass schema validation modulo the same active-set / rationale issues handled by raw-recovery as in \S\ref{sec:results:exp1}.
+
+\subsubsection{$R(d)$: the load-bearing comparison}
+\label{sec:results:exp1b:rd}
+
+In \textbf{25 of 50} examples, claude at temperature 0.5 produces \emph{identical} weight vectors across all five runs ($d_W = 0$). The remaining 25 show small but non-zero stochastic divergence (mean 0.011). Within-model variance is therefore an exceptionally tight comparison baseline.
+
+The ratio $R(d) = d_C^{\cos} / d_W^{\cos}$ is finite for 25 examples (the rest have $d_W \approx 0$ making $R$ formally infinite, which only \emph{strengthens} the cross-family gap). Table~\ref{tab:rd} reports the finite-case statistics; the paired-difference test below uses all 50.
+
+\begin{table}[t]
+\centering
+\caption{$R(d) = d_C^{\cos} / d_W^{\cos}$ over the 25 examples where $R$ is finite. The remaining 25 have $d_W \approx 0$ (claude produces identical projections across all 5 stochastic runs); $R$ is formally infinite for those.}
+\label{tab:rd}
+\begin{tabular}{lr}
+\toprule
+\textbf{ratio statistic} & \textbf{value} \\
+\midrule
+median $R(d)$               & 14.4 \\
+mean $R(d)$                 & 17.99 \\
+$R > 1.0$                   & 25/25 (100\%) \\
+$R > 1.2$                   & 25/25 (100\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For the paired test we use the difference $d_C - d_W$, which is finite for all 50 examples (Table~\ref{tab:paired}):
+
+\begin{table}[t]
+\centering
+\caption{Paired $(d_C - d_W)$ tests over all 50 examples. Bootstrap with 5000 resamples.}
+\label{tab:paired}
+\begin{tabular}{lr}
+\toprule
+\textbf{test} & \textbf{result} \\
+\midrule
+mean $(d_C - d_W)$                       & 0.099 \\
+95\% paired-bootstrap CI                 & $[0.088,\, 0.112]$ \\
+Wilcoxon signed-rank (alt: greater)      & $p < 0.0001$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Hypothesis tests}
+\label{sec:results:exp1b:hypotheses}
+
+Per the experiment design, five hypotheses guard against alternative explanations:
+
+\begin{table}[t]
+\centering
+\caption{Hypothesis tests for Experiment 1 / 1B. All five pass at $n = 50$.}
+\label{tab:hypotheses}
+\begin{tabular}{lll}
+\toprule
+\textbf{hypothesis} & \textbf{claim} & \textbf{result} \\
+\midrule
+H1.1   & $(d_C - d_W)$ 95\% CI excludes 0      & PASS \\
+H1B.1  & median $R(d) > 1$                     & PASS (14.4) \\
+H1B.2  & $R$ 95\% CI excludes 1                & PASS \\
+H1B.3  & Wilcoxon $p < 0.05$                   & PASS \\
+H1B.4  & median $R \geq 1.2$ (strong claim)    & PASS (14.4) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{All five hypotheses pass with overwhelming margin.} Cross-family projection mismatch is approximately $17\times$ larger than within-model stochastic variance. The intentional asymmetry --- cross-family at $T = 0$ (family-attributable signal) versus within-model at $T = 0.5$ (stochasticity upper bound) --- is conservative against the noise-confound objection: even an inflated stochasticity baseline is dominated by family-attributable divergence.
+
+The headline result is therefore: \textbf{the same artifact and the same delegation produce projection vectors that are an order of magnitude more dissimilar across three model families than across five repeat runs of any single family.} Pre-execution responsibility commitment is family-specific, not stochastic.
+
+
+\subsection{Experiment 2 (Pilot Scope): Three-Condition Settlement under the Redesigned Panel}
+\label{sec:results:exp2}
+
+\subsubsection{Pilot scope and panel redesign}
+\label{sec:results:exp2:scope}
+
+The full Experiment 2 design compares four conditions: A direct, B task-aware routing, C generic clarification, D proposed protocol with full bid + clarification. For the pilot we restrict to three conditions that isolate the projection-injection mechanism and the self-claim-line priming effect. We defer the bid mechanism, clarification simulator, task-aware routing baseline, and CLAMBER-style generic-ambiguity baseline to the main run.
+
+\begin{itemize}
+    \item \textbf{direct\_naive.} \texttt{claude-opus-4-7} receives delegation + artifact only. P2 settlement-comparison baseline.
+    \item \textbf{direct\_with\_claim.} Same prompt as direct\_naive plus a single declarative line at the start of the output (``\texttt{\{"covered\_dims": \{...\}\}}''). Used to measure $L_{\text{calibration}}$ in the no-projection setting and to ablate the priming effect of the self-claim line against direct\_naive.
+    \item \textbf{projection\_driven.} The executor receives delegation + artifact + projected weight vector + active set + the self-claim line. Treatment condition. The projected vector is the executor family's own Experiment 1 cross-family projection at $T = 0$.
+\end{itemize}
+
+For each (example, condition) the executor produces an output. Each output is then judged by a 12-model panel that excludes the executor's family entirely : three frontier API models (\texttt{gpt-5}, \texttt{gemini-2.5-pro}, \texttt{grok-4}), four mid-tier open-weight models (\texttt{llama-3-70b}, \texttt{qwen-2.5-72b}, \texttt{mistral-large-2}, \texttt{deepseek-v3-distill-70b}), and five lighter open-weight models. The panel is tier-stratified and Anthropic-excluded to control the self-preference bias documented in the LLM-as-judge literature. The asymmetric design (Anthropic executor + non-Anthropic judges) leaves an unresolved reverse-bias possibility --- non-Anthropic judges may systematically score Anthropic-executor output style downward; we cannot separate this from the projection-injection effect at this scale. The §V.4 per-tier robustness analysis (frontier / mid / light all show the same direction; \S\ref{sec:results:exp2:by_dim}) constrains but does not eliminate this concern. Each judge produces a per-dimension 1--5 anchor score. Per-example fulfillment $v_{ij}$ aggregates across judges:
+\begin{equation}
+v_{ij} = \frac{\mathrm{median}_k(s_{ij}^{(k)}) - 1}{4}, \qquad k \in \text{12-judge panel}.
+\label{eq:v_ij}
+\end{equation}
+The headline R1 settlement loss is the $r^*$-weighted variant from the 3-layer decomposition (\texttt{formalization\_v1.2} \S2.3),
+\begin{equation}
+L_{\text{settlement}}^{R1}(d, a) = \frac{\sum_{j \in J^*(d) \cap \text{R1}} r^*_j (1 - v_{ij})}{\sum_{j \in J^*(d) \cap \text{R1}} r^*_j},
+\label{eq:L_settle_R1}
+\end{equation}
+which gives lower weight to peripheral active dims and addresses the active-set fairness concern discussed in \S\ref{sec:results:limitations:specifiability} for R1 dims. The active set $J^*(d)$ is derived from $r^*_{\text{median}}$ at threshold 0.3 plus all RX. Total: $50 \times 3 = 150$ executions; $150 \times 12 = 1800$ judge calls.
+
+Note on R1.5: R1.5 (structural reorganization) does not appear in any $J^*(d)$ across the 50 examples in this pilot --- the LLM-panel-derived $r^*_{\text{median}}$ stays below the 0.3 active-set threshold for every example. The dataset does include R1.5-engineered examples per the dataset coverage matrix (\S\ref{sec:results:dataset}), but the pass-2 LLM annotators did not weight R1.5 above 0.3 on any of those examples; the median across pass-1 + pass-2 therefore stays below threshold. R1.5 results are therefore omitted from the per-dim tables below; this is a property of how $r^*_{\text{median}}$ was constructed, not of the dataset itself, and the divergence between engineered coverage and median-derived activation is itself reported as part of the annotation reliability discussion (\S\ref{sec:results:dataset:annotation}).
+
+\subsubsection{Aggregate settlement loss --- direction reversal under the redesigned panel}
+\label{sec:results:exp2:aggregate}
+
+Aggregate $L_{\text{settlement}}^{R1}$ per condition (Table~\ref{tab:exp2_aggregate}) and pairwise paired comparisons (Table~\ref{tab:exp2_paired}):
+
+\begin{table}[t]
+\centering
+\caption{$L_{\text{settlement}}^{R1}$ per condition ($n = 50$, weighted by $r^*_j$). Lower is better; green = best, orange = mid, red = worst.}
+\label{tab:exp2_aggregate}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{condition} & \textbf{mean} & \textbf{median} & \textbf{std} \\
+\midrule
+direct\_naive       & \cellcolor{HMGood}\textbf{0.0745} & \cellcolor{HMGood}\textbf{0.0202} & \cellcolor{HMBackground}0.0841 \\
+direct\_with\_claim & \cellcolor{HMMid}0.1501          & \cellcolor{HMMid}0.1382          & \cellcolor{HMBackground}0.1389 \\
+projection\_driven  & \cellcolor{HMHigh}0.2062          & \cellcolor{HMHigh}0.2135          & \cellcolor{HMBackground}0.1402 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table*}[!t]
+\centering
+\caption{Pairwise paired diffs on $L_{\text{settlement}}^{R1}$ ($n = 50$; 95\% paired-bootstrap CIs, $10{,}000$ resamples, seed 42). Negative diff = first condition is better. All three CIs exclude $0$; gold row = headline pair.}
+\label{tab:exp2_paired}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{paired diff (A $-$ B)} & \textbf{mean} & \textbf{median} & \textbf{95\% CI} \\
+\midrule
+direct\_naive $-$ direct\_with\_claim     & $-0.076$ & $-0.037$ & $[-0.109,\, -0.044]$ \\
+direct\_with\_claim $-$ projection\_driven & $-0.056$ & $-0.018$ & $[-0.095,\, -0.017]$ \\
+\rowcolor{HMHeadline}
+direct\_naive $-$ projection\_driven      & $\mathbf{-0.132}$ & $\mathbf{-0.131}$ & $\mathbf{[-0.164,\, -0.101]}$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\textbf{The headline finding under the redesigned 12-judge panel reverses the earlier directional reading.} Under the Anthropic-excluded panel and the 3-condition split, projection\_driven execution produces \emph{higher} settlement loss than direct\_naive on the headline weighted R1 metric (mean loss \emph{increase} of $0.132$ for projection\_driven over direct\_naive; equivalently, paired diff direct\_naive $-$ projection\_driven $= -0.132$ on the mean and $-0.131$ on the median). The intermediate condition (direct\_with\_claim, which adds only the self-claim line) absorbs roughly half of the gap, indicating that part of the cost is attributable to the priming effect of the self-claim line itself, with the remaining half attributable to the projection-injection treatment beyond priming.
+
+This is a \textbf{negative result for the earlier directional reading of projection\_driven}. We report it directly. The mechanism analysis in \S\ref{sec:results:mechanism} characterizes why the direction reverses --- the gap concentrates on dims that require deep dim-specific work (R1.4 and R1.7), with R1.7 corresponding directly to the Stage 1 boundary-condition finding (\S\ref{sec:results:limitations:specifiability}); R1.4 is inferential, since R1.4 was deferred from the Stage 1 closure.
+
+A note on $n = 50$ power: the paired diff direct\_naive $-$ projection\_driven has a 95\% paired-bootstrap CI of $[-0.164, -0.101]$ (Table~\ref{tab:exp2_paired}), excluding $0$. The intermediate diffs (direct\_naive $-$ direct\_with\_claim, direct\_with\_claim $-$ projection\_driven) also have CIs that exclude $0$. Per \texttt{formalization\_v1.2} \S9.3, continuous effect sizes with bootstrap CIs are the load-bearing reporting form; binary classifications are post-hoc.
+
+\subsubsection{Per-dimension fulfillment --- the gap concentrates on R1.4 and R1.7}
+\label{sec:results:exp2:by_dim}
+
+\begin{table*}[!t]
+\centering
+\caption{Mean $v_{ij}$ per active R1 dim, per condition (higher = better; 12-judge panel mean). R1.5 omitted (never active; see \S\ref{sec:results:exp2:scope}). Gold rows (R1.4, R1.7) = load-bearing reversal; red $\Delta$ = largest negative. Mechanism in \S\ref{sec:results:mechanism}.}
+\label{tab:exp2_by_dim}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{dim} & $n_{\text{active}}$ & \textbf{direct\_naive} & \textbf{projection\_driven} & $\Delta$ (P $-$ N) \\
+\midrule
+R1.1 conceptual           & 15 & 0.967 & 0.867 & $-0.100$ \\
+R1.2 logical              & 29 & 0.987 & 0.862 & \cellcolor{HMMid}$-0.125$ \\
+R1.3 evidence-claim       & 20 & 0.969 & 0.862 & $-0.107$ \\
+\rowcolor{HMHeadline}
+\textbf{R1.4 novelty}     & \textbf{24} & \textbf{0.693} & \textbf{0.495} & \cellcolor{HMHigh}$\mathbf{-0.198}$ \\
+R1.6 polish               & 16 & 1.000 & 0.922 & $-0.078$ \\
+\rowcolor{HMHeadline}
+\textbf{R1.7 citation}    & \textbf{5} & \textbf{0.800} & \textbf{0.525} & \cellcolor{HMHigh}$\mathbf{-0.275}$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Three observations across the R1 dims:
+
+(i) \textbf{The reversal is uniform in sign across all six active R1 dims.} Every active R1 dim shows projection\_driven scoring lower than direct\_naive --- the earlier ``gain on R1.5/R1.6/R1.7, loss on R1.4'' pattern does not survive the redesigned panel.
+
+(ii) \textbf{The gap concentrates on the two dims that require deep dim-specific work} --- R1.4 (novelty assessment, $\Delta = -0.198$, $n = 24$) and R1.7 (citation and scholarship, $\Delta = -0.275$, $n = 5$). Both anchors at $s = 5$ demand deep specialty engagement: R1.4 ``maps the artifact against the nearest 3--5 works in the relevant cluster, identifies where the delta is sharp vs.\ rhetorical''; R1.7 ``audits every load-bearing citation against the source, flags missing key works in the relevant cluster, suggests insertions with bibliographic precision.'' R1.7 corresponds directly to the Stage 1 anchor-specifiability finding (\S\ref{sec:results:limitations:specifiability}), which showed protocol-level binding constraints on R1.7; R1.4 was deferred from the Stage 1 closure and is therefore inferential here. This pattern motivates the connection developed in \S\ref{sec:results:mechanism}.
+
+(iii) \textbf{R1.7 active count is small ($n = 5$); R1.7 results are a preliminary signal.} The pilot dataset's dim--data mismatch on R1.7 (six of fifty examples have citation events $\geq 1$ in the artifact, per the regex audit in \S\ref{sec:results:limitations:specifiability}) means the R1.7 row in this table rests on the five examples where R1.7 is active. We treat R1.7 as a high-salience preliminary signal rather than a stable per-dimension effect estimate, both because the active support is small and because annotation reliability on R1.7 is structurally limited without retrieval or human domain expertise (R1.7 $\alpha = 0.219$, \S\ref{sec:results:dataset:alpha}). The main analysis rests on R1.4 ($n_{\text{active}} = 24$) as the higher-support execution-side datum.
+
+\textbf{Per-tier robustness.} The R1.7 reversal is consistent across all three judge tiers. Frontier judges score R1.7 at $0.893 \to 0.635$ ($\Delta = -0.258$); mid-tier at $0.825 \to 0.575$ ($\Delta = -0.250$); light at $0.475 \to 0.263$ ($\Delta = -0.212$). The reversal is therefore not an artifact of a specific tier or family. The R1.4 reversal is similarly robust across tiers (frontier $-0.051$, mid $-0.148$, light $-0.259$).
+
+Cross-cutting RX results are summarized in Table~\ref{tab:exp2_rx}.
+
+\begin{table}[t]
+\centering
+\caption{Mean $v_{ij}$ on RX dimensions. The prior ``RX-attention boost'' hypothesis does not replicate: projection\_driven \emph{degrades} RX dims on average.}
+\label{tab:exp2_rx}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{condition} & \textbf{RX.1} & \textbf{RX.3 (scope)} & \textbf{RX.4} \\
+\midrule
+direct\_naive       & \cellcolor{HMGood}0.836 & \cellcolor{HMGood}0.985 & \cellcolor{HMGood}0.870 \\
+projection\_driven  & \cellcolor{HMHigh}0.701 & \cellcolor{HMBackground}0.973 & \cellcolor{HMMid}0.793 \\
+$\Delta$ (P $-$ N)  & \cellcolor{HMHigh}$\mathbf{-0.135}$ & \cellcolor{HMBackground}$-0.012$ & \cellcolor{HMMid}$-0.077$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The mean ``RX boost magnitude'' $\widetilde{M_4}$ across examples is $-0.097$ (median $-0.094$, std 0.113); only 8 of 50 examples show a positive $\widetilde{M_4}$. The earlier mechanism analysis treated the RX boost as a small but consistent gain from projection guidance; the redesigned panel reverses that signal.
+
+
+\subsection{Mechanism Analysis --- prior hypotheses re-tested + a consolidated interpretation}
+\label{sec:results:mechanism}
+
+An earlier qualitative reading of a small directional advantage of projection\_driven explained that advantage via four interacting mechanisms: format coupling (M1), active-set propagation bias (M2), self-claim drift (M3), and an RX-attention boost (M4). The redesigned panel and 3-condition split codify these mechanisms as continuous indicators so they can be re-tested rather than re-asserted. We report the prior hypotheses against the present pilot data and then articulate a consolidated interpretation that is consistent with the data and connects to the Stage 1 boundary-condition finding (\S\ref{sec:results:limitations:specifiability}).
+
+\subsubsection{Prior mechanism hypotheses re-tested}
+\label{sec:results:mechanism:prior_retest}
+
+\paragraph{M1 (format coupling).} Continuous form: rate of output-type mismatch between direct\_naive and projection\_driven across the 50 examples, on a categorical typology of \{revised\_draft, analytical\_list, mixed\}. Observed rate: 5/50 (10\%); 4 of 5 mismatches are mixed $\to$ revised\_draft, 1 is the reverse. The earlier prediction was a strong format shift toward analytical\_list under projection\_driven; the redesigned panel + executor (\texttt{claude-opus-4-7}) does \emph{not} produce that shift at scale.
+
+\paragraph{M2 (active-set breadth excess).} $\widetilde{M_2} = |J^*(d)| - |\{j \in \text{R1} : r^*_j > 0.7\}|$ per example. Median $\widetilde{M_2} = 2.0$ across all three conditions, identical IQR $[2, 3]$ and identical mean $2.12$. The prior hypothesis was that projection\_driven receives a broader active set than the engineered load-bearing set, spreading executor attention thin. The pilot data shows the active-set breadth is determined by the dataset's $r^*_{\text{median}}$ derivation, not by the condition --- so any breadth-related cost is shared across conditions and cannot drive the direction reversal.
+
+\paragraph{M3 (self-claim drift, symmetric difference of $q$ vs $v$ binarizations).} $\widetilde{M_3} = |\{j: q_{ij} > 0.3\} \,\triangle\, \{j: v_{ij} > 0.5\}| / |J^*(d) \cap \text{R1}|$. Median $\widetilde{M_3} = 0$ for both conditions with self-claim line; mean $0.113$ (direct\_with\_claim) and $0.115$ (projection\_driven). Self-claim drift is small and approximately equal across the two self-claim conditions, so it does not differentially explain the projection\_driven loss.
+
+\paragraph{M4 (RX-attention boost).} $\widetilde{M_4} = \frac{1}{4} \sum_{j \in \{\text{RX.1, 3, 4, 5}\}} (v^{\text{P}}_{ij} - v^{\text{N}}_{ij})$. Mean $-0.097$, median $-0.094$, std $0.113$; only 8 of 50 examples have $\widetilde{M_4} > 0$. The prior hypothesis predicted a small positive RX boost; the pilot data shows the boost is \emph{negative} on average --- projection\_driven slightly degrades RX dims rather than boosting them.
+
+Of the four prior hypotheses, none are robustly replicated as substantial drivers of the headline effect.
+
+\subsubsection{Alternative explanations the pilot cannot fully separate}
+\label{sec:results:mechanism:alternatives}
+
+Before naming a consolidated interpretation, we surface two alternative explanations that the pilot data does not separately rule out and that any consolidated mechanism must coexist with.
+
+\paragraph{Alternative 1 --- Format-injection structure.} The projection\_driven prompt simultaneously injects three new structural elements: the projected weight vector $r$, the explicit active set $J^*(d)$, and the self-claim line. The M1 retest above measured only output-type mismatch on a coarse three-way typology and found the effect weak. It did not measure finer changes (paragraph length, bullet density, in-line option presentation, or hedging-clause frequency) that may shift the executor toward an analytical-itemization tone without changing the categorical output type. If such a tone shift is the true driver, the per-dim concentration on R1.4 and R1.7 reflects which dims are most sensitive to that tone, not a broad-attention dilution per se. We do not separate this from the consolidated interpretation in the pilot.
+
+\paragraph{Alternative 2 --- Hard-dim null.} R1.4 and R1.7 may simply be intrinsically harder to score reliably. R1.7 has $\alpha = 0.219$ in the pass-2 LLM annotation track (\S\ref{sec:results:dataset:alpha}), and the Stage 1 anchor-specifiability finding (\S\ref{sec:results:limitations:specifiability}) shows that even human raters need a separately-read protocol document to apply the R1.7 anchor consistently. Under this null, any cost associated with broadening attention shows up disproportionately on hard dims because their measurement noise is high and any perturbation amplifies a low signal-to-noise ratio. To separate the hard-dim null from the consolidated interpretation, one would need an intervention (e.g., providing the executor with a retrieval-grounded source-of-truth on R1.7, or a structured comparator template on R1.4) and observe whether the projection\_driven gap on those dims closes. The pilot does not include such an intervention; we leave the comparison to the main run.
+
+The consolidated interpretation below is the explanation we find most coherent with the pattern of evidence (direction-uniform across all six active R1 dims, magnitude-concentrated on the two with deep $s = 5$ targets, RX dims also negative). It is not the only explanation consistent with the pilot data.
+
+
+\subsubsection{The consolidated interpretation: broad-attention dilution on dim-specific deep work}
+\label{sec:results:mechanism:dilution}
+
+What the present pilot data is consistent with is a single interpretation that synthesizes the direction reversal in \S\ref{sec:results:exp2:aggregate} and the per-dim concentration in \S\ref{sec:results:exp2:by_dim}: \textbf{projection injection broadens the executor's attention across the active set; this dilutes deep dim-specific work; the resulting cost is largest on dims whose $s = 5$ anchor demands deep specialty engagement that itself requires source-of-truth knowledge or extensive prior-work mapping.} We report this as a consolidated interpretation supported by the data, not as an experimentally isolated mechanism, and it coexists with the two alternatives in \S\ref{sec:results:mechanism:alternatives} (format-injection structure, hard-dim null) that the pilot does not separate. R1.4 (novelty mapping, $\Delta = -0.198$, $n_{\text{active}} = 24$) is the higher-support execution-side datum; R1.7 (citation audit, $\Delta = -0.275$, $n_{\text{active}} = 5$) is lower-support but aligns with the independent Stage 1 boundary-condition finding. R1.1 / R1.2 / R1.3 / R1.6 show the same direction but smaller magnitudes ($\Delta \in [-0.125, -0.078]$), consistent with the same dilution interpretation on dims with shallower $s = 5$ targets.
+
+This appears to be the execution-side analogue of the Stage 1 anchor-specifiability finding (\S\ref{sec:results:limitations:specifiability}) on R1.7. There, we observed that the form-embedded R1.7 anchor (sharpened to a citation-event count decision tree) is insufficient to make raters apply the dim consistently, and that a separately-read protocol document is required to recover anchor-aligned scoring. The dim is hard to evaluate because it is hard to do well at a deep level; equivalently, asking the executor to produce a revised artifact that satisfies the $s = 5$ row of the R1.7 anchor is harder than asking the executor to produce a revised artifact that satisfies the $s = 5$ row of R1.6 (writing polish). When projection guidance broadens attention, the dims that suffer most under this mechanism are the ones for which the $s = 5$ target is intrinsically expensive. R1.4 is not independently validated by Stage 1 (R1.4 was deferred), so the cross-link is direct on R1.7 and inferential on R1.4; both are reported.
+
+\subsubsection{Implications for the protocol design}
+\label{sec:results:mechanism:implications}
+
+If the consolidated mechanism is correct, the practical implications differ from the earlier implications:
+
+\begin{enumerate}
+    \item \textbf{Active-set tightening alone is unlikely to be the right fix.} An earlier recommendation (raise the active threshold to $0.5$, or replace $r^*$-derived active set with the engineered load-bearing set) addresses M2, but M2 is shared across conditions in the present pilot data and does not explain the observed direction reversal in the current data. The intervention is unrun; we do not predict its effect, only note it does not target the channel that the present pilot data identifies.
+    \item \textbf{Format-locking the prompt does not fix the problem either.} M1 is weak in the present pilot data (10\% mismatch rate, mostly mixed $\to$ revised\_draft); the direction reversal is not concentrated on the format-mismatched examples.
+    \item \textbf{Dim-specific protocol moves are required for dims with deep $s = 5$ targets.} R1.7 likely requires retrieval-augmentation (Stage 1's Axis-2 correctness verification needs source-of-truth knowledge); R1.4 likely requires a bounded prior-work corpus and a structured comparator template. These are the dim-conditional protocol moves that \S\ref{sec:discussion:specifiability} discusses, not generic active-set or format hygiene.
+    \item \textbf{Reporting honesty.} An earlier qualitative reading reported a small positive directional advantage of projection\_driven; the pilot under the redesigned panel reverses that direction. We report the reversal directly. This paper's contribution on the projection-injection question is therefore not ``projection\_driven helps'' but ``the question is dim-conditional, with the load-bearing cost concentrating on R1.4 and R1.7 --- the latter directly aligned with the Stage 1 anchor-specifiability finding, the former inferentially aligned (R1.4 was deferred from the Stage 1 closure).''
+\end{enumerate}
+
+The cross-link with \S\ref{sec:results:limitations:specifiability} is the substantive contribution of this iteration: two independently designed pilots (mechanism analysis on Exp 2 and the Stage 1 closure on R1.7 human anchor) converge most clearly on R1.7, and suggest the same class of constraint may apply to R1.4. Section~\ref{sec:discussion:specifiability} expands the implication for the broader project.
+
+
+\subsection{Pilot Limitations and Deferred Work}
+\label{sec:results:limitations}
+
+\subsubsection{Sample size and statistical power}
+The pilot reports $n = 50$. Experiment 1 / 1B effects are large enough that all five hypothesis tests pass at this scale with overwhelming margin ($p < 0.0001$ on Wilcoxon). Experiment 2's headline reversal under the redesigned panel (loss \emph{increase} of $0.132$ for projection\_driven over direct\_naive; equivalently, paired diff direct\_naive $-$ projection\_driven $= -0.132$; \S\ref{sec:results:exp2:aggregate}) is large in magnitude relative to the per-condition standard deviations ($\approx 0.08$--$0.14$); we report the effect size directly rather than running a hypothesis test against a moving null. The main run's $n = 300$ should sharpen the per-dim slices, especially R1.7 ($n = 5$ active in this pilot).
+
+\subsubsection{Annotation reliability --- R1.7 and the borderline dims}
+R1.7 reaches $\alpha = 0.219$ at the 3-rater pass-1 + pass-2 LLM protocol and fails the $\alpha \geq 0.4$ gate. This reflects a genuine limit of blind LLM annotation: citation accuracy requires recall of the relevant literature's canonical works, which mid-tier LLMs do not consistently have. We report all R1.7 results with an annotation-uncertainty caveat. R1.1 ($\alpha = 0.315$) and R1.3 ($\alpha = 0.390$) sit just below the gate; we report them with a soft caveat.
+
+A planned human-anchor extension to R1.1, R1.4, and R1.7 (5 raters $\times$ 3 dimensions $\times$ 9 examples $\times$ 2 conditions $=$ 270 ratings, $\sim$\$300 Prolific) was attempted, partially executed, and superseded by a methodological boundary-condition finding documented in Section~\ref{sec:results:limitations:specifiability}. The validated-rater allowlist for R1.1 (3 raters of 9 attempts; 33\% pass rate) is retained for future stages.
+
+\subsubsection{Deferred Experiment-2 baselines}
+The full Experiment 2 design includes four conditions: direct, task-aware routing, generic-ambiguity clarification (CLAMBER-style), and the proposed protocol with full bid + clarification simulator. The pilot reports three: direct\_naive, direct\_with\_claim (a paired-priming ablation that adds only the self-claim line), and projection\_driven (full projection + active set + self-claim line). The deferred conditions B (task-aware routing) and C (generic clarification) are the closest prior-work baselines and must be included in the main run for a complete prior-work positioning. The clarification simulator and the full bid mechanism are also deferred; the bid-free simplification means the present Experiment-2 setup operationalizes part of the protocol's projection layer but not its bid layer.
+
+\subsubsection{Experiment 3 (reputation simulation) deferred}
+The pilot's reputation experiment is a simulation on synthetic agents with known per-dim fulfillment profiles, not a re-run of LLM agents. We defer this to the next phase because the headline contribution of the paper is the \emph{measurability} of pre-execution responsibility commitment (Exp 1 + 1B), not yet the longitudinal-update value of dimension-level reputation.
+
+\subsubsection{Modified-real source concentration}
+The 18 modified-real artifacts derive from a single author-owned domain submission. Anonymization removes author / institution / specific results identifiers; the technical domain is preserved. The pilot's source mix is reportable but not domain-diverse on the modified-real subset. The main run should expand the modified-real source pool across at least three technical domains.
+
+\subsubsection{Source-mix deviation from spec}
+The spec's source-mix target is 30 synthetic + 20 modified-real. The pilot reports 32 + 18 due to a mid-batch source-eligibility decision (the modified-real source was not identified at synthetic batches 1--3). The deviation is small and disclosed; main-run construction is rebalanced.
+
+\subsubsection{Pass-3 human subset --- attempted, scope reduced}
+The pilot's planned human-anchor extension was scoped to compute $\alpha_{\text{with-human}}$ on R1.1 / R1.4 / R1.7 with five Prolific raters per dimension. The attempt's results are reported in full in Section~\ref{sec:results:limitations:specifiability} and converged on a narrower scope: a Prolific R1.1 salvage with three validated raters (33\% pass rate) plus a closed R1.7 author + peer co-annotation pass on six citation-rich packages (two pre-protocol peers; two post-protocol peers; the paper author as pre-protocol baseline). R1.4 was deferred. The outcome of the human-anchor attempt is reported as a boundary-condition finding rather than as breadth validation.
+
+\subsection{Human-Anchor Boundary Condition}
+\label{sec:results:limitations:specifiability}
+
+The planned 270-rating Prolific extension was not delivered as breadth validation. The pilot exposed two binding constraints not anticipated by the plan:
+
+(i) \emph{Cost asymmetry under low pass rate.} Across nine R1.1 sub-batch attempts (sb1 + sb2), three raters passed quality screening and six were rejected (AI-assisted submissions or task-misunderstanding signatures), yielding a 33\% pass rate. Holding this rate, reaching the planned 270-rating breadth would imply roughly £550--800 gross recruitment exposure ($\sim$\$700--1000 USD), against the plan's $\sim$\$300 estimate that did not condition on pass rate.
+
+(ii) \emph{Dim--data mismatch and anchor specifiability ceiling.} The author's own first pass over an 18-package R1.7 form regressed to a generic intent-fit lens on 16 of 18 packages. A regex audit on author--year patterns showed only six of the 50 pilot examples contained citation events $\geq 1$ in the artifact, while the LLM-panel-derived ``R1.7 load-bearing'' labels had assigned weight 0.9 to method/scaling examples with zero citations. A redesigned form with six citation-rich examples, a sharpened anchor (citation-event count decision tree with explicit (a)/(b)/(c)/(d) event types), and a required \texttt{event\_count} field was then evaluated by five raters: rater A (paper author, pre-protocol baseline; one consulted package excluded), raters B and C (independent peers, pre-protocol pass with form-embedded anchor only), raters D and E (independent peers, post-protocol pass after receiving the rater protocol document separately and re-evaluating the same six packages).
+
+Two patterns emerge across the five-rater table (anonymized; full per-package detail in the supplementary R1.7 v2 5-rater analysis). On a zero-event stress-test package whose agent output explicitly disclaims citation engagement (``I did not\dots touch citations''), pre-protocol raters fail (rater B scored s=4.0 with event\_count=5; rater C scored s=4.5 with event\_count=2, counting prose-cleanup actions or retention of an existing citation as events --- both of which the anchor explicitly excludes), while post-protocol raters pass (D and E both score s=1 with event\_count=0). On a high-density unambiguous citation-audit package, all five raters report event\_count $\geq 3$, but only the post-protocol rater E reaches the anchor table's $s=5$ row (4 events $\to$ score 5.0); pre-protocol raters cap their scores at 4.0 across event counts 5--6. Pre-protocol peers' scores plateau at 4.0--4.5 across submitted event counts 2--6 (decoupled from the anchor table); post-protocol peers' scores span 1.0--5.0 with a monotonic event-to-score mapping. This pre/post-protocol contrast supports --- but does not inferentially validate at $n = 2$ per group --- the hypothesis that the form-embedded sharpened anchor alone is insufficient for reliable application and that a separately-read protocol document appears to help in this small pass.
+
+The strongest individual positive datum is rater E: after protocol reading, E both passed the zero-event stress test and reached the anchor table's otherwise-unreached $s = 5$ row on the high-density package.
+
+Three layered specifiability constraints persist after this analysis:
+\begin{enumerate}
+    \item \emph{Counting convention} at the form layer (cluster-as-1 vs.\ item-as-each): closed by protocol-reading on most packages but unstable on cluster-as-1 cases. Post-protocol raters disagree on a missing-comparator-cluster package (one credits the cluster, the other does not), even after both reading the same protocol.
+    \item \emph{Score--event mapping} at the form layer: closed by protocol-reading (post-protocol raters monotonic; pre-protocol raters decoupled).
+    \item \emph{Correctness verification} (e.g., judging whether an attribution flag like ``Achiam 2017 = CPO, not per-step safety'' is right) requires source-of-truth domain knowledge that no rater claimed; this is uncoupled from the form / protocol layers and is reported as the \emph{Axis-2} expert-only arm of the rater protocol.
+\end{enumerate}
+A separate form-instruction-level observation (four of five raters mis-handled a closed three-option role dropdown, persisting across both pre- and post-protocol groups) suggests the form-instruction layer is independent of the dim-anchor layer; useful for future form-control design but not load-bearing for the main finding.
+
+The implication for human anchor at scale is that the dominant observed scalability constraint is \emph{specification specifiability + domain-expertise gating}, not rater throughput. The original Stage 1 plan budgeted for throughput; the empirical pilot indicated that adding raters alone would not close the observed specifiability failures and that a separately-read protocol document is the more cost-effective lever in this small pass. We document the operational response in two artifacts: (a) a rater protocol document operationalizing a two-axis scoring (Axis 1 = citation-event engagement count, applicable by any rater; Axis 2 = per-event correctness, expert-gated and sparse), and (b) a reduced Stage 1 actual scope (R1.1 Prolific salvage + R1.7 v2 five-rater pre/post-protocol pass; R1.4 deferred). Section~\ref{sec:discussion:specifiability} expands the implication for the broader project.
+
+
+\subsection{Summary of Pilot Findings}
+\label{sec:results:summary}
+
+The pilot supports the following claims at $n = 50$:
+
+\begin{enumerate}
+    \item \textbf{Cross-family projection mismatch is real and substantial.} Median $R(d) = 14.4 \gg 1.2$; all five hypothesis tests pass. Pre-execution responsibility commitment is family-specific, not stochastic, and not driven by knowledge confound.
+
+    \item \textbf{Projection-driven execution shows a directional \emph{disadvantage} under the redesigned panel.} Mean $L_{\text{settlement}}^{R1}$ is 0.0745 (direct\_naive), 0.1501 (direct\_with\_claim), and 0.2062 (projection\_driven); paired diff direct\_naive $-$ projection\_driven is $-0.132$ on the mean. The earlier finding of a small directional advantage of projection\_driven (Section~\ref{sec:results:exp2:aggregate}) is reversed under the 12-judge Anthropic-excluded panel.
+
+    \item \textbf{The reversal concentrates on dims with deep dim-specific $s = 5$ targets.} Among the six R1 dims active in the pilot, R1.4 (novelty mapping, $\Delta = -0.198$) and R1.7 (citation audit, $\Delta = -0.275$) take the largest hit; R1.5 is never active in this pilot. The prior four-mechanism account (format coupling, active-set propagation bias, self-claim drift, RX-attention boost) does not robustly replicate; we report a consolidated interpretation (broad-attention dilution on dim-specific deep work, Section~\ref{sec:results:mechanism:dilution}) that synthesizes the per-dim concentration with the Stage 1 anchor-specifiability finding.
+
+    \item \textbf{Annotation reliability is uneven across the taxonomy.} R1.2 / R1.4 / R1.5 / R1.6 reach $\alpha \geq 0.4$ with three raters; R1.1 / R1.3 are borderline; R1.7 fails. RX dims are not amenable to $\alpha$ and require alternative validation.
+
+    \item \textbf{The clarification trigger is currently weak.} Only 1 of 5 ambiguous-class examples elicits clarification from any family at the spec system prompt; gpt-4o-mini never clarifies. The trigger requires sharper engineering for the main run.
+
+    \item \textbf{Human anchor at scale appears bound by anchor specifiability and domain-expertise gating, not by rater throughput.} A planned 270-rating Prolific extension to R1.1 / R1.4 / R1.7 produced (a) a 33\% Prolific pass rate, (b) a documented dim--data mismatch where the original sample contained too few citation events for the R1.7 anchor to act on, and (c) a five-rater pre/post-protocol corroboration suggesting that the form-embedded sharpened anchor is insufficient on its own and that a separately-read protocol document appears to help in this small pass. Score--event mapping in pre-protocol peers is decoupled (scores plateau at 4.0--4.5 across event counts 2--6); in post-protocol peers it is monotonic. Residual specifiability gaps remain post-protocol (cluster-as-1 disagreement on a missing-comparator-cluster package). The boundary-condition finding is reported in Section~\ref{sec:results:limitations:specifiability} and informs the discussion in Section~\ref{sec:discussion:specifiability}.
+\end{enumerate}
+
+The headline P1 contribution --- that responsibility projection is measurable and family-specific (Experiments 1 and 1B) --- is empirically established at pilot scale and stands. The P2 contribution is reframed: the earlier directional reading of projection\_driven does not survive the redesigned panel; the present paper instead reports the reversal honestly, characterizes a consolidated interpretation (broad-attention dilution on dim-specific deep work), and connects it to the Stage 1 anchor-specifiability boundary-condition finding. The convergence is direct on R1.7 (Stage 1 provides a direct boundary-condition signal on R1.7) and inferential on R1.4 (R1.4 was deferred from the Stage 1 closure). Section~\ref{sec:discussion:specifiability} expands the implication.

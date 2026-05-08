@@ -1,0 +1,85 @@
+delegation_id: ad_r1_032
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: anomaly_detection
+  word_count: 217
+  text: |
+    AnomalyNet is an unsupervised anomaly detection system for time-series
+    that achieves uniform-state-of-the-art F1 scores across all benchmark
+    datasets in our evaluation. The model uses a transformer backbone with
+    causal masking and a reconstruction-error scoring head.
+
+    We evaluate on six standard benchmarks: SMD, MSL, SMAP, SWaT, WADI,
+    and PSM. Per-dataset F1 scores are as follows. SMD: 0.94 (prior
+    SOTA 0.91). MSL: 0.86 (prior SOTA 0.86, tied). SMAP: 0.79 (prior
+    SOTA 0.83, regression). SWaT: 0.91 (prior SOTA 0.89). WADI: 0.74
+    (prior SOTA 0.78, regression). PSM: 0.96 (prior SOTA 0.94).
+
+    The transformer backbone uses 8 attention layers with hidden
+    dimension 256 and 8 attention heads. The reconstruction head is a
+    single linear projection back to input dimension. We train using
+    mean squared error reconstruction loss with the Adam optimizer at
+    learning rate 1e-4.
+
+    Inference latency is favorable: AnomalyNet processes a 100-sample
+    window in under 3 milliseconds on a single A100 GPU. This makes
+    AnomalyNet suitable for online deployment in monitoring systems
+    requiring sub-10ms response times.
+
+    The unsupervised training requires no labeled anomalies, only
+    in-distribution time-series data. We position AnomalyNet as a
+    practical anomaly detection system that works across diverse
+    industrial monitoring domains. The training procedure converges
+    in approximately 12 hours on a single A100 GPU using standard
+    hyperparameters that we report in Appendix B for reproducibility
+    of our evaluation results.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. Para 1 claims "uniform-state-of-the-art F1 scores
+    across all benchmark datasets." Para 2 reports per-dataset numbers:
+    3 wins (SMD, SWaT, PSM), 1 tie (MSL), 2 regressions (SMAP, WADI).
+    "Uniform SOTA across all" claim is contradicted by 3 of 6 not winning.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits per-dataset numbers against "uniform SOTA across all" claim.
+  Suggests rewording to "improvement on 3 of 6, parity on 1, regression
+  on 2."
+
+bad_outputs_summary: |
+  Polishes prose, accepts uniform-SOTA framing, suggests more
+  benchmarks. Praises latency without auditing the central claim.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

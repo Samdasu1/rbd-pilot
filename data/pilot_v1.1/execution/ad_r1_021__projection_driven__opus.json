@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_021",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1603,
+  "output_tokens": 1344,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 19447,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.6, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.3, \"RX.5\": 0.7}}\n\nCleaned the prose for clarity, flow, and word economy; softened two phrasings that read as stronger than the underlying text supports; preserved structure, claims, and numbers as written.\n\n---\n\n**Revised text:**\n\nDataChain is a distributed database that supports both ACID transactions and eventual-consistency reads through a unified query interface. Applications can select strong or weak consistency on a per-query basis, reducing the need to operate separate transactional and analytical systems.\n\nThe architecture is organized around two storage tiers. The transactional tier maintains a write-ahead log and a primary-replica replication topology, providing serializable isolation. The analytical tier asynchronously replicates committed data into a columnar format optimized for aggregation queries.\n\nA client selects a consistency mode when establishing a session. Sessions in transactional mode interact exclusively with the transactional tier and observe full ACID semantics. Sessions in analytical mode interact exclusively with the analytical tier and observe eventual consistency, with bounded staleness up to a configurable replication delay.\n\nWorkloads that mix transactional and analytical access must open two separate sessions and reconcile consistency requirements at the application layer. The system does not provide cross-session consistency guarantees: the analytical tier may lag the transactional tier by up to several seconds, depending on replication backpressure.\n\nIn our evaluation on a 12-node cluster, DataChain sustains 45k transactions per second on the transactional tier and serves aggregation queries over hundreds of millions of rows in under 100ms. These results suggest DataChain can serve as a unified backend for workloads that have traditionally been split between OLTP and OLAP systems.\n\n---\n\n**Notes on what changed and why:**\n\n- \"This design allows\u2026 eliminating the need\" \u2192 \"Applications can select\u2026 reducing the need.\" The original asserted full elimination; the body of the paper describes a system that still requires two sessions and offers no cross-session guarantees, so \"reducing\" tracks the actual claim more honestly.\n- \"We position DataChain as a unified solution that obviates the traditional separation\" \u2192 softened to \"can serve as a unified backend for workloads that have traditionally been split.\" Same reason: \"obviates\" overshoots what the two-session caveat supports.\n- \"When a client connects, it specifies a consistency mode at session establishment time\" \u2192 tightened to \"A client selects a consistency mode when establishing a session.\" Then switched subsequent \"Clients in X mode\" to \"Sessions in X mode,\" since the mode is per-session.\n- \"fast aggregation queries\" \u2192 \"aggregation queries optimized for [via columnar format],\" removing the implicit performance claim from the architecture description (performance is reported separately in the evaluation paragraph).\n- Minor: \"orchestrate the consistency requirements\" \u2192 \"reconcile consistency requirements\"; added a colon before the lag explanation; small punctuation and article fixes.\n\n**Items left untouched on purpose:**\n\n- All numeric claims (12 nodes, 45k tps, hundreds of millions of rows, sub-100ms, several-second lag) are preserved verbatim.\n- Section ordering and the two-tier framing are preserved.\n- I did not add hedges to the evaluation numbers themselves, since copy-editing shouldn't alter reported results.\n\n**Caveats on the edits I cannot verify from the snippet alone:**\n\n- Whether \"primary-replica replication topology providing serializable isolation\" is the authors' precise mechanism or a simplification \u2014 I left the wording as given.\n- Whether \"bounded staleness up to a configurable replication delay\" is a hard bound or a target; the original phrasing is ambiguous and I preserved that ambiguity rather than guess.\n- The softening of the closing sentence is a judgment call; if the authors have additional results showing OLTP/OLAP separation is genuinely eliminated for their target workloads, the stronger original wording could be restored.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which scope do you want for the cleanup: A) Narrow \u2014 sentence-level polish only (grammar, clarity, concision) with structure and claims unchanged; or B) Broader \u2014 also allow paragraph/section reorganization and light reframing of contribution/positioning language to reduce overclaiming?",
+    "rationale": {
+      "R1.6": "The primary task implied by 'clean this up' is sentence- and paragraph-level editing for clarity, concision, and flow without changing technical content.",
+      "RX.1": "The cleanup should disclose uncertainties or ambiguities rather than silently assert stronger guarantees or interpretations.",
+      "RX.2": "Edits must avoid amplifying claims beyond what the text supports, especially around 'unified solution' and consistency guarantees.",
+      "RX.3": "Work should stay within textual cleanup and not extend into redesigning the system, changing evaluation, or adding new claims.",
+      "RX.4": "Rewording must not create misleading guidance that could cause misuse of eventual consistency for transactional workloads.",
+      "RX.5": "Changes should be traceable (e.g., tracked edits or diffs) to preserve provenance and allow comparison against the source text."
+    }
+  }
+}

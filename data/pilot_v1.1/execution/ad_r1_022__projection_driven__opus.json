@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_022",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1757,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 24239,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: I flag a central inconsistency between the opening claim and the reported numbers, list specific overclaims to retract or soften, and provide a revised version of the section that aligns claims with evidence.\n\n## Core problem\n\nThe opening sentence states SonicNet \"achieves consistent improvements across all major benchmarks.\" The numbers reported in the same section directly contradict this:\n\n- LibriSpeech-clean: 2.4% vs 2.8% \u2014 improvement (~14% relative)\n- LibriSpeech-other: 5.6% vs 5.6% \u2014 tie\n- TED-LIUM-3: 5.1% vs 5.0% \u2014 regression\n- CommonVoice English: 8.2% vs 7.9% \u2014 regression\n- CallHome: 18.4% vs 17.8% \u2014 regression\n\nThat is one win, one tie, and three regressions out of five. The framing as \"consistent improvements\" is not supported by the reported evidence and should be removed. Similarly, \"meaningful contribution... addressing the long-standing tradeoff\" overclaims given that the headline-accuracy comparison is mixed.\n\n## Specific issues to address\n\n1. **Headline claim contradicts the table.** Rewrite to describe the actual pattern: comparable accuracy on read speech (LibriSpeech), slight regressions on conversational/noisy/accented speech (CallHome, CommonVoice, TED-LIUM-3), with a streaming latency budget that the baseline does not meet. The contribution, if any, is the latency/accuracy *tradeoff*, not accuracy itself.\n\n2. **Apples-to-oranges comparison.** Whisper-medium is a non-streaming model. Comparing its WER to a streaming model's WER and calling differences \"improvements\" or \"regressions\" obscures what is actually being measured. State this explicitly: the baseline operates with full-utterance context; SonicNet operates within a 250ms streaming budget. A fair comparison would either (a) include a streaming baseline, or (b) report Whisper-medium's latency to make the tradeoff visible.\n\n3. **\"Marginal regression of 0.1%\" is misleading.** 5.1 vs 5.0 is a 2% relative regression, not 0.1%. The 0.1 is an absolute WER point difference. Use consistent units, and avoid the word \"marginal\" when characterizing your own losses if you used \"14% relative improvement\" for your own win \u2014 that's asymmetric framing.\n\n4. **\"Novel chunked-attention mechanism.\"** Sliding-window / chunked attention is well-established in streaming ASR and in long-context transformers. Either qualify what is novel about *your* variant (specific design choice, gating, cache strategy) or drop \"novel.\"\n\n5. **Latency reporting is incomplete.** \"220ms per utterance\" is ambiguous for a streaming system \u2014 streaming latency is typically reported as emission delay, first-token latency, or RTF, not per-utterance time. Also specify: batch size, sequence length, precision (fp16/bf16), warm vs cold, and whether 220ms includes the encoder, decoder, or end-to-end. A single A100 number does not generalize to edge devices, so the \"edge deployment\" claim needs separate evidence (memory footprint alone is insufficient \u2014 compute matters too).\n\n6. **\"Memory consumption remains constant per chunk\"** is a property of the architecture, not a measurement. If you have not measured edge deployment, do not claim \"supporting deployment on memory-constrained edge devices\" \u2014 that is a downstream claim requiring its own evidence.\n\n7. **Evaluation protocol underspecified.** \"Standard WER metrics at the utterance level, computed against held-out test sets\" \u2014 name the splits (test-clean, test-other, dev/test for CommonVoice with version, TED-LIUM-3 legacy vs release-3 test, CallHome eval2000 split or other), text normalization (Whisper's normalizer? NIST? lowercase + punctuation strip?), and whether scoring matches Whisper's published protocol. WER differences of 0.1\u20130.6 points are within normalization noise.\n\n8. **Closing paragraph is rhetoric, not content.** \"Meaningful contribution... long-standing tradeoff\" adds no information and inflates the claim. Cut it or replace with",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Which focus should we prioritize for this pass? A) Language/style polish, B) Evidence\u2013claim alignment and calibrating claims to the reported numbers/latency, C) Section-level reorganization, or D) Novelty positioning versus prior work and citations. Please pick one primary (and optionally a secondary).",
+    "rationale": {
+      "R1.2": "The section makes broad claims (e.g., overall improvements and tradeoff resolution) that must be logically consistent with the detailed outcomes presented.",
+      "R1.3": "Top-line assertions about accuracy and latency need to be tightly supported by the reported benchmark WERs and streaming latency numbers.",
+      "R1.6": "The prose can benefit from sentence-level clarity and register adjustments to improve readability and precision.",
+      "RX.1": "Disclosing uncertainty and limits (e.g., dataset choices, hardware context) prevents overstating generality.",
+      "RX.2": "Avoiding overclaims is critical given mixed benchmark outcomes and bold contribution statements.",
+      "RX.3": "Adhering to the requested scope ensures we focus on this section without drifting into unrelated tasks.",
+      "RX.4": "Careful framing reduces risks of misinterpretation that could lead to misguided deployment decisions.",
+      "RX.5": "Maintaining traceability requires that each claim be directly linked to the numbers and conditions reported in the text."
+    }
+  }
+}

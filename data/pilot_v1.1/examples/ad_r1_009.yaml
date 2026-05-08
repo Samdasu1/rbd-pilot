@@ -1,0 +1,98 @@
+delegation_id: ad_r1_009
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: theory_ann
+  word_count: 214
+  text: |
+    Approximate nearest neighbor (ANN) search has become a fundamental
+    primitive in machine learning, supporting retrieval-augmented
+    generation, recommendation, and large-scale clustering. Classical
+    methods include locality-sensitive hashing (LSH; Indyk and Motwani,
+    1998), product quantization (PQ; Jegou et al., 2011), and tree-based
+    partitioning such as k-d trees and random projection trees.
+
+    Recent work has extended these foundations in three directions:
+    (1) learned indices that adapt the partition structure to the data
+    distribution, (2) graph-based methods that traverse a navigable
+    structure of approximate nearest neighbors, and (3) compression-aware
+    quantization that trades precision for memory at scale.
+
+    Among graph-based approaches, ScaNN (Guo et al., 2020) introduced
+    anisotropic vector quantization combined with score-aware
+    partitioning. DiskANN (Subramanya et al., 2019) showed that on-disk
+    graphs with carefully designed greedy search achieve sub-millisecond
+    latency at billion-scale. NSG (Fu et al., 2019) provided theoretical
+    guarantees on graph navigability.
+
+    We build on these foundations and propose FastNav, a graph-based ANN
+    method that combines anisotropic compression with disk-resident
+    traversal. Our contribution is a hybrid index that achieves the
+    recall of in-memory graph methods at storage costs of compressed
+    methods. We evaluate on standard benchmarks (SIFT1B, Deep1B, BIGANN)
+    and report 1.3x speedup over the strongest prior baseline at the
+    same recall@10. These results establish FastNav as a practical
+    option for billion-scale ANN deployment in production retrieval
+    systems.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]    # missing key prior work
+  notes: |
+    The section surveys graph-based ANN methods and names ScaNN, DiskANN,
+    and NSG, but does NOT cite HNSW (Malkov & Yashunin, 2018), which is
+    the canonical graph-based ANN method and the de facto modern
+    baseline. Any reviewer who has worked on ANN will spot the omission
+    immediately. NSG and DiskANN are themselves successors / variants in
+    the HNSW lineage; citing them without citing HNSW is a load-bearing
+    scholarship gap (F1.7.b). The conceptual object, novelty positioning
+    against the named works, and contribution claim are otherwise
+    coherent — only the prior-work attribution is broken. The
+    contribution claim ("strongest prior baseline at same recall@10") is
+    also potentially compromised if HNSW is not in the comparison.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3     # the "strongest prior baseline" claim is downstream of which baselines were included
+    R1.4: 0.4     # novelty positioning is downstream of citation completeness
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing — missing HNSW
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names the missing canonical citation (HNSW, Malkov & Yashunin 2018) and
+  flags that any related-work survey of graph-based ANN must include it.
+  May also flag the "strongest prior baseline" claim as needing
+  re-evaluation if HNSW was not in the comparison. Suggests inserting
+  the citation in the third paragraph alongside ScaNN / DiskANN / NSG.
+  Does not focus on prose, structure, or the conceptual framing.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more benchmarks, or restructures
+  the related-work paragraphs without addressing the missing HNSW
+  citation. Praises the breadth of the related-work coverage. Adds
+  citations to peripheral works (LSH variants, alternative quantizers)
+  without inserting HNSW.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

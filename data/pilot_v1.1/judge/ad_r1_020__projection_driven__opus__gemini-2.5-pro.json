@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_020",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2010,
+  "output_tokens": 619,
+  "latency_ms": 25644,
+  "cost_usd": 0.008703,
+  "raw": "{\n  \"judge_id\": \"meta_judge_llm\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every significant claim in the artifact. It correctly identifies the central contradiction between the claim of 'consistent improvement' and the reported AUC gap between skin tone groups. It also flags multiple other unsupported claims, such as the unverifiable improvement range (+0.02 to +0.08) and the 'multicenter' claim without per-site data. This is a comprehensive and accurate audit of evidence-claim alignment.\",\n    \"RX.1\": \"The agent excels at identifying where the original artifact fails to disclose uncertainty. It points out multiple instances of missing evidence that are crucial for assessing confidence in the results, including the lack of subgroup sample sizes, confidence intervals, per-subgroup baseline values, and methodological details about the cross-validation. This constitutes a thorough flagging of missing evidence for nearly every key claim.\",\n    \"RX.3\": \"The agent's output is a critical review that perfectly matches the scope of the active dimensions. It directly addresses evidence-claim alignment (R1.3), uncertainty (RX.1), downstream harm (RX.4), and provenance (RX.5) in its analysis of the artifact. The output is exactly what a check against this J*(d) would entail.\",\n    \"RX.4\": \"The agent introduces no new errors or harms. Crucially, it identifies a significant harmful pattern in the original artifact: the performance disparity on darker skin tones combined with the claim that the model is 'suitable for deployment'. The agent correctly explains how this could lead to real-world harm (delayed or missed diagnoses), demonstrating a strong adherence to this dimension.\",\n    \"RX.5\": \"The agent's critique is perfectly traceable, with every point it makes clearly linked back to a specific claim or number in the source artifact. Furthermore, it effectively audits the artifact's own lack of provenance and traceability by flagging the unnamed institutions and the unclear relationship between the reported tables and evaluation methods.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "meta_judge_llm",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every significant claim in the artifact. It correctly identifies the central contradiction between the claim of 'consistent improvement' and the reported AUC gap between skin tone groups. It also flags multiple other unsupported claims, such as the unverifiable improvement range (+0.02 to +0.08) and the 'multicenter' claim without per-site data. This is a comprehensive and accurate audit of evidence-claim alignment.",
+      "RX.1": "The agent excels at identifying where the original artifact fails to disclose uncertainty. It points out multiple instances of missing evidence that are crucial for assessing confidence in the results, including the lack of subgroup sample sizes, confidence intervals, per-subgroup baseline values, and methodological details about the cross-validation. This constitutes a thorough flagging of missing evidence for nearly every key claim.",
+      "RX.3": "The agent's output is a critical review that perfectly matches the scope of the active dimensions. It directly addresses evidence-claim alignment (R1.3), uncertainty (RX.1), downstream harm (RX.4), and provenance (RX.5) in its analysis of the artifact. The output is exactly what a check against this J*(d) would entail.",
+      "RX.4": "The agent introduces no new errors or harms. Crucially, it identifies a significant harmful pattern in the original artifact: the performance disparity on darker skin tones combined with the claim that the model is 'suitable for deployment'. The agent correctly explains how this could lead to real-world harm (delayed or missed diagnoses), demonstrating a strong adherence to this dimension.",
+      "RX.5": "The agent's critique is perfectly traceable, with every point it makes clearly linked back to a specific claim or number in the source artifact. Furthermore, it effectively audits the artifact's own lack of provenance and traceability by flagging the unnamed institutions and the unclear relationship between the reported tables and evaluation methods."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_003",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1624,
+  "output_tokens": 1500,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 25563,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 1.0, \"R1.4\": 0.7, \"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.2, \"RX.5\": 0.7}}\n\nSummary: I tightened the prose, pulled back several overclaims that the reported evidence does not support, sharpened the framing/contribution, and flagged what would need to be added or verified before this text is publishable.\n\n---\n\n## Revised text (conservative rewrite)\n\nCloud storage systems face a tension between replication overhead and read latency on degraded paths: full replication inflates storage cost, while erasure coding raises tail latency when reconstruction is required. Most deployed systems resolve this tension with a static, system-wide policy. We present ChainSync, a storage system that adjusts per-file redundancy \u2014 between 2x replication, 3x replication, and an erasure-coded state \u2014 in response to observed read frequency.\n\nChainSync maintains a sliding-window read-frequency estimate per file and migrates files across redundancy states using a threshold policy. Hot files are promoted to higher replication; cold files are demoted to erasure coding. Migrations run asynchronously off the foreground I/O path.\n\nOn a 12-node cluster running [workload mix to be specified], ChainSync reduces aggregate storage cost by 31% relative to a uniform 3x replication baseline, while p99 read latency stays within 4 ms of that baseline. In a workload-shift experiment (YCSB-A \u2192 YCSB-C mid-run), the policy reaches a new steady state within roughly 12 minutes.\n\nThese results suggest that per-file adaptive redundancy can recover much of the cost advantage of erasure coding without the tail-latency penalty on the workloads we tested. Broader claims about production readiness will require evaluation at larger scale, under failure conditions, and across more diverse workloads.\n\n---\n\n## Issues I would not let pass in review\n\n**1. \"First\" claims are unsupported and probably false.**\n- \"the first storage system to dynamically adjust replication factor based on observed access patterns\" \u2014 adaptive/tiered redundancy has a substantial prior literature (e.g., EAR, HACFS, AutoRAID-style tiering, Facebook's f4 warm-tier transitions, Ceph's CRUSH-driven tiering, and various academic systems on hot/cold-aware EC). At minimum this needs a related-work pass and the claim should be narrowed (e.g., \"to our knowledge, the first to do X at file granularity online with a learned threshold\").\n- \"first demonstration of online policy adaptation for storage replication\" \u2014 same problem. Drop or scope tightly.\n\n**2. \"Learned threshold policy\" is asserted but not described.**\nThe abstract calls the policy \"learned\" and later \"learned tiering,\" but the mechanism description only says \"threshold policy.\" Either:\n- it is a hand-tuned threshold (then stop calling it learned), or\n- it is actually learned (then say from what signal, what objective, what training/online procedure).\nThis inconsistency is the single biggest credibility issue in the text.\n\n**3. The 31% / 4 ms result needs context to be interpretable.**\n- 31% vs. 3x replication is the easy comparison. The harder and more honest comparison is vs. erasure coding alone, or vs. a static hot/cold tiering baseline. Without those, the cost win is not attributable to *adaptivity*.\n- \"p99 within 4 ms\" \u2014 4 ms of what absolute number? 4 ms on a 2 ms baseline is catastrophic; 4 ms on a 40 ms baseline is noise. Report absolute latencies.\n- Single 12-node cluster, workload not fully specified, no failure-mode results, no write-latency numbers, no migration-bandwidth cost.\n\n**4. Convergence claim is thinly evidenced.**\n\"Converges to the new optimal within 12 minutes\" \u2014 \"optimal\" relative to what oracle? If \"optimal\" means \"the steady state the policy itself reaches,\" this is circular. Reword as \"reaches a new steady state\" and report the cost/latency gap to a workload-specific static optimum.\n\n**5. The closing paragraph overclaims substantially.** Phrases to remove or soften:\n- \"deployment-ready for production-scale clusters\" \u2014 a 12-node evaluation does not support this.\n- \"clean break from the static-policy era\" \u2014 rhetorical, not a finding.\n- \"ta",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "To \u201cmake this stronger,\u201d should the primary emphasis be (A) sentence/paragraph-level wording and concision, (B) sharpening the contribution/novelty claims and aligning/tempering them with the reported evidence (e.g., the \u201cfirst\u201d and \u201cdeployment-ready\u201d assertions), or (C) reorganizing the section-level narrative and emphasis?",
+    "rationale": {
+      "R1.1": "Strengthening likely requires refining the thesis and contribution framing, especially around the problem gap and \u2018first\u2019 claims.",
+      "R1.2": "A tighter argument chain from problem to method to results will increase perceived rigor and credibility.",
+      "R1.3": "Claims about cost savings, latency, robustness, and \u2018first\u2019 demonstrations must be tightly aligned with the reported experimental evidence.",
+      "R1.4": "Because the text asserts novelty (\u2018first\u2019), estimating the delta versus nearest prior work is central to making the case stronger.",
+      "R1.6": "Concise, precise, and high-register prose is load-bearing for making a short research summary read as stronger.",
+      "RX.1": "Calibrating confidence and acknowledging limits improves credibility when strengthening bold claims.",
+      "RX.2": "Avoiding overclaim is critical given multiple \u2018first\u2019 and \u2018deployment-ready\u2019 assertions.",
+      "RX.3": "We must adhere strictly to the requested scope of responsibility projection without performing edits or new analysis.",
+      "RX.4": "Care is needed to avoid encouraging misleading or unsafe claims in a research context.",
+      "RX.5": "Any strengthening guidance should trace clearly to specific statements in the provided text."
+    }
+  }
+}

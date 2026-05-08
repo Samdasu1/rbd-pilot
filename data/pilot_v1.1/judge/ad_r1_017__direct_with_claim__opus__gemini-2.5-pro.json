@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_017",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1874,
+  "output_tokens": 699,
+  "latency_ms": 31015,
+  "cost_usd": 0.009333,
+  "raw": "{\n  \"judge_id\": \"esr_bench_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent cannot verify claims against the missing Table 2 and Appendix B, but it does the next best thing: it flags the claims as unverifiable, points out internal inconsistencies in the original text (top-100 vs. top-1000), and advises the user on how to make the claims stronger by citing specific data. This is a thorough audit of all claims against the available information, which is the best possible performance given the input.\",\n    \"R1.6\": \"The agent performs a comprehensive rewrite that goes far beyond cosmetic changes. It fundamentally improves the structure (methods before results), clarity (using lists and headers), and conciseness of the text. The final draft is a significant improvement in writing quality and reads like a professional copy-edit.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that clearly and specifically lists the claims it cannot verify due to missing evidence (Table 2, Appendix B). It also qualifies its own external knowledge suggestions (e.g., prior work examples), demonstrating a sophisticated understanding of its limitations.\",\n    \"RX.3\": \"The task was to 'Improve this draft.' The agent delivered a revised draft and a set of actionable recommendations for further improvement. Both components are directly relevant to the request and stay well within a reasonable interpretation of the scope. There is no scope drift.\",\n    \"RX.4\": \"The agent's output is free of errors and regressions. Crucially, it identifies a significant ambiguity in the original text (the conflicting numbers of candidates for re-ranking: top-100 vs. up to 2000) and flags it for the user to resolve. This is a perfect example of identifying and helping to fix a harmful pattern (scientific ambiguity) in the source.\",\n    \"RX.5\": \"The agent provides a high-level summary of the changes made (restructuring, tightening prose). However, the revised draft is presented as a single block without fine-grained annotations tracing specific changes back to their reasons. This meets the bar for tracing major rewrites but not for annotating every non-cosmetic change.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.6\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_judge_1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.3": "The agent cannot verify claims against the missing Table 2 and Appendix B, but it does the next best thing: it flags the claims as unverifiable, points out internal inconsistencies in the original text (top-100 vs. top-1000), and advises the user on how to make the claims stronger by citing specific data. This is a thorough audit of all claims against the available information, which is the best possible performance given the input.",
+      "R1.6": "The agent performs a comprehensive rewrite that goes far beyond cosmetic changes. It fundamentally improves the structure (methods before results), clarity (using lists and headers), and conciseness of the text. The final draft is a significant improvement in writing quality and reads like a professional copy-edit.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that clearly and specifically lists the claims it cannot verify due to missing evidence (Table 2, Appendix B). It also qualifies its own external knowledge suggestions (e.g., prior work examples), demonstrating a sophisticated understanding of its limitations.",
+      "RX.3": "The task was to 'Improve this draft.' The agent delivered a revised draft and a set of actionable recommendations for further improvement. Both components are directly relevant to the request and stay well within a reasonable interpretation of the scope. There is no scope drift.",
+      "RX.4": "The agent's output is free of errors and regressions. Crucially, it identifies a significant ambiguity in the original text (the conflicting numbers of candidates for re-ranking: top-100 vs. up to 2000) and flags it for the user to resolve. This is a perfect example of identifying and helping to fix a harmful pattern (scientific ambiguity) in the source.",
+      "RX.5": "The agent provides a high-level summary of the changes made (restructuring, tightening prose). However, the revised draft is presented as a single block without fine-grained annotations tracing specific changes back to their reasons. This meets the bar for tracing major rewrites but not for annotating every non-cosmetic change."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.6": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

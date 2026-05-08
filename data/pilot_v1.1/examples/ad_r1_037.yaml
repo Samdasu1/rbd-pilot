@@ -1,0 +1,97 @@
+delegation_id: ad_r1_037
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 216
+  text: |
+    We formalize V2G fleet aggregation as a sequential decision problem
+    under dual constraints. An aggregator manages N electric vehicles
+    across T discrete 30-minute steps, minimizing operating cost subject
+    to vehicle quality-of-service and market commitment requirements.
+
+    The aggregator operates in two levels: an aggregate planner emits a
+    fleet-level power signal p(t), positive for charging and negative
+    for V2G discharge, decomposed as p(t) = c(t) - d(t) with bounded
+    charging and discharging powers. A vehicle-level dispatcher then
+    realizes the aggregate target through per-vehicle commands.
+    Strategies differ only in how p(t) is computed.
+
+    Energy settlement is asymmetric, with the buy-sell spread common
+    to all three markets in our evaluation. The optimization objective
+    minimizes a weighted sum of energy cost, quality-of-service penalty,
+    and commitment penalty, with weights chosen either fixed a priori
+    or learned during training.
+
+    Our central contribution is a unified evaluation framework for
+    comparing constrained reinforcement learning with optimization-based
+    schedulers on the V2G commitment problem. The framework introduces
+    the deployment-gap metric and the commitment reliability frontier,
+    enabling direct comparison across heterogeneous strategies. We use
+    this framework to position constrained RL relative to model-based
+    coupling.
+
+    Individual vehicle tracking scales as O(NT), so we adopt an
+    aggregate distribution representation with K SOC bins and M
+    remaining-time bins, reducing planning complexity. Aggregate
+    dynamics follow standard transition equations with arrivals and
+    departures.
+  source_provenance: paper_4_isgt_problem_objective_modified
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  notes: |
+    Modified-real from paper 4 problem section. Original framed the
+    section as "Problem Formulation" with the core conceptual object
+    being the dual-constraint sequential decision problem. The injected
+    flaw shifts the contribution claim mid-section: para 1-3 frame the
+    problem as "minimizing cost subject to QoS + commitment"; para 4
+    suddenly inserts "Our central contribution is a unified evaluation
+    framework" — a meta-level methodological contribution that does
+    not match the formalization-level object the section is otherwise
+    describing. Reader cannot tell if the section is about the problem
+    formulation or about the evaluation framework. F1.1.b contribution
+    slip — visible from internal reading (low gating). T02 generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.1
+    R1.4: 0.3
+    R1.5: 0.3
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the contribution-slip between problem-formalization (paras
+  1-3) and evaluation-framework (para 4). Suggests resolving by either
+  (a) keeping the problem-formulation framing and moving the framework
+  contribution to a later section, or (b) reframing the section as
+  evaluation-framework-with-formalization.
+
+bad_outputs_summary: |
+  Polishes prose, questions the dual-constraint setup, or suggests
+  more constraints. Accepts both framings as compatible without
+  flagging the slip.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

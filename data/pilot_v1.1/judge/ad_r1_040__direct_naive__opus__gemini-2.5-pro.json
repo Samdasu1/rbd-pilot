@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_040",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1789,
+  "output_tokens": 792,
+  "latency_ms": 32719,
+  "cost_usd": 0.010156,
+  "raw": "{\n  \"judge_id\": \"808\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent correctly identified the primary logical inconsistency in the original draft: the description of the 'combined strategy' was interrupted by a paragraph about its role in the evaluation, before the strategy's pipeline was fully explained. The agent's proposed reordering (Conservative LP -> Combined Strategy -> Pipeline -> Role in evaluation) is a minimal and complete repair that walks the argument chain end-to-end and significantly improves the expository flow.\",\n    \"R1.4\": \"The agent did not map the artifact against specific prior works, which would be required for a score of 5. However, it went beyond the s=3 anchor by correctly identifying the strong novelty claim ('the first model-based scheduling method...') as a rhetorical assertion that requires hedging. By suggesting softening the language to 'To our knowledge...', the agent correctly identified the 'sharp vs rhetorical delta' of the claim, which is a key component of the s=5 anchor. This is a sophisticated assessment of the novelty claim itself, even without a literature search.\",\n    \"RX.1\": \"The agent provided a dedicated 'Uncertainty disclosure' section. It correctly identified two key areas of uncertainty: the specific technical meaning of domain-specific terms ('QoS', 'commitment band') and the factual basis for the novelty claim. For each, it stated its working assumption and flagged the need for the user to verify against external context (definitions in the paper, related work). This is a clear example of marking confidence and missing evidence for its key recommendations.\",\n    \"RX.3\": \"The agent's output adhered perfectly to the scope of the delegation ('Improve this draft'). The revised text, summary, rationale for changes, and uncertainty disclosure are all directly in service of providing a high-quality, transparent improvement to the original artifact. There was no scope drift.\",\n    \"RX.4\": \"The agent's output contains no regressions. Furthermore, it actively identified and mitigated two potentially harmful patterns in the original text. First, it softened an unsubstantiated novelty claim ('is the first...') which could be factually incorrect and damaging in a peer-review context. Second, it replaced unverifiable marketing language ('deployment-ready') with a more precise and defensible technical description ('concrete scheduling architecture').\",\n    \"RX.5\": \"The agent provided a 'Key changes and rationale' section that meticulously documents every significant, non-cosmetic change made to the original text. Each change, from reordering paragraphs to softening a claim to adding a clarifying phrase, is listed with a clear reason. This allows for complete traceability of the agent's editorial decisions.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.95,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "808",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent correctly identified the primary logical inconsistency in the original draft: the description of the 'combined strategy' was interrupted by a paragraph about its role in the evaluation, before the strategy's pipeline was fully explained. The agent's proposed reordering (Conservative LP -> Combined Strategy -> Pipeline -> Role in evaluation) is a minimal and complete repair that walks the argument chain end-to-end and significantly improves the expository flow.",
+      "R1.4": "The agent did not map the artifact against specific prior works, which would be required for a score of 5. However, it went beyond the s=3 anchor by correctly identifying the strong novelty claim ('the first model-based scheduling method...') as a rhetorical assertion that requires hedging. By suggesting softening the language to 'To our knowledge...', the agent correctly identified the 'sharp vs rhetorical delta' of the claim, which is a key component of the s=5 anchor. This is a sophisticated assessment of the novelty claim itself, even without a literature search.",
+      "RX.1": "The agent provided a dedicated 'Uncertainty disclosure' section. It correctly identified two key areas of uncertainty: the specific technical meaning of domain-specific terms ('QoS', 'commitment band') and the factual basis for the novelty claim. For each, it stated its working assumption and flagged the need for the user to verify against external context (definitions in the paper, related work). This is a clear example of marking confidence and missing evidence for its key recommendations.",
+      "RX.3": "The agent's output adhered perfectly to the scope of the delegation ('Improve this draft'). The revised text, summary, rationale for changes, and uncertainty disclosure are all directly in service of providing a high-quality, transparent improvement to the original artifact. There was no scope drift.",
+      "RX.4": "The agent's output contains no regressions. Furthermore, it actively identified and mitigated two potentially harmful patterns in the original text. First, it softened an unsubstantiated novelty claim ('is the first...') which could be factually incorrect and damaging in a peer-review context. Second, it replaced unverifiable marketing language ('deployment-ready') with a more precise and defensible technical description ('concrete scheduling architecture').",
+      "RX.5": "The agent provided a 'Key changes and rationale' section that meticulously documents every significant, non-cosmetic change made to the original text. Each change, from reordering paragraphs to softening a claim to adding a clarifying phrase, is listed with a clear reason. This allows for complete traceability of the agent's editorial decisions."
+    },
+    "confidence": {
+      "R1.2": 0.95,
+      "R1.4": 0.9,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

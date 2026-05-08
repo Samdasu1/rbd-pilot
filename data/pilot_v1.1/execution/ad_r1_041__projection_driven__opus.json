@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_041",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "api_fallback",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 1634,
+  "output_tokens": 964,
+  "cache_read_input_tokens": 0,
+  "latency_ms": 12963,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.3, \"RX.5\": 0.7}}\n\nCleaned up the prose for clarity and flow, preserving all technical content, numbers, and claims as written; flagged a few wording points where the original may overstate or where I cannot verify intent.\n\n---\n\nTable 1 summarizes cost, QoS, and commitment across all five strategies and three markets. The results reveal a fundamental tension: the RL strategies achieve the lowest net energy cost through aggressive arbitrage \u2014 PPO even generates net revenue (negative cost) in every market \u2014 but none sustain commitment above 50%.\n\nThe constrained MDP (CMDP) approach treats commitment as an explicit constraint and reaches roughly 85% commitment during training, achieving the principled enforcement that a soft penalty does not. Across all markets evaluated, CMDP shows that the Lagrangian relaxation framework internalizes the constraint structure and yields commitment-aware policies.\n\nThe critical and initially counterintuitive observation is that CMDP \u2014 designed specifically to enforce commitment \u2014 attains substantially lower commitment under operational rolling re-planning (~50%) than even the unconstrained LP-only baseline (75\u201390% across markets). The learned multiplier, calibrated on a static 24-hour horizon, cannot adapt to the disjoint constraint landscape of 4-hour windows, and its guidance becomes stale.\n\nBy contrast, the model-based combined strategy exceeds 99% commitment in every market while remaining competitive on cost and QoS. PPO and CMDP inference each take under 10 ms per episode but fail to deliver the commitment guarantees that the combined strategy achieves at 137 s per episode. Computational cost therefore does not explain the performance differences among the strategies in this comparison.\n\n---\n\nNotes on edits I made and points you may want to confirm:\n\n- Changed \"CMDP\" to be introduced parenthetically on first use; if it has already been defined earlier in the paper, revert.\n- \"fail to deliver the commitment guarantees that combined achieves\" \u2014 I rendered \"combined\" as \"the combined strategy\" for readability; confirm this matches the naming convention used elsewhere in the manuscript.\n- The phrase \"Computational cost therefore does not explain the performance differences\" is a fairly strong claim from a single timing comparison; consider softening to \"is unlikely to explain\" if the surrounding text does not establish this more rigorously. I left it as-is to avoid altering meaning.\n- \"trains commitment to ~85% during the training phase\" was tightened to \"reaches roughly 85% commitment during training\"; verify this matches what the training curves actually show (e.g., final value vs. average).\n- I did not change any numerical values, market counts, or the structural ordering of the four paragraphs.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "By \u201cClean this up,\u201d do you want (A) sentence-level polish only (grammar, clarity, concision) without changing structure or claims, (B) polish plus light section-level reordering and softening/aligning claims to avoid overstatement, or (C) a deeper rewrite that may reframe the argument and restructure the section?",
+    "rationale": {
+      "R1.6": "The request most naturally maps to sentence- and paragraph-level editing to improve clarity, flow, and concision without changing content.",
+      "RX.1": "Edits should preserve appropriate uncertainty and not imply stronger certainty than the reported results support.",
+      "RX.2": "Language must avoid overstating performance or generality relative to what the artifact claims.",
+      "RX.3": "Work must adhere to the requested scope of \u2018clean up\u2019 and avoid expanding into re-analysis unless authorized.",
+      "RX.4": "Edits should not introduce phrasing that could lead to harmful misinterpretation of the results or methods.",
+      "RX.5": "All references to strategies, markets, and Table 1 must be preserved to maintain provenance and traceability."
+    }
+  }
+}

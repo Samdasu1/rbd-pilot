@@ -1,0 +1,109 @@
+delegation_id: ad_r1_019
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 209
+  text: |
+    We present TransNova, a neural machine translation system that
+    achieves state-of-the-art BLEU scores on the WMT-2018 English-German
+    translation task. Our system reaches 28.7 BLEU compared to the
+    previous best of 27.1 reported by the Vaswani et al. baseline
+    transformer.
+
+    The architecture builds on the standard transformer encoder-decoder
+    with two modifications. First, we use a larger context window of
+    1024 tokens compared to the 512 tokens used in the baseline. Second,
+    we apply pre-norm residual connections rather than the original
+    post-norm formulation, which improves training stability at scale.
+
+    We trained on the WMT-2018 training set and evaluated on the
+    WMT-2018 test set. Hyperparameter search was conducted using the
+    validation split. We report sacreBLEU scores for direct
+    comparability with prior work.
+
+    In our final evaluation TransNova outperforms the Vaswani transformer
+    by 1.6 BLEU and exceeds the score reported by the Google production
+    system at the time of publication. We position this work as a
+    meaningful contribution to neural machine translation research and
+    as evidence that simple architectural refinements continue to yield
+    gains. Detailed hyperparameter and training-cost numbers are reported
+    in Appendix C, including the full training time of approximately 84
+    GPU-hours on 8 V100 GPUs and the dataset preprocessing pipeline used
+    for tokenization and BPE encoding of the WMT-2018 training corpus.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  R1.4: [F1.4.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.4 dominant (novelty positioning):
+      The only baseline is the original 2017 Vaswani transformer at
+      27.1 BLEU. Modern NMT (mBART, NLLB, large multilingual decoders)
+      has long since exceeded the Vaswani baseline. The contribution
+      sits in a 2017-vintage comparison while claiming to be a
+      "meaningful contribution to neural machine translation research"
+      in the present. Rewrite would re-anchor against current strong
+      baselines — the comparison set, not the empirical numbers,
+      is the load-bearing issue.
+
+    Reading B — R1.3 dominant (claim-evidence mismatch):
+      The headline "state-of-the-art BLEU scores on WMT-2018 English-German"
+      is internally unsupported. WMT-2018 has been benchmarked widely
+      since 2018 and the SOTA BLEU on this specific task has long been
+      well above 28.7. The section reports 28.7 against a 27.1 baseline
+      and claims "state-of-the-art" — the empirical evidence shown does
+      not support that claim because the baseline used is not the
+      contemporary SOTA. Rewrite would tighten the empirical claim to
+      what the evidence supports.
+
+    Reading A says "the framing is wrong" — fix the comparison set.
+    Reading B says "the claim is wrong" — fix the empirical wording.
+    Both produce different papers. Detection: low gating; both
+    readings are visible from careful reading of the section's claim
+    and the cited baseline year.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.6
+    R1.4: 0.6
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (rewrite the comparison set / novelty positioning) from Reading B
+  (rewrite the SOTA claim to match the evidence). After clarification,
+  addresses the chosen reading thoroughly.
+
+bad_outputs_summary: |
+  Polishes prose, suggests training longer, or proposes adding more
+  language pairs. Accepts the "state-of-the-art" framing and the
+  Vaswani baseline as appropriate. Treats the section as a
+  contribution to be strengthened by adding more experiments.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

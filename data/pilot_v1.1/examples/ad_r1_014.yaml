@@ -1,0 +1,102 @@
+delegation_id: ad_r1_014
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: distributed_systems
+  word_count: 214
+  text: |
+    Distributed key-value stores must handle concurrent writes from many
+    clients. Our system, ConsistencyChain, addresses this challenge using
+    a novel approach. The challenge is severe in geo-distributed settings
+    where network partitions are frequent.
+
+    ConsistencyChain implements a vector-clock-based protocol where each
+    write is tagged with an originating node ID and a per-node sequence
+    number. Concurrent writes are merged using a deterministic conflict
+    resolution function described in Section 3. The protocol guarantees
+    eventual consistency in the absence of partitions and bounded
+    staleness during partitions.
+
+    Recent work in distributed systems has emphasized the importance of
+    latency under realistic network conditions. Geo-distributed deployments
+    routinely experience inter-region round-trip times of 100-300ms, which
+    makes synchronous replication impractical for low-latency reads. This
+    motivates the asynchronous protocol we describe.
+
+    In our experiments on a 6-region testbed spanning North America,
+    Europe, and Asia, ConsistencyChain achieves p99 read latency of
+    8.4ms (within-region) and 142ms (cross-region) under sustained
+    50k-write/sec load. The system also survives 3-region partitions
+    without availability loss.
+
+    The bounded-staleness guarantee is formalized as follows: writes are
+    visible within max(2T, 50ms) where T is the inter-region RTT.
+    Section 4 proves this bound.
+
+    Section 5 further reports an availability case study in which a
+    3-region partition lasted 47 minutes during a simulated outage,
+    with no client-visible inconsistencies observed after partition
+    healing across the full 50k-write/sec workload.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  notes: |
+    Out-of-order narrative. The section flow is:
+      (1) motivation (concurrent writes, partitions)
+      (2) method intro (vector-clock protocol, guarantees)
+      (3) SECOND motivation (geo-distribution latency) — duplicates and
+          extends para 1's motivation, but appears AFTER method intro
+      (4) experimental results
+      (5) formalization of the staleness guarantee — should be near (2)
+    Para 3 belongs in para 1 or replaces para 1's framing. Para 5's
+    formal bound belongs near para 2's protocol description, not after
+    results. The current ordering forces the reader to backtrack twice.
+    Detection: any careful reader of the paragraph sequence notices the
+    motivation–motivation–results–formalization mismatch — no canonical
+    recall needed (low gating). Delegation T02 "Review this section" is
+    generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Proposes a section reorder. Recommends consolidating the two motivation
+  paragraphs (1 + 3) into one opening; moving the formal bound (5) up to
+  follow the protocol description (2); placing experiments at the end.
+  Provides a concrete suggested ordering with rationale per section.
+
+bad_outputs_summary: |
+  Polishes prose, questions the experimental setup, or proposes
+  additional partition-survival experiments. Treats the section
+  ordering as fine and suggests only sentence-level changes. Adds
+  unrelated discussion of consistency models without addressing the
+  structural issue.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

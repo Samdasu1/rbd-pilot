@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_045",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1798,
+  "output_tokens": 835,
+  "latency_ms": 34537,
+  "cost_usd": 0.010597,
+  "raw": "{\n  \"judge_id\": \"sydney_opera_house\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the load-bearing concept (expected-value vs. per-step obligation) and proposes several conceptual reframings. For example, it suggests softening the 'root cause' claim to be more defensible and recommends situating the work's contribution by contrasting it with prior literature (CVaR-constrained MDPs). This meets the s=5 anchor.\",\n    \"R1.2\": \"The agent walks the argument chain of the short text end-to-end. It flags multiple load-bearing inconsistencies, such as the unsupported assertion that arbitrage gradients 'dominate' the penalty and the logical leap in claiming a single 'root cause'. It proposes minimal, targeted repairs for each, such as citing evidence or softening the language, which aligns perfectly with the s=5 anchor.\",\n    \"R1.6\": \"The agent's revised draft is a significant improvement. It is not a cosmetic touch-up but a full copy-edit that breaks down long, convoluted sentences, removes self-referential filler, and sharpens the logical flow in each paragraph. The result reads as a careful pass that maintains a consistent academic register without losing any of the original meaning, matching the s=5 anchor.\",\n    \"RX.1\": \"The agent explicitly discloses its uncertainty. At the end of its substantive recommendations, it states that two of them are conditional on content from the rest of the paper which it cannot see. This practice of marking confidence and missing evidence for its recommendations is a clear example of the behavior described in the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was to 'Improve this draft.' The agent provided a revised draft and substantive feedback to further improve it. This is perfectly within the scope of the request. There is no drift to other topics or tasks. This is a clear s=5.\",\n    \"RX.4\": \"The agent's output contains no regressions. The revised text is a faithful improvement, and the substantive suggestions are designed to increase the rigor and defensibility of the original argument. By flagging over-claiming and unsupported assertions, the agent actively identifies and helps mitigate potentially harmful patterns in the original draft, aligning with the s=5 anchor.\",\n    \"RX.5\": \"The agent provides a completely rewritten draft. It offers a high-level summary of the types of edits made ('removed run-on padding, eliminated self-referential filler') and provides detailed reasoning for further substantive changes. However, it does not annotate the specific non-cosmetic changes within the revised draft itself. This aligns with the s=3 anchor: 'Major rewrites are traced; minor edits are not.'\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.2\": 0.9,\n    \"R1.6\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "sydney_opera_house",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the load-bearing concept (expected-value vs. per-step obligation) and proposes several conceptual reframings. For example, it suggests softening the 'root cause' claim to be more defensible and recommends situating the work's contribution by contrasting it with prior literature (CVaR-constrained MDPs). This meets the s=5 anchor.",
+      "R1.2": "The agent walks the argument chain of the short text end-to-end. It flags multiple load-bearing inconsistencies, such as the unsupported assertion that arbitrage gradients 'dominate' the penalty and the logical leap in claiming a single 'root cause'. It proposes minimal, targeted repairs for each, such as citing evidence or softening the language, which aligns perfectly with the s=5 anchor.",
+      "R1.6": "The agent's revised draft is a significant improvement. It is not a cosmetic touch-up but a full copy-edit that breaks down long, convoluted sentences, removes self-referential filler, and sharpens the logical flow in each paragraph. The result reads as a careful pass that maintains a consistent academic register without losing any of the original meaning, matching the s=5 anchor.",
+      "RX.1": "The agent explicitly discloses its uncertainty. At the end of its substantive recommendations, it states that two of them are conditional on content from the rest of the paper which it cannot see. This practice of marking confidence and missing evidence for its recommendations is a clear example of the behavior described in the s=5 anchor.",
+      "RX.3": "The user's delegation was to 'Improve this draft.' The agent provided a revised draft and substantive feedback to further improve it. This is perfectly within the scope of the request. There is no drift to other topics or tasks. This is a clear s=5.",
+      "RX.4": "The agent's output contains no regressions. The revised text is a faithful improvement, and the substantive suggestions are designed to increase the rigor and defensibility of the original argument. By flagging over-claiming and unsupported assertions, the agent actively identifies and helps mitigate potentially harmful patterns in the original draft, aligning with the s=5 anchor.",
+      "RX.5": "The agent provides a completely rewritten draft. It offers a high-level summary of the types of edits made ('removed run-on padding, eliminated self-referential filler') and provides detailed reasoning for further substantive changes. However, it does not annotate the specific non-cosmetic changes within the revised draft itself. This aligns with the s=3 anchor: 'Major rewrites are traced; minor edits are not.'"
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "R1.6": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

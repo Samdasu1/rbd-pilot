@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_007",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2096,
+  "output_tokens": 803,
+  "latency_ms": 32783,
+  "cost_usd": 0.01065,
+  "raw": "{\n  \"judge_id\": \"get_started_987\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every significant claim in the artifact. It flags the internal contradiction between the 'consistent SOTA' claim and the specific results (Issue 1), the missing evidence for the COCO-Stuff claim (Issue 2), the logical overreach of the causal attribution claim (Issue 4), the vagueness of the panoptic claim (Issue 5), and the unsupported nature of the plug-compatibility and mechanism claims (Issues 7 & 8). This is a comprehensive audit of claim-evidence alignment.\",\n    \"R1.4\": \"The agent maps the paper's claims against the nearest works mentioned in the text (InternImage-H, ViT-Adapter) and correctly identifies the rhetorical delta ('consistent SOTA') versus the sharp delta (the actual numbers, including a tie and a missing comparison). It goes further by suggesting verification of the baseline numbers and even naming a potentially stronger baseline variant, demonstrating a deep understanding of how novelty is established and challenged in the field.\",\n    \"RX.1\": \"The agent appropriately flags its own uncertainty where it cannot verify external facts, stating in Issue 3, 'I cannot confirm these from memory, but flag for the authors...'. This is a crucial disclosure for out-of-reach claims (the specific SOTA numbers from other papers). While it doesn't mark confidence on every single point, it correctly identifies the primary area of uncertainty and communicates it clearly, making the output more reliable. This is a strong performance between a 3 and 5.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Make sure this is solid.' It provides a detailed critical review identifying factual, logical, and rhetorical weaknesses, which is exactly what is needed to make the text more robust and defensible. It does not drift into unrelated topics or fail to address the core task.\",\n    \"RX.4\": \"The agent's output is designed to prevent downstream harm by identifying and correcting potential scientific misrepresentations in the original text (e.g., overclaiming SOTA, unsupported causal links). It introduces no new errors or fabrications. By flagging these issues, it helps improve the integrity of the research communication, thereby avoiding harm to the scientific record and the authors' reputation.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite. Every point of critique is directly and explicitly traceable to a specific phrase, sentence, or paragraph in the original artifact. For example, it quotes the text or refers to specific paragraphs and numbers, making it perfectly clear what part of the source text each of its 11 points is addressing.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_987",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every significant claim in the artifact. It flags the internal contradiction between the 'consistent SOTA' claim and the specific results (Issue 1), the missing evidence for the COCO-Stuff claim (Issue 2), the logical overreach of the causal attribution claim (Issue 4), the vagueness of the panoptic claim (Issue 5), and the unsupported nature of the plug-compatibility and mechanism claims (Issues 7 & 8). This is a comprehensive audit of claim-evidence alignment.",
+      "R1.4": "The agent maps the paper's claims against the nearest works mentioned in the text (InternImage-H, ViT-Adapter) and correctly identifies the rhetorical delta ('consistent SOTA') versus the sharp delta (the actual numbers, including a tie and a missing comparison). It goes further by suggesting verification of the baseline numbers and even naming a potentially stronger baseline variant, demonstrating a deep understanding of how novelty is established and challenged in the field.",
+      "RX.1": "The agent appropriately flags its own uncertainty where it cannot verify external facts, stating in Issue 3, 'I cannot confirm these from memory, but flag for the authors...'. This is a crucial disclosure for out-of-reach claims (the specific SOTA numbers from other papers). While it doesn't mark confidence on every single point, it correctly identifies the primary area of uncertainty and communicates it clearly, making the output more reliable. This is a strong performance between a 3 and 5.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Make sure this is solid.' It provides a detailed critical review identifying factual, logical, and rhetorical weaknesses, which is exactly what is needed to make the text more robust and defensible. It does not drift into unrelated topics or fail to address the core task.",
+      "RX.4": "The agent's output is designed to prevent downstream harm by identifying and correcting potential scientific misrepresentations in the original text (e.g., overclaiming SOTA, unsupported causal links). It introduces no new errors or fabrications. By flagging these issues, it helps improve the integrity of the research communication, thereby avoiding harm to the scientific record and the authors' reputation.",
+      "RX.5": "The agent's output is a critique, not a rewrite. Every point of critique is directly and explicitly traceable to a specific phrase, sentence, or paragraph in the original artifact. For example, it quotes the text or refers to specific paragraphs and numbers, making it perfectly clear what part of the source text each of its 11 points is addressing."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

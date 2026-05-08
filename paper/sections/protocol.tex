@@ -1,0 +1,140 @@
+\section{Protocol}
+\label{sec:protocol}
+
+We operationalize responsibility-bearing delegation as a closed-loop pipeline of seven steps that runs between a natural-language delegation $d$ and any execution against the artifact $a$: (4.1) projection of $d$ onto a closed responsibility space $J$, (4.2) responsibility-bearing bids by candidate agents, (4.3) a clarification trigger that may re-enter the loop before commitment, (4.4) agent--role selection under responsibility-adjusted utility, (4.5) execution with evidence collection, (4.6) ex-post settlement scored at the dimension level, and (4.7) responsibility-conditioned reputation update. Steps 4.1--4.4 constitute the \textbf{pre-execution governance layer} that the paper argues is missing from existing routing, aggregation, and post-hoc failure pipelines; steps 4.5--4.7 close the loop so that future delegations consume the settlement record. Section~\ref{sec:protocol:algorithm} states the full procedure as \textsc{Algorithm}~\ref{alg:rbd}; Section~\ref{sec:protocol:risks} lists three deployment risks with their mitigations.
+
+\subsection{Responsibility projection}
+\label{sec:protocol:projection}
+
+A projection agent maps $(d, u, t, a)$ into a weight vector $r \in [0, 1]^{|J|}$ over the closed responsibility space and emits a derived active set:
+\begin{equation}
+J^*(d) = \{ j \in J_{R1} : r_j > \tau_r \} \cup J_X,
+\label{eq:active_set}
+\end{equation}
+where $\tau_r = 0.3$ is the inclusion threshold and $J_X = \{\text{RX.1, RX.2, RX.3, RX.4, RX.5}\}$ is the cross-cutting subset, treated as always-active by construction. The projection agent is instructed not to execute the delegation; it only commits a structured projection. Each weight $r_j$ takes the four-anchor calibration from Section~\ref{sec:problem}: $0.0$ (out of scope), $0.3$ (peripheral), $0.7$ (central expected responsibility), $1.0$ (load-bearing). Outputs additionally carry a binary \texttt{clarification\_needed} flag and, when true, a concrete clarification question that proposes a small-set choice rather than a generic prompt.
+
+\textbf{Cross-family deployment.} The protocol intentionally elicits projections from multiple model families to expose projection mismatch as a measurable quantity (Section~\ref{sec:results:exp1}). Empirically, projections under temperature 0 from three families differ by a margin that exceeds within-family stochastic variance by an order of magnitude; pre-execution responsibility commitment is family-specific, not stochastic.
+
+\subsection{Responsibility-bearing bids}
+\label{sec:protocol:bid}
+
+Given $(d, a, r, J^*, y_i, \rho_i)$ where $y_i$ is the candidate role assigned to agent $i$ and $\rho_i$ is its prior reputation, agent $i$ submits a bid
+\begin{equation}
+b_i = \bigl( z_i,\, q_i,\, u_i,\, p_i,\, c_i,\, s_i \bigr),
+\label{eq:bid}
+\end{equation}
+where $q_i \in [0,1]^{|J|}$ is claimed responsibility coverage per dimension, $u_i \in [0,1]^{|J|}$ is per-dimension uncertainty, $p_i$ is the cost claim, and $(c_i, s_i)$ are short capability and scope statements. The bid type $z_i$ is one of four:
+\begin{itemize}
+    \item \textbf{execute}: $q_{ij} \geq 0.7$ for all $j \in J^*(d)$. The agent commits to the entire active set.
+    \item \textbf{partial}: at least one $j \in J^*(d)$ has $q_{ij} \geq 0.5$ and at least one has $q_{ij} < 0.5$. The agent commits to a subset.
+    \item \textbf{clarify}: the agent refuses to bid and proposes a clarification question. Reserved for delegations whose responsibility structure remains underdetermined after the projection.
+    \item \textbf{limit}: the agent explicitly refuses one or more dimensions; \texttt{limit\_dims} $\subseteq J^*(d)$ is non-empty, and $q_{ij} \leq 0.3$ for $j \in \texttt{limit\_dims}$.
+\end{itemize}
+Coverage and uncertainty are coupled: an agent that claims $q_{ij} > 0.7$ on a dimension it cannot externally verify must report $u_{ij} \geq 0.05$. Coverage that is honest about uncertainty supports overclaim accounting in settlement (Section~\ref{sec:protocol:settlement}).
+
+\subsection{Clarification trigger}
+\label{sec:protocol:clarify}
+
+The system enters clarification before commitment whenever any of three conditions hold:
+\begin{multline}
+C(d) = 1 \;\;\Longleftrightarrow\;\; \big[\, z_i = \texttt{clarify} \;\,\text{for some}\,\, i \,\big] \\
+\,\lor\, \big[\, D_\pi(d) > \tau_D \,\big] \,\lor\, \big[\, V(d) > \tau_V \,\big],
+\label{eq:trigger}
+\end{multline}
+where $D_\pi(d) = \tfrac{1}{\binom{m}{2}} \sum_{f_1 < f_2} \bigl( 1 - \cos(r_{f_1}, r_{f_2}) \bigr)$ is the cross-family projection divergence over $m$ projection runs and $V(d) = \max_j \mathrm{Var}_i(q_{ij})$ is the maximum across-bidder variance in claimed coverage on any active dimension. The cost-sensitivity formulation absorbs the lesson from selective-clarification work~\cite{lhaw2024, cole2023selectivelyambig, lee2023selectiveambig} that clarification has nontrivial cost and should not fire on every borderline case. Default thresholds for the pilot are $\tau_D = 0.25$ and $\tau_V = 0.20$. When $C(d) = 1$ the system selects the most specific available clarification question (priority: bidder \texttt{clarify} > projection-supplied question > a divergence-pattern-derived question), updates the delegation, and re-enters Section~\ref{sec:protocol:projection}. We cap clarification at one round per delegation in the pilot; multi-round protocols are reserved for future work.
+
+\subsection{Agent--role selection}
+\label{sec:protocol:selection}
+
+After clarification (or directly, if $C(d) = 0$), the system selects an agent--role assignment $i^\star$ by maximizing a responsibility-adjusted utility:
+\begin{equation}
+U_i = \!\! \sum_{j \in J^*(d)} \!\! w_j^{(u, t)} \Bigl[\, q_{ij}\,\rho_{i, y_i, j, t} \;-\; \beta_u\, u_{ij} \;-\; \beta_{\text{oc}}\, \widehat{\text{OC}}_{ij} \Bigr] \;-\; \beta_p\, p_i,
+\label{eq:utility}
+\end{equation}
+\begin{equation}
+i^\star = \arg\max_i U_i.
+\label{eq:select}
+\end{equation}
+Here $w_j^{(u, t)}$ is the user- and task-conditioned dimension weight (defaulting to uniform), $\rho_{i, y_i, j, t}$ is the agent's prior reputation on dimension $j$ in role $y_i$ at time $t$, $\widehat{\text{OC}}_{ij}$ is an estimated overclaim risk, and $\beta_u, \beta_{\text{oc}}, \beta_p$ are non-negative trade-off coefficients. The utility rewards honest coverage discounted by reputation, penalizes uncertainty and overclaim risk, and offsets the agent's cost. \textsc{Algorithm}~\ref{alg:rbd} treats $\rho$ as a cold-start prior in the pilot ($\rho_{i, y, j, 0} = 0.5$); Section~\ref{sec:protocol:reputation} specifies the update rule.
+
+\subsection{Execution and evidence}
+\label{sec:protocol:execute}
+
+The selected agent $i^\star$ executes against the artifact and produces output $o_{i^\star}$. Evaluation in the next step requires evidence; we model the evidence set $E_{i^\star}$ as a heterogeneous collection in which each item $e \in E_{i^\star}$ carries a reliability score $\kappa(e) \in [0, 1]$ and a source type $\tau(e) \in \{\text{deterministic}, \text{harness}, \text{human}, \text{LLM-judge}, \text{retrieval}\}$. The recommended reliability ordering is
+\begin{equation}
+\kappa_{\text{deterministic}} \;\geq\; \kappa_{\text{harness}} \;\geq\; \kappa_{\text{human}} \;\geq\; \kappa_{\text{LLM-judge}} \;\geq\; \kappa_{\text{retrieval}},
+\label{eq:kappa}
+\end{equation}
+which encodes the bias risk of each source. The initial pilot used a three-judge LLM panel; the redesigned measurement layer reported in Section~\ref{sec:results:exp2} uses a 12-judge tier-stratified Anthropic-excluded panel for the settlement loss. The planned 20-example human subset was attempted with scope reduction reported in Section~\ref{sec:results:limitations:specifiability}; deterministic and harness evidence apply only to dimensions for which a verifier exists.
+
+\textbf{Cross-model rule.} The judge panel excludes the executor's family entirely; an earlier weaker rule of two-of-three judges differing was strengthened to full family-exclusion in the panel redesign.
+
+\subsection{Settlement}
+\label{sec:protocol:settlement}
+
+Each judge $k$ scores the executed output on each active dimension $j \in J^*(d)$ on the integer 1--5 scale defined by per-dimension anchors. The aggregated settlement score, normalized loss, and per-example settlement loss are
+\begin{align}
+v_{ij} \;&=\; \frac{\mathrm{median}_k\bigl(s_{ij}^{(k)}\bigr) - 1}{4},
+\qquad
+\ell_{ij} \;=\; 1 - v_{ij}, \nonumber \\
+L_i \;&=\; \sum_{j \in J^*(d)} w_j^{(u, t)}\, \ell_{ij}.
+\label{eq:settlement}
+\end{align}
+We decompose the loss into a category component and a cross-cutting component, $L_i = L_i^{\text{cat}} + L_i^{X}$, so that overclaim and scope failures (RX.2 and RX.3) are accountable separately from the category-task quality. An overclaim flag is raised whenever $q_{ij} > v_{ij} + \delta_{\text{oc}}$ with default $\delta_{\text{oc}} = 0.2$; the count of raised flags drives $\ell_{i, \text{RX.2}}$ via
+\begin{equation}
+\ell_{i,\,\text{RX.2}} \;=\; \min\!\Bigl( 1,\; \gamma_{\text{oc}} \!\!\!\! \sum_{j \in J^*(d) \setminus J_X} \!\!\!\! \mathbb{1}\bigl[\, q_{ij} > v_{ij} + \delta_{\text{oc}} \,\bigr] \Bigr),
+\label{eq:overclaim}
+\end{equation}
+with $\gamma_{\text{oc}}$ a unit normalizer. Scope adherence (RX.3) penalizes work that falls outside the agreed $J^*(d)$, a particular concern when the projection's active set differs from the engineered load-bearing set (Section~\ref{sec:results:mechanism:prior_retest}).
+
+\subsection{Reputation update}
+\label{sec:protocol:reputation}
+
+After settlement, the agent's role- and dimension-conditioned reputation is updated by additive exponential moving average:
+\begin{equation}
+\rho_{i, y_i, j, t+1} \;=\; (1 - \lambda)\, \rho_{i, y_i, j, t} \;+\; \lambda\, v_{ij},
+\label{eq:rho}
+\end{equation}
+with $\lambda = 0.2$ and cold-start prior $\rho_{i, y, j, 0} = 0.5$.
+We deliberately reject multiplicative reputation decay --- it can only decrease and conflates noise with miscalibration. Additive EMA admits both increase and decrease, converges to repeated fulfillment, and remains stable under noise. An overclaim-sensitive variant
+\begin{multline}
+\rho_{i, y_i, j, t+1} \;=\; \mathrm{clip}_{[0,1]}\Bigl( (1 - \lambda)\, \rho_{i, y_i, j, t} \\
++ \lambda \bigl( v_{ij} - \mu_{\text{oc}}\, \mathbb{1}[q_{ij} > v_{ij} + \delta_{\text{oc}}] \bigr) \Bigr)
+\label{eq:rho_oc}
+\end{multline}
+is reserved for the ablation in the appendix; the headline experiments use Equation~(\ref{eq:rho}).
+
+\subsection{The protocol}
+\label{sec:protocol:algorithm}
+
+\begin{algorithm}[t]
+\caption{Responsibility-Bearing Delegation}
+\label{alg:rbd}
+\begin{algorithmic}[1]
+\Require delegation $d$, user $u$, task $t$, artifact $a$, agents $A$, prior reputation $\rho$
+\State \textbf{Project:} $r \gets \pi(d, u, t, a)$ \Comment{cross-family projections at $T = 0$}
+\State \textbf{Active set:} $J^*(d) \gets \{ j \in J_{R1} : r_j > \tau_r \} \cup J_X$
+\For{each candidate $i \in A$}
+    \State \textbf{Bid:} $b_i \gets B(a_i, d, r, y_i, \rho_i)$ \Comment{Eq.~(\ref{eq:bid})}
+\EndFor
+\State \textbf{Trigger:} compute $D_\pi(d)$, $V(d)$ and check Eq.~(\ref{eq:trigger})
+\If{$C(d) = 1$}
+    \State Pose the most specific clarification question; update $d$; \textbf{goto} step 1
+\EndIf
+\State \textbf{Select:} $i^\star \gets \arg\max_i U_i$ \Comment{Eq.~(\ref{eq:utility}), (\ref{eq:select})}
+\State \textbf{Execute:} $o_{i^\star} \gets \mathrm{execute}(a_{i^\star}, d, r, J^*)$
+\State \textbf{Collect evidence:} $E_{i^\star}$ with reliability $\kappa$ per Eq.~(\ref{eq:kappa})
+\State \textbf{Settle:} compute $v_{ij}, \ell_{ij}, L_{i^\star}$ \Comment{Eq.~(\ref{eq:settlement}), (\ref{eq:overclaim})}
+\State \textbf{Update reputation:} $\rho_{i^\star, y_{i^\star}, j, t+1} \gets (1 - \lambda) \rho_{i^\star, y_{i^\star}, j, t} + \lambda v_{ij}$
+\State \Return $o_{i^\star}$, settlement record, updated reputation
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Risks and safeguards}
+\label{sec:protocol:risks}
+
+\noindent\textbf{(1) Active-set propagation bias (prior hypothesis; pilot evidence inconclusive).} If the projection's active set is broader than the actually load-bearing set, the executor under projection-driven guidance may spread attention away from the central dimension. Section~\ref{sec:results:mechanism:prior_retest} re-tested this hypothesis in the redesigned panel and found the active-set breadth excess approximately equal across conditions; it does not differentially explain the projection-injection effect at this scale. Mitigations are still worth considering for main run: raise $\tau_r$ from 0.3 to 0.5 for execution guidance even when annotation continues to use 0.3; or separate the annotation active set from the execution active set, deriving the latter from the engineered or hidden-intent ground truth.
+
+\noindent\textbf{(2) Format coupling between guidance and output (prior hypothesis; pilot effect weak).} Explicit per-dimension guidance can induce an analytical-report style (``Option A vs.\ Option B'') in place of a unified revised artifact, especially on dual or ambiguous delegations. Section~\ref{sec:results:mechanism:prior_retest} reports a 10\% format-mismatch rate, weaker than an earlier qualitative reading suggested. Mitigation if main-run scale revives the effect: lock the executor prompt to artifact-revision mode with a hard instruction so format coupling does not absorb the guidance signal.
+
+\noindent\textbf{(3) Self-claim drift.} Agents asked to self-report addressed dimensions sometimes claim dimensions outside the active set or drop dimensions inside it. The full bid mechanism (Section~\ref{sec:protocol:bid}) suppresses drift by forcing a structured commitment before execution; a free-form self-claim does not. Mitigation: require a strict bid record under Equation~(\ref{eq:bid}) before any execution prompt is constructed.

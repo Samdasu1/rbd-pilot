@@ -1,0 +1,107 @@
+delegation_id: ad_r1_026
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 202
+  text: |
+    We introduce DrugDock, the first machine learning method for
+    predicting drug-target binding affinity that achieves clinically
+    relevant accuracy across diverse target classes. Our approach is
+    built on a graph neural network backbone that encodes both small
+    molecules and protein binding pockets in a unified representation
+    space.
+
+    The training data is drawn from our previously published dataset
+    (Anonymous Authors et al., 2021), which we expanded with an
+    additional 50,000 binding measurements collected through our group's
+    recent crystallography campaigns. The model architecture extends
+    our earlier DrugDock-v1 system (Anonymous Authors et al., 2022)
+    with a cross-attention layer that integrates structural and chemical
+    features.
+
+    Compared to DrugDock-v1, our new architecture achieves a 12% reduction
+    in mean absolute error on the held-out test set. Compared to a
+    chemistry-only baseline that we constructed for this paper, we
+    achieve a 28% reduction in error.
+
+    We evaluate DrugDock on three diverse target classes: kinases,
+    GPCRs, and proteases. Performance is consistent across classes,
+    with mean absolute error of 0.84 kcal/mol on kinases, 0.91 kcal/mol
+    on GPCRs, and 0.79 kcal/mol on proteases.
+
+    We position DrugDock as a meaningful step toward deployable ML
+    methods in early-stage drug discovery. The unified architecture and
+    the consistent cross-target performance suggest broad applicability
+    in the pharmaceutical industry.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  R1.7: [F1.7.b]
+  notes: |
+    Two compound issues, both visible without external knowledge:
+
+    R1.4 — rhetorical novelty. Para 1 claims DrugDock is "the first
+    machine learning method for predicting drug-target binding
+    affinity." This is contradicted by the section's own paragraphs:
+    para 2 cites DrugDock-v1 (the authors' own prior ML method for the
+    same task), and para 3 cites "a chemistry-only baseline that we
+    constructed for this paper." So the "first ML method" claim is
+    incompatible with the section's acknowledgment of DrugDock-v1 as
+    prior ML work on the same problem.
+
+    R1.7 — missing prior work. The section cites only the authors' own
+    DrugDock-v1 and an unnamed "chemistry-only baseline." It does not
+    name any non-self ML methods for drug-target binding (the field
+    has many such methods, including widely-cited GNN-based approaches).
+    Detection: a reader notices "all baselines are author-self" without
+    needing to know specific names like DeepDTA — the absence of
+    third-party comparisons is internally visible (low gating).
+
+    Combined: fixing R1.4 alone (rewording "first" claim) requires
+    addressing R1.7 (adding third-party baselines) and vice versa.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.7
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.7
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the "first ML method" claim is contradicted by the
+  section's own citation of DrugDock-v1 (an ML method on the same
+  task); (2) all named baselines are author-self, so the contribution's
+  novelty positioning lacks third-party contrast. Suggests rewording
+  the novelty claim to a defensible delta and adding non-self baselines
+  to the comparison.
+
+bad_outputs_summary: |
+  Polishes prose, accepts the "first" claim, suggests more target
+  classes. Adds peripheral chemistry citations without addressing the
+  self-citation pattern. Praises the unified architecture.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

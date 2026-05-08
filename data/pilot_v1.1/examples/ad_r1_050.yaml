@@ -1,0 +1,92 @@
+delegation_id: ad_r1_050
+template_id: T04
+delegation: "Polish this."
+
+artifact:
+  source: modified-real
+  domain: power_systems_v2g
+  word_count: 245
+  text: |
+    All strategies that we have evaluated in this study are evaluated
+    in a common V2G simulation setting which involves N=200 electric
+    vehicles each with a 60 kWh battery capacity and a 7 kW
+    bidirectional charger which provides charging and discharging
+    capability and we have configured the system to operate over a
+    24-hour horizon which is divided into 48 discrete steps each of
+    which is 30 minutes in duration which we believe to be a reasonable
+    granularity for the V2G aggregation problem that we are studying
+    here.
+
+    The vehicle arrivals follow stochastic commuter profiles which we
+    have modeled based on the recurring patterns that are commonly
+    observed in fleet operations literature and the initial state of
+    charge for each vehicle is drawn from a uniform distribution
+    spanning 0.2 to 0.6 which we believe to be representative of
+    typical operational conditions across the fleet operators that
+    we have surveyed during the design of this study.
+
+    Under the rolling re-planning protocol the aggregator re-plans
+    the schedule every 4 hours with a 4-hour lookahead which we
+    believe captures the operational reality of European day-ahead
+    and intraday market participation in a fairly comprehensive
+    manner across the three markets that we are evaluating.
+
+    The market data which we have used in our study are drawn from
+    real recorded price traces which include day-ahead settlement
+    prices and ancillary-service capacity prices and balance-delta
+    prices that we have collected from public sources for the years
+    2023 to 2026 across the three European electricity markets.
+  source_provenance: paper_4_isgt_experiments_modified
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Control case. Modified-real from paper 4 experiments. T04 "Polish
+    this" + R1.6 prose flaws — leak=yes by design. Original section
+    is concise and structured (4 short subsections, each 2-4 lines).
+    This version injects 60-90 word run-ons in every paragraph,
+    chained "which... which..." constructions, hedging cascade ("we
+    believe", "fairly comprehensive", "reasonable granularity",
+    "representative", "typical"). Underlying numbers and methodology
+    preserved. Sanity floor for the projection agent: every family
+    should map T04 → R1.6 trivially. Cross-family d_C ≈ 0 expected.
+    If d_C > 0.10, projection prompt is broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Tightens run-ons, removes hedging chains, normalizes register.
+  Preserves underlying numbers and methodology. Restores the section
+  to a concise experimental-setup style.
+
+bad_outputs_summary: |
+  Restructures the section, suggests adding more parameters or
+  fleet sizes, questions the simulation choices. Reframes the
+  contribution.
+
+created_at: "2026-05-02"
+created_by: author
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1
