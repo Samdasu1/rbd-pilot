@@ -2,6 +2,10 @@
 
 > Claude Code / Anthropic SDK 통해 본 디렉토리에서 호출된 Claude 인스턴스용. **본 파일 직전 또는 직후 `AGENTS.md` 반드시 로드** (충돌 시 AGENTS.md 우선).
 
+## 본 문서의 역할 — session 재시작 회피
+
+대화 세션을 끝내고 새 세션으로 다시 시작하는 것은 비효율적이다 — 사용자가 같은 prompt를 반복 입력하고, 모델은 cold-start로 컨텍스트를 재학습해야 한다. 그 대신 본 문서 + `AGENTS.md`가 매 turn system context로 자동 로드되도록 둔다. **자동 압축(compaction) 후에도 본 문서들은 보존**되므로, 새 prompt로 같은 정보를 반복하는 것보다 token 사용량이 적다. 따라서 사용자가 paper-6 작업 중 컨텍스트가 길어져도 (a) 새 세션 열 필요 없고, (b) 압축이 일어나도 critical invariant 잃지 않는다.
+
 ---
 
 ## 0. 매 호출 직전 자가 확인

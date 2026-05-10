@@ -2,6 +2,12 @@
 
 > 이 디렉토리는 paper "When Responsibility Guidance Hurts: A Pilot Study of Pre-Execution Projection in LLM Agents" (Hwang & Han, KNU EE, 2026)의 source + data + scripts다. 모든 sub-agent / Claude 세션은 호출 직전 본 문서를 읽고 §1의 critical invariants를 인지해야 한다.
 
+## 왜 본 문서가 필요한가 — token-efficiency rationale
+
+대화 세션이 길어지면 자동 압축(compaction)이 일어나 과거 turn이 요약된다. 압축 후에도 본 문서와 `CLAUDE.md`는 매 turn system context로 재로드되므로 critical invariant가 보존된다. 따라서 사용자가 새 세션을 열고 같은 컨텍스트를 다시 prompt로 입력하는 것보다 **본 문서들이 자동 재로드되도록 두는 편이 토큰 사용량을 더 적게 쓴다**. 결과: (a) 사용자는 prompt 반복 안 해도 됨, (b) 모델은 압축 직후도 baseline context 유지, (c) 실수(R-PAPER number drift, R-DATA stats overwrite 등) 재발 방지.
+
+본 문서는 "session-restart 비용 vs auto-load 비용" 트레이드오프에서 후자를 선택한 산출물이다. 따라서 길이는 critical invariant + 작업 패턴까지만 두고, 변동성 있는 상태(현재 진행, 비용 잔여 등)는 §0/§3에 짧게 둔다.
+
 ---
 
 ## 0. 프로젝트 상태 (2026-05-10 기준)
