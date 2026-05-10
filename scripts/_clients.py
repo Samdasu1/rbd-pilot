@@ -185,6 +185,50 @@ def _quota_strategy() -> str:
     return s if s in _CODEX_QUOTA_STRATEGIES else "fallback"
 
 
+_ISO_WEEKDAY = {
+    "MON": 0, "TUE": 1, "WED": 2, "THU": 3, "FRI": 4, "SAT": 5, "SUN": 6,
+}
+
+
+def _seconds_until_weekly_reset() -> int | None:
+    """Read ~/.config/codex_quota.yaml and return seconds until the next
+    weekly reset moment (+ 5 min buffer). Returns None if config missing or
+    malformed — caller should fall back to a generic 24h poll.
+    """
+    cfg_path = os.path.expanduser("~/.config/codex_quota.yaml")
+    if not os.path.exists(cfg_path):
+        return None
+    try:
+        import yaml
+        from datetime import datetime, timedelta
+        try:
+            from zoneinfo import ZoneInfo
+        except ImportError:
+            return None
+        with open(cfg_path, "r", encoding="utf-8") as f:
+            cfg = yaml.safe_load(f) or {}
+        wr = cfg.get("weekly_reset") or {}
+        wd_str = str(wr.get("weekday", "SAT")).upper()
+        if wd_str not in _ISO_WEEKDAY:
+            return None
+        target_wd = _ISO_WEEKDAY[wd_str]
+        target_hour = int(wr.get("hour_local", 0))
+        tz = ZoneInfo(str(wr.get("tz", "UTC")))
+        now = datetime.now(tz)
+        # earliest candidate: today at target_hour
+        cand = now.replace(hour=target_hour, minute=0, second=0, microsecond=0)
+        # advance by days until weekday matches AND it's strictly in the future
+        for _ in range(8):
+            if cand.weekday() == target_wd and cand > now:
+                break
+            cand = cand + timedelta(days=1)
+        else:
+            return None
+        return int((cand - now).total_seconds()) + 300  # +5min buffer
+    except Exception:
+        return None
+
+
 def call_openai_via_codex_or_api(model_id: str, system: str, user: str, *,
                                   max_tokens: int = 1500, temperature: float = 0.0,
                                   force_json: bool = False,
@@ -213,7 +257,10 @@ def call_openai_via_codex_or_api(model_id: str, system: str, user: str, *,
                 if strategy == "wait_5h":
                     sleep_s = 5 * 3600 + 600   # 5h10m past the bucket boundary
                 elif strategy == "wait_weekly":
-                    sleep_s = 24 * 3600        # poll daily until weekly bucket recovers
+                    # Try ~/.config/codex_quota.yaml for an account-specific
+                    # weekday + hour_local + tz; fall back to 24h poll if
+                    # config missing or malformed.
+                    sleep_s = _seconds_until_weekly_reset() or 24 * 3600
                 else:
                     print(f"  [codex→api fallback] {e}", file=sys.stderr)
                     break
