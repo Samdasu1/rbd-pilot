@@ -177,22 +177,52 @@ def call_codex_exec(system: str, user: str, *,
     }
 
 
+_CODEX_QUOTA_STRATEGIES = ("fallback", "wait_5h", "wait_weekly")
+
+
+def _quota_strategy() -> str:
+    s = os.environ.get("CODEX_QUOTA_STRATEGY", "fallback").lower()
+    return s if s in _CODEX_QUOTA_STRATEGIES else "fallback"
+
+
 def call_openai_via_codex_or_api(model_id: str, system: str, user: str, *,
                                   max_tokens: int = 1500, temperature: float = 0.0,
                                   force_json: bool = False,
                                   prefer_codex: bool = True) -> dict:
-    """Primary path: codex CLI. Fallback: OpenAI API. Used for gpt-5 family calls
-    when the user wants to consume ChatGPT subscription rather than API quota.
+    """Primary path: codex CLI. Behavior on codex rate-limit/quota signal is
+    controlled by env var CODEX_QUOTA_STRATEGY:
+      fallback (default) — switch to OpenAI API immediately (paid)
+      wait_5h            — sleep 5h10m, retry codex (preserves subscription)
+      wait_weekly        — sleep 24h, retry codex (weekly bucket recovers slowly)
+    Used for gpt-5 family calls when the user wants to consume ChatGPT
+    subscription rather than API quota.
     """
+    import sys
     if prefer_codex and model_id.startswith("gpt-5"):
-        try:
-            result = call_codex_exec(system, user,
-                                     max_tokens=max_tokens, force_json=force_json)
-            result["_path"] = "codex"
-            return result
-        except CodexFailure as e:
-            import sys
-            print(f"  [codex→api fallback] {e}", file=sys.stderr)
+        strategy = _quota_strategy()
+        while True:
+            try:
+                result = call_codex_exec(system, user,
+                                         max_tokens=max_tokens, force_json=force_json)
+                result["_path"] = "codex"
+                return result
+            except CodexFailure as e:
+                if strategy == "fallback":
+                    print(f"  [codex→api fallback] {e}", file=sys.stderr)
+                    break
+                if strategy == "wait_5h":
+                    sleep_s = 5 * 3600 + 600   # 5h10m past the bucket boundary
+                elif strategy == "wait_weekly":
+                    sleep_s = 24 * 3600        # poll daily until weekly bucket recovers
+                else:
+                    print(f"  [codex→api fallback] {e}", file=sys.stderr)
+                    break
+                wake = time.strftime("%Y-%m-%d %H:%M",
+                                     time.localtime(time.time() + sleep_s))
+                print(f"  [codex quota — strategy={strategy}; sleeping until ~{wake}] {e}",
+                      file=sys.stderr)
+                time.sleep(sleep_s)
+                # loop and retry codex
     result = call_openai(model_id, system, user,
                          max_tokens=max_tokens, temperature=temperature,
                          force_json=force_json)
