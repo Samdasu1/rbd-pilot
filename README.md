@@ -23,29 +23,18 @@ Pilot replication package for **"When Responsibility Guidance Hurts: A Pilot Stu
 
 ## Reproducibility
 
-The pilot used a fixed model panel (`data/pilot_v1.1/spec_models_panel.json`) at $T = 0$ for projection and a 12-judge Anthropic-excluded tier-stratified panel for execution scoring. To rerun:
+The pilot used a fixed model panel (`data/pilot_v1.1/spec_models_panel.json`) at $T = 0$ for projection and a 12-judge Anthropic-excluded tier-stratified panel for execution scoring. **For per-user setup details (Python venv, API keys, optional CLI subscriptions, codex weekly-quota config), see [`SETUP.md`](SETUP.md).**
+
+Quick rerun once setup is done:
 
 ```bash
-# 1. install deps (Python 3.10+)
-python -m venv .venv && source .venv/bin/activate
-pip install openai anthropic google-generativeai
-
-# 2. set API keys (one-time)
-cp .env.example .env       # then fill in keys
-# ANTHROPIC_API_KEY=...
-# OPENAI_API_KEY=...
-# GOOGLE_API_KEY=...
-# XAI_API_KEY=...
-# (Ollama, if used, runs locally)
-
-# 3. rerun any stage from data/
-python scripts/exp1_projection.py    # cross-family projection (Exp 1)
-python scripts/exp2_run.py           # 3-condition execution (Exp 2)
-python scripts/exp2_aggregate.py     # judge-panel aggregation
-python scripts/exp1_analyze.py       # paired-bootstrap statistics
+source .venv/bin/activate
+python scripts/exp1_projection.py        # cross-family + within-model projection
+python scripts/exp2_run.py               # 3-condition execution (Exp 2)
+python scripts/exp2_aggregate.py         # judge-panel aggregation
 ```
 
-Estimated total cost at panel pricing (2026-05): ≈ \$130 (within the $1{,}000 study cap reported in §V).
+Estimated total cost at panel pricing (2026-05): ≈ \$130 (within the $1{,}000 study cap reported in §V) when using subscription paths for `gpt-5` and `claude-opus-4-7`. Without subscription, expect ~\$170-300 in API spend across the three providers; see `SETUP.md` §3 for how to wire subscription CLIs and §4 for the codex-quota waiting strategy that minimizes API fallback.
 
 ## Citation
 
