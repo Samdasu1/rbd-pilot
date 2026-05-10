@@ -190,10 +190,19 @@ _ISO_WEEKDAY = {
 }
 
 
-def _seconds_until_weekly_reset() -> int | None:
+def _seconds_until_weekly_reset(section: str = "codex_weekly_reset",
+                                 fallback_section: str = "weekly_reset") -> int | None:
     """Read ~/.config/codex_quota.yaml and return seconds until the next
-    weekly reset moment (+ 5 min buffer). Returns None if config missing or
-    malformed — caller should fall back to a generic 24h poll.
+    weekly reset moment for the given service section (+ 5 min buffer).
+
+    Returns None if config missing or malformed — caller should fall back to
+    a generic 24h poll.
+
+    Sections recognized: ``codex_weekly_reset`` (OpenAI/ChatGPT), and
+    ``claude_weekly_reset`` (Anthropic) — these can have different anchor
+    weekdays per account. ``fallback_section`` is consulted if the primary
+    section is absent (used to honor the old top-level ``weekly_reset`` key
+    for backward compatibility).
     """
     cfg_path = os.path.expanduser("~/.config/codex_quota.yaml")
     if not os.path.exists(cfg_path):
@@ -207,7 +216,11 @@ def _seconds_until_weekly_reset() -> int | None:
             return None
         with open(cfg_path, "r", encoding="utf-8") as f:
             cfg = yaml.safe_load(f) or {}
-        wr = cfg.get("weekly_reset") or {}
+        wr = cfg.get(section)
+        if not wr and fallback_section:
+            wr = cfg.get(fallback_section)
+        if not wr:
+            return None
         wd_str = str(wr.get("weekday", "SAT")).upper()
         if wd_str not in _ISO_WEEKDAY:
             return None

@@ -97,27 +97,98 @@ artifact:
 {artifact}"""
 
 
+_CLAUDE_QUOTA_STRATEGIES = ("fallback", "wait_5h", "wait_weekly")
+
+
+def _claude_quota_strategy() -> str:
+    """Read CLAUDE_QUOTA_STRATEGY env (preferred) or fall back to CODEX_QUOTA_STRATEGY."""
+    s = os.environ.get("CLAUDE_QUOTA_STRATEGY") or os.environ.get("CODEX_QUOTA_STRATEGY") or "fallback"
+    s = s.lower()
+    return s if s in _CLAUDE_QUOTA_STRATEGIES else "fallback"
+
+
+_CLAUDE_QUOTA_INDICATORS = (
+    "rate_limit", "rate limit", "rate-limit",
+    "429", "too many requests",
+    "usage limit", "plan limit",
+    "quota exceeded", "quota exhausted", "quota reached", "out of quota",
+    "subscription limit", "weekly limit", "5-hour limit",
+)
+
+
+def _is_quota_throttle(stderr: str, stdout: str) -> bool:
+    blob = ((stderr or "") + "\n" + (stdout or "")).lower()
+    return any(ind in blob for ind in _CLAUDE_QUOTA_INDICATORS)
+
+
+def _seconds_until_weekly_reset_for_claude() -> int | None:
+    """Read claude-specific reset section from ~/.config/codex_quota.yaml.
+    Anthropic subscription weekly anchor (e.g., Thursday) is typically
+    different from OpenAI's (e.g., Saturday) — each account's start date
+    differs."""
+    try:
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).parent))
+        from _clients import _seconds_until_weekly_reset
+        return _seconds_until_weekly_reset(section="claude_weekly_reset",
+                                            fallback_section=None)
+    except Exception:
+        return None
+
+
+def _wait_for_quota(strategy: str, reason: str) -> None:
+    if strategy == "wait_5h":
+        sleep_s = 5 * 3600 + 600
+    elif strategy == "wait_weekly":
+        sleep_s = _seconds_until_weekly_reset_for_claude() or 24 * 3600
+    else:
+        return
+    wake = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time() + sleep_s))
+    print(f"  [claude quota — strategy={strategy}; sleeping until ~{wake}] {reason[:200]}",
+          file=sys.stderr, flush=True)
+    time.sleep(sleep_s)
+
+
 def call_claude_cli(system: str, user: str, *, timeout_s: int = 300) -> dict:
-    """Invoke Claude CLI in print mode (subscription billed). Returns dict with raw text."""
+    """Invoke Claude CLI in print mode (subscription billed). Returns dict with raw text.
+    On rate-limit/quota signal, behavior depends on env CLAUDE_QUOTA_STRATEGY
+    (or falls back to CODEX_QUOTA_STRATEGY for convenience): fallback (return
+    error), wait_5h (sleep 5h10m and retry), wait_weekly (sleep until next
+    weekly reset per ~/.config/codex_quota.yaml).
+    """
     bin_path = shutil.which("claude") or "claude"
-    with tempfile.TemporaryDirectory(prefix="harness-claude-") as iso_cwd:
-        sys_path = Path(iso_cwd) / "system.md"
-        sys_path.write_text(system, encoding="utf-8")
-        cmd = [
-            bin_path, "-p",
-            "--system-prompt-file", str(sys_path),
-            "--output-format", "json",
-            "--model", "claude-sonnet-4-6",
-        ]
-        env = {**os.environ, "HARNESS_NO_RECURSE": "1"}
-        t0 = time.time()
-        proc = subprocess.run(
-            cmd, input=user, capture_output=True, text=True, encoding="utf-8",
-            env=env, timeout=timeout_s, cwd=iso_cwd,
-        )
-        elapsed_ms = int((time.time() - t0) * 1000)
-    if proc.returncode != 0:
+    strategy = _claude_quota_strategy()
+
+    while True:
+        with tempfile.TemporaryDirectory(prefix="harness-claude-") as iso_cwd:
+            sys_path = Path(iso_cwd) / "system.md"
+            sys_path.write_text(system, encoding="utf-8")
+            cmd = [
+                bin_path, "-p",
+                "--system-prompt-file", str(sys_path),
+                "--output-format", "json",
+                "--model", "claude-sonnet-4-6",
+            ]
+            env = {**os.environ, "HARNESS_NO_RECURSE": "1"}
+            t0 = time.time()
+            proc = subprocess.run(
+                cmd, input=user, capture_output=True, text=True, encoding="utf-8",
+                env=env, timeout=timeout_s, cwd=iso_cwd,
+            )
+            elapsed_ms = int((time.time() - t0) * 1000)
+
+        if proc.returncode == 0:
+            break
+
+        # check for quota throttle vs other failure
+        if _is_quota_throttle(proc.stderr or "", proc.stdout or ""):
+            if strategy == "fallback":
+                return {"error": f"quota signal (fallback strategy): stderr={(proc.stderr or '')[-400:]}"}
+            _wait_for_quota(strategy, f"rc={proc.returncode} stderr={(proc.stderr or '')[-200:]}")
+            continue   # retry the call
+
         return {"error": f"rc={proc.returncode} stderr={(proc.stderr or '')[-400:]}"}
+    # success path
     raw = ""
     last_obj = None
     for line in (proc.stdout or "").splitlines():

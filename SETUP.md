@@ -84,20 +84,25 @@ Five of these populate the "light" tier of the 12-judge panel; the rest are part
 
 ---
 
-## 4. Codex weekly-quota config (only if using `CODEX_QUOTA_STRATEGY=wait_weekly`)
+## 4. Subscription weekly-quota config (only if using `*_QUOTA_STRATEGY=wait_weekly`)
 
-`_clients.py`'s `wait_weekly` strategy waits until the next ChatGPT subscription weekly bucket reset before retrying — this avoids OpenAI API fallback when the codex subscription is exhausted. **The reset weekday is account-specific** (anchored to your subscription start date). Drop a YAML at `~/.config/codex_quota.yaml`:
+`_clients.py` (codex) and `exp1b_claude_within.py` (Claude CLI) both support a `wait_weekly` strategy that sleeps until the next subscription bucket reset before retrying — this avoids paid API fallback when the corresponding subscription is exhausted. **The reset weekday is account-specific and differs by service** (anchored to each subscription's start date). Drop a YAML at `~/.config/codex_quota.yaml`:
 
 ```yaml
-weekly_reset:
-  weekday: SAT       # MON|TUE|WED|THU|FRI|SAT|SUN — your account's reset day
-  hour_local: 0      # 0..23 in tz below
-  tz: Asia/Seoul     # IANA timezone string
+codex_weekly_reset:        # OpenAI / ChatGPT subscription (codex CLI)
+  weekday: SAT             # MON|TUE|WED|THU|FRI|SAT|SUN — your codex reset day
+  hour_local: 0            # 0..23 in tz below
+  tz: Asia/Seoul
+
+claude_weekly_reset:       # Anthropic / Claude Code subscription
+  weekday: THU             # often differs from codex (different sub start dates)
+  hour_local: 0
+  tz: Asia/Seoul
 ```
 
-If the file is missing, `wait_weekly` falls back to a generic 24-hour poll (correct, just less precise). Default strategy if `CODEX_QUOTA_STRATEGY` env is unset is `fallback` (immediate API switch on rate-limit), which costs money but doesn't wait.
+If the relevant section is missing, `wait_weekly` falls back to a generic 24-hour poll (correct, just less precise). Default strategy if the `*_QUOTA_STRATEGY` env is unset is `fallback` (immediate paid-API switch on rate-limit), which costs money but doesn't wait.
 
-How to discover your reset weekday: when you next hit "weekly limit reached" from codex CLI, note the timestamp; whenever it starts answering again, note that too. The day-of-week of the second timestamp is your `weekday`.
+How to discover your reset weekday for each service: when you next hit "weekly limit reached" from `codex` or `claude`, note the timestamp; whenever it starts answering again, note that too. The day-of-week of the second timestamp is your `weekday` for that service.
 
 ---
 
