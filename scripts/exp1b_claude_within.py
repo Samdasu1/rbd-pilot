@@ -175,7 +175,11 @@ def call_claude_cli(system: str, user: str, *, timeout_s: int = 600,
                 "--output-format", "json",
                 "--model", "claude-sonnet-4-6",
             ]
-            env = {**os.environ, "HARNESS_NO_RECURSE": "1"}
+            # Strip ANTHROPIC_API_KEY so the CLI uses OAuth subscription, not API.
+            # 2026-05-12 incident: env-present API key caused some CLI code paths
+            # to bill against the API instead of the Max subscription bucket.
+            env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+            env["HARNESS_NO_RECURSE"] = "1"
             t0 = time.time()
             try:
                 proc = subprocess.run(

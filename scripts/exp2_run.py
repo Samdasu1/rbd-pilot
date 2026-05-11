@@ -371,6 +371,88 @@ def build_executor_prompts(eid: str, condition: str, delegation: str, artifact: 
     raise ValueError(f"unknown condition {condition!r}")
 
 
+def _call_claude_cli_executor(system: str, user: str, *, timeout_s: int = 600,
+                              max_timeout_retries: int = 2) -> dict:
+    """Invoke claude-opus-4-7 via Claude Code CLI subscription (free).
+    Returns the same dict shape as _clients.call_anthropic for downstream
+    compatibility. On subprocess.TimeoutExpired retries up to N times before
+    giving up. Quota throttle uses the same wait_5h / wait_weekly strategy as
+    exp1b_claude_within (env CLAUDE_QUOTA_STRATEGY).
+    """
+    import shutil, subprocess, tempfile
+    sys.path.insert(0, str(Path(__file__).parent))
+    from exp1b_claude_within import (
+        _claude_quota_strategy, _is_quota_throttle, _wait_for_quota,
+    )
+
+    bin_path = shutil.which("claude") or "claude"
+    strategy = _claude_quota_strategy()
+    timeout_retries = 0
+
+    while True:
+        with tempfile.TemporaryDirectory(prefix="harness-claude-exec-") as iso_cwd:
+            sys_path = Path(iso_cwd) / "system.md"
+            sys_path.write_text(system, encoding="utf-8")
+            cmd = [
+                bin_path, "-p",
+                "--system-prompt-file", str(sys_path),
+                "--output-format", "json",
+                "--model", "claude-opus-4-7",
+            ]
+            # Strip ANTHROPIC_API_KEY so the CLI uses OAuth subscription, not API.
+            # 2026-05-12 incident: env-present API key caused some CLI code paths
+            # to bill against the API instead of the Max subscription bucket.
+            env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
+            env["HARNESS_NO_RECURSE"] = "1"
+            t0 = time.time()
+            try:
+                proc = subprocess.run(
+                    cmd, input=user, capture_output=True, text=True, encoding="utf-8",
+                    env=env, timeout=timeout_s, cwd=iso_cwd,
+                )
+            except subprocess.TimeoutExpired:
+                if timeout_retries < max_timeout_retries:
+                    timeout_retries += 1
+                    print(f"    [claude exec timeout >{timeout_s}s — retry {timeout_retries}/{max_timeout_retries}]",
+                          file=sys.stderr, flush=True)
+                    time.sleep(5)
+                    continue
+                raise RuntimeError(f"claude exec subprocess timeout × {timeout_retries+1} attempts")
+            elapsed_ms = int((time.time() - t0) * 1000)
+
+        if proc.returncode == 0:
+            break
+
+        if _is_quota_throttle(proc.stderr or "", proc.stdout or ""):
+            if strategy == "fallback":
+                raise RuntimeError(f"claude exec quota signal: {(proc.stderr or '')[-200:]}")
+            _wait_for_quota(strategy, f"rc={proc.returncode} stderr={(proc.stderr or '')[-200:]}")
+            continue
+        raise RuntimeError(f"claude exec failed (rc={proc.returncode}): {(proc.stderr or '')[-400:]}")
+
+    last_obj = None
+    for line in (proc.stdout or "").splitlines():
+        line = line.strip()
+        if line.startswith("{"):
+            try:
+                last_obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+    if last_obj is None:
+        raise RuntimeError(f"claude exec produced no JSON output. stdout_tail={(proc.stdout or '')[-200:]!r}")
+
+    raw = last_obj.get("result") or last_obj.get("text") or ""
+    usage = last_obj.get("usage") or {}
+    return {
+        "raw": raw,
+        "input_tokens": usage.get("input_tokens", -1),
+        "output_tokens": usage.get("output_tokens", -1),
+        "cache_read_input_tokens": usage.get("cache_read_input_tokens", 0),
+        "latency_ms": elapsed_ms,
+        "model": "claude-opus-4-7",
+    }
+
+
 def run_execution(eid: str, condition: str, delegation: str, artifact: str,
                   executor_mode: str = "api_fallback") -> tuple[bool, float]:
     """Run executor for one (example, condition) pair.
@@ -391,6 +473,9 @@ def run_execution(eid: str, condition: str, delegation: str, artifact: str,
         print(f"    {eid} :: {condition} -> SKIP (session_handoff: file missing)")
         return False, 0.0
 
+    if executor_mode not in ("api_fallback", "claude_cli", "session_handoff"):
+        raise ValueError(f"unknown executor_mode {executor_mode!r}")
+
     try:
         system, user, proj = build_executor_prompts(eid, condition, delegation, artifact)
     except RuntimeError as e:
@@ -398,12 +483,18 @@ def run_execution(eid: str, condition: str, delegation: str, artifact: str,
         return False, 0.0
 
     try:
-        result = _clients.call_anthropic(EXECUTOR_MODEL_ID, system, user, max_tokens=1500)
+        if executor_mode == "claude_cli":
+            result = _call_claude_cli_executor(system, user)
+        else:
+            result = _clients.call_anthropic(EXECUTOR_MODEL_ID, system, user, max_tokens=1500)
     except Exception as e:
         print(f"    {eid} :: {condition} -> EXCEPTION: {e}")
         return False, 0.0
 
-    cost = _clients.estimate_cost_usd(EXECUTOR_MODEL_ID, result["input_tokens"], result["output_tokens"]) or 0.0
+    if executor_mode == "claude_cli":
+        cost = 0.0  # subscription billed; not metered
+    else:
+        cost = _clients.estimate_cost_usd(EXECUTOR_MODEL_ID, result["input_tokens"], result["output_tokens"]) or 0.0
     out = {
         "example_id": eid,
         "condition": condition,
@@ -572,7 +663,7 @@ def main() -> None:
     ap.add_argument("--ids", nargs="+", default=None)
     ap.add_argument("--conditions", nargs="+", default=None,
                     choices=CONDITIONS, help="subset of conditions to run (default: all 3)")
-    ap.add_argument("--executor-mode", choices=["api_fallback", "session_handoff"],
+    ap.add_argument("--executor-mode", choices=["api_fallback", "claude_cli", "session_handoff"],
                     default="api_fallback",
                     help="api_fallback (default): call Anthropic API. "
                          "session_handoff: require pre-staged executor outputs.")
