@@ -66,7 +66,31 @@ CODEX_QUOTA_STRATEGY=wait_5h \
 
 ---
 
-## 4. 외부 review iter 규칙
+## 3.5. 장기 background 작업 health-check 규약
+
+긴 background 작업 (≥ 30분 예상: dataset generation, projection batch, exp2 judge 등) 돌릴 때는 watcher 하나만 믿지 말고 **자체 10-30분 cadence로 health-check 능동 수행**. 이유: watcher (Bash run_in_background)는 max ~10분 timeout이라 1-3일 long-run을 끝까지 못 봄. 그리고 silent failure (subprocess.TimeoutExpired uncaught, 메모리 부족 OOM, network drop 등)는 watcher가 잡지 못 함 — 진짜 처음으로 알아채는 건 ledger/파일 카운트가 멈춘 시점.
+
+**health-check 4점 체크리스트** (사용자 ping 들어올 때 항상 + 자발적으로 30분 주기):
+
+```bash
+# 1. process 살아있나
+ps aux | grep <script_name> | grep -v grep | head -1
+# 2. output 파일 수 증가하나
+ls <output_dir>/ | grep <pattern> | wc -l
+# 3. ledger 최근 entry 시간이 최근 N분 안인가
+tail -3 <ledger.jsonl>
+# 4. log에 traceback / error 있나
+tail -50 <log_file> | grep -iE "error|traceback|timeout|fail"
+```
+
+발견되는 silent failure 패턴:
+- **subprocess.TimeoutExpired 처리 안 됨**: 한 call이 timeout_s 초과 → uncaught → script 죽음. 모든 subprocess.run은 try/except로 감싸고 retry/skip 로직 필요.
+- **ledger entry 시간 stale**: 30분간 새 entry 없으면 hang. process 살아있어도 의심해야 함.
+- **log stdout buffered**: nohup으로 띄운 Python의 print는 buffered. 진짜 진행은 ledger.jsonl과 output 파일 mtime로 확인.
+
+작업 시작 시 추정 시간 X 줬으면, X/4 또는 X/8 시점에 한 번씩 점검 (예: 20시간 추정이면 2.5시간 또는 5시간마다).
+
+
 
 `feedback_external_review_iterations.md` 메모리: 모든 non-trivial 변경은 codex review **≥ 2-3 iter**. 작은 변경(typo / wording fix)은 1 iter OK. paper §V number / 데이터 산출 / dataset spec 변경은 minimum 2 iter.
 

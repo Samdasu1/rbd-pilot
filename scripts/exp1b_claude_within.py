@@ -149,15 +149,21 @@ def _wait_for_quota(strategy: str, reason: str) -> None:
     time.sleep(sleep_s)
 
 
-def call_claude_cli(system: str, user: str, *, timeout_s: int = 300) -> dict:
+def call_claude_cli(system: str, user: str, *, timeout_s: int = 600,
+                    max_timeout_retries: int = 2) -> dict:
     """Invoke Claude CLI in print mode (subscription billed). Returns dict with raw text.
     On rate-limit/quota signal, behavior depends on env CLAUDE_QUOTA_STRATEGY
     (or falls back to CODEX_QUOTA_STRATEGY for convenience): fallback (return
     error), wait_5h (sleep 5h10m and retry), wait_weekly (sleep until next
     weekly reset per ~/.config/codex_quota.yaml).
+
+    Also catches subprocess timeout (claude CLI taking longer than timeout_s
+    seconds — sometimes happens under load) and retries up to
+    max_timeout_retries times before giving up gracefully.
     """
     bin_path = shutil.which("claude") or "claude"
     strategy = _claude_quota_strategy()
+    timeout_retries = 0
 
     while True:
         with tempfile.TemporaryDirectory(prefix="harness-claude-") as iso_cwd:
@@ -171,10 +177,19 @@ def call_claude_cli(system: str, user: str, *, timeout_s: int = 300) -> dict:
             ]
             env = {**os.environ, "HARNESS_NO_RECURSE": "1"}
             t0 = time.time()
-            proc = subprocess.run(
-                cmd, input=user, capture_output=True, text=True, encoding="utf-8",
-                env=env, timeout=timeout_s, cwd=iso_cwd,
-            )
+            try:
+                proc = subprocess.run(
+                    cmd, input=user, capture_output=True, text=True, encoding="utf-8",
+                    env=env, timeout=timeout_s, cwd=iso_cwd,
+                )
+            except subprocess.TimeoutExpired as e:
+                if timeout_retries < max_timeout_retries:
+                    timeout_retries += 1
+                    print(f"  [claude timeout >{timeout_s}s — retry {timeout_retries}/{max_timeout_retries}]",
+                          file=sys.stderr, flush=True)
+                    time.sleep(5)
+                    continue
+                return {"error": f"subprocess timeout after {timeout_s}s × {timeout_retries+1} attempts"}
             elapsed_ms = int((time.time() - t0) * 1000)
 
         if proc.returncode == 0:
