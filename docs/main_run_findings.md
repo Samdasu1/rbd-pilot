@@ -96,7 +96,8 @@ Budget cap: $1000. Spent so far ~$204 (pilot $136 + main $68). Remaining ~$796. 
 
 ## 4. Open items
 
-- Phase C (Exp 2 judge) — pending. Will scale 12-judge panel × 4-condition Exp 2 (vs pilot's 3-condition).
+- Phase C (Exp 2 executor) — **done 2026-05-12**. 780/780 new examples × 3 conditions = 930 total exec files. Subscription path (claude-opus-4-7 via Claude CLI), $0 actual cost (API leak incident on first attempt — see §7).
+- Phase C (Exp 2 judge) — **partial 2026-05-12, ~5% done before server shutdown**. See §8.
 - Codex weekly bucket recovers **2026-05-16 Saturday 00:00 KST**; Claude weekly recovers **2026-05-14 Thursday 00:00 KST**. Phase C executor (claude-opus) is fine — Anthropic subscription has headroom after sonnet within-model run finished. Judge calls via codex (gpt-5) are gated by 5h bucket (`wait_5h`) and weekly bucket. 
 - Anchor specifiability ceiling (P3 / §VI #4) — Stage 1 closure unchanged; future rater_protocol_v2 work deferred to v2 paper.
 
@@ -153,3 +154,67 @@ The 152 executor calls completed before the kill (ad_r1_051..~ad_r1_102, partial
 ### Lesson (added to AGENTS.md / CLAUDE.md if recurring)
 
 When invoking CLI tools that have multiple auth modes (subscription OAuth + API key), do not assume env inheritance is safe. Explicitly strip auth env that you don't want the CLI to use, or set `--bare` / equivalent flag to force a specific mode.
+
+---
+
+## 8. Phase C judge — partial progress at 2026-05-12 server shutdown
+
+Server was scheduled to power off at 2026-05-12 21:30 KST. Two judge processes were running in parallel and gracefully stopped at 20:45 KST.
+
+### What ran
+
+| process | PID | judges | started | stopped |
+|---|---|---|---|---|
+| frontier 3 | 2604828 | gpt-5 (codex sub), gemini-2.5-pro (API), grok-4 (API) | 12:23 | 20:45 (SIGTERM) |
+| ollama 9 | 2799360 | llama-3.1-70b/8b, qwen-2.5-72b/7b, mistral-large-2/7b, deepseek-v3-70b, gemma-9b, phi-3-medium-14b | 15:03 | 20:45 (SIGTERM) |
+
+Both were launched as `python scripts/exp2_run.py --mode judge ...` with `CODEX_QUOTA_STRATEGY=wait_5h`. Frontier had `--judge-workers 3`, Ollama had `--judge-workers 2`. ANTHROPIC_API_KEY and OPENAI_API_KEY env disabled (see §7), so any unexpected fallback would have failed-closed rather than charged.
+
+### Coverage achieved (new examples only, ad_r1_051..310)
+
+| metric | value |
+|---|---|
+| (eid, condition) pairs touched | 38 / 780 (4.9%) |
+| pairs with full 12-judge coverage | 29 |
+| pairs with frontier-3 complete | 29 |
+| pairs with ollama-9 complete | 37 |
+| total NEW judge calls written | ~410 |
+| total NEW judge files on disk | 424 |
+| actual cost (API/codex sum) | $0.70 (gemini $0.27 + grok $0.43 + gpt-5 codex $0; ollama 9 all $0) |
+
+Pilot 50 examples × 3 conditions × 12 judges = 1800 judge files are intact from earlier runs (paper-cited). Total judge dir size: 2224 files.
+
+### Resumption commands (post-power-on)
+
+Both scripts have `if p.exists(): return True, 0.0` skip logic at the run_judge entry, so re-launching the same commands will pick up where they left off without duplicating work.
+
+```bash
+# enable defensive env (do NOT re-enable ANTHROPIC_API_KEY or OPENAI_API_KEY
+# in .env unless you have a specific reason)
+export CODEX_QUOTA_STRATEGY=wait_5h
+
+# frontier 3 — ~17-20h remaining at ~65s per (eid, cond)
+cd "/home/treu46/paper/6. agent"
+nohup ~/research-harness/.venv/bin/python scripts/exp2_run.py \
+  --mode judge --judges gpt-5 gemini-2.5-pro grok-4 --judge-workers 3 \
+  > /tmp/exp2_judge_frontier.log 2>&1 &
+
+# ollama 9 — ~3-5 days remaining at --judge-workers 2 (40% GPU target)
+# launch separately so the two phases progress independently
+nohup ~/research-harness/.venv/bin/python scripts/exp2_run.py \
+  --mode judge \
+  --judges llama-3.1-70b-instruct qwen-2.5-72b-instruct mistral-large-2-2407 \
+           deepseek-v3-distill-70b llama-3.1-8b-instruct qwen-2.5-7b-instruct \
+           gemma-2-9b-it phi-3-medium-14b-instruct mistral-7b-instruct-v0.3 \
+  --judge-workers 2 \
+  > /tmp/exp2_judge_ollama.log 2>&1 &
+```
+
+The `r_star_median.json` fallback to `hidden_intent.weights` (commit `cf059b3` family — see also `get_active_set` patch in `exp2_run.py`) is required for the new examples to be judgeable; this is already in the script.
+
+### Open items at shutdown
+
+- Frontier 3 still has ~96% (~750 pairs) of new judge work to do.
+- Ollama 9 still has ~95% (~743 pairs) to do.
+- Once the judge phase reaches ≥95% coverage (e.g., ≥741 of 780 new pairs with at least 9-of-12 judges), run `scripts/exp2_aggregate.py` to compute settlement loss and per-tier breakdowns. Output should write to `data/main_v1.0/stats/` not `data/pilot_v1.1/stats/` to preserve paper-cited pilot stats.
+- After aggregate stats land, this file's §2-style block will be added for the executor/judge headline numbers under the v2-paper section.

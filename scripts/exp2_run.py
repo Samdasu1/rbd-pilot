@@ -644,13 +644,34 @@ def run_judge(eid: str, condition: str, judge_model_id: str,
 # ------------------ ACTIVE SET DERIVATION ------------------
 
 def get_active_set(eid: str) -> list[str]:
-    """J*(d) for judging = R1 dims with median r* > 0.3 ∪ {RX.1, RX.3, RX.4, RX.5}.
+    """J*(d) for judging = R1 dims with r* > 0.3 ∪ {RX.1, RX.3, RX.4, RX.5}.
+
+    Primary source: stats/r_star_median.json (3-track median: author + 2 LLM
+    annotators). Fallback: hidden_intent.weights from the example YAML (author
+    track only). The fallback is used for examples added in the main run
+    expansion (ad_r1_051+) before pass2 LLM annotation has been re-run.
 
     RX.2 is dropped (per formalization_v1.2 §4 — operationalized as L_overclaim).
     """
-    r_star = json.loads((BASE / "stats" / "r_star_median.json").read_text())
-    weights = r_star[eid]
-    active = [d for d in DIMS_R1 if weights.get(d, 0) > 0.3] + RX_DIMS_SCORED
+    weights = None
+    r_star_path = BASE / "stats" / "r_star_median.json"
+    if r_star_path.exists():
+        try:
+            r_star = json.loads(r_star_path.read_text())
+            weights = r_star.get(eid)
+        except Exception:
+            weights = None
+    if weights is None:
+        # fallback: read hidden_intent.weights from the example YAML
+        ex_path = EXAMPLES_DIR / f"{eid}.yaml"
+        if not ex_path.exists():
+            raise KeyError(eid)
+        ex = yaml.safe_load(ex_path.read_text(encoding="utf-8"))
+        hi = ex.get("hidden_intent") or {}
+        weights = hi.get("weights") or {}
+        if not weights:
+            raise KeyError(f"{eid} (no hidden_intent.weights)")
+    active = [d for d in DIMS_R1 if float(weights.get(d, 0)) > 0.3] + RX_DIMS_SCORED
     return active
 
 
