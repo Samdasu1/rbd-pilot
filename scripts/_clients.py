@@ -33,7 +33,10 @@ def call_openai(model_id: str, system: str, user: str, *,
                 max_tokens: int = 1500, temperature: float = 0.0,
                 force_json: bool = False) -> dict:
     import openai
-    client = openai.OpenAI()
+    # timeout=120s + max_retries=1: previously unset → SDK default exponential
+    # retry could hang indefinitely on flaky calls (observed 1h+ stall on xAI).
+    # Our retry script handles re-attempts at the application layer.
+    client = openai.OpenAI(timeout=120.0, max_retries=1)
     t0 = time.time()
     # gpt-5 quirks (vs gpt-4o):
     #   - rejects `max_tokens`; use `max_completion_tokens`
@@ -155,12 +158,14 @@ def call_codex_exec(system: str, user: str, *,
         raise CodexFailure(f"timeout after {timeout_s}s") from e
 
     err_l = (proc.stderr or "").lower()
-    out_l = (proc.stdout or "").lower()
-    if any(ind in err_l for ind in _CODEX_RATE_LIMIT_INDICATORS) or \
-       any(ind in out_l for ind in _CODEX_RATE_LIMIT_INDICATORS):
-        raise CodexFailure(f"rate-limit/quota signal: stderr={proc.stderr[:200]} stdout={proc.stdout[:200]}")
-
     if proc.returncode != 0:
+        # Only inspect rate-limit indicators on actual codex failure. Previously
+        # we also scanned stdout, which false-fired on successful judge responses
+        # whose rationale text naturally contained words like "exceeded" /
+        # "exhausted" / "limit" — causing the wait_5h strategy to discard valid
+        # judgments and silently fall back to paid API.
+        if any(ind in err_l for ind in _CODEX_RATE_LIMIT_INDICATORS):
+            raise CodexFailure(f"rate-limit/quota signal: stderr={proc.stderr[:200]}")
         raise CodexFailure(f"non-zero exit {proc.returncode}: {proc.stderr[:300]}")
 
     raw = _parse_codex_stdout(proc.stdout)
@@ -297,7 +302,12 @@ def call_google_genai(model_id: str, system: str, user: str, *,
                       force_json: bool = False) -> dict:
     from google import genai
     from google.genai import types as gtypes
-    client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
+    # HttpOptions.timeout is in milliseconds. 120s mirrors xAI/openai patch
+    # (prevents indefinite hang during retry sweep).
+    client = genai.Client(
+        api_key=os.environ["GOOGLE_API_KEY"],
+        http_options=gtypes.HttpOptions(timeout=120000),
+    )
     t0 = time.time()
     # NOTE: gemini-2.5-pro does NOT support thinking_budget=0 (thinking is
     # always-on for pro). gemini-2.5-flash does support disabling. Only pass
@@ -333,7 +343,9 @@ def call_xai(model_id: str, system: str, user: str, *,
     api_key = os.environ.get("XAI_API_KEY")
     if not api_key:
         raise RuntimeError("XAI_API_KEY env var not set")
-    client = openai.OpenAI(api_key=api_key, base_url="https://api.x.ai/v1")
+    # timeout=120s + max_retries=1: see call_openai for rationale.
+    client = openai.OpenAI(api_key=api_key, base_url="https://api.x.ai/v1",
+                           timeout=120.0, max_retries=1)
     t0 = time.time()
     kwargs = dict(
         model=model_id,
