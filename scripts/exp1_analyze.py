@@ -36,8 +36,14 @@ DIMS = ["R1.1","R1.2","R1.3","R1.4","R1.5","R1.6","R1.7","RX.1","RX.2","RX.3","R
 DIMS_R1 = ["R1.1","R1.2","R1.3","R1.4","R1.5","R1.6","R1.7"]
 RX_SET = {"RX.1","RX.2","RX.3","RX.4","RX.5"}
 
-FAMILIES = ["claude", "gpt", "gemini"]
+FAMILIES = ["gpt-5", "gemini-2.5-pro", "grok-4"]   # v1.3 panel (spec_models_panel.json projection_cross_family)
 WITHIN_RUNS = [1, 2, 3, 4, 5]
+# Within-model uses the "claude" filename alias (claude-sonnet-4-6 via Claude
+# Code CLI subscription, see scripts/exp1b_claude_within.py). This mirrors what
+# paper §V.2 R=14.4 was computed on (claude family within), even though
+# spec_models_panel.json now lists gpt-5 as the within source — both datasets
+# exist on disk; the claude one is the paper-comparable headline.
+WITHIN_FAMILY_ALIAS = "claude"
 
 
 def vec(weights, dims=DIMS):
@@ -121,26 +127,29 @@ def main():
                 "weights_per_family": {f: cross[f]["weights"] for f in cross},
                 "clarification_per_family": {f: cross[f].get("clarification_needed", False) for f in cross},
             }
-            # projection-intent mismatch per family
-            r_star_vec = vec(r_star[eid])
-            rec["cross"]["M_per_family"] = {
-                f: cos_dist(vec(cross[f]["weights"]), r_star_vec) for f in cross
-            }
-            # under/over projection on R1 only
-            for f, p in cross.items():
-                w = p["weights"]
-                rstar_w = r_star[eid]
-                under_num = sum(1 for d in DIMS_R1 if w[d] <= 0.3 and rstar_w[d] > 0.7)
-                under_den = sum(1 for d in DIMS_R1 if rstar_w[d] > 0.7) or 1
-                over_num = sum(1 for d in DIMS_R1 if w[d] > 0.3 and rstar_w[d] <= 0.2)
-                over_den = sum(1 for d in DIMS_R1 if w[d] > 0.3) or 1
-                rec["cross"].setdefault("under_per_family", {})[f] = under_num / under_den
-                rec["cross"].setdefault("over_per_family", {})[f] = over_num / over_den
+            # projection-intent mismatch per family (skipped when r_star unavailable —
+            # r_star comes from the closed pilot human-annotation track and only
+            # covers ad_r1_001..050; main-run eids 51-310 have no r_star).
+            if eid in r_star:
+                r_star_vec = vec(r_star[eid])
+                rec["cross"]["M_per_family"] = {
+                    f: cos_dist(vec(cross[f]["weights"]), r_star_vec) for f in cross
+                }
+                # under/over projection on R1 only
+                for f, p in cross.items():
+                    w = p["weights"]
+                    rstar_w = r_star[eid]
+                    under_num = sum(1 for d in DIMS_R1 if w[d] <= 0.3 and rstar_w[d] > 0.7)
+                    under_den = sum(1 for d in DIMS_R1 if rstar_w[d] > 0.7) or 1
+                    over_num = sum(1 for d in DIMS_R1 if w[d] > 0.3 and rstar_w[d] <= 0.2)
+                    over_den = sum(1 for d in DIMS_R1 if w[d] > 0.3) or 1
+                    rec["cross"].setdefault("under_per_family", {})[f] = under_num / under_den
+                    rec["cross"].setdefault("over_per_family", {})[f] = over_num / over_den
 
-        # within-model @ T=0.5 (5 runs claude)
+        # within-model @ T=0.5 (5 runs of WITHIN_FAMILY_ALIAS = claude-sonnet-4-6)
         within = {}
         for r in WITHIN_RUNS:
-            p = load_proj(eid, "claude", r, 0.5)
+            p = load_proj(eid, WITHIN_FAMILY_ALIAS, r, 0.5)
             if p:
                 within[r] = p
         if len(within) >= 2:

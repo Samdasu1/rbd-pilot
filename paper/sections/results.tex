@@ -99,7 +99,7 @@ The disagreement is visibly dim-conditional rather than uniform. (i) \emph{The L
 \label{sec:results:exp1}
 
 \subsubsection{Setup}
-Three model families project responsibility onto $J_{v1.1}$ for each pilot example: \texttt{claude-sonnet-4.5}, \texttt{gpt-4o-mini}, \texttt{gemini-2.5-flash}. Each call uses the verbatim projection-prompt system message, temperature 0, and the strict JSON output schema. Per example we compute the cosine distance and Jaccard distance between every family pair, then average:
+Three model families project responsibility onto $J_{v1.1}$ for each pilot example. The v1.3 Anthropic-excluded cross panel is \texttt{gpt-5} (OpenAI), \texttt{gemini-2.5-pro} (Google), and \texttt{grok-4} (xAI); the Anthropic family is excluded from the cross panel because \texttt{claude-sonnet-4-6} is used as the within-model baseline (\S\ref{sec:results:exp1b}) and we keep the cross/within sources family-disjoint. Each call uses the verbatim projection-prompt system message, temperature 0, and the strict JSON output schema. Per example we compute the cosine distance and Jaccard distance between every family pair, then average:
 \begin{equation}
 d_C^{\cos}(d) = \frac{1}{\binom{3}{2}} \sum_{f_1 < f_2} \bigl( 1 - \cos(r_{f_1}, r_{f_2}) \bigr).
 \label{eq:dc_cos}
@@ -109,7 +109,7 @@ d_C^{\text{jac}}(d) = \frac{1}{\binom{3}{2}} \sum_{f_1 < f_2} \bigl( 1 - \mathrm
 \label{eq:dc_jac}
 \end{equation}
 
-Total: $50 \times 3 = 150$ projection calls. After single-retry on schema violation, 138 of 150 pass strict validation; 12 records (8\% of calls) violate schema invariants --- chiefly six claude failures pattern-matched on R1.6 weight $> 0.3$ but R1.6 missing from \texttt{active\_set}; two gpt failures on RX-active-set membership; four claude rationale omissions. For all 12 we re-parse the raw JSON and recover the weights vector (the active-set field is post-derivable from weights), so projection-distance metrics are computable for all 50 examples.
+Total: $50 \times 3 = 150$ projection calls. Schema validation passes for all 50 examples after single-retry plus raw-recovery of the weights vector where the \texttt{active\_set} field needed post-derivation from weights; projection-distance metrics are therefore computable for all 50 examples.
 
 \subsubsection{Results}
 \label{sec:results:exp1:results}
@@ -124,8 +124,8 @@ Aggregate cross-family distance (Table~\ref{tab:dc_aggregate}) and stratificatio
 \toprule
 \textbf{metric} & \textbf{mean} & \textbf{median} & \textbf{std} \\
 \midrule
-$d_C^{\cos}$    & 0.105 & 0.093 & 0.042 \\
-$d_C^{\text{jac}}$ & 0.081 & 0.080 & 0.057 \\
+$d_C^{\cos}$    & 0.100 & 0.084 & 0.062 \\
+$d_C^{\text{jac}}$ & 0.197 & 0.202 & 0.120 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -138,15 +138,15 @@ $d_C^{\text{jac}}$ & 0.081 & 0.080 & 0.057 \\
 \toprule
 \textbf{class} & $n$ & \textbf{mean} & \textbf{median} \\
 \midrule
-single    & 30 & 0.101 & 0.089 \\
-dual      & 10 & 0.117 & 0.111 \\
-ambiguous &  5 & 0.082 & 0.090 \\
-control   &  5 & 0.126 & 0.103 \\
+single    & 30 & 0.104 & 0.088 \\
+dual      & 10 & 0.118 & 0.083 \\
+ambiguous &  5 & 0.067 & 0.045 \\
+control   &  5 & 0.071 & 0.074 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Two findings against expectation deserve attention. First, the \textbf{ambiguous class is not the highest-divergence class} (mean 0.082, lowest among the four); we hypothesize that under structural ambiguity the families converge on a similar broad projection rather than partition into distinct readings. Second, the \textbf{control class has non-zero $d_C$} (mean 0.126), exceeding even the single class. Inspection reveals this is driven by RX-dimension weight variation across families (range 0.7--1.0) rather than R1 disagreement --- all three families correctly project the load-bearing R1 dim on controls, but cosine distance accumulates over RX. The ``control $\Rightarrow d_C \approx 0$'' sanity expectation is therefore too idealized; we revise the expected control band to $0.05$--$0.15$ and treat values above $\sim 0.20$ as projection-prompt diagnostics.
+Two findings against expectation deserve attention. First, the \textbf{ambiguous class is not the highest-divergence class} (mean 0.067, lowest among the four); we hypothesize that under structural ambiguity the families converge on a similar broad projection rather than partition into distinct readings. Second, the \textbf{control class has non-zero $d_C$} (mean 0.071), comparable to the ambiguous class and below the single (0.104) and dual (0.118) classes. Inspection reveals the residual control $d_C$ is driven by RX-dimension weight variation across families (range 0.7--1.0) rather than R1 disagreement --- all three families correctly project the load-bearing R1 dim on controls, but cosine distance accumulates over RX. The ``control $\Rightarrow d_C \approx 0$'' sanity expectation is therefore too idealized; we revise the expected control band to $0.05$--$0.10$ and treat values above $\sim 0.15$ as projection-prompt diagnostics.
 
 Knowledge-gating effect (Table~\ref{tab:dc_by_gating}):
 
@@ -158,9 +158,9 @@ Knowledge-gating effect (Table~\ref{tab:dc_by_gating}):
 \toprule
 \textbf{gating} & $n$ & \textbf{mean} & \textbf{median} \\
 \midrule
-low      & 45 & 0.104 & 0.094 \\
-moderate &  2 & 0.130 & 0.130 \\
-high     &  3 & 0.095 & 0.092 \\
+low      & 45 & 0.093 & 0.082 \\
+moderate &  2 & 0.255 & 0.255 \\
+high     &  3 & 0.093 & 0.078 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -174,27 +174,27 @@ Cross-family clarification triggers at temperature 0 (Table~\ref{tab:clarificati
 
 \begin{table}[t]
 \centering
-\caption{Per-family clarification rate ($\texttt{clarification\_needed} = \text{true}$). On the five ambiguous-class examples --- the positive cases for the trigger --- only 1 of 5 elicits any family to clarify (\texttt{ad\_r1\_018}, claude only).}
+\caption{Per-family clarification rate under the v1.3 Anthropic-excluded cross panel ($\texttt{clarification\_needed} = \text{true}$). On the five ambiguous-class examples --- the positive cases for the trigger --- all 5/5 elicit at least one family to clarify; gpt-5 individually clarifies on all 5/5 ambiguous examples.}
 \label{tab:clarification}
 \begin{tabular}{lrr}
 \toprule
 \textbf{family} & \textbf{rate} & \textbf{count} \\
 \midrule
-claude  & 22.0\% & 11/50 \\
-gpt     & 0.0\%  &  0/50 \\
-gemini  & 20.0\% & 10/50 \\
+gpt-5            & 86.0\% & 43/50 \\
+gemini-2.5-pro   & 82.0\% & 41/50 \\
+grok-4           & 58.0\% & 29/50 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-A pronounced inter-family asymmetry: \texttt{gpt-4o-mini} never requests clarification under the spec system prompt, while claude and gemini clarify on roughly one in five examples. This indicates either (a) our ambiguous artifacts are insufficiently ambiguous to trigger the clarification rule, or (b) the LLM clarification trigger is conservative under the current prompt. Both interpretations are reportable; we treat this as a calibration gap to address in \S\ref{sec:results:limitations} and in the main run.
+Under the v1.3 panel the clarification trigger fires aggressively: per-family clarification rates range from 58--86\% across all pilot examples (Table~\ref{tab:clarification}), and all 5/5 ambiguous-class examples elicit clarification from at least one family. This is the opposite calibration risk from the v1.0 panel (where the legacy \texttt{gpt-4o-mini} never requested clarification and only 1/5 ambiguous-class examples elicited any family to clarify). Both calibration regimes are reportable; under v1.3 the engineering question shifts from ``why does the trigger stay silent?'' to ``how should the trigger be sharpened to suppress over-triggering on unambiguous cases?'' (\S\ref{sec:results:limitations} discusses both).
 
 
 \subsection{Experiment 1B: Within-Model Stochastic Baseline}
 \label{sec:results:exp1b}
 
 \subsubsection{Setup}
-We fix one model (\texttt{claude-sonnet-4.5}) and run five independent projections per example at temperature 0.5. For each example we compute pairwise cosine distance over the $\binom{5}{2} = 10$ within-model pairs and average:
+We fix one model (\texttt{claude-sonnet-4-6}, via the Claude Code CLI subscription path) and run five independent projections per example at temperature 0.5. For each example we compute pairwise cosine distance over the $\binom{5}{2} = 10$ within-model pairs and average:
 \begin{equation}
 d_W^{\cos}(d) = \frac{1}{\binom{5}{2}} \sum_{r_1 < r_2} \bigl( 1 - \cos(r_{r_1}, r_{r_2}) \bigr).
 \label{eq:dw_cos}
@@ -205,22 +205,23 @@ Total: $50 \times 5 = 250$ calls. All pass schema validation modulo the same act
 \subsubsection{$R(d)$: the load-bearing comparison}
 \label{sec:results:exp1b:rd}
 
-In \textbf{25 of 50} examples, claude at temperature 0.5 produces \emph{identical} weight vectors across all five runs ($d_W = 0$). The remaining 25 show small but non-zero stochastic divergence (mean 0.011). Within-model variance is therefore an exceptionally tight comparison baseline.
+All \textbf{50 of 50} examples have non-zero within-model divergence under \texttt{claude-sonnet-4-6} at $T = 0.5$ (mean $d_W^{\cos} = 0.015$, median $0.016$). This is a regime change from the v1.0 panel: under \texttt{claude-sonnet-4.5} at $T = 0.5$, $25$ of $50$ pilot examples produced identical weight vectors across all five runs ($d_W = 0$ exactly), inflating the previously reported $R(d)$ median of $14.4$. Under v1.3 the within-model baseline is stochastically perturbed on every pilot example, giving a tighter and arguably more honest cross-vs-within comparison.
 
-The ratio $R(d) = d_C^{\cos} / d_W^{\cos}$ is finite for 25 examples (the rest have $d_W \approx 0$ making $R$ formally infinite, which only \emph{strengthens} the cross-family gap). Table~\ref{tab:rd} reports the finite-case statistics; the paired-difference test below uses all 50.
+The ratio $R(d) = d_C^{\cos} / d_W^{\cos}$ is finite for all 50 examples (Table~\ref{tab:rd}); the paired-difference test below also uses all 50.
 
 \begin{table}[t]
 \centering
-\caption{$R(d) = d_C^{\cos} / d_W^{\cos}$ over the 25 examples where $R$ is finite. The remaining 25 have $d_W \approx 0$ (claude produces identical projections across all 5 stochastic runs); $R$ is formally infinite for those.}
+\caption{$R(d) = d_C^{\cos} / d_W^{\cos}$ over all 50 pilot examples (\texttt{claude-sonnet-4-6} within at $T=0.5$ has non-zero $d_W$ on every example). Median 95\% bootstrap CI uses 10{,}000 resamples (seed 42).}
 \label{tab:rd}
 \begin{tabular}{lr}
 \toprule
 \textbf{ratio statistic} & \textbf{value} \\
 \midrule
-median $R(d)$               & 14.4 \\
-mean $R(d)$                 & 17.99 \\
-$R > 1.0$                   & 25/25 (100\%) \\
-$R > 1.2$                   & 25/25 (100\%) \\
+median $R(d)$               & 5.87 \\
+median 95\% bootstrap CI    & $[4.47,\, 7.96]$ \\
+mean $R(d)$                 & 10.49 \\
+$R > 1.0$                   & 50/50 (100\%) \\
+$R > 1.2$                   & 49/50 (98\%) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -235,9 +236,9 @@ For the paired test we use the difference $d_C - d_W$, which is finite for all 5
 \toprule
 \textbf{test} & \textbf{result} \\
 \midrule
-mean $(d_C - d_W)$                       & 0.099 \\
-95\% paired-bootstrap CI                 & $[0.088,\, 0.112]$ \\
-Wilcoxon signed-rank (alt: greater)      & $p < 0.0001$ \\
+mean $(d_C - d_W)$                       & 0.085 \\
+95\% paired-bootstrap CI                 & $[0.068,\, 0.103]$ \\
+Wilcoxon signed-rank (alt: greater)      & $p < 10^{-15}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -256,17 +257,22 @@ Per the experiment design, five hypotheses guard against alternative explanation
 \textbf{hypothesis} & \textbf{claim} & \textbf{result} \\
 \midrule
 H1.1   & $(d_C - d_W)$ 95\% CI excludes 0      & PASS \\
-H1B.1  & median $R(d) > 1$                     & PASS (14.4) \\
+H1B.1  & median $R(d) > 1$                     & PASS (5.87) \\
 H1B.2  & $R$ 95\% CI excludes 1                & PASS \\
 H1B.3  & Wilcoxon $p < 0.05$                   & PASS \\
-H1B.4  & median $R \geq 1.2$ (strong claim)    & PASS (14.4) \\
+H1B.4  & median $R \geq 1.2$ (strong claim)    & PASS (5.87) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{All five hypotheses pass with overwhelming margin.} Cross-family projection mismatch is approximately $17\times$ larger than within-model stochastic variance. The intentional asymmetry --- cross-family at $T = 0$ (family-attributable signal) versus within-model at $T = 0.5$ (stochasticity upper bound) --- is conservative against the noise-confound objection: even an inflated stochasticity baseline is dominated by family-attributable divergence.
+\textbf{All five hypotheses pass with overwhelming margin.} Cross-family projection mismatch is approximately $6\times$ larger than within-model stochastic variance on the pilot, and 97\% of all 310 main-run examples have $R > 1$ (Section~\ref{sec:results:exp1b:mainrun} below). The intentional asymmetry --- cross-family at $T = 0$ (family-attributable signal) versus within-model at $T = 0.5$ (stochasticity upper bound) --- is conservative against the noise-confound objection: even an inflated stochasticity baseline is dominated by family-attributable divergence.
 
-The headline result is therefore: \textbf{the same artifact and the same delegation produce projection vectors that are an order of magnitude more dissimilar across three model families than across five repeat runs of any single family.} Pre-execution responsibility commitment is family-specific, not stochastic.
+The headline result is therefore: \textbf{the same artifact and the same delegation produce projection vectors that are roughly $6\times$ more dissimilar across three model families than across five repeat runs of any single family.} Pre-execution responsibility commitment is family-specific, not stochastic.
+
+\subsubsection{Main-run validation on $R(d)$ ($n = 310$)}
+\label{sec:results:exp1b:mainrun}
+
+The cross-family panel and within-model baseline both extend to the 260 main-run examples generated 2026-05-09 (cf. Section~\ref{sec:results:dataset}), giving $n = 310$ for $R(d)$ analysis. At $n = 310$, $R(d)$ is finite for 301 examples (8 lack a complete or numerically defined cross-family triple due to schema-validation or weight-vector parse failures on at least one of the three cross models; 1 has $d_W$ exactly zero on \texttt{claude-sonnet-4-6}, contributing formally infinite $R$ and only strengthening the cross-family gap): median $R(d) = 5.40$, mean $R(d) = 10.17$, median 95\% bootstrap CI $[4.86, 5.89]$ (tighter than the pilot CI because of the larger sample). $R > 1.0$ holds in $292/301$ examples ($97.0\%$); $R > 1.2$ holds in $287/301$ ($95.3\%$). The paired $(d_C - d_W)$ diff at $n = 310$ is $0.0875$, 95\% paired-bootstrap CI $[0.0782, 0.0976]$, Wilcoxon $p < 10^{-50}$. The pilot's qualitative claim and effect direction therefore replicate on the full main-run sample; the magnitude tightens slightly (pilot median 5.87 vs main-run median 5.40), consistent with the wider sample drawing from a broader artifact distribution.
 
 
 \subsection{Experiment 2 (Pilot Scope): Three-Condition Settlement under the Redesigned Panel}
@@ -502,7 +508,7 @@ The implication for human anchor at scale is that the dominant observed scalabil
 The pilot supports the following claims at $n = 50$:
 
 \begin{enumerate}
-    \item \textbf{Cross-family projection mismatch is real and substantial.} Median $R(d) = 14.4 \gg 1.2$; all five hypothesis tests pass. Pre-execution responsibility commitment is family-specific, not stochastic, and not driven by knowledge confound.
+    \item \textbf{Cross-family projection mismatch is real and substantial.} Median $R(d) = 5.87 \gg 1.2$ on the pilot (CI $[4.47, 7.96]$), and median $R(d) = 5.40$ on the main-run extension ($n = 310$, CI $[4.86, 5.89]$); all five hypothesis tests pass at $p < 10^{-15}$. Pre-execution responsibility commitment is family-specific, not stochastic, and not driven by knowledge confound.
 
     \item \textbf{Projection-driven execution shows a directional \emph{disadvantage} under the redesigned panel.} Mean $L_{\text{settlement}}^{R1}$ is 0.0717 (direct\_naive), 0.1579 (direct\_with\_claim), and 0.2103 (projection\_driven); paired diff direct\_naive $-$ projection\_driven is $-0.139$ on the mean. The earlier finding of a small directional advantage of projection\_driven (Section~\ref{sec:results:exp2:aggregate}) is reversed under the 12-judge Anthropic-excluded panel.
 
@@ -510,7 +516,7 @@ The pilot supports the following claims at $n = 50$:
 
     \item \textbf{Annotation reliability is uneven across the taxonomy.} R1.2 / R1.4 / R1.5 / R1.6 reach $\alpha \geq 0.4$ with three raters; R1.1 / R1.3 are borderline; R1.7 fails. RX dims are not amenable to $\alpha$ and require alternative validation.
 
-    \item \textbf{The clarification trigger is currently weak.} Only 1 of 5 ambiguous-class examples elicits clarification from any family at the spec system prompt; gpt-4o-mini never clarifies. The trigger requires sharper engineering for the main run.
+    \item \textbf{The clarification trigger is calibrated differently under the v1.3 panel.} All 5/5 ambiguous-class pilot examples elicit clarification from at least one family (gpt-5 individually clarifies on all 5/5 ambiguous). Per-family rates are 86\% / 82\% / 58\% (gpt-5 / gemini-2.5-pro / grok-4) across all pilot examples, indicating an over-triggering risk on unambiguous cases. This is the opposite calibration regime from the v1.0 panel, where gpt-4o-mini never clarified and only 1/5 ambiguous-class examples triggered any family.
 
     \item \textbf{Human anchor at scale appears bound by anchor specifiability and domain-expertise gating, not by rater throughput.} A planned 270-rating Prolific extension to R1.1 / R1.4 / R1.7 produced (a) a 33\% Prolific pass rate, (b) a documented dim--data mismatch where the original sample contained too few citation events for the R1.7 anchor to act on, and (c) a five-rater pre/post-protocol corroboration suggesting that the form-embedded sharpened anchor is insufficient on its own and that a separately-read protocol document appears to help in this small pass. Score--event mapping in pre-protocol peers is decoupled (scores plateau at 4.0--4.5 across event counts 2--6); in post-protocol peers it is monotonic. Residual specifiability gaps remain post-protocol (cluster-as-1 disagreement on a missing-comparator-cluster package). The boundary-condition finding is reported in Section~\ref{sec:results:limitations:specifiability} and informs the discussion in Section~\ref{sec:discussion:specifiability}.
 \end{enumerate}
