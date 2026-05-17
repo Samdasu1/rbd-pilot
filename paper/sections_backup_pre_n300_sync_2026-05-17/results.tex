@@ -310,9 +310,9 @@ Aggregate $L_{\text{settlement}}^{R1}$ per condition (Table~\ref{tab:exp2_aggreg
 \toprule
 \textbf{condition} & \textbf{mean} & \textbf{median} & \textbf{std} \\
 \midrule
-direct\_naive       & \cellcolor{HMGood}\textbf{0.0717} & \cellcolor{HMGood}\textbf{0.0202} & \cellcolor{HMBackground}0.0819 \\
-direct\_with\_claim & \cellcolor{HMMid}0.1579          & \cellcolor{HMMid}0.1420          & \cellcolor{HMBackground}0.1382 \\
-projection\_driven  & \cellcolor{HMHigh}0.2103          & \cellcolor{HMHigh}0.2237          & \cellcolor{HMBackground}0.1450 \\
+direct\_naive       & \cellcolor{HMGood}\textbf{0.0745} & \cellcolor{HMGood}\textbf{0.0202} & \cellcolor{HMBackground}0.0841 \\
+direct\_with\_claim & \cellcolor{HMMid}0.1501          & \cellcolor{HMMid}0.1382          & \cellcolor{HMBackground}0.1389 \\
+projection\_driven  & \cellcolor{HMHigh}0.2062          & \cellcolor{HMHigh}0.2135          & \cellcolor{HMBackground}0.1402 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -325,21 +325,19 @@ projection\_driven  & \cellcolor{HMHigh}0.2103          & \cellcolor{HMHigh}0.22
 \toprule
 \textbf{paired diff (A $-$ B)} & \textbf{mean} & \textbf{median} & \textbf{95\% CI} \\
 \midrule
-direct\_naive $-$ direct\_with\_claim     & $-0.086$ & $-0.063$ & $[-0.118,\, -0.055]$ \\
-direct\_with\_claim $-$ projection\_driven & $-0.052$ & $\phantom{-}0.000$ & $[-0.089,\, -0.017]$ \\
+direct\_naive $-$ direct\_with\_claim     & $-0.076$ & $-0.037$ & $[-0.109,\, -0.044]$ \\
+direct\_with\_claim $-$ projection\_driven & $-0.056$ & $-0.018$ & $[-0.095,\, -0.017]$ \\
 \rowcolor{HMHeadline}
-direct\_naive $-$ projection\_driven      & $\mathbf{-0.139}$ & $\mathbf{-0.125}$ & $\mathbf{[-0.169,\, -0.109]}$ \\
+direct\_naive $-$ projection\_driven      & $\mathbf{-0.132}$ & $\mathbf{-0.131}$ & $\mathbf{[-0.164,\, -0.101]}$ \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-\textbf{The headline finding under the redesigned 12-judge panel reverses the earlier directional reading.} Under the Anthropic-excluded panel and the 3-condition split, projection\_driven execution produces \emph{higher} settlement loss than direct\_naive on the headline weighted R1 metric (mean loss \emph{increase} of $0.139$ for projection\_driven over direct\_naive; equivalently, paired diff direct\_naive $-$ projection\_driven $= -0.139$ on the mean and $-0.125$ on the median). The intermediate condition (direct\_with\_claim, which adds only the self-claim line) absorbs roughly half of the gap, indicating that part of the cost is attributable to the priming effect of the self-claim line itself, with the remaining half attributable to the projection-injection treatment beyond priming.
+\textbf{The headline finding under the redesigned 12-judge panel reverses the earlier directional reading.} Under the Anthropic-excluded panel and the 3-condition split, projection\_driven execution produces \emph{higher} settlement loss than direct\_naive on the headline weighted R1 metric (mean loss \emph{increase} of $0.132$ for projection\_driven over direct\_naive; equivalently, paired diff direct\_naive $-$ projection\_driven $= -0.132$ on the mean and $-0.131$ on the median). The intermediate condition (direct\_with\_claim, which adds only the self-claim line) absorbs roughly half of the gap, indicating that part of the cost is attributable to the priming effect of the self-claim line itself, with the remaining half attributable to the projection-injection treatment beyond priming.
 
 This is a \textbf{negative result for the earlier directional reading of projection\_driven}. We report it directly. The mechanism analysis in \S\ref{sec:results:mechanism} characterizes why the direction reverses --- the gap concentrates on dims that require deep dim-specific work (R1.4 and R1.7), with R1.7 corresponding directly to the Stage 1 boundary-condition finding (\S\ref{sec:results:limitations:specifiability}); R1.4 is inferential, since R1.4 was deferred from the Stage 1 closure.
 
-A note on $n = 50$ power: the paired diff direct\_naive $-$ projection\_driven has a 95\% paired-bootstrap CI of $[-0.169, -0.109]$ (Table~\ref{tab:exp2_paired}), excluding $0$. The intermediate diffs (direct\_naive $-$ direct\_with\_claim, direct\_with\_claim $-$ projection\_driven) also have CIs that exclude $0$. Per \texttt{formalization\_v1.2} \S9.3, continuous effect sizes with bootstrap CIs are the load-bearing reporting form; binary classifications are post-hoc.
-
-\paragraph*{Main-run validation on $L_{\text{settlement}}^{RX}$ ($n = 310$).} The headline R1 weighted analysis above remains bound to the $n = 50$ pilot because the $r^\star$ weight vector is derived from the pass-1+pass-2 human annotation track, which is closed at pilot scope. The RX component of settlement loss, which does not require $r^\star$ weighting, extends to the full main-run sample. At $n = 310$, the paired diff direct\_naive $-$ projection\_driven on $L_{\text{settlement}}^{RX}$ is $-0.099$ with 95\% paired-bootstrap CI $[-0.112, -0.086]$; the intermediate direct\_naive $-$ direct\_with\_claim diff is $-0.108$ with CI $[-0.119, -0.097]$; and the projection-vector increment beyond the self-claim line, direct\_with\_claim $-$ projection\_driven, is statistically null at $+0.009$ with CI $[-0.005, +0.023]$ (CI includes $0$). The R1-versus-RX contrast is informative: on RX, the entire shift from direct\_naive is captured by the priming effect of the self-claim line, and adding the projection vector and active set on top of the self-claim line produces no detectable additional RX cost; on R1, by contrast, the same projection-vector increment beyond the self-claim line carries its own measurable loss (paired diff direct\_with\_claim $-$ projection\_driven $= -0.052$, CI $[-0.089, -0.017]$). The contrast localizes the projection-injection cost to the R1.4 / R1.7 deep-specialty dims (\S\ref{sec:results:exp2:by_dim}), consistent with the boundary-condition reading: the cross-cutting subscale shifts only with priming, while the deep-specialty cost is what additionally shifts when projection content is injected. The main-run extension therefore strengthens the boundary-condition framing rather than overturning it.
+A note on $n = 50$ power: the paired diff direct\_naive $-$ projection\_driven has a 95\% paired-bootstrap CI of $[-0.164, -0.101]$ (Table~\ref{tab:exp2_paired}), excluding $0$. The intermediate diffs (direct\_naive $-$ direct\_with\_claim, direct\_with\_claim $-$ projection\_driven) also have CIs that exclude $0$. Per \texttt{formalization\_v1.2} \S9.3, continuous effect sizes with bootstrap CIs are the load-bearing reporting form; binary classifications are post-hoc.
 
 \subsubsection{Per-dimension fulfillment --- the gap concentrates on R1.4 and R1.7}
 \label{sec:results:exp2:by_dim}
@@ -450,7 +448,7 @@ The cross-link with \S\ref{sec:results:limitations:specifiability} is the substa
 \label{sec:results:limitations}
 
 \subsubsection{Sample size and statistical power}
-The pilot reports $n = 50$. Experiment 1 / 1B effects are large enough that all five hypothesis tests pass at this scale with overwhelming margin ($p < 0.0001$ on Wilcoxon). Experiment 2's headline reversal under the redesigned panel (loss \emph{increase} of $0.139$ for projection\_driven over direct\_naive; equivalently, paired diff direct\_naive $-$ projection\_driven $= -0.139$; \S\ref{sec:results:exp2:aggregate}) is large in magnitude relative to the per-condition standard deviations ($\approx 0.08$--$0.15$); we report the effect size directly rather than running a hypothesis test against a moving null. The main-run extension at $n = 310$ on the cross-cutting subscale (\S\ref{sec:results:exp2:aggregate}, RX paragraph) confirms the projection\_driven loss-increase direction on RX; the per-dim R1 slices remain pilot-bound by the $r^\star$ annotation track and would benefit from a main-run-scale $r^\star$ extension, especially R1.7 ($n = 5$ active in this pilot).
+The pilot reports $n = 50$. Experiment 1 / 1B effects are large enough that all five hypothesis tests pass at this scale with overwhelming margin ($p < 0.0001$ on Wilcoxon). Experiment 2's headline reversal under the redesigned panel (loss \emph{increase} of $0.132$ for projection\_driven over direct\_naive; equivalently, paired diff direct\_naive $-$ projection\_driven $= -0.132$; \S\ref{sec:results:exp2:aggregate}) is large in magnitude relative to the per-condition standard deviations ($\approx 0.08$--$0.14$); we report the effect size directly rather than running a hypothesis test against a moving null. The main run's $n = 300$ should sharpen the per-dim slices, especially R1.7 ($n = 5$ active in this pilot).
 
 \subsubsection{Annotation reliability --- R1.7 and the borderline dims}
 R1.7 reaches $\alpha = 0.219$ at the 3-rater pass-1 + pass-2 LLM protocol and fails the $\alpha \geq 0.4$ gate. This reflects a genuine limit of blind LLM annotation: citation accuracy requires recall of the relevant literature's canonical works, which mid-tier LLMs do not consistently have. We report all R1.7 results with an annotation-uncertainty caveat. R1.1 ($\alpha = 0.315$) and R1.3 ($\alpha = 0.390$) sit just below the gate; we report them with a soft caveat.
@@ -504,7 +502,7 @@ The pilot supports the following claims at $n = 50$:
 \begin{enumerate}
     \item \textbf{Cross-family projection mismatch is real and substantial.} Median $R(d) = 14.4 \gg 1.2$; all five hypothesis tests pass. Pre-execution responsibility commitment is family-specific, not stochastic, and not driven by knowledge confound.
 
-    \item \textbf{Projection-driven execution shows a directional \emph{disadvantage} under the redesigned panel.} Mean $L_{\text{settlement}}^{R1}$ is 0.0717 (direct\_naive), 0.1579 (direct\_with\_claim), and 0.2103 (projection\_driven); paired diff direct\_naive $-$ projection\_driven is $-0.139$ on the mean. The earlier finding of a small directional advantage of projection\_driven (Section~\ref{sec:results:exp2:aggregate}) is reversed under the 12-judge Anthropic-excluded panel.
+    \item \textbf{Projection-driven execution shows a directional \emph{disadvantage} under the redesigned panel.} Mean $L_{\text{settlement}}^{R1}$ is 0.0745 (direct\_naive), 0.1501 (direct\_with\_claim), and 0.2062 (projection\_driven); paired diff direct\_naive $-$ projection\_driven is $-0.132$ on the mean. The earlier finding of a small directional advantage of projection\_driven (Section~\ref{sec:results:exp2:aggregate}) is reversed under the 12-judge Anthropic-excluded panel.
 
     \item \textbf{The reversal concentrates on dims with deep dim-specific $s = 5$ targets.} Among the six R1 dims active in the pilot, R1.4 (novelty mapping, $\Delta = -0.198$) and R1.7 (citation audit, $\Delta = -0.275$) take the largest hit; R1.5 is never active in this pilot. The prior four-mechanism account (format coupling, active-set propagation bias, self-claim drift, RX-attention boost) does not robustly replicate; we report a consolidated interpretation (broad-attention dilution on dim-specific deep work, Section~\ref{sec:results:mechanism:dilution}) that synthesizes the per-dim concentration with the Stage 1 anchor-specifiability finding.
 
