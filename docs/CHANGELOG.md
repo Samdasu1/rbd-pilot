@@ -4,6 +4,71 @@
 
 ---
 
+## 2026-05-17 — Phase C completion + paper v1.4 → v1.4.2 main-run sync (R-PAPER drift closed)
+
+### Trigger
+
+Phase C Exp 2 judge process (paused 2026-05-13 at ~5%) completed end-to-end this cycle: 11,160 / 11,160 judge files on the n=310 main run, three conditions per example × 12-judge Anthropic-excluded panel. With the data complete, the v1.4 manuscript's pilot-bound numerical claims drifted: (a) the headline weighted-R1 settlement-loss paired diff shifted as some pilot judge entries were rerun via the retry pipeline; (b) the headline P1 measurability claim "approximately 17× / R(d) = 14.4" was computed under the v1.0 panel (cross = claude-sonnet-4.5 / gpt-4o-mini / gemini-2.5-flash; within = claude-sonnet-4.5), not the v1.3 panel that the rest of the paper documents. R-PAPER required re-derivation under the documented v1.3 panel.
+
+### What this changes
+
+Six commits over this cycle close out Phase C and bring the paper back into R-PAPER alignment under the v1.3 panel.
+
+**v1.4.1 (commit `924aaf2`) — §V.2 weighted-R1 sync + RX n=310 validation.** Re-running `scripts/exp2_aggregate.py` + `scripts/exp2_mechanism_v1_3.py` on the completed 11,160 judge files refreshed the n=50 pilot R1 weighted numbers (some judge entries had been rerun during the retry pipeline). Headline paired diff direct_naive − projection_driven = −0.132 [−0.164, −0.101] → **−0.139 [−0.169, −0.109]** (<5% drift, conclusion unchanged). New RX paragraph in §V.2 reports the main-run extension at n=310: paired diff −0.099 [−0.112, −0.086]; intermediate direct_naive − direct_with_claim = −0.108; direct_with_claim − projection_driven statistically null at +0.009 (CI includes 0). The R1-vs-RX contrast localizes the projection-injection cost to R1.4 / R1.7 deep-specialty dims while showing the cross-cutting cost is the priming component.
+
+**v1.4.2 (commit `0572ae0`) — P1 headline re-derivation under v1.3 panel.** `scripts/exp1_analyze.py` had a stale v1.0 FAMILIES constant (`["claude", "gpt", "gemini"]`); patched to the v1.3 cross panel (`["gpt-5", "gemini-2.5-pro", "grok-4"]`) and re-run against the 1,550 claude-sonnet-4-6 within-model projection files already on disk (from `scripts/exp1b_claude_within.py`). Result: **R(d) median 14.4 → 5.87 (n=50, CI [4.47, 7.96]) / 5.40 (n=310, CI [4.86, 5.89])**, "approximately 17×" → "approximately 6×". The qualitative claim (cross-family mismatch substantially exceeds within-model stochastic variance) is preserved with stronger statistical support: all five guard hypotheses still PASS, R > 1.0 in 50/50 pilot examples and 292/301 (97.0%) main-run examples, Wilcoxon p < 10⁻¹⁵ (pilot) and p < 10⁻⁵⁰ (main-run).
+
+- **Mechanism**: under claude-sonnet-4.5 at T=0.5, 25/50 pilot examples produced identical projections (d_W = 0 exactly) — a truncated within-model distribution that artificially inflated R. Under claude-sonnet-4-6, 0/50 pilot examples have d_W = 0 — the within-model baseline is stochastically perturbed on every example, giving a tighter and more honest cross-vs-within comparison.
+- **Clarification narrative flipped**: under v1.3 panel, trigger rates are gpt-5 86% / gemini-2.5-pro 82% / grok-4 58% (vs v1.0 legacy 0% / 22% / 20%); all 5/5 ambiguous-class pilot examples elicit at least one family (vs v1.0 1/5). v1.0 panel showed under-triggering; v1.3 panel shows over-triggering on unambiguous cases. discussion.tex §V.A1 and results.tex §V.5 bullet updated accordingly.
+- **Scope language synced**: abstract / intro §III / conclusion now explicitly distinguish the completed P1 main-run extension (n=310) from the still-r*-bound P2 weighted-R1 analysis (pilot-only because r* is derived from the pilot human-annotation track). Main-run-scale r* extension joins the still-reserved four-condition Exp 2 + longitudinal reputation as future work.
+- **§V.1 cross-family stratification re-synced**: control class no longer exceeds single class (was 0.126 > 0.101 under v1.0; now 0.071 < 0.104 under v1.3); narrative softened from "exceeds single class" to "comparable to ambiguous class, below single and dual".
+
+**Infrastructure (commits `cb7fcad`, `689f169`, `92e5401`)**.
+
+- `cb7fcad`: 9,910 judge files (8,365 new + 1,545 modified via retry) committed with three provenance attic dirs: `_backup_codex_api_path_2026-05-13/` (179 gpt-5 entries that hit paid OpenAI API at $12.16 due to the call_codex_exec wrapper false-positive bug), `_retry_attempt1_2026-05-14/` + `_retry_attempt2_2026-05-14/` (failed validations rerun via 2-pass policy). 1,220/11,160 = 10.9% validation-failed; phi-3-medium dominant (863, deterministic JSON malformation); effective panel ≈ 11/12 (median aggregation robust to phi-3 dropout).
+- `689f169`: `scripts/_clients.py` `call_codex_exec` wrapper — the rate-limit indicator scan previously ran on both stderr AND stdout regardless of exit code, false-firing on successful judge responses whose rationale text naturally contained words like "exceeded" / "exhausted" / "limit". Fix: scan stderr only, only on non-zero exit. Bonus hardening: `call_openai` / `call_xai` / `call_google_genai` get explicit `timeout=120.0, max_retries=1` (was SDK default exponential retry that could hang indefinitely; observed 1h+ stall on xAI).
+- `92e5401`: 260 new dataset examples (`ad_r1_051~310.yaml`, generated 2026-05-09), 780 executor outputs, 3,625 projection outputs (Experiment 1 + 1B on the new examples). Generation infrastructure: `scripts/{build_topic_seeds,build_main_plan,gen_examples_main,exp2_retry_failed}.py` + plan JSONs. **Copyright sanitization** of `data/main_v1.0/topic_seeds.jsonl`: abstract field stripped from 44/63 entries (60,612 chars of third-party paper abstracts removed); original retained locally as `topic_seeds_with_abstracts.local.jsonl` (gitignored). `scripts/gen_examples_main.py` prefers local file for regen parity.
+
+**Defense memo (commit `b89022b`).** `docs/defense_memo_recognition_vs_fulfillment_v1.0.md` — pre-emptive rebuttal kit for predicted TMLR reviewer attacks against the P2 negative result. Central thesis: *Recognition ≠ Fulfillment*. 5 attack vectors + 5 Q&A drafts + template separation/limitation/future-work paragraphs + 5 ablation designs + §14 manuscript-modification checklist. **Usage policy: v1.4.2 manuscript is not edited on the basis of this memo; activated only on actual reviewer comment.** v1.5 framing rewrite deferred until review outcome known.
+
+### Doc updates
+
+| doc | change | type |
+|---|---|---|
+| `paper/sections/abstract.tex` | P1 headline `17× / R=14.4` → `6× / R=5.87 [4.47, 7.96]` + n=310 extension. P2 headline `-0.132 [-0.164, -0.101]` → `-0.139 [-0.169, -0.109]`. Scope clause rephrased (P1 main-run extension done; r*-bound P2 pilot; future = r* extension + 4-condition Exp 2 + longitudinal). | in-place patch (v1.4.1 + v1.4.2) |
+| `paper/sections/introduction.tex` | Same as abstract (intro paragraph + P1 contribution bullet + Scope subsection). | in-place patch |
+| `paper/sections/conclusion.tex` | Same as abstract; "next phase" updated to lead with r*-extension rather than scale-up (since scale-up done on P1). | in-place patch |
+| `paper/sections/experiments.tex` §III | Cross panel + within model names synced to v1.3 (gpt-5 / gemini-2.5-pro / grok-4 + claude-sonnet-4-6); call totals extended to include n=310 main-run sample. | in-place patch (v1.4.2) |
+| `paper/sections/discussion.tex` §V.A1 | Clarification trigger framing flipped from "currently conservative (1/5)" to "no longer conservative under v1.3 (5/5 ambiguous); fires 58–86% across all pilot examples — opposite calibration regime". | in-place patch (v1.4.2) |
+| `paper/sections/results.tex` §V.1 cross-family + §V.1B within-model + §V.2 settlement + §V.5 summary | Full re-sync to v1.3 panel: aggregate / stratification tables, tab:rd, tab:paired, tab:hypotheses, tab:clarification all updated. New §V.1B.4 "Main-run validation on R(d) (n=310)" subsubsection. New §V.2 "Main-run validation on L_settlement^RX (n=310)" paragraph. | in-place patch (v1.4.1 + v1.4.2) |
+| `scripts/exp1_analyze.py` | FAMILIES const v1.0 → v1.3; WITHIN_FAMILY_ALIAS introduced (claude → claude-sonnet-4-6 via filename literal); M_per_family + under/over-projection wrapped in r_star coverage check (pilot-only). | in-place patch |
+| `scripts/_clients.py` | call_codex_exec rate-limit scan: stderr-only + non-zero-exit-only. SDK timeout/retry caps on call_openai/xai/google_genai. | in-place patch |
+| `data/pilot_v1.1/examples/ad_r1_051~310.yaml` (260 files) | NEW. n=310 main-run dataset, generated 2026-05-09. | new |
+| `data/pilot_v1.1/{execution,projection,judge}/` | NEW + EXTENDED. 780 executor + 3,625 projection + 9,910 judge files for the n=310 expansion + retry attics. | new + patch |
+| `data/main_v1.0/topic_seeds.jsonl` | NEW (sanitized). 63 paper-topic seeds; abstract field stripped from 44 entries for public-push safety. Local-only `topic_seeds_with_abstracts.local.jsonl` retains the originals. | new |
+| `data/pilot_v1.1/stats/exp{1,2}_*` + `_backup_{n300_complete_2026-05-16,pre_R_rederivation_2026-05-17}/` | REGENERATED + BACKED UP per R-DATA. exp1_per_example.json now covers 310 eids with R_cos populated. exp2_aggregate.json + exp2_v1_3_mechanism.json refreshed from the completed judge files. | regenerate + backup |
+| `docs/defense_memo_recognition_vs_fulfillment_v1.0.md` | NEW. Rebuttal kit, not for v1.4 manuscript edits. | new |
+| `_submission/{main.pdf, source-bundle.tar.gz, abstract.txt}` | SYNCED. Bundle rebuilt with v1.4.2 source; abstract.txt headline numbers updated. Awaiting user OpenReview re-upload. | sync (gitignored) |
+
+### Decisions worth recording
+
+- **R-PAPER under-derivation can hide as an "old panel" artifact for arbitrarily long.** v1.4 carried R = 14.4 across two months of subsequent edits without re-derivation under the documented v1.3 panel. The drift (14.4 → 5.40) was discoverable only by running the patched analyzer. Future paper-number lifecycle should pin every headline number to a `(stats_file, panel_version, regenerator)` triple in the AGENTS.md §3 consistency table.
+- **Within-model degenerate distributions inflate R artificially.** The v1.0 panel's 25/50 d_W = 0 cases under claude-sonnet-4.5 made R appear larger than is honest. Reporting R is more defensible when the within-model variance distribution is non-degenerate. v1.4.2 R = 5.40 is a more honest comparison than v1.4 R = 14.4; the qualitative direction is preserved.
+- **Clarification trigger calibration regime is panel-dependent.** Under v1.0 panel the legacy gpt-4o-mini was silent (calibration concern: trigger too conservative). Under v1.3 panel, gpt-5/gemini-2.5-pro/grok-4 trigger on 58–86% of all examples (calibration concern: trigger too aggressive). Both are calibration problems, not presence-of-clarification problems; the v1.3 narrative is the current paper claim.
+- **Defense memo is shelf-stable until reviewer comments arrive.** Per project memory `feedback_paper_iteration.md`, mid-stream framing rewrites are wasteful. The recognition-vs-fulfillment separation framing is a v1.5 candidate gated on actual reviewer attack rather than speculative repair.
+- **Copyright sanitization is a public-push prerequisite, not optional.** topic_seeds.jsonl with 44 third-party abstracts was caught only because codex flagged it as a backlog item. Future dataset commits must run an abstract-strip pass before push; the .gitignore + script-fallback pattern is reusable.
+
+### Pending downstream work (updated)
+
+- ~~Phase C Exp 2 judge n=310~~ — done 2026-05-16/17, 11,160/11,160.
+- ~~Headline R re-derivation under v1.3 panel~~ — done 2026-05-17 (v1.4.2).
+- **TMLR `_submission/` re-upload to OpenReview** — user action (CLI not available). `_submission/main.pdf` + `_submission/source-bundle.tar.gz` + `_submission/abstract.txt` are synced and ready.
+- **`rater_protocol_v2`** — still queued. v1's §3.2 borderline list now has empirical evidence (cluster-as-1 + method-name-only); v2 should provide stricter examples and a worked-example pre-rating step.
+- **Main-run-scale r* extension** — to lift the P2 weighted-R1 settlement analysis from pilot to main-run scope. Currently r* covers ad_r1_001..050 only (closed pilot human-annotation track).
+- **Submission package** — cover letter, response to v1.0 reviewers — still queued (depends on review timeline).
+
+---
+
 ## 2026-05-08 — 5-rater pre/post-protocol corroboration extends §VI #4 (`human_annotation/recruitment/r17_v2_5_rater_analysis.md`)
 
 ### Trigger
