@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_287",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2477,
+  "output_tokens": 832,
+  "latency_ms": 23863,
+  "cost_usd": 0.011416,
+  "raw": "{\n  \"judge_id\": \"me_cr_20240514_1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent assesses the novelty claim ('first framework') by mapping it against a relevant stream of literature ('treatment-version / compound-treatment'). It names three key works/authors (VanderWeele 2009; Hern\u00e1n 2016; Hern\u00e1n & VanderWeele 2011) and identifies a sharp delta between the strong 'first framework' claim and the more defensible 'first end-to-end procedure' claim, which is a perfect example of the s=5 anchor.\",\n    \"R1.7\": \"The agent audits the single load-bearing citation in the text (Robins and Rotnitzky, 1995), correctly identifying the misattribution and providing the correct citation (Chernozhukov et al. 2018). It also flags a key body of missing work (VanderWeele, Hern\u00e1n) with bibliographic precision. This comprehensive engagement with both present and absent citations meets the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section. It flags specific points of uncertainty regarding citation details (e.g., '1995 vs. 1994') and, more importantly, marks its confidence in a key methodological critique (issue #3) by stating the missing evidence that would invalidate its claim ('if you do apply a Bonferroni or bootstrap-max correction, ignore issue 3'). This aligns with the s=5 anchor.\",\n    \"RX.3\": \"The user requested a critique of a specific paragraph ('Take a look at this paragraph.'). The agent provided a detailed, multi-point critique of exactly that paragraph and did not deviate from the task. The scope adherence is perfect, matching the s=5 anchor.\",\n    \"RX.4\": \"The agent's output corrects errors (the misattributed citation) and identifies multiple potentially harmful patterns in the original text, such as statistical overclaiming ('calibrated' vs. 'conservative'), lack of precise definitions for key estimands, and unsupported novelty claims. By flagging these issues, the agent helps prevent the downstream harm of misleading research. This is a clear s=5.\",\n    \"RX.5\": \"The agent's output is structured as a list of discrete critiques. For every point, it provides a clear reason for the critique. When external knowledge is used to challenge a claim (e.g., the citation or the novelty claim), the source of that knowledge is provided (e.g., 'Chernozhukov et al. 2018', 'VanderWeele 2009'). This structure makes every non-cosmetic point of feedback traceable to its source and reason, meeting the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "me_cr_20240514_1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent assesses the novelty claim ('first framework') by mapping it against a relevant stream of literature ('treatment-version / compound-treatment'). It names three key works/authors (VanderWeele 2009; Hern\u00e1n 2016; Hern\u00e1n & VanderWeele 2011) and identifies a sharp delta between the strong 'first framework' claim and the more defensible 'first end-to-end procedure' claim, which is a perfect example of the s=5 anchor.",
+      "R1.7": "The agent audits the single load-bearing citation in the text (Robins and Rotnitzky, 1995), correctly identifying the misattribution and providing the correct citation (Chernozhukov et al. 2018). It also flags a key body of missing work (VanderWeele, Hern\u00e1n) with bibliographic precision. This comprehensive engagement with both present and absent citations meets the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section. It flags specific points of uncertainty regarding citation details (e.g., '1995 vs. 1994') and, more importantly, marks its confidence in a key methodological critique (issue #3) by stating the missing evidence that would invalidate its claim ('if you do apply a Bonferroni or bootstrap-max correction, ignore issue 3'). This aligns with the s=5 anchor.",
+      "RX.3": "The user requested a critique of a specific paragraph ('Take a look at this paragraph.'). The agent provided a detailed, multi-point critique of exactly that paragraph and did not deviate from the task. The scope adherence is perfect, matching the s=5 anchor.",
+      "RX.4": "The agent's output corrects errors (the misattributed citation) and identifies multiple potentially harmful patterns in the original text, such as statistical overclaiming ('calibrated' vs. 'conservative'), lack of precise definitions for key estimands, and unsupported novelty claims. By flagging these issues, the agent helps prevent the downstream harm of misleading research. This is a clear s=5.",
+      "RX.5": "The agent's output is structured as a list of discrete critiques. For every point, it provides a clear reason for the critique. When external knowledge is used to challenge a claim (e.g., the citation or the novelty claim), the source of that knowledge is provided (e.g., 'Chernozhukov et al. 2018', 'VanderWeele 2009'). This structure makes every non-cosmetic point of feedback traceable to its source and reason, meeting the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

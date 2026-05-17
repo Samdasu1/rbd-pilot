@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_069",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2352,
+  "output_tokens": 635,
+  "latency_ms": 30379,
+  "cost_usd": 0.00929,
+  "raw": "{\n  \"judge_id\": \"text_to_sql_debias_judge\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent identifies multiple load-bearing conceptual issues (statistical identifiability, contradictory ground truth) and proposes a structural reframing (problem -> method -> payoff) that makes the argument much clearer. This goes far beyond surface edits and addresses the core logic of the artifact.\",\n    \"R1.4\": \"The agent correctly identifies that the artifact makes a novelty claim without any contrast to prior work. It then names specific, relevant prior works (Zheng et al., Dubois et al.) and articulates the sharp delta that needs to be established (methodological advance vs. domain transfer), which is the essence of a strong novelty assessment.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that explicitly flags which parts of its output are assumptions that require user verification (the specific names of benchmarks and cited papers). This is a clear and responsible disclosure of missing evidence for its concrete suggestions.\",\n    \"RX.3\": \"The request was a broad 'Make this stronger.' The agent's response, which includes both a direct rewrite and a deeper critique of the underlying scientific claims, is perfectly aligned with this request. It does not drift into irrelevant topics.\",\n    \"RX.4\": \"The agent's output is free of regressions. Crucially, it identifies patterns in the original artifact that could be considered harmful in a scientific context: overclaiming, potential for statistically invalid conclusions due to collinearity, and a logically inconsistent evaluation. By flagging these, it helps the user avoid downstream harm.\",\n    \"RX.5\": \"The agent provides a clear, itemized list of the major changes made in the rewrite, along with the specific reasoning for each change. This 'Notes on what the rewrite changed' section makes the edits fully traceable and explains the 'why' behind every significant, non-cosmetic modification.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "text_to_sql_debias_judge",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent identifies multiple load-bearing conceptual issues (statistical identifiability, contradictory ground truth) and proposes a structural reframing (problem -> method -> payoff) that makes the argument much clearer. This goes far beyond surface edits and addresses the core logic of the artifact.",
+      "R1.4": "The agent correctly identifies that the artifact makes a novelty claim without any contrast to prior work. It then names specific, relevant prior works (Zheng et al., Dubois et al.) and articulates the sharp delta that needs to be established (methodological advance vs. domain transfer), which is the essence of a strong novelty assessment.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that explicitly flags which parts of its output are assumptions that require user verification (the specific names of benchmarks and cited papers). This is a clear and responsible disclosure of missing evidence for its concrete suggestions.",
+      "RX.3": "The request was a broad 'Make this stronger.' The agent's response, which includes both a direct rewrite and a deeper critique of the underlying scientific claims, is perfectly aligned with this request. It does not drift into irrelevant topics.",
+      "RX.4": "The agent's output is free of regressions. Crucially, it identifies patterns in the original artifact that could be considered harmful in a scientific context: overclaiming, potential for statistically invalid conclusions due to collinearity, and a logically inconsistent evaluation. By flagging these, it helps the user avoid downstream harm.",
+      "RX.5": "The agent provides a clear, itemized list of the major changes made in the rewrite, along with the specific reasoning for each change. This 'Notes on what the rewrite changed' section makes the edits fully traceable and explains the 'why' behind every significant, non-cosmetic modification."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

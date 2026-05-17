@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_152",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2616,
+  "output_tokens": 610,
+  "latency_ms": 29338,
+  "cost_usd": 0.00937,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent proposes a coherent end-to-end section plan ('motivation \u2192 contributions list \u2192 related work \u2192 method \u2192 experiments') and provides a clear rationale for the change ('Currently the reader does not know what is being claimed until after the experiments.'). This directly matches the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section that explicitly flags its own knowledge gaps. It qualifies its major critique on novelty by stating it hasn't verified the existence of prior art mentioned in the artifact, and it notes that several of its citation suggestions are from memory and require verification. This goes beyond flagging one or two claims and systematically marks the recommendations that depend on unverified external information, which aligns well with the spirit of the s=5 anchor.\",\n    \"RX.3\": \"The delegation was a broad 'Review this section.' The agent provided a comprehensive and high-quality review of the artifact, which is exactly what was requested. The output is perfectly within the scope of the delegation.\",\n    \"RX.4\": \"The agent's critique is sound and does not introduce any errors or fabrications. Instead, it correctly identifies multiple harmful patterns in the original artifact that would be serious flaws in a scientific publication, such as an overstated novelty claim, an unverified core assumption, missing baselines, and potential data leakage (tuning on the test set). This directly aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite. Each point of critique is effectively a proposed 'change' to the artifact. Every one of these points is meticulously justified with a reason and is clearly traceable to a specific claim or omission in the source artifact. For the external knowledge it introduces (e.g., suggesting citations), it explicitly discloses the source as its own memory and recommends verification, which is a strong form of provenance.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent proposes a coherent end-to-end section plan ('motivation \u2192 contributions list \u2192 related work \u2192 method \u2192 experiments') and provides a clear rationale for the change ('Currently the reader does not know what is being claimed until after the experiments.'). This directly matches the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section that explicitly flags its own knowledge gaps. It qualifies its major critique on novelty by stating it hasn't verified the existence of prior art mentioned in the artifact, and it notes that several of its citation suggestions are from memory and require verification. This goes beyond flagging one or two claims and systematically marks the recommendations that depend on unverified external information, which aligns well with the spirit of the s=5 anchor.",
+      "RX.3": "The delegation was a broad 'Review this section.' The agent provided a comprehensive and high-quality review of the artifact, which is exactly what was requested. The output is perfectly within the scope of the delegation.",
+      "RX.4": "The agent's critique is sound and does not introduce any errors or fabrications. Instead, it correctly identifies multiple harmful patterns in the original artifact that would be serious flaws in a scientific publication, such as an overstated novelty claim, an unverified core assumption, missing baselines, and potential data leakage (tuning on the test set). This directly aligns with the s=5 anchor.",
+      "RX.5": "The agent's output is a critique, not a rewrite. Each point of critique is effectively a proposed 'change' to the artifact. Every one of these points is meticulously justified with a reason and is clearly traceable to a specific claim or omission in the source artifact. For the external knowledge it introduces (e.g., suggesting citations), it explicitly discloses the source as its own memory and recommends verification, which is a strong form of provenance."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

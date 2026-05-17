@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_065",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2445,
+  "output_tokens": 609,
+  "latency_ms": 25434,
+  "cost_usd": 0.009146,
+  "raw": "{\n  \"judge_id\": \"epistemologist_v1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the load-bearing conceptual error in the draft: confusing discrimination with calibration, and in-distribution evaluation with distribution shift. It shows precisely where the draft's claims drift from its evidence and proposes a much tighter, more accurate reframing of the contribution around what the experiments actually support. This is a textbook example of the s=5 anchor.\",\n    \"RX.1\": \"The agent provides a dedicated section, 'Unverified items in this critique,' which explicitly flags the parts of its recommendation that require external data or verification. It uses placeholders like '[report]' for missing evidence and notes that its suggested citations are from memory and need checking. This fulfills the s=5 anchor of marking confidence and missing evidence for each recommendation.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent provided a detailed critique and a complete rewrite that addresses the identified issues. This is exactly within the scope of the request. The output does not drift to other topics or fail to address the core task. It is a perfect adherence to the requested scope.\",\n    \"RX.4\": \"The agent's output actively reduces downstream harm. The original draft's unsupported claims ('well calibrated under distribution shift') constitute a form of scientific overclaiming that could mislead future work. The agent identifies this harmful pattern and proposes a revised draft that is scientifically sound and honest. It introduces no new errors or regressions, using placeholders to avoid fabrication.\",\n    \"RX.5\": \"The agent's output structure\u2014a detailed, point-by-point critique followed by a revised draft\u2014makes every change fully traceable. Each modification in the rewrite (e.g., changing 'calibrated' to 'discriminates', adding statistical tests, clarifying the experimental setup) is directly justified by a corresponding point in the preceding critique. This provides a clear reason for every non-cosmetic change.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "epistemologist_v1",
+    "active_set_recognized": [
+      "R1.1",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the load-bearing conceptual error in the draft: confusing discrimination with calibration, and in-distribution evaluation with distribution shift. It shows precisely where the draft's claims drift from its evidence and proposes a much tighter, more accurate reframing of the contribution around what the experiments actually support. This is a textbook example of the s=5 anchor.",
+      "RX.1": "The agent provides a dedicated section, 'Unverified items in this critique,' which explicitly flags the parts of its recommendation that require external data or verification. It uses placeholders like '[report]' for missing evidence and notes that its suggested citations are from memory and need checking. This fulfills the s=5 anchor of marking confidence and missing evidence for each recommendation.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent provided a detailed critique and a complete rewrite that addresses the identified issues. This is exactly within the scope of the request. The output does not drift to other topics or fail to address the core task. It is a perfect adherence to the requested scope.",
+      "RX.4": "The agent's output actively reduces downstream harm. The original draft's unsupported claims ('well calibrated under distribution shift') constitute a form of scientific overclaiming that could mislead future work. The agent identifies this harmful pattern and proposes a revised draft that is scientifically sound and honest. It introduces no new errors or regressions, using placeholders to avoid fabrication.",
+      "RX.5": "The agent's output structure\u2014a detailed, point-by-point critique followed by a revised draft\u2014makes every change fully traceable. Each modification in the rewrite (e.g., changing 'calibrated' to 'discriminates', adding statistical tests, clarifying the experimental setup) is directly justified by a corresponding point in the preceding critique. This provides a clear reason for every non-cosmetic change."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

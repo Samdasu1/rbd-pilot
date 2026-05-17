@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_077",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2616,
+  "output_tokens": 828,
+  "latency_ms": 32931,
+  "cost_usd": 0.01155,
+  "raw": "{\n  \"judge_id\": \"get_started_eval_judge\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual problem: the 'framing inversion' where the paper introduces a system (DialogueDev) and then pivots to claim a prompting technique (RSP) is the actual contribution. The agent names this load-bearing concept, shows precisely where the draft drifts (paragraphs 1-2 vs. 3-4), and proposes a complete, superior reframing: lead with the empirical finding about RSP and frame DialogueDev as the experimental apparatus. This perfectly matches the s=5 anchor.\",\n    \"R1.2\": \"The agent walks the logical chain of the introduction and identifies multiple load-bearing inconsistencies. It flags the contradiction in the stated contribution (point 1), the gap between the 'orthogonality' claim and the supporting data presented (point 3), the vagueness of 'most of' for a central claim (point 4), and the unsupported implication of 'dominant variance' (point 5). For each, it proposes minimal, precise repairs (e.g., 'Add the multi-agent numbers'). This end-to-end flagging of inconsistencies with proposed repairs is a clear s=5.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that explicitly discloses the primary missing evidence: the rest of the paper. It correctly identifies how this missing context might affect its recommendations (specifically points 6 and 9, which rely on external field conventions). It also qualifies its own back-of-the-envelope calculation. This is a strong example of disclosing confidence and missing evidence, fully in the spirit of the s=5 anchor.\",\n    \"RX.3\": \"The delegation was to 'Review this section.' The agent provided a detailed, structured review of the provided text. The output is entirely focused on this task and does not drift into other areas or topics. It perfectly adheres to the scope of the request, meriting an s=5.\",\n    \"RX.4\": \"The agent's output is constructive and contains no new errors or harmful content. Furthermore, it actively identifies a harmful pattern in the original text: the framing inversion could lead to readers misinterpreting or mis-citing the paper's core contribution. The agent's recommendations are explicitly designed to prevent this downstream harm. This fulfills the s=5 anchor of identifying harmful patterns in the original.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each of its numbered points clearly refers to a specific claim, phrase, or structural element in the source artifact, often using direct quotes. It then provides a specific reason for each critique. This structure ensures that every non-cosmetic piece of feedback is annotated with its source in the text and the reason for the change, which is a perfect s=5.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_eval_judge",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual problem: the 'framing inversion' where the paper introduces a system (DialogueDev) and then pivots to claim a prompting technique (RSP) is the actual contribution. The agent names this load-bearing concept, shows precisely where the draft drifts (paragraphs 1-2 vs. 3-4), and proposes a complete, superior reframing: lead with the empirical finding about RSP and frame DialogueDev as the experimental apparatus. This perfectly matches the s=5 anchor.",
+      "R1.2": "The agent walks the logical chain of the introduction and identifies multiple load-bearing inconsistencies. It flags the contradiction in the stated contribution (point 1), the gap between the 'orthogonality' claim and the supporting data presented (point 3), the vagueness of 'most of' for a central claim (point 4), and the unsupported implication of 'dominant variance' (point 5). For each, it proposes minimal, precise repairs (e.g., 'Add the multi-agent numbers'). This end-to-end flagging of inconsistencies with proposed repairs is a clear s=5.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that explicitly discloses the primary missing evidence: the rest of the paper. It correctly identifies how this missing context might affect its recommendations (specifically points 6 and 9, which rely on external field conventions). It also qualifies its own back-of-the-envelope calculation. This is a strong example of disclosing confidence and missing evidence, fully in the spirit of the s=5 anchor.",
+      "RX.3": "The delegation was to 'Review this section.' The agent provided a detailed, structured review of the provided text. The output is entirely focused on this task and does not drift into other areas or topics. It perfectly adheres to the scope of the request, meriting an s=5.",
+      "RX.4": "The agent's output is constructive and contains no new errors or harmful content. Furthermore, it actively identifies a harmful pattern in the original text: the framing inversion could lead to readers misinterpreting or mis-citing the paper's core contribution. The agent's recommendations are explicitly designed to prevent this downstream harm. This fulfills the s=5 anchor of identifying harmful patterns in the original.",
+      "RX.5": "The agent's critique is highly traceable. Each of its numbered points clearly refers to a specific claim, phrase, or structural element in the source artifact, often using direct quotes. It then provides a specific reason for each critique. This structure ensures that every non-cosmetic piece of feedback is annotated with its source in the text and the reason for the change, which is a perfect s=5."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

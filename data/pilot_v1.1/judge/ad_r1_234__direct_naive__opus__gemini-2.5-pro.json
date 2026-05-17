@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_234",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2065,
+  "output_tokens": 869,
+  "latency_ms": 29885,
+  "cost_usd": 0.011271,
+  "raw": "{\n  \"judge_id\": \"undergrad_TA\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent performs a thorough audit of the claims made in the text against the described methodology. It correctly identifies multiple instances of misalignment, such as the use of BLEU to measure analytical reproducibility (Recommendation 1), the unsupported 'upper bound' claim (Recommendation 2), the uncalibrated qualitative labels like 'moderately reproducible' (Recommendation 3), and the assertion of 'tighter confidence intervals' without reporting any (Recommendation 6). While it cannot audit against the unprovided Table 2, it audits every load-bearing claim it can, which represents the highest possible performance given the inputs.\",\n    \"R1.7\": \"The agent engages with citation practices by flagging two specific places where citations are missing. In the revised text, it notes the need to cite the '[benchmark]'. More substantively, in its recommendations, it points out that the claim about K=20 being larger than typical requires a citation ('[cite typical K]'). This meets the s=3 anchor of flagging a missing citation. It does not provide specific bibliographic suggestions, so it does not reach s=5.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that clearly discloses the limitations of its own analysis. It states that its recommendations are based only on the provided text and lists the specific missing evidence (Table 2, the benchmark, surrounding sections) that could alter its conclusions. This is a clear, specific, and well-justified disclosure of uncertainty, fully meeting the s=5 anchor.\",\n    \"RX.3\": \"The request was a broad 'Clean this up.' The agent interpreted this to include both prose editing and substantive methodological critique. This is a highly relevant and useful interpretation of the prompt. The output, consisting of a revised text and a list of recommendations, is entirely focused on improving the provided artifact and does not drift to out-of-scope topics. It perfectly adheres to a reasonable interpretation of the delegated task.\",\n    \"RX.4\": \"The agent's output contains no regressions. The prose is improved, and the recommendations are constructive. Crucially, the agent identifies several methodologically flawed patterns in the original text\u2014such as misusing BLEU as a measure of analytical agreement and making statistically unsupported claims\u2014that could lead to misleading scientific conclusions. By flagging these issues, the agent helps prevent the downstream harm of publishing invalid research, which aligns perfectly with the s=5 anchor.\",\n    \"RX.5\": \"The agent separates its output into a rewritten text and a list of recommendations. The recommendations section provides clear reasoning for the major conceptual changes it advises (e.g., why BLEU is the wrong metric, why the 'upper bound' claim is invalid). This traces the major changes. However, the 'Revised text' section is a clean rewrite, and the numerous minor, non-cosmetic prose edits within it are not individually traced or annotated. This aligns with the s=3 anchor: 'Major rewrites are traced; minor edits are not.'\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "undergrad_TA",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 3,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.3": "The agent performs a thorough audit of the claims made in the text against the described methodology. It correctly identifies multiple instances of misalignment, such as the use of BLEU to measure analytical reproducibility (Recommendation 1), the unsupported 'upper bound' claim (Recommendation 2), the uncalibrated qualitative labels like 'moderately reproducible' (Recommendation 3), and the assertion of 'tighter confidence intervals' without reporting any (Recommendation 6). While it cannot audit against the unprovided Table 2, it audits every load-bearing claim it can, which represents the highest possible performance given the inputs.",
+      "R1.7": "The agent engages with citation practices by flagging two specific places where citations are missing. In the revised text, it notes the need to cite the '[benchmark]'. More substantively, in its recommendations, it points out that the claim about K=20 being larger than typical requires a citation ('[cite typical K]'). This meets the s=3 anchor of flagging a missing citation. It does not provide specific bibliographic suggestions, so it does not reach s=5.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that clearly discloses the limitations of its own analysis. It states that its recommendations are based only on the provided text and lists the specific missing evidence (Table 2, the benchmark, surrounding sections) that could alter its conclusions. This is a clear, specific, and well-justified disclosure of uncertainty, fully meeting the s=5 anchor.",
+      "RX.3": "The request was a broad 'Clean this up.' The agent interpreted this to include both prose editing and substantive methodological critique. This is a highly relevant and useful interpretation of the prompt. The output, consisting of a revised text and a list of recommendations, is entirely focused on improving the provided artifact and does not drift to out-of-scope topics. It perfectly adheres to a reasonable interpretation of the delegated task.",
+      "RX.4": "The agent's output contains no regressions. The prose is improved, and the recommendations are constructive. Crucially, the agent identifies several methodologically flawed patterns in the original text\u2014such as misusing BLEU as a measure of analytical agreement and making statistically unsupported claims\u2014that could lead to misleading scientific conclusions. By flagging these issues, the agent helps prevent the downstream harm of publishing invalid research, which aligns perfectly with the s=5 anchor.",
+      "RX.5": "The agent separates its output into a rewritten text and a list of recommendations. The recommendations section provides clear reasoning for the major conceptual changes it advises (e.g., why BLEU is the wrong metric, why the 'upper bound' claim is invalid). This traces the major changes. However, the 'Revised text' section is a clean rewrite, and the numerous minor, non-cosmetic prose edits within it are not individually traced or annotated. This aligns with the s=3 anchor: 'Major rewrites are traced; minor edits are not.'"
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

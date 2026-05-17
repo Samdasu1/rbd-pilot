@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1900,
-  "output_tokens": 1701,
-  "latency_ms": 28155,
-  "cost_usd": 0.06053,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 5, \"R1.6\": 5, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"Thoroughly traces the argument, flags the key contradiction (no Lyapunov vs. Lyapunov-based proof), tension between black-box claims and Q-based Lyapunov structure, robustness overclaim vs. 20% violations, ambiguity of the LQR baseline, and the strong 'deployment-ready' claim. Offers concrete, minimal repair paths for each.\",\n    \"R1.6\": \"Provides a polished, coherent suggested revision and a targeted list of minor phrasing fixes. The edited passage reads consistently and clearly without loss of meaning.\",\n    \"RX.1\": \"Clearly marks unresolved issues and where author input is needed (e.g., Lyapunov framing, assumptions, metrics, robustness bound, number of trials). However, it does not provide per-recommendation confidence levels or systematically note missing evidence for every change.\",\n    \"RX.3\": \"Stays tightly focused on cleaning up the abstract: diagnosing inconsistencies, clarifying claims, and proposing revisions. No scope drift.\",\n    \"RX.4\": \"Introduces no new claims as facts; avoids fabrications; explicitly warns about potential overclaiming and suggests safer framings, reducing downstream risk.\",\n    \"RX.5\": \"Cites specific original phrases to justify changes and groups edits by issue, but the proposed revision is not annotated line-by-line with sources/reasons for every non-cosmetic change.\"\n  },\n  \"confidence\": {\"R1.2\": 0.86, \"R1.6\": 0.82, \"RX.1\": 0.72, \"RX.3\": 0.9, \"RX.4\": 0.84, \"RX.5\": 0.7},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 30185,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.2\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":5,\"R1.6\":3,\"RX.1\":3,\"RX.3\":3,\"RX.4\":1,\"RX.5\":2},\"rationale\":{\"R1.2\":\"The output follows the main argument chain and flags the load-bearing contradictions around black-box modeling, Lyapunov proof structure, robustness bounds, LQR comparison, and deployment claims, with plausible minimal repair options.\",\"R1.6\":\"It improves terminology and offers a cleaner rewrite, but the suggested revision is incomplete and includes unresolved placeholders, so it is not a full careful copy-edit pass.\",\"RX.1\":\"It discloses uncertainty around the Lyapunov contradiction, proof scope, and missing assumptions, but recommendations are not individually marked with confidence or missing evidence.\",\"RX.3\":\"The response mostly addresses logical consistency and polish, but it declares coverage of dimensions outside the active set and does not explicitly cover the full agreed RX set.\",\"RX.4\":\"The critique identifies harmful overclaims, but the suggested revision introduces unsupported specifics such as a terminal-cost construction, primal-dual warm start, RMS tracking error, and LQR applied to a linearized plant.\",\"RX.5\":\"Several major issues are traceable to source sentences, but the rewrite contains non-cosmetic changes without clear source or reason, and some added details lack provenance.\"},\"confidence\":{\"R1.2\":0.88,\"R1.6\":0.82,\"RX.1\":0.84,\"RX.3\":0.8,\"RX.4\":0.87,\"RX.5\":0.83},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.2",
       "R1.6",
@@ -34,27 +34,27 @@
     ],
     "scores": {
       "R1.2": 5,
-      "R1.6": 5,
+      "R1.6": 3,
       "RX.1": 3,
-      "RX.3": 5,
-      "RX.4": 5,
-      "RX.5": 3
+      "RX.3": 3,
+      "RX.4": 1,
+      "RX.5": 2
     },
     "rationale": {
-      "R1.2": "Thoroughly traces the argument, flags the key contradiction (no Lyapunov vs. Lyapunov-based proof), tension between black-box claims and Q-based Lyapunov structure, robustness overclaim vs. 20% violations, ambiguity of the LQR baseline, and the strong 'deployment-ready' claim. Offers concrete, minimal repair paths for each.",
-      "R1.6": "Provides a polished, coherent suggested revision and a targeted list of minor phrasing fixes. The edited passage reads consistently and clearly without loss of meaning.",
-      "RX.1": "Clearly marks unresolved issues and where author input is needed (e.g., Lyapunov framing, assumptions, metrics, robustness bound, number of trials). However, it does not provide per-recommendation confidence levels or systematically note missing evidence for every change.",
-      "RX.3": "Stays tightly focused on cleaning up the abstract: diagnosing inconsistencies, clarifying claims, and proposing revisions. No scope drift.",
-      "RX.4": "Introduces no new claims as facts; avoids fabrications; explicitly warns about potential overclaiming and suggests safer framings, reducing downstream risk.",
-      "RX.5": "Cites specific original phrases to justify changes and groups edits by issue, but the proposed revision is not annotated line-by-line with sources/reasons for every non-cosmetic change."
+      "R1.2": "The output follows the main argument chain and flags the load-bearing contradictions around black-box modeling, Lyapunov proof structure, robustness bounds, LQR comparison, and deployment claims, with plausible minimal repair options.",
+      "R1.6": "It improves terminology and offers a cleaner rewrite, but the suggested revision is incomplete and includes unresolved placeholders, so it is not a full careful copy-edit pass.",
+      "RX.1": "It discloses uncertainty around the Lyapunov contradiction, proof scope, and missing assumptions, but recommendations are not individually marked with confidence or missing evidence.",
+      "RX.3": "The response mostly addresses logical consistency and polish, but it declares coverage of dimensions outside the active set and does not explicitly cover the full agreed RX set.",
+      "RX.4": "The critique identifies harmful overclaims, but the suggested revision introduces unsupported specifics such as a terminal-cost construction, primal-dual warm start, RMS tracking error, and LQR applied to a linearized plant.",
+      "RX.5": "Several major issues are traceable to source sentences, but the rewrite contains non-cosmetic changes without clear source or reason, and some added details lack provenance."
     },
     "confidence": {
-      "R1.2": 0.86,
+      "R1.2": 0.88,
       "R1.6": 0.82,
-      "RX.1": 0.72,
-      "RX.3": 0.9,
-      "RX.4": 0.84,
-      "RX.5": 0.7
+      "RX.1": 0.84,
+      "RX.3": 0.8,
+      "RX.4": 0.87,
+      "RX.5": 0.83
     },
     "blockers": []
   },

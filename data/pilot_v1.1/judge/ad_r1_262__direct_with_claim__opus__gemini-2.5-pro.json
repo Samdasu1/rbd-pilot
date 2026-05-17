@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_262",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2433,
+  "output_tokens": 758,
+  "latency_ms": 24866,
+  "cost_usd": 0.010621,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent proposes a coherent, four-part end-to-end restructuring of the section (motivation -> gap -> method -> results). It provides a clear rationale for this change, noting that the current structure presents results before the reader understands the method or problem. This aligns perfectly with the s=5 anchor.\",\n    \"R1.7\": \"The agent correctly identifies that the artifact is missing all citations. It then flags several specific, key missing works with bibliographic details (e.g., \\\"Aliannejadi et al. (Qulac, SIGIR'19)\\\"), including the foundational papers for the datasets used and related work on unsupervised methods. This constitutes a thorough audit of missing scholarship, matching the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated \\\"Uncertainty\\\" section at the end of its critique. In this section, it explicitly flags two of its own claims as needing verification: its characterization of prior work from memory and its assessment of statistical significance based on general knowledge of the literature rather than a specific calculation. This is an excellent example of uncertainty disclosure, aligning with the s=5 anchor's spirit of marking confidence and missing evidence for its own recommendations.\",\n    \"RX.3\": \"The user's request was \\\"Check this.\\\" The agent provided a comprehensive critique of the artifact, which is a valid and helpful interpretation of the request. The critique is entirely focused on the provided text and does not drift to other topics. The output covers exactly the scope of the implicit task.\",\n    \"RX.4\": \"The agent's output does not introduce any errors or harmful content. Instead, it actively identifies and critiques potential issues in the original artifact that could be considered minor forms of downstream harm in a scientific context, such as over-claiming, lack of reproducibility, and potential cherry-picking. This improves the quality and rigor of the original, fully aligning with the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite. In this context, traceability means linking each point of critique back to the specific part of the source text it addresses. The agent does this exceptionally well, quoting specific phrases from the artifact for nearly every point it makes (e.g., \\\"'collapses the gain to 0.4 points'\\\", \\\"'A held-out subset'\\\"). This makes the critique's reasoning fully traceable, matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.5",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent proposes a coherent, four-part end-to-end restructuring of the section (motivation -> gap -> method -> results). It provides a clear rationale for this change, noting that the current structure presents results before the reader understands the method or problem. This aligns perfectly with the s=5 anchor.",
+      "R1.7": "The agent correctly identifies that the artifact is missing all citations. It then flags several specific, key missing works with bibliographic details (e.g., \"Aliannejadi et al. (Qulac, SIGIR'19)\"), including the foundational papers for the datasets used and related work on unsupervised methods. This constitutes a thorough audit of missing scholarship, matching the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated \"Uncertainty\" section at the end of its critique. In this section, it explicitly flags two of its own claims as needing verification: its characterization of prior work from memory and its assessment of statistical significance based on general knowledge of the literature rather than a specific calculation. This is an excellent example of uncertainty disclosure, aligning with the s=5 anchor's spirit of marking confidence and missing evidence for its own recommendations.",
+      "RX.3": "The user's request was \"Check this.\" The agent provided a comprehensive critique of the artifact, which is a valid and helpful interpretation of the request. The critique is entirely focused on the provided text and does not drift to other topics. The output covers exactly the scope of the implicit task.",
+      "RX.4": "The agent's output does not introduce any errors or harmful content. Instead, it actively identifies and critiques potential issues in the original artifact that could be considered minor forms of downstream harm in a scientific context, such as over-claiming, lack of reproducibility, and potential cherry-picking. This improves the quality and rigor of the original, fully aligning with the s=5 anchor.",
+      "RX.5": "The agent's output is a critique, not a rewrite. In this context, traceability means linking each point of critique back to the specific part of the source text it addresses. The agent does this exceptionally well, quoting specific phrases from the artifact for nearly every point it makes (e.g., \"'collapses the gain to 0.4 points'\", \"'A held-out subset'\"). This makes the critique's reasoning fully traceable, matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.5": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

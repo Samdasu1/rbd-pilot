@@ -1,0 +1,71 @@
+{
+  "example_id": "ad_r1_213",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2630,
+  "output_tokens": 828,
+  "latency_ms": 28932,
+  "cost_usd": 0.011567,
+  "raw": "{\n  \"judge_id\": \"esr_bench_v1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every load-bearing claim in the text. It identifies multiple inconsistencies, including an arithmetic error in the reported gain (2.1 vs 2.3), a logical contradiction between its own results and a cited paper's (2.1 F1 is not 'in line with' 6.4 F1), and a major claim ('retrieval quality is no longer the primary bottleneck') that has no supporting evidence in the section.\",\n    \"R1.4\": \"The agent provides a sophisticated novelty assessment. It maps the work against the two key prior works mentioned (Min et al., Patel and Rajagopal), correctly identifies that the main contribution is porting an existing technique, and flags that the novelty framing is 'muddled'. It then suggests a precise, sharp articulation of the delta, distinguishing the actual contribution from the rhetorical framing.\",\n    \"R1.7\": \"The agent audits every load-bearing citation mentioned or implied in the text. It flags missing citations for specific concepts (EDIT-F1, specific 'prior work' pipelines) and, most importantly, calls for verification of the key citation (Patel and Rajagopal, 2021) on which the entire contribution rests, questioning both its existence and the accuracy of the reported number.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states which external facts it cannot verify (the existence and content of cited papers) and explains how this uncertainty affects its conclusions, noting that some critiques (internal arithmetic) stand regardless, while others (claim alignment with prior work) depend on the unverified information. This is a model of uncertainty disclosure.\",\n    \"RX.3\": \"The user's request was general ('Help me with this section'). The agent's output, a detailed critique aimed at improving the scientific quality of the text, is perfectly within the scope of this request. There is no scope drift.\",\n    \"RX.4\": \"The agent's output corrects errors (arithmetic, logical inconsistencies) and removes unsupported claims from the original text. It introduces no new errors or harmful content. By identifying patterns of weak argumentation and unsupported claims, it helps improve the quality and integrity of the artifact, thus avoiding downstream harm.\",\n    \"RX.5\": \"The agent's critique provides a clear reason for every suggested change. The 'Suggested rewrite' section is illustrative, and every change within it is directly traceable to a specific point made in the 'Major issues' list. The agent uses placeholders to indicate where information must come from the original author, maintaining perfect provenance.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_v1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every load-bearing claim in the text. It identifies multiple inconsistencies, including an arithmetic error in the reported gain (2.1 vs 2.3), a logical contradiction between its own results and a cited paper's (2.1 F1 is not 'in line with' 6.4 F1), and a major claim ('retrieval quality is no longer the primary bottleneck') that has no supporting evidence in the section.",
+      "R1.4": "The agent provides a sophisticated novelty assessment. It maps the work against the two key prior works mentioned (Min et al., Patel and Rajagopal), correctly identifies that the main contribution is porting an existing technique, and flags that the novelty framing is 'muddled'. It then suggests a precise, sharp articulation of the delta, distinguishing the actual contribution from the rhetorical framing.",
+      "R1.7": "The agent audits every load-bearing citation mentioned or implied in the text. It flags missing citations for specific concepts (EDIT-F1, specific 'prior work' pipelines) and, most importantly, calls for verification of the key citation (Patel and Rajagopal, 2021) on which the entire contribution rests, questioning both its existence and the accuracy of the reported number.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states which external facts it cannot verify (the existence and content of cited papers) and explains how this uncertainty affects its conclusions, noting that some critiques (internal arithmetic) stand regardless, while others (claim alignment with prior work) depend on the unverified information. This is a model of uncertainty disclosure.",
+      "RX.3": "The user's request was general ('Help me with this section'). The agent's output, a detailed critique aimed at improving the scientific quality of the text, is perfectly within the scope of this request. There is no scope drift.",
+      "RX.4": "The agent's output corrects errors (arithmetic, logical inconsistencies) and removes unsupported claims from the original text. It introduces no new errors or harmful content. By identifying patterns of weak argumentation and unsupported claims, it helps improve the quality and integrity of the artifact, thus avoiding downstream harm.",
+      "RX.5": "The agent's critique provides a clear reason for every suggested change. The 'Suggested rewrite' section is illustrative, and every change within it is directly traceable to a specific point made in the 'Major issues' list. The agent uses placeholders to indicate where information must come from the original author, maintaining perfect provenance."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

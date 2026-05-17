@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_213",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2266,
+  "output_tokens": 822,
+  "latency_ms": 30059,
+  "cost_usd": 0.011052,
+  "raw": "{\n  \"judge_id\": \"esr_bench_v1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every numerical claim in the text, identifying multiple inconsistencies (e.g., the 2.9 F1 gap vs. the claimed 2.3 F1 contribution, and the 2.1 F1 ablation result). It also flags a major qualitative claim ('retrieval is no longer the bottleneck') as entirely unsupported by the provided evidence. This is a perfect execution of auditing claims against evidence.\",\n    \"R1.4\": \"The agent critiques the artifact's novelty claims by questioning the framing ('retrieve-then-rewrite' is mis-advertised) and the foundation of the main contribution (the questionable 'Patel and Rajagopal (2021)' citation). This correctly identifies the rhetorical vs. sharp delta and scrutinizes the claimed advance over prior work, which is the essence of novelty assessment within this task's scope.\",\n    \"R1.7\": \"The agent audits both citations mentioned in the text. It flags the primary, load-bearing citation ('Patel and Rajagopal (2021)') as potentially incorrect or non-existent, explaining precisely why this is a critical issue. This goes beyond simply flagging a citation and constitutes a deep audit of the scholarship presented.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states its inability to verify the 'Patel and Rajagopal (2021)' citation from its own knowledge, explaining that the recommendation is based on non-recognition. It contrasts this with its high confidence in the arithmetic and logical checks, which are verifiable from the text alone. This is a model example of responsible uncertainty disclosure.\",\n    \"RX.3\": \"The agent's output is a detailed, structured critique of the provided artifact. It perfectly matches the implicit request in 'Help me with this section' by providing concrete, actionable feedback without drifting into rewriting the text or discussing unrelated topics. The scope adherence is exact.\",\n    \"RX.4\": \"The output is designed to prevent downstream harm (in a research context) by identifying and correcting errors in the original artifact, such as incorrect arithmetic, unsupported claims, and a questionable citation. It introduces no new errors and its tone is constructive, making it a clear example of harm avoidance.\",\n    \"RX.5\": \"Every point of critique is explicitly traced back to a specific quote, number, or claim in the source artifact. For example, item 1 directly quotes the F1 scores, and item 3 quotes the system's name. This makes the reasoning for every recommendation perfectly transparent and traceable.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_v1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every numerical claim in the text, identifying multiple inconsistencies (e.g., the 2.9 F1 gap vs. the claimed 2.3 F1 contribution, and the 2.1 F1 ablation result). It also flags a major qualitative claim ('retrieval is no longer the bottleneck') as entirely unsupported by the provided evidence. This is a perfect execution of auditing claims against evidence.",
+      "R1.4": "The agent critiques the artifact's novelty claims by questioning the framing ('retrieve-then-rewrite' is mis-advertised) and the foundation of the main contribution (the questionable 'Patel and Rajagopal (2021)' citation). This correctly identifies the rhetorical vs. sharp delta and scrutinizes the claimed advance over prior work, which is the essence of novelty assessment within this task's scope.",
+      "R1.7": "The agent audits both citations mentioned in the text. It flags the primary, load-bearing citation ('Patel and Rajagopal (2021)') as potentially incorrect or non-existent, explaining precisely why this is a critical issue. This goes beyond simply flagging a citation and constitutes a deep audit of the scholarship presented.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states its inability to verify the 'Patel and Rajagopal (2021)' citation from its own knowledge, explaining that the recommendation is based on non-recognition. It contrasts this with its high confidence in the arithmetic and logical checks, which are verifiable from the text alone. This is a model example of responsible uncertainty disclosure.",
+      "RX.3": "The agent's output is a detailed, structured critique of the provided artifact. It perfectly matches the implicit request in 'Help me with this section' by providing concrete, actionable feedback without drifting into rewriting the text or discussing unrelated topics. The scope adherence is exact.",
+      "RX.4": "The output is designed to prevent downstream harm (in a research context) by identifying and correcting errors in the original artifact, such as incorrect arithmetic, unsupported claims, and a questionable citation. It introduces no new errors and its tone is constructive, making it a clear example of harm avoidance.",
+      "RX.5": "Every point of critique is explicitly traced back to a specific quote, number, or claim in the source artifact. For example, item 1 directly quotes the F1 scores, and item 3 quotes the system's name. This makes the reasoning for every recommendation perfectly transparent and traceable."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

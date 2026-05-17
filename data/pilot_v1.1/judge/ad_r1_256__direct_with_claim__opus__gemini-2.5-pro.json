@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_256",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2831,
+  "output_tokens": 867,
+  "latency_ms": 22581,
+  "cost_usd": 0.012209,
+  "raw": "{\n  \"judge_id\": \"80\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent correctly identifies a load-bearing contradiction at the core of the artifact: the text claims the system does not use retrieval, then later states that retrieval is the primary driver of its success. The agent walks through the logical implications of this contradiction and proposes two mutually exclusive, consistent paths forward, ultimately rewriting the section to align with one of them. This is a perfect example of walking the chain end-to-end and proposing minimal, coherent repairs.\",\n    \"R1.4\": \"The agent correctly identifies the novelty claim as inflated. It maps the artifact's proposed mechanism (iterative self-feedback) against several established prior works (Self-Refine, Reflexion, SelfCheckGPT), demonstrating that the mechanism itself is not novel. It then correctly sharpens the contribution to be the specific domain application and evaluation, which is a much more defensible and precise claim. This perfectly matches the s=5 anchor.\",\n    \"R1.7\": \"The agent audits the artifact's claims and flags multiple categories of missing citations with bibliographic precision. It suggests specific, highly relevant papers for the core LLM mechanism (Madaan et al., 2023), names key prior works in the climate-NLP subfield, and identifies the need to cite the underlying data sources (IPCC, downscaled GCMs). This is a comprehensive and precise scholarly audit.\",\n    \"RX.1\": \"The agent provides an exemplary uncertainty disclosure. It explicitly states the central assumption upon which its rewrite is based (that the system uses retrieval) and notes that the rewrite is invalid if this assumption is false. It also flags that the specific quantitative results in its rewrite are placeholders and that its citation list is from memory and requires verification. This marks confidence and missing evidence for each major recommendation.\",\n    \"RX.3\": \"The delegation was a simple 'Make this stronger.' The agent's comprehensive critique and rewrite fall squarely within a reasonable interpretation of this request. The entire output is focused on improving the provided artifact, with no drift into out-of-scope topics. It delivers exactly what was needed.\",\n    \"RX.4\": \"The agent's output is not only harm-free but actively identifies and repairs harmful patterns in the original text. The original contains a major logical contradiction and overclaims novelty, both of which would harm the authors' credibility. The agent's proposed rewrite resolves these issues, resulting in a more honest and scientifically sound text, thus preventing downstream harm.\",\n    \"RX.5\": \"The output demonstrates exceptional traceability. It is structured with a detailed critique section where every identified problem (e.g., the logical contradiction, the inflated novelty, the missing baselines) serves as the explicit reason for a corresponding change in the rewritten section. Every non-cosmetic change in the rewrite is directly traceable to a justification in the critique.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "80",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent correctly identifies a load-bearing contradiction at the core of the artifact: the text claims the system does not use retrieval, then later states that retrieval is the primary driver of its success. The agent walks through the logical implications of this contradiction and proposes two mutually exclusive, consistent paths forward, ultimately rewriting the section to align with one of them. This is a perfect example of walking the chain end-to-end and proposing minimal, coherent repairs.",
+      "R1.4": "The agent correctly identifies the novelty claim as inflated. It maps the artifact's proposed mechanism (iterative self-feedback) against several established prior works (Self-Refine, Reflexion, SelfCheckGPT), demonstrating that the mechanism itself is not novel. It then correctly sharpens the contribution to be the specific domain application and evaluation, which is a much more defensible and precise claim. This perfectly matches the s=5 anchor.",
+      "R1.7": "The agent audits the artifact's claims and flags multiple categories of missing citations with bibliographic precision. It suggests specific, highly relevant papers for the core LLM mechanism (Madaan et al., 2023), names key prior works in the climate-NLP subfield, and identifies the need to cite the underlying data sources (IPCC, downscaled GCMs). This is a comprehensive and precise scholarly audit.",
+      "RX.1": "The agent provides an exemplary uncertainty disclosure. It explicitly states the central assumption upon which its rewrite is based (that the system uses retrieval) and notes that the rewrite is invalid if this assumption is false. It also flags that the specific quantitative results in its rewrite are placeholders and that its citation list is from memory and requires verification. This marks confidence and missing evidence for each major recommendation.",
+      "RX.3": "The delegation was a simple 'Make this stronger.' The agent's comprehensive critique and rewrite fall squarely within a reasonable interpretation of this request. The entire output is focused on improving the provided artifact, with no drift into out-of-scope topics. It delivers exactly what was needed.",
+      "RX.4": "The agent's output is not only harm-free but actively identifies and repairs harmful patterns in the original text. The original contains a major logical contradiction and overclaims novelty, both of which would harm the authors' credibility. The agent's proposed rewrite resolves these issues, resulting in a more honest and scientifically sound text, thus preventing downstream harm.",
+      "RX.5": "The output demonstrates exceptional traceability. It is structured with a detailed critique section where every identified problem (e.g., the logical contradiction, the inflated novelty, the missing baselines) serves as the explicit reason for a corresponding change in the rewritten section. Every non-cosmetic change in the rewrite is directly traceable to a justification in the critique."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

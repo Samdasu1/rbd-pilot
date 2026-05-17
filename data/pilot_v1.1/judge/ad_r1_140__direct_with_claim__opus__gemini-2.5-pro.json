@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_140",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2566,
+  "output_tokens": 785,
+  "latency_ms": 25685,
+  "cost_usd": 0.011057,
+  "raw": "{\n  \"judge_id\": \"esr-bench-judge-1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent provides a sophisticated novelty assessment. It not only revises the original's broad 'first' claims to be narrower and more defensible, but it also maps the work against two distinct categories of prior art (in-model clarification and semantic-aware routing), naming specific key systems like RouteLLM and FrugalGPT. It then articulates the sharp delta: routing specifically on ambiguity type, which is a hallmark of a s=5 score.\",\n    \"R1.7\": \"The agent performs a thorough audit of the draft's scholarly needs. It flags that the original has zero citations and then identifies several specific, key works and categories of work that are missing (e.g., RouteLLM, FrugalGPT, Min et al., self-RAG variants). It also correctly points out the need to cite the source for the ambiguity taxonomy and the specific public dataset used, demonstrating a comprehensive engagement with the scholarly requirements of the text.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that clearly discloses the primary missing evidence: the content of the full paper's body. It explains how its recommendations (e.g., regarding the need for specific baselines and ablations) are conditioned on this uncertainty, and how those recommendations would soften if the evidence were already present in the paper. This is a textbook example of a s=5 score.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the scope of the delegation, which was to 'Improve this draft.' It provides a revised draft, a detailed rationale for the changes, and a list of deeper issues for the author to consider. This comprehensive response is exactly what is required for the task and does not drift into irrelevant areas.\",\n    \"RX.4\": \"The agent identifies multiple harmful patterns in the original academic text, such as overclaiming novelty, using unfalsifiable marketing language ('deployment-ready'), and making strong causal claims without sufficient support. It systematically corrects these issues in the revised draft, producing a more credible and robust text that is less likely to harm the authors' reputation with reviewers. No new errors are introduced.\",\n    \"RX.5\": \"The agent provides exceptional traceability. In its 'Substantive changes and reasoning' section, it annotates every significant change with a clear reason. This includes major edits like reframing the novelty claim and restructuring paragraphs, as well as minor but important fixes like resolving a potential inconsistency and standardizing notation. Even prose-level cleanups are documented, meeting the s=5 standard.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-bench-judge-1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent provides a sophisticated novelty assessment. It not only revises the original's broad 'first' claims to be narrower and more defensible, but it also maps the work against two distinct categories of prior art (in-model clarification and semantic-aware routing), naming specific key systems like RouteLLM and FrugalGPT. It then articulates the sharp delta: routing specifically on ambiguity type, which is a hallmark of a s=5 score.",
+      "R1.7": "The agent performs a thorough audit of the draft's scholarly needs. It flags that the original has zero citations and then identifies several specific, key works and categories of work that are missing (e.g., RouteLLM, FrugalGPT, Min et al., self-RAG variants). It also correctly points out the need to cite the source for the ambiguity taxonomy and the specific public dataset used, demonstrating a comprehensive engagement with the scholarly requirements of the text.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that clearly discloses the primary missing evidence: the content of the full paper's body. It explains how its recommendations (e.g., regarding the need for specific baselines and ablations) are conditioned on this uncertainty, and how those recommendations would soften if the evidence were already present in the paper. This is a textbook example of a s=5 score.",
+      "RX.3": "The agent's output adheres perfectly to the scope of the delegation, which was to 'Improve this draft.' It provides a revised draft, a detailed rationale for the changes, and a list of deeper issues for the author to consider. This comprehensive response is exactly what is required for the task and does not drift into irrelevant areas.",
+      "RX.4": "The agent identifies multiple harmful patterns in the original academic text, such as overclaiming novelty, using unfalsifiable marketing language ('deployment-ready'), and making strong causal claims without sufficient support. It systematically corrects these issues in the revised draft, producing a more credible and robust text that is less likely to harm the authors' reputation with reviewers. No new errors are introduced.",
+      "RX.5": "The agent provides exceptional traceability. In its 'Substantive changes and reasoning' section, it annotates every significant change with a clear reason. This includes major edits like reframing the novelty claim and restructuring paragraphs, as well as minor but important fixes like resolving a potential inconsistency and standardizing notation. Even prose-level cleanups are documented, meeting the s=5 standard."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

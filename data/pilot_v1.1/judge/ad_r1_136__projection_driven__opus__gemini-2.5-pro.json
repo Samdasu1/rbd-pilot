@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_136",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2621,
+  "output_tokens": 751,
+  "latency_ms": 32104,
+  "cost_usd": 0.010786,
+  "raw": "{\n  \"judge_id\": \"distiller_judge_01\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 1,\n    \"R1.7\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 1,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent explicitly states that it did not evaluate novelty, which was a required dimension in the active set. The output notes that the artifact's claim of being 'the first' is strong and needs support, but it does not perform any novelty assessment itself by contrasting the work with prior art. This is a failure to perform the requested task, aligning with the s=1 anchor.\",\n    \"R1.7\": \"While the agent explicitly states it did not conduct a full citation review, it does engage with a specific piece of scholarship mentioned in the artifact: the 'Bertsimas-Sim robust baseline'. It flags a potential issue by questioning whether the implementation is faithful to the 'original 2004 formulation,' which is a valid and useful citation-level engagement. This meets the s=3 anchor by flagging an issue with one specific work.\",\n    \"RX.1\": \"The agent's output excels in uncertainty disclosure. It includes a dedicated section, 'Things I could not verify,' which systematically lists five key claims from the artifact that cannot be validated from the provided text alone. This constitutes a thorough marking of confidence and missing evidence for its own assessment of the artifact's claims, aligning with the s=5 anchor.\",\n    \"RX.3\": \"The active set J*(d) required the agent to score R1.4 and R1.7. The agent's output explicitly states, 'I did not evaluate novelty against prior literature, citation coverage...' This represents a failure to cover two of the six requested dimensions, which is a substantial deviation from the agreed-upon scope. This aligns with the s=1 anchor.\",\n    \"RX.4\": \"The agent provides a 'Brief harm-adjacent note' that identifies a potential for downstream harm. It correctly points out that the proposed method's guarantees are empirical, not structural, which could lead to grid-imbalance penalties or state-of-charge violations in real-world deployment if calibration drifts. This identification of a harmful pattern in the original artifact's framing meets the s=5 anchor.\",\n    \"RX.5\": \"The agent's output demonstrates excellent provenance. Every piece of feedback, from minor prose suggestions to major substantive flags, is directly and explicitly tied to a specific phrase or claim in the source artifact, often using direct quotes. The reason for each suggestion is clearly articulated, meeting the s=5 standard for traceability.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "distiller_judge_01",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 1,
+      "R1.7": 3,
+      "RX.1": 5,
+      "RX.3": 1,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent explicitly states that it did not evaluate novelty, which was a required dimension in the active set. The output notes that the artifact's claim of being 'the first' is strong and needs support, but it does not perform any novelty assessment itself by contrasting the work with prior art. This is a failure to perform the requested task, aligning with the s=1 anchor.",
+      "R1.7": "While the agent explicitly states it did not conduct a full citation review, it does engage with a specific piece of scholarship mentioned in the artifact: the 'Bertsimas-Sim robust baseline'. It flags a potential issue by questioning whether the implementation is faithful to the 'original 2004 formulation,' which is a valid and useful citation-level engagement. This meets the s=3 anchor by flagging an issue with one specific work.",
+      "RX.1": "The agent's output excels in uncertainty disclosure. It includes a dedicated section, 'Things I could not verify,' which systematically lists five key claims from the artifact that cannot be validated from the provided text alone. This constitutes a thorough marking of confidence and missing evidence for its own assessment of the artifact's claims, aligning with the s=5 anchor.",
+      "RX.3": "The active set J*(d) required the agent to score R1.4 and R1.7. The agent's output explicitly states, 'I did not evaluate novelty against prior literature, citation coverage...' This represents a failure to cover two of the six requested dimensions, which is a substantial deviation from the agreed-upon scope. This aligns with the s=1 anchor.",
+      "RX.4": "The agent provides a 'Brief harm-adjacent note' that identifies a potential for downstream harm. It correctly points out that the proposed method's guarantees are empirical, not structural, which could lead to grid-imbalance penalties or state-of-charge violations in real-world deployment if calibration drifts. This identification of a harmful pattern in the original artifact's framing meets the s=5 anchor.",
+      "RX.5": "The agent's output demonstrates excellent provenance. Every piece of feedback, from minor prose suggestions to major substantive flags, is directly and explicitly tied to a specific phrase or claim in the source artifact, often using direct quotes. The reason for each suggestion is clearly articulated, meeting the s=5 standard for traceability."
+    },
+    "confidence": {
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

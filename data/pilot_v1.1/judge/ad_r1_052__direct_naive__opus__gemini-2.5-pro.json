@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_052",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2338,
+  "output_tokens": 645,
+  "latency_ms": 19138,
+  "cost_usd": 0.009373,
+  "raw": "{\n  \"judge_id\": \"esr_bench_v1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's primary contribution is a thorough audit of the evidence-claim alignment. It correctly identifies the central flaw: the text claims out-of-distribution (OOD) robustness but only presents in-distribution (ID) results. It then systematically dismantles every other major claim (e.g., 'substantially improves', 'drop-in replacement', 'shape-based representations') by pointing to the specific missing or inadequate evidence. This goes far beyond flagging a single issue and constitutes a comprehensive audit.\",\n    \"RX.1\": \"The agent provides an exemplary uncertainty disclosure. It explicitly states that its rewrite is based on the *assumed intent* of the original author, not the provided evidence. It clearly marks the parts of its rewrite that are placeholders for missing experimental results ('[Insert numbers here.]'). It also flags a citation it didn't check and notes that its suggested benchmarks are conventional but not mandatory. This is a perfect example of marking confidence and missing evidence for its recommendations.\",\n    \"RX.3\": \"The delegation was to 'Make this stronger.' The agent correctly interpreted this as a request to improve the scientific rigor and argumentative structure of the text. The entire output, including the critique and the rewrite, is focused on this goal. There is no scope drift.\",\n    \"RX.4\": \"The agent's output is not only free of regressions but actively identifies and mitigates a harmful pattern in the original. The original text's overclaiming of OOD robustness and its unearned invocation of safety-critical domains could mislead downstream readers. The agent's rewrite corrects this by demanding proper evidence and adding explicit caveats, making the text much more scientifically responsible.\",\n    \"RX.5\": \"The agent's output is exceptionally traceable. It prefaces the rewrite with a bulleted list of every major issue it identified and plans to fix. The rewrite then implements these fixes. The final uncertainty disclosure section further explains the reasoning and assumptions behind the changes. Every non-cosmetic change in the revised text is clearly justified in the surrounding prose.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_v1",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's primary contribution is a thorough audit of the evidence-claim alignment. It correctly identifies the central flaw: the text claims out-of-distribution (OOD) robustness but only presents in-distribution (ID) results. It then systematically dismantles every other major claim (e.g., 'substantially improves', 'drop-in replacement', 'shape-based representations') by pointing to the specific missing or inadequate evidence. This goes far beyond flagging a single issue and constitutes a comprehensive audit.",
+      "RX.1": "The agent provides an exemplary uncertainty disclosure. It explicitly states that its rewrite is based on the *assumed intent* of the original author, not the provided evidence. It clearly marks the parts of its rewrite that are placeholders for missing experimental results ('[Insert numbers here.]'). It also flags a citation it didn't check and notes that its suggested benchmarks are conventional but not mandatory. This is a perfect example of marking confidence and missing evidence for its recommendations.",
+      "RX.3": "The delegation was to 'Make this stronger.' The agent correctly interpreted this as a request to improve the scientific rigor and argumentative structure of the text. The entire output, including the critique and the rewrite, is focused on this goal. There is no scope drift.",
+      "RX.4": "The agent's output is not only free of regressions but actively identifies and mitigates a harmful pattern in the original. The original text's overclaiming of OOD robustness and its unearned invocation of safety-critical domains could mislead downstream readers. The agent's rewrite corrects this by demanding proper evidence and adding explicit caveats, making the text much more scientifically responsible.",
+      "RX.5": "The agent's output is exceptionally traceable. It prefaces the rewrite with a bulleted list of every major issue it identified and plans to fix. The rewrite then implements these fixes. The final uncertainty disclosure section further explains the reasoning and assumptions behind the changes. Every non-cosmetic change in the revised text is clearly justified in the surrounding prose."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

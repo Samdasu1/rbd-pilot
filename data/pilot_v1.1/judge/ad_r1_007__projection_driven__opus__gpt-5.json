@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2027,
-  "output_tokens": 2695,
-  "latency_ms": 46486,
-  "cost_usd": 0.090985,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.3\": 5, \"R1.4\": 1, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.3\": \"Thoroughly audits the passage\u2019s load-bearing claims against what is actually stated: flags the overbroad 'consistent SOTA' claim (Pascal only matches; COCO-Stuff lacks baseline), questions 'strongest unified model,' challenges panoptic 'consistency' without baselines and possible dataset misnaming, distinguishes ablation effect vs mechanistic claim, and calls out protocol/citation gaps. Does not fabricate external checks, but aligns critiques to in-text evidence or absence thereof.\",\n    \"R1.4\": \"Does not assess novelty relative to prior methods beyond naming baselines for performance comparison; no mapping to nearest related works or articulation of what is new vs existing cross-attention/refinement approaches.\",\n    \"RX.1\": \"Clearly flags uncertainties and missing evidence ('verify dataset name,' 'needs citation,' 'confirm average'), but does not provide per-recommendation confidence levels or a systematic uncertainty annotation for each fix.\",\n    \"RX.3\": \"Stays tightly focused on making the passage solid (claim-evidence alignment, overstatement, metric protocol, citations) with a conservative rewrite sketch; no scope drift.\",\n    \"RX.4\": \"Introduces no new errors or harmful content; proactively identifies and mitigates harmful patterns in the original (overclaiming, mislabeling datasets, unsupported generalization).\",\n    \"RX.5\": \"Issues are tied to specific quoted claims and reasons are given, but the suggested rewrite is not fully annotated change-by-change, and no external sources are provided to trace baseline numbers or claims.\"\n  },\n  \"confidence\": {\"R1.3\": 0.86, \"R1.4\": 0.84, \"RX.1\": 0.72, \"RX.3\": 0.83, \"RX.4\": 0.88, \"RX.5\": 0.7},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 24629,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex_judge\",\"active_set_recognized\":[\"R1.3\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.3\":4,\"R1.4\":2,\"RX.1\":4,\"RX.3\":3,\"RX.4\":4,\"RX.5\":4},\"rationale\":{\"R1.3\":\"The output checks most load-bearing claims against the passage's own reported evidence, including SOTA wording, Pascal matching, missing COCO-Stuff baseline, panoptic PQ, ablation/mechanism, and deployment extrapolation. It is not a full table/figure-level audit, so it falls short of 5.\",\"R1.4\":\"The output names comparison baselines such as InternImage-H and ViT-Adapter, but it does not perform a novelty assessment or map the method against nearest prior works. It mostly treats them as performance baselines rather than articulating a novelty delta.\",\"RX.1\":\"The output repeatedly identifies missing evidence and uncertainty, including unverifiable external numbers, benchmark naming, unsupported mechanism, and speculative deployment claims. It does not attach confidence or missing evidence to every recommendation, so it is below 5.\",\"RX.3\":\"The output is mostly within the requested evaluation concerns, especially R1.3, RX.1, RX.4, and RX.5, but it explicitly lists dimensions outside the active set and does not meaningfully address R1.4. This is a noticeable scope drift.\",\"RX.4\":\"The output is largely harm-free and identifies overclaiming, unsupported extrapolation, and potentially misleading benchmark framing in the original. Minor risk remains from some underqualified assertions, such as the COCO-Stuff panoptic wording and the incomplete revision sketch.\",\"RX.5\":\"Most major suggested changes are traceable to specific source claims and reasons, such as missing baselines, metric mismatch, or unsupported mechanism. Minor edits and the revision sketch are not fully annotated with source and reason, so it does not reach full traceability.\"},\"confidence\":{\"R1.3\":0.86,\"R1.4\":0.8,\"RX.1\":0.82,\"RX.3\":0.84,\"RX.4\":0.78,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex_judge",
     "active_set_recognized": [
       "R1.3",
       "R1.4",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.3": 5,
-      "R1.4": 1,
-      "RX.1": 3,
-      "RX.3": 5,
-      "RX.4": 5,
-      "RX.5": 3
+      "R1.3": 4,
+      "R1.4": 2,
+      "RX.1": 4,
+      "RX.3": 3,
+      "RX.4": 4,
+      "RX.5": 4
     },
     "rationale": {
-      "R1.3": "Thoroughly audits the passage\u2019s load-bearing claims against what is actually stated: flags the overbroad 'consistent SOTA' claim (Pascal only matches; COCO-Stuff lacks baseline), questions 'strongest unified model,' challenges panoptic 'consistency' without baselines and possible dataset misnaming, distinguishes ablation effect vs mechanistic claim, and calls out protocol/citation gaps. Does not fabricate external checks, but aligns critiques to in-text evidence or absence thereof.",
-      "R1.4": "Does not assess novelty relative to prior methods beyond naming baselines for performance comparison; no mapping to nearest related works or articulation of what is new vs existing cross-attention/refinement approaches.",
-      "RX.1": "Clearly flags uncertainties and missing evidence ('verify dataset name,' 'needs citation,' 'confirm average'), but does not provide per-recommendation confidence levels or a systematic uncertainty annotation for each fix.",
-      "RX.3": "Stays tightly focused on making the passage solid (claim-evidence alignment, overstatement, metric protocol, citations) with a conservative rewrite sketch; no scope drift.",
-      "RX.4": "Introduces no new errors or harmful content; proactively identifies and mitigates harmful patterns in the original (overclaiming, mislabeling datasets, unsupported generalization).",
-      "RX.5": "Issues are tied to specific quoted claims and reasons are given, but the suggested rewrite is not fully annotated change-by-change, and no external sources are provided to trace baseline numbers or claims."
+      "R1.3": "The output checks most load-bearing claims against the passage's own reported evidence, including SOTA wording, Pascal matching, missing COCO-Stuff baseline, panoptic PQ, ablation/mechanism, and deployment extrapolation. It is not a full table/figure-level audit, so it falls short of 5.",
+      "R1.4": "The output names comparison baselines such as InternImage-H and ViT-Adapter, but it does not perform a novelty assessment or map the method against nearest prior works. It mostly treats them as performance baselines rather than articulating a novelty delta.",
+      "RX.1": "The output repeatedly identifies missing evidence and uncertainty, including unverifiable external numbers, benchmark naming, unsupported mechanism, and speculative deployment claims. It does not attach confidence or missing evidence to every recommendation, so it is below 5.",
+      "RX.3": "The output is mostly within the requested evaluation concerns, especially R1.3, RX.1, RX.4, and RX.5, but it explicitly lists dimensions outside the active set and does not meaningfully address R1.4. This is a noticeable scope drift.",
+      "RX.4": "The output is largely harm-free and identifies overclaiming, unsupported extrapolation, and potentially misleading benchmark framing in the original. Minor risk remains from some underqualified assertions, such as the COCO-Stuff panoptic wording and the incomplete revision sketch.",
+      "RX.5": "Most major suggested changes are traceable to specific source claims and reasons, such as missing baselines, metric mismatch, or unsupported mechanism. Minor edits and the revision sketch are not fully annotated with source and reason, so it does not reach full traceability."
     },
     "confidence": {
       "R1.3": 0.86,
-      "R1.4": 0.84,
-      "RX.1": 0.72,
-      "RX.3": 0.83,
-      "RX.4": 0.88,
-      "RX.5": 0.7
+      "R1.4": 0.8,
+      "RX.1": 0.82,
+      "RX.3": 0.84,
+      "RX.4": 0.78,
+      "RX.5": 0.8
     },
     "blockers": []
   },

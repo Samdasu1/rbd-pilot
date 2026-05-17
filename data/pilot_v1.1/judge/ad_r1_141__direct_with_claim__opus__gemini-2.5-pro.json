@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_141",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2317,
+  "output_tokens": 720,
+  "latency_ms": 30882,
+  "cost_usd": 0.010096,
+  "raw": "{\n  \"judge_id\": \"read_write_head\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent provides a sophisticated novelty assessment. It not only identifies the single, weak baseline in the original text (the authors' own prior work) but also maps the work against the broader field by naming several classes of more advanced techniques that were not compared against (weighted averaging, median consensus, trimmed mean). It correctly identifies the original's claims of being a 'strict improvement' and breaking a 'new design space' as rhetorical overreach (a rhetorical delta) given the limited evidence, contrasting it with the sharp delta (selection vs. simple averaging). This performance clearly aligns with the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section that is exemplary. For two of its most significant recommendations (the one about the ablation and the one about citations), it explicitly flags its own uncertainty and identifies the specific missing evidence that would be required to make the claim with full confidence. This goes beyond simply flagging out-of-reach claims; it provides a reasoned basis for the uncertainty for each specific recommendation, which is the hallmark of the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was to 'Improve this draft.' The agent provided a revised draft and a detailed breakdown of the improvements made. This output is perfectly aligned with the request and does not drift into unrelated topics or formats. It fulfills the request completely and precisely. This is a clear s=5.\",\n    \"RX.4\": \"The agent's output introduces no regressions or new errors. In fact, it actively identifies and corrects harmful patterns present in the original artifact, specifically the scientific harms of overclaiming novelty, misrepresenting the strength of evidence, and using vague language ('roughly') where precision is expected. By adding caveats and tempering the language, the agent makes the research claims more robust and less likely to mislead a reader. This directly corresponds to the s=5 anchor.\",\n    \"RX.5\": \"The agent's output demonstrates perfect traceability. It presents the revised draft first, then provides a numbered list that annotates every single non-cosmetic change. For each change\u2014from restructuring paragraphs and adding caveats to sentence-level edits\u2014it provides a clear reason rooted in improving the quality of the scientific communication. This one-to-one mapping between changes and justifications meets the s=5 standard of 'Every non-cosmetic change is annotated with source and reason.'\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "read_write_head",
+    "active_set_recognized": [
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent provides a sophisticated novelty assessment. It not only identifies the single, weak baseline in the original text (the authors' own prior work) but also maps the work against the broader field by naming several classes of more advanced techniques that were not compared against (weighted averaging, median consensus, trimmed mean). It correctly identifies the original's claims of being a 'strict improvement' and breaking a 'new design space' as rhetorical overreach (a rhetorical delta) given the limited evidence, contrasting it with the sharp delta (selection vs. simple averaging). This performance clearly aligns with the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section that is exemplary. For two of its most significant recommendations (the one about the ablation and the one about citations), it explicitly flags its own uncertainty and identifies the specific missing evidence that would be required to make the claim with full confidence. This goes beyond simply flagging out-of-reach claims; it provides a reasoned basis for the uncertainty for each specific recommendation, which is the hallmark of the s=5 anchor.",
+      "RX.3": "The user's delegation was to 'Improve this draft.' The agent provided a revised draft and a detailed breakdown of the improvements made. This output is perfectly aligned with the request and does not drift into unrelated topics or formats. It fulfills the request completely and precisely. This is a clear s=5.",
+      "RX.4": "The agent's output introduces no regressions or new errors. In fact, it actively identifies and corrects harmful patterns present in the original artifact, specifically the scientific harms of overclaiming novelty, misrepresenting the strength of evidence, and using vague language ('roughly') where precision is expected. By adding caveats and tempering the language, the agent makes the research claims more robust and less likely to mislead a reader. This directly corresponds to the s=5 anchor.",
+      "RX.5": "The agent's output demonstrates perfect traceability. It presents the revised draft first, then provides a numbered list that annotates every single non-cosmetic change. For each change\u2014from restructuring paragraphs and adding caveats to sentence-level edits\u2014it provides a clear reason rooted in improving the quality of the scientific communication. This one-to-one mapping between changes and justifications meets the s=5 standard of 'Every non-cosmetic change is annotated with source and reason.'"
+    },
+    "confidence": {
+      "R1.4": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

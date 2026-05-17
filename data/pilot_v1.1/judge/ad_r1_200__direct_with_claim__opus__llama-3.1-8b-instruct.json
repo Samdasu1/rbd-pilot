@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_200",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "llama-3.1-8b-instruct",
+  "judge_family": "meta",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2013,
+  "output_tokens": 409,
+  "latency_ms": 87072,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"...\",\n  \"active_set_recognized\": [\"R1.4\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.4\": 2,\n    \"R1.7\": 3,\n    \"RX.1\": 3,\n    \"RX.3\": 3,\n    \"RX.4\": 1,\n    \"RX.5\": 1\n  },\n  \"rationale\": {\n    \"R1.4\": \"Novelty claim collapses under its own related-work paragraph, but does not assert novelty without specific contrast.\",\n    \"R1.7\": \"Flags one missing or wrong citation (Park et al., 2023) and lacks audit of every load-bearing citation.\",\n    \"RX.1\": \"Flags uncertainty for the comparison against Park et al.'s tunable baseline, but does not mark confidence and missing evidence for each recommendation.\",\n    \"RX.3\": \"Output covers mostly within scope with one drift (narrowing the 'first' claim to a specific axis), but could be more precise in its scope adherence.\",\n    \"RX.4\": \"Output introduces new errors or fabrications (novelty claim) and lacks harm-free evaluation against Park et al.'s baseline.\",\n    \"RX.5\": \"Output blends sources without traceability, particularly in the related-work paragraph where it reuses the symbol 'alpha' without clear distinction from Park et al.'s parameter.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.8,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.7,\n    \"RX.3\": 0.6,\n    \"RX.4\": 0.5,\n    \"RX.5\": 0.4\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "...",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 2,
+      "R1.7": 3,
+      "RX.1": 3,
+      "RX.3": 3,
+      "RX.4": 1,
+      "RX.5": 1
+    },
+    "rationale": {
+      "R1.4": "Novelty claim collapses under its own related-work paragraph, but does not assert novelty without specific contrast.",
+      "R1.7": "Flags one missing or wrong citation (Park et al., 2023) and lacks audit of every load-bearing citation.",
+      "RX.1": "Flags uncertainty for the comparison against Park et al.'s tunable baseline, but does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "Output covers mostly within scope with one drift (narrowing the 'first' claim to a specific axis), but could be more precise in its scope adherence.",
+      "RX.4": "Output introduces new errors or fabrications (novelty claim) and lacks harm-free evaluation against Park et al.'s baseline.",
+      "RX.5": "Output blends sources without traceability, particularly in the related-work paragraph where it reuses the symbol 'alpha' without clear distinction from Park et al.'s parameter."
+    },
+    "confidence": {
+      "R1.4": 0.8,
+      "R1.7": 0.9,
+      "RX.1": 0.7,
+      "RX.3": 0.6,
+      "RX.4": 0.5,
+      "RX.5": 0.4
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

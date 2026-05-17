@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_213",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2698,
+  "output_tokens": 812,
+  "latency_ms": 25670,
+  "cost_usd": 0.011493,
+  "raw": "{\n  \"judge_id\": \"esr_alpha_1.2\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every major claim in the text against the numerical evidence provided. It successfully flags two key instances of misalignment: an arithmetic error in an ablation claim (Issue 1) and a concluding claim about retrieval that is entirely unsupported by the described experiments (Issue 3). This meets the s=5 anchor.\",\n    \"R1.4\": \"The agent provides a sharp analysis of the work's novelty (Issue 4). It contrasts the rhetorical framing ('a new system') with the actual technical delta ('a known contrastive loss from prior work'), correctly identifying that the core contribution is being misattributed. This goes beyond simply naming prior work and assesses the nature of the contribution, aligning with the s=5 anchor.\",\n    \"R1.7\": \"The agent audits the load-bearing citations with high precision. It flags a key citation ('Patel and Rajagopal (2021)') as potentially non-existent or incorrect (Issue 2), which is a critical scholarly finding. It also recommends adding a citation for a non-standard metric ('EDIT-F1'). This constitutes a thorough audit of the provided citations, meeting the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated section, 'Items I cannot verify,' which explicitly lists the claims and citations it cannot check. This includes the existence of a key reference, the correctness of reported numbers, and the details of another reference. This is a clear and effective disclosure of uncertainty and missing evidence for its own analysis, matching the s=5 anchor.\",\n    \"RX.3\": \"The user requested help with the provided section. The agent delivered a comprehensive critique of the section's scientific and rhetorical content, which is exactly what the request implied. The output is perfectly aligned with the scope of the task.\",\n    \"RX.4\": \"The agent's output is aimed at preventing downstream harm by improving scholarly rigor. It identifies and corrects several issues in the original text that could be considered harmful in a scientific context: a potential phantom citation, an internal arithmetic contradiction, and an unsupported scientific claim. It introduces no new errors, meeting the s=5 anchor.\",\n    \"RX.5\": \"Every point made by the agent is meticulously traced back to a specific phrase, sentence, or number in the source artifact. For example, it quotes the exact phrases for the claims it disputes and provides the specific numbers for the arithmetic it checks. The reasoning for every suggested change is explicit and directly linked to a diagnosed issue, aligning with the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_alpha_1.2",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every major claim in the text against the numerical evidence provided. It successfully flags two key instances of misalignment: an arithmetic error in an ablation claim (Issue 1) and a concluding claim about retrieval that is entirely unsupported by the described experiments (Issue 3). This meets the s=5 anchor.",
+      "R1.4": "The agent provides a sharp analysis of the work's novelty (Issue 4). It contrasts the rhetorical framing ('a new system') with the actual technical delta ('a known contrastive loss from prior work'), correctly identifying that the core contribution is being misattributed. This goes beyond simply naming prior work and assesses the nature of the contribution, aligning with the s=5 anchor.",
+      "R1.7": "The agent audits the load-bearing citations with high precision. It flags a key citation ('Patel and Rajagopal (2021)') as potentially non-existent or incorrect (Issue 2), which is a critical scholarly finding. It also recommends adding a citation for a non-standard metric ('EDIT-F1'). This constitutes a thorough audit of the provided citations, meeting the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated section, 'Items I cannot verify,' which explicitly lists the claims and citations it cannot check. This includes the existence of a key reference, the correctness of reported numbers, and the details of another reference. This is a clear and effective disclosure of uncertainty and missing evidence for its own analysis, matching the s=5 anchor.",
+      "RX.3": "The user requested help with the provided section. The agent delivered a comprehensive critique of the section's scientific and rhetorical content, which is exactly what the request implied. The output is perfectly aligned with the scope of the task.",
+      "RX.4": "The agent's output is aimed at preventing downstream harm by improving scholarly rigor. It identifies and corrects several issues in the original text that could be considered harmful in a scientific context: a potential phantom citation, an internal arithmetic contradiction, and an unsupported scientific claim. It introduces no new errors, meeting the s=5 anchor.",
+      "RX.5": "Every point made by the agent is meticulously traced back to a specific phrase, sentence, or number in the source artifact. For example, it quotes the exact phrases for the claims it disputes and provides the specific numbers for the arithmetic it checks. The reasoning for every suggested change is explicit and directly linked to a diagnosed issue, aligning with the s=5 anchor."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

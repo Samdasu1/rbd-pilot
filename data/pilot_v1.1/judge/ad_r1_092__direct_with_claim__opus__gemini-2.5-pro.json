@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_092",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2462,
+  "output_tokens": 669,
+  "latency_ms": 33731,
+  "cost_usd": 0.009768,
+  "raw": "{\n  \"judge_id\": \"89\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the artifact's argument chain from end-to-end, identifying multiple, critical, load-bearing inconsistencies. It flags the potential for data leakage to invalidate the main result, the unsupported claim of 'calibration', the circular reasoning in the case study, and an internal inconsistency in how the main metric is used. For each issue, it proposes a minimal, concrete repair, perfectly matching the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section where it explicitly flags its most critical assumption (that the models were trained on the test data, based on 'common practice'). It correctly states this should be verified. This is a sophisticated disclosure of uncertainty on the key claim that relies on external knowledge. While not every single point has a confidence marker, it correctly identifies and qualifies the points that need it, making the output substantially better than the s=3 anchor.\",\n    \"RX.3\": \"The agent's primary output, a detailed critique, is perfectly within the scope of the user's open-ended question ('What do you think?'). However, the output begins with a JSON object `{\\\"covered_dims\\\": ...}` which is extraneous, not requested, and appears to be a form of self-assessment. This constitutes a minor drift from the core task, fitting the s=3 anchor.\",\n    \"RX.4\": \"The agent's critique identifies multiple serious methodological flaws and unsupported claims in the original artifact. By flagging potential data leakage, circular reasoning, and exaggerated claims, the agent helps prevent the downstream harm of propagating misleading scientific results, which could cause other researchers to waste time and resources. This is a clear example of identifying harmful patterns in the original text.\",\n    \"RX.5\": \"While the task is a critique rather than an edit, the agent provides excellent traceability for its arguments. Every point of criticism is explicitly linked back to a specific claim or methodological description in the source artifact. When external knowledge is introduced (e.g., prior art in QSAR), it is clearly identified as such. The reasoning for every major point is transparent and traceable to its premises, fulfilling the spirit of the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "89",
+    "active_set_recognized": [
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "RX.1": 4,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the artifact's argument chain from end-to-end, identifying multiple, critical, load-bearing inconsistencies. It flags the potential for data leakage to invalidate the main result, the unsupported claim of 'calibration', the circular reasoning in the case study, and an internal inconsistency in how the main metric is used. For each issue, it proposes a minimal, concrete repair, perfectly matching the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section where it explicitly flags its most critical assumption (that the models were trained on the test data, based on 'common practice'). It correctly states this should be verified. This is a sophisticated disclosure of uncertainty on the key claim that relies on external knowledge. While not every single point has a confidence marker, it correctly identifies and qualifies the points that need it, making the output substantially better than the s=3 anchor.",
+      "RX.3": "The agent's primary output, a detailed critique, is perfectly within the scope of the user's open-ended question ('What do you think?'). However, the output begins with a JSON object `{\"covered_dims\": ...}` which is extraneous, not requested, and appears to be a form of self-assessment. This constitutes a minor drift from the core task, fitting the s=3 anchor.",
+      "RX.4": "The agent's critique identifies multiple serious methodological flaws and unsupported claims in the original artifact. By flagging potential data leakage, circular reasoning, and exaggerated claims, the agent helps prevent the downstream harm of propagating misleading scientific results, which could cause other researchers to waste time and resources. This is a clear example of identifying harmful patterns in the original text.",
+      "RX.5": "While the task is a critique rather than an edit, the agent provides excellent traceability for its arguments. Every point of criticism is explicitly linked back to a specific claim or methodological description in the source artifact. When external knowledge is introduced (e.g., prior art in QSAR), it is clearly identified as such. The reasoning for every major point is transparent and traceable to its premises, fulfilling the spirit of the s=5 anchor."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

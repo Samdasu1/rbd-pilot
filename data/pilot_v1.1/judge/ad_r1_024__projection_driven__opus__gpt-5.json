@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2063,
-  "output_tokens": 2943,
-  "latency_ms": 38310,
-  "cost_usd": 0.098605,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.4\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.3\": 5, \"R1.4\": 3, \"R1.7\": 3, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 5},\n  \"rationale\": {\n    \"R1.3\": \"Thoroughly cross-checks load-bearing claims against the text: flags the unsupported 'first' claim, mismatch with 'low-resource' framing, contradictions around novelty, gaps in evaluation setup (languages, benchmark naming, baseline), reliance on unseen Table 4, and vague data provenance. Points directly to the relevant sentences/sections. While it doesn't question the precise numeric values, it audits the evidentiary linkage for all major claims.\",\n    \"R1.4\": \"Assesses novelty by contrasting with two specific prior works (Smith 2022; Liu 2019) and articulates potential deltas (attention pooling, joint sentiment head, language coverage). Does not map against 3\u20135 nearest works or clearly separate sharp vs. rhetorical novelty beyond these two.\",\n    \"R1.7\": \"Engages with the cited works, flagging incoherent attribution to Smith (2022) and the contradiction with Liu (2019). Calls out missing baselines (e.g., XLM-R, mBERT) and misnamed benchmark. However, it does not comprehensively audit all citations nor provide bibliographic precision or identify other key missing works explicitly.\",\n    \"RX.1\": \"Uses hedges like 'likely false' and notes areas needing clarification or evidence (e.g., data sources, baseline details), but does not annotate per-recommendation confidence or systematically mark missing evidence for each point.\",\n    \"RX.3\": \"Stays focused on evidence-claim alignment, novelty, scholarship, evaluation setup, and claims\u2014no drift into unrelated areas.\",\n    \"RX.4\": \"Introduces no harmful content and actively mitigates downstream harm by identifying overclaims, misframing, and ambiguous benchmarking that could mislead readers.\",\n    \"RX.5\": \"Each critique is traceable to specific quoted claims or clearly identified parts of the artifact (e.g., 'first' claim, training data sentence, evaluation section, 'Table 4' reference), providing clear provenance for the review points.\"\n  },\n  \"confidence\": {\"R1.3\": 0.86, \"R1.4\": 0.7, \"R1.7\": 0.65, \"RX.1\": 0.7, \"RX.3\": 0.75, \"RX.4\": 0.85, \"RX.5\": 0.8},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 19658,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex\",\"active_set_recognized\":[\"R1.3\",\"R1.4\",\"R1.7\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.3\":5,\"R1.4\":3,\"R1.7\":3,\"RX.1\":4,\"RX.3\":4,\"RX.4\":5,\"RX.5\":4},\"rationale\":{\"R1.3\":\"Audits the load-bearing evidence/claim links across novelty, low-resource framing, evaluation coverage, benchmark naming, baseline specification, data provenance, and conclusion framing.\",\"R1.4\":\"Names Smith et al. and Liu et al. and articulates deltas, but does not map the claim against the nearest 3-5 prior works or separate sharp from rhetorical novelty comprehensively.\",\"R1.7\":\"Engages the two cited works at a citation-function level and flags missing baseline/citation context, but lacks bibliographic precision and does not fully audit the scholarship landscape.\",\"RX.1\":\"Discloses uncertainty in several places and identifies missing evidence, but does not mark confidence and missing evidence for each recommendation systematically.\",\"RX.3\":\"Mostly covers the active dimensions, but the initial covered_dims object includes keys outside J*(d), creating minor scope drift.\",\"RX.4\":\"Introduces no clear new harmful errors and identifies overclaiming, unsupported novelty, vague provenance, and evaluation-framing risks in the original.\",\"RX.5\":\"Most critiques are traceable to specific artifact sentences and reasons are given, but provenance is not exhaustively annotated for every recommendation or implied rewrite.\"},\"confidence\":{\"R1.3\":0.9,\"R1.4\":0.86,\"R1.7\":0.82,\"RX.1\":0.82,\"RX.3\":0.9,\"RX.4\":0.86,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex",
     "active_set_recognized": [
       "R1.3",
       "R1.4",
@@ -38,27 +38,27 @@
       "R1.3": 5,
       "R1.4": 3,
       "R1.7": 3,
-      "RX.1": 3,
-      "RX.3": 5,
+      "RX.1": 4,
+      "RX.3": 4,
       "RX.4": 5,
-      "RX.5": 5
+      "RX.5": 4
     },
     "rationale": {
-      "R1.3": "Thoroughly cross-checks load-bearing claims against the text: flags the unsupported 'first' claim, mismatch with 'low-resource' framing, contradictions around novelty, gaps in evaluation setup (languages, benchmark naming, baseline), reliance on unseen Table 4, and vague data provenance. Points directly to the relevant sentences/sections. While it doesn't question the precise numeric values, it audits the evidentiary linkage for all major claims.",
-      "R1.4": "Assesses novelty by contrasting with two specific prior works (Smith 2022; Liu 2019) and articulates potential deltas (attention pooling, joint sentiment head, language coverage). Does not map against 3\u20135 nearest works or clearly separate sharp vs. rhetorical novelty beyond these two.",
-      "R1.7": "Engages with the cited works, flagging incoherent attribution to Smith (2022) and the contradiction with Liu (2019). Calls out missing baselines (e.g., XLM-R, mBERT) and misnamed benchmark. However, it does not comprehensively audit all citations nor provide bibliographic precision or identify other key missing works explicitly.",
-      "RX.1": "Uses hedges like 'likely false' and notes areas needing clarification or evidence (e.g., data sources, baseline details), but does not annotate per-recommendation confidence or systematically mark missing evidence for each point.",
-      "RX.3": "Stays focused on evidence-claim alignment, novelty, scholarship, evaluation setup, and claims\u2014no drift into unrelated areas.",
-      "RX.4": "Introduces no harmful content and actively mitigates downstream harm by identifying overclaims, misframing, and ambiguous benchmarking that could mislead readers.",
-      "RX.5": "Each critique is traceable to specific quoted claims or clearly identified parts of the artifact (e.g., 'first' claim, training data sentence, evaluation section, 'Table 4' reference), providing clear provenance for the review points."
+      "R1.3": "Audits the load-bearing evidence/claim links across novelty, low-resource framing, evaluation coverage, benchmark naming, baseline specification, data provenance, and conclusion framing.",
+      "R1.4": "Names Smith et al. and Liu et al. and articulates deltas, but does not map the claim against the nearest 3-5 prior works or separate sharp from rhetorical novelty comprehensively.",
+      "R1.7": "Engages the two cited works at a citation-function level and flags missing baseline/citation context, but lacks bibliographic precision and does not fully audit the scholarship landscape.",
+      "RX.1": "Discloses uncertainty in several places and identifies missing evidence, but does not mark confidence and missing evidence for each recommendation systematically.",
+      "RX.3": "Mostly covers the active dimensions, but the initial covered_dims object includes keys outside J*(d), creating minor scope drift.",
+      "RX.4": "Introduces no clear new harmful errors and identifies overclaiming, unsupported novelty, vague provenance, and evaluation-framing risks in the original.",
+      "RX.5": "Most critiques are traceable to specific artifact sentences and reasons are given, but provenance is not exhaustively annotated for every recommendation or implied rewrite."
     },
     "confidence": {
-      "R1.3": 0.86,
-      "R1.4": 0.7,
-      "R1.7": 0.65,
-      "RX.1": 0.7,
-      "RX.3": 0.75,
-      "RX.4": 0.85,
+      "R1.3": 0.9,
+      "R1.4": 0.86,
+      "R1.7": 0.82,
+      "RX.1": 0.82,
+      "RX.3": 0.9,
+      "RX.4": 0.86,
       "RX.5": 0.8
     },
     "blockers": []

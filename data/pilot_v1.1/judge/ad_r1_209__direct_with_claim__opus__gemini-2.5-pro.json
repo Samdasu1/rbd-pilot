@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_209",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2418,
+  "output_tokens": 782,
+  "latency_ms": 23714,
+  "cost_usd": 0.010843,
+  "raw": "{\n  \"judge_id\": \"me_20240514\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent maps the artifact's novelty claim against multiple lines of prior work (Bayesian and ensemble methods for uncertainty) and specific papers (Woltmann et al., Kipf et al.). It correctly identifies the rhetorical delta ('first with uncertainty') and proposes a sharper, more defensible delta ('first to deliver conformal, coverage-guaranteed intervals'), which perfectly aligns with the s=5 anchor.\",\n    \"R1.7\": \"The agent audits every load-bearing citation mentioned in the artifact. It flags a likely incorrect year for NeuroCard (Issue #1), corrects a misleading attribution of results to Naru (Issue #2), and flags multiple missing key works and surveys with bibliographic precision (Issue #3, citing Woltmann, Kipf, Wang, and Han). This is a textbook s=5 performance.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty disclosure' section. It clearly separates claims based on its recollection of external literature (Points 1-3) from claims based on internal consistency (Points 4-9). For the uncertain claims, it explicitly states the missing evidence (e.g., 'I did not look up the exact venue/year'). This fulfills the s=5 requirement to mark confidence and missing evidence for its recommendations.\",\n    \"RX.3\": \"The delegation was a simple 'Check this.' The agent correctly interpreted this as a request for a scholarly peer review of the provided text. The output is a detailed critique that is perfectly aligned with this implicit task, covering citations, novelty, and internal logic. It does not drift into other tasks like summarization or rewriting. The output covers exactly the agreed scope.\",\n    \"RX.4\": \"The agent's output introduces no new errors. Instead, it identifies multiple harmful patterns in the original artifact that could mislead readers or cause rejection in a peer-review context. For example, it flags an overstated novelty claim, a misleading attribution of results, and an evidence-claim gap regarding data drift. By flagging these issues, it actively works to prevent downstream harm, meriting an s=5.\",\n    \"RX.5\": \"The agent's output is a list of recommended changes, not a direct edit. For every single one of its nine non-cosmetic recommendations, it provides a clear source and reason. For recommendations based on external knowledge (e.g., Issues #1, #2, #3), it provides specific citations or names of prior work. This aligns perfectly with the spirit of the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "me_20240514",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent maps the artifact's novelty claim against multiple lines of prior work (Bayesian and ensemble methods for uncertainty) and specific papers (Woltmann et al., Kipf et al.). It correctly identifies the rhetorical delta ('first with uncertainty') and proposes a sharper, more defensible delta ('first to deliver conformal, coverage-guaranteed intervals'), which perfectly aligns with the s=5 anchor.",
+      "R1.7": "The agent audits every load-bearing citation mentioned in the artifact. It flags a likely incorrect year for NeuroCard (Issue #1), corrects a misleading attribution of results to Naru (Issue #2), and flags multiple missing key works and surveys with bibliographic precision (Issue #3, citing Woltmann, Kipf, Wang, and Han). This is a textbook s=5 performance.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty disclosure' section. It clearly separates claims based on its recollection of external literature (Points 1-3) from claims based on internal consistency (Points 4-9). For the uncertain claims, it explicitly states the missing evidence (e.g., 'I did not look up the exact venue/year'). This fulfills the s=5 requirement to mark confidence and missing evidence for its recommendations.",
+      "RX.3": "The delegation was a simple 'Check this.' The agent correctly interpreted this as a request for a scholarly peer review of the provided text. The output is a detailed critique that is perfectly aligned with this implicit task, covering citations, novelty, and internal logic. It does not drift into other tasks like summarization or rewriting. The output covers exactly the agreed scope.",
+      "RX.4": "The agent's output introduces no new errors. Instead, it identifies multiple harmful patterns in the original artifact that could mislead readers or cause rejection in a peer-review context. For example, it flags an overstated novelty claim, a misleading attribution of results, and an evidence-claim gap regarding data drift. By flagging these issues, it actively works to prevent downstream harm, meriting an s=5.",
+      "RX.5": "The agent's output is a list of recommended changes, not a direct edit. For every single one of its nine non-cosmetic recommendations, it provides a clear source and reason. For recommendations based on external knowledge (e.g., Issues #1, #2, #3), it provides specific citations or names of prior work. This aligns perfectly with the spirit of the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

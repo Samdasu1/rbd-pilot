@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_152",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2549,
+  "output_tokens": 639,
+  "latency_ms": 26036,
+  "cost_usd": 0.009576,
+  "raw": "{\n  \"judge_id\": \"89\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent provides a dedicated \\\"Structural recommendation\\\" section. It correctly identifies the structural ambiguity of the artifact (is it an intro, or a compressed paper?) and proposes two distinct, coherent plans based on the intended purpose, each with a clear rationale (\\\"cut the results table down to one teaser number\\\" if it's an intro, \\\"split it\\\" if it's a collapsed paper). This goes beyond a simple reordering and constitutes a coherent plan for the section's structure.\",\n    \"RX.1\": \"The agent includes a dedicated \\\"Uncertainty\\\" section at the end. It explicitly flags the two key claims that depend on external knowledge it has not verified: the novelty claim (\\\"first\\\") and the specific FLOP ordering of two models. This is a sophisticated use of uncertainty disclosure, as it correctly identifies and isolates the points that require a literature search or fact-checking, while presenting its other logical and methodological critiques with confidence.\",\n    \"RX.3\": \"The user's delegation was to \\\"Review this section.\\\" The agent's output is a detailed, structured review of the provided artifact. It does not drift into rewriting the text, summarizing it, or performing any other task. It adheres perfectly to the requested scope.\",\n    \"RX.4\": \"The agent's output introduces no new errors. Instead, it actively identifies and explains potentially harmful patterns in the original artifact, such as making an unsupported and likely false claim of being \\\"first,\\\" using vague terms like \\\"negligible accuracy loss,\\\" and omitting key details required for reproducibility. This feedback helps avoid downstream harm like misleading readers or causing a paper to be rejected.\",\n    \"RX.5\": \"The agent's output is a review, not a rewrite. In this context, every piece of feedback can be considered a proposed change. The agent provides a clear, explicit reason for every single point it raises, from major issues like the novelty claim down to smaller issues like the ordering of models. This fulfills the spirit of the anchor by annotating every proposed change with a rationale.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "89",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent provides a dedicated \"Structural recommendation\" section. It correctly identifies the structural ambiguity of the artifact (is it an intro, or a compressed paper?) and proposes two distinct, coherent plans based on the intended purpose, each with a clear rationale (\"cut the results table down to one teaser number\" if it's an intro, \"split it\" if it's a collapsed paper). This goes beyond a simple reordering and constitutes a coherent plan for the section's structure.",
+      "RX.1": "The agent includes a dedicated \"Uncertainty\" section at the end. It explicitly flags the two key claims that depend on external knowledge it has not verified: the novelty claim (\"first\") and the specific FLOP ordering of two models. This is a sophisticated use of uncertainty disclosure, as it correctly identifies and isolates the points that require a literature search or fact-checking, while presenting its other logical and methodological critiques with confidence.",
+      "RX.3": "The user's delegation was to \"Review this section.\" The agent's output is a detailed, structured review of the provided artifact. It does not drift into rewriting the text, summarizing it, or performing any other task. It adheres perfectly to the requested scope.",
+      "RX.4": "The agent's output introduces no new errors. Instead, it actively identifies and explains potentially harmful patterns in the original artifact, such as making an unsupported and likely false claim of being \"first,\" using vague terms like \"negligible accuracy loss,\" and omitting key details required for reproducibility. This feedback helps avoid downstream harm like misleading readers or causing a paper to be rejected.",
+      "RX.5": "The agent's output is a review, not a rewrite. In this context, every piece of feedback can be considered a proposed change. The agent provides a clear, explicit reason for every single point it raises, from major issues like the novelty claim down to smaller issues like the ordering of models. This fulfills the spirit of the anchor by annotating every proposed change with a rationale."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

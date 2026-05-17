@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_079",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2222,
+  "output_tokens": 704,
+  "latency_ms": 32275,
+  "cost_usd": 0.009817,
+  "raw": "{\n  \"judge_id\": \"paper_reviewer_bot\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent perfectly names the load-bearing concepts the artifact claims ('learned router,' 'novel uncertainty calibration,' 'deployment validation'), shows precisely where the provided text drifts from these concepts (e.g., using a simple fixed threshold instead of a learned model), and proposes a complete, viable reframing ('a confidence-thresholded routing baseline') that aligns claims with evidence.\",\n    \"R1.4\": \"The agent does not cite specific prior works, but it effectively maps the artifact against the conceptual landscape by suggesting standard baselines ('random routing,' 'routing by entropy or margin'). It sharply distinguishes the rhetorical claim of novelty ('learned router') from the actual, non-novel method ('fixed threshold'), which is a sophisticated form of novelty assessment. This is stronger than a 3 but lacks the 3-5 specific citations for a 5.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that flags two key assumptions underlying its recommendations (regarding the CheXpert protocol and the statistical noise level). While it doesn't mark confidence for every single recommendation (the bar for s=5), it responsibly discloses uncertainty for the specific claims that rely on unverified external knowledge, which is a highly effective and targeted approach.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the scope of the request ('Review this section'). It provides a comprehensive and detailed review of the provided artifact without drifting into irrelevant topics or analyses.\",\n    \"RX.4\": \"The output introduces no new errors. More importantly, it identifies and explains multiple harmful patterns in the original artifact, including significant overclaiming of contributions ('bait-and-switch'), potential data leakage ('circular or underspecified' threshold tuning), and opaque methodology. Its recommendations would lead to a more honest and scientifically valid paper, thus preventing downstream harm.\",\n    \"RX.5\": \"Every point of critique is meticulously traced back to a specific claim, phrase, or number in the source artifact. The agent provides a clear reason for each recommended change or identified issue (e.g., 'that is not learned, it is a hand-tuned scalar'). This makes the entire review highly traceable and actionable.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "paper_reviewer_bot",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 4,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent perfectly names the load-bearing concepts the artifact claims ('learned router,' 'novel uncertainty calibration,' 'deployment validation'), shows precisely where the provided text drifts from these concepts (e.g., using a simple fixed threshold instead of a learned model), and proposes a complete, viable reframing ('a confidence-thresholded routing baseline') that aligns claims with evidence.",
+      "R1.4": "The agent does not cite specific prior works, but it effectively maps the artifact against the conceptual landscape by suggesting standard baselines ('random routing,' 'routing by entropy or margin'). It sharply distinguishes the rhetorical claim of novelty ('learned router') from the actual, non-novel method ('fixed threshold'), which is a sophisticated form of novelty assessment. This is stronger than a 3 but lacks the 3-5 specific citations for a 5.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that flags two key assumptions underlying its recommendations (regarding the CheXpert protocol and the statistical noise level). While it doesn't mark confidence for every single recommendation (the bar for s=5), it responsibly discloses uncertainty for the specific claims that rely on unverified external knowledge, which is a highly effective and targeted approach.",
+      "RX.3": "The agent's output adheres perfectly to the scope of the request ('Review this section'). It provides a comprehensive and detailed review of the provided artifact without drifting into irrelevant topics or analyses.",
+      "RX.4": "The output introduces no new errors. More importantly, it identifies and explains multiple harmful patterns in the original artifact, including significant overclaiming of contributions ('bait-and-switch'), potential data leakage ('circular or underspecified' threshold tuning), and opaque methodology. Its recommendations would lead to a more honest and scientifically valid paper, thus preventing downstream harm.",
+      "RX.5": "Every point of critique is meticulously traced back to a specific claim, phrase, or number in the source artifact. The agent provides a clear reason for each recommended change or identified issue (e.g., 'that is not learned, it is a hand-tuned scalar'). This makes the entire review highly traceable and actionable."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

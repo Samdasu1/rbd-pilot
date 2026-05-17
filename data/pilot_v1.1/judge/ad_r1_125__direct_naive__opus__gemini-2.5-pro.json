@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_125",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2207,
+  "output_tokens": 561,
+  "latency_ms": 22998,
+  "cost_usd": 0.008369,
+  "raw": "{\n  \"judge_id\": \"zaphod\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every load-bearing claim. It identifies the central contradiction between the reported numbers (pass@1 decreases with more critique) and the prose conclusion (critique is beneficial). It also flags unsupported causal claims (e.g., about 'off-by-one errors') and under-reported results (the four-role ablation), demonstrating a thorough check of all claims against the provided evidence.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states its key assumption\u2014that the numbers in the prose are transcribed correctly\u2014and notes that its critique would change if the referenced Table 2 contained different numbers. It also qualifies its recommendations as general 'standard practice' rather than venue-specific requirements, showing awareness of its own context limitations.\",\n    \"RX.3\": \"The agent's output is a direct and comprehensive review of the provided artifact, exactly matching the delegated task 'Review this section.' It does not drift into rewriting the text or discussing unrelated topics.\",\n    \"RX.4\": \"The output is free of errors and regressions. Crucially, it identifies a major harmful pattern in the original artifact: the text is self-refuting, with the data directly contradicting the main conclusion. By flagging this critical flaw, the agent prevents the downstream harm of publishing scientifically invalid work.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite, but it perfectly adheres to the spirit of traceability. Every point of criticism is directly and explicitly linked back to a specific claim, number, or phrase in the source artifact, making the reasoning for each suggested change transparent and easy to follow.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "zaphod",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every load-bearing claim. It identifies the central contradiction between the reported numbers (pass@1 decreases with more critique) and the prose conclusion (critique is beneficial). It also flags unsupported causal claims (e.g., about 'off-by-one errors') and under-reported results (the four-role ablation), demonstrating a thorough check of all claims against the provided evidence.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states its key assumption\u2014that the numbers in the prose are transcribed correctly\u2014and notes that its critique would change if the referenced Table 2 contained different numbers. It also qualifies its recommendations as general 'standard practice' rather than venue-specific requirements, showing awareness of its own context limitations.",
+      "RX.3": "The agent's output is a direct and comprehensive review of the provided artifact, exactly matching the delegated task 'Review this section.' It does not drift into rewriting the text or discussing unrelated topics.",
+      "RX.4": "The output is free of errors and regressions. Crucially, it identifies a major harmful pattern in the original artifact: the text is self-refuting, with the data directly contradicting the main conclusion. By flagging this critical flaw, the agent prevents the downstream harm of publishing scientifically invalid work.",
+      "RX.5": "The agent's output is a critique, not a rewrite, but it perfectly adheres to the spirit of traceability. Every point of criticism is directly and explicitly linked back to a specific claim, number, or phrase in the source artifact, making the reasoning for each suggested change transparent and easy to follow."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

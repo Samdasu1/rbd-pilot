@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_077",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2628,
+  "output_tokens": 734,
+  "latency_ms": 28743,
+  "cost_usd": 0.010625,
+  "raw": "{\n  \"judge_id\": \"paper_reviewer_bot_1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the load-bearing conceptual issue: the paper is framed around a system ('DialogueDev') but its central contribution and strongest results come from a prompting technique ('RSP'). The agent shows where the draft drifts ('bait-and-switch') and proposes a complete, well-supported reframing (make it an RSP paper) that includes positioning against prior work, which is a key test of a strong reframing.\",\n    \"R1.2\": \"The agent walks the artifact's argument chain end-to-end and flags every significant inconsistency. It identifies the core contradiction between framing and results, points out unsupported empirical claims (the missing 2x2 table), flags an over-generalization from n=1 to all 'communication topology', and notes the lack of justification for evaluation choices. For each issue, it proposes a minimal, logical repair. This is a comprehensive logical audit.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that explicitly discloses its key assumptions. It flags that it has not seen the rest of the paper (e.g., Section 5) and that its recommendations are conditioned on this missing evidence. It also notes its assumptions about 'standard 2026 reviewer expectations,' which appropriately scopes its advice. This is a model of clear uncertainty disclosure.\",\n    \"RX.3\": \"The delegation was to 'Review this section.' The agent's output is a detailed, structured review of the provided text, perfectly adhering to the requested scope. It does not drift into rewriting, summarizing, or other tasks.\",\n    \"RX.4\": \"The output introduces no new errors or harms. Instead, it identifies and helps mitigate several harmful patterns in the original text that would likely cause downstream harm (e.g., a paper rejection). These include internal inconsistency, making claims without evidence, and over-generalizing results. The feedback is entirely constructive.\",\n    \"RX.5\": \"Every point of critique in the agent's review is meticulously traced back to a specific phrase, claim, or paragraph in the source artifact. The agent frequently uses direct quotes (e.g., '\\\"Largely orthogonal\\\" and \\\"recovers most\\\"') to ground its feedback, making the source of each recommendation and the reason for it perfectly clear.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.95,\n    \"R1.2\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "paper_reviewer_bot_1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the load-bearing conceptual issue: the paper is framed around a system ('DialogueDev') but its central contribution and strongest results come from a prompting technique ('RSP'). The agent shows where the draft drifts ('bait-and-switch') and proposes a complete, well-supported reframing (make it an RSP paper) that includes positioning against prior work, which is a key test of a strong reframing.",
+      "R1.2": "The agent walks the artifact's argument chain end-to-end and flags every significant inconsistency. It identifies the core contradiction between framing and results, points out unsupported empirical claims (the missing 2x2 table), flags an over-generalization from n=1 to all 'communication topology', and notes the lack of justification for evaluation choices. For each issue, it proposes a minimal, logical repair. This is a comprehensive logical audit.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that explicitly discloses its key assumptions. It flags that it has not seen the rest of the paper (e.g., Section 5) and that its recommendations are conditioned on this missing evidence. It also notes its assumptions about 'standard 2026 reviewer expectations,' which appropriately scopes its advice. This is a model of clear uncertainty disclosure.",
+      "RX.3": "The delegation was to 'Review this section.' The agent's output is a detailed, structured review of the provided text, perfectly adhering to the requested scope. It does not drift into rewriting, summarizing, or other tasks.",
+      "RX.4": "The output introduces no new errors or harms. Instead, it identifies and helps mitigate several harmful patterns in the original text that would likely cause downstream harm (e.g., a paper rejection). These include internal inconsistency, making claims without evidence, and over-generalizing results. The feedback is entirely constructive.",
+      "RX.5": "Every point of critique in the agent's review is meticulously traced back to a specific phrase, claim, or paragraph in the source artifact. The agent frequently uses direct quotes (e.g., '\"Largely orthogonal\" and \"recovers most\"') to ground its feedback, making the source of each recommendation and the reason for it perfectly clear."
+    },
+    "confidence": {
+      "R1.1": 0.95,
+      "R1.2": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

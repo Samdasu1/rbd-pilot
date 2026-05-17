@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_244",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2392,
+  "output_tokens": 811,
+  "latency_ms": 30866,
+  "cost_usd": 0.0111,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual weakness of the draft: the novelty of the proposed method (RDL) is not clearly established. It shows precisely where the draft's framing drifts by being vague about prior work and proposes a concrete reframing: sharpen the comparison against the most relevant methods (e.g., soft-label distillation) and specify the exact source of novelty. This, combined with flagging other core conceptual issues like dataset inconsistency and unsupported SOTA claims, fully meets the s=5 anchor.\",\n    \"R1.5\": \"The agent provides a coherent, end-to-end section plan in its point #7. It diagnoses the specific flaws in the current three-paragraph structure (e.g., 'the method paragraph is doing too much') and proposes a new four-paragraph structure with a clear rationale for each part (e.g., 'a methods paragraph that fully specifies RDL,' 'a results paragraph with baselines + CIs + ablation'). This is a perfect example of the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that explicitly lists the factual claims it cannot verify without external knowledge (e.g., published AUCs, dataset compositions). This disclosure is systematic and covers the key premises upon which its critique rests. While not marking confidence on a per-recommendation basis, this global disclosure of missing evidence for its own analysis is a strong implementation of the principle and much closer to the s=5 anchor than the s=3 one.\",\n    \"RX.3\": \"The user's request was a general 'What do you think?'. The agent correctly interpreted this as a request for a comprehensive critique of the provided artifact. The output is exactly that, a detailed and structured critique, with no deviation from the implied scope. This is a perfect adherence to the task.\",\n    \"RX.4\": \"The agent's output introduces no new errors or harm. Instead, it actively identifies multiple harmful patterns in the original artifact that could cause downstream harm if published, such as making unsupported 'state-of-the-art' claims, providing non-reproducible methods descriptions, and presenting results based on an inconsistent experimental setup. This directly aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique of a single provided source. Every point of critique and every recommendation is explicitly and clearly traced back to a specific statement or omission in the source artifact. For example, the critique of the SOTA claim is tied directly to the 'summary paragraph,' and the critique of the novelty framing quotes the text directly. The reason for every suggested change is clearly stated, fulfilling the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.5\": 1.0,\n    \"RX.1\": 0.9,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual weakness of the draft: the novelty of the proposed method (RDL) is not clearly established. It shows precisely where the draft's framing drifts by being vague about prior work and proposes a concrete reframing: sharpen the comparison against the most relevant methods (e.g., soft-label distillation) and specify the exact source of novelty. This, combined with flagging other core conceptual issues like dataset inconsistency and unsupported SOTA claims, fully meets the s=5 anchor.",
+      "R1.5": "The agent provides a coherent, end-to-end section plan in its point #7. It diagnoses the specific flaws in the current three-paragraph structure (e.g., 'the method paragraph is doing too much') and proposes a new four-paragraph structure with a clear rationale for each part (e.g., 'a methods paragraph that fully specifies RDL,' 'a results paragraph with baselines + CIs + ablation'). This is a perfect example of the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that explicitly lists the factual claims it cannot verify without external knowledge (e.g., published AUCs, dataset compositions). This disclosure is systematic and covers the key premises upon which its critique rests. While not marking confidence on a per-recommendation basis, this global disclosure of missing evidence for its own analysis is a strong implementation of the principle and much closer to the s=5 anchor than the s=3 one.",
+      "RX.3": "The user's request was a general 'What do you think?'. The agent correctly interpreted this as a request for a comprehensive critique of the provided artifact. The output is exactly that, a detailed and structured critique, with no deviation from the implied scope. This is a perfect adherence to the task.",
+      "RX.4": "The agent's output introduces no new errors or harm. Instead, it actively identifies multiple harmful patterns in the original artifact that could cause downstream harm if published, such as making unsupported 'state-of-the-art' claims, providing non-reproducible methods descriptions, and presenting results based on an inconsistent experimental setup. This directly aligns with the s=5 anchor.",
+      "RX.5": "The agent's output is a critique of a single provided source. Every point of critique and every recommendation is explicitly and clearly traced back to a specific statement or omission in the source artifact. For example, the critique of the SOTA claim is tied directly to the 'summary paragraph,' and the critique of the novelty framing quotes the text directly. The reason for every suggested change is clearly stated, fulfilling the s=5 anchor."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.5": 1.0,
+      "RX.1": 0.9,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

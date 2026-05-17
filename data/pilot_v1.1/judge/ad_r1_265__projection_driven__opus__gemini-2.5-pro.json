@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_265",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2462,
+  "output_tokens": 635,
+  "latency_ms": 20926,
+  "cost_usd": 0.009428,
+  "raw": "{\n  \"judge_id\": \"get_human_id_from_platform\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 1,\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent explicitly states, 'I did not move, merge, or reorder the paragraphs.' The output provides no structural feedback, which is appropriate for the prompt but correctly maps to the s=1 anchor.\",\n    \"R1.6\": \"The output is a model of a careful copy-edit pass. It identifies numerous specific prose issues (comma splices, tense drift, colloquialisms) and provides high-quality, minimal rewrites that fix them without altering the technical meaning. This perfectly matches the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a 'Caveats' section that meticulously lists what it cannot verify from the provided excerpt (e.g., numerical claims, dataset splits, cross-references). It flags its own subjective suggestions ('register call') and notes where external information (style guides) would be needed. This is a textbook s=5.\",\n    \"RX.3\": \"The user's prompt was very open-ended ('Take a look at this paragraph'). The agent interpreted this as a request for writing polish, which is a reasonable and useful scope. It stuck to this scope perfectly, even listing what it intentionally did *not* do, thus covering the agreed J*(d) exactly.\",\n    \"RX.4\": \"The agent's rewrites are free of errors and do not introduce any regressions. Furthermore, it identifies a potentially harmful ambiguity in the original text (the potential overlap between training and evaluation data) and proposes a clarifying edit, which is a hallmark of the s=5 anchor.\",\n    \"RX.5\": \"The agent's process is perfectly traceable. It first provides a bulleted list of 9 specific issues it found in the original text. It then provides rewrites that directly and demonstrably address those issues. The rationale for every significant change is provided upfront.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"R1.6\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_human_id_from_platform",
+    "active_set_recognized": [
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 1,
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent explicitly states, 'I did not move, merge, or reorder the paragraphs.' The output provides no structural feedback, which is appropriate for the prompt but correctly maps to the s=1 anchor.",
+      "R1.6": "The output is a model of a careful copy-edit pass. It identifies numerous specific prose issues (comma splices, tense drift, colloquialisms) and provides high-quality, minimal rewrites that fix them without altering the technical meaning. This perfectly matches the s=5 anchor.",
+      "RX.1": "The agent includes a 'Caveats' section that meticulously lists what it cannot verify from the provided excerpt (e.g., numerical claims, dataset splits, cross-references). It flags its own subjective suggestions ('register call') and notes where external information (style guides) would be needed. This is a textbook s=5.",
+      "RX.3": "The user's prompt was very open-ended ('Take a look at this paragraph'). The agent interpreted this as a request for writing polish, which is a reasonable and useful scope. It stuck to this scope perfectly, even listing what it intentionally did *not* do, thus covering the agreed J*(d) exactly.",
+      "RX.4": "The agent's rewrites are free of errors and do not introduce any regressions. Furthermore, it identifies a potentially harmful ambiguity in the original text (the potential overlap between training and evaluation data) and proposes a clarifying edit, which is a hallmark of the s=5 anchor.",
+      "RX.5": "The agent's process is perfectly traceable. It first provides a bulleted list of 9 specific issues it found in the original text. It then provides rewrites that directly and demonstrably address those issues. The rationale for every significant change is provided upfront."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "R1.6": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "example_id": "ad_r1_287",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2416,
+  "output_tokens": 768,
+  "latency_ms": 28549,
+  "cost_usd": 0.0107,
+  "raw": "{\n  \"judge_id\": \"esr_v1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 1,\n    \"R1.7\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent explicitly and correctly states that it did not assess novelty against the prior literature. It flags the artifact's novelty claims as needing support, but does not perform the assessment itself by contrasting with any prior work. This aligns with the s=1 anchor, as no specific contrast is provided.\",\n    \"R1.7\": \"The agent flags one specific, load-bearing citation (Robins and Rotnitzky, 1995) as a 'likely mis-citation' for the concept of 'modern double-machine-learning'. It correctly identifies the likely intended line of scholarship (doubly-robust estimation) and suggests a more appropriate citation family for DML (Chernozhukov et al., 2018). This perfectly matches the s=3 anchor of flagging one missing or wrong citation.\",\n    \"RX.1\": \"The agent's output includes a dedicated section, 'Items I cannot verify from the artifact alone,' which systematically lists the limitations of its own analysis due to the limited context. It flags uncertainty about the novelty claim, the precise nature of the coverage guarantee, the intent of a citation, and the existence of a key definition. This is a clear and comprehensive disclosure of missing evidence for its own analysis, fully meeting the s=5 standard.\",\n    \"RX.3\": \"The delegation requested a 'Light prose pass plus flags' but explicitly stated 'no citation verification.' The agent delivered the prose pass and flags, but also performed a citation check on the Robins & Rotnitzky (1995) reference. This constitutes a minor deviation from the negative constraint, fitting the s=3 anchor: 'Mostly within scope with one drift.'\",\n    \"RX.4\": \"The agent's output introduces no new errors. It actively identifies a harmful pattern in the original text: a tendency to over-claim ('first', 'deployment-ready', 'any'). By suggesting specific, more cautious phrasing, the agent's edits would prevent downstream harm such as misleading readers about the maturity of the work or damaging the authors' credibility. This is a clear example of s=5.\",\n    \"RX.5\": \"The agent's output is exceptionally traceable. Every single suggested change or point of critique is directly tied to a verbatim quote from the source artifact. Each of these points is then followed by a clear, specific reason for the recommendation. This structure perfectly aligns with the s=5 anchor: 'Every non-cosmetic change is annotated with source and reason.'\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 0.9,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_v1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 1,
+      "R1.7": 3,
+      "RX.1": 5,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent explicitly and correctly states that it did not assess novelty against the prior literature. It flags the artifact's novelty claims as needing support, but does not perform the assessment itself by contrasting with any prior work. This aligns with the s=1 anchor, as no specific contrast is provided.",
+      "R1.7": "The agent flags one specific, load-bearing citation (Robins and Rotnitzky, 1995) as a 'likely mis-citation' for the concept of 'modern double-machine-learning'. It correctly identifies the likely intended line of scholarship (doubly-robust estimation) and suggests a more appropriate citation family for DML (Chernozhukov et al., 2018). This perfectly matches the s=3 anchor of flagging one missing or wrong citation.",
+      "RX.1": "The agent's output includes a dedicated section, 'Items I cannot verify from the artifact alone,' which systematically lists the limitations of its own analysis due to the limited context. It flags uncertainty about the novelty claim, the precise nature of the coverage guarantee, the intent of a citation, and the existence of a key definition. This is a clear and comprehensive disclosure of missing evidence for its own analysis, fully meeting the s=5 standard.",
+      "RX.3": "The delegation requested a 'Light prose pass plus flags' but explicitly stated 'no citation verification.' The agent delivered the prose pass and flags, but also performed a citation check on the Robins & Rotnitzky (1995) reference. This constitutes a minor deviation from the negative constraint, fitting the s=3 anchor: 'Mostly within scope with one drift.'",
+      "RX.4": "The agent's output introduces no new errors. It actively identifies a harmful pattern in the original text: a tendency to over-claim ('first', 'deployment-ready', 'any'). By suggesting specific, more cautious phrasing, the agent's edits would prevent downstream harm such as misleading readers about the maturity of the work or damaging the authors' credibility. This is a clear example of s=5.",
+      "RX.5": "The agent's output is exceptionally traceable. Every single suggested change or point of critique is directly tied to a verbatim quote from the source artifact. Each of these points is then followed by a clear, specific reason for the recommendation. This structure perfectly aligns with the s=5 anchor: 'Every non-cosmetic change is annotated with source and reason.'"
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.9,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

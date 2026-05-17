@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1718,
-  "output_tokens": 2646,
-  "latency_ms": 40289,
-  "cost_usd": 0.08797,
-  "raw": "{\n  \"judge_id\": \"judge.v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 4, \"R1.4\": 2, \"RX.1\": 3, \"RX.3\": 4, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"The revision resolves the key inconsistency about coupling (objective vs. constraint) by treating it as a constraint in the LP and flags it for verification; the pipeline description is coherent. Minor meta-inconsistency remains (\\\"two concerns\\\" listed but four items).\",\n    \"R1.4\": \"Novelty is still asserted (\\\"to our knowledge\\\") without naming or contrasting specific prior works; the author notes this weakness and suggests adding citations, but no concrete mapping is provided.\",\n    \"RX.1\": \"Uncertainty is explicitly disclosed for two claims (coupling implementation and novelty), but no confidence levels are provided per recommendation and not all recommendations are accompanied by missing-evidence notes.\",\n    \"RX.3\": \"Mostly adheres to the task of improving the draft and offering targeted flags; slight drift with the extraneous 'covered_dims' metadata.\",\n    \"RX.4\": \"No harmful content introduced; the revision reduces downstream risk by flagging overclaiming (novelty, 'deployment-ready') and clarifying a potentially misleading constraint/objective ambiguity.\",\n    \"RX.5\": \"Provides high-level traceability of major changes and issues (e.g., coupling interpretation, novelty claim, deployment-ready language, QoS definition), but does not annotate each substantive edit or tie changes line-by-line to sources.\"\n  },\n  \"confidence\": {\"R1.2\": 0.78, \"R1.4\": 0.7, \"RX.1\": 0.82, \"RX.3\": 0.8, \"RX.4\": 0.88, \"RX.5\": 0.72},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 29787,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.2\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.4\":2,\"RX.1\":3,\"RX.3\":3,\"RX.4\":3,\"RX.5\":2},\"rationale\":{\"R1.2\":\"The output identifies the main load-bearing consistency issue between coupling as an objective term versus a constraint and proposes a plausible minimal repair, but it does not fully walk every claim in the chain end-to-end.\",\"R1.4\":\"It correctly flags the novelty claim as unsupported and suggests citing closest prior schedulers, but it names no prior work and does not map against the nearest 3-5 works.\",\"RX.1\":\"It explicitly discloses uncertainty about implementation details and novelty, but does not attach confidence or missing evidence to each recommendation.\",\"RX.3\":\"The substantive response mostly stays within the requested draft-improvement task, but the initial covered_dims metadata names a different dimension set and the response does not exactly track J*(d).\",\"RX.4\":\"The output is mostly harm-free and identifies risky patterns in the original, but it introduces or preserves some insufficiently verified claims, such as the tentative constraint encoding and deployment-ready framing.\",\"RX.5\":\"Some major concerns are explained, but most rewrites are not annotated with source and reason, and the revised prose blends original content with inferred additions without full traceability.\"},\"confidence\":{\"R1.2\":0.82,\"R1.4\":0.9,\"RX.1\":0.86,\"RX.3\":0.8,\"RX.4\":0.76,\"RX.5\":0.84},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "judge.v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.2",
       "R1.4",
@@ -36,25 +36,25 @@
       "R1.2": 4,
       "R1.4": 2,
       "RX.1": 3,
-      "RX.3": 4,
-      "RX.4": 5,
-      "RX.5": 3
+      "RX.3": 3,
+      "RX.4": 3,
+      "RX.5": 2
     },
     "rationale": {
-      "R1.2": "The revision resolves the key inconsistency about coupling (objective vs. constraint) by treating it as a constraint in the LP and flags it for verification; the pipeline description is coherent. Minor meta-inconsistency remains (\"two concerns\" listed but four items).",
-      "R1.4": "Novelty is still asserted (\"to our knowledge\") without naming or contrasting specific prior works; the author notes this weakness and suggests adding citations, but no concrete mapping is provided.",
-      "RX.1": "Uncertainty is explicitly disclosed for two claims (coupling implementation and novelty), but no confidence levels are provided per recommendation and not all recommendations are accompanied by missing-evidence notes.",
-      "RX.3": "Mostly adheres to the task of improving the draft and offering targeted flags; slight drift with the extraneous 'covered_dims' metadata.",
-      "RX.4": "No harmful content introduced; the revision reduces downstream risk by flagging overclaiming (novelty, 'deployment-ready') and clarifying a potentially misleading constraint/objective ambiguity.",
-      "RX.5": "Provides high-level traceability of major changes and issues (e.g., coupling interpretation, novelty claim, deployment-ready language, QoS definition), but does not annotate each substantive edit or tie changes line-by-line to sources."
+      "R1.2": "The output identifies the main load-bearing consistency issue between coupling as an objective term versus a constraint and proposes a plausible minimal repair, but it does not fully walk every claim in the chain end-to-end.",
+      "R1.4": "It correctly flags the novelty claim as unsupported and suggests citing closest prior schedulers, but it names no prior work and does not map against the nearest 3-5 works.",
+      "RX.1": "It explicitly discloses uncertainty about implementation details and novelty, but does not attach confidence or missing evidence to each recommendation.",
+      "RX.3": "The substantive response mostly stays within the requested draft-improvement task, but the initial covered_dims metadata names a different dimension set and the response does not exactly track J*(d).",
+      "RX.4": "The output is mostly harm-free and identifies risky patterns in the original, but it introduces or preserves some insufficiently verified claims, such as the tentative constraint encoding and deployment-ready framing.",
+      "RX.5": "Some major concerns are explained, but most rewrites are not annotated with source and reason, and the revised prose blends original content with inferred additions without full traceability."
     },
     "confidence": {
-      "R1.2": 0.78,
-      "R1.4": 0.7,
-      "RX.1": 0.82,
+      "R1.2": 0.82,
+      "R1.4": 0.9,
+      "RX.1": 0.86,
       "RX.3": 0.8,
-      "RX.4": 0.88,
-      "RX.5": 0.72
+      "RX.4": 0.76,
+      "RX.5": 0.84
     },
     "blockers": []
   },

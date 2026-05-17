@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_228",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2707,
+  "output_tokens": 765,
+  "latency_ms": 26525,
+  "cost_usd": 0.011034,
+  "raw": "{\n  \"judge_id\": \"get_started_evals\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs a comprehensive, end-to-end analysis of the artifact's logic. It correctly identifies the central flaw (conflating agreement with skill), the biased reasoning (post-hoc exclusion of data), and multiple direct internal contradictions (e.g., claiming agreement across all six regions while presenting data that shows disagreement in two). It proposes specific, minimal repairs for each issue, perfectly matching the s=5 anchor.\",\n    \"R1.3\": \"The agent meticulously audits every load-bearing claim against the numerical evidence provided in the artifact. It demonstrates that the headline claim of 'high predictive skill across all six regions' is unsupported by the evidence, that the reported mean skill of 0.78 is based on selective data, and that the claim of '~10% agreement' is directly contradicted by the numbers given for two of the regions. This is a perfect execution of evidence-claim alignment checking.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags that its external citations are from memory and require verification, and it qualifies its own recalculation of the mean (~0.66) by noting that the source text is missing a data point and that the user should recompute from the original source. This is a model example of responsible uncertainty disclosure, matching the s=5 anchor.\",\n    \"RX.3\": \"The request was a general 'Check this.' The agent's output is a detailed, multi-faceted critique of the artifact's scientific reasoning, which is exactly what the request implies. It remains entirely focused on this task without drifting to unrelated topics, thus adhering perfectly to the scope.\",\n    \"RX.4\": \"The agent's output avoids introducing any new errors. More importantly, it identifies a significant potential for downstream harm in the original artifact's conclusion that 'adaptation planners can draw on its projections with confidence.' By flagging this unsupported and dangerous overconfidence, the agent actively works to prevent harm, fully satisfying the s=5 anchor.\",\n    \"RX.5\": \"The agent provides excellent traceability for all its claims. Criticisms of the artifact are tied directly to specific phrases or numbers within the text. Claims relying on external knowledge are supported with specific (though caveated) citations to the scientific literature (e.g., Murphy 1993, Knutti et al. 2013). This clear annotation of sources for its reasoning meets the s=5 standard.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_evals",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs a comprehensive, end-to-end analysis of the artifact's logic. It correctly identifies the central flaw (conflating agreement with skill), the biased reasoning (post-hoc exclusion of data), and multiple direct internal contradictions (e.g., claiming agreement across all six regions while presenting data that shows disagreement in two). It proposes specific, minimal repairs for each issue, perfectly matching the s=5 anchor.",
+      "R1.3": "The agent meticulously audits every load-bearing claim against the numerical evidence provided in the artifact. It demonstrates that the headline claim of 'high predictive skill across all six regions' is unsupported by the evidence, that the reported mean skill of 0.78 is based on selective data, and that the claim of '~10% agreement' is directly contradicted by the numbers given for two of the regions. This is a perfect execution of evidence-claim alignment checking.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags that its external citations are from memory and require verification, and it qualifies its own recalculation of the mean (~0.66) by noting that the source text is missing a data point and that the user should recompute from the original source. This is a model example of responsible uncertainty disclosure, matching the s=5 anchor.",
+      "RX.3": "The request was a general 'Check this.' The agent's output is a detailed, multi-faceted critique of the artifact's scientific reasoning, which is exactly what the request implies. It remains entirely focused on this task without drifting to unrelated topics, thus adhering perfectly to the scope.",
+      "RX.4": "The agent's output avoids introducing any new errors. More importantly, it identifies a significant potential for downstream harm in the original artifact's conclusion that 'adaptation planners can draw on its projections with confidence.' By flagging this unsupported and dangerous overconfidence, the agent actively works to prevent harm, fully satisfying the s=5 anchor.",
+      "RX.5": "The agent provides excellent traceability for all its claims. Criticisms of the artifact are tied directly to specific phrases or numbers within the text. Claims relying on external knowledge are supported with specific (though caveated) citations to the scientific literature (e.g., Murphy 1993, Knutti et al. 2013). This clear annotation of sources for its reasoning meets the s=5 standard."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

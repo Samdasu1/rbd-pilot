@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_258",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2382,
+  "output_tokens": 802,
+  "latency_ms": 27518,
+  "cost_usd": 0.010998,
+  "raw": "{\n  \"judge_id\": \"exoplanet_abstract_judge\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the original text's argument chain end-to-end, identifying multiple load-bearing inconsistencies. These include a contradiction between the stated goal (decomposition) and the proposed implementation (collapsing to a scalar), an inconsistent definition of the decomposition 'axes', and an unjustified statistical claim about independence. The proposed repairs in the revised draft are minimal and directly fix each identified flaw.\",\n    \"R1.4\": \"The agent correctly identifies the strong, unsupported novelty claims in the original ('first decomposed evaluation framework'). It then names the most relevant body of prior work (Christiansen et al. on Kepler injection-recovery) and articulates the delta, correctly noting that prior work already reported sliced/decomposed results. While it doesn't map against 3-5 works, the single example provided is the most critical one and is sufficient to ground the novelty claim effectively. This is a very strong 's=3' and approaches 's=5'.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty disclosure' section that is exemplary. For each of its key recommendations or edits, it marks its confidence and lists missing evidence. It flags a citation from memory, explicitly states that a numerical claim is an illustrative placeholder that the user must replace with real data, and clarifies that a methodological critique needs to be empirically verified by the user. This meets the s=5 anchor perfectly.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent's output, which includes a detailed critique, a revised draft, and an uncertainty disclosure, is perfectly aligned with this request. It provides not just a better version but also the reasoning behind the improvements, which is central to the task. The output covers exactly the requested scope without any drift.\",\n    \"RX.4\": \"The agent's output is a model of downstream-harm avoidance. It identifies and removes several harmful patterns from the original text, including logical contradictions and an incorrect statistical claim that would represent flawed scientific reasoning if published. Where the agent introduces a new, specific number as a placeholder, it explicitly flags this as a fabrication in the uncertainty section and instructs the user to replace it with real data, thus preventing the introduction of new errors. There are no regressions.\",\n    \"RX.5\": \"The output has perfect traceability. The agent's 'Critique' section functions as a detailed annotation for every non-cosmetic change made in the 'Revised draft'. Each of the six points in the critique maps directly to a specific change (a deletion, a rewrite, a clarification) in the revision, providing a clear source and reason for every significant edit.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.4\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "exoplanet_abstract_judge",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the original text's argument chain end-to-end, identifying multiple load-bearing inconsistencies. These include a contradiction between the stated goal (decomposition) and the proposed implementation (collapsing to a scalar), an inconsistent definition of the decomposition 'axes', and an unjustified statistical claim about independence. The proposed repairs in the revised draft are minimal and directly fix each identified flaw.",
+      "R1.4": "The agent correctly identifies the strong, unsupported novelty claims in the original ('first decomposed evaluation framework'). It then names the most relevant body of prior work (Christiansen et al. on Kepler injection-recovery) and articulates the delta, correctly noting that prior work already reported sliced/decomposed results. While it doesn't map against 3-5 works, the single example provided is the most critical one and is sufficient to ground the novelty claim effectively. This is a very strong 's=3' and approaches 's=5'.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty disclosure' section that is exemplary. For each of its key recommendations or edits, it marks its confidence and lists missing evidence. It flags a citation from memory, explicitly states that a numerical claim is an illustrative placeholder that the user must replace with real data, and clarifies that a methodological critique needs to be empirically verified by the user. This meets the s=5 anchor perfectly.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent's output, which includes a detailed critique, a revised draft, and an uncertainty disclosure, is perfectly aligned with this request. It provides not just a better version but also the reasoning behind the improvements, which is central to the task. The output covers exactly the requested scope without any drift.",
+      "RX.4": "The agent's output is a model of downstream-harm avoidance. It identifies and removes several harmful patterns from the original text, including logical contradictions and an incorrect statistical claim that would represent flawed scientific reasoning if published. Where the agent introduces a new, specific number as a placeholder, it explicitly flags this as a fabrication in the uncertainty section and instructs the user to replace it with real data, thus preventing the introduction of new errors. There are no regressions.",
+      "RX.5": "The output has perfect traceability. The agent's 'Critique' section functions as a detailed annotation for every non-cosmetic change made in the 'Revised draft'. Each of the six points in the critique maps directly to a specific change (a deletion, a rewrite, a clarification) in the revision, providing a clear source and reason for every significant edit."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.4": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

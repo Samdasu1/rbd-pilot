@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_229",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2525,
+  "output_tokens": 809,
+  "latency_ms": 27573,
+  "cost_usd": 0.011246,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent's entire output is a systematic, end-to-end deconstruction of the artifact's argument chain. It flags every major inconsistency, from the headline claim ('uniformly reduces overconfidence') being contradicted by the per-category data, to the aggregate analysis ('joint upward movement') being a non-sequitur that masks increased miscalibration under the artifact's own metric. The proposed rewrite path is a direct, logical consequence of correcting these inconsistencies. This is a textbook example of a score=5 performance.\",\n    \"R1.3\": \"The agent meticulously audits every load-bearing claim in the artifact against the numerical evidence provided. It correctly calculates the aggregate miscalibration gap to show it worsens, directly contradicting the artifact's claim of improvement. It points out that the per-category data (3 of 5 tools worsening) falsifies the claim of uniform reduction in overconfidence. It even deconstructs the 'noise' argument by comparing effect sizes. The entire critique is built on exposing the severe misalignment between claims and evidence.\",\n    \"RX.1\": \"The agent provides an exemplary uncertainty disclosure. It explicitly states what evidence is missing ('I have not seen Table 2 itself') and how that missing evidence could alter its conclusions. It also qualifies its statistical reasoning, noting that its standard error estimate assumes independent invocations and would change if they were correlated. This is a sophisticated and appropriate disclosure of the limits of its analysis.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a deep, actionable critique of the section's core argument, its use of evidence, and its conclusions, which is a central and highly valuable way to provide help. The output does not drift to irrelevant topics and is entirely focused on the provided artifact.\",\n    \"RX.4\": \"The agent's output does not introduce any errors. More importantly, it identifies a significant downstream harm in the original artifact. The artifact's recommendation to deploy 'SelfCheck' in confidence-sensitive settings is directly contradicted by its own data, which shows the method increases overconfidence. The agent correctly flags this as a dangerous recommendation and proposes a corrected path that avoids this harm, thus meeting the highest standard for this dimension.\",\n    \"RX.5\": \"The agent's critique is perfectly traceable. Every point it makes is explicitly tied to a specific number, phrase, or claim from the source artifact. For example, it quotes the confidence/success numbers to recalculate the gap, lists the specific tools that improve vs. worsen, and directly addresses the 'noise' justification. The reasoning for every recommended change is transparent and directly linked to the source material.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent's entire output is a systematic, end-to-end deconstruction of the artifact's argument chain. It flags every major inconsistency, from the headline claim ('uniformly reduces overconfidence') being contradicted by the per-category data, to the aggregate analysis ('joint upward movement') being a non-sequitur that masks increased miscalibration under the artifact's own metric. The proposed rewrite path is a direct, logical consequence of correcting these inconsistencies. This is a textbook example of a score=5 performance.",
+      "R1.3": "The agent meticulously audits every load-bearing claim in the artifact against the numerical evidence provided. It correctly calculates the aggregate miscalibration gap to show it worsens, directly contradicting the artifact's claim of improvement. It points out that the per-category data (3 of 5 tools worsening) falsifies the claim of uniform reduction in overconfidence. It even deconstructs the 'noise' argument by comparing effect sizes. The entire critique is built on exposing the severe misalignment between claims and evidence.",
+      "RX.1": "The agent provides an exemplary uncertainty disclosure. It explicitly states what evidence is missing ('I have not seen Table 2 itself') and how that missing evidence could alter its conclusions. It also qualifies its statistical reasoning, noting that its standard error estimate assumes independent invocations and would change if they were correlated. This is a sophisticated and appropriate disclosure of the limits of its analysis.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a deep, actionable critique of the section's core argument, its use of evidence, and its conclusions, which is a central and highly valuable way to provide help. The output does not drift to irrelevant topics and is entirely focused on the provided artifact.",
+      "RX.4": "The agent's output does not introduce any errors. More importantly, it identifies a significant downstream harm in the original artifact. The artifact's recommendation to deploy 'SelfCheck' in confidence-sensitive settings is directly contradicted by its own data, which shows the method increases overconfidence. The agent correctly flags this as a dangerous recommendation and proposes a corrected path that avoids this harm, thus meeting the highest standard for this dimension.",
+      "RX.5": "The agent's critique is perfectly traceable. Every point it makes is explicitly tied to a specific number, phrase, or claim from the source artifact. For example, it quotes the confidence/success numbers to recalculate the gap, lists the specific tools that improve vs. worsen, and directly addresses the 'noise' justification. The reasoning for every recommended change is transparent and directly linked to the source material."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

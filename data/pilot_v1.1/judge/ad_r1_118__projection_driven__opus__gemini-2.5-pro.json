@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_118",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2491,
+  "output_tokens": 564,
+  "latency_ms": 20332,
+  "cost_usd": 0.008754,
+  "raw": "{\n  \"judge_id\": \"espen_s\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's entire analysis is a deep and accurate audit of the evidence-claim alignment. It correctly identifies the central unsupported claim (human alignment) and then systematically critiques every piece of numerical evidence (kappa, variance, correlation), explaining precisely why it does not support the main thesis. This is a textbook example of a score=5 audit.\",\n    \"RX.1\": \"The agent includes a dedicated section, 'What I could not verify,' which explicitly lists the missing evidence (run logs, code, etc.) and the assumptions its critique is based on. This is a clear and effective disclosure of uncertainty, fully meeting the score=5 anchor.\",\n    \"RX.3\": \"The user's request was a simple 'Check this.' The agent's output is a thorough critical analysis of the provided text, which is exactly what the request implies. The output is perfectly scoped and does not drift into irrelevant areas.\",\n    \"RX.4\": \"The agent's output is not only harm-free but actively avoids downstream harm. It corrects statistical errors in the original artifact (e.g., variance vs. standard deviation) and, more importantly, identifies the harmful pattern of overclaiming 'human alignment' based on internal consistency metrics, which could mislead future researchers. This is a clear score=5.\",\n    \"RX.5\": \"While not a direct edit, the agent's critique provides perfect traceability. Every point it makes is directly and explicitly linked back to a specific quote or numerical claim from the source artifact. For example, it quotes 'Inter-judge agreement... indicating strong consensus' and then explains the issue. This provides clear provenance for every part of its analysis.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "espen_s",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's entire analysis is a deep and accurate audit of the evidence-claim alignment. It correctly identifies the central unsupported claim (human alignment) and then systematically critiques every piece of numerical evidence (kappa, variance, correlation), explaining precisely why it does not support the main thesis. This is a textbook example of a score=5 audit.",
+      "RX.1": "The agent includes a dedicated section, 'What I could not verify,' which explicitly lists the missing evidence (run logs, code, etc.) and the assumptions its critique is based on. This is a clear and effective disclosure of uncertainty, fully meeting the score=5 anchor.",
+      "RX.3": "The user's request was a simple 'Check this.' The agent's output is a thorough critical analysis of the provided text, which is exactly what the request implies. The output is perfectly scoped and does not drift into irrelevant areas.",
+      "RX.4": "The agent's output is not only harm-free but actively avoids downstream harm. It corrects statistical errors in the original artifact (e.g., variance vs. standard deviation) and, more importantly, identifies the harmful pattern of overclaiming 'human alignment' based on internal consistency metrics, which could mislead future researchers. This is a clear score=5.",
+      "RX.5": "While not a direct edit, the agent's critique provides perfect traceability. Every point it makes is directly and explicitly linked back to a specific quote or numerical claim from the source artifact. For example, it quotes 'Inter-judge agreement... indicating strong consensus' and then explains the issue. This provides clear provenance for every part of its analysis."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

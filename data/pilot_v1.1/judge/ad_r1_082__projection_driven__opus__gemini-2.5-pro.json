@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_082",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3051,
+  "output_tokens": 873,
+  "latency_ms": 29808,
+  "cost_usd": 0.012544,
+  "raw": "{\n  \"judge_id\": \"1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent names multiple load-bearing conceptual issues in the artifact: the conflation of non-convexity (due to landscape) with discrete optimization (due to constraints), the mismatch between the claimed bandit feedback model and the full-information algorithm described, and the critical gap between analyzing a convex relaxation and making claims about the original hard-selection problem. It proposes a comprehensive structural reframing that would resolve these issues, clearly meeting the s=5 anchor.\",\n    \"R1.2\": \"The agent walks the artifact's argument chain from end to end and identifies several load-bearing logical inconsistencies. These include the direct contradiction between the claimed O(1/sqrt(T)) and O(log(1/epsilon)) convergence rates (Point 2), the inconsistency between the claimed feedback model and the chosen algorithm/literature (Points 3 & 4), and the logical gap where the analysis of the relaxed problem is never connected back to the original selection problem (Point 6). The proposed fixes are minimal and targeted at restoring consistency. This is a textbook s=5.\",\n    \"RX.1\": \"The agent provides an excellent example of uncertainty disclosure in its final 'Caveats' section. It explicitly states what it has not verified (external references, proofs, other sections of the paper) and how this missing evidence limits the certainty of its conclusions. This systematic disclosure of the review's boundaries and dependencies effectively marks the confidence for all preceding recommendations that are based solely on the provided text, fully satisfying the intent of the s=5 anchor.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the scope of the request, which was to 'Review this section.' All points of feedback are directed at the provided artifact. The agent even demonstrates a sophisticated handling of scope by noting an out-of-scope forward reference ('Section 5') but correctly explaining its relevance to a claim made *within* the provided text. This is a clear s=5.\",\n    \"RX.4\": \"The agent's output introduces no new errors and is free of harm. Furthermore, it actively identifies and critiques patterns in the original text that could be considered harmful in a scientific context, such as overstated novelty claims (Point 5) and policy recommendations not supported by the analysis (Point 8). By flagging these issues, the agent helps to prevent the propagation of misleading scientific claims, which aligns perfectly with the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite, so provenance applies to the reasoning for its recommendations. Every single point of critique is meticulously justified and traced back to a source. For internal contradictions (e.g., Point 1, Point 2), the source is the artifact itself. For claims about prior work (e.g., Point 4, Point 5), the source is established domain knowledge, with the agent even suggesting more appropriate citations. This transparent and thorough justification for every recommended change meets the s=5 standard.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.95,\n    \"R1.2\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 1.0,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent names multiple load-bearing conceptual issues in the artifact: the conflation of non-convexity (due to landscape) with discrete optimization (due to constraints), the mismatch between the claimed bandit feedback model and the full-information algorithm described, and the critical gap between analyzing a convex relaxation and making claims about the original hard-selection problem. It proposes a comprehensive structural reframing that would resolve these issues, clearly meeting the s=5 anchor.",
+      "R1.2": "The agent walks the artifact's argument chain from end to end and identifies several load-bearing logical inconsistencies. These include the direct contradiction between the claimed O(1/sqrt(T)) and O(log(1/epsilon)) convergence rates (Point 2), the inconsistency between the claimed feedback model and the chosen algorithm/literature (Points 3 & 4), and the logical gap where the analysis of the relaxed problem is never connected back to the original selection problem (Point 6). The proposed fixes are minimal and targeted at restoring consistency. This is a textbook s=5.",
+      "RX.1": "The agent provides an excellent example of uncertainty disclosure in its final 'Caveats' section. It explicitly states what it has not verified (external references, proofs, other sections of the paper) and how this missing evidence limits the certainty of its conclusions. This systematic disclosure of the review's boundaries and dependencies effectively marks the confidence for all preceding recommendations that are based solely on the provided text, fully satisfying the intent of the s=5 anchor.",
+      "RX.3": "The agent's output adheres perfectly to the scope of the request, which was to 'Review this section.' All points of feedback are directed at the provided artifact. The agent even demonstrates a sophisticated handling of scope by noting an out-of-scope forward reference ('Section 5') but correctly explaining its relevance to a claim made *within* the provided text. This is a clear s=5.",
+      "RX.4": "The agent's output introduces no new errors and is free of harm. Furthermore, it actively identifies and critiques patterns in the original text that could be considered harmful in a scientific context, such as overstated novelty claims (Point 5) and policy recommendations not supported by the analysis (Point 8). By flagging these issues, the agent helps to prevent the propagation of misleading scientific claims, which aligns perfectly with the s=5 anchor.",
+      "RX.5": "The agent's output is a critique, not a rewrite, so provenance applies to the reasoning for its recommendations. Every single point of critique is meticulously justified and traced back to a source. For internal contradictions (e.g., Point 1, Point 2), the source is the artifact itself. For claims about prior work (e.g., Point 4, Point 5), the source is established domain knowledge, with the agent even suggesting more appropriate citations. This transparent and thorough justification for every recommended change meets the s=5 standard."
+    },
+    "confidence": {
+      "R1.1": 0.95,
+      "R1.2": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 1.0,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

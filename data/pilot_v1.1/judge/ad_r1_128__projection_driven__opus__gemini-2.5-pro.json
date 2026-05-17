@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_128",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2874,
+  "output_tokens": 834,
+  "latency_ms": 28972,
+  "cost_usd": 0.011933,
+  "raw": "{\n  \"judge_id\": \"es_001\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 3,\n    \"R1.7\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the unsupported novelty claim ('The first...') and proposes a more defensible, hedged version. While it does not name specific prior works (which would be a 5), it articulates the nature of the delta that needs to be proven (published vs. concurrent work) and explicitly flags that a literature search is required. This goes beyond simply asserting novelty and represents a constructive critique of the claim's basis, aligning with the s=3 anchor.\",\n    \"R1.7\": \"The artifact is an abstract and has no citations to audit. However, the agent's critique of the 'first' claim is a direct engagement with scholarship. It flags a critical missing step: a literature review to substantiate the novelty claim. This is equivalent to flagging a missing key work or body of work, as required by the s=3 anchor. It correctly identifies where citations are needed to support a load-bearing claim.\",\n    \"RX.1\": \"The agent's performance on uncertainty disclosure is exemplary. It adds hedging directly into the revised text (e.g., 'To our knowledge...', scoping the performance metrics to the specific hardware). Crucially, it also provides a separate, detailed section ('Things I could not verify') that lists multiple points of uncertainty and missing evidence, such as the train/test split, the exact label definition, and the provenance of baseline numbers. This meets the s=5 standard of marking confidence and missing evidence for each key recommendation/claim.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a revised draft, a detailed breakdown of the changes, and a list of remaining questions. The entire output is focused on improving the provided artifact and does not drift into out-of-scope topics. This is a perfect execution of the delegated task.\",\n    \"RX.4\": \"The agent introduces no new errors. Instead, it systematically identifies and corrects multiple harmful patterns in the original text that could mislead a reader. These include overclaiming novelty, presenting specific results as general laws, making unsupported forward-looking statements, and omitting key limitations. By replacing a speculative paragraph with a dedicated 'caveats' section, the agent significantly improves the scientific integrity of the text and avoids downstream harm, meriting a score of 5.\",\n    \"RX.5\": \"The agent provides exceptional traceability. In the 'Notable issues and what I changed' section, it annotates every significant change with a clear and compelling reason. It covers changes to specific claims, framing of results, structural ordering, and even sentence-level polish. It also documents ambiguities it could not resolve from the source text. This detailed, point-by-point rationale for all non-cosmetic changes perfectly matches the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.95,\n    \"R1.7\": 0.95,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "es_001",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 3,
+      "R1.7": 3,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the unsupported novelty claim ('The first...') and proposes a more defensible, hedged version. While it does not name specific prior works (which would be a 5), it articulates the nature of the delta that needs to be proven (published vs. concurrent work) and explicitly flags that a literature search is required. This goes beyond simply asserting novelty and represents a constructive critique of the claim's basis, aligning with the s=3 anchor.",
+      "R1.7": "The artifact is an abstract and has no citations to audit. However, the agent's critique of the 'first' claim is a direct engagement with scholarship. It flags a critical missing step: a literature review to substantiate the novelty claim. This is equivalent to flagging a missing key work or body of work, as required by the s=3 anchor. It correctly identifies where citations are needed to support a load-bearing claim.",
+      "RX.1": "The agent's performance on uncertainty disclosure is exemplary. It adds hedging directly into the revised text (e.g., 'To our knowledge...', scoping the performance metrics to the specific hardware). Crucially, it also provides a separate, detailed section ('Things I could not verify') that lists multiple points of uncertainty and missing evidence, such as the train/test split, the exact label definition, and the provenance of baseline numbers. This meets the s=5 standard of marking confidence and missing evidence for each key recommendation/claim.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a revised draft, a detailed breakdown of the changes, and a list of remaining questions. The entire output is focused on improving the provided artifact and does not drift into out-of-scope topics. This is a perfect execution of the delegated task.",
+      "RX.4": "The agent introduces no new errors. Instead, it systematically identifies and corrects multiple harmful patterns in the original text that could mislead a reader. These include overclaiming novelty, presenting specific results as general laws, making unsupported forward-looking statements, and omitting key limitations. By replacing a speculative paragraph with a dedicated 'caveats' section, the agent significantly improves the scientific integrity of the text and avoids downstream harm, meriting a score of 5.",
+      "RX.5": "The agent provides exceptional traceability. In the 'Notable issues and what I changed' section, it annotates every significant change with a clear and compelling reason. It covers changes to specific claims, framing of results, structural ordering, and even sentence-level polish. It also documents ambiguities it could not resolve from the source text. This detailed, point-by-point rationale for all non-cosmetic changes perfectly matches the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 0.95,
+      "R1.7": 0.95,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

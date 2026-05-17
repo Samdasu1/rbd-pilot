@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_239",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3454,
+  "output_tokens": 904,
+  "latency_ms": 29058,
+  "cost_usd": 0.013357,
+  "raw": "{\n  \"judge_id\": \"metaculus_pqa_s1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the strong 'first' claims as rhetorical and likely incorrect. It maps the proposed work against several highly relevant prior research areas (Dawid-Skene models, calibrated ensembling, mirror descent) to contextualize the novelty. It also astutely uses the paper's own citation (Hartmann & Liu 2021) to question the breadth of the novelty claim. It then proposes a sharper, more defensible claim ('first application... to our knowledge'), perfectly aligning with the s=5 anchor of identifying sharp vs. rhetorical delta.\",\n    \"R1.7\": \"The agent audits the single provided citation (Hartmann & Liu 2021) and uses it to identify an internal inconsistency in the draft's claims. It also explicitly flags a 'Citation gap' (point #9), identifying three entire fields of relevant literature that are missing ('Aggregating noisy judges, calibrated ensembling, and LM-as-judge meta-evaluation'). While it doesn't provide specific paper citations (lacking 'bibliographic precision' for a perfect 5), it goes well beyond flagging a single missing work (s=3) by identifying the key missing areas of scholarship.\",\n    \"RX.1\": \"The agent's output is exemplary in its disclosure of uncertainty. It includes a dedicated 'Caveats on this review' section that explicitly lists which claims it could not verify (empirical results, novelty against the full literature, complexity) and why (lack of access to the full paper/code). This uncertainty is used to justify its editorial choices, such as using `[TODO]` placeholders instead of inventing technical details. This perfectly matches the s=5 anchor of marking confidence and missing evidence for its recommendations.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent provided a comprehensive improvement plan, including a detailed critique of substantive issues, a suggested reorganization, and a rewritten draft that implements its own suggestions. The entire output is focused on fulfilling this request without any deviation. This is a perfect adherence to the specified scope.\",\n    \"RX.4\": \"The agent's output introduces no new errors and corrects several potential errors in the original. Crucially, it also identifies a potential for downstream harm in the original work's framing. In point #10, it notes that a tool for creating a single quality score could be misused for ranking and that the authors should consider failure modes like correlated judge errors. It then incorporates a limitations section into the revised draft to address this, fully satisfying the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is structured to provide maximum traceability. It first lists its critiques as a numbered list of 'Key issues,' providing the rationale for each proposed change. It then presents a 'Revised draft' where every significant change (e.g., softening novelty claims, correcting the regret comparison, adding limitations) and every request for more information (`[TODO]` placeholders) can be directly traced back to a specific point in the 'Key issues' section. This meets the s=5 anchor of annotating every non-cosmetic change with its reason.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "metaculus_pqa_s1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the strong 'first' claims as rhetorical and likely incorrect. It maps the proposed work against several highly relevant prior research areas (Dawid-Skene models, calibrated ensembling, mirror descent) to contextualize the novelty. It also astutely uses the paper's own citation (Hartmann & Liu 2021) to question the breadth of the novelty claim. It then proposes a sharper, more defensible claim ('first application... to our knowledge'), perfectly aligning with the s=5 anchor of identifying sharp vs. rhetorical delta.",
+      "R1.7": "The agent audits the single provided citation (Hartmann & Liu 2021) and uses it to identify an internal inconsistency in the draft's claims. It also explicitly flags a 'Citation gap' (point #9), identifying three entire fields of relevant literature that are missing ('Aggregating noisy judges, calibrated ensembling, and LM-as-judge meta-evaluation'). While it doesn't provide specific paper citations (lacking 'bibliographic precision' for a perfect 5), it goes well beyond flagging a single missing work (s=3) by identifying the key missing areas of scholarship.",
+      "RX.1": "The agent's output is exemplary in its disclosure of uncertainty. It includes a dedicated 'Caveats on this review' section that explicitly lists which claims it could not verify (empirical results, novelty against the full literature, complexity) and why (lack of access to the full paper/code). This uncertainty is used to justify its editorial choices, such as using `[TODO]` placeholders instead of inventing technical details. This perfectly matches the s=5 anchor of marking confidence and missing evidence for its recommendations.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent provided a comprehensive improvement plan, including a detailed critique of substantive issues, a suggested reorganization, and a rewritten draft that implements its own suggestions. The entire output is focused on fulfilling this request without any deviation. This is a perfect adherence to the specified scope.",
+      "RX.4": "The agent's output introduces no new errors and corrects several potential errors in the original. Crucially, it also identifies a potential for downstream harm in the original work's framing. In point #10, it notes that a tool for creating a single quality score could be misused for ranking and that the authors should consider failure modes like correlated judge errors. It then incorporates a limitations section into the revised draft to address this, fully satisfying the s=5 anchor.",
+      "RX.5": "The agent's output is structured to provide maximum traceability. It first lists its critiques as a numbered list of 'Key issues,' providing the rationale for each proposed change. It then presents a 'Revised draft' where every significant change (e.g., softening novelty claims, correcting the regret comparison, adding limitations) and every request for more information (`[TODO]` placeholders) can be directly traced back to a specific point in the 'Key issues' section. This meets the s=5 anchor of annotating every non-cosmetic change with its reason."
+    },
+    "confidence": {
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

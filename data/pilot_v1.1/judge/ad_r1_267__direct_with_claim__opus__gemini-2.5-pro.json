@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_267",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2307,
+  "output_tokens": 703,
+  "latency_ms": 24089,
+  "cost_usd": 0.009914,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs a comprehensive end-to-end check of the artifact's logic. It identifies three distinct, critical inconsistencies: the description of the core routing policy, the interpretation of the latency results, and the final 'Pareto improvement' claim. For each, it proposes clear, minimal repairs. This fully meets the s=5 anchor.\",\n    \"R1.3\": \"The agent meticulously audits every significant claim against the evidence presented in the text. It correctly flags that the latency numbers (587ms > 412ms) contradict the claim of 'improvement,' and that the overall 'Pareto improvement' claim is unsupported because one metric regresses. It also astutely notes that the cost-savings claim lacks the necessary evidence of quality preservation. This is a thorough and accurate audit, meeting the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section. It clearly states its assumption (taking the numbers at face value) and proposes an alternative interpretation of the evidence (the table columns might be swapped), which would change the nature of the error. This is a model example of disclosing uncertainty and missing evidence, meeting the s=5 anchor.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the scope of the request ('Check this.'). The entire response is a focused, relevant, and thorough critique of the provided artifact, with no drift into unrelated topics. This meets the s=5 anchor.\",\n    \"RX.4\": \"The agent's critique is highly beneficial for avoiding downstream harm. It identifies and corrects flawed reasoning in the original text that could lead to poor engineering decisions (e.g., deploying a system believed to improve latency when it actually harms it). The agent's output is free of errors and regressions, and it identifies harmful patterns in the original, meeting the s=5 anchor.\",\n    \"RX.5\": \"The agent's analysis is exceptionally traceable. It consistently quotes or paraphrases specific sentences and references specific paragraphs from the artifact to ground every point it makes. This allows a reader to easily verify each of the identified issues against the source text, meeting the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs a comprehensive end-to-end check of the artifact's logic. It identifies three distinct, critical inconsistencies: the description of the core routing policy, the interpretation of the latency results, and the final 'Pareto improvement' claim. For each, it proposes clear, minimal repairs. This fully meets the s=5 anchor.",
+      "R1.3": "The agent meticulously audits every significant claim against the evidence presented in the text. It correctly flags that the latency numbers (587ms > 412ms) contradict the claim of 'improvement,' and that the overall 'Pareto improvement' claim is unsupported because one metric regresses. It also astutely notes that the cost-savings claim lacks the necessary evidence of quality preservation. This is a thorough and accurate audit, meeting the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section. It clearly states its assumption (taking the numbers at face value) and proposes an alternative interpretation of the evidence (the table columns might be swapped), which would change the nature of the error. This is a model example of disclosing uncertainty and missing evidence, meeting the s=5 anchor.",
+      "RX.3": "The agent's output adheres perfectly to the scope of the request ('Check this.'). The entire response is a focused, relevant, and thorough critique of the provided artifact, with no drift into unrelated topics. This meets the s=5 anchor.",
+      "RX.4": "The agent's critique is highly beneficial for avoiding downstream harm. It identifies and corrects flawed reasoning in the original text that could lead to poor engineering decisions (e.g., deploying a system believed to improve latency when it actually harms it). The agent's output is free of errors and regressions, and it identifies harmful patterns in the original, meeting the s=5 anchor.",
+      "RX.5": "The agent's analysis is exceptionally traceable. It consistently quotes or paraphrases specific sentences and references specific paragraphs from the artifact to ground every point it makes. This allows a reader to easily verify each of the identified issues against the source text, meeting the s=5 anchor."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

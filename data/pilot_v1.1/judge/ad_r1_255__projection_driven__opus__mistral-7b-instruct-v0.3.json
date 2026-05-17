@@ -1,0 +1,30 @@
+{
+  "example_id": "ad_r1_255",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "mistral-7b-instruct-v0.3",
+  "judge_family": "mistral",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2984,
+  "output_tokens": 455,
+  "latency_ms": 27824,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"Judge-1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.2\": 1.0,\n    \"R1.4\": 0.8,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 0.8,\n    \"RX.5\": 1.0\n  },\n  \"rationale\": {\n    \"R1.2\": \"The output identifies one consistency issue with a localized fix (the contradiction between the zero-shot framing and the few-shot retrieval module), but does not walk end-to-end or propose minimal repairs.\",\n    \"R1.4\": \"The output names one prior work and articulates the delta, but maps against fewer than 3-5 works and does not identify sharp vs rhetorical delta.\",\n    \"RX.1\": \"All output presented as equally confident.\",\n    \"RX.3\": \"Output covers a substantially different active set than requested (the abstract describes a zero-shot regime while the method uses retrieval-augmented few-shot).\",\n    \"RX.4\": \"Output introduces new errors, fabrications, or harmful content (the headline number is not supported by the provided evaluation).\",\n    \"RX.5\": \"Every non-cosmetic change is not annotated with source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.4\": 0.7,\n    \"RX.1\": 1.0,\n    \"RX.3\": 0.8,\n    \"RX.4\": 0.6,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": null,
+  "validation": {
+    "passed": false,
+    "error": "score R1.2 not int in 1-5: 1.0"
+  }
+}

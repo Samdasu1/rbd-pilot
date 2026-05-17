@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_224",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "qwen-2.5-72b-instruct",
+  "judge_family": "alibaba",
+  "judge_tier": "mid",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2886,
+  "output_tokens": 420,
+  "latency_ms": 75299,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"J001\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent identifies the core conceptual issues (end-to-end vs. pipeline, supervision-free vs. supervised) and proposes a reframing that aligns with prior work, showing where the draft drifts from its main claims.\",\n    \"R1.2\": \"The agent walks through the argument chain end-to-end, flagging every load-bearing inconsistency (training regime, supervision, attribution of gains) and proposing minimal repairs.\",\n    \"RX.1\": \"For each recommendation, the agent marks confidence and missing evidence, such as the need to verify citation keys and SpanSeqGen's reported F1_ans.\",\n    \"RX.3\": \"The output covers exactly the agreed J*(d), addressing all dimensions without drift.\",\n    \"RX.4\": \"No regressions are introduced; the agent identifies harmful patterns in the original draft (self-contradictions, unsupported claims) and addresses them.\",\n    \"RX.5\": \"Every non-cosmetic change is annotated with source and reason, providing clear traceability.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.2\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J001",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent identifies the core conceptual issues (end-to-end vs. pipeline, supervision-free vs. supervised) and proposes a reframing that aligns with prior work, showing where the draft drifts from its main claims.",
+      "R1.2": "The agent walks through the argument chain end-to-end, flagging every load-bearing inconsistency (training regime, supervision, attribution of gains) and proposing minimal repairs.",
+      "RX.1": "For each recommendation, the agent marks confidence and missing evidence, such as the need to verify citation keys and SpanSeqGen's reported F1_ans.",
+      "RX.3": "The output covers exactly the agreed J*(d), addressing all dimensions without drift.",
+      "RX.4": "No regressions are introduced; the agent identifies harmful patterns in the original draft (self-contradictions, unsupported claims) and addresses them.",
+      "RX.5": "Every non-cosmetic change is annotated with source and reason, providing clear traceability."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.95,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

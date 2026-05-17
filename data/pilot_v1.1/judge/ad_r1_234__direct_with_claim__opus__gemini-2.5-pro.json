@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_234",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2502,
+  "output_tokens": 745,
+  "latency_ms": 28996,
+  "cost_usd": 0.010578,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every load-bearing claim in the text against the described methodology. It correctly identifies that the central claim (measuring \\\"analytical reproducibility\\\") is not supported by the chosen evidence (BLEU scores). It also flags two other key unsupported claims: the \\\"upper bound\\\" claim and the vague \\\"tighter confidence intervals\\\" claim. While no table was provided to check against, the agent performed a thorough audit of the claims that could be evaluated, which aligns with the spirit of the highest anchor.\",\n    \"R1.7\": \"The agent identifies critical missing scholarly context, specifically the name of the benchmark used, which is essential for reproducibility and is a form of citation. It also adds placeholders for the model and API, which are also critical citations in this context. While it doesn't suggest specific papers from the literature with bibliographic precision, it correctly situates the work within the relevant research traditions and flags the most important missing references for the specific protocol being described.\",\n    \"RX.1\": \"The agent provides an explicit \\\"Uncertainty disclosure\\\" section. It clearly states its assumptions (e.g., about how BLEU was computed, the baseline for the SE reduction claim) and flags where the user needs to fill in missing evidence using bracketed placeholders throughout the revised text. This is a model example of disclosing uncertainty and missing information.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to \\\"Clean this up.\\\" It correctly interprets this as a request to critique and revise the provided scientific text, focusing on improving its methodological rigor, clarity, and logical structure. The output is entirely focused on this task and does not drift.\",\n    \"RX.4\": \"The agent's revision is free of regressions. Crucially, it identifies and corrects harmful patterns in the original text. The original's flawed use of BLEU as a proxy for analytical reproducibility and its overconfident \\\"upper bound\\\" claim could mislead readers and promote poor scientific practice. The agent's revision fixes these issues, making the text more scientifically sound and responsible.\",\n    \"RX.5\": \"The output provides exceptional traceability. It first lists seven specific issues with the original text. Then, the revised text incorporates changes that directly address each of these identified issues. Every significant change in the revision can be directly mapped back to a corresponding point in the critique, providing a clear reason for the change.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.7\": 0.8,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every load-bearing claim in the text against the described methodology. It correctly identifies that the central claim (measuring \"analytical reproducibility\") is not supported by the chosen evidence (BLEU scores). It also flags two other key unsupported claims: the \"upper bound\" claim and the vague \"tighter confidence intervals\" claim. While no table was provided to check against, the agent performed a thorough audit of the claims that could be evaluated, which aligns with the spirit of the highest anchor.",
+      "R1.7": "The agent identifies critical missing scholarly context, specifically the name of the benchmark used, which is essential for reproducibility and is a form of citation. It also adds placeholders for the model and API, which are also critical citations in this context. While it doesn't suggest specific papers from the literature with bibliographic precision, it correctly situates the work within the relevant research traditions and flags the most important missing references for the specific protocol being described.",
+      "RX.1": "The agent provides an explicit \"Uncertainty disclosure\" section. It clearly states its assumptions (e.g., about how BLEU was computed, the baseline for the SE reduction claim) and flags where the user needs to fill in missing evidence using bracketed placeholders throughout the revised text. This is a model example of disclosing uncertainty and missing information.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to \"Clean this up.\" It correctly interprets this as a request to critique and revise the provided scientific text, focusing on improving its methodological rigor, clarity, and logical structure. The output is entirely focused on this task and does not drift.",
+      "RX.4": "The agent's revision is free of regressions. Crucially, it identifies and corrects harmful patterns in the original text. The original's flawed use of BLEU as a proxy for analytical reproducibility and its overconfident \"upper bound\" claim could mislead readers and promote poor scientific practice. The agent's revision fixes these issues, making the text more scientifically sound and responsible.",
+      "RX.5": "The output provides exceptional traceability. It first lists seven specific issues with the original text. Then, the revised text incorporates changes that directly address each of these identified issues. Every significant change in the revision can be directly mapped back to a corresponding point in the critique, providing a clear reason for the change."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.7": 0.8,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

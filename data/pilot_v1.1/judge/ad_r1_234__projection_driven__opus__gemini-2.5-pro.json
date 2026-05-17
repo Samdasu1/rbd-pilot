@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_234",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2231,
+  "output_tokens": 740,
+  "latency_ms": 26365,
+  "cost_usd": 0.010189,
+  "raw": "{\n  \"judge_id\": \"get_multi_turn_20240513_090119_834\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 3,\n    \"R1.7\": 1,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent correctly identifies and softens two claims in the original text that are not well-supported by the described evidence: the characterization of 0.41 BLEU as an 'upper bound' and the absolute qualitative labels ('moderately reproducible') applied to BLEU scores. This meets the s=3 anchor. It does not reach s=5 because it explicitly states in its notes that it did not verify the numerical claims against the cited 'Table 2'.\",\n    \"R1.7\": \"The agent explicitly states that it 'did not assess the bibliography or add citations.' While it correctly hedges language around prior work, it performs no citation-level audit, which is the core of this dimension. This is a clear s=1.\",\n    \"RX.1\": \"The agent provides an exemplary 'Notes on changes and residual caveats' section. This section meticulously details the limitations of the edit, including what was not verified (numerical values, citations), explains the reasoning behind subjective changes (paragraph order), and flags where its own edits might need further refinement (e.g., adding 'textual' before 'reproducibility'). This is a textbook s=5.\",\n    \"RX.3\": \"The request was to 'Clean this up.' The agent performed a comprehensive cleanup, including improving prose, reordering paragraphs for better flow, and correcting logical flaws in the argumentation. This is exactly what the request entails. The agent's work is perfectly within the scope of the delegation.\",\n    \"RX.4\": \"The agent's output is free of regressions. Crucially, it identifies and corrects a harmful pattern in the original text: overclaiming. By softening the claim that a single result constitutes an 'upper bound' for current models, it prevents the propagation of a potentially misleading scientific conclusion. This directly aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent provides a detailed list of 'changes and residual caveats' that traces every significant, non-cosmetic edit. It explains the reordering of paragraphs, the softening of specific claims, and the addition of a clarifying word ('textual'), providing a clear rationale for each change. This allows the user to understand and approve or revert every substantive modification, meeting the s=5 standard.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_multi_turn_20240513_090119_834",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 3,
+      "R1.7": 1,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent correctly identifies and softens two claims in the original text that are not well-supported by the described evidence: the characterization of 0.41 BLEU as an 'upper bound' and the absolute qualitative labels ('moderately reproducible') applied to BLEU scores. This meets the s=3 anchor. It does not reach s=5 because it explicitly states in its notes that it did not verify the numerical claims against the cited 'Table 2'.",
+      "R1.7": "The agent explicitly states that it 'did not assess the bibliography or add citations.' While it correctly hedges language around prior work, it performs no citation-level audit, which is the core of this dimension. This is a clear s=1.",
+      "RX.1": "The agent provides an exemplary 'Notes on changes and residual caveats' section. This section meticulously details the limitations of the edit, including what was not verified (numerical values, citations), explains the reasoning behind subjective changes (paragraph order), and flags where its own edits might need further refinement (e.g., adding 'textual' before 'reproducibility'). This is a textbook s=5.",
+      "RX.3": "The request was to 'Clean this up.' The agent performed a comprehensive cleanup, including improving prose, reordering paragraphs for better flow, and correcting logical flaws in the argumentation. This is exactly what the request entails. The agent's work is perfectly within the scope of the delegation.",
+      "RX.4": "The agent's output is free of regressions. Crucially, it identifies and corrects a harmful pattern in the original text: overclaiming. By softening the claim that a single result constitutes an 'upper bound' for current models, it prevents the propagation of a potentially misleading scientific conclusion. This directly aligns with the s=5 anchor.",
+      "RX.5": "The agent provides a detailed list of 'changes and residual caveats' that traces every significant, non-cosmetic edit. It explains the reordering of paragraphs, the softening of specific claims, and the addition of a clarifying word ('textual'), providing a clear rationale for each change. This allows the user to understand and approve or revert every substantive modification, meeting the s=5 standard."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

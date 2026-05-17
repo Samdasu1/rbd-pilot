@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_228",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "mistral-7b-instruct-v0.3",
+  "judge_family": "mistral",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3417,
+  "output_tokens": 433,
+  "latency_ms": 10402,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"Judge-1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 1,\n    \"RX.1\": 1,\n    \"RX.3\": 3,\n    \"RX.4\": 1,\n    \"RX.5\": 2\n  },\n  \"rationale\": {\n    \"R1.2\": \"The output identifies and explains the logical inconsistency between the headline claim and the actual metric used.\",\n    \"R1.3\": \"The output does not check claim-evidence alignment as it does not audit every load-bearing claim against the corresponding table/figure.\",\n    \"RX.1\": \"The output does not disclose uncertainty for all claims, only marking uncertainty for one or two clearly out-of-reach claims.\",\n    \"RX.3\": \"The output is mostly within scope with one drift: it covers a substantially different active set than requested (R1.6) but this dimension was not in the active set.\",\n    \"RX.4\": \"The output introduces new errors, fabrications, or harmful content as it makes downstream recommendations that overreach.\",\n    \"RX.5\": \"Every non-cosmetic change is not annotated with source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.3\": 0.8,\n    \"RX.1\": 0.7,\n    \"RX.3\": 0.6,\n    \"RX.4\": 0.5,\n    \"RX.5\": 0.4\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "Judge-1",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 1,
+      "RX.1": 1,
+      "RX.3": 3,
+      "RX.4": 1,
+      "RX.5": 2
+    },
+    "rationale": {
+      "R1.2": "The output identifies and explains the logical inconsistency between the headline claim and the actual metric used.",
+      "R1.3": "The output does not check claim-evidence alignment as it does not audit every load-bearing claim against the corresponding table/figure.",
+      "RX.1": "The output does not disclose uncertainty for all claims, only marking uncertainty for one or two clearly out-of-reach claims.",
+      "RX.3": "The output is mostly within scope with one drift: it covers a substantially different active set than requested (R1.6) but this dimension was not in the active set.",
+      "RX.4": "The output introduces new errors, fabrications, or harmful content as it makes downstream recommendations that overreach.",
+      "RX.5": "Every non-cosmetic change is not annotated with source and reason."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.3": 0.8,
+      "RX.1": 0.7,
+      "RX.3": 0.6,
+      "RX.4": 0.5,
+      "RX.5": 0.4
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

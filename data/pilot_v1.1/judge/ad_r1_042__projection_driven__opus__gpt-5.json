@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1928,
-  "output_tokens": 3274,
-  "latency_ms": 33158,
-  "cost_usd": 0.10786,
-  "raw": "{\n  \"judge_id\": \"responsibility_bearing_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 4, \"R1.3\": 4, \"RX.1\": 4, \"RX.3\": 5, \"RX.4\": 3, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"The critique systematically flags key logical issues (unbounded universal claims, conflating empirical results with theoretical necessity, over-strong 'confirms/entirely' language) and proposes concrete, minimal repairs (softening language, reframing mechanisms as hypotheses, reordering to lead with the strongest contrast). Minor deductions because the suggested rewrite is truncated and not all claims (e.g., CMDP quantitative assertions) are examined.\",\n    \"R1.3\": \"It audits major claims against the reported evidence: three markets vs 'any market,' 44.8\u201345.9% not justifying 'confirms,' penalty dominance presented as a hypothesis rather than measured, and the >99% claim needing matched conditions. It does not explicitly check every quantitative claim (e.g., '~85% training commitment'), so falls short of a full audit.\",\n    \"RX.1\": \"Uncertainties and missing evidence are explicitly noted (mechanism is 'plausible,' coefficient not isolated/swept, soften 'confirms' to 'suggests'). The rewrite models appropriate hedging. It does not provide confidence levels per recommendation, so not maximal.\",\n    \"RX.3\": \"Stays tightly within the scope of helping improve the provided section: identifies overclaims, offers structural and wording edits, and a focused rewrite without drifting into unrelated topics.\",\n    \"RX.4\": \"Avoids harmful content and highlights overclaiming as a problematic pattern. However, the suggested rewrite asserts a specific experimental omission ('we have not isolated the penalty coefficient') that may not be true, introducing a potential new error.\",\n    \"RX.5\": \"Provides clear reasons for major suggested changes (scope-bounding, hedging, mechanism framing, structure) but does not give line-by-line provenance or annotate each non-cosmetic edit; no explicit trace to sources beyond the provided text.\"\n  },\n  \"confidence\": {\"R1.2\": 0.78, \"R1.3\": 0.75, \"RX.1\": 0.7, \"RX.3\": 0.85, \"RX.4\": 0.65, \"RX.5\": 0.6},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 27626,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex_judge\",\"active_set_recognized\":[\"R1.2\",\"R1.3\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.3\":4,\"RX.1\":4,\"RX.3\":3,\"RX.4\":5,\"RX.5\":3},\"rationale\":{\"R1.2\":\"The output follows the main argument chain and flags the central inconsistencies: evaluated-scope claims becoming universal claims, empirical results becoming structural impossibility claims, and interpretation being stated as confirmation. It does not fully exhaust every load-bearing inconsistency, partly because the rewrite is truncated.\",\"R1.3\":\"It checks several key claim-evidence links, especially the 44.8-45.9% range, the claim that PPO ignores commitment entirely, the unsupported universalization to all markets and all bare RL, and the >99% comparison. It does not audit every load-bearing claim against specific tables or figures.\",\"RX.1\":\"The output explicitly marks uncertainty around the proposed mechanism, penalty coefficient sweep, ablation needs, and scope of inference. It does not assign confidence or missing evidence to every recommendation, but uncertainty handling is broader than a minimal disclosure.\",\"RX.3\":\"The response mostly addresses the requested dimensions through consistency, evidence alignment, uncertainty, harm avoidance, and traceability concerns, but it also declares and discusses dimensions outside the active set and provides a rewrite, so scope is not exact.\",\"RX.4\":\"The output avoids introducing substantive new errors and directly identifies harmful patterns in the original, especially categorical overclaims and unsupported impossibility framing. The suggested softening reduces downstream risk.\",\"RX.5\":\"Major proposed changes are generally traceable to specific quoted or paraphrased claims from the artifact and paired with reasons. However, the rewrite itself is not annotated change-by-change with source and rationale, and minor edits are not traced.\"},\"confidence\":{\"R1.2\":0.84,\"R1.3\":0.82,\"RX.1\":0.78,\"RX.3\":0.83,\"RX.4\":0.86,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_bearing_judge_v1",
+    "judge_id": "codex_judge",
     "active_set_recognized": [
       "R1.2",
       "R1.3",
@@ -36,25 +36,25 @@
       "R1.2": 4,
       "R1.3": 4,
       "RX.1": 4,
-      "RX.3": 5,
-      "RX.4": 3,
+      "RX.3": 3,
+      "RX.4": 5,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "The critique systematically flags key logical issues (unbounded universal claims, conflating empirical results with theoretical necessity, over-strong 'confirms/entirely' language) and proposes concrete, minimal repairs (softening language, reframing mechanisms as hypotheses, reordering to lead with the strongest contrast). Minor deductions because the suggested rewrite is truncated and not all claims (e.g., CMDP quantitative assertions) are examined.",
-      "R1.3": "It audits major claims against the reported evidence: three markets vs 'any market,' 44.8\u201345.9% not justifying 'confirms,' penalty dominance presented as a hypothesis rather than measured, and the >99% claim needing matched conditions. It does not explicitly check every quantitative claim (e.g., '~85% training commitment'), so falls short of a full audit.",
-      "RX.1": "Uncertainties and missing evidence are explicitly noted (mechanism is 'plausible,' coefficient not isolated/swept, soften 'confirms' to 'suggests'). The rewrite models appropriate hedging. It does not provide confidence levels per recommendation, so not maximal.",
-      "RX.3": "Stays tightly within the scope of helping improve the provided section: identifies overclaims, offers structural and wording edits, and a focused rewrite without drifting into unrelated topics.",
-      "RX.4": "Avoids harmful content and highlights overclaiming as a problematic pattern. However, the suggested rewrite asserts a specific experimental omission ('we have not isolated the penalty coefficient') that may not be true, introducing a potential new error.",
-      "RX.5": "Provides clear reasons for major suggested changes (scope-bounding, hedging, mechanism framing, structure) but does not give line-by-line provenance or annotate each non-cosmetic edit; no explicit trace to sources beyond the provided text."
+      "R1.2": "The output follows the main argument chain and flags the central inconsistencies: evaluated-scope claims becoming universal claims, empirical results becoming structural impossibility claims, and interpretation being stated as confirmation. It does not fully exhaust every load-bearing inconsistency, partly because the rewrite is truncated.",
+      "R1.3": "It checks several key claim-evidence links, especially the 44.8-45.9% range, the claim that PPO ignores commitment entirely, the unsupported universalization to all markets and all bare RL, and the >99% comparison. It does not audit every load-bearing claim against specific tables or figures.",
+      "RX.1": "The output explicitly marks uncertainty around the proposed mechanism, penalty coefficient sweep, ablation needs, and scope of inference. It does not assign confidence or missing evidence to every recommendation, but uncertainty handling is broader than a minimal disclosure.",
+      "RX.3": "The response mostly addresses the requested dimensions through consistency, evidence alignment, uncertainty, harm avoidance, and traceability concerns, but it also declares and discusses dimensions outside the active set and provides a rewrite, so scope is not exact.",
+      "RX.4": "The output avoids introducing substantive new errors and directly identifies harmful patterns in the original, especially categorical overclaims and unsupported impossibility framing. The suggested softening reduces downstream risk.",
+      "RX.5": "Major proposed changes are generally traceable to specific quoted or paraphrased claims from the artifact and paired with reasons. However, the rewrite itself is not annotated change-by-change with source and rationale, and minor edits are not traced."
     },
     "confidence": {
-      "R1.2": 0.78,
-      "R1.3": 0.75,
-      "RX.1": 0.7,
-      "RX.3": 0.85,
-      "RX.4": 0.65,
-      "RX.5": 0.6
+      "R1.2": 0.84,
+      "R1.3": 0.82,
+      "RX.1": 0.78,
+      "RX.3": 0.83,
+      "RX.4": 0.86,
+      "RX.5": 0.8
     },
     "blockers": []
   },

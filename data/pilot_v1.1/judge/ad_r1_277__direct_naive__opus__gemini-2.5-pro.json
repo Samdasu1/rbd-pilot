@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_277",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2397,
+  "output_tokens": 773,
+  "latency_ms": 22353,
+  "cost_usd": 0.010726,
+  "raw": "{\n  \"judge_id\": \"esr-1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent maps the artifact's novelty claim against four relevant prior systems (AutoGen, MetaGPT, CrewAI, LangGraph). It correctly identifies that the claimed novel components exist individually in these systems and points out that a simple combination is a weak or 'rhetorical' delta. It then suggests a way to sharpen the claim to be more specific and defensible, which perfectly aligns with the s=5 anchor.\",\n    \"R1.7\": \"The artifact is an abstract with no citations, but the agent's critique is deeply engaged with scholarship. It flags multiple critical missing citations: the prior art for the novelty claim (naming specific systems), and the source for the evaluation benchmark (naming SWE-bench as a likely candidate). This goes beyond flagging a single missing work and constitutes a thorough audit of the missing scholarly context, which is the most that can be done for a citation-free abstract.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section at the end. It explicitly flags that its knowledge of the feature sets of competing frameworks is not guaranteed to be current, and qualifies its statistical recommendation by stating the underlying assumption about the experimental setup. This is a clear, principled disclosure of the key uncertainties and missing evidence for its most important recommendations, matching the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was a minimal 'Check this.' The agent correctly interpreted this as a request to critique the provided research abstract and provide actionable feedback. The output is precisely that, with no deviation or scope drift. It provides a prioritized list of issues, suggested rewrites, and a summary. This is a perfect adherence to the inferred scope.\",\n    \"RX.4\": \"The agent's output introduces no new errors. Instead, it identifies multiple harmful patterns in the original artifact that would likely lead to a paper's rejection: overstated novelty, conclusions not supported by evidence, a confounded experimental design, a weak baseline, and vague benchmark provenance. By flagging these issues, the agent helps the user avoid the downstream harm of a desk-rejection or harsh peer review.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each of the seven identified issues directly quotes or references a specific claim in the original artifact. The suggested rewrites are then explicitly linked back to the critiques. For example, the rewritten results paragraph directly addresses the issues raised about statistical tests, baselines, ablations, and benchmark provenance. Every recommended change is clearly motivated by a preceding, traceable critique.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent maps the artifact's novelty claim against four relevant prior systems (AutoGen, MetaGPT, CrewAI, LangGraph). It correctly identifies that the claimed novel components exist individually in these systems and points out that a simple combination is a weak or 'rhetorical' delta. It then suggests a way to sharpen the claim to be more specific and defensible, which perfectly aligns with the s=5 anchor.",
+      "R1.7": "The artifact is an abstract with no citations, but the agent's critique is deeply engaged with scholarship. It flags multiple critical missing citations: the prior art for the novelty claim (naming specific systems), and the source for the evaluation benchmark (naming SWE-bench as a likely candidate). This goes beyond flagging a single missing work and constitutes a thorough audit of the missing scholarly context, which is the most that can be done for a citation-free abstract.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section at the end. It explicitly flags that its knowledge of the feature sets of competing frameworks is not guaranteed to be current, and qualifies its statistical recommendation by stating the underlying assumption about the experimental setup. This is a clear, principled disclosure of the key uncertainties and missing evidence for its most important recommendations, matching the s=5 anchor.",
+      "RX.3": "The user's delegation was a minimal 'Check this.' The agent correctly interpreted this as a request to critique the provided research abstract and provide actionable feedback. The output is precisely that, with no deviation or scope drift. It provides a prioritized list of issues, suggested rewrites, and a summary. This is a perfect adherence to the inferred scope.",
+      "RX.4": "The agent's output introduces no new errors. Instead, it identifies multiple harmful patterns in the original artifact that would likely lead to a paper's rejection: overstated novelty, conclusions not supported by evidence, a confounded experimental design, a weak baseline, and vague benchmark provenance. By flagging these issues, the agent helps the user avoid the downstream harm of a desk-rejection or harsh peer review.",
+      "RX.5": "The agent's critique is highly traceable. Each of the seven identified issues directly quotes or references a specific claim in the original artifact. The suggested rewrites are then explicitly linked back to the critiques. For example, the rewritten results paragraph directly addresses the issues raised about statistical tests, baselines, ablations, and benchmark provenance. Every recommended change is clearly motivated by a preceding, traceable critique."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

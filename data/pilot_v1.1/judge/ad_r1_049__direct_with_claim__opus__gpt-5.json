@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1717,
-  "output_tokens": 2374,
-  "latency_ms": 28731,
-  "cost_usd": 0.079805,
-  "raw": "{\n  \"judge_id\": \"responsibility_bearing_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.4\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 5, \"R1.4\": 3, \"R1.6\": 5, \"RX.1\": 3, \"RX.3\": 3, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"Identifies the core contradiction between calibration breaking under 4-hour re-planning and the claim of automatic adaptation, then resolves it by reframing as a limitation. The chain of reasoning about horizon-matched calibration and deployment mismatch is walked end-to-end with a minimal, coherent repair.\",\n    \"R1.4\": \"Flags and removes the unsupported 'first principled approach' claim and advises adding citations if defensible, but does not contrast against any specific prior work or map the contribution within the literature.\",\n    \"R1.6\": \"Provides a clean, concise rewrite with consistent technical register, reduced redundancy, clarified terms, and preserved intended meaning apart from justified corrections.\",\n    \"RX.1\": \"Explicitly notes uncertainty about whether online recalibration is actually implemented and flags missing units/context for the multiplier range, but does not attach confidence levels to each change or comprehensively enumerate evidence gaps.\",\n    \"RX.3\": \"Delivers a focused cleanup and rationale aligned with the task, but includes extra 'covered_dims' metadata and meta commentary beyond the requested rewrite.\",\n    \"RX.4\": \"Removes overclaiming, resolves contradictions, and avoids introducing errors, thereby reducing the risk of misleading readers.\",\n    \"RX.5\": \"Major changes are explained with reasons (contradiction resolution, removal of superlatives, minor fixes), but not every non-cosmetic edit is individually traced.\"\n  },\n  \"confidence\": {\"R1.2\": 0.84, \"R1.4\": 0.72, \"R1.6\": 0.80, \"RX.1\": 0.75, \"RX.3\": 0.78, \"RX.4\": 0.82, \"RX.5\": 0.76},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 34928,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex\",\"active_set_recognized\":[\"R1.2\",\"R1.4\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":5,\"R1.4\":2,\"R1.6\":5,\"RX.1\":3,\"RX.3\":3,\"RX.4\":3,\"RX.5\":3},\"rationale\":{\"R1.2\":\"Walks the argument chain through training horizon, deployment mismatch, and the final-paragraph contradiction; proposes the minimal repair of framing protocol mismatch as a limitation unless online recalibration is evidenced.\",\"R1.4\":\"Correctly flags the unsupported novelty/superlative claim, but does not name or contrast any prior work, so it falls below the s=3 anchor.\",\"R1.6\":\"The revised passage is substantially cleaner, more consistent in register, and preserves the main technical meaning while removing inflated claims.\",\"RX.1\":\"Discloses uncertainty about online recalibration and the multiplier range, but does not mark confidence and missing evidence for each recommendation.\",\"RX.3\":\"Mostly addresses the requested cleanup dimensions, but the output's own covered_dims lists an out-of-scope R1.3 and omits the RX dimensions, indicating some scope drift.\",\"RX.4\":\"Identifies harmful patterns in the original, especially contradiction and unsupported novelty, but introduces possible unsupported phrasing such as an online-recalibration extension in the next section and gradient ascent details.\",\"RX.5\":\"Major changes are explained with reasons, but the rewrite is not annotated change-by-change and minor edits are not fully traced to source or rationale.\"},\"confidence\":{\"R1.2\":0.9,\"R1.4\":0.85,\"R1.6\":0.9,\"RX.1\":0.85,\"RX.3\":0.8,\"RX.4\":0.75,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_bearing_judge_v1",
+    "judge_id": "codex",
     "active_set_recognized": [
       "R1.2",
       "R1.4",
@@ -36,30 +36,30 @@
     ],
     "scores": {
       "R1.2": 5,
-      "R1.4": 3,
+      "R1.4": 2,
       "R1.6": 5,
       "RX.1": 3,
       "RX.3": 3,
-      "RX.4": 5,
+      "RX.4": 3,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "Identifies the core contradiction between calibration breaking under 4-hour re-planning and the claim of automatic adaptation, then resolves it by reframing as a limitation. The chain of reasoning about horizon-matched calibration and deployment mismatch is walked end-to-end with a minimal, coherent repair.",
-      "R1.4": "Flags and removes the unsupported 'first principled approach' claim and advises adding citations if defensible, but does not contrast against any specific prior work or map the contribution within the literature.",
-      "R1.6": "Provides a clean, concise rewrite with consistent technical register, reduced redundancy, clarified terms, and preserved intended meaning apart from justified corrections.",
-      "RX.1": "Explicitly notes uncertainty about whether online recalibration is actually implemented and flags missing units/context for the multiplier range, but does not attach confidence levels to each change or comprehensively enumerate evidence gaps.",
-      "RX.3": "Delivers a focused cleanup and rationale aligned with the task, but includes extra 'covered_dims' metadata and meta commentary beyond the requested rewrite.",
-      "RX.4": "Removes overclaiming, resolves contradictions, and avoids introducing errors, thereby reducing the risk of misleading readers.",
-      "RX.5": "Major changes are explained with reasons (contradiction resolution, removal of superlatives, minor fixes), but not every non-cosmetic edit is individually traced."
+      "R1.2": "Walks the argument chain through training horizon, deployment mismatch, and the final-paragraph contradiction; proposes the minimal repair of framing protocol mismatch as a limitation unless online recalibration is evidenced.",
+      "R1.4": "Correctly flags the unsupported novelty/superlative claim, but does not name or contrast any prior work, so it falls below the s=3 anchor.",
+      "R1.6": "The revised passage is substantially cleaner, more consistent in register, and preserves the main technical meaning while removing inflated claims.",
+      "RX.1": "Discloses uncertainty about online recalibration and the multiplier range, but does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "Mostly addresses the requested cleanup dimensions, but the output's own covered_dims lists an out-of-scope R1.3 and omits the RX dimensions, indicating some scope drift.",
+      "RX.4": "Identifies harmful patterns in the original, especially contradiction and unsupported novelty, but introduces possible unsupported phrasing such as an online-recalibration extension in the next section and gradient ascent details.",
+      "RX.5": "Major changes are explained with reasons, but the rewrite is not annotated change-by-change and minor edits are not fully traced to source or rationale."
     },
     "confidence": {
-      "R1.2": 0.84,
-      "R1.4": 0.72,
-      "R1.6": 0.8,
-      "RX.1": 0.75,
-      "RX.3": 0.78,
-      "RX.4": 0.82,
-      "RX.5": 0.76
+      "R1.2": 0.9,
+      "R1.4": 0.85,
+      "R1.6": 0.9,
+      "RX.1": 0.85,
+      "RX.3": 0.8,
+      "RX.4": 0.75,
+      "RX.5": 0.8
     },
     "blockers": []
   },

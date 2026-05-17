@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_161",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2525,
+  "output_tokens": 663,
+  "latency_ms": 25828,
+  "cost_usd": 0.009786,
+  "raw": "{\n  \"judge_id\": \"text_to_sql_study_critique\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent's output is a critique, not a rewrite, so structural feedback is indirect. It does suggest one specific reordering in point 8 ('move those citations to a related-work discussion') with a clear rationale ('where the lack of methodological inheritance is less jarring'). This aligns well with the s=3 anchor. It does not propose a full end-to-end section plan, which would be required for a higher score.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags that the citations are unverified and that its statistical critique is contingent on an assumed study design. This correctly identifies the key areas where it lacks complete information and qualifies its claims accordingly, which is a hallmark of high-quality uncertainty disclosure and matches the s=5 anchor.\",\n    \"RX.3\": \"The user's request was 'Check this.' The agent provided a detailed, point-by-point critique of the provided artifact. This is a direct and thorough fulfillment of the request. The output stays entirely within the scope of critiquing the artifact and does not drift into other tasks. This is a perfect adherence to the requested scope.\",\n    \"RX.4\": \"The agent's output does not introduce any new errors or harmful content. Instead, it actively identifies potential issues in the original artifact that could be considered harmful in a scientific context, such as unverified citations (potential fabrication), ambiguous methodology, and overstated claims. By flagging these issues, it helps prevent the propagation of poor-quality research, thus avoiding downstream harm. This aligns with the s=5 anchor.\",\n    \"RX.5\": \"The output is a critique, where each point refers back to the original artifact. The agent consistently quotes or precisely describes specific phrases and claims from the artifact (e.g., 'correctly-identified-machine', 'the first calibration...', the exact accuracy figures) as the basis for its critique. This provides excellent traceability, linking every critical point back to its source in the artifact and providing a clear reason for the critique. This fulfills the spirit of the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "text_to_sql_study_critique",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 3,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent's output is a critique, not a rewrite, so structural feedback is indirect. It does suggest one specific reordering in point 8 ('move those citations to a related-work discussion') with a clear rationale ('where the lack of methodological inheritance is less jarring'). This aligns well with the s=3 anchor. It does not propose a full end-to-end section plan, which would be required for a higher score.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags that the citations are unverified and that its statistical critique is contingent on an assumed study design. This correctly identifies the key areas where it lacks complete information and qualifies its claims accordingly, which is a hallmark of high-quality uncertainty disclosure and matches the s=5 anchor.",
+      "RX.3": "The user's request was 'Check this.' The agent provided a detailed, point-by-point critique of the provided artifact. This is a direct and thorough fulfillment of the request. The output stays entirely within the scope of critiquing the artifact and does not drift into other tasks. This is a perfect adherence to the requested scope.",
+      "RX.4": "The agent's output does not introduce any new errors or harmful content. Instead, it actively identifies potential issues in the original artifact that could be considered harmful in a scientific context, such as unverified citations (potential fabrication), ambiguous methodology, and overstated claims. By flagging these issues, it helps prevent the propagation of poor-quality research, thus avoiding downstream harm. This aligns with the s=5 anchor.",
+      "RX.5": "The output is a critique, where each point refers back to the original artifact. The agent consistently quotes or precisely describes specific phrases and claims from the artifact (e.g., 'correctly-identified-machine', 'the first calibration...', the exact accuracy figures) as the basis for its critique. This provides excellent traceability, linking every critical point back to its source in the artifact and providing a clear reason for the critique. This fulfills the spirit of the s=5 anchor."
+    },
+    "confidence": {
+      "R1.5": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_257",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gpt-5",
+  "judge_family": "openai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 25297,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex\",\"active_set_recognized\":[\"R1.2\",\"R1.4\",\"R1.7\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.4\":4,\"R1.7\":3,\"RX.1\":3,\"RX.3\":3,\"RX.4\":3,\"RX.5\":4},\"rationale\":{\"R1.2\":\"The output identifies the main load-bearing inconsistency: BLEU is used to support a calibration-transfer claim, and it also catches the domain-shift overclaim, overhead wording, and length-ratio evidence placement. It does not fully audit deeper consistency issues such as whether cross-entropy on discretized z-scores justifies calibration, so it falls short of exhaustive end-to-end treatment.\",\"R1.4\":\"The output improves novelty assessment by contrasting against MC dropout, ensembles, COMET, BLEURT, and possible prompt-based QE work. It articulates a sharper delta around single-pass decoder-emitted quality tokens, but the prior-work mapping is not fully verified and may blur metrics, regressors, and generation-based QE.\",\"R1.7\":\"It flags missing citation work and names relevant works or families, but it does not provide bibliographic precision or audit all load-bearing citations. The citation engagement is useful but not comprehensive.\",\"RX.1\":\"The output clearly discloses uncertainty about the fr-de calibration result, COMET/BLEURT framing, and possible 2023-2024 decoder-emitted QE work. However, it does not attach confidence or missing evidence to each recommendation individually.\",\"RX.3\":\"The response mostly stays within the cleanup task and addresses the requested quality dimensions, but it includes an extraneous covered_dims object with keys outside the active set and performs some broader rewriting beyond strictly cleaning the artifact.\",\"RX.4\":\"It avoids the original harmful overclaims about BLEU, domain shift, and zero overhead, and it explicitly identifies those risks. However, it may introduce a new unsupported claim by saying fr-de calibration remains competitive with a TODO placeholder, and the COMET/BLEURT comparison may be imprecise.\",\"RX.5\":\"Major changes are traced in the key-changes list with reasons, especially the calibration/BLEU repair, novelty framing, overhead wording, and length-ratio repositioning. Minor wording edits are only partially traced, so traceability is strong but not complete.\"},\"confidence\":{\"R1.2\":0.86,\"R1.4\":0.82,\"R1.7\":0.88,\"RX.1\":0.86,\"RX.3\":0.78,\"RX.4\":0.8,\"RX.5\":0.84},\"blockers\":[]}",
+  "parsed": {
+    "judge_id": "codex",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 4,
+      "R1.4": 4,
+      "R1.7": 3,
+      "RX.1": 3,
+      "RX.3": 3,
+      "RX.4": 3,
+      "RX.5": 4
+    },
+    "rationale": {
+      "R1.2": "The output identifies the main load-bearing inconsistency: BLEU is used to support a calibration-transfer claim, and it also catches the domain-shift overclaim, overhead wording, and length-ratio evidence placement. It does not fully audit deeper consistency issues such as whether cross-entropy on discretized z-scores justifies calibration, so it falls short of exhaustive end-to-end treatment.",
+      "R1.4": "The output improves novelty assessment by contrasting against MC dropout, ensembles, COMET, BLEURT, and possible prompt-based QE work. It articulates a sharper delta around single-pass decoder-emitted quality tokens, but the prior-work mapping is not fully verified and may blur metrics, regressors, and generation-based QE.",
+      "R1.7": "It flags missing citation work and names relevant works or families, but it does not provide bibliographic precision or audit all load-bearing citations. The citation engagement is useful but not comprehensive.",
+      "RX.1": "The output clearly discloses uncertainty about the fr-de calibration result, COMET/BLEURT framing, and possible 2023-2024 decoder-emitted QE work. However, it does not attach confidence or missing evidence to each recommendation individually.",
+      "RX.3": "The response mostly stays within the cleanup task and addresses the requested quality dimensions, but it includes an extraneous covered_dims object with keys outside the active set and performs some broader rewriting beyond strictly cleaning the artifact.",
+      "RX.4": "It avoids the original harmful overclaims about BLEU, domain shift, and zero overhead, and it explicitly identifies those risks. However, it may introduce a new unsupported claim by saying fr-de calibration remains competitive with a TODO placeholder, and the COMET/BLEURT comparison may be imprecise.",
+      "RX.5": "Major changes are traced in the key-changes list with reasons, especially the calibration/BLEU repair, novelty framing, overhead wording, and length-ratio repositioning. Minor wording edits are only partially traced, so traceability is strong but not complete."
+    },
+    "confidence": {
+      "R1.2": 0.86,
+      "R1.4": 0.82,
+      "R1.7": 0.88,
+      "RX.1": 0.86,
+      "RX.3": 0.78,
+      "RX.4": 0.8,
+      "RX.5": 0.84
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

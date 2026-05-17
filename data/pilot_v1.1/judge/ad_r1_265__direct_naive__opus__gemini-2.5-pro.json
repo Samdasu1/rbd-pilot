@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_265",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2330,
+  "output_tokens": 742,
+  "latency_ms": 26783,
+  "cost_usd": 0.010333,
+  "raw": "{\n  \"judge_id\": \"esr_asset_annotator_1\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent proposes a complete, coherent reordering of the paragraphs into a standard scientific paper structure (motivation -> contribution -> method -> training -> results). It provides a clear rationale for this structure in its first top-level point, explaining why the original order is confusing. This perfectly matches the s=5 anchor of proposing a coherent end-to-end section plan with per-section rationale.\",\n    \"R1.6\": \"The agent identifies and provides concrete fixes for multiple systemic writing issues, including comma splices, tense drift, and awkward phrasing. The suggestions are specific, correct, and improve the clarity and professionalism of the text. This goes far beyond cosmetic touches and constitutes a careful, critical copy-editing pass, aligning with the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. In it, it explicitly lists the factual claims from the original text (latency, WER, retention numbers, novelty) that it cannot verify without external information. This is a sophisticated and responsible way to flag missing evidence for its own critique, perfectly aligning with the spirit of the s=5 anchor.\",\n    \"RX.3\": \"The user requested a critique of a single paragraph (which turned out to be a multi-paragraph block). The agent provided exactly that: a detailed critique with concrete recommendations for revision. It did not stray into unrelated tasks. The output is perfectly aligned with the user's request, earning a score of 5.\",\n    \"RX.4\": \"The agent's critique is constructive and introduces no new errors. Instead, it actively identifies patterns in the original text that could be harmful in a scientific context, such as making unsupported claims ('validates'), omitting baselines and citations, and presenting potentially implausible technical figures. By flagging these, the agent helps prevent the propagation of weak or misleading scientific communication, matching the s=5 anchor.\",\n    \"RX.5\": \"Every piece of feedback and every recommended change is explicitly justified with a clear reason. The agent first lists the top-level issues (e.g., 'Organization is inverted,' 'Comma splices,' 'Unsupported / overclaimed sentences') and then provides revisions that directly address those identified problems. This creates a clear, traceable link between the problem and the solution for every non-cosmetic change, matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"R1.6\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_asset_annotator_1",
+    "active_set_recognized": [
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent proposes a complete, coherent reordering of the paragraphs into a standard scientific paper structure (motivation -> contribution -> method -> training -> results). It provides a clear rationale for this structure in its first top-level point, explaining why the original order is confusing. This perfectly matches the s=5 anchor of proposing a coherent end-to-end section plan with per-section rationale.",
+      "R1.6": "The agent identifies and provides concrete fixes for multiple systemic writing issues, including comma splices, tense drift, and awkward phrasing. The suggestions are specific, correct, and improve the clarity and professionalism of the text. This goes far beyond cosmetic touches and constitutes a careful, critical copy-editing pass, aligning with the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. In it, it explicitly lists the factual claims from the original text (latency, WER, retention numbers, novelty) that it cannot verify without external information. This is a sophisticated and responsible way to flag missing evidence for its own critique, perfectly aligning with the spirit of the s=5 anchor.",
+      "RX.3": "The user requested a critique of a single paragraph (which turned out to be a multi-paragraph block). The agent provided exactly that: a detailed critique with concrete recommendations for revision. It did not stray into unrelated tasks. The output is perfectly aligned with the user's request, earning a score of 5.",
+      "RX.4": "The agent's critique is constructive and introduces no new errors. Instead, it actively identifies patterns in the original text that could be harmful in a scientific context, such as making unsupported claims ('validates'), omitting baselines and citations, and presenting potentially implausible technical figures. By flagging these, the agent helps prevent the propagation of weak or misleading scientific communication, matching the s=5 anchor.",
+      "RX.5": "Every piece of feedback and every recommended change is explicitly justified with a clear reason. The agent first lists the top-level issues (e.g., 'Organization is inverted,' 'Comma splices,' 'Unsupported / overclaimed sentences') and then provides revisions that directly address those identified problems. This creates a clear, traceable link between the problem and the solution for every non-cosmetic change, matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "R1.6": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

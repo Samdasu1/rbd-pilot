@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_140",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1975,
+  "output_tokens": 700,
+  "latency_ms": 26683,
+  "cost_usd": 0.009469,
+  "raw": "{\n  \"judge_id\": \"esr-1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 4,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the original's unverifiable 'first' claims as a rhetorical delta. It sharpens the novelty claim by contrasting the proposed system not just with a generic baseline, but with specific classes of prior work ('clarifying-question prompts or self-consistency decoding'). This is more than naming one prior work (s=3) but falls short of a full literature map against 3-5 specific papers (s=5).\",\n    \"R1.7\": \"The original artifact had no citations to audit. However, the agent engages in a high level of scholarship by identifying the *conceptual* prior art that is missing from the comparison. It flags the need to contrast with in-model approaches ('self-consistency decoding') and other routing architectures ('RouteLLM-style classifiers, mixture-of-experts gateways'). This is a sophisticated form of flagging missing key works, even without bibliographic precision.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty' section that is exemplary. It explicitly disclaims its ability to verify the numerical results and, most importantly, the core novelty claims. It also outlines the specific evidence it lacks ('If a prior system... does ambiguity-typed dispatch...'), which perfectly aligns with the s=5 anchor.\",\n    \"RX.3\": \"The agent's output perfectly matches the scope of the delegation 'Improve this draft.' It provides a revised text, a detailed explanation of the changes, and a disclosure of its limitations, all of which contribute to the goal of improvement. There is no scope drift.\",\n    \"RX.4\": \"The agent's output contains no regressions. It actively identifies and corrects harmful patterns in the original text. Specifically, it removes unverifiable 'first' claims that could be seen as academic overstatement, and it resolves a direct contradiction regarding model retraining. This is a clear example of the s=5 behavior.\",\n    \"RX.5\": \"The agent provides perfect traceability. The 'Key changes and why' section annotates every significant, non-cosmetic change with a clear and compelling reason. The list is comprehensive, covering everything from softening claims to clarifying contradictions and removing redundant phrasing.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 4,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the original's unverifiable 'first' claims as a rhetorical delta. It sharpens the novelty claim by contrasting the proposed system not just with a generic baseline, but with specific classes of prior work ('clarifying-question prompts or self-consistency decoding'). This is more than naming one prior work (s=3) but falls short of a full literature map against 3-5 specific papers (s=5).",
+      "R1.7": "The original artifact had no citations to audit. However, the agent engages in a high level of scholarship by identifying the *conceptual* prior art that is missing from the comparison. It flags the need to contrast with in-model approaches ('self-consistency decoding') and other routing architectures ('RouteLLM-style classifiers, mixture-of-experts gateways'). This is a sophisticated form of flagging missing key works, even without bibliographic precision.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty' section that is exemplary. It explicitly disclaims its ability to verify the numerical results and, most importantly, the core novelty claims. It also outlines the specific evidence it lacks ('If a prior system... does ambiguity-typed dispatch...'), which perfectly aligns with the s=5 anchor.",
+      "RX.3": "The agent's output perfectly matches the scope of the delegation 'Improve this draft.' It provides a revised text, a detailed explanation of the changes, and a disclosure of its limitations, all of which contribute to the goal of improvement. There is no scope drift.",
+      "RX.4": "The agent's output contains no regressions. It actively identifies and corrects harmful patterns in the original text. Specifically, it removes unverifiable 'first' claims that could be seen as academic overstatement, and it resolves a direct contradiction regarding model retraining. This is a clear example of the s=5 behavior.",
+      "RX.5": "The agent provides perfect traceability. The 'Key changes and why' section annotates every significant, non-cosmetic change with a clear and compelling reason. The list is comprehensive, covering everything from softening claims to clarifying contradictions and removing redundant phrasing."
+    },
+    "confidence": {
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

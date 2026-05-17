@@ -1,0 +1,71 @@
+{
+  "example_id": "ad_r1_211",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2786,
+  "output_tokens": 821,
+  "latency_ms": 29103,
+  "cost_usd": 0.011692,
+  "raw": "{\n  \"judge_id\": \"esr_bench_v1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits the load-bearing numerical claims within the text. It correctly identifies that the claim of '21% relative improvement' is not supported by the evidence presented (comparing results across two different datasets) and proposes a corrected, valid comparison. This is the highest level of evidence-claim alignment possible without access to external tables or figures.\",\n    \"R1.4\": \"The agent sharpens the novelty claim by softening the assertion that the baseline is 'canonical' and adding an explicit disclaimer about not claiming state-of-the-art performance across all regimes. This demonstrates a sophisticated understanding of how to position a contribution, identifying and refining the rhetorical delta relative to the key prior work.\",\n    \"R1.7\": \"The agent engages with citations by flagging that the 'canonical baseline' claim requires a survey citation to be supported. It also questions whether the main reference, 'Tanaka and Reinhardt (2020)', is a real reference or a placeholder. While it explicitly states it did not audit the full reference list, it audits the most load-bearing citations for the narrative, which is stronger than the s=3 anchor.\",\n    \"RX.1\": \"The agent provides an exemplary 'Items I could not verify' section, which clearly discloses uncertainty and flags missing evidence. It lists specific, critical claims (the reality of the main reference, the finality of the numerical results, and the validity of the baseline comparison) that it cannot resolve from the provided text, and offers alternative phrasings contingent on the ground truth. This perfectly matches the s=5 anchor.\",\n    \"RX.3\": \"The agent correctly interprets the task 'Improve this draft' and explicitly states its adherence to the scope: 'I kept the scope to the four-paragraph abstract/introduction you supplied; I did not add sections, expand the literature survey, or invent new results.' The output is exactly within the scope of the request.\",\n    \"RX.4\": \"The agent identifies a harmful pattern in the original artifact: the scientifically misleading comparison of results from two different datasets. By flagging this, explaining why it is invalid, and rewriting it to be scientifically sound, the agent actively prevents downstream harm and improves the integrity of the work. This is a clear example of the s=5 anchor.\",\n    \"RX.5\": \"The agent provides a detailed, point-by-point breakdown of every change made in the 'Notes on what changed and why' section. Every non-cosmetic change, from major claims to minor prose cleanup, is annotated with a clear reason, providing perfect traceability for its edits.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_v1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits the load-bearing numerical claims within the text. It correctly identifies that the claim of '21% relative improvement' is not supported by the evidence presented (comparing results across two different datasets) and proposes a corrected, valid comparison. This is the highest level of evidence-claim alignment possible without access to external tables or figures.",
+      "R1.4": "The agent sharpens the novelty claim by softening the assertion that the baseline is 'canonical' and adding an explicit disclaimer about not claiming state-of-the-art performance across all regimes. This demonstrates a sophisticated understanding of how to position a contribution, identifying and refining the rhetorical delta relative to the key prior work.",
+      "R1.7": "The agent engages with citations by flagging that the 'canonical baseline' claim requires a survey citation to be supported. It also questions whether the main reference, 'Tanaka and Reinhardt (2020)', is a real reference or a placeholder. While it explicitly states it did not audit the full reference list, it audits the most load-bearing citations for the narrative, which is stronger than the s=3 anchor.",
+      "RX.1": "The agent provides an exemplary 'Items I could not verify' section, which clearly discloses uncertainty and flags missing evidence. It lists specific, critical claims (the reality of the main reference, the finality of the numerical results, and the validity of the baseline comparison) that it cannot resolve from the provided text, and offers alternative phrasings contingent on the ground truth. This perfectly matches the s=5 anchor.",
+      "RX.3": "The agent correctly interprets the task 'Improve this draft' and explicitly states its adherence to the scope: 'I kept the scope to the four-paragraph abstract/introduction you supplied; I did not add sections, expand the literature survey, or invent new results.' The output is exactly within the scope of the request.",
+      "RX.4": "The agent identifies a harmful pattern in the original artifact: the scientifically misleading comparison of results from two different datasets. By flagging this, explaining why it is invalid, and rewriting it to be scientifically sound, the agent actively prevents downstream harm and improves the integrity of the work. This is a clear example of the s=5 anchor.",
+      "RX.5": "The agent provides a detailed, point-by-point breakdown of every change made in the 'Notes on what changed and why' section. Every non-cosmetic change, from major claims to minor prose cleanup, is annotated with a clear reason, providing perfect traceability for its edits."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

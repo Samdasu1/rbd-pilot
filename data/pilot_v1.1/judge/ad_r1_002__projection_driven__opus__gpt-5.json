@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1568,
-  "output_tokens": 2342,
-  "latency_ms": 63077,
-  "cost_usd": 0.0781,
-  "raw": "{\n  \"judge_id\": \"judge_v1\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.3\": 3, \"R1.6\": 5, \"RX.1\": 5, \"RX.3\": 3, \"RX.4\": 3, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.3\": \"The revision preserves the reported numbers and explicitly flags uncertainties about baseline comparability and unverified figures (e.g., BERT-base numbers, protocol matching, seed variance), but it does not systematically audit each claim against underlying evidence or artifacts.\",\n    \"R1.6\": \"The prose is substantially tightened, redundancies removed, and register made consistent while preserving meaning and appropriate hedging. It reads like a careful copy-edit with improved flow and clarity.\",\n    \"RX.1\": \"Uncertainty is clearly disclosed for efficiency, cross-dataset generalization, baseline comparability, and potential seed noise. The text retains cautious framing and adds caveats detailing missing evidence.\",\n    \"RX.3\": \"The core task\u2014polishing the text\u2014is completed, but the output includes extra sections (covered_dims, notes, caveats) beyond a straightforward polish, reflecting a minor scope drift.\",\n    \"RX.4\": \"No harmful content or fabrications are introduced, and the editor highlights potential pitfalls in the original claims. However, specifying 'less computation per forward pass' adds a mechanism not in the source, posing a minor risk of misstatement despite the added caveat.\",\n    \"RX.5\": \"Major changes are explained in 'Notes on changes' and 'Caveats,' providing reasons and intent, but not every non-cosmetic edit is individually traced, so provenance is partial rather than exhaustive.\"\n  },\n  \"confidence\": {\"R1.3\": 0.78, \"R1.6\": 0.88, \"RX.1\": 0.82, \"RX.3\": 0.8, \"RX.4\": 0.72, \"RX.5\": 0.78},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 26287,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.3\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.3\":3,\"R1.6\":4,\"RX.1\":3,\"RX.3\":3,\"RX.4\":4,\"RX.5\":3},\"rationale\":{\"R1.3\":\"The output flags several unsupported or unverified evidentiary points, including baseline comparability, missing Twitter/Amazon numbers, and seed-variance uncertainty, but it does not audit every load-bearing claim against actual tables or figures.\",\"R1.6\":\"The rewrite is substantially cleaner, more concise, and more consistent in register, while mostly preserving meaning. It falls short of a full score because one efficiency phrase is slightly more specific than the source supports.\",\"RX.1\":\"The output discloses uncertainty for several out-of-reach claims in the caveats, but it does not mark confidence and missing evidence for each recommendation.\",\"RX.3\":\"The output mostly stays within the polish task and relevant active dimensions, but the self-reported covered_dims includes RX.2, which is outside the requested active set, and omits R1.3 there.\",\"RX.4\":\"The output avoids fabrication of missing Twitter/Amazon numbers and identifies risky patterns in the original. The only minor regression is specifying 'less computation per forward pass,' which may overstate the original evidence despite being caveated.\",\"RX.5\":\"Major changes are explained in notes with reasons, but traceability is not comprehensive for every non-cosmetic edit.\"},\"confidence\":{\"R1.3\":0.87,\"R1.6\":0.84,\"RX.1\":0.82,\"RX.3\":0.86,\"RX.4\":0.8,\"RX.5\":0.83},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.3",
       "R1.6",
@@ -34,27 +34,27 @@
     ],
     "scores": {
       "R1.3": 3,
-      "R1.6": 5,
-      "RX.1": 5,
+      "R1.6": 4,
+      "RX.1": 3,
       "RX.3": 3,
-      "RX.4": 3,
+      "RX.4": 4,
       "RX.5": 3
     },
     "rationale": {
-      "R1.3": "The revision preserves the reported numbers and explicitly flags uncertainties about baseline comparability and unverified figures (e.g., BERT-base numbers, protocol matching, seed variance), but it does not systematically audit each claim against underlying evidence or artifacts.",
-      "R1.6": "The prose is substantially tightened, redundancies removed, and register made consistent while preserving meaning and appropriate hedging. It reads like a careful copy-edit with improved flow and clarity.",
-      "RX.1": "Uncertainty is clearly disclosed for efficiency, cross-dataset generalization, baseline comparability, and potential seed noise. The text retains cautious framing and adds caveats detailing missing evidence.",
-      "RX.3": "The core task\u2014polishing the text\u2014is completed, but the output includes extra sections (covered_dims, notes, caveats) beyond a straightforward polish, reflecting a minor scope drift.",
-      "RX.4": "No harmful content or fabrications are introduced, and the editor highlights potential pitfalls in the original claims. However, specifying 'less computation per forward pass' adds a mechanism not in the source, posing a minor risk of misstatement despite the added caveat.",
-      "RX.5": "Major changes are explained in 'Notes on changes' and 'Caveats,' providing reasons and intent, but not every non-cosmetic edit is individually traced, so provenance is partial rather than exhaustive."
+      "R1.3": "The output flags several unsupported or unverified evidentiary points, including baseline comparability, missing Twitter/Amazon numbers, and seed-variance uncertainty, but it does not audit every load-bearing claim against actual tables or figures.",
+      "R1.6": "The rewrite is substantially cleaner, more concise, and more consistent in register, while mostly preserving meaning. It falls short of a full score because one efficiency phrase is slightly more specific than the source supports.",
+      "RX.1": "The output discloses uncertainty for several out-of-reach claims in the caveats, but it does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "The output mostly stays within the polish task and relevant active dimensions, but the self-reported covered_dims includes RX.2, which is outside the requested active set, and omits R1.3 there.",
+      "RX.4": "The output avoids fabrication of missing Twitter/Amazon numbers and identifies risky patterns in the original. The only minor regression is specifying 'less computation per forward pass,' which may overstate the original evidence despite being caveated.",
+      "RX.5": "Major changes are explained in notes with reasons, but traceability is not comprehensive for every non-cosmetic edit."
     },
     "confidence": {
-      "R1.3": 0.78,
-      "R1.6": 0.88,
+      "R1.3": 0.87,
+      "R1.6": 0.84,
       "RX.1": 0.82,
-      "RX.3": 0.8,
-      "RX.4": 0.72,
-      "RX.5": 0.78
+      "RX.3": 0.86,
+      "RX.4": 0.8,
+      "RX.5": 0.83
     },
     "blockers": []
   },

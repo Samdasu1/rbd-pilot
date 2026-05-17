@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_139",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2281,
+  "output_tokens": 834,
+  "latency_ms": 27094,
+  "cost_usd": 0.011191,
+  "raw": "{\n  \"judge_id\": \"esr-1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the novelty claim ('substantial advance over prior routing approaches') as unsubstantiated. It moves beyond a simple assertion by naming a class of relevant prior work ('learned routers') and providing three specific examples ('RouteLLM, FrugalGPT, HybridLLM'). This fulfills the s=5 anchor by mapping the work against the nearest 3-5 works and identifying the delta (a complete lack of comparison) as rhetorical rather than sharp.\",\n    \"R1.7\": \"The agent performs a strong scholarly audit. It flags the absence of a critical class of prior work (learned routers) and provides specific, relevant examples, which is a key aspect of good scholarship. This goes beyond flagging a single missing citation (s=3) and aligns with the s=5 anchor of flagging missing key works with bibliographic precision. It also correctly identifies the methodological issue of LLM-as-judge bias as a known problem in the literature.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section, which is exemplary. It explicitly qualifies two of its key recommendations: (1) it states it has not verified if the named prior works are the current SOTA, and (2) it notes it has not checked for a recent citable paper on the specific GPT-4-judging-GPT-4 bias. This perfectly matches the s=5 anchor: 'For each recommendation, marks confidence and missing evidence.'\",\n    \"RX.3\": \"The agent's output is a direct and focused critique of the provided artifact. The delegation was 'Check this,' and the agent provided a detailed check. Every point raised is directly relevant to the text of the 'LaneRouter' introduction. There is no scope drift. This is a perfect adherence to the task, meriting a score of 5.\",\n    \"RX.4\": \"The output is not only harm-free but actively works to prevent downstream harm by identifying and explaining multiple scientific and methodological flaws in the artifact. These include strawman baselines, potential experimental bias (judge conflict), and lack of reproducibility (undefined costs/metrics). By flagging these issues, the agent helps improve the scientific rigor of the work, thus preventing the harm of publishing flawed research. This aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each point is either directly quoting the artifact (e.g., '35% absolute quality improvement') or clearly referencing a specific claim or omission within it (e.g., 'GPT-4 as judge when GPT-4 is also in the candidate pool'). The numbered list format makes it easy to connect each piece of criticism to its source in the original text. This structured approach serves the function of annotation, fulfilling the spirit of the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the novelty claim ('substantial advance over prior routing approaches') as unsubstantiated. It moves beyond a simple assertion by naming a class of relevant prior work ('learned routers') and providing three specific examples ('RouteLLM, FrugalGPT, HybridLLM'). This fulfills the s=5 anchor by mapping the work against the nearest 3-5 works and identifying the delta (a complete lack of comparison) as rhetorical rather than sharp.",
+      "R1.7": "The agent performs a strong scholarly audit. It flags the absence of a critical class of prior work (learned routers) and provides specific, relevant examples, which is a key aspect of good scholarship. This goes beyond flagging a single missing citation (s=3) and aligns with the s=5 anchor of flagging missing key works with bibliographic precision. It also correctly identifies the methodological issue of LLM-as-judge bias as a known problem in the literature.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section, which is exemplary. It explicitly qualifies two of its key recommendations: (1) it states it has not verified if the named prior works are the current SOTA, and (2) it notes it has not checked for a recent citable paper on the specific GPT-4-judging-GPT-4 bias. This perfectly matches the s=5 anchor: 'For each recommendation, marks confidence and missing evidence.'",
+      "RX.3": "The agent's output is a direct and focused critique of the provided artifact. The delegation was 'Check this,' and the agent provided a detailed check. Every point raised is directly relevant to the text of the 'LaneRouter' introduction. There is no scope drift. This is a perfect adherence to the task, meriting a score of 5.",
+      "RX.4": "The output is not only harm-free but actively works to prevent downstream harm by identifying and explaining multiple scientific and methodological flaws in the artifact. These include strawman baselines, potential experimental bias (judge conflict), and lack of reproducibility (undefined costs/metrics). By flagging these issues, the agent helps improve the scientific rigor of the work, thus preventing the harm of publishing flawed research. This aligns with the s=5 anchor.",
+      "RX.5": "The agent's critique is highly traceable. Each point is either directly quoting the artifact (e.g., '35% absolute quality improvement') or clearly referencing a specific claim or omission within it (e.g., 'GPT-4 as judge when GPT-4 is also in the candidate pool'). The numbered list format makes it easy to connect each piece of criticism to its source in the original text. This structured approach serves the function of annotation, fulfilling the spirit of the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

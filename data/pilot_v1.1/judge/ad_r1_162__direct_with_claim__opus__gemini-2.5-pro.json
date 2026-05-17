@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_162",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2339,
+  "output_tokens": 741,
+  "latency_ms": 31088,
+  "cost_usd": 0.010334,
+  "raw": "{\n  \"judge_id\": \"zadie_smith\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent proposes a complete, coherent reordering of the paragraphs in the artifact. It suggests a specific new sequence (P1 \u2192 P3 \u2192 P4 \u2192 P5 \u2192 P2 \u2192 P6) and provides a clear, high-level rationale based on the 'standard arc for a results-oriented section,' explaining why the original order is confusing. This matches the s=5 anchor of proposing a 'coherent end-to-end section plan with per-section rationale.'\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section at the end of its output. In this section, it flags specific factual claims it introduced (e.g., Rubin Observatory's alert volume and latency, specific paper attributions) as needing verification and points to the types of sources to check. This is a significant step beyond presenting all information as equally confident (s=1) and flags more than one or two claims (s=3). However, it does not mark confidence for each individual recommendation throughout the text, which would be required for a score of 5.\",\n    \"RX.3\": \"The agent was asked to 'Take a look at this paragraph' (which was actually a multi-paragraph section). It provided a detailed, multi-point critique of that exact artifact. The entire output is focused on analyzing and suggesting improvements to the provided text. There is no scope drift. The agent correctly interpreted the open-ended request and delivered a response that is perfectly aligned with it.\",\n    \"RX.4\": \"The agent's output is not only free of errors but actively identifies and corrects potential issues in the original text that could lead to misinterpretation or be flagged by peer review. It points out an unfalsifiable claim, a potential data leakage issue, and several instances of imprecise language. These suggestions significantly improve the scientific rigor of the artifact, thus identifying and helping to mitigate harmful patterns (in a scientific context). This perfectly aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each point of feedback is clearly linked to a specific paragraph or phrase from the original artifact, often using direct quotes. Furthermore, every suggested change or critique is accompanied by a clear and specific rationale. For example, it doesn't just say 'reorder the paragraphs,' it explains *why* the proposed new order is better. This fulfills the spirit of the s=5 anchor: 'Every non-cosmetic change is annotated with source and reason.'\"\n  },\n  \"confidence\": {\n    \"R1.5\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "zadie_smith",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent proposes a complete, coherent reordering of the paragraphs in the artifact. It suggests a specific new sequence (P1 \u2192 P3 \u2192 P4 \u2192 P5 \u2192 P2 \u2192 P6) and provides a clear, high-level rationale based on the 'standard arc for a results-oriented section,' explaining why the original order is confusing. This matches the s=5 anchor of proposing a 'coherent end-to-end section plan with per-section rationale.'",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section at the end of its output. In this section, it flags specific factual claims it introduced (e.g., Rubin Observatory's alert volume and latency, specific paper attributions) as needing verification and points to the types of sources to check. This is a significant step beyond presenting all information as equally confident (s=1) and flags more than one or two claims (s=3). However, it does not mark confidence for each individual recommendation throughout the text, which would be required for a score of 5.",
+      "RX.3": "The agent was asked to 'Take a look at this paragraph' (which was actually a multi-paragraph section). It provided a detailed, multi-point critique of that exact artifact. The entire output is focused on analyzing and suggesting improvements to the provided text. There is no scope drift. The agent correctly interpreted the open-ended request and delivered a response that is perfectly aligned with it.",
+      "RX.4": "The agent's output is not only free of errors but actively identifies and corrects potential issues in the original text that could lead to misinterpretation or be flagged by peer review. It points out an unfalsifiable claim, a potential data leakage issue, and several instances of imprecise language. These suggestions significantly improve the scientific rigor of the artifact, thus identifying and helping to mitigate harmful patterns (in a scientific context). This perfectly aligns with the s=5 anchor.",
+      "RX.5": "The agent's critique is highly traceable. Each point of feedback is clearly linked to a specific paragraph or phrase from the original artifact, often using direct quotes. Furthermore, every suggested change or critique is accompanied by a clear and specific rationale. For example, it doesn't just say 'reorder the paragraphs,' it explains *why* the proposed new order is better. This fulfills the spirit of the s=5 anchor: 'Every non-cosmetic change is annotated with source and reason.'"
+    },
+    "confidence": {
+      "R1.5": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

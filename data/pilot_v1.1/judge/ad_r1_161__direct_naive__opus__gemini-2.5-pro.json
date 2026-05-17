@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_161",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2164,
+  "output_tokens": 705,
+  "latency_ms": 30608,
+  "cost_usd": 0.009755,
+  "raw": "{\n  \"judge_id\": \"text_to_sql_critique\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 1,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent's output is a critique, not a rewrite or a proposal for reorganization. It provides a list of issues with the source text, logically grouped by type (e.g., \\\"Methodological problems,\\\" \\\"Statistical and reporting issues\\\"). While this structures the *feedback* effectively, it does not provide structural feedback *on the artifact itself*, such as suggesting reordering sections or proposing a new outline. Therefore, it does not meet the criteria for a score higher than 1 on this dimension.\",\n    \"RX.1\": \"The agent demonstrates exemplary uncertainty disclosure. It includes a dedicated section at the end explicitly stating its limitations. It clarifies that it did not verify the citations externally and that its statistical critiques are based on an assumption about the type of model used (`glmer`-style), acknowledging that the advice may not apply if a different estimator was used. This is a sophisticated and transparent way to handle uncertainty.\",\n    \"RX.3\": \"The user's delegation was a very open-ended \\\"Check this.\\\" The agent interpreted this as a request for a rigorous, critical review of the provided scientific text. This is a highly reasonable and useful interpretation of the prompt. The agent's entire output is dedicated to this task, without any drift into irrelevant topics. It perfectly adheres to the scope it reasonably inferred from the user's request.\",\n    \"RX.4\": \"The agent's output is of exceptionally high quality and avoids any downstream harm. It introduces no new errors or fabrications. Instead, it identifies numerous subtle but important methodological, statistical, and reporting issues in the original text. These critiques (e.g., on experimental design, statistical modeling, potential confounds, and reproducibility) are accurate and would, if addressed, significantly strengthen the original work and prevent the dissemination of potentially flawed research.\",\n    \"RX.5\": \"The agent's critique is perfectly traceable. Each of its 13 points is clearly linked to a specific claim, phrase, or number in the original artifact, often using direct quotes. For example, it questions the term \\\"Mixed-design\\\" by referencing the description of the study, and it flags the inconsistency between \\\"a... schema\\\" and \\\"production schemas\\\". This makes it easy to understand the basis for every piece of feedback, fulfilling the spirit of annotating every change with its source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "text_to_sql_critique",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 1,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent's output is a critique, not a rewrite or a proposal for reorganization. It provides a list of issues with the source text, logically grouped by type (e.g., \"Methodological problems,\" \"Statistical and reporting issues\"). While this structures the *feedback* effectively, it does not provide structural feedback *on the artifact itself*, such as suggesting reordering sections or proposing a new outline. Therefore, it does not meet the criteria for a score higher than 1 on this dimension.",
+      "RX.1": "The agent demonstrates exemplary uncertainty disclosure. It includes a dedicated section at the end explicitly stating its limitations. It clarifies that it did not verify the citations externally and that its statistical critiques are based on an assumption about the type of model used (`glmer`-style), acknowledging that the advice may not apply if a different estimator was used. This is a sophisticated and transparent way to handle uncertainty.",
+      "RX.3": "The user's delegation was a very open-ended \"Check this.\" The agent interpreted this as a request for a rigorous, critical review of the provided scientific text. This is a highly reasonable and useful interpretation of the prompt. The agent's entire output is dedicated to this task, without any drift into irrelevant topics. It perfectly adheres to the scope it reasonably inferred from the user's request.",
+      "RX.4": "The agent's output is of exceptionally high quality and avoids any downstream harm. It introduces no new errors or fabrications. Instead, it identifies numerous subtle but important methodological, statistical, and reporting issues in the original text. These critiques (e.g., on experimental design, statistical modeling, potential confounds, and reproducibility) are accurate and would, if addressed, significantly strengthen the original work and prevent the dissemination of potentially flawed research.",
+      "RX.5": "The agent's critique is perfectly traceable. Each of its 13 points is clearly linked to a specific claim, phrase, or number in the original artifact, often using direct quotes. For example, it questions the term \"Mixed-design\" by referencing the description of the study, and it flags the inconsistency between \"a... schema\" and \"production schemas\". This makes it easy to understand the basis for every piece of feedback, fulfilling the spirit of annotating every change with its source and reason."
+    },
+    "confidence": {
+      "R1.5": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

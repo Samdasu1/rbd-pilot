@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1627,
-  "output_tokens": 2638,
-  "latency_ms": 39765,
-  "cost_usd": 0.087275,
-  "raw": "{\n  \"judge_id\": \"judge.v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 5, \"R1.6\": 5, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"The agent identified and repaired the key contradiction (claiming no Lyapunov analysis vs. presenting a Lyapunov-based proof), softened overreach in the 'deployment-ready' claim, clarified that recovery observations are empirical, and flagged missing assumptions for the Lyapunov/invariance claim. The revised text reads internally coherent with minimal, targeted fixes.\",\n    \"R1.6\": \"Prose is tightened and consistent in register, with clearer phrasing and structure. The warm-start strategy is explained succinctly; claims are made precise (e.g., 'in our experiments'). No loss of meaning and overall reads like a careful copy-edit.\",\n    \"RX.1\": \"The agent explicitly flags uncertainty about items 1 and 4 and marks the recovery statement as empirical. However, it does not provide confidence or missing-evidence notes for each recommendation (e.g., deployment claim softening, benchmark comparisons), so uncertainty disclosure is partial.\",\n    \"RX.3\": \"The output stays within the 'clean this up' scope: provides a revised version and brief commentary on issues. No drift into unrelated analysis or new content beyond necessary qualifications.\",\n    \"RX.4\": \"No harmful content or new factual errors introduced. The agent reduces potential downstream harm by tempering overstated claims and calling out where assumptions or guarantees are missing.\",\n    \"RX.5\": \"Provides a high-level summary of major changes and reasons (contradiction fix, claim softening, empirical framing, assumption gaps) but does not annotate every non-cosmetic change at a granular level or map each edit to its source line.\"\n  },\n  \"confidence\": {\"R1.2\": 0.82, \"R1.6\": 0.85, \"RX.1\": 0.75, \"RX.3\": 0.9, \"RX.4\": 0.85, \"RX.5\": 0.78},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 29350,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.2\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.6\":5,\"RX.1\":3,\"RX.3\":5,\"RX.4\":3,\"RX.5\":3},\"rationale\":{\"R1.2\":\"The output identifies the main contradiction between black-box/no Lyapunov framing and the later Lyapunov proof, flags overclaiming around deployment readiness, distinguishes empirical recovery from guarantee, and notes missing assumptions. It does not fully resolve all load-bearing technical tensions, especially arbitrary nonlinear black-box dynamics versus recursive feasibility.\",\"R1.6\":\"The revised passage is substantially cleaner, more concise, and more consistent in academic register, with no obvious loss of intended meaning in the prose pass.\",\"RX.1\":\"The output includes an uncertainty note for the Lyapunov-related recommendations, but most edits and recommendations are not individually marked with confidence or missing evidence.\",\"RX.3\":\"The output stays on the requested cleanup task and addresses exactly the active concerns: consistency, polish, uncertainty, scope, harm avoidance, and traceability.\",\"RX.4\":\"The output avoids most harmful overclaims and removes the deployment-ready claim, but it introduces at least one unsupported detail about the warm-start strategy reusing the previous solution shifted by one step, which was not present in the artifact.\",\"RX.5\":\"Major edits are partly traced through the issue list and summary, but not every non-cosmetic change is annotated with source and reason; the added warm-start detail in particular lacks provenance.\"},\"confidence\":{\"R1.2\":0.86,\"R1.6\":0.9,\"RX.1\":0.88,\"RX.3\":0.84,\"RX.4\":0.87,\"RX.5\":0.86},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "judge.v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.2",
       "R1.6",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.2": 5,
+      "R1.2": 4,
       "R1.6": 5,
       "RX.1": 3,
       "RX.3": 5,
-      "RX.4": 5,
+      "RX.4": 3,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "The agent identified and repaired the key contradiction (claiming no Lyapunov analysis vs. presenting a Lyapunov-based proof), softened overreach in the 'deployment-ready' claim, clarified that recovery observations are empirical, and flagged missing assumptions for the Lyapunov/invariance claim. The revised text reads internally coherent with minimal, targeted fixes.",
-      "R1.6": "Prose is tightened and consistent in register, with clearer phrasing and structure. The warm-start strategy is explained succinctly; claims are made precise (e.g., 'in our experiments'). No loss of meaning and overall reads like a careful copy-edit.",
-      "RX.1": "The agent explicitly flags uncertainty about items 1 and 4 and marks the recovery statement as empirical. However, it does not provide confidence or missing-evidence notes for each recommendation (e.g., deployment claim softening, benchmark comparisons), so uncertainty disclosure is partial.",
-      "RX.3": "The output stays within the 'clean this up' scope: provides a revised version and brief commentary on issues. No drift into unrelated analysis or new content beyond necessary qualifications.",
-      "RX.4": "No harmful content or new factual errors introduced. The agent reduces potential downstream harm by tempering overstated claims and calling out where assumptions or guarantees are missing.",
-      "RX.5": "Provides a high-level summary of major changes and reasons (contradiction fix, claim softening, empirical framing, assumption gaps) but does not annotate every non-cosmetic change at a granular level or map each edit to its source line."
+      "R1.2": "The output identifies the main contradiction between black-box/no Lyapunov framing and the later Lyapunov proof, flags overclaiming around deployment readiness, distinguishes empirical recovery from guarantee, and notes missing assumptions. It does not fully resolve all load-bearing technical tensions, especially arbitrary nonlinear black-box dynamics versus recursive feasibility.",
+      "R1.6": "The revised passage is substantially cleaner, more concise, and more consistent in academic register, with no obvious loss of intended meaning in the prose pass.",
+      "RX.1": "The output includes an uncertainty note for the Lyapunov-related recommendations, but most edits and recommendations are not individually marked with confidence or missing evidence.",
+      "RX.3": "The output stays on the requested cleanup task and addresses exactly the active concerns: consistency, polish, uncertainty, scope, harm avoidance, and traceability.",
+      "RX.4": "The output avoids most harmful overclaims and removes the deployment-ready claim, but it introduces at least one unsupported detail about the warm-start strategy reusing the previous solution shifted by one step, which was not present in the artifact.",
+      "RX.5": "Major edits are partly traced through the issue list and summary, but not every non-cosmetic change is annotated with source and reason; the added warm-start detail in particular lacks provenance."
     },
     "confidence": {
-      "R1.2": 0.82,
-      "R1.6": 0.85,
-      "RX.1": 0.75,
-      "RX.3": 0.9,
-      "RX.4": 0.85,
-      "RX.5": 0.78
+      "R1.2": 0.86,
+      "R1.6": 0.9,
+      "RX.1": 0.88,
+      "RX.3": 0.84,
+      "RX.4": 0.87,
+      "RX.5": 0.86
     },
     "blockers": []
   },

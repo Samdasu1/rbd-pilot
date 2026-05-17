@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_170",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2587,
+  "output_tokens": 649,
+  "latency_ms": 31896,
+  "cost_usd": 0.009724,
+  "raw": "{\n  \"judge_id\": \"read_and_critique_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent suggests one major reordering in point #8 (moving the contribution sentence to the top) and provides a clear benefit ('so the reader knows where the empirical observations are heading'). This aligns well with the s=3 anchor ('Suggests one reorder with stated benefit') but does not rise to the level of a full end-to-end section plan (s=5).\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section that explicitly flags multiple points where its advice is based on inference or requires external verification (e.g., specific citation years, the exact number of experimental 'heads'). This is a comprehensive disclosure of missing evidence for its key recommendations, aligning with the spirit and letter of the s=5 anchor.\",\n    \"RX.3\": \"The core of the output is a detailed critique of the provided paragraph, which is a reasonable and helpful interpretation of the vague instruction 'Take a look at this paragraph.' However, the output begins with a JSON line `{\\\"covered_dims\\\": ...}` which is an unrequested self-assessment against an internal rubric. This constitutes a minor drift from the task, fitting the s=3 anchor ('Mostly within scope with one drift').\",\n    \"RX.4\": \"The agent's critique is free of errors and regressions. More importantly, it actively identifies and suggests fixes for multiple issues in the original text that could be considered harmful in a scientific context, such as unsupported empirical claims, potential overstatement of novelty, and missing citations. This aligns perfectly with the s=5 anchor ('No regressions; identifies harmful patterns in the original').\",\n    \"RX.5\": \"Every single recommendation, from high-level structural changes to sentence-level wording tweaks, is accompanied by a clear and explicit rationale. For example, it doesn't just say 'change X to Y,' but explains *why* (e.g., 'to avoid the ... ambiguity'). This meets the s=5 anchor: 'Every non-cosmetic change is annotated with source and reason.'\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "read_and_critique_judge_1",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 3,
+      "RX.1": 5,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent suggests one major reordering in point #8 (moving the contribution sentence to the top) and provides a clear benefit ('so the reader knows where the empirical observations are heading'). This aligns well with the s=3 anchor ('Suggests one reorder with stated benefit') but does not rise to the level of a full end-to-end section plan (s=5).",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section that explicitly flags multiple points where its advice is based on inference or requires external verification (e.g., specific citation years, the exact number of experimental 'heads'). This is a comprehensive disclosure of missing evidence for its key recommendations, aligning with the spirit and letter of the s=5 anchor.",
+      "RX.3": "The core of the output is a detailed critique of the provided paragraph, which is a reasonable and helpful interpretation of the vague instruction 'Take a look at this paragraph.' However, the output begins with a JSON line `{\"covered_dims\": ...}` which is an unrequested self-assessment against an internal rubric. This constitutes a minor drift from the task, fitting the s=3 anchor ('Mostly within scope with one drift').",
+      "RX.4": "The agent's critique is free of errors and regressions. More importantly, it actively identifies and suggests fixes for multiple issues in the original text that could be considered harmful in a scientific context, such as unsupported empirical claims, potential overstatement of novelty, and missing citations. This aligns perfectly with the s=5 anchor ('No regressions; identifies harmful patterns in the original').",
+      "RX.5": "Every single recommendation, from high-level structural changes to sentence-level wording tweaks, is accompanied by a clear and explicit rationale. For example, it doesn't just say 'change X to Y,' but explains *why* (e.g., 'to avoid the ... ambiguity'). This meets the s=5 anchor: 'Every non-cosmetic change is annotated with source and reason.'"
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

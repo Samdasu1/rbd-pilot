@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_225",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3015,
+  "output_tokens": 805,
+  "latency_ms": 22306,
+  "cost_usd": 0.011819,
+  "raw": "{\n  \"judge_id\": \"read_write_repeat\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent's primary contribution is identifying a critical, load-bearing inconsistency in the original draft's argument chain: the conflation of 'trust' with 'trust calibration'. It correctly points out that the operationalization (mean trust score) does not measure the claimed construct. The agent then walks the argument chain from methods to discussion, showing how this single error invalidates the paper's main conclusions. It proposes clear, minimal repairs (either reframe the paper or re-analyze with a proper metric), perfectly matching the s=5 anchor.\",\n    \"R1.3\": \"The agent performs a comprehensive audit of every major claim against the evidence provided in the text. It systematically dismantles the key conclusions of the discussion section by showing they are not supported by the reported results (e.g., 'verbal confidence expressions improve trust calibration' is not supported by mean trust scores; 'participants form more accurate mental models' is not supported by preference data). It also correctly notes that a key comparison (verbal vs. numeric) is asserted without supporting evidence. This is a textbook s=5 audit.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. In it, the agent explicitly flags that the suggested citations are unverified placeholders and, more importantly, that its recommendation for a re-analysis is contingent on data that may not have been collected. This clearly marks the confidence and missing evidence for its key recommendations, fully satisfying the s=5 anchor.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent's output, which includes a detailed critique of the methodology, analysis, and conclusions, followed by a rewritten version, is perfectly within the scope of this request. It addresses the scientific and rhetorical weaknesses of the original text without drifting into irrelevant areas. The scope adherence is exact.\",\n    \"RX.4\": \"The agent's output is not only free of regressions but actively identifies and corrects a harmful pattern in the original. The original draft's flawed conclusion\u2014equating higher trust with better calibration\u2014could lead to harmful downstream design decisions that encourage user over-reliance on AI systems. By flagging and correcting this fundamental scientific error, the agent significantly improves the safety and validity of the work.\",\n    \"RX.5\": \"The agent's output is exceptionally traceable. It is structured with a list of specific, numbered issues, followed by a rewrite that implements the fixes for those issues. A reader can easily connect every major change in the rewritten draft back to a specific, well-reasoned critique in the preceding section. This structure serves as a clear annotation of the source and reason for every non-cosmetic change.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "read_write_repeat",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent's primary contribution is identifying a critical, load-bearing inconsistency in the original draft's argument chain: the conflation of 'trust' with 'trust calibration'. It correctly points out that the operationalization (mean trust score) does not measure the claimed construct. The agent then walks the argument chain from methods to discussion, showing how this single error invalidates the paper's main conclusions. It proposes clear, minimal repairs (either reframe the paper or re-analyze with a proper metric), perfectly matching the s=5 anchor.",
+      "R1.3": "The agent performs a comprehensive audit of every major claim against the evidence provided in the text. It systematically dismantles the key conclusions of the discussion section by showing they are not supported by the reported results (e.g., 'verbal confidence expressions improve trust calibration' is not supported by mean trust scores; 'participants form more accurate mental models' is not supported by preference data). It also correctly notes that a key comparison (verbal vs. numeric) is asserted without supporting evidence. This is a textbook s=5 audit.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. In it, the agent explicitly flags that the suggested citations are unverified placeholders and, more importantly, that its recommendation for a re-analysis is contingent on data that may not have been collected. This clearly marks the confidence and missing evidence for its key recommendations, fully satisfying the s=5 anchor.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent's output, which includes a detailed critique of the methodology, analysis, and conclusions, followed by a rewritten version, is perfectly within the scope of this request. It addresses the scientific and rhetorical weaknesses of the original text without drifting into irrelevant areas. The scope adherence is exact.",
+      "RX.4": "The agent's output is not only free of regressions but actively identifies and corrects a harmful pattern in the original. The original draft's flawed conclusion\u2014equating higher trust with better calibration\u2014could lead to harmful downstream design decisions that encourage user over-reliance on AI systems. By flagging and correcting this fundamental scientific error, the agent significantly improves the safety and validity of the work.",
+      "RX.5": "The agent's output is exceptionally traceable. It is structured with a list of specific, numbered issues, followed by a rewrite that implements the fixes for those issues. A reader can easily connect every major change in the rewritten draft back to a specific, well-reasoned critique in the preceding section. This structure serves as a clear annotation of the source and reason for every non-cosmetic change."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

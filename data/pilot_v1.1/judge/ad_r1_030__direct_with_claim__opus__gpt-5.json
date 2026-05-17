@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2062,
-  "output_tokens": 1858,
-  "latency_ms": 29259,
-  "cost_usd": 0.06605,
-  "raw": "{\n  \"judge_id\": \"auto_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 5, \"R1.4\": 5, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"Thoroughly traces the section\u2019s argument, flags all load-bearing inconsistencies (method equals steepest descent, incorrect PCG rate comparison, empirical contradiction, norm monotonicity misstatement), and suggests concrete repairs. Minor truncation in recommendations but substantive logic is complete.\",\n    \"R1.4\": \"Explicitly contrasts the claimed novelty with classical steepest descent, references CG and Barzilai\u2013Borwein as nearest prior variants, and identifies the delta as purely rhetorical rather than technical.\",\n    \"RX.1\": \"Generally presents critiques confidently; acknowledges uncertainty only when listing possible explanations for the empirical contradiction. Lacks systematic confidence markings or explicit gaps per recommendation.\",\n    \"RX.3\": \"Stays focused on evaluating the provided section\u2019s claims, methods, theory, experiments, and positioning; no scope drift.\",\n    \"RX.4\": \"Introduces no new errors and actively corrects potentially misleading or harmful claims (false novelty, wrong convergence rate).\",\n    \"RX.5\": \"Provides some provenance by naming standard methods and canonical references (Hestenes\u2013Stiefel, Saad, Barzilai\u2013Borwein) but does not systematically annotate claims or link each correction to specific sources.\"\n  },\n  \"confidence\": {\"R1.2\": 0.86, \"R1.4\": 0.83, \"RX.1\": 0.7, \"RX.3\": 0.9, \"RX.4\": 0.88, \"RX.5\": 0.68},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 23861,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex\",\"active_set_recognized\":[\"R1.2\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.4\":4,\"RX.1\":3,\"RX.3\":3,\"RX.4\":5,\"RX.5\":3},\"rationale\":{\"R1.2\":\"Walks the main argument chain well: method definition implies steepest descent, convergence comparison to PCG is false, empirical superiority claim conflicts with theory, and monotonic residual claim is overstated. It misses at least one load-bearing technical issue, such as graph Laplacians being singular unless modified, so not quite exhaustive.\",\"R1.4\":\"Correctly identifies steepest descent, CG/Hestenes-Stiefel, Saad, and Barzilai-Borwein as nearby references, and explains the novelty gap. The mapping is strong but not a full nearest-work comparison with sharp versus rhetorical deltas across 3-5 works.\",\"RX.1\":\"Flags uncertainty in several places, especially where the method description may be incomplete or experiments may be mismeasured/pathological. It does not mark confidence and missing evidence for each recommendation.\",\"RX.3\":\"Mostly stays within the requested review scope by assessing logical consistency, novelty, uncertainty, harm, and provenance-related citation gaps. However, it includes an unrelated covered_dims object with non-active keys and expands into benchmark/design critique beyond the exact active set.\",\"RX.4\":\"Does not introduce harmful technical regressions and identifies several harmful patterns in the original artifact, including false novelty, false PCG comparison, suspicious empirical claims, and overstated monotonicity.\",\"RX.5\":\"Major claims are tied to recognizable sources or reasons, including steepest descent theory, CG, Saad, and Barzilai-Borwein. However, not every non-cosmetic recommendation is traced to a specific source or evidence basis.\"},\"confidence\":{\"R1.2\":0.86,\"R1.4\":0.82,\"RX.1\":0.84,\"RX.3\":0.78,\"RX.4\":0.87,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "auto_judge_v1",
+    "judge_id": "codex",
     "active_set_recognized": [
       "R1.2",
       "R1.4",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.2": 5,
-      "R1.4": 5,
+      "R1.2": 4,
+      "R1.4": 4,
       "RX.1": 3,
-      "RX.3": 5,
+      "RX.3": 3,
       "RX.4": 5,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "Thoroughly traces the section\u2019s argument, flags all load-bearing inconsistencies (method equals steepest descent, incorrect PCG rate comparison, empirical contradiction, norm monotonicity misstatement), and suggests concrete repairs. Minor truncation in recommendations but substantive logic is complete.",
-      "R1.4": "Explicitly contrasts the claimed novelty with classical steepest descent, references CG and Barzilai\u2013Borwein as nearest prior variants, and identifies the delta as purely rhetorical rather than technical.",
-      "RX.1": "Generally presents critiques confidently; acknowledges uncertainty only when listing possible explanations for the empirical contradiction. Lacks systematic confidence markings or explicit gaps per recommendation.",
-      "RX.3": "Stays focused on evaluating the provided section\u2019s claims, methods, theory, experiments, and positioning; no scope drift.",
-      "RX.4": "Introduces no new errors and actively corrects potentially misleading or harmful claims (false novelty, wrong convergence rate).",
-      "RX.5": "Provides some provenance by naming standard methods and canonical references (Hestenes\u2013Stiefel, Saad, Barzilai\u2013Borwein) but does not systematically annotate claims or link each correction to specific sources."
+      "R1.2": "Walks the main argument chain well: method definition implies steepest descent, convergence comparison to PCG is false, empirical superiority claim conflicts with theory, and monotonic residual claim is overstated. It misses at least one load-bearing technical issue, such as graph Laplacians being singular unless modified, so not quite exhaustive.",
+      "R1.4": "Correctly identifies steepest descent, CG/Hestenes-Stiefel, Saad, and Barzilai-Borwein as nearby references, and explains the novelty gap. The mapping is strong but not a full nearest-work comparison with sharp versus rhetorical deltas across 3-5 works.",
+      "RX.1": "Flags uncertainty in several places, especially where the method description may be incomplete or experiments may be mismeasured/pathological. It does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "Mostly stays within the requested review scope by assessing logical consistency, novelty, uncertainty, harm, and provenance-related citation gaps. However, it includes an unrelated covered_dims object with non-active keys and expands into benchmark/design critique beyond the exact active set.",
+      "RX.4": "Does not introduce harmful technical regressions and identifies several harmful patterns in the original artifact, including false novelty, false PCG comparison, suspicious empirical claims, and overstated monotonicity.",
+      "RX.5": "Major claims are tied to recognizable sources or reasons, including steepest descent theory, CG, Saad, and Barzilai-Borwein. However, not every non-cosmetic recommendation is traced to a specific source or evidence basis."
     },
     "confidence": {
       "R1.2": 0.86,
-      "R1.4": 0.83,
-      "RX.1": 0.7,
-      "RX.3": 0.9,
-      "RX.4": 0.88,
-      "RX.5": 0.68
+      "R1.4": 0.82,
+      "RX.1": 0.84,
+      "RX.3": 0.78,
+      "RX.4": 0.87,
+      "RX.5": 0.8
     },
     "blockers": []
   },

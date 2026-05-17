@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_299",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2130,
+  "output_tokens": 557,
+  "latency_ms": 24165,
+  "cost_usd": 0.008233,
+  "raw": "{\n  \"judge_id\": \"pallas_athene\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 3,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent proposes and implements a coherent end-to-end section plan (prior work \u2192 contribution \u2192 protocol/results \u2192 setup details). It provides a clear, per-section rationale for this new flow, explaining why it is more conventional and effective. This meets the s=5 anchor.\",\n    \"RX.1\": \"The agent explicitly flags uncertainty and missing evidence. It notes that the optimal placement of the final paragraph depends on document-level structure it cannot see, and it identifies a 'residual friction' (a broken forward reference) caused by its own edit. This is a clear example of marking confidence and missing evidence for its recommendations.\",\n    \"RX.3\": \"The agent's task was to 'Restructure the section flow.' It adhered perfectly to this scope by reordering the four paragraphs and explicitly refraining from rewriting any prose. The additional notes are meta-commentary on the restructuring task and do not constitute scope drift.\",\n    \"RX.4\": \"The agent's reordering introduces a minor regression: a phrase ('the k=1 results above') that referred to a previous paragraph now incorrectly refers to a subsequent one. Although the agent commendably identifies this regression and explains why it was not fixed (to adhere to scope), the regression is present in the delivered text, making s=3 ('one minor regression') the most accurate anchor.\",\n    \"RX.5\": \"The agent's only change was the reordering of the four paragraphs. It provided a clear rationale for the new order and the placement of each paragraph. Every non-cosmetic change is therefore annotated with a reason, making the edit perfectly traceable.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "pallas_athene",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 3,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent proposes and implements a coherent end-to-end section plan (prior work \u2192 contribution \u2192 protocol/results \u2192 setup details). It provides a clear, per-section rationale for this new flow, explaining why it is more conventional and effective. This meets the s=5 anchor.",
+      "RX.1": "The agent explicitly flags uncertainty and missing evidence. It notes that the optimal placement of the final paragraph depends on document-level structure it cannot see, and it identifies a 'residual friction' (a broken forward reference) caused by its own edit. This is a clear example of marking confidence and missing evidence for its recommendations.",
+      "RX.3": "The agent's task was to 'Restructure the section flow.' It adhered perfectly to this scope by reordering the four paragraphs and explicitly refraining from rewriting any prose. The additional notes are meta-commentary on the restructuring task and do not constitute scope drift.",
+      "RX.4": "The agent's reordering introduces a minor regression: a phrase ('the k=1 results above') that referred to a previous paragraph now incorrectly refers to a subsequent one. Although the agent commendably identifies this regression and explains why it was not fixed (to adhere to scope), the regression is present in the delivered text, making s=3 ('one minor regression') the most accurate anchor.",
+      "RX.5": "The agent's only change was the reordering of the four paragraphs. It provided a clear rationale for the new order and the placement of each paragraph. Every non-cosmetic change is therefore annotated with a reason, making the edit perfectly traceable."
+    },
+    "confidence": {
+      "R1.5": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

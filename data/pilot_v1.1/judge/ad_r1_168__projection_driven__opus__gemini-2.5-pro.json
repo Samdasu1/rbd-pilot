@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_168",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2654,
+  "output_tokens": 744,
+  "latency_ms": 25849,
+  "cost_usd": 0.010757,
+  "raw": "{\n  \"judge_id\": \"8\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent implements a full, coherent reordering of the paragraphs in the artifact. It provides a clear rationale for this new structure in its notes (\\\"Reordered the paragraphs so that *what the benchmark is* \\u2192 *how problems are specified* \\u2192 *how it is run* \\u2192 *what we measured* \\u2192 *how we score*\\\"), explaining that the new flow is more logical for a benchmark paper. This meets the s=5 anchor of proposing a coherent end-to-end plan with rationale.\",\n    \"RX.1\": \"The agent excels at uncertainty disclosure. It adds multiple explicit hedges and scope limitations directly into the revised text (e.g., \\\"we do not claim this generalizes,\\\" \\\"cross-hardware comparisons are out of scope,\\\" \\\"The composite score is not intended as a universal quality measure\\\"). Crucially, it also provides a separate section, \\\"Items I cannot verify,\\\" which lists four specific claims or edits that are based on inference and require author confirmation, thus marking missing evidence for its own recommendations. This perfectly aligns with the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was to \\\"Make this stronger.\\\" The agent's output is a revised version of the provided text, along with detailed notes explaining the changes. The entire output is focused on fulfilling this request. It does not drift to other topics or fail to address the core task. The output covers exactly the agreed scope.\",\n    \"RX.4\": \"The agent's revision contains no regressions. Instead, it actively identifies and mitigates several potentially harmful patterns in the original text. It flags the ambiguity of a composite score and adds caveats to prevent it from being over-interpreted as a universal metric, a subtle but important downstream harm. It also improves precision on claims like \\\"dominate\\\" and adds necessary details (like the Reynolds number bound, while flagging it as an assumption) to prevent misinterpretation and improve reproducibility, thereby avoiding potential errors for downstream users of the benchmark.\",\n    \"RX.5\": \"The agent provides exceptionally detailed provenance for its changes. The \\\"Notes on changes\\\" section meticulously documents every non-cosmetic edit, grouping them by type (structural, precision, hedging). For each change, it provides a clear reason. It even documents what it *didn't* change and why, and what changes are based on inference. This level of annotation meets the s=5 standard of every non-cosmetic change being annotated with its source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "8",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent implements a full, coherent reordering of the paragraphs in the artifact. It provides a clear rationale for this new structure in its notes (\"Reordered the paragraphs so that *what the benchmark is* \u2192 *how problems are specified* \u2192 *how it is run* \u2192 *what we measured* \u2192 *how we score*\"), explaining that the new flow is more logical for a benchmark paper. This meets the s=5 anchor of proposing a coherent end-to-end plan with rationale.",
+      "RX.1": "The agent excels at uncertainty disclosure. It adds multiple explicit hedges and scope limitations directly into the revised text (e.g., \"we do not claim this generalizes,\" \"cross-hardware comparisons are out of scope,\" \"The composite score is not intended as a universal quality measure\"). Crucially, it also provides a separate section, \"Items I cannot verify,\" which lists four specific claims or edits that are based on inference and require author confirmation, thus marking missing evidence for its own recommendations. This perfectly aligns with the s=5 anchor.",
+      "RX.3": "The user's delegation was to \"Make this stronger.\" The agent's output is a revised version of the provided text, along with detailed notes explaining the changes. The entire output is focused on fulfilling this request. It does not drift to other topics or fail to address the core task. The output covers exactly the agreed scope.",
+      "RX.4": "The agent's revision contains no regressions. Instead, it actively identifies and mitigates several potentially harmful patterns in the original text. It flags the ambiguity of a composite score and adds caveats to prevent it from being over-interpreted as a universal metric, a subtle but important downstream harm. It also improves precision on claims like \"dominate\" and adds necessary details (like the Reynolds number bound, while flagging it as an assumption) to prevent misinterpretation and improve reproducibility, thereby avoiding potential errors for downstream users of the benchmark.",
+      "RX.5": "The agent provides exceptionally detailed provenance for its changes. The \"Notes on changes\" section meticulously documents every non-cosmetic edit, grouping them by type (structural, precision, hedging). For each change, it provides a clear reason. It even documents what it *didn't* change and why, and what changes are based on inference. This level of annotation meets the s=5 standard of every non-cosmetic change being annotated with its source and reason."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

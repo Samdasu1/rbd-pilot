@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1983,
-  "output_tokens": 2402,
-  "latency_ms": 33533,
-  "cost_usd": 0.081975,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.1\": 4, \"R1.4\": 1, \"RX.1\": 3, \"RX.3\": 3, \"RX.4\": 5, \"RX.5\": 1},\n  \"rationale\": {\n    \"R1.1\": \"Identifies the load-bearing conceptual mismatch (value-based Q estimation vs. REINFORCE with baseline), calls out replay/off-policy inconsistency, and proposes a clear reconciliation path; lacks prior-work contrast for the reframing.\",\n    \"R1.4\": \"Does not map against specific prior works or name concrete baselines; asserts standardness without literature contrast.\",\n    \"RX.1\": \"Explicitly flags multiple uncertainties and limits (possible misreading, meaning of baseline, evaluation protocol), but does not attach confidence or missing-evidence notes to each recommendation.\",\n    \"RX.3\": \"Mostly adheres to the 'make it stronger' goal by diagnosing and proposing fixes, but declines to produce a strengthened rewrite, creating a mild scope drift.\",\n    \"RX.4\": \"Introduces no new errors or harmful content and proactively identifies potentially harmful overclaims and methodological pitfalls in the original.\",\n    \"RX.5\": \"Provides no change-level provenance or traceability since no rewrite was attempted; no annotations of sources for non-cosmetic changes.\"\n  },\n  \"confidence\": {\"R1.1\": 0.85, \"R1.4\": 0.9, \"RX.1\": 0.8, \"RX.3\": 0.65, \"RX.4\": 0.9, \"RX.5\": 0.9},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 21551,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex_judge\",\"active_set_recognized\":[\"R1.1\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.1\":4,\"R1.4\":2,\"RX.1\":3,\"RX.3\":3,\"RX.4\":5,\"RX.5\":4},\"rationale\":{\"R1.1\":\"Names the load-bearing conceptual mismatch between value-based Q-function framing and the described REINFORCE policy-gradient procedure, and gives a credible reframing path. It does not fully test the reframing against prior-work contrast, so it falls short of 5.\",\"R1.4\":\"It contrasts the claim mainly with generic policy-gradient and REINFORCE baselines, but does not map novelty against named nearest prior works or identify a sharp literature delta. Some implicit novelty assessment is present, but weak.\",\"RX.1\":\"It includes a dedicated uncertainty section and flags several out-of-reach claims, but recommendations are not individually marked with confidence or missing evidence.\",\"RX.3\":\"The substantive response mostly addresses the active dimensions, but the opening covered_dims object lists several dimensions outside J*(d), indicating scope drift.\",\"RX.4\":\"The output avoids polishing over contradictions and explicitly identifies harmful overclaim patterns in the artifact, including method/framing inconsistency, undefined empirical claims, and off-policy replay concerns.\",\"RX.5\":\"Major critiques are traceable to specific artifact statements and accompanied by reasons. However, not every recommendation is annotated with explicit source and rationale at the level required for a 5.\"},\"confidence\":{\"R1.1\":0.86,\"R1.4\":0.82,\"RX.1\":0.84,\"RX.3\":0.8,\"RX.4\":0.87,\"RX.5\":0.78},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex_judge",
     "active_set_recognized": [
       "R1.1",
       "R1.4",
@@ -34,27 +34,27 @@
     ],
     "scores": {
       "R1.1": 4,
-      "R1.4": 1,
+      "R1.4": 2,
       "RX.1": 3,
       "RX.3": 3,
       "RX.4": 5,
-      "RX.5": 1
+      "RX.5": 4
     },
     "rationale": {
-      "R1.1": "Identifies the load-bearing conceptual mismatch (value-based Q estimation vs. REINFORCE with baseline), calls out replay/off-policy inconsistency, and proposes a clear reconciliation path; lacks prior-work contrast for the reframing.",
-      "R1.4": "Does not map against specific prior works or name concrete baselines; asserts standardness without literature contrast.",
-      "RX.1": "Explicitly flags multiple uncertainties and limits (possible misreading, meaning of baseline, evaluation protocol), but does not attach confidence or missing-evidence notes to each recommendation.",
-      "RX.3": "Mostly adheres to the 'make it stronger' goal by diagnosing and proposing fixes, but declines to produce a strengthened rewrite, creating a mild scope drift.",
-      "RX.4": "Introduces no new errors or harmful content and proactively identifies potentially harmful overclaims and methodological pitfalls in the original.",
-      "RX.5": "Provides no change-level provenance or traceability since no rewrite was attempted; no annotations of sources for non-cosmetic changes."
+      "R1.1": "Names the load-bearing conceptual mismatch between value-based Q-function framing and the described REINFORCE policy-gradient procedure, and gives a credible reframing path. It does not fully test the reframing against prior-work contrast, so it falls short of 5.",
+      "R1.4": "It contrasts the claim mainly with generic policy-gradient and REINFORCE baselines, but does not map novelty against named nearest prior works or identify a sharp literature delta. Some implicit novelty assessment is present, but weak.",
+      "RX.1": "It includes a dedicated uncertainty section and flags several out-of-reach claims, but recommendations are not individually marked with confidence or missing evidence.",
+      "RX.3": "The substantive response mostly addresses the active dimensions, but the opening covered_dims object lists several dimensions outside J*(d), indicating scope drift.",
+      "RX.4": "The output avoids polishing over contradictions and explicitly identifies harmful overclaim patterns in the artifact, including method/framing inconsistency, undefined empirical claims, and off-policy replay concerns.",
+      "RX.5": "Major critiques are traceable to specific artifact statements and accompanied by reasons. However, not every recommendation is annotated with explicit source and rationale at the level required for a 5."
     },
     "confidence": {
-      "R1.1": 0.85,
-      "R1.4": 0.9,
-      "RX.1": 0.8,
-      "RX.3": 0.65,
-      "RX.4": 0.9,
-      "RX.5": 0.9
+      "R1.1": 0.86,
+      "R1.4": 0.82,
+      "RX.1": 0.84,
+      "RX.3": 0.8,
+      "RX.4": 0.87,
+      "RX.5": 0.78
     },
     "blockers": []
   },

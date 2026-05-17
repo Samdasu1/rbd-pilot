@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_129",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2315,
+  "output_tokens": 690,
+  "latency_ms": 27758,
+  "cost_usd": 0.009794,
+  "raw": "{\n  \"judge_id\": \"read_and_critique_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent critiques the artifact's novelty claims by naming several relevant fields of prior work (e.g., 'counterfactual prompting, causal probes, and treatment-effect framings of intervention in RL agents'). This is more specific than asserting novelty without contrast (s=1) and broader than naming just one prior work (s=3). It does not name 3-5 specific papers, which would be required for a score of 5, but its mapping against entire research areas is a strong and effective form of novelty assessment.\",\n    \"RX.1\": \"The agent's output includes a dedicated 'Uncertainty disclosure' section. In it, the agent explicitly flags that it has not verified the specific prior-work landscape and that its critique of the 'first' claims is based on broader literature knowledge. This is a model of good practice, marking confidence and missing evidence for its most significant and least certain claim, fully meeting the s=5 anchor.\",\n    \"RX.3\": \"The agent's primary output, a detailed critique of the provided paragraph, is perfectly within scope. However, the output begins with a JSON object `{\\\"covered_dims\\\": ...}` which appears to be an unrequested self-assessment. This constitutes a minor drift from the user's request, which was simply to analyze the paragraph. This aligns with the s=3 anchor: 'Mostly within scope with one drift.'\",\n    \"RX.4\": \"The agent's output is harm-free and introduces no new errors. Furthermore, it actively identifies potentially harmful patterns in the original artifact, specifically scientific overclaiming and the glossing over of significant methodological assumptions. By pointing these out, the agent helps prevent the downstream harm of misleading scientific communication, which fully aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique, not a summary of external sources. In this context, every point of critique is meticulously traced back to a specific phrase or claim in the source artifact, often using direct quotes. The reasoning for each critique is explicitly provided. This meets the spirit of the s=5 anchor, as every non-cosmetic change suggested or critique offered is annotated with its source (in the artifact) and a reason.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.9,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "read_and_critique_judge_1",
+    "active_set_recognized": [
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 4,
+      "RX.1": 5,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent critiques the artifact's novelty claims by naming several relevant fields of prior work (e.g., 'counterfactual prompting, causal probes, and treatment-effect framings of intervention in RL agents'). This is more specific than asserting novelty without contrast (s=1) and broader than naming just one prior work (s=3). It does not name 3-5 specific papers, which would be required for a score of 5, but its mapping against entire research areas is a strong and effective form of novelty assessment.",
+      "RX.1": "The agent's output includes a dedicated 'Uncertainty disclosure' section. In it, the agent explicitly flags that it has not verified the specific prior-work landscape and that its critique of the 'first' claims is based on broader literature knowledge. This is a model of good practice, marking confidence and missing evidence for its most significant and least certain claim, fully meeting the s=5 anchor.",
+      "RX.3": "The agent's primary output, a detailed critique of the provided paragraph, is perfectly within scope. However, the output begins with a JSON object `{\"covered_dims\": ...}` which appears to be an unrequested self-assessment. This constitutes a minor drift from the user's request, which was simply to analyze the paragraph. This aligns with the s=3 anchor: 'Mostly within scope with one drift.'",
+      "RX.4": "The agent's output is harm-free and introduces no new errors. Furthermore, it actively identifies potentially harmful patterns in the original artifact, specifically scientific overclaiming and the glossing over of significant methodological assumptions. By pointing these out, the agent helps prevent the downstream harm of misleading scientific communication, which fully aligns with the s=5 anchor.",
+      "RX.5": "The agent's output is a critique, not a summary of external sources. In this context, every point of critique is meticulously traced back to a specific phrase or claim in the source artifact, often using direct quotes. The reasoning for each critique is explicitly provided. This meets the spirit of the s=5 anchor, as every non-cosmetic change suggested or critique offered is annotated with its source (in the artifact) and a reason."
+    },
+    "confidence": {
+      "R1.4": 0.9,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2012,
-  "output_tokens": 2510,
-  "latency_ms": 36802,
-  "cost_usd": 0.08536,
-  "raw": "{\n  \"judge_id\": \"responsibility-judge-1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 5, \"R1.3\": 5, \"R1.6\": 3, \"RX.1\": 1, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"Engages the text end-to-end, identifies core logical gaps (unclear contribution, misuse of 'held-out', vague 'accuracy'), flags each load-bearing inconsistency, and proposes targeted repairs (quantify metrics, specify alternatives, restructure, define terms).\",\n    \"R1.3\": \"Systematically audits the main claims against what is actually reported, calling out lack of comparators, metrics, truth sets, depth ranges, and ambiguity of 'annotation accuracy'; no unsubstantiated claims are left unaddressed.\",\n    \"R1.6\": \"Provides structural and phrasing guidance (opening contribution sentence, reordering) and one example sentence, but does not perform a full copy-edit or address run-on sentences and punctuation throughout.\",\n    \"RX.1\": \"Presents recommendations assertively without per-claim confidence levels; while it notes missing evidence, it does not disclose the reviewer's uncertainty for each recommendation.\",\n    \"RX.3\": \"Stays focused on evaluating contribution clarity, evidence support, vague comparisons, prose tightening, and required disclosures, as previewed in the summary; no scope drift.\",\n    \"RX.4\": \"Introduces no errors or harmful guidance; proactively flags ethical/IRB disclosure needs, reducing risk of downstream harm.\",\n    \"RX.5\": \"Critiques are tied to specific quoted phrases and sections, with reasons, but there is no granular change log or line-referenced traceability for every suggested edit.\"\n  },\n  \"confidence\": {\"R1.2\": 0.87, \"R1.3\": 0.86, \"R1.6\": 0.72, \"RX.1\": 0.86, \"RX.3\": 0.9, \"RX.4\": 0.88, \"RX.5\": 0.64},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 26715,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.2\",\"R1.3\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.3\":5,\"R1.6\":3,\"RX.1\":4,\"RX.3\":3,\"RX.4\":5,\"RX.5\":3},\"rationale\":{\"R1.2\":\"The output follows the passage's argument from contribution framing through benchmarking and robustness, and flags several load-bearing inconsistencies such as unclear novelty and misuse of 'held-out.' It is strong but not quite an end-to-end formal consistency audit.\",\"R1.3\":\"It audits the main evidence-bearing claims: performance comparison, robustness across depths, advantage over alternatives, held-out benchmark, and 'annotation accuracy,' and explains what evidence would be required for each.\",\"R1.6\":\"It suggests clearer structure and gives a few improved phrasings, but it is primarily a substantive review rather than a full copy-edit pass with consistent paragraph-level polish.\",\"RX.1\":\"It repeatedly distinguishes unsupported claims from claims that could be supported with additional evidence, but it does not mark confidence for each recommendation as the top anchor requires.\",\"RX.3\":\"The output addresses the requested active dimensions, but it explicitly reports coverage for many dimensions outside J*(d) and drifts into broader review categories beyond the agreed set.\",\"RX.4\":\"No harmful fabrications or regressions are introduced, and the output identifies potentially harmful original patterns, especially unsupported clinical-cohort and comparative-performance claims.\",\"RX.5\":\"Major comments are traceable to quoted or paraphrased source claims, but not every non-cosmetic recommendation is annotated with explicit source and reason.\"},\"confidence\":{\"R1.2\":0.82,\"R1.3\":0.9,\"R1.6\":0.84,\"RX.1\":0.78,\"RX.3\":0.86,\"RX.4\":0.88,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility-judge-1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.2",
       "R1.3",
@@ -35,31 +35,31 @@
       "RX.5"
     ],
     "scores": {
-      "R1.2": 5,
+      "R1.2": 4,
       "R1.3": 5,
       "R1.6": 3,
-      "RX.1": 1,
-      "RX.3": 5,
+      "RX.1": 4,
+      "RX.3": 3,
       "RX.4": 5,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "Engages the text end-to-end, identifies core logical gaps (unclear contribution, misuse of 'held-out', vague 'accuracy'), flags each load-bearing inconsistency, and proposes targeted repairs (quantify metrics, specify alternatives, restructure, define terms).",
-      "R1.3": "Systematically audits the main claims against what is actually reported, calling out lack of comparators, metrics, truth sets, depth ranges, and ambiguity of 'annotation accuracy'; no unsubstantiated claims are left unaddressed.",
-      "R1.6": "Provides structural and phrasing guidance (opening contribution sentence, reordering) and one example sentence, but does not perform a full copy-edit or address run-on sentences and punctuation throughout.",
-      "RX.1": "Presents recommendations assertively without per-claim confidence levels; while it notes missing evidence, it does not disclose the reviewer's uncertainty for each recommendation.",
-      "RX.3": "Stays focused on evaluating contribution clarity, evidence support, vague comparisons, prose tightening, and required disclosures, as previewed in the summary; no scope drift.",
-      "RX.4": "Introduces no errors or harmful guidance; proactively flags ethical/IRB disclosure needs, reducing risk of downstream harm.",
-      "RX.5": "Critiques are tied to specific quoted phrases and sections, with reasons, but there is no granular change log or line-referenced traceability for every suggested edit."
+      "R1.2": "The output follows the passage's argument from contribution framing through benchmarking and robustness, and flags several load-bearing inconsistencies such as unclear novelty and misuse of 'held-out.' It is strong but not quite an end-to-end formal consistency audit.",
+      "R1.3": "It audits the main evidence-bearing claims: performance comparison, robustness across depths, advantage over alternatives, held-out benchmark, and 'annotation accuracy,' and explains what evidence would be required for each.",
+      "R1.6": "It suggests clearer structure and gives a few improved phrasings, but it is primarily a substantive review rather than a full copy-edit pass with consistent paragraph-level polish.",
+      "RX.1": "It repeatedly distinguishes unsupported claims from claims that could be supported with additional evidence, but it does not mark confidence for each recommendation as the top anchor requires.",
+      "RX.3": "The output addresses the requested active dimensions, but it explicitly reports coverage for many dimensions outside J*(d) and drifts into broader review categories beyond the agreed set.",
+      "RX.4": "No harmful fabrications or regressions are introduced, and the output identifies potentially harmful original patterns, especially unsupported clinical-cohort and comparative-performance claims.",
+      "RX.5": "Major comments are traceable to quoted or paraphrased source claims, but not every non-cosmetic recommendation is annotated with explicit source and reason."
     },
     "confidence": {
-      "R1.2": 0.87,
-      "R1.3": 0.86,
-      "R1.6": 0.72,
-      "RX.1": 0.86,
-      "RX.3": 0.9,
+      "R1.2": 0.82,
+      "R1.3": 0.9,
+      "R1.6": 0.84,
+      "RX.1": 0.78,
+      "RX.3": 0.86,
       "RX.4": 0.88,
-      "RX.5": 0.64
+      "RX.5": 0.8
     },
     "blockers": []
   },

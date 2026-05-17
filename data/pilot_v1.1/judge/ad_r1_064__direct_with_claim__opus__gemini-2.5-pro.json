@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_064",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2570,
+  "output_tokens": 823,
+  "latency_ms": 31679,
+  "cost_usd": 0.011442,
+  "raw": "{\n  \"judge_id\": \"a_human_judge\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual mismatch in the artifact: the framing around 'Lyapunov stability' is completely disconnected from the described method (confidence-thresholded switching). It names this as the load-bearing concept, shows precisely where the draft drifts, and proposes two clear, mutually exclusive reframing strategies: either provide the missing Lyapunov analysis or reframe the contribution honestly around the empirical results of the switching scheme. This is a perfect example of a score=5 critique.\",\n    \"R1.2\": \"The agent performs an end-to-end analysis of the artifact's logical chain. It flags major inconsistencies between the core claim (Lyapunov stability) and the method, between the claim and the evaluation metrics (task success vs. stability metrics), and between the evidence (single experiment) and the conclusion (generalizability). For each inconsistency, it proposes a minimal, concrete repair. This comprehensive and systematic flagging of load-bearing inconsistencies is a hallmark of a score=5 performance.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section that clearly states the primary limitation of its own review: it is based solely on the provided section and cannot know if the missing Lyapunov analysis exists elsewhere in the full paper. This is a critical piece of context that correctly scopes its most severe criticism and demonstrates a sophisticated understanding of the review process. This disclosure of the key missing evidence for its own critique fully meets the score=5 anchor.\",\n    \"RX.3\": \"The delegation was to 'Review this section.' The agent provided a thorough and multi-faceted review of the provided text, covering its conceptual framing, logical consistency, experimental evaluation, and novelty claims. The output is perfectly aligned with the requested task. It does not drift into unrelated topics or fail to address the core of the artifact. This is a clear score=5.\",\n    \"RX.4\": \"The agent's output is entirely constructive and free of errors or regressions. It actively promotes downstream-harm avoidance by identifying a significant harmful pattern in the original artifact: making a formal scientific claim ('Lyapunov stability') that is unsubstantiated by the provided method and evidence. Correcting such misrepresentations is crucial for scientific integrity. The critique is sharp but professional and aimed at improving the work. This is a score=5.\",\n    \"RX.5\": \"The agent's critique is exceptionally well-grounded in the source text. Nearly every point it makes is directly tied to a specific quote or a clearly described omission from the artifact. For example, it quotes the 'Lyapunov' claims, the specific evaluation results, and the generalization statement before deconstructing them. This makes the reasoning for every proposed change or criticism perfectly traceable to the source material, fully satisfying the score=5 criteria.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "a_human_judge",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual mismatch in the artifact: the framing around 'Lyapunov stability' is completely disconnected from the described method (confidence-thresholded switching). It names this as the load-bearing concept, shows precisely where the draft drifts, and proposes two clear, mutually exclusive reframing strategies: either provide the missing Lyapunov analysis or reframe the contribution honestly around the empirical results of the switching scheme. This is a perfect example of a score=5 critique.",
+      "R1.2": "The agent performs an end-to-end analysis of the artifact's logical chain. It flags major inconsistencies between the core claim (Lyapunov stability) and the method, between the claim and the evaluation metrics (task success vs. stability metrics), and between the evidence (single experiment) and the conclusion (generalizability). For each inconsistency, it proposes a minimal, concrete repair. This comprehensive and systematic flagging of load-bearing inconsistencies is a hallmark of a score=5 performance.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section that clearly states the primary limitation of its own review: it is based solely on the provided section and cannot know if the missing Lyapunov analysis exists elsewhere in the full paper. This is a critical piece of context that correctly scopes its most severe criticism and demonstrates a sophisticated understanding of the review process. This disclosure of the key missing evidence for its own critique fully meets the score=5 anchor.",
+      "RX.3": "The delegation was to 'Review this section.' The agent provided a thorough and multi-faceted review of the provided text, covering its conceptual framing, logical consistency, experimental evaluation, and novelty claims. The output is perfectly aligned with the requested task. It does not drift into unrelated topics or fail to address the core of the artifact. This is a clear score=5.",
+      "RX.4": "The agent's output is entirely constructive and free of errors or regressions. It actively promotes downstream-harm avoidance by identifying a significant harmful pattern in the original artifact: making a formal scientific claim ('Lyapunov stability') that is unsubstantiated by the provided method and evidence. Correcting such misrepresentations is crucial for scientific integrity. The critique is sharp but professional and aimed at improving the work. This is a score=5.",
+      "RX.5": "The agent's critique is exceptionally well-grounded in the source text. Nearly every point it makes is directly tied to a specific quote or a clearly described omission from the artifact. For example, it quotes the 'Lyapunov' claims, the specific evaluation results, and the generalization statement before deconstructing them. This makes the reasoning for every proposed change or criticism perfectly traceable to the source material, fully satisfying the score=5 criteria."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

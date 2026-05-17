@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_212",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "qwen-2.5-72b-instruct",
+  "judge_family": "alibaba",
+  "judge_tier": "mid",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2496,
+  "output_tokens": 618,
+  "latency_ms": 129766,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"J001\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.4\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.3\": 3,\n    \"R1.4\": 2,\n    \"R1.7\": 2,\n    \"RX.1\": 3,\n    \"RX.3\": 4,\n    \"RX.4\": 4,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent flags several claims that the evidence does not support, such as the anachronistic framing of prior work and the misattribution to Hannun et al. (2014). However, it does not audit every load-bearing claim against the corresponding table/figure.\",\n    \"R1.4\": \"The agent names one prior work (Guo et al., 2017) but fails to map against the nearest 3-5 works or identify a sharp vs rhetorical delta. The novelty claim is also overstated and needs more precise articulation.\",\n    \"R1.7\": \"The agent flags several missing or wrong citations, such as Hannun et al. (2014) and the need to verify Park et al. (2025) and Yamamoto et al. (2025). However, it does not audit every load-bearing citation with bibliographic precision.\",\n    \"RX.1\": \"The agent flags uncertainty for one or two claims, such as the existence of Park et al. (2025) and Yamamoto et al. (2025), but does not mark confidence and missing evidence for each recommendation.\",\n    \"RX.3\": \"The output is mostly within scope with one drift, specifically the need to address the domain gap between LibriSpeech and tool-use routing decisions.\",\n    \"RX.4\": \"The output is harm-free but includes a minor regression in the misattribution of Hannun et al. (2014) and the anachronistic framing of prior work.\",\n    \"RX.5\": \"The agent traces major rewrites, such as the need to fix the Hannun et al. citation and verify Park/Yamamoto, but does not annotate every non-cosmetic change with source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.8,\n    \"R1.4\": 0.7,\n    \"R1.7\": 0.75,\n    \"RX.1\": 0.8,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.85,\n    \"RX.5\": 0.8\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J001",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 3,
+      "R1.4": 2,
+      "R1.7": 2,
+      "RX.1": 3,
+      "RX.3": 4,
+      "RX.4": 4,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.3": "The agent flags several claims that the evidence does not support, such as the anachronistic framing of prior work and the misattribution to Hannun et al. (2014). However, it does not audit every load-bearing claim against the corresponding table/figure.",
+      "R1.4": "The agent names one prior work (Guo et al., 2017) but fails to map against the nearest 3-5 works or identify a sharp vs rhetorical delta. The novelty claim is also overstated and needs more precise articulation.",
+      "R1.7": "The agent flags several missing or wrong citations, such as Hannun et al. (2014) and the need to verify Park et al. (2025) and Yamamoto et al. (2025). However, it does not audit every load-bearing citation with bibliographic precision.",
+      "RX.1": "The agent flags uncertainty for one or two claims, such as the existence of Park et al. (2025) and Yamamoto et al. (2025), but does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "The output is mostly within scope with one drift, specifically the need to address the domain gap between LibriSpeech and tool-use routing decisions.",
+      "RX.4": "The output is harm-free but includes a minor regression in the misattribution of Hannun et al. (2014) and the anachronistic framing of prior work.",
+      "RX.5": "The agent traces major rewrites, such as the need to fix the Hannun et al. citation and verify Park/Yamamoto, but does not annotate every non-cosmetic change with source and reason."
+    },
+    "confidence": {
+      "R1.3": 0.8,
+      "R1.4": 0.7,
+      "R1.7": 0.75,
+      "RX.1": 0.8,
+      "RX.3": 0.9,
+      "RX.4": 0.85,
+      "RX.5": 0.8
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

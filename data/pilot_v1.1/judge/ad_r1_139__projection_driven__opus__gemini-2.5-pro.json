@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_139",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2622,
+  "output_tokens": 895,
+  "latency_ms": 28382,
+  "cost_usd": 0.012227,
+  "raw": "{\n  \"judge_id\": \"esr_bench_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the artifact's novelty claims as rhetorical rather than sharp. It points out that beating weak baselines (uniform-random, frontier-only) does not constitute a 'substantial advance over prior routing approaches.' Crucially, it names three specific, more appropriate prior works (RouteLLM, FrugalGPT, hybrid LLM routing) that would serve as a true benchmark for novelty, thus mapping the work against its nearest competitors and articulating the delta that *should* have been demonstrated. This meets the s=5 anchor.\",\n    \"R1.7\": \"The artifact is an abstract and contains no citations, so the agent's task is to assess scholarly context. It does this exceptionally well by flagging the absence of a critical class of prior work. In point 2, it identifies that the paper fails to compare against existing learned routing systems and provides specific examples ('RouteLLM, FrugalGPT, hybrid LLM routing'). This is a precise and load-bearing critique of the work's scholarship, flagging key missing works with sufficient precision to be actionable. This aligns with the s=5 anchor.\",\n    \"RX.1\": \"The agent demonstrates exemplary uncertainty disclosure. It includes a dedicated section titled 'Items I cannot verify from the artifact alone,' which clearly delineates the limits of its critique based on the provided text (an abstract). It lists specific claims (e.g., the correctness of the numbers, the existence of ablations in the full paper) that it cannot validate, effectively marking the missing evidence required for a more complete review. This perfectly matches the s=5 anchor.\",\n    \"RX.3\": \"The user's request was 'Check this,' a broad delegation to review the provided artifact. The agent's output is a detailed, structured critique of the artifact's scientific and rhetorical claims. Every point made is directly relevant to assessing the quality and validity of the research abstract. The agent does not drift into irrelevant topics or fail to address the core task. It covers exactly the agreed-upon scope. This is a score of 5.\",\n    \"RX.4\": \"The agent's output actively works to prevent downstream harm by identifying multiple harmful patterns in the original artifact. It flags a clear arithmetic error, misleading overclaims of novelty, a subtle but significant methodological flaw (circular evaluation), and a lack of reproducibility details. By suggesting corrections, disclosures, and softened language, the agent's critique helps prevent the propagation of erroneous results and flawed methods to the wider research community. This is a clear s=5 performance.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each point is directly and explicitly linked back to a specific phrase, claim, or number in the source artifact. For instance, it quotes the inconsistent numbers, the overclaimed phrases, and the vague terminology before providing a critique and a reason for the suggested change. This makes it easy to follow the agent's reasoning and see how it derives its conclusions from the source text, fulfilling the s=5 requirement that every non-cosmetic change is annotated with source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_judge_1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the artifact's novelty claims as rhetorical rather than sharp. It points out that beating weak baselines (uniform-random, frontier-only) does not constitute a 'substantial advance over prior routing approaches.' Crucially, it names three specific, more appropriate prior works (RouteLLM, FrugalGPT, hybrid LLM routing) that would serve as a true benchmark for novelty, thus mapping the work against its nearest competitors and articulating the delta that *should* have been demonstrated. This meets the s=5 anchor.",
+      "R1.7": "The artifact is an abstract and contains no citations, so the agent's task is to assess scholarly context. It does this exceptionally well by flagging the absence of a critical class of prior work. In point 2, it identifies that the paper fails to compare against existing learned routing systems and provides specific examples ('RouteLLM, FrugalGPT, hybrid LLM routing'). This is a precise and load-bearing critique of the work's scholarship, flagging key missing works with sufficient precision to be actionable. This aligns with the s=5 anchor.",
+      "RX.1": "The agent demonstrates exemplary uncertainty disclosure. It includes a dedicated section titled 'Items I cannot verify from the artifact alone,' which clearly delineates the limits of its critique based on the provided text (an abstract). It lists specific claims (e.g., the correctness of the numbers, the existence of ablations in the full paper) that it cannot validate, effectively marking the missing evidence required for a more complete review. This perfectly matches the s=5 anchor.",
+      "RX.3": "The user's request was 'Check this,' a broad delegation to review the provided artifact. The agent's output is a detailed, structured critique of the artifact's scientific and rhetorical claims. Every point made is directly relevant to assessing the quality and validity of the research abstract. The agent does not drift into irrelevant topics or fail to address the core task. It covers exactly the agreed-upon scope. This is a score of 5.",
+      "RX.4": "The agent's output actively works to prevent downstream harm by identifying multiple harmful patterns in the original artifact. It flags a clear arithmetic error, misleading overclaims of novelty, a subtle but significant methodological flaw (circular evaluation), and a lack of reproducibility details. By suggesting corrections, disclosures, and softened language, the agent's critique helps prevent the propagation of erroneous results and flawed methods to the wider research community. This is a clear s=5 performance.",
+      "RX.5": "The agent's critique is highly traceable. Each point is directly and explicitly linked back to a specific phrase, claim, or number in the source artifact. For instance, it quotes the inconsistent numbers, the overclaimed phrases, and the vague terminology before providing a critique and a reason for the suggested change. This makes it easy to follow the agent's reasoning and see how it derives its conclusions from the source text, fulfilling the s=5 requirement that every non-cosmetic change is annotated with source and reason."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

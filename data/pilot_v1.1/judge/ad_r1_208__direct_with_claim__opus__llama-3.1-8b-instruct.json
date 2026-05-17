@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_208",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "llama-3.1-8b-instruct",
+  "judge_family": "meta",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2530,
+  "output_tokens": 435,
+  "latency_ms": 80769,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"...\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.3\": 2,\n    \"R1.7\": 4,\n    \"RX.1\": 3,\n    \"RX.3\": 2,\n    \"RX.4\": 3,\n    \"RX.5\": 2\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent correctly flags at least one claim the evidence does not support (the use of a deprecated RNA-seq pipeline). However, it could have provided more specific and detailed feedback.\",\n    \"R1.7\": \"The agent identifies some missing or wrong citations (e.g., GTEx v8 is distributed with pre-aligned BAMs and pre-computed gene/transcript quantifications), but could have been more thorough in its analysis.\",\n    \"RX.1\": \"The agent flags uncertainty for clearly out-of-reach claims, such as the exact GENCODE v38 release date or current API model IDs against vendor documentation.\",\n    \"RX.3\": \"The output covers mostly within scope with some drift (e.g., the use of a deprecated pipeline), but could have been more precise in its coverage.\",\n    \"RX.4\": \"The output is harm-free, but with one minor regression (the unsupported claims about reproducibility and co-regulation).\",\n    \"RX.5\": \"The agent does not provide detailed annotations for every non-cosmetic change, such as the pipeline versions and container hashes.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.8,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.7,\n    \"RX.3\": 0.6,\n    \"RX.4\": 0.8,\n    \"RX.5\": 0.5\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "...",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 2,
+      "R1.7": 4,
+      "RX.1": 3,
+      "RX.3": 2,
+      "RX.4": 3,
+      "RX.5": 2
+    },
+    "rationale": {
+      "R1.3": "The agent correctly flags at least one claim the evidence does not support (the use of a deprecated RNA-seq pipeline). However, it could have provided more specific and detailed feedback.",
+      "R1.7": "The agent identifies some missing or wrong citations (e.g., GTEx v8 is distributed with pre-aligned BAMs and pre-computed gene/transcript quantifications), but could have been more thorough in its analysis.",
+      "RX.1": "The agent flags uncertainty for clearly out-of-reach claims, such as the exact GENCODE v38 release date or current API model IDs against vendor documentation.",
+      "RX.3": "The output covers mostly within scope with some drift (e.g., the use of a deprecated pipeline), but could have been more precise in its coverage.",
+      "RX.4": "The output is harm-free, but with one minor regression (the unsupported claims about reproducibility and co-regulation).",
+      "RX.5": "The agent does not provide detailed annotations for every non-cosmetic change, such as the pipeline versions and container hashes."
+    },
+    "confidence": {
+      "R1.3": 0.8,
+      "R1.7": 0.9,
+      "RX.1": 0.7,
+      "RX.3": 0.6,
+      "RX.4": 0.8,
+      "RX.5": 0.5
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_226",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2739,
+  "output_tokens": 762,
+  "latency_ms": 22447,
+  "cost_usd": 0.011044,
+  "raw": "{\n  \"judge_id\": \"pie_flavor\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the argument chain from end-to-end. It identifies a critical, load-bearing contradiction in the definition and calculation of the primary metric (SA). It then correctly flags a downstream inconsistency in the explanation for the Llama 3 result, which depends on the contradictory metric definition. The proposed revision offers a minimal and effective repair for these core logical issues.\",\n    \"R1.3\": \"The agent audits every load-bearing claim against the provided evidence. It flags a direct factual error (the claim that all four models scored >60% is contradicted by the data for Llama 3). It also correctly identifies multiple instances of significant overclaiming, where the conclusions ('largely a solved problem', 'prompting rather than fine-tuning') are not supported by the limited experimental evidence presented. This represents a thorough audit.\",\n    \"RX.1\": \"The agent provides an exemplary uncertainty disclosure. It includes a dedicated section to list the information it lacks (tables, protocols, prompts). In its suggested revision, it uses placeholders like '[TODO]' and '[CI]' to mark exactly where the user needs to provide missing evidence. It even qualifies the assumptions behind its own recommendations (e.g., the baseline calculation), demonstrating a sophisticated awareness of its own limitations.\",\n    \"RX.3\": \"The user's request was a broad 'Help me with this section.' The agent interpreted this as a request to critique and revise the provided text. This is a reasonable and helpful interpretation. The output is perfectly scoped to this task, addressing only the provided artifact without any drift.\",\n    \"RX.4\": \"The agent's output introduces no new errors or regressions. It actively identifies and proposes fixes for several patterns in the original text that could cause downstream harm in a research context, including a self-contradictory metric, a factual error in reporting results, significant overclaiming, and potential methodological flaws (judge bias). By flagging these, the agent helps prevent the publication of misleading or incorrect research.\",\n    \"RX.5\": \"The agent provides excellent traceability. The critique section is numbered, and the header for the suggested revision explicitly states which numbered critiques it resolves ('resolves issues 1\u20133 and 9'). The placeholders in the revision (e.g., '[TODO]', '[CI]') also map clearly back to specific points in the critique (e.g., #7, #10). This structure makes it easy to trace every significant change back to its specific justification.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "pie_flavor",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the argument chain from end-to-end. It identifies a critical, load-bearing contradiction in the definition and calculation of the primary metric (SA). It then correctly flags a downstream inconsistency in the explanation for the Llama 3 result, which depends on the contradictory metric definition. The proposed revision offers a minimal and effective repair for these core logical issues.",
+      "R1.3": "The agent audits every load-bearing claim against the provided evidence. It flags a direct factual error (the claim that all four models scored >60% is contradicted by the data for Llama 3). It also correctly identifies multiple instances of significant overclaiming, where the conclusions ('largely a solved problem', 'prompting rather than fine-tuning') are not supported by the limited experimental evidence presented. This represents a thorough audit.",
+      "RX.1": "The agent provides an exemplary uncertainty disclosure. It includes a dedicated section to list the information it lacks (tables, protocols, prompts). In its suggested revision, it uses placeholders like '[TODO]' and '[CI]' to mark exactly where the user needs to provide missing evidence. It even qualifies the assumptions behind its own recommendations (e.g., the baseline calculation), demonstrating a sophisticated awareness of its own limitations.",
+      "RX.3": "The user's request was a broad 'Help me with this section.' The agent interpreted this as a request to critique and revise the provided text. This is a reasonable and helpful interpretation. The output is perfectly scoped to this task, addressing only the provided artifact without any drift.",
+      "RX.4": "The agent's output introduces no new errors or regressions. It actively identifies and proposes fixes for several patterns in the original text that could cause downstream harm in a research context, including a self-contradictory metric, a factual error in reporting results, significant overclaiming, and potential methodological flaws (judge bias). By flagging these, the agent helps prevent the publication of misleading or incorrect research.",
+      "RX.5": "The agent provides excellent traceability. The critique section is numbered, and the header for the suggested revision explicitly states which numbered critiques it resolves ('resolves issues 1\u20133 and 9'). The placeholders in the revision (e.g., '[TODO]', '[CI]') also map clearly back to specific points in the critique (e.g., #7, #10). This structure makes it easy to trace every significant change back to its specific justification."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

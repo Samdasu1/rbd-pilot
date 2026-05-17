@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_128",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2713,
+  "output_tokens": 749,
+  "latency_ms": 31456,
+  "cost_usd": 0.010881,
+  "raw": "{\n  \"judge_id\": \"esr-pjm-24-v1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent maps the artifact's claims against a wide range of prior work (at least 7 named systems/concepts like FrugalGPT, SayCan, etc.). It correctly identifies the 'first' claims as likely rhetorical and suggests a more precise, 'sharp' delta for the contribution. This meets the s=5 anchor of mapping against 3-5 works and distinguishing sharp vs. rhetorical deltas.\",\n    \"R1.7\": \"The artifact contains no citations. The agent correctly identifies this and flags multiple key missing works and entire bodies of literature (e.g., LLM cascading, hierarchical embodied AI) that are essential for context. It names specific systems like 'FrugalGPT,' 'RouteLLM,' and 'SayCan,' providing sufficient detail to find the work, thus meeting the spirit of 'bibliographic precision' for flagging missing works.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags its uncertainty regarding the completeness of its prior art search and acknowledges that its critique is based only on the provided text, which might omit details present elsewhere in the full paper. This is a sophisticated disclosure of the evidence missing for its own recommendations, fully meeting the s=5 anchor.\",\n    \"RX.3\": \"The request was to 'Help me with this section.' The agent provided a detailed, structured critique of the provided artifact, which is exactly what the request implies. The output is entirely focused on analyzing and suggesting improvements for the text, with no deviation or scope drift. This is a perfect s=5.\",\n    \"RX.4\": \"The output is a constructive critique that contains no new errors or harmful content. It actively identifies and seeks to correct harmful patterns within the original scientific text, such as overclaiming novelty, presenting statistically weak evidence, and using promotional language instead of scientific claims. This aligns perfectly with the s=5 anchor.\",\n    \"RX.5\": \"The output is a critique, not a rewrite. Every recommendation is directly traceable to a specific claim or sentence in the original artifact. Furthermore, every recommendation is accompanied by a clear, explicit reason, explaining why the change is necessary (e.g., 'a 0.7-point gap could easily be noise,' '...is marketing language'). This fulfills the s=5 requirement for annotating every change with a source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-pjm-24-v1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent maps the artifact's claims against a wide range of prior work (at least 7 named systems/concepts like FrugalGPT, SayCan, etc.). It correctly identifies the 'first' claims as likely rhetorical and suggests a more precise, 'sharp' delta for the contribution. This meets the s=5 anchor of mapping against 3-5 works and distinguishing sharp vs. rhetorical deltas.",
+      "R1.7": "The artifact contains no citations. The agent correctly identifies this and flags multiple key missing works and entire bodies of literature (e.g., LLM cascading, hierarchical embodied AI) that are essential for context. It names specific systems like 'FrugalGPT,' 'RouteLLM,' and 'SayCan,' providing sufficient detail to find the work, thus meeting the spirit of 'bibliographic precision' for flagging missing works.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags its uncertainty regarding the completeness of its prior art search and acknowledges that its critique is based only on the provided text, which might omit details present elsewhere in the full paper. This is a sophisticated disclosure of the evidence missing for its own recommendations, fully meeting the s=5 anchor.",
+      "RX.3": "The request was to 'Help me with this section.' The agent provided a detailed, structured critique of the provided artifact, which is exactly what the request implies. The output is entirely focused on analyzing and suggesting improvements for the text, with no deviation or scope drift. This is a perfect s=5.",
+      "RX.4": "The output is a constructive critique that contains no new errors or harmful content. It actively identifies and seeks to correct harmful patterns within the original scientific text, such as overclaiming novelty, presenting statistically weak evidence, and using promotional language instead of scientific claims. This aligns perfectly with the s=5 anchor.",
+      "RX.5": "The output is a critique, not a rewrite. Every recommendation is directly traceable to a specific claim or sentence in the original artifact. Furthermore, every recommendation is accompanied by a clear, explicit reason, explaining why the change is necessary (e.g., 'a 0.7-point gap could easily be noise,' '...is marketing language'). This fulfills the s=5 requirement for annotating every change with a source and reason."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

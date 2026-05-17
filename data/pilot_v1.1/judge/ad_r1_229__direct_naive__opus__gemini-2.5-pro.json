@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_229",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2494,
+  "output_tokens": 761,
+  "latency_ms": 25071,
+  "cost_usd": 0.010727,
+  "raw": "{\n  \"judge_id\": \"get_human_id\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent meticulously walks through the logical chain of the original text, from its definition of miscalibration to its final conclusion. It identifies multiple critical inconsistencies where the claims contradict the data presented. For example, it shows that the aggregate miscalibration *increases* from 0.13 to 0.21, directly refuting the claim of improvement. It proposes minimal but necessary repairs, such as rewriting the core framing to align with the data. This is a perfect example of a score=5 analysis.\",\n    \"R1.3\": \"The agent's entire output is a rigorous audit of the claims against the provided evidence (the numerical results). It systematically checks every major claim: the 'uniform reduction' claim (false in 3/5 cases), the 'improved calibration' claim (false in aggregate), and the 'noise' explanation (shown to be statistically implausible). It reconstructs the data in a table to make the claim-evidence misalignment undeniable. This is a textbook score=5 performance.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that discloses the key assumptions underpinning its own critique. It correctly identifies that its statistical significance argument (the '10\u03c3' estimate) depends on the assumption of independent trials and that its interpretation of the per-category results depends on the definition of the 'gap' metric being consistent. This is a sophisticated and appropriate disclosure of uncertainty.\",\n    \"RX.3\": \"The user requested help with the provided section. The agent delivered a comprehensive critique and a set of actionable recommendations for improving that specific section. The output is perfectly aligned with the user's request and does not drift into unrelated topics.\",\n    \"RX.4\": \"The agent's output prevents significant downstream harm. The original text's recommendation to deploy 'SelfCheck as a default mitigation' is based on a flawed analysis and would likely lead to worse-calibrated systems in many cases. By identifying the flawed reasoning and the unsupported recommendation, the agent prevents the propagation of misinformation and the deployment of a faulty method. It identifies the harmful pattern of misinterpreting data to fit a desired narrative.\",\n    \"RX.5\": \"The critique is exceptionally traceable. The agent quotes or precisely paraphrases specific claims from the source artifact before deconstructing them. This allows a reader to easily map each point of criticism back to the exact sentence or phrase in the original text, leaving no ambiguity about what is being critiqued and why.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_human_id",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent meticulously walks through the logical chain of the original text, from its definition of miscalibration to its final conclusion. It identifies multiple critical inconsistencies where the claims contradict the data presented. For example, it shows that the aggregate miscalibration *increases* from 0.13 to 0.21, directly refuting the claim of improvement. It proposes minimal but necessary repairs, such as rewriting the core framing to align with the data. This is a perfect example of a score=5 analysis.",
+      "R1.3": "The agent's entire output is a rigorous audit of the claims against the provided evidence (the numerical results). It systematically checks every major claim: the 'uniform reduction' claim (false in 3/5 cases), the 'improved calibration' claim (false in aggregate), and the 'noise' explanation (shown to be statistically implausible). It reconstructs the data in a table to make the claim-evidence misalignment undeniable. This is a textbook score=5 performance.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that discloses the key assumptions underpinning its own critique. It correctly identifies that its statistical significance argument (the '10\u03c3' estimate) depends on the assumption of independent trials and that its interpretation of the per-category results depends on the definition of the 'gap' metric being consistent. This is a sophisticated and appropriate disclosure of uncertainty.",
+      "RX.3": "The user requested help with the provided section. The agent delivered a comprehensive critique and a set of actionable recommendations for improving that specific section. The output is perfectly aligned with the user's request and does not drift into unrelated topics.",
+      "RX.4": "The agent's output prevents significant downstream harm. The original text's recommendation to deploy 'SelfCheck as a default mitigation' is based on a flawed analysis and would likely lead to worse-calibrated systems in many cases. By identifying the flawed reasoning and the unsupported recommendation, the agent prevents the propagation of misinformation and the deployment of a faulty method. It identifies the harmful pattern of misinterpreting data to fit a desired narrative.",
+      "RX.5": "The critique is exceptionally traceable. The agent quotes or precisely paraphrases specific claims from the source artifact before deconstructing them. This allows a reader to easily map each point of criticism back to the exact sentence or phrase in the original text, leaving no ambiguity about what is being critiqued and why."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_274",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "llama-3.1-8b-instruct",
+  "judge_family": "meta",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2886,
+  "output_tokens": 439,
+  "latency_ms": 75690,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"...\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.3\": 2,\n    \"R1.7\": 3,\n    \"RX.1\": 3,\n    \"RX.3\": 1,\n    \"RX.4\": 1,\n    \"RX.5\": 1\n  },\n  \"rationale\": {\n    \"R1.3\": \"The paper contradicts its own numbers, claiming improved calibration while reporting worse ECE for CALIGRA on both splits.\",\n    \"R1.7\": \"The paper cites Guo et al. (2017) but misrepresents their contribution as formal guarantees; it's an empirical paper that shows temperature scaling reduces ECE.\",\n    \"RX.1\": \"The paper fails to disclose uncertainty in its results, presenting them as equally confident without providing confidence intervals or discussing the potential for overfitting on a small calibration set.\",\n    \"RX.3\": \"The paper introduces a custom out-of-distribution split named after the method itself, which may be seen as biased; it should be renamed and more details provided about its construction.\",\n    \"RX.4\": \"The paper fails to address potential downstream harm from CALIGRA's performance on OOD data, which is worse than the baseline in both splits.\",\n    \"RX.5\": \"The paper lacks transparency in its evaluation design, including the size of the calibration set and the procedure for constructing the OOD split; it also fails to provide complementary metrics beyond ECE.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.8,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.85,\n    \"RX.3\": 0.7,\n    \"RX.4\": 0.75,\n    \"RX.5\": 0.8\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "...",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 2,
+      "R1.7": 3,
+      "RX.1": 3,
+      "RX.3": 1,
+      "RX.4": 1,
+      "RX.5": 1
+    },
+    "rationale": {
+      "R1.3": "The paper contradicts its own numbers, claiming improved calibration while reporting worse ECE for CALIGRA on both splits.",
+      "R1.7": "The paper cites Guo et al. (2017) but misrepresents their contribution as formal guarantees; it's an empirical paper that shows temperature scaling reduces ECE.",
+      "RX.1": "The paper fails to disclose uncertainty in its results, presenting them as equally confident without providing confidence intervals or discussing the potential for overfitting on a small calibration set.",
+      "RX.3": "The paper introduces a custom out-of-distribution split named after the method itself, which may be seen as biased; it should be renamed and more details provided about its construction.",
+      "RX.4": "The paper fails to address potential downstream harm from CALIGRA's performance on OOD data, which is worse than the baseline in both splits.",
+      "RX.5": "The paper lacks transparency in its evaluation design, including the size of the calibration set and the procedure for constructing the OOD split; it also fails to provide complementary metrics beyond ECE."
+    },
+    "confidence": {
+      "R1.3": 0.8,
+      "R1.7": 0.9,
+      "RX.1": 0.85,
+      "RX.3": 0.7,
+      "RX.4": 0.75,
+      "RX.5": 0.8
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

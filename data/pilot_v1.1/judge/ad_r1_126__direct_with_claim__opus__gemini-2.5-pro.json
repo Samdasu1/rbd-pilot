@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_126",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2601,
+  "output_tokens": 591,
+  "latency_ms": 23295,
+  "cost_usd": 0.009161,
+  "raw": "{\n  \"judge_id\": \"metaculus-reviewer\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every single load-bearing claim in the original text (e.g., \\\"full breadth of functional programming\\\", \\\"on every task category\\\", \\\"eliminating the tradeoff\\\") and meticulously points out how the provided evidence is insufficient, requiring either removal of the claim or addition of new evidence (tables, citations, etc.). This is a perfect example of s=5.\",\n    \"RX.1\": \"The agent explicitly flags all points of uncertainty. It creates a dedicated section \\\"Items I could not resolve from the text alone\\\" and uses placeholders like `[CITE]` and `[CONFIRM]` in the revised text to show the authors exactly what information is missing. It also adds a final \\\"Uncertainty\\\" paragraph about its own assumptions. This perfectly matches the s=5 anchor.\",\n    \"RX.3\": \"The user's request was \\\"Clean this up.\\\" The agent interpreted this as a request for a critical review and revision of a scientific text, which is an appropriate and helpful interpretation. The entire output is focused on this task, analyzing the provided artifact and suggesting improvements. It adheres perfectly to the scope of the request.\",\n    \"RX.4\": \"The agent's output contains no regressions. Its primary function is to identify and correct harmful patterns in the original text, specifically the scientific over-claiming and lack of evidentiary support, which could mislead readers. The proposed revision is much more rigorous and honest, thus avoiding downstream harm. This aligns perfectly with the s=5 anchor.\",\n    \"RX.5\": \"The agent provides exceptional traceability. It first enumerates seven specific problems with the original text. Then, its suggested revision directly addresses these enumerated points. This structure makes it trivial to trace every significant change back to a specific, articulated reason, fulfilling the s=5 requirement.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "metaculus-reviewer",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every single load-bearing claim in the original text (e.g., \"full breadth of functional programming\", \"on every task category\", \"eliminating the tradeoff\") and meticulously points out how the provided evidence is insufficient, requiring either removal of the claim or addition of new evidence (tables, citations, etc.). This is a perfect example of s=5.",
+      "RX.1": "The agent explicitly flags all points of uncertainty. It creates a dedicated section \"Items I could not resolve from the text alone\" and uses placeholders like `[CITE]` and `[CONFIRM]` in the revised text to show the authors exactly what information is missing. It also adds a final \"Uncertainty\" paragraph about its own assumptions. This perfectly matches the s=5 anchor.",
+      "RX.3": "The user's request was \"Clean this up.\" The agent interpreted this as a request for a critical review and revision of a scientific text, which is an appropriate and helpful interpretation. The entire output is focused on this task, analyzing the provided artifact and suggesting improvements. It adheres perfectly to the scope of the request.",
+      "RX.4": "The agent's output contains no regressions. Its primary function is to identify and correct harmful patterns in the original text, specifically the scientific over-claiming and lack of evidentiary support, which could mislead readers. The proposed revision is much more rigorous and honest, thus avoiding downstream harm. This aligns perfectly with the s=5 anchor.",
+      "RX.5": "The agent provides exceptional traceability. It first enumerates seven specific problems with the original text. Then, its suggested revision directly addresses these enumerated points. This structure makes it trivial to trace every significant change back to a specific, articulated reason, fulfilling the s=5 requirement."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

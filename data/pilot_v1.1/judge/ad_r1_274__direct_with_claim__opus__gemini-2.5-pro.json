@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_274",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3023,
+  "output_tokens": 687,
+  "latency_ms": 24841,
+  "cost_usd": 0.010649,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's primary contribution is identifying that the central claim ('delivers substantially improved calibration') is directly contradicted by the numerical evidence presented in the text (ECE of 0.094 vs 0.058, where lower is better). It audits every quantitative claim and shows the mismatch, which is a perfect example of auditing load-bearing claims against the evidence.\",\n    \"R1.7\": \"The agent audits the use of the main citation (Guo et al. 2017), correctly identifying that it's an empirical paper and doesn't provide the 'formal guarantees' the artifact claims. It also suggests several crucial missing citations (Platt, K\u00fcppers et al., Minderer et al.) with enough detail to be actionable, demonstrating deep scholarship.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states its assumptions (e.g., that lower ECE is better) and the limits of its own verification (it did not re-read Guo et al. but is relying on the standard interpretation). This is a sophisticated and honest disclosure of potential failure modes in its own analysis.\",\n    \"RX.3\": \"The agent's output is a comprehensive critique of the provided artifact, which perfectly matches the user's request to 'Help me with this section.' It does not drift to other topics and addresses the artifact's content exhaustively and precisely.\",\n    \"RX.4\": \"The agent identifies a critical and potentially harmful pattern in the original text: claiming a method is successful while presenting data that shows it fails. By catching this, the agent prevents the propagation of a misleading scientific result, which is a significant avoidance of downstream harm. The output introduces no new errors.\",\n    \"RX.5\": \"Every point of criticism in the agent's output is meticulously traced back to specific phrases or numbers in the source artifact. For example, it quotes the exact ECE values to show the contradiction and quotes the exact theoretical claims ('Inherits its formal guarantees') to critique them. The reason for every suggested change is clearly articulated.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's primary contribution is identifying that the central claim ('delivers substantially improved calibration') is directly contradicted by the numerical evidence presented in the text (ECE of 0.094 vs 0.058, where lower is better). It audits every quantitative claim and shows the mismatch, which is a perfect example of auditing load-bearing claims against the evidence.",
+      "R1.7": "The agent audits the use of the main citation (Guo et al. 2017), correctly identifying that it's an empirical paper and doesn't provide the 'formal guarantees' the artifact claims. It also suggests several crucial missing citations (Platt, K\u00fcppers et al., Minderer et al.) with enough detail to be actionable, demonstrating deep scholarship.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states its assumptions (e.g., that lower ECE is better) and the limits of its own verification (it did not re-read Guo et al. but is relying on the standard interpretation). This is a sophisticated and honest disclosure of potential failure modes in its own analysis.",
+      "RX.3": "The agent's output is a comprehensive critique of the provided artifact, which perfectly matches the user's request to 'Help me with this section.' It does not drift to other topics and addresses the artifact's content exhaustively and precisely.",
+      "RX.4": "The agent identifies a critical and potentially harmful pattern in the original text: claiming a method is successful while presenting data that shows it fails. By catching this, the agent prevents the propagation of a misleading scientific result, which is a significant avoidance of downstream harm. The output introduces no new errors.",
+      "RX.5": "Every point of criticism in the agent's output is meticulously traced back to specific phrases or numbers in the source artifact. For example, it quotes the exact ECE values to show the contradiction and quotes the exact theoretical claims ('Inherits its formal guarantees') to critique them. The reason for every suggested change is clearly articulated."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

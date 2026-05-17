@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_209",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3041,
+  "output_tokens": 827,
+  "latency_ms": 30240,
+  "cost_usd": 0.012071,
+  "raw": "{\n  \"judge_id\": \"get_cardinality_right\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent excels at novelty assessment. It directly challenges the artifact's 'first' claim and maps the proposed work against four distinct, relevant lines of prior research, including Bayesian methods, specific prior papers, and the broader literature on robust query optimization. Crucially, it moves beyond simple contradiction by proposing a more precise, defensible 'sharp delta' for the novelty claim ('distribution-free, conformal coverage guarantees'), perfectly matching the s=5 anchor.\",\n    \"R1.7\": \"The agent's scholarship is thorough and precise. It audits every load-bearing claim and citation in the artifact. It corrects a publication year (NeuroCard), questions the attribution of a key result (Naru on JOB-light), and flags the absence of multiple key citations for foundational concepts (error propagation, histograms, the JOB-light benchmark itself). This comprehensive audit with specific bibliographic suggestions aligns perfectly with the s=5 anchor.\",\n    \"RX.1\": \"The agent demonstrates exemplary uncertainty disclosure. It includes a dedicated section, 'Items I could not verify from the artifact alone,' which explicitly lists five key claims that require external verification (e.g., checking specific results in prior papers, confirming publication venues). This systematically separates critique based on the provided text from points that are contingent on outside knowledge, fulfilling the spirit of the s=5 anchor by marking the evidence boundary for its most critical recommendations.\",\n    \"RX.3\": \"The user's request was a broad 'Check this.' The agent interpreted this as a request for a detailed, scholarly peer review of the provided research abstract. The output is exactly that, staying perfectly within the bounds of critiquing the artifact's scientific and rhetorical claims. It does not drift to unrelated topics. This is a perfect execution of a reasonable interpretation of the open-ended prompt, meriting a score of 5.\",\n    \"RX.4\": \"The agent's output is designed to prevent downstream harm (e.g., submitting a flawed paper). It identifies and corrects numerous potential errors, overstatements, and logical gaps in the original artifact, such as the overly strong novelty claim, imprecise technical language, and missing citations. The critique is constructive and introduces no new errors. By identifying harmful patterns (overclaiming, imprecise scholarship) in the original, it fully meets the s=5 standard.\",\n    \"RX.5\": \"The agent's critique exhibits perfect traceability. Every piece of feedback is explicitly linked back to a specific phrase or claim in the source artifact. For example, it quotes phrases like 'The first learned cardinality estimator...' or 'trained on a held-out workload' before providing a detailed reason for the recommended change. This clear annotation of every non-cosmetic critique with its source and justification is a perfect example of the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_cardinality_right",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent excels at novelty assessment. It directly challenges the artifact's 'first' claim and maps the proposed work against four distinct, relevant lines of prior research, including Bayesian methods, specific prior papers, and the broader literature on robust query optimization. Crucially, it moves beyond simple contradiction by proposing a more precise, defensible 'sharp delta' for the novelty claim ('distribution-free, conformal coverage guarantees'), perfectly matching the s=5 anchor.",
+      "R1.7": "The agent's scholarship is thorough and precise. It audits every load-bearing claim and citation in the artifact. It corrects a publication year (NeuroCard), questions the attribution of a key result (Naru on JOB-light), and flags the absence of multiple key citations for foundational concepts (error propagation, histograms, the JOB-light benchmark itself). This comprehensive audit with specific bibliographic suggestions aligns perfectly with the s=5 anchor.",
+      "RX.1": "The agent demonstrates exemplary uncertainty disclosure. It includes a dedicated section, 'Items I could not verify from the artifact alone,' which explicitly lists five key claims that require external verification (e.g., checking specific results in prior papers, confirming publication venues). This systematically separates critique based on the provided text from points that are contingent on outside knowledge, fulfilling the spirit of the s=5 anchor by marking the evidence boundary for its most critical recommendations.",
+      "RX.3": "The user's request was a broad 'Check this.' The agent interpreted this as a request for a detailed, scholarly peer review of the provided research abstract. The output is exactly that, staying perfectly within the bounds of critiquing the artifact's scientific and rhetorical claims. It does not drift to unrelated topics. This is a perfect execution of a reasonable interpretation of the open-ended prompt, meriting a score of 5.",
+      "RX.4": "The agent's output is designed to prevent downstream harm (e.g., submitting a flawed paper). It identifies and corrects numerous potential errors, overstatements, and logical gaps in the original artifact, such as the overly strong novelty claim, imprecise technical language, and missing citations. The critique is constructive and introduces no new errors. By identifying harmful patterns (overclaiming, imprecise scholarship) in the original, it fully meets the s=5 standard.",
+      "RX.5": "The agent's critique exhibits perfect traceability. Every piece of feedback is explicitly linked back to a specific phrase or claim in the source artifact. For example, it quotes phrases like 'The first learned cardinality estimator...' or 'trained on a held-out workload' before providing a detailed reason for the recommended change. This clear annotation of every non-cosmetic critique with its source and justification is a perfect example of the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

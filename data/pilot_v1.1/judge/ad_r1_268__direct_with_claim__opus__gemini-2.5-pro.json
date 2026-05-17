@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_268",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2342,
+  "output_tokens": 857,
+  "latency_ms": 22279,
+  "cost_usd": 0.011497,
+  "raw": "{\n  \"judge_id\": \"zadie_smith\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent's critique of the novelty claims is sharp and specific. It doesn't just assert the claims are weak; it identifies the two distinct 'first' claims, correctly points out that they are under-evidenced, and names several classes of nearest-neighbor works that must be compared against (e.g., 'self-rewarding LMs, iterative DPO with updated judges, RLAIF variants with judge fine-tuning'). This goes beyond naming a single prior work and constitutes a map of the most relevant areas for comparison, fulfilling the spirit of the s=5 anchor.\",\n    \"R1.7\": \"The agent engages with scholarship on two levels. First, it performs a deep analysis of the single provided citation (Marquez & Tan), identifying a potential internal contradiction based on the artifact's own description of that work. Second, it flags entire categories of missing citations (PPO, RLAIF precursors, self-rewarding LMs) that are essential for contextualizing the work's novelty claims. It falls just short of a 5 because it doesn't provide specific bibliographic details for the missing works, but it's a very strong audit.\",\n    \"RX.1\": \"The agent provides an explicit 'Uncertainty' section at the end of its output. It flags its confidence and missing evidence for its two most significant claims: the critique of the Marquez & Tan citation (noting it hasn't verified the source) and the novelty assessment (noting it's based on general familiarity, not a fresh literature search). This is a model of responsible uncertainty disclosure, marking the key points where its own analysis would require further verification.\",\n    \"RX.3\": \"The agent's output is perfectly within scope. The delegation was to 'Take a look at this paragraph,' and the agent produced a detailed, well-structured critique of that paragraph. Every point made relates directly to the content of the artifact. There is no drift or extraneous information.\",\n    \"RX.4\": \"The agent's output is harm-free and actively identifies and corrects harmful patterns in the original artifact. It systematically flags issues common in scientific writing that can mislead readers, such as making unsubstantiated 'state-of-the-art' claims, asserting novelty without comparison, presenting internal contradictions, and stating hypotheses as findings. By deconstructing these rhetorical overreaches, the agent improves the integrity of the original text.\",\n    \"RX.5\": \"The agent's critique is exceptionally traceable. It is structured as a numbered list, and each point explicitly quotes or paraphrases the specific claim from the source artifact being critiqued. For example, it quotes the 'first' claims, the 'state-of-the-art' claim, and the 'binding constraint' claim directly. This makes it trivial to trace every piece of feedback back to its source in the original paragraph and understand the reason for the critique.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "zadie_smith",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent's critique of the novelty claims is sharp and specific. It doesn't just assert the claims are weak; it identifies the two distinct 'first' claims, correctly points out that they are under-evidenced, and names several classes of nearest-neighbor works that must be compared against (e.g., 'self-rewarding LMs, iterative DPO with updated judges, RLAIF variants with judge fine-tuning'). This goes beyond naming a single prior work and constitutes a map of the most relevant areas for comparison, fulfilling the spirit of the s=5 anchor.",
+      "R1.7": "The agent engages with scholarship on two levels. First, it performs a deep analysis of the single provided citation (Marquez & Tan), identifying a potential internal contradiction based on the artifact's own description of that work. Second, it flags entire categories of missing citations (PPO, RLAIF precursors, self-rewarding LMs) that are essential for contextualizing the work's novelty claims. It falls just short of a 5 because it doesn't provide specific bibliographic details for the missing works, but it's a very strong audit.",
+      "RX.1": "The agent provides an explicit 'Uncertainty' section at the end of its output. It flags its confidence and missing evidence for its two most significant claims: the critique of the Marquez & Tan citation (noting it hasn't verified the source) and the novelty assessment (noting it's based on general familiarity, not a fresh literature search). This is a model of responsible uncertainty disclosure, marking the key points where its own analysis would require further verification.",
+      "RX.3": "The agent's output is perfectly within scope. The delegation was to 'Take a look at this paragraph,' and the agent produced a detailed, well-structured critique of that paragraph. Every point made relates directly to the content of the artifact. There is no drift or extraneous information.",
+      "RX.4": "The agent's output is harm-free and actively identifies and corrects harmful patterns in the original artifact. It systematically flags issues common in scientific writing that can mislead readers, such as making unsubstantiated 'state-of-the-art' claims, asserting novelty without comparison, presenting internal contradictions, and stating hypotheses as findings. By deconstructing these rhetorical overreaches, the agent improves the integrity of the original text.",
+      "RX.5": "The agent's critique is exceptionally traceable. It is structured as a numbered list, and each point explicitly quotes or paraphrases the specific claim from the source artifact being critiqued. For example, it quotes the 'first' claims, the 'state-of-the-art' claim, and the 'binding constraint' claim directly. This makes it trivial to trace every piece of feedback back to its source in the original paragraph and understand the reason for the critique."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

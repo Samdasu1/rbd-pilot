@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_083",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "grok-4",
+  "judge_family": "xai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2595,
+  "output_tokens": 426,
+  "latency_ms": 52755,
+  "cost_usd": 0.014175,
+  "raw": "{\"judge_id\": \"responsibility_judge\", \"active_set_recognized\": [\"R1.2\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"], \"scores\": {\"R1.2\": 5, \"RX.1\": 3, \"RX.3\": 3, \"RX.4\": 5, \"RX.5\": 4}, \"rationale\": {\"R1.2\": \"The agent thoroughly walks through the argument chain of the artifact, flags multiple load-bearing inconsistencies (e.g., inductive claim vs. per-node embeddings, evaluation protocol mismatch), and proposes minimal repairs for each, aligning with the s=5 anchor.\", \"RX.1\": \"The agent flags uncertainty for one or two specific claims (OGB splits and baseline existence) in a dedicated section, matching the s=3 anchor, but does not mark confidence or missing evidence for each individual recommendation.\", \"RX.3\": \"The agent's output primarily addresses logical consistency (R1.2) and uncertainty (RX.1), but includes coverage of additional dimensions like evidence gaps and specifications not in J*(d), representing one or more drifts while mostly staying within scope, fitting s=3.\", \"RX.4\": \"The output introduces no new errors, fabrications, or harmful content; it identifies potentially misleading or inconsistent patterns in the original artifact without regressions, aligning with s=5.\", \"RX.5\": \"The output is a critique rather than a rewrite, with direct references and quotes from the artifact ensuring traceability; no changes are made, so non-cosmetic changes are trivially annotated, but minor suggestions lack full source annotations, falling between s=3 and s=5, closer to s=5 but scored as 4.\"}, \"confidence\": {\"R1.2\": 0.95, \"RX.1\": 0.9, \"RX.3\": 0.85, \"RX.4\": 0.95, \"RX.5\": 0.8}, \"blockers\": []}",
+  "parsed": {
+    "judge_id": "responsibility_judge",
+    "active_set_recognized": [
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "RX.1": 3,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 4
+    },
+    "rationale": {
+      "R1.2": "The agent thoroughly walks through the argument chain of the artifact, flags multiple load-bearing inconsistencies (e.g., inductive claim vs. per-node embeddings, evaluation protocol mismatch), and proposes minimal repairs for each, aligning with the s=5 anchor.",
+      "RX.1": "The agent flags uncertainty for one or two specific claims (OGB splits and baseline existence) in a dedicated section, matching the s=3 anchor, but does not mark confidence or missing evidence for each individual recommendation.",
+      "RX.3": "The agent's output primarily addresses logical consistency (R1.2) and uncertainty (RX.1), but includes coverage of additional dimensions like evidence gaps and specifications not in J*(d), representing one or more drifts while mostly staying within scope, fitting s=3.",
+      "RX.4": "The output introduces no new errors, fabrications, or harmful content; it identifies potentially misleading or inconsistent patterns in the original artifact without regressions, aligning with s=5.",
+      "RX.5": "The output is a critique rather than a rewrite, with direct references and quotes from the artifact ensuring traceability; no changes are made, so non-cosmetic changes are trivially annotated, but minor suggestions lack full source annotations, falling between s=3 and s=5, closer to s=5 but scored as 4."
+    },
+    "confidence": {
+      "R1.2": 0.95,
+      "RX.1": 0.9,
+      "RX.3": 0.85,
+      "RX.4": 0.95,
+      "RX.5": 0.8
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

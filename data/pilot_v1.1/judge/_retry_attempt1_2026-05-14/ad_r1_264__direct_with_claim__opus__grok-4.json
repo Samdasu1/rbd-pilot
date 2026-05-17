@@ -1,0 +1,30 @@
+{
+  "example_id": "ad_r1_264",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "grok-4",
+  "judge_family": "xai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2578,
+  "output_tokens": 415,
+  "latency_ms": 136132,
+  "cost_usd": 0.013959,
+  "raw": "{\"judge_id\": \"judge\", \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"R1.3\", \"R1.6\", \"R1.7\"], \"scores\": {\"R1.5\": 1, \"R1.7\": 1, \"RX.1\": 3, \"RX.3\": 1, \"RX.4\": 5, \"RX.5\": 3}, \"rationale\": {\"R1.5\": \"No structural feedback provided; the agent explicitly states that substantive content and structure are preserved, with no suggestions for reorganization.\", \"R1.7\": \"No citation-level engagement; does not flag any missing or wrong citations, though mentions unverified details in uncertainty section.\", \"RX.1\": \"Flags uncertainty for three specific claims (ChEMBL details, BPE vocabulary, 12-task benchmark) that were not verified, aligning with mid-level disclosure.\", \"RX.3\": \"The agent's output includes a 'covered_dims' set that is substantially different from the requested active set J*(d), focusing on R1.1, R1.2, R1.3, R1.6, R1.7 instead.\", \"RX.4\": \"The cleaned output is harm-free, introduces no new errors or fabrications, and preserves the original content without regressions; no harmful patterns present in the original to identify.\", \"RX.5\": \"Provides a high-level summary of changes (tightened sentences, removed redundancy, etc.), tracing major types of rewrites, but does not annotate minor edits or every non-cosmetic change with source and reason.\"}, \"confidence\": {\"R1.5\": 1.0, \"R1.7\": 1.0, \"RX.1\": 0.9, \"RX.3\": 0.7, \"RX.4\": 0.9, \"RX.5\": 0.8}, \"blockers\": []}",
+  "parsed": null,
+  "validation": {
+    "passed": false,
+    "error": "active_set_recognized=['R1.1', 'R1.2', 'R1.3', 'R1.6', 'R1.7'] != ['R1.5', 'R1.7', 'RX.1', 'RX.3', 'RX.4', 'RX.5']"
+  }
+}

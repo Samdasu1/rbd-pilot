@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2014,
-  "output_tokens": 2248,
-  "latency_ms": 40718,
-  "cost_usd": 0.07751,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.1\": 5, \"R1.4\": 4, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 4, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.1\": \"Identifies the core concept (per-file adaptive redundancy trading cost vs tail latency), shows where the draft overclaims (\\\"first,\\\" \\\"learned,\\\" \\\"production-ready\\\"), and offers a coherent reframing via a conservative rewrite that more tightly aligns claims to evidence.\",\n    \"R1.4\": \"Calls out \\\"first\\\" claims and contrasts against multiple prior efforts (e.g., AutoRAID-style tiering, Facebook f4 transitions, Ceph tiering, hot/cold-aware EC), suggesting a narrower novelty claim. However, it stops short of a precise delta analysis for each nearest work.\",\n    \"RX.1\": \"Softens strong claims, flags missing evidence (absolute latencies, baselines vs EC/tiering, failure tests, workload specifics), and reframes \\\"optimal\\\" to \\\"steady state.\\\" Does not provide per-recommendation confidence levels.\",\n    \"RX.3\": \"Stays on task: produces a stronger, conservative rewrite and a focused review checklist tied to the artifact\u2019s claims; no scope drift.\",\n    \"RX.4\": \"Avoids new overclaims, highlights risky patterns in the original (unchecked \\\"first,\\\" \\\"learned,\\\" production-readiness). Minor risk from loosely cited prior examples without precise references.\",\n    \"RX.5\": \"Provides a side-by-side style rewrite plus a clear list of issue-driven edits and reasons (e.g., rewording \\\"optimal\\\"). Not every change is explicitly annotated with source/justification at a fine-grained level.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.84,\n    \"R1.4\": 0.7,\n    \"RX.1\": 0.75,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.65,\n    \"RX.5\": 0.8\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 22601,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.1\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.1\":5,\"R1.4\":4,\"RX.1\":3,\"RX.3\":3,\"RX.4\":4,\"RX.5\":3},\"rationale\":{\"R1.1\":\"Names the load-bearing conceptual issue: the draft should be framed as per-file adaptive redundancy under cost/latency tradeoffs, not as unsupported production-ready novelty. It also identifies drift around learned policy, first claims, and static-policy rhetoric, then provides a conservative reframing.\",\"R1.4\":\"Names several nearby systems and research areas and distinguishes unsupported first claims from a narrower defensible novelty claim. However, it does not fully map the nearest works or clearly separate sharp novelty from rhetorical delta for each one.\",\"RX.1\":\"Flags uncertainty around workload mix, learned-policy mechanism, baseline adequacy, optimality, failure modes, and production readiness. It does not assign confidence or missing evidence for each recommendation individually.\",\"RX.3\":\"Mostly addresses the requested strengthening dimensions, but it explicitly reports coverage for dimensions outside the active set and includes a broader review surface than the agreed J*(d).\",\"RX.4\":\"Avoids the main harmful patterns in the original by removing first claims, production-readiness claims, and vague optimality language. Minor risk remains because some prior-work references are asserted without evidence or precise citation.\",\"RX.5\":\"Major rewrites are generally traceable through the issue list and conservative rewrite, but individual non-cosmetic edits are not annotated one by one with source and reason.\"},\"confidence\":{\"R1.1\":0.86,\"R1.4\":0.78,\"RX.1\":0.82,\"RX.3\":0.8,\"RX.4\":0.76,\"RX.5\":0.83},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.1",
       "R1.4",
@@ -36,25 +36,25 @@
       "R1.1": 5,
       "R1.4": 4,
       "RX.1": 3,
-      "RX.3": 5,
+      "RX.3": 3,
       "RX.4": 4,
       "RX.5": 3
     },
     "rationale": {
-      "R1.1": "Identifies the core concept (per-file adaptive redundancy trading cost vs tail latency), shows where the draft overclaims (\"first,\" \"learned,\" \"production-ready\"), and offers a coherent reframing via a conservative rewrite that more tightly aligns claims to evidence.",
-      "R1.4": "Calls out \"first\" claims and contrasts against multiple prior efforts (e.g., AutoRAID-style tiering, Facebook f4 transitions, Ceph tiering, hot/cold-aware EC), suggesting a narrower novelty claim. However, it stops short of a precise delta analysis for each nearest work.",
-      "RX.1": "Softens strong claims, flags missing evidence (absolute latencies, baselines vs EC/tiering, failure tests, workload specifics), and reframes \"optimal\" to \"steady state.\" Does not provide per-recommendation confidence levels.",
-      "RX.3": "Stays on task: produces a stronger, conservative rewrite and a focused review checklist tied to the artifact\u2019s claims; no scope drift.",
-      "RX.4": "Avoids new overclaims, highlights risky patterns in the original (unchecked \"first,\" \"learned,\" production-readiness). Minor risk from loosely cited prior examples without precise references.",
-      "RX.5": "Provides a side-by-side style rewrite plus a clear list of issue-driven edits and reasons (e.g., rewording \"optimal\"). Not every change is explicitly annotated with source/justification at a fine-grained level."
+      "R1.1": "Names the load-bearing conceptual issue: the draft should be framed as per-file adaptive redundancy under cost/latency tradeoffs, not as unsupported production-ready novelty. It also identifies drift around learned policy, first claims, and static-policy rhetoric, then provides a conservative reframing.",
+      "R1.4": "Names several nearby systems and research areas and distinguishes unsupported first claims from a narrower defensible novelty claim. However, it does not fully map the nearest works or clearly separate sharp novelty from rhetorical delta for each one.",
+      "RX.1": "Flags uncertainty around workload mix, learned-policy mechanism, baseline adequacy, optimality, failure modes, and production readiness. It does not assign confidence or missing evidence for each recommendation individually.",
+      "RX.3": "Mostly addresses the requested strengthening dimensions, but it explicitly reports coverage for dimensions outside the active set and includes a broader review surface than the agreed J*(d).",
+      "RX.4": "Avoids the main harmful patterns in the original by removing first claims, production-readiness claims, and vague optimality language. Minor risk remains because some prior-work references are asserted without evidence or precise citation.",
+      "RX.5": "Major rewrites are generally traceable through the issue list and conservative rewrite, but individual non-cosmetic edits are not annotated one by one with source and reason."
     },
     "confidence": {
-      "R1.1": 0.84,
-      "R1.4": 0.7,
-      "RX.1": 0.75,
-      "RX.3": 0.9,
-      "RX.4": 0.65,
-      "RX.5": 0.8
+      "R1.1": 0.86,
+      "R1.4": 0.78,
+      "RX.1": 0.82,
+      "RX.3": 0.8,
+      "RX.4": 0.76,
+      "RX.5": 0.83
     },
     "blockers": []
   },

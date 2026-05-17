@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_078",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2068,
+  "output_tokens": 751,
+  "latency_ms": 31758,
+  "cost_usd": 0.010095,
+  "raw": "{\n  \"judge_id\": \"zadie_smith\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual contradiction between the stated thesis (decode-time diversity is key) and the experimental conclusion (distillation is key). It proposes a precise and well-supported reframing of the thesis to align with the evidence presented, demonstrating a deep understanding of the conceptual drift. This meets the s=5 anchor by naming the load-bearing concept, showing the drift, and proposing a strong reframing.\",\n    \"R1.2\": \"The agent performs an end-to-end analysis of the paragraph's logical chain. It flags the main load-bearing inconsistency (thesis vs. conclusion) and a secondary one (late introduction of the teacher VLM). For both, it proposes minimal, effective repairs. It also identifies smaller ambiguities in the argument (e.g., 'marginalized,' 'log-likelihood'). This comprehensive flagging and repair proposal perfectly matches the s=5 anchor.\",\n    \"RX.1\": \"The agent dedicates a paragraph to explicitly listing claims that cannot be verified from the provided text alone. It asks specific, targeted questions about missing evidence (e.g., teacher model details, baseline consistency, test splits, ablation averaging), which are crucial for evaluating the paper's claims. This fulfills the s=5 requirement of marking missing evidence for key claims.\",\n    \"RX.3\": \"The agent's review is perfectly scoped to the provided paragraph. It analyzes the internal consistency, conceptual framing, and clarity of the text, which is precisely what the task implies. It also explicitly states what is out of scope (e.g., novelty assessment), demonstrating a clear adherence to the task boundaries. This is a perfect s=5.\",\n    \"RX.4\": \"The output is free of errors and regressions. Crucially, it identifies a seriously misleading pattern in the original text: the opening paragraph makes a claim that is directly contradicted by the results and conclusion. By flagging this misrepresentation, the agent prevents the downstream harm of readers being misled about the core findings of the work. This qualifies as identifying a harmful pattern and earns a score of 5.\",\n    \"RX.5\": \"Every point of critique made by the agent is directly and explicitly tied to a specific phrase or claim in the source artifact, often using direct quotes. The reason for each suggested change is clearly articulated. This provides perfect traceability from the critique back to the source text, aligning with the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "zadie_smith",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual contradiction between the stated thesis (decode-time diversity is key) and the experimental conclusion (distillation is key). It proposes a precise and well-supported reframing of the thesis to align with the evidence presented, demonstrating a deep understanding of the conceptual drift. This meets the s=5 anchor by naming the load-bearing concept, showing the drift, and proposing a strong reframing.",
+      "R1.2": "The agent performs an end-to-end analysis of the paragraph's logical chain. It flags the main load-bearing inconsistency (thesis vs. conclusion) and a secondary one (late introduction of the teacher VLM). For both, it proposes minimal, effective repairs. It also identifies smaller ambiguities in the argument (e.g., 'marginalized,' 'log-likelihood'). This comprehensive flagging and repair proposal perfectly matches the s=5 anchor.",
+      "RX.1": "The agent dedicates a paragraph to explicitly listing claims that cannot be verified from the provided text alone. It asks specific, targeted questions about missing evidence (e.g., teacher model details, baseline consistency, test splits, ablation averaging), which are crucial for evaluating the paper's claims. This fulfills the s=5 requirement of marking missing evidence for key claims.",
+      "RX.3": "The agent's review is perfectly scoped to the provided paragraph. It analyzes the internal consistency, conceptual framing, and clarity of the text, which is precisely what the task implies. It also explicitly states what is out of scope (e.g., novelty assessment), demonstrating a clear adherence to the task boundaries. This is a perfect s=5.",
+      "RX.4": "The output is free of errors and regressions. Crucially, it identifies a seriously misleading pattern in the original text: the opening paragraph makes a claim that is directly contradicted by the results and conclusion. By flagging this misrepresentation, the agent prevents the downstream harm of readers being misled about the core findings of the work. This qualifies as identifying a harmful pattern and earns a score of 5.",
+      "RX.5": "Every point of critique made by the agent is directly and explicitly tied to a specific phrase or claim in the source artifact, often using direct quotes. The reason for each suggested change is clearly articulated. This provides perfect traceability from the critique back to the source text, aligning with the s=5 anchor."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

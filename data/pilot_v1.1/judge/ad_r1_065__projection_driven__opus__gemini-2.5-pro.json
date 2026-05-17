@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_065",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2736,
+  "output_tokens": 669,
+  "latency_ms": 23127,
+  "cost_usd": 0.01011,
+  "raw": "{\n  \"judge_id\": \"get_human_judge_id_from_platform\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual error in the draft: conflating 'discrimination' (confidence is higher on correct vs. incorrect predictions) with 'calibration' (predicted probabilities match empirical frequencies). It names this load-bearing concept, shows precisely where the draft's evidence fails to support it, and proposes a complete reframing of the abstract around the supportable claim of discrimination. This is a textbook example of high-quality conceptual reconstruction.\",\n    \"RX.1\": \"The agent's output includes a dedicated section, 'Items I could not verify from the draft alone,' which explicitly lists the key ambiguities in the original text that limit the certainty of its critique (e.g., whether the data split is truly disjoint, what Figure 3 contains). This systematic disclosure of missing evidence and its impact on the agent's own recommendations perfectly matches the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was broad: 'Improve this draft.' The agent's output, which includes a detailed critique, a suggested revision, a list of necessary experiments, and a disclosure of uncertainties, is a comprehensive and direct response to this request. The entire output is focused on improving the provided artifact and does not drift into out-of-scope topics.\",\n    \"RX.4\": \"The agent's output contains no regressions. Crucially, it identifies a significant potential for downstream harm in the original draft's premature recommendation for citizen-science deployment. The agent correctly notes that the model's stated weakness on rare species is exactly the failure mode that could cause harm in conservation applications and proposes a revised draft with an explicit limitations section to mitigate this risk. This is a clear example of identifying and correcting harmful patterns.\",\n    \"RX.5\": \"The agent's output is structured to provide perfect traceability. It first presents a numbered list of 'Major issues,' providing a clear reason for each subsequent change. The 'Suggested revision' then directly implements the fixes for these identified issues. This structure makes the provenance of every single non-cosmetic change explicit and well-justified, fully meeting the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_human_judge_id_from_platform",
+    "active_set_recognized": [
+      "R1.1",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual error in the draft: conflating 'discrimination' (confidence is higher on correct vs. incorrect predictions) with 'calibration' (predicted probabilities match empirical frequencies). It names this load-bearing concept, shows precisely where the draft's evidence fails to support it, and proposes a complete reframing of the abstract around the supportable claim of discrimination. This is a textbook example of high-quality conceptual reconstruction.",
+      "RX.1": "The agent's output includes a dedicated section, 'Items I could not verify from the draft alone,' which explicitly lists the key ambiguities in the original text that limit the certainty of its critique (e.g., whether the data split is truly disjoint, what Figure 3 contains). This systematic disclosure of missing evidence and its impact on the agent's own recommendations perfectly matches the s=5 anchor.",
+      "RX.3": "The user's delegation was broad: 'Improve this draft.' The agent's output, which includes a detailed critique, a suggested revision, a list of necessary experiments, and a disclosure of uncertainties, is a comprehensive and direct response to this request. The entire output is focused on improving the provided artifact and does not drift into out-of-scope topics.",
+      "RX.4": "The agent's output contains no regressions. Crucially, it identifies a significant potential for downstream harm in the original draft's premature recommendation for citizen-science deployment. The agent correctly notes that the model's stated weakness on rare species is exactly the failure mode that could cause harm in conservation applications and proposes a revised draft with an explicit limitations section to mitigate this risk. This is a clear example of identifying and correcting harmful patterns.",
+      "RX.5": "The agent's output is structured to provide perfect traceability. It first presents a numbered list of 'Major issues,' providing a clear reason for each subsequent change. The 'Suggested revision' then directly implements the fixes for these identified issues. This structure makes the provenance of every single non-cosmetic change explicit and well-justified, fully meeting the s=5 anchor."
+    },
+    "confidence": {
+      "R1.1": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

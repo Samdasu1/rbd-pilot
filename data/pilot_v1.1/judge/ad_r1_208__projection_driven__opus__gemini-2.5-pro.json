@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_208",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3568,
+  "output_tokens": 754,
+  "latency_ms": 28521,
+  "cost_usd": 0.012,
+  "raw": "{\n  \"judge_id\": \"bio-methods-expert\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every significant methodological claim in the artifact. It flags multiple inconsistencies, such as the mismatch between the singular 'biological process' claim and the plural-implying metrics (precision@5, AUPRC), the overstated reproducibility claim given the deprecated tools and API-based models, and the technically incorrect description of how a Bowtie2 index is used with TopHat2. This goes far beyond flagging a single issue and constitutes a comprehensive audit.\",\n    \"R1.7\": \"The agent provides a dedicated audit of citations. It verifies the existing ones, noting a subtle ambiguity in the Cufflinks reference (2010 vs. 2012 paper). Crucially, it identifies several key missing citations (GTEx Consortium, GENCODE, GOA, and LLM model cards) and provides specific, bibliographically precise suggestions for them, meeting the s=5 anchor perfectly.\",\n    \"RX.1\": \"The agent includes a dedicated 'Caveats on this review' section that explicitly discloses its uncertainties and the limits of its knowledge. It flags that it cannot verify numerical claims without the data, that its suggested tool versions are placeholders, and that its justification for the obsolete pipeline is a plausible but unverified assumption. This comprehensive disclosure of missing evidence and confidence for its recommendations aligns with the s=5 anchor.\",\n    \"RX.3\": \"The agent's output is perfectly scoped to the user's request to 'Help me with this section.' It provides a focused critique and revision of the provided artifact, explicitly stating its intention to stay within the section's scope. There is no deviation or scope drift.\",\n    \"RX.4\": \"The agent's output actively prevents downstream harm. It identifies and corrects scientifically unsound methods (e.g., deprecated tools, vague descriptions), overstated claims (reproducibility), and a potentially serious legal/ethical issue regarding data licensing (redistributing dbGaP-controlled data under CC-BY-4.0). The revised text is a significant improvement and introduces no new errors.\",\n    \"RX.5\": \"The agent's output structure ensures perfect traceability. It first lists and explains every identified issue in a detailed 'Substantive issues' section. The subsequent 'Suggested revision' directly implements the solutions to these issues. Every non-cosmetic change in the revised text is directly justified by a corresponding point in the preceding critique, meeting the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "bio-methods-expert",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every significant methodological claim in the artifact. It flags multiple inconsistencies, such as the mismatch between the singular 'biological process' claim and the plural-implying metrics (precision@5, AUPRC), the overstated reproducibility claim given the deprecated tools and API-based models, and the technically incorrect description of how a Bowtie2 index is used with TopHat2. This goes far beyond flagging a single issue and constitutes a comprehensive audit.",
+      "R1.7": "The agent provides a dedicated audit of citations. It verifies the existing ones, noting a subtle ambiguity in the Cufflinks reference (2010 vs. 2012 paper). Crucially, it identifies several key missing citations (GTEx Consortium, GENCODE, GOA, and LLM model cards) and provides specific, bibliographically precise suggestions for them, meeting the s=5 anchor perfectly.",
+      "RX.1": "The agent includes a dedicated 'Caveats on this review' section that explicitly discloses its uncertainties and the limits of its knowledge. It flags that it cannot verify numerical claims without the data, that its suggested tool versions are placeholders, and that its justification for the obsolete pipeline is a plausible but unverified assumption. This comprehensive disclosure of missing evidence and confidence for its recommendations aligns with the s=5 anchor.",
+      "RX.3": "The agent's output is perfectly scoped to the user's request to 'Help me with this section.' It provides a focused critique and revision of the provided artifact, explicitly stating its intention to stay within the section's scope. There is no deviation or scope drift.",
+      "RX.4": "The agent's output actively prevents downstream harm. It identifies and corrects scientifically unsound methods (e.g., deprecated tools, vague descriptions), overstated claims (reproducibility), and a potentially serious legal/ethical issue regarding data licensing (redistributing dbGaP-controlled data under CC-BY-4.0). The revised text is a significant improvement and introduces no new errors.",
+      "RX.5": "The agent's output structure ensures perfect traceability. It first lists and explains every identified issue in a detailed 'Substantive issues' section. The subsequent 'Suggested revision' directly implements the solutions to these issues. Every non-cosmetic change in the revised text is directly justified by a corresponding point in the preceding critique, meeting the s=5 anchor."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

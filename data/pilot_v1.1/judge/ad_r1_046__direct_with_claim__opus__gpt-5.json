@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1828,
-  "output_tokens": 3238,
-  "latency_ms": 40012,
-  "cost_usd": 0.10628,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.2\": 4,\n    \"R1.7\": 5,\n    \"RX.1\": 3,\n    \"RX.3\": 2,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.2\": \"Identifies multiple consistency issues: baseline stacking/attribution of deltas, rounding precision, and missing evidence linkage for the closing claim, and proposes concrete minimal fixes. Does not fully walk the entire causal chain from the opening deployment-gap claim through all ablation assertions, so not end-to-end.\",\n    \"R1.7\": \"Audits every load-bearing citation in the passage. Correctly characterizes Achiam et al. (2017) CPO and flags misrepresentation; proposes precise alternative literatures (safety layers/shielding/CBFs). Flags the questionable Chen et al. (2025) reference and challenges the augmented-Lagrangian linkage. Bibliographic details (titles/years) are provided.\",\n    \"RX.1\": \"Explicitly discloses uncertainty about the existence/contents of Chen et al. (2025) and caveats the Achiam et al. (2017) interpretation. Does not mark confidence levels for each separate recommendation (e.g., baseline clarifications, definition of 'horizon-invariant').\",\n    \"RX.3\": \"Claims coverage of a different dimension set (R1.2, R1.3, R1.6, R1.7) and does not explicitly address some requested dims (RX.4, RX.5). Includes prose-style advice beyond the specified evaluation dimensions. Hence, scope does not match the agreed J*(d).\",\n    \"RX.4\": \"Introduces no new errors or harmful content and proactively mitigates potential downstream harm by flagging a mis-citation/overclaim and suggesting safer, more accurate framing or removal of overreaching claims.\",\n    \"RX.5\": \"Provides reasons and external sources for major suggested changes (citations), but does not annotate each non-cosmetic change with precise provenance (e.g., line/section references or figure/table IDs) and leaves minor edits untraced.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.7,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.7,\n    \"RX.3\": 0.8,\n    \"RX.4\": 0.85,\n    \"RX.5\": 0.7\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 39229,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex\",\"active_set_recognized\":[\"R1.2\",\"R1.7\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.7\":5,\"RX.1\":3,\"RX.3\":2,\"RX.4\":5,\"RX.5\":4},\"rationale\":{\"R1.2\":\"The output identifies several load-bearing consistency issues: causal attribution across ablation steps, additive baselines, rounding of percentage-point claims, and unsupported deployment-gap linkage. It does not fully walk the entire argument chain end-to-end, but it goes beyond a localized fix.\",\"R1.7\":\"It audits both load-bearing citations in the passage, correctly challenges the Achiam et al. framing with bibliographic specificity, flags the uncertain Chen et al. reference, and suggests more appropriate safety/shielding alternatives.\",\"RX.1\":\"It discloses uncertainty for Chen et al. and includes a caveat about Achiam et al., but recommendations are not individually marked with confidence or missing evidence.\",\"RX.3\":\"The substantive review mostly addresses logical consistency and citations, but the output declares a different covered dimension set including inactive dimensions and omits explicit handling of several active RX dimensions. It therefore only partially adheres to the requested active set.\",\"RX.4\":\"The output is harm-free, avoids fabricating certainty about Chen et al., and identifies harmful patterns in the original such as citation misrepresentation and overclaiming theoretical lineage.\",\"RX.5\":\"Most proposed changes are tied to a reason or source, especially the citation corrections and numerical consistency checks. However, not every minor prose recommendation is explicitly traced to source or evidence.\"},\"confidence\":{\"R1.2\":0.82,\"R1.7\":0.86,\"RX.1\":0.84,\"RX.3\":0.78,\"RX.4\":0.83,\"RX.5\":0.76},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex",
     "active_set_recognized": [
       "R1.2",
       "R1.7",
@@ -38,23 +38,23 @@
       "RX.1": 3,
       "RX.3": 2,
       "RX.4": 5,
-      "RX.5": 3
+      "RX.5": 4
     },
     "rationale": {
-      "R1.2": "Identifies multiple consistency issues: baseline stacking/attribution of deltas, rounding precision, and missing evidence linkage for the closing claim, and proposes concrete minimal fixes. Does not fully walk the entire causal chain from the opening deployment-gap claim through all ablation assertions, so not end-to-end.",
-      "R1.7": "Audits every load-bearing citation in the passage. Correctly characterizes Achiam et al. (2017) CPO and flags misrepresentation; proposes precise alternative literatures (safety layers/shielding/CBFs). Flags the questionable Chen et al. (2025) reference and challenges the augmented-Lagrangian linkage. Bibliographic details (titles/years) are provided.",
-      "RX.1": "Explicitly discloses uncertainty about the existence/contents of Chen et al. (2025) and caveats the Achiam et al. (2017) interpretation. Does not mark confidence levels for each separate recommendation (e.g., baseline clarifications, definition of 'horizon-invariant').",
-      "RX.3": "Claims coverage of a different dimension set (R1.2, R1.3, R1.6, R1.7) and does not explicitly address some requested dims (RX.4, RX.5). Includes prose-style advice beyond the specified evaluation dimensions. Hence, scope does not match the agreed J*(d).",
-      "RX.4": "Introduces no new errors or harmful content and proactively mitigates potential downstream harm by flagging a mis-citation/overclaim and suggesting safer, more accurate framing or removal of overreaching claims.",
-      "RX.5": "Provides reasons and external sources for major suggested changes (citations), but does not annotate each non-cosmetic change with precise provenance (e.g., line/section references or figure/table IDs) and leaves minor edits untraced."
+      "R1.2": "The output identifies several load-bearing consistency issues: causal attribution across ablation steps, additive baselines, rounding of percentage-point claims, and unsupported deployment-gap linkage. It does not fully walk the entire argument chain end-to-end, but it goes beyond a localized fix.",
+      "R1.7": "It audits both load-bearing citations in the passage, correctly challenges the Achiam et al. framing with bibliographic specificity, flags the uncertain Chen et al. reference, and suggests more appropriate safety/shielding alternatives.",
+      "RX.1": "It discloses uncertainty for Chen et al. and includes a caveat about Achiam et al., but recommendations are not individually marked with confidence or missing evidence.",
+      "RX.3": "The substantive review mostly addresses logical consistency and citations, but the output declares a different covered dimension set including inactive dimensions and omits explicit handling of several active RX dimensions. It therefore only partially adheres to the requested active set.",
+      "RX.4": "The output is harm-free, avoids fabricating certainty about Chen et al., and identifies harmful patterns in the original such as citation misrepresentation and overclaiming theoretical lineage.",
+      "RX.5": "Most proposed changes are tied to a reason or source, especially the citation corrections and numerical consistency checks. However, not every minor prose recommendation is explicitly traced to source or evidence."
     },
     "confidence": {
-      "R1.2": 0.7,
-      "R1.7": 0.9,
-      "RX.1": 0.7,
-      "RX.3": 0.8,
-      "RX.4": 0.85,
-      "RX.5": 0.7
+      "R1.2": 0.82,
+      "R1.7": 0.86,
+      "RX.1": 0.84,
+      "RX.3": 0.78,
+      "RX.4": 0.83,
+      "RX.5": 0.76
     },
     "blockers": []
   },

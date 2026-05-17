@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2089,
-  "output_tokens": 2364,
-  "latency_ms": 30553,
-  "cost_usd": 0.081365,
-  "raw": "{\n  \"judge_id\": \"responsibility-judge-v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 3,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.1\": \"The review identifies the load-bearing concepts (saddle escape, noise assumptions, first-order vs HVP classification, and rate claims), shows where the text drifts (consensus framing, rate and trust-region conflation, noise role), and proposes concrete reframings (soften/attribute consensus, clarify deterministic vs stochastic, qualify assumptions, and tighten first-claim taxonomy).\",\n    \"R1.2\": \"It walks the argument chain end-to-end, flagging internal inconsistencies (noise role across paragraphs, local vs global rate, trust-region comparison) and offers minimal, targeted repairs (state assumptions, add citations, clarify algorithm nature and taxonomy).\",\n    \"R1.4\": \"It maps against multiple nearest lines of work (Ge et al.; Jin et al.; Daneshmand et al.; Fang et al.; Allen-Zhu & Li/Neon2; accelerated escape) and articulates the sharp deltas (noise scale, HVP use, rate and 'first' claim), distinguishing rhetorical from substantive novelty.\",\n    \"RX.1\": \"The reviewer flags uncertainty and missing evidence in specific places (asks for theorem-level citation for dimension scaling; uses 'likely' and 'unclear' on first-claim and noise role) but does not provide per-recommendation confidence levels or systematically mark all missing evidence.\",\n    \"RX.3\": \"The output stays within the requested dimensions of framing, logic, novelty, uncertainty/overclaim risk, without drifting to unrelated areas.\",\n    \"RX.4\": \"No harmful content or fabrications are introduced; the critique reduces downstream harm by identifying and mitigating overclaiming and potential misrepresentation of prior work.\",\n    \"RX.5\": \"Some provenance is provided via specific prior-work references and standard complexity claims, but not all critiques are tied to precise theorems or detailed sources; changes are not annotated at a granular level.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.88,\n    \"R1.2\": 0.86,\n    \"R1.4\": 0.87,\n    \"RX.1\": 0.72,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.7\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 26631,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.1\",\"R1.2\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.1\":5,\"R1.2\":5,\"R1.4\":5,\"RX.1\":3,\"RX.3\":3,\"RX.4\":5,\"RX.5\":4},\"rationale\":{\"R1.1\":\"Identifies the load-bearing framing problem: the draft contrasts CA-SGD against an overstated noise-dominance consensus. It shows where the conceptual object drifts between SGD, perturbed SGD, deterministic curvature correction, and HVP-based methods, and proposes tighter framing around curvature-aware deterministic correction and explicit taxonomy.\",\"R1.2\":\"Walks the central argument chain from prior-work characterization to novelty claim, noise role, rate statement, trust-region comparison, and final rhetorical conclusion. It flags the main load-bearing inconsistencies and proposes localized repairs such as clarifying assumptions, epsilon meaning, and whether the method is deterministic or stochastic.\",\"R1.4\":\"Maps the novelty claim against multiple nearby works, including Ge et al., Jin et al., Daneshmand et al., Fang et al., Neon/Neon2, and accelerated saddle-escape work. It distinguishes sharper possible deltas from rhetorical or exposed claims, especially around HVPs and first-order status.\",\"RX.1\":\"The output uses uncertainty markers such as likely, unclear, presumably, and should be cited, but it does not mark confidence and missing evidence for each recommendation. Disclosure is present but not systematic enough for the top anchor.\",\"RX.3\":\"The substantive review mostly addresses the active set, but the output includes a covered_dims object with keys outside J*(d), including R1.3, R1.5, R1.6, R1.7, and RX.2. This is a scope drift even though the actual prose is largely relevant.\",\"RX.4\":\"The output avoids harmful rewrites and identifies risky patterns in the artifact: strawman prior-work framing, overclaiming firstness, ambiguity about noise, and conflation of local escape with global complexity. No clear new fabrication or damaging regression is introduced.\",\"RX.5\":\"Most major recommendations are tied to reasons and named prior-work sources, but traceability is not complete: several claims are not linked to specific theorems, assumptions, or exact source locations. Stronger than major-only tracing, but not exhaustive.\"},\"confidence\":{\"R1.1\":0.88,\"R1.2\":0.86,\"R1.4\":0.84,\"RX.1\":0.9,\"RX.3\":0.87,\"RX.4\":0.82,\"RX.5\":0.78},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility-judge-v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.1",
       "R1.2",
@@ -39,27 +39,27 @@
       "R1.2": 5,
       "R1.4": 5,
       "RX.1": 3,
-      "RX.3": 5,
+      "RX.3": 3,
       "RX.4": 5,
-      "RX.5": 3
+      "RX.5": 4
     },
     "rationale": {
-      "R1.1": "The review identifies the load-bearing concepts (saddle escape, noise assumptions, first-order vs HVP classification, and rate claims), shows where the text drifts (consensus framing, rate and trust-region conflation, noise role), and proposes concrete reframings (soften/attribute consensus, clarify deterministic vs stochastic, qualify assumptions, and tighten first-claim taxonomy).",
-      "R1.2": "It walks the argument chain end-to-end, flagging internal inconsistencies (noise role across paragraphs, local vs global rate, trust-region comparison) and offers minimal, targeted repairs (state assumptions, add citations, clarify algorithm nature and taxonomy).",
-      "R1.4": "It maps against multiple nearest lines of work (Ge et al.; Jin et al.; Daneshmand et al.; Fang et al.; Allen-Zhu & Li/Neon2; accelerated escape) and articulates the sharp deltas (noise scale, HVP use, rate and 'first' claim), distinguishing rhetorical from substantive novelty.",
-      "RX.1": "The reviewer flags uncertainty and missing evidence in specific places (asks for theorem-level citation for dimension scaling; uses 'likely' and 'unclear' on first-claim and noise role) but does not provide per-recommendation confidence levels or systematically mark all missing evidence.",
-      "RX.3": "The output stays within the requested dimensions of framing, logic, novelty, uncertainty/overclaim risk, without drifting to unrelated areas.",
-      "RX.4": "No harmful content or fabrications are introduced; the critique reduces downstream harm by identifying and mitigating overclaiming and potential misrepresentation of prior work.",
-      "RX.5": "Some provenance is provided via specific prior-work references and standard complexity claims, but not all critiques are tied to precise theorems or detailed sources; changes are not annotated at a granular level."
+      "R1.1": "Identifies the load-bearing framing problem: the draft contrasts CA-SGD against an overstated noise-dominance consensus. It shows where the conceptual object drifts between SGD, perturbed SGD, deterministic curvature correction, and HVP-based methods, and proposes tighter framing around curvature-aware deterministic correction and explicit taxonomy.",
+      "R1.2": "Walks the central argument chain from prior-work characterization to novelty claim, noise role, rate statement, trust-region comparison, and final rhetorical conclusion. It flags the main load-bearing inconsistencies and proposes localized repairs such as clarifying assumptions, epsilon meaning, and whether the method is deterministic or stochastic.",
+      "R1.4": "Maps the novelty claim against multiple nearby works, including Ge et al., Jin et al., Daneshmand et al., Fang et al., Neon/Neon2, and accelerated saddle-escape work. It distinguishes sharper possible deltas from rhetorical or exposed claims, especially around HVPs and first-order status.",
+      "RX.1": "The output uses uncertainty markers such as likely, unclear, presumably, and should be cited, but it does not mark confidence and missing evidence for each recommendation. Disclosure is present but not systematic enough for the top anchor.",
+      "RX.3": "The substantive review mostly addresses the active set, but the output includes a covered_dims object with keys outside J*(d), including R1.3, R1.5, R1.6, R1.7, and RX.2. This is a scope drift even though the actual prose is largely relevant.",
+      "RX.4": "The output avoids harmful rewrites and identifies risky patterns in the artifact: strawman prior-work framing, overclaiming firstness, ambiguity about noise, and conflation of local escape with global complexity. No clear new fabrication or damaging regression is introduced.",
+      "RX.5": "Most major recommendations are tied to reasons and named prior-work sources, but traceability is not complete: several claims are not linked to specific theorems, assumptions, or exact source locations. Stronger than major-only tracing, but not exhaustive."
     },
     "confidence": {
       "R1.1": 0.88,
       "R1.2": 0.86,
-      "R1.4": 0.87,
-      "RX.1": 0.72,
-      "RX.3": 0.95,
-      "RX.4": 0.9,
-      "RX.5": 0.7
+      "R1.4": 0.84,
+      "RX.1": 0.9,
+      "RX.3": 0.87,
+      "RX.4": 0.82,
+      "RX.5": 0.78
     },
     "blockers": []
   },

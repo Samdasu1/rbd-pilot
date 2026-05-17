@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_306",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2811,
+  "output_tokens": 547,
+  "latency_ms": 20284,
+  "cost_usd": 0.008984,
+  "raw": "{\n  \"judge_id\": \"read_and_weep\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent proposes a complete, coherent reordering of all four paragraphs into a standard and logical (setup -> gap -> method -> results) flow. It provides a clear, high-level rationale for the reordering, citing the problematic forward reference in the original text. This matches the s=5 anchor of a 'coherent end-to-end section plan with per-section rationale.'\",\n    \"RX.1\": \"The agent includes an excellent 'Caveats on what I did not verify' section. It explicitly lists the types of claims it took on faith (citations, numerical results, novelty), which constitutes marking missing evidence for its recommendations. This perfectly aligns with the s=5 anchor.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the delegation to 'Restructure the section flow.' It reorders the paragraphs, provides the revised text, and adds relevant commentary. There is no scope drift.\",\n    \"RX.4\": \"The output contains no regressions. The minor textual edits made to accommodate the new structure are improvements that enhance clarity and precision (e.g., removing the dangling forward reference, adding 'Empirically'). The agent correctly identifies and fixes a confusing structural pattern in the original text.\",\n    \"RX.5\": \"The agent provides perfect traceability. It clearly states the new paragraph order by referencing the original numbering (4 \u2192 2 \u2192 3 \u2192 1). Furthermore, every single non-cosmetic change to the text is flagged with an `[edit: ...]` annotation that explains the change, matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "read_and_weep",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent proposes a complete, coherent reordering of all four paragraphs into a standard and logical (setup -> gap -> method -> results) flow. It provides a clear, high-level rationale for the reordering, citing the problematic forward reference in the original text. This matches the s=5 anchor of a 'coherent end-to-end section plan with per-section rationale.'",
+      "RX.1": "The agent includes an excellent 'Caveats on what I did not verify' section. It explicitly lists the types of claims it took on faith (citations, numerical results, novelty), which constitutes marking missing evidence for its recommendations. This perfectly aligns with the s=5 anchor.",
+      "RX.3": "The agent's output is perfectly aligned with the delegation to 'Restructure the section flow.' It reorders the paragraphs, provides the revised text, and adds relevant commentary. There is no scope drift.",
+      "RX.4": "The output contains no regressions. The minor textual edits made to accommodate the new structure are improvements that enhance clarity and precision (e.g., removing the dangling forward reference, adding 'Empirically'). The agent correctly identifies and fixes a confusing structural pattern in the original text.",
+      "RX.5": "The agent provides perfect traceability. It clearly states the new paragraph order by referencing the original numbering (4 \u2192 2 \u2192 3 \u2192 1). Furthermore, every single non-cosmetic change to the text is flagged with an `[edit: ...]` annotation that explains the change, matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

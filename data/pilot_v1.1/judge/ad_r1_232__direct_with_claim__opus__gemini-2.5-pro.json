@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_232",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3026,
+  "output_tokens": 746,
+  "latency_ms": 22238,
+  "cost_usd": 0.011242,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every load-bearing claim in the original text. It correctly identifies that the central claim\u2014that lower ECE implies better selective-prediction ability\u2014is not supported by the evidence. It also flags overclaiming in the architectural comparison and the non-sequitur leap to safety-critical deployment recommendations, demonstrating a thorough check of evidence-claim alignment.\",\n    \"R1.7\": \"The agent's performance on this dimension is exemplary. It audits the single load-bearing citation (Hendrycks & Gimpel, 2017), correctly identifies it as a misattribution, and provides the correct citations (Naeini et al., 2015; Guo et al., 2017) with bibliographic precision. It also flags missing key works on selective prediction (Geifman & El-Yaniv, 2017; El-Yaniv & Wiener, 2010), meeting the s=5 anchor perfectly.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section. It clearly states high confidence in its primary technical corrections (citation and metric choice) while also explicitly marking what it has not verified and is assuming (e.g., specific details of the model checkpoints). This is a model of good uncertainty disclosure, marking both confidence and missing evidence for its own recommendations.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Improve this draft.' It provides a detailed critique, a revised draft, and a list of targeted recommendations, all of which directly serve the goal of improving the original artifact. There is no scope drift.\",\n    \"RX.4\": \"The agent introduces no new errors. Crucially, it identifies a harmful pattern in the original text: the over-extrapolation of a narrow benchmark result (ECE on ImageNet variants) to a recommendation for safety-critical deployment. By flagging this and correcting the reasoning, the agent actively mitigates a potential downstream harm, which is the highest standard for this dimension.\",\n    \"RX.5\": \"The agent's output is highly traceable. It first enumerates the specific problems with the draft, then provides a rewrite and a list of recommendations that directly address those enumerated points. Every non-cosmetic change in the revised draft is clearly justified by the preceding analysis, making the provenance of each change exceptionally clear.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every load-bearing claim in the original text. It correctly identifies that the central claim\u2014that lower ECE implies better selective-prediction ability\u2014is not supported by the evidence. It also flags overclaiming in the architectural comparison and the non-sequitur leap to safety-critical deployment recommendations, demonstrating a thorough check of evidence-claim alignment.",
+      "R1.7": "The agent's performance on this dimension is exemplary. It audits the single load-bearing citation (Hendrycks & Gimpel, 2017), correctly identifies it as a misattribution, and provides the correct citations (Naeini et al., 2015; Guo et al., 2017) with bibliographic precision. It also flags missing key works on selective prediction (Geifman & El-Yaniv, 2017; El-Yaniv & Wiener, 2010), meeting the s=5 anchor perfectly.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section. It clearly states high confidence in its primary technical corrections (citation and metric choice) while also explicitly marking what it has not verified and is assuming (e.g., specific details of the model checkpoints). This is a model of good uncertainty disclosure, marking both confidence and missing evidence for its own recommendations.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Improve this draft.' It provides a detailed critique, a revised draft, and a list of targeted recommendations, all of which directly serve the goal of improving the original artifact. There is no scope drift.",
+      "RX.4": "The agent introduces no new errors. Crucially, it identifies a harmful pattern in the original text: the over-extrapolation of a narrow benchmark result (ECE on ImageNet variants) to a recommendation for safety-critical deployment. By flagging this and correcting the reasoning, the agent actively mitigates a potential downstream harm, which is the highest standard for this dimension.",
+      "RX.5": "The agent's output is highly traceable. It first enumerates the specific problems with the draft, then provides a rewrite and a list of recommendations that directly address those enumerated points. Every non-cosmetic change in the revised draft is clearly justified by the preceding analysis, making the provenance of each change exceptionally clear."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

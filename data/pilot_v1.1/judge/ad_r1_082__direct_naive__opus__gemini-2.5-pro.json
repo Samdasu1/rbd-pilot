@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_082",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2558,
+  "output_tokens": 775,
+  "latency_ms": 23036,
+  "cost_usd": 0.010947,
+  "raw": "{\n  \"judge_id\": \"meta_judge_llm\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual flaw of the artifact: the disconnect between the stated 'hard-selection' (discrete) problem and the analyzed 'synthesis' (convex relaxation) problem. It names these load-bearing concepts, shows precisely where the draft drifts from its stated goal, and proposes a valid reframing (adding a 'bridging argument' like rounding or sampling). This goes far beyond restating phrasing and represents a deep conceptual reconstruction.\",\n    \"R1.2\": \"The agent performs an end-to-end walk of the artifact's logical chain and identifies multiple, critical inconsistencies. These include the mutually inconsistent convergence rates (Issue #1), the unstated assumption required for the strong-convexity claim (Issue #2), the gap between the analysis and the objective (Issue #3), and the incorrect rate for the claimed feedback model (Issue #4). For each inconsistency, it proposes a minimal, correct repair. This is a textbook example of a perfect score on this dimension.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It correctly marks where it has not performed a full evidence check (verifying specific citations) while also expressing well-calibrated confidence in its own primary claims (e.g., the strong-convexity counterexample). This systematic marking of confidence and missing evidence for its key recommendations fully meets the s=5 anchor.\",\n    \"RX.3\": \"The agent's output is a direct and comprehensive review of the provided artifact, as requested by the delegation ('Review this section'). It does not drift into unrelated topics or analyze content outside the provided text. The output covers exactly the agreed scope.\",\n    \"RX.4\": \"The agent's output avoids introducing any new errors. More importantly, it identifies several harmful patterns in the original artifact that could mislead downstream readers, such as the unsupported leap from a convex relaxation to a discrete problem, the inconsistent rates, and the likely-false strong-convexity claim. By flagging these issues, the agent actively prevents downstream harm.\",\n    \"RX.5\": \"The agent's critique is exceptionally well-traced. Every major and minor point is explicitly linked back to a specific phrase, claim, or paragraph in the source artifact. For example, Issue #1 quotes the three inconsistent rates and their locations, and Issue #2 targets the specific assumptions listed for strong convexity. Every non-cosmetic change or critique is annotated with its source and a clear reason, fulfilling the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "meta_judge_llm",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual flaw of the artifact: the disconnect between the stated 'hard-selection' (discrete) problem and the analyzed 'synthesis' (convex relaxation) problem. It names these load-bearing concepts, shows precisely where the draft drifts from its stated goal, and proposes a valid reframing (adding a 'bridging argument' like rounding or sampling). This goes far beyond restating phrasing and represents a deep conceptual reconstruction.",
+      "R1.2": "The agent performs an end-to-end walk of the artifact's logical chain and identifies multiple, critical inconsistencies. These include the mutually inconsistent convergence rates (Issue #1), the unstated assumption required for the strong-convexity claim (Issue #2), the gap between the analysis and the objective (Issue #3), and the incorrect rate for the claimed feedback model (Issue #4). For each inconsistency, it proposes a minimal, correct repair. This is a textbook example of a perfect score on this dimension.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It correctly marks where it has not performed a full evidence check (verifying specific citations) while also expressing well-calibrated confidence in its own primary claims (e.g., the strong-convexity counterexample). This systematic marking of confidence and missing evidence for its key recommendations fully meets the s=5 anchor.",
+      "RX.3": "The agent's output is a direct and comprehensive review of the provided artifact, as requested by the delegation ('Review this section'). It does not drift into unrelated topics or analyze content outside the provided text. The output covers exactly the agreed scope.",
+      "RX.4": "The agent's output avoids introducing any new errors. More importantly, it identifies several harmful patterns in the original artifact that could mislead downstream readers, such as the unsupported leap from a convex relaxation to a discrete problem, the inconsistent rates, and the likely-false strong-convexity claim. By flagging these issues, the agent actively prevents downstream harm.",
+      "RX.5": "The agent's critique is exceptionally well-traced. Every major and minor point is explicitly linked back to a specific phrase, claim, or paragraph in the source artifact. For example, Issue #1 quotes the three inconsistent rates and their locations, and Issue #2 targets the specific assumptions listed for strong convexity. Every non-cosmetic change or critique is annotated with its source and a clear reason, fulfilling the s=5 anchor."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_281",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2748,
+  "output_tokens": 706,
+  "latency_ms": 27171,
+  "cost_usd": 0.010495,
+  "raw": "{\n  \"judge_id\": \"model_judge\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the artifact's argument chain end-to-end and flags multiple, critical, load-bearing inconsistencies. These include a direct contradiction in the model architecture details, a flawed statistical significance claim (p-value arithmetically questionable for n=5), and a logical leap in the mechanism analysis. For each, it proposes minimal, targeted repairs.\",\n    \"R1.3\": \"The agent audits every load-bearing claim against the provided evidence (or lack thereof). It correctly flags that the headline accuracy claim is uninterpretable without baseline/class-balance data, the statistical significance claim is not supported by the evidence (n=5 seeds), the optimality claim for k=4 lacks a results table, and the broad generalization claim is unsupported by single-dataset results.\",\n    \"RX.1\": \"The agent provides an excellent, dedicated \\\"Uncertainty disclosure\\\" section. It flags that its external knowledge (e.g., baseline scores, class imbalance stats) is from memory and should be verified. Crucially, it also discloses the assumptions behind its own critiques, such as the specific type of permutation test it assumes was used, which demonstrates a sophisticated understanding of its own reasoning's limitations.\",\n    \"RX.3\": \"The delegation was to \\\"Review this section.\\\" The agent provided a detailed, structured review of the provided text. The output is perfectly aligned with the request and does not drift into out-of-scope activities like rewriting the text or performing new analysis.\",\n    \"RX.4\": \"The output introduces no new errors or harms. On the contrary, it identifies multiple harmful patterns in the original artifact that could mislead readers or prevent reproducibility. These include the use of a misleading metric (accuracy on an imbalanced dataset), contradictory experimental details, and an overly broad generalization claim. The proposed fixes would significantly reduce downstream harm.\",\n    \"RX.5\": \"The agent's output is perfectly traceable. Every critique is explicitly linked back to a specific quote or claim in the source artifact. When the agent introduces external knowledge to form a critique, it clearly states the basis for that knowledge (e.g., conventions in the field, statistical arithmetic) and even discloses when that knowledge is from memory.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "model_judge",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the artifact's argument chain end-to-end and flags multiple, critical, load-bearing inconsistencies. These include a direct contradiction in the model architecture details, a flawed statistical significance claim (p-value arithmetically questionable for n=5), and a logical leap in the mechanism analysis. For each, it proposes minimal, targeted repairs.",
+      "R1.3": "The agent audits every load-bearing claim against the provided evidence (or lack thereof). It correctly flags that the headline accuracy claim is uninterpretable without baseline/class-balance data, the statistical significance claim is not supported by the evidence (n=5 seeds), the optimality claim for k=4 lacks a results table, and the broad generalization claim is unsupported by single-dataset results.",
+      "RX.1": "The agent provides an excellent, dedicated \"Uncertainty disclosure\" section. It flags that its external knowledge (e.g., baseline scores, class imbalance stats) is from memory and should be verified. Crucially, it also discloses the assumptions behind its own critiques, such as the specific type of permutation test it assumes was used, which demonstrates a sophisticated understanding of its own reasoning's limitations.",
+      "RX.3": "The delegation was to \"Review this section.\" The agent provided a detailed, structured review of the provided text. The output is perfectly aligned with the request and does not drift into out-of-scope activities like rewriting the text or performing new analysis.",
+      "RX.4": "The output introduces no new errors or harms. On the contrary, it identifies multiple harmful patterns in the original artifact that could mislead readers or prevent reproducibility. These include the use of a misleading metric (accuracy on an imbalanced dataset), contradictory experimental details, and an overly broad generalization claim. The proposed fixes would significantly reduce downstream harm.",
+      "RX.5": "The agent's output is perfectly traceable. Every critique is explicitly linked back to a specific quote or claim in the source artifact. When the agent introduces external knowledge to form a critique, it clearly states the basis for that knowledge (e.g., conventions in the field, statistical arithmetic) and even discloses when that knowledge is from memory."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

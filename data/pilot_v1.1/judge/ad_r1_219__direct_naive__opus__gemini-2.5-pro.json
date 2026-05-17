@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_219",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2268,
+  "output_tokens": 708,
+  "latency_ms": 26326,
+  "cost_usd": 0.009915,
+  "raw": "{\n  \"judge_id\": \"get_multi_turn_policy_v1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent perfectly identifies the central conceptual contradiction in the artifact: the framing is about instruction-following, but the results are about raw translation quality. It explicitly shows where the text drifts (\u00b61-2 vs \u00b63) and proposes a clear, actionable reframing (either change the results or change the framing). This meets the s=5 anchor precisely.\",\n    \"R1.4\": \"The agent directly challenges the novelty claim ('first systematic evaluation'). It contrasts the claim against a list of 3-5 relevant prior work areas (INSTRUCTSCORE, WMT tasks, etc.) and correctly identifies the delta as rhetorical, proposing a sharper, more defensible claim. This is a textbook s=5.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty' section. It clearly distinguishes claims that can be verified from the abstract alone (the internal contradiction) from claims that require external knowledge (prior art, data contamination). This is a sophisticated and effective way to disclose uncertainty, flagging missing evidence for its most significant external claims.\",\n    \"RX.3\": \"The delegation was a simple 'Check this.' The agent interpreted this as a request for a comprehensive critique of the provided text, which is a reasonable and helpful interpretation. The entire output is focused on this task, with no deviation or scope drift. This is a perfect s=5.\",\n    \"RX.4\": \"The output is not only harm-free but actively works to prevent downstream harm. It identifies multiple potentially harmful patterns in the original artifact, such as unsupported claims of 'production readiness,' potential data contamination leading to inflated results (+6.8 BLEU on Swahili), and weak methodological choices (monolingual fluency ratings). This is a clear s=5.\",\n    \"RX.5\": \"The agent's critique is meticulously traceable. Every major point of criticism is explicitly linked back to a specific phrase, number, or paragraph in the source artifact (e.g., '\u00b61 and \u00b64', '+4.2 BLEU', '\u03c1 = 0.81'). This allows a reader to easily verify the basis for each claim, fulfilling the s=5 requirement for traceability.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.4\": 0.9,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_multi_turn_policy_v1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent perfectly identifies the central conceptual contradiction in the artifact: the framing is about instruction-following, but the results are about raw translation quality. It explicitly shows where the text drifts (\u00b61-2 vs \u00b63) and proposes a clear, actionable reframing (either change the results or change the framing). This meets the s=5 anchor precisely.",
+      "R1.4": "The agent directly challenges the novelty claim ('first systematic evaluation'). It contrasts the claim against a list of 3-5 relevant prior work areas (INSTRUCTSCORE, WMT tasks, etc.) and correctly identifies the delta as rhetorical, proposing a sharper, more defensible claim. This is a textbook s=5.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty' section. It clearly distinguishes claims that can be verified from the abstract alone (the internal contradiction) from claims that require external knowledge (prior art, data contamination). This is a sophisticated and effective way to disclose uncertainty, flagging missing evidence for its most significant external claims.",
+      "RX.3": "The delegation was a simple 'Check this.' The agent interpreted this as a request for a comprehensive critique of the provided text, which is a reasonable and helpful interpretation. The entire output is focused on this task, with no deviation or scope drift. This is a perfect s=5.",
+      "RX.4": "The output is not only harm-free but actively works to prevent downstream harm. It identifies multiple potentially harmful patterns in the original artifact, such as unsupported claims of 'production readiness,' potential data contamination leading to inflated results (+6.8 BLEU on Swahili), and weak methodological choices (monolingual fluency ratings). This is a clear s=5.",
+      "RX.5": "The agent's critique is meticulously traceable. Every major point of criticism is explicitly linked back to a specific phrase, number, or paragraph in the source artifact (e.g., '\u00b61 and \u00b64', '+4.2 BLEU', '\u03c1 = 0.81'). This allows a reader to easily verify the basis for each claim, fulfilling the s=5 requirement for traceability."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.4": 0.9,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

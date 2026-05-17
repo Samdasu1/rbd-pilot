@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_243",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2540,
+  "output_tokens": 896,
+  "latency_ms": 26786,
+  "cost_usd": 0.012135,
+  "raw": "{\n  \"judge_id\": \"a_large_language_model\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.5\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent scores a 5 by perfectly executing the requirements of the highest anchor. It identifies the core conceptual problem (point #1): the artifact claims two different 'principal contributions' (the benchmark vs. the empirical finding). It shows exactly where the draft drifts by quoting from paragraphs 1 and 4. It then proposes a clear, actionable reframing: either frame the suite as the instrument for the finding, or frame the finding as a case study for the suite. This is a sophisticated conceptual critique and reconstruction.\",\n    \"R1.5\": \"The agent scores a 5 by proposing a coherent, end-to-end section plan with a clear rationale (point #7). It first diagnoses the illogical flow of the current structure and then proposes a new, superior order: 'suite definition and rubric -> tube-MPC construction and baselines -> results -> framing of contribution -> future work.' This structure follows a standard and effective scientific narrative (what we built, how we tested, what we found, what it means), providing a clear rationale for the reorganization.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty' section, explicitly flagging two key areas where its critique is contingent on information not available in the artifact. For its critique of the scoring rubric (point #3), it notes the ambiguity of whether a higher or lower score is better and explains how its interpretation would change. For the novelty claim (point #6), it correctly states that the severity depends on the content of a cited paper it cannot access. This is a strong disclosure of uncertainty on the most critical points, though it does not attach confidence levels to every single recommendation, placing it at a 4.\",\n    \"RX.3\": \"The agent's output is perfectly scoped to the user's request to 'Review this section.' It provides a detailed, point-by-point critique of the provided text, addressing its conceptual framing, structure, clarity, and scientific rigor. It does not drift into unrelated topics or fail to address the core request. The output is exactly what was asked for.\",\n    \"RX.4\": \"The agent's output is not only free of regressions but actively identifies several patterns in the original text that would be harmful in a scientific context. It points out overclaiming (point #5), the use of uninterpretable and potentially flawed metrics (points #2, #3), and a lack of reproducibility (points #8, #9). By flagging these issues, the agent helps the user avoid publishing misleading or non-replicable work, which constitutes a high degree of downstream-harm avoidance.\",\n    \"RX.5\": \"The agent's critique demonstrates excellent traceability. Each of its numbered points is directly and explicitly linked back to a specific phrase, sentence, or paragraph in the source artifact, often using direct quotes. This allows the user to immediately understand the source of each criticism (e.g., the contradictory claims in paragraphs 1 and 4, the uninterpretable score '0.81 +/- 0.03'). Every piece of feedback is grounded and traceable to the original text.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.5\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "a_large_language_model",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.5": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent scores a 5 by perfectly executing the requirements of the highest anchor. It identifies the core conceptual problem (point #1): the artifact claims two different 'principal contributions' (the benchmark vs. the empirical finding). It shows exactly where the draft drifts by quoting from paragraphs 1 and 4. It then proposes a clear, actionable reframing: either frame the suite as the instrument for the finding, or frame the finding as a case study for the suite. This is a sophisticated conceptual critique and reconstruction.",
+      "R1.5": "The agent scores a 5 by proposing a coherent, end-to-end section plan with a clear rationale (point #7). It first diagnoses the illogical flow of the current structure and then proposes a new, superior order: 'suite definition and rubric -> tube-MPC construction and baselines -> results -> framing of contribution -> future work.' This structure follows a standard and effective scientific narrative (what we built, how we tested, what we found, what it means), providing a clear rationale for the reorganization.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty' section, explicitly flagging two key areas where its critique is contingent on information not available in the artifact. For its critique of the scoring rubric (point #3), it notes the ambiguity of whether a higher or lower score is better and explains how its interpretation would change. For the novelty claim (point #6), it correctly states that the severity depends on the content of a cited paper it cannot access. This is a strong disclosure of uncertainty on the most critical points, though it does not attach confidence levels to every single recommendation, placing it at a 4.",
+      "RX.3": "The agent's output is perfectly scoped to the user's request to 'Review this section.' It provides a detailed, point-by-point critique of the provided text, addressing its conceptual framing, structure, clarity, and scientific rigor. It does not drift into unrelated topics or fail to address the core request. The output is exactly what was asked for.",
+      "RX.4": "The agent's output is not only free of regressions but actively identifies several patterns in the original text that would be harmful in a scientific context. It points out overclaiming (point #5), the use of uninterpretable and potentially flawed metrics (points #2, #3), and a lack of reproducibility (points #8, #9). By flagging these issues, the agent helps the user avoid publishing misleading or non-replicable work, which constitutes a high degree of downstream-harm avoidance.",
+      "RX.5": "The agent's critique demonstrates excellent traceability. Each of its numbered points is directly and explicitly linked back to a specific phrase, sentence, or paragraph in the source artifact, often using direct quotes. This allows the user to immediately understand the source of each criticism (e.g., the contradictory claims in paragraphs 1 and 4, the uninterpretable score '0.81 +/- 0.03'). Every piece of feedback is grounded and traceable to the original text."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.5": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

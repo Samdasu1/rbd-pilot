@@ -19,13 +19,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1711,
-  "output_tokens": 2539,
-  "latency_ms": 38487,
-  "cost_usd": 0.084725,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"R1.3\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.1\": 5, \"R1.2\": 3, \"R1.3\": 3, \"R1.6\": 5, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 3, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.1\": \"The revision foregrounds the core tension (cost vs. commitment), keeps the CMDP training vs. deployment contrast, and clarifies that computational cost is not causal. It identifies drift (redundancy and muddled timing) and offers a tighter framing with clearer paragraph roles.\",\n    \"R1.2\": \"It preserves the argument chain and flags a key inconsistency (per-episode timing). However, the fix assumes per-step timing without evidence, leaving a residual potential inconsistency, so the engagement is localized rather than end-to-end.\",\n    \"R1.3\": \"The agent flags that the 10 ms figure likely isn't per-episode and calls for verification, but does not audit other quantitative claims (e.g., 99% commitment, 75\u201390% baseline) against Table 1; some wording changes assert universality without new support.\",\n    \"R1.6\": \"Reads as a careful copy edit: tighter sentences, parallel structure, standardized units/notation, clarified subject references, and removal of redundancy, with no loss of meaning.\",\n    \"RX.1\": \"Explicitly discloses uncertainty about the inference timing units and the term 'disjoint constraint landscape,' and requests verification. Not every change is accompanied by uncertainty bounds.\",\n    \"RX.3\": \"The output stays on the requested task\u2014cleaning up prose and logic\u2014without drifting into new analysis or content.\",\n    \"RX.4\": \"No harmful content introduced. Minor risk arises from inserting an unverified unit change into the revised text, though it is flagged in the uncertainty note.\",\n    \"RX.5\": \"Provides a 'Key changes' list with reasons for major edits and flags specific decisions; however, it does not annotate every non-cosmetic change line-by-line.\"\n  },\n  \"confidence\": {\"R1.1\": 0.75, \"R1.2\": 0.7, \"R1.3\": 0.65, \"R1.6\": 0.85, \"RX.1\": 0.7, \"RX.3\": 0.9, \"RX.4\": 0.75, \"RX.5\": 0.8},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 21372,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex_judge\",\"active_set_recognized\":[\"R1.1\",\"R1.2\",\"R1.3\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.1\":3,\"R1.2\":4,\"R1.3\":3,\"R1.6\":5,\"RX.1\":3,\"RX.3\":5,\"RX.4\":2,\"RX.5\":4},\"rationale\":{\"R1.1\":\"The output preserves and clarifies the main conceptual contrast between arbitrage, commitment enforcement, stale CMDP multipliers, and model-based guarantees, but it does not add a deeper reframing or prior-work-resilient conceptual reconstruction.\",\"R1.2\":\"It improves the argument chain and flags a timing inconsistency, with mostly minimal repairs. However, it does not fully walk every load-bearing dependency end-to-end, especially claim support from Table 1.\",\"R1.3\":\"It checks one important evidence-claim issue around inference timing units and asks for verification, but it does not audit all numerical claims against the referenced table or figures.\",\"R1.6\":\"The revised prose is substantially cleaner, more parallel, and more concise while preserving meaning except for the noted timing-unit risk.\",\"RX.1\":\"It discloses uncertainty about the timing unit and terminology, but not for each substantive recommendation or edit.\",\"RX.3\":\"The output stays within the requested cleanup task and addresses the supplied artifact without expanding into unrelated dimensions.\",\"RX.4\":\"The change from 'per episode' to 'per step' may introduce an unsupported factual alteration, even though the output flags it for verification. That is a potential regression in a load-bearing numerical claim.\",\"RX.5\":\"Major edits are explained in the key changes and uncertainty notes, but not every non-cosmetic change is fully annotated with source and reason.\"},\"confidence\":{\"R1.1\":0.82,\"R1.2\":0.84,\"R1.3\":0.86,\"R1.6\":0.9,\"RX.1\":0.88,\"RX.3\":0.9,\"RX.4\":0.87,\"RX.5\":0.84},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex_judge",
     "active_set_recognized": [
       "R1.1",
       "R1.2",
@@ -37,34 +37,34 @@
       "RX.5"
     ],
     "scores": {
-      "R1.1": 5,
-      "R1.2": 3,
+      "R1.1": 3,
+      "R1.2": 4,
       "R1.3": 3,
       "R1.6": 5,
       "RX.1": 3,
       "RX.3": 5,
-      "RX.4": 3,
-      "RX.5": 3
+      "RX.4": 2,
+      "RX.5": 4
     },
     "rationale": {
-      "R1.1": "The revision foregrounds the core tension (cost vs. commitment), keeps the CMDP training vs. deployment contrast, and clarifies that computational cost is not causal. It identifies drift (redundancy and muddled timing) and offers a tighter framing with clearer paragraph roles.",
-      "R1.2": "It preserves the argument chain and flags a key inconsistency (per-episode timing). However, the fix assumes per-step timing without evidence, leaving a residual potential inconsistency, so the engagement is localized rather than end-to-end.",
-      "R1.3": "The agent flags that the 10 ms figure likely isn't per-episode and calls for verification, but does not audit other quantitative claims (e.g., 99% commitment, 75\u201390% baseline) against Table 1; some wording changes assert universality without new support.",
-      "R1.6": "Reads as a careful copy edit: tighter sentences, parallel structure, standardized units/notation, clarified subject references, and removal of redundancy, with no loss of meaning.",
-      "RX.1": "Explicitly discloses uncertainty about the inference timing units and the term 'disjoint constraint landscape,' and requests verification. Not every change is accompanied by uncertainty bounds.",
-      "RX.3": "The output stays on the requested task\u2014cleaning up prose and logic\u2014without drifting into new analysis or content.",
-      "RX.4": "No harmful content introduced. Minor risk arises from inserting an unverified unit change into the revised text, though it is flagged in the uncertainty note.",
-      "RX.5": "Provides a 'Key changes' list with reasons for major edits and flags specific decisions; however, it does not annotate every non-cosmetic change line-by-line."
+      "R1.1": "The output preserves and clarifies the main conceptual contrast between arbitrage, commitment enforcement, stale CMDP multipliers, and model-based guarantees, but it does not add a deeper reframing or prior-work-resilient conceptual reconstruction.",
+      "R1.2": "It improves the argument chain and flags a timing inconsistency, with mostly minimal repairs. However, it does not fully walk every load-bearing dependency end-to-end, especially claim support from Table 1.",
+      "R1.3": "It checks one important evidence-claim issue around inference timing units and asks for verification, but it does not audit all numerical claims against the referenced table or figures.",
+      "R1.6": "The revised prose is substantially cleaner, more parallel, and more concise while preserving meaning except for the noted timing-unit risk.",
+      "RX.1": "It discloses uncertainty about the timing unit and terminology, but not for each substantive recommendation or edit.",
+      "RX.3": "The output stays within the requested cleanup task and addresses the supplied artifact without expanding into unrelated dimensions.",
+      "RX.4": "The change from 'per episode' to 'per step' may introduce an unsupported factual alteration, even though the output flags it for verification. That is a potential regression in a load-bearing numerical claim.",
+      "RX.5": "Major edits are explained in the key changes and uncertainty notes, but not every non-cosmetic change is fully annotated with source and reason."
     },
     "confidence": {
-      "R1.1": 0.75,
-      "R1.2": 0.7,
-      "R1.3": 0.65,
-      "R1.6": 0.85,
-      "RX.1": 0.7,
+      "R1.1": 0.82,
+      "R1.2": 0.84,
+      "R1.3": 0.86,
+      "R1.6": 0.9,
+      "RX.1": 0.88,
       "RX.3": 0.9,
-      "RX.4": 0.75,
-      "RX.5": 0.8
+      "RX.4": 0.87,
+      "RX.5": 0.84
     },
     "blockers": []
   },

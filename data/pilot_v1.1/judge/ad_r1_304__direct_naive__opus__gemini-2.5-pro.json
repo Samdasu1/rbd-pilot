@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_304",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2109,
+  "output_tokens": 546,
+  "latency_ms": 22854,
+  "cost_usd": 0.008096,
+  "raw": "{\n  \"judge_id\": \"get_folder_name_from_env\",\n  \"active_set_recognized\": [\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.7\": \"The agent audits every citation. It correctly identifies multiple errors, including a likely fabricated citation ('Kowalski et al. 2019') and a misattributed one ('Gray and Suri, 2019'). For these, it provides specific, high-quality replacement suggestions with bibliographic precision, meeting the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states its limitations (no web access) and explicitly assigns confidence levels to its findings (e.g., 'confidently correct,' 'confidently problematic,' 'should be cross-checked'), which aligns with the s=5 anchor of marking confidence for its recommendations.\",\n    \"RX.3\": \"The delegation was to 'Check the citations.' The agent's output is a point-by-point audit of the citations and nothing else. It adheres perfectly to the requested scope, earning a score of 5.\",\n    \"RX.4\": \"The output is free of errors and regressions. It improves the original by identifying a harmful pattern: a fabricated citation ('Kowalski et al. 2019') that would damage the credibility of the work. This meets the s=5 anchor.\",\n    \"RX.5\": \"The output is an audit, not a rewrite. Every recommendation for change is explicitly tied to a specific citation in the original text and is justified with a clear reason and, where applicable, a traceable bibliographic source for the correction or suggestion. This aligns with the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_folder_name_from_env",
+    "active_set_recognized": [
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.7": "The agent audits every citation. It correctly identifies multiple errors, including a likely fabricated citation ('Kowalski et al. 2019') and a misattributed one ('Gray and Suri, 2019'). For these, it provides specific, high-quality replacement suggestions with bibliographic precision, meeting the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states its limitations (no web access) and explicitly assigns confidence levels to its findings (e.g., 'confidently correct,' 'confidently problematic,' 'should be cross-checked'), which aligns with the s=5 anchor of marking confidence for its recommendations.",
+      "RX.3": "The delegation was to 'Check the citations.' The agent's output is a point-by-point audit of the citations and nothing else. It adheres perfectly to the requested scope, earning a score of 5.",
+      "RX.4": "The output is free of errors and regressions. It improves the original by identifying a harmful pattern: a fabricated citation ('Kowalski et al. 2019') that would damage the credibility of the work. This meets the s=5 anchor.",
+      "RX.5": "The output is an audit, not a rewrite. Every recommendation for change is explicitly tied to a specific citation in the original text and is justified with a clear reason and, where applicable, a traceable bibliographic source for the correction or suggestion. This aligns with the s=5 anchor."
+    },
+    "confidence": {
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

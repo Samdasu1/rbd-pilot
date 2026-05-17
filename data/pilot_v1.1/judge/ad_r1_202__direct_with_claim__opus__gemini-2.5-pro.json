@@ -1,0 +1,71 @@
+{
+  "example_id": "ad_r1_202",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2367,
+  "output_tokens": 873,
+  "latency_ms": 31162,
+  "cost_usd": 0.011689,
+  "raw": "{\n  \"judge_id\": \"8\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every significant claim in the artifact. It flags the headline '1.4x improvement' claim by pointing out it's a cross-dataset comparison, challenges the fairness of the 'cost-adjusted F1' metric for the baseline, and identifies an internal inconsistency in the project timeline. This is equivalent to auditing every load-bearing claim against a table in a text-only context.\",\n    \"R1.4\": \"The agent provides an exemplary novelty assessment. It moves beyond the single baseline offered in the text to map the work against the dominant benchmarks in the field (PLAsTiCC, ELASTiCC) and the entire ecosystem of relevant broker systems (ALeRCE, ANTARES, etc.). It then precisely articulates the likely sharp delta (joint cost+accuracy evaluation) versus the currently unsupported rhetorical one.\",\n    \"R1.7\": \"The agent's engagement with scholarship is deep. It audits the single provided citation, flagging the choice of an older (2019) paper over a more relevant follow-up (2021) from the same authors. It also flags the omission of multiple key works (PLAsTiCC, ELASTiCC) with enough bibliographic detail (Kessler et al. 2019) to be precise.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states which facts it has not independently verified (e.g., F1 figures from the cited papers, the exact baseline architecture) and recommends checking them. This is a strong disclosure, falling short of a 5 only because the uncertainty is noted for the output as a whole rather than being attached to each specific recommendation.\",\n    \"RX.3\": \"The agent's output is a detailed critique of the provided artifact. This is a reasonable and well-scoped interpretation of the simple delegation 'Check this.' The output is entirely focused on the artifact and does not drift into unrelated topics, perfectly adhering to the implied scope.\",\n    \"RX.4\": \"The agent's output identifies and corrects several patterns in the original text that are harmful in a scientific context, such as cherry-picking a weaker baseline, making a misleading cross-dataset comparison, and omitting key prior work. By flagging these issues, the agent avoids regressions and actively works to prevent the downstream harm of publishing a flawed or misleading scientific claim.\",\n    \"RX.5\": \"The agent's output is highly traceable. Each point of critique is explicitly linked back to a specific claim, phrase, or paragraph in the source artifact. For example, the critique of the baseline choice is tied to the paragraph discussing Carrasco-Davis et al., and the critique of the novelty claim is tied to the sentence asserting it is the 'first benchmark'. The reasoning for each point is clear and directly connected to the source text.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "8",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every significant claim in the artifact. It flags the headline '1.4x improvement' claim by pointing out it's a cross-dataset comparison, challenges the fairness of the 'cost-adjusted F1' metric for the baseline, and identifies an internal inconsistency in the project timeline. This is equivalent to auditing every load-bearing claim against a table in a text-only context.",
+      "R1.4": "The agent provides an exemplary novelty assessment. It moves beyond the single baseline offered in the text to map the work against the dominant benchmarks in the field (PLAsTiCC, ELASTiCC) and the entire ecosystem of relevant broker systems (ALeRCE, ANTARES, etc.). It then precisely articulates the likely sharp delta (joint cost+accuracy evaluation) versus the currently unsupported rhetorical one.",
+      "R1.7": "The agent's engagement with scholarship is deep. It audits the single provided citation, flagging the choice of an older (2019) paper over a more relevant follow-up (2021) from the same authors. It also flags the omission of multiple key works (PLAsTiCC, ELASTiCC) with enough bibliographic detail (Kessler et al. 2019) to be precise.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states which facts it has not independently verified (e.g., F1 figures from the cited papers, the exact baseline architecture) and recommends checking them. This is a strong disclosure, falling short of a 5 only because the uncertainty is noted for the output as a whole rather than being attached to each specific recommendation.",
+      "RX.3": "The agent's output is a detailed critique of the provided artifact. This is a reasonable and well-scoped interpretation of the simple delegation 'Check this.' The output is entirely focused on the artifact and does not drift into unrelated topics, perfectly adhering to the implied scope.",
+      "RX.4": "The agent's output identifies and corrects several patterns in the original text that are harmful in a scientific context, such as cherry-picking a weaker baseline, making a misleading cross-dataset comparison, and omitting key prior work. By flagging these issues, the agent avoids regressions and actively works to prevent the downstream harm of publishing a flawed or misleading scientific claim.",
+      "RX.5": "The agent's output is highly traceable. Each point of critique is explicitly linked back to a specific claim, phrase, or paragraph in the source artifact. For example, the critique of the baseline choice is tied to the paragraph discussing Carrasco-Davis et al., and the critique of the novelty claim is tied to the sentence asserting it is the 'first benchmark'. The reasoning for each point is clear and directly connected to the source text."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

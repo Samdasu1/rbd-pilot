@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_282",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2815,
+  "output_tokens": 811,
+  "latency_ms": 20189,
+  "cost_usd": 0.011629,
+  "raw": "{\n  \"judge_id\": \"80\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent identifies a major conceptual drift in the final paragraph, where the paper's contribution is reframed from a 'query router' to a 'query-difficulty estimator'. The agent correctly flags this as a significant, unsupported repositioning and proposes a clear reframing: either commit to the original frame or restructure the paper. This names the load-bearing concept (the paper's contribution), shows the drift, and proposes a robust reframing, meeting the s=5 anchor.\",\n    \"R1.2\": \"The agent's primary finding is a blocking self-contradiction between \u00a73.1 (router does not probe local model) and \u00a73.3 (local model's logits are the dominant signal). It walks the logical chain of this inconsistency to its core impact on the paper's efficiency claims and proposes a minimal repair. It also flags multiple other load-bearing inconsistencies, such as the mismatch between 'answer quality' claims and retrieval metrics (nDCG), and the ambiguity in cost and performance reporting. This is a textbook example of an end-to-end consistency check.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states that it cannot resolve the central contradiction from the text alone and that its suggested rewrite is based on an inference about which claim is more likely to be correct. It also flags that a reference in its rewrite ('row 3') is a placeholder because it lacks the full context of Table 2. This is a perfect example of marking confidence and missing evidence for its key recommendations.\",\n    \"RX.3\": \"The user requested help with a specific section of text. The agent's output is a detailed critique and rewrite suggestion focused exclusively on that provided artifact. It does not drift to other topics or analyze anything outside the requested scope. The output covers exactly the agreed-upon task.\",\n    \"RX.4\": \"The agent's output is not only harm-free but actively works to prevent downstream harm. It identifies a critical self-contradiction, ambiguous claims, and conceptual scope creep that, if left unaddressed, would severely damage the credibility of the research paper. The proposed revisions increase clarity, precision, and honesty, thereby preventing the user from publishing a flawed or misleading document.\",\n    \"RX.5\": \"Every point of critique and every suggested change is meticulously traced back to a specific phrase or claim in the original artifact. For example, the agent quotes or references specific sentences from \u00a73.1, \u00a73.2, and \u00a73.3 to ground its arguments. The proposed rewrite is explicitly constructed to resolve the issues identified in the critique, making the reason for every non-cosmetic change perfectly clear.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "80",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent identifies a major conceptual drift in the final paragraph, where the paper's contribution is reframed from a 'query router' to a 'query-difficulty estimator'. The agent correctly flags this as a significant, unsupported repositioning and proposes a clear reframing: either commit to the original frame or restructure the paper. This names the load-bearing concept (the paper's contribution), shows the drift, and proposes a robust reframing, meeting the s=5 anchor.",
+      "R1.2": "The agent's primary finding is a blocking self-contradiction between \u00a73.1 (router does not probe local model) and \u00a73.3 (local model's logits are the dominant signal). It walks the logical chain of this inconsistency to its core impact on the paper's efficiency claims and proposes a minimal repair. It also flags multiple other load-bearing inconsistencies, such as the mismatch between 'answer quality' claims and retrieval metrics (nDCG), and the ambiguity in cost and performance reporting. This is a textbook example of an end-to-end consistency check.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states that it cannot resolve the central contradiction from the text alone and that its suggested rewrite is based on an inference about which claim is more likely to be correct. It also flags that a reference in its rewrite ('row 3') is a placeholder because it lacks the full context of Table 2. This is a perfect example of marking confidence and missing evidence for its key recommendations.",
+      "RX.3": "The user requested help with a specific section of text. The agent's output is a detailed critique and rewrite suggestion focused exclusively on that provided artifact. It does not drift to other topics or analyze anything outside the requested scope. The output covers exactly the agreed-upon task.",
+      "RX.4": "The agent's output is not only harm-free but actively works to prevent downstream harm. It identifies a critical self-contradiction, ambiguous claims, and conceptual scope creep that, if left unaddressed, would severely damage the credibility of the research paper. The proposed revisions increase clarity, precision, and honesty, thereby preventing the user from publishing a flawed or misleading document.",
+      "RX.5": "Every point of critique and every suggested change is meticulously traced back to a specific phrase or claim in the original artifact. For example, the agent quotes or references specific sentences from \u00a73.1, \u00a73.2, and \u00a73.3 to ground its arguments. The proposed rewrite is explicitly constructed to resolve the issues identified in the critique, making the reason for every non-cosmetic change perfectly clear."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_111",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2395,
+  "output_tokens": 687,
+  "latency_ms": 25086,
+  "cost_usd": 0.009864,
+  "raw": "{\n  \"judge_id\": \"chatgpt4_turbo_20240409\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's entire analysis is built on a meticulous audit of the claims versus the evidence presented in the artifact. It correctly identifies that the main narrative claim ('PanelEval substantially outperforms the single-judge baseline') is directly contradicted by the reported numbers (Spearman rho: 0.58 vs 0.71; ECE: 0.19 vs 0.07). It also flags the unsupported causal attribution claim about 'three-model heterogeneity.' This is a perfect example of auditing every load-bearing claim.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. In it, it explicitly states that it has not verified the source of the contradiction (prose vs. a hypothetical Table 2) and that it is taking other numerical claims (like Krippendorff's alpha) at face value without external verification. This clearly marks the boundaries of its analysis and flags missing evidence for its own audit, fully aligning with the s=5 anchor.\",\n    \"RX.3\": \"The user's prompt was a broad 'What do you think?'. The agent interpreted this as a request for a critical review of the provided scientific text. It delivered exactly that, focusing its entire output on analyzing the artifact's strengths and (mostly) weaknesses. It did not drift to other topics or fail to address the core content of the artifact. The output covers the requested scope perfectly.\",\n    \"RX.4\": \"The agent identifies a critical, potentially harmful flaw in the original artifact\u2014a conclusion that is the opposite of what the data shows. By flagging this and providing concrete, corrected rewrites, the agent actively prevents the downstream harm of publishing misleading research. The agent's output introduces no new errors and represents a significant improvement in factual accuracy and scientific integrity over the original.\",\n    \"RX.5\": \"The agent's critique is exceptionally well-traced. Every point it makes is directly linked back to a specific quote or number from the source artifact. For example, it quotes the exact performance metrics and the exact contradictory claims from the text. This makes it easy to follow the agent's reasoning and verify its analysis against the source, demonstrating excellent provenance.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "chatgpt4_turbo_20240409",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's entire analysis is built on a meticulous audit of the claims versus the evidence presented in the artifact. It correctly identifies that the main narrative claim ('PanelEval substantially outperforms the single-judge baseline') is directly contradicted by the reported numbers (Spearman rho: 0.58 vs 0.71; ECE: 0.19 vs 0.07). It also flags the unsupported causal attribution claim about 'three-model heterogeneity.' This is a perfect example of auditing every load-bearing claim.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. In it, it explicitly states that it has not verified the source of the contradiction (prose vs. a hypothetical Table 2) and that it is taking other numerical claims (like Krippendorff's alpha) at face value without external verification. This clearly marks the boundaries of its analysis and flags missing evidence for its own audit, fully aligning with the s=5 anchor.",
+      "RX.3": "The user's prompt was a broad 'What do you think?'. The agent interpreted this as a request for a critical review of the provided scientific text. It delivered exactly that, focusing its entire output on analyzing the artifact's strengths and (mostly) weaknesses. It did not drift to other topics or fail to address the core content of the artifact. The output covers the requested scope perfectly.",
+      "RX.4": "The agent identifies a critical, potentially harmful flaw in the original artifact\u2014a conclusion that is the opposite of what the data shows. By flagging this and providing concrete, corrected rewrites, the agent actively prevents the downstream harm of publishing misleading research. The agent's output introduces no new errors and represents a significant improvement in factual accuracy and scientific integrity over the original.",
+      "RX.5": "The agent's critique is exceptionally well-traced. Every point it makes is directly linked back to a specific quote or number from the source artifact. For example, it quotes the exact performance metrics and the exact contradictory claims from the text. This makes it easy to follow the agent's reasoning and verify its analysis against the source, demonstrating excellent provenance."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

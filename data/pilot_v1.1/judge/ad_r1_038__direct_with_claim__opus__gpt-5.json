@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1523,
-  "output_tokens": 3794,
-  "latency_ms": 48673,
-  "cost_usd": 0.121435,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 5, \"R1.6\": 5, \"RX.1\": 3, \"RX.3\": 3, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"The revision preserves all core claims (performance figures, mechanisms, limitations) and removes a redundant sentence without introducing contradictions. Argument flow is tightened (results \u2192 mechanism \u2192 limitations \u2192 future work) and remains logically coherent end-to-end.\",\n    \"R1.6\": \"Prose is concise, well-structured, and consistently toned. Sentences are clarified, redundancy removed, and paragraphs grouped logically. No grammar or register issues and meaning is preserved.\",\n    \"RX.1\": \"Uncertainty is acknowledged via explicit limitations (simulated dynamics, hyperparameter tuning limits, unmodeled degradation, heterogeneity) and an open problem is clearly flagged. However, no per-claim confidence or missing-evidence markers are provided.\",\n    \"RX.3\": \"The response fulfills the 'clean this up' brief with a revised conclusion and a brief change log. Minor drift appears in the added 'covered_dims' metadata not requested by the task.\",\n    \"RX.4\": \"No harmful content or new errors introduced; the note to reconcile figures if they differ elsewhere further reduces risk of misstatement.\",\n    \"RX.5\": \"Provides a high-level 'Changes made' section mapping major edits and intentions, but does not annotate each non-cosmetic change with precise source locations or detailed justifications.\"\n  },\n  \"confidence\": {\"R1.2\": 0.86, \"R1.6\": 0.86, \"RX.1\": 0.71, \"RX.3\": 0.74, \"RX.4\": 0.84, \"RX.5\": 0.75},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 21737,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex\",\"active_set_recognized\":[\"R1.2\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":4,\"R1.6\":5,\"RX.1\":2,\"RX.3\":3,\"RX.4\":4,\"RX.5\":3},\"rationale\":{\"R1.2\":\"The revision preserves the main argument chain and improves ordering from headline result to mechanism, limitations, and future work. It does not explicitly audit every load-bearing consistency issue, and one deletion is justified as implied rather than fully checked.\",\"R1.6\":\"The prose is substantially cleaner, more coherent, and consistently registered, with redundancy reduced and paragraph structure improved without obvious meaning loss.\",\"RX.1\":\"Uncertainty is disclosed only in a broad final caveat about numerical claims and in the retained open-question framing. Recommendations and edits are not individually marked with confidence or missing evidence.\",\"RX.3\":\"The output mostly performs the requested cleanup, but its self-reported covered dimensions include an out-of-scope key and omit several active dimensions, indicating some scope drift.\",\"RX.4\":\"The rewrite appears harm-free and likely reduces downstream confusion by grouping limitations and mechanism claims. The removal of the rolling-protocol sentence may be a minor regression if that fact needed explicit preservation.\",\"RX.5\":\"Major structural changes are summarized with reasons, but individual non-cosmetic edits are not fully annotated with source and rationale.\"},\"confidence\":{\"R1.2\":0.82,\"R1.6\":0.9,\"RX.1\":0.86,\"RX.3\":0.8,\"RX.4\":0.75,\"RX.5\":0.83},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex",
     "active_set_recognized": [
       "R1.2",
       "R1.6",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.2": 5,
+      "R1.2": 4,
       "R1.6": 5,
-      "RX.1": 3,
+      "RX.1": 2,
       "RX.3": 3,
-      "RX.4": 5,
+      "RX.4": 4,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "The revision preserves all core claims (performance figures, mechanisms, limitations) and removes a redundant sentence without introducing contradictions. Argument flow is tightened (results \u2192 mechanism \u2192 limitations \u2192 future work) and remains logically coherent end-to-end.",
-      "R1.6": "Prose is concise, well-structured, and consistently toned. Sentences are clarified, redundancy removed, and paragraphs grouped logically. No grammar or register issues and meaning is preserved.",
-      "RX.1": "Uncertainty is acknowledged via explicit limitations (simulated dynamics, hyperparameter tuning limits, unmodeled degradation, heterogeneity) and an open problem is clearly flagged. However, no per-claim confidence or missing-evidence markers are provided.",
-      "RX.3": "The response fulfills the 'clean this up' brief with a revised conclusion and a brief change log. Minor drift appears in the added 'covered_dims' metadata not requested by the task.",
-      "RX.4": "No harmful content or new errors introduced; the note to reconcile figures if they differ elsewhere further reduces risk of misstatement.",
-      "RX.5": "Provides a high-level 'Changes made' section mapping major edits and intentions, but does not annotate each non-cosmetic change with precise source locations or detailed justifications."
+      "R1.2": "The revision preserves the main argument chain and improves ordering from headline result to mechanism, limitations, and future work. It does not explicitly audit every load-bearing consistency issue, and one deletion is justified as implied rather than fully checked.",
+      "R1.6": "The prose is substantially cleaner, more coherent, and consistently registered, with redundancy reduced and paragraph structure improved without obvious meaning loss.",
+      "RX.1": "Uncertainty is disclosed only in a broad final caveat about numerical claims and in the retained open-question framing. Recommendations and edits are not individually marked with confidence or missing evidence.",
+      "RX.3": "The output mostly performs the requested cleanup, but its self-reported covered dimensions include an out-of-scope key and omit several active dimensions, indicating some scope drift.",
+      "RX.4": "The rewrite appears harm-free and likely reduces downstream confusion by grouping limitations and mechanism claims. The removal of the rolling-protocol sentence may be a minor regression if that fact needed explicit preservation.",
+      "RX.5": "Major structural changes are summarized with reasons, but individual non-cosmetic edits are not fully annotated with source and rationale."
     },
     "confidence": {
-      "R1.2": 0.86,
-      "R1.6": 0.86,
-      "RX.1": 0.71,
-      "RX.3": 0.74,
-      "RX.4": 0.84,
-      "RX.5": 0.75
+      "R1.2": 0.82,
+      "R1.6": 0.9,
+      "RX.1": 0.86,
+      "RX.3": 0.8,
+      "RX.4": 0.75,
+      "RX.5": 0.83
     },
     "blockers": []
   },

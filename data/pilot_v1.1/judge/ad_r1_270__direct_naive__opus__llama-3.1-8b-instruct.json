@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_270",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "llama-3.1-8b-instruct",
+  "judge_family": "meta",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2263,
+  "output_tokens": 526,
+  "latency_ms": 68527,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"...\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent correctly identifies multiple potential causes for the observed variance, including early nondeterministic ops, attention kernels, and cuBLAS algorithm selection heuristics. The only issue is that it does not provide a clear causal link between the dispatcher's batch-formation policy and the observed variance.\",\n    \"R1.3\": \"The agent correctly points out that the two results (62% ODR reduction and 4\u00d7 BLEU variance reduction) are not mutually confirming, but rather separate pieces of evidence. However, it does not provide a clear explanation for why the BLEU result is secondary to the ODR result.\",\n    \"RX.1\": \"The agent correctly identifies uncertainty in its claims about specific kernels being plausible alternative sources of nondeterminism. It also acknowledges that whether a batch-size-1 ablation would eliminate the variance is an empirical question it cannot answer from the paragraph.\",\n    \"RX.3\": \"The agent correctly points out that the recommendation 'drop-in fix for practitioners' is broader than the evidence, but does not provide a clear explanation for why this is the case or how to narrow the recommendation.\",\n    \"RX.4\": \"The agent correctly identifies the issue with the phrase 'near-deterministic', but does not provide a clear solution or recommendation for how to address it.\",\n    \"RX.5\": \"The agent correctly points out that the mechanism story is internally shaky, and that running with batch size 1 (or fixed batch composition) should already eliminate the variance if the dispatcher's batch-formation policy is indeed the cause.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.3\": 0.8,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.7,\n    \"RX.4\": 0.85,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "...",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent correctly identifies multiple potential causes for the observed variance, including early nondeterministic ops, attention kernels, and cuBLAS algorithm selection heuristics. The only issue is that it does not provide a clear causal link between the dispatcher's batch-formation policy and the observed variance.",
+      "R1.3": "The agent correctly points out that the two results (62% ODR reduction and 4\u00d7 BLEU variance reduction) are not mutually confirming, but rather separate pieces of evidence. However, it does not provide a clear explanation for why the BLEU result is secondary to the ODR result.",
+      "RX.1": "The agent correctly identifies uncertainty in its claims about specific kernels being plausible alternative sources of nondeterminism. It also acknowledges that whether a batch-size-1 ablation would eliminate the variance is an empirical question it cannot answer from the paragraph.",
+      "RX.3": "The agent correctly points out that the recommendation 'drop-in fix for practitioners' is broader than the evidence, but does not provide a clear explanation for why this is the case or how to narrow the recommendation.",
+      "RX.4": "The agent correctly identifies the issue with the phrase 'near-deterministic', but does not provide a clear solution or recommendation for how to address it.",
+      "RX.5": "The agent correctly points out that the mechanism story is internally shaky, and that running with batch size 1 (or fixed batch composition) should already eliminate the variance if the dispatcher's batch-formation policy is indeed the cause."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.3": 0.8,
+      "RX.1": 0.95,
+      "RX.3": 0.7,
+      "RX.4": 0.85,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

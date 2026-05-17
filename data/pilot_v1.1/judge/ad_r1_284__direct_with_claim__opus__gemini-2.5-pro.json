@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_284",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2464,
+  "output_tokens": 899,
+  "latency_ms": 27627,
+  "cost_usd": 0.01207,
+  "raw": "{\n  \"judge_id\": \"metaculus_pallas_cat\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the artifact's argument chain from end to end, identifying multiple load-bearing inconsistencies. Its primary finding (Point 1) is a direct contradiction between the diagnostic section (confidence is a difficulty estimate) and the conclusion (confidence is a correctness estimate). It also flags a weak causal inference (Point 5) and an unsupported logical connective ('thus' in Point 7). The proposed repairs are minimal and constructive, such as rewriting the conclusion or performing a partial correlation analysis. This perfectly matches the s=5 anchor.\",\n    \"R1.3\": \"The agent audits every significant claim in the artifact against the evidence provided. It correctly flags that the reported ECE numbers do not support the claim of 'maintaining calibration' under distribution shift (Point 2). It identifies multiple, specific instances of generalization far beyond the evidence in the closing paragraph (e.g., 'model-agnostic', 'any language') when only one model and language were tested (Point 4). It also astutely notes the tension between the aggregate ECE and the per-bin errors, correctly inferring that this implies something important and unstated about the data distribution (Point 3). This is a comprehensive audit.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that is both precise and insightful. It correctly identifies that its claim about sparse bin populations is a 'plausible reconstruction rather than a verified fact' because the artifact omits the necessary evidence (bin masses). It also qualifies its characterization of the out-of-distribution dataset, acknowledging that the full paper might frame it differently. This demonstrates a clear understanding of the limits of its own analysis based on the provided text, fully meeting the s=5 standard.\",\n    \"RX.3\": \"The user requested a review of a single paragraph. The agent's output is a detailed critique focused exclusively on the content of that paragraph. It does not drift into unrelated topics or analyze anything outside the provided artifact. The output covers exactly the agreed-upon scope.\",\n    \"RX.4\": \"The agent's output is a model of downstream-harm avoidance. It introduces no new errors or fabrications. More importantly, it identifies a potentially harmful pattern in the original artifact: a concluding recommendation that directly contradicts the paper's own diagnostic findings. By flagging this, the agent's critique could prevent practitioners from misinterpreting the abstract and misusing the proposed technique. The critique is constructive and aimed at improving the scientific rigor of the original work.\",\n    \"RX.5\": \"The agent's critique demonstrates perfect traceability. Every point it makes is explicitly tied back to a specific quote, paraphrase, or numerical value from the source artifact. For example, in Point 1, it directly contrasts the phrases 'property of the prompt' and 'signal of program correctness'. In Point 2, it links the claim 'maintains calibration' to the specific numbers '0.041 -> 0.058'. This allows a reader to easily verify every one of the agent's criticisms against the original text.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.95,\n    \"R1.3\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "metaculus_pallas_cat",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the artifact's argument chain from end to end, identifying multiple load-bearing inconsistencies. Its primary finding (Point 1) is a direct contradiction between the diagnostic section (confidence is a difficulty estimate) and the conclusion (confidence is a correctness estimate). It also flags a weak causal inference (Point 5) and an unsupported logical connective ('thus' in Point 7). The proposed repairs are minimal and constructive, such as rewriting the conclusion or performing a partial correlation analysis. This perfectly matches the s=5 anchor.",
+      "R1.3": "The agent audits every significant claim in the artifact against the evidence provided. It correctly flags that the reported ECE numbers do not support the claim of 'maintaining calibration' under distribution shift (Point 2). It identifies multiple, specific instances of generalization far beyond the evidence in the closing paragraph (e.g., 'model-agnostic', 'any language') when only one model and language were tested (Point 4). It also astutely notes the tension between the aggregate ECE and the per-bin errors, correctly inferring that this implies something important and unstated about the data distribution (Point 3). This is a comprehensive audit.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that is both precise and insightful. It correctly identifies that its claim about sparse bin populations is a 'plausible reconstruction rather than a verified fact' because the artifact omits the necessary evidence (bin masses). It also qualifies its characterization of the out-of-distribution dataset, acknowledging that the full paper might frame it differently. This demonstrates a clear understanding of the limits of its own analysis based on the provided text, fully meeting the s=5 standard.",
+      "RX.3": "The user requested a review of a single paragraph. The agent's output is a detailed critique focused exclusively on the content of that paragraph. It does not drift into unrelated topics or analyze anything outside the provided artifact. The output covers exactly the agreed-upon scope.",
+      "RX.4": "The agent's output is a model of downstream-harm avoidance. It introduces no new errors or fabrications. More importantly, it identifies a potentially harmful pattern in the original artifact: a concluding recommendation that directly contradicts the paper's own diagnostic findings. By flagging this, the agent's critique could prevent practitioners from misinterpreting the abstract and misusing the proposed technique. The critique is constructive and aimed at improving the scientific rigor of the original work.",
+      "RX.5": "The agent's critique demonstrates perfect traceability. Every point it makes is explicitly tied back to a specific quote, paraphrase, or numerical value from the source artifact. For example, in Point 1, it directly contrasts the phrases 'property of the prompt' and 'signal of program correctness'. In Point 2, it links the claim 'maintains calibration' to the specific numbers '0.041 -> 0.058'. This allows a reader to easily verify every one of the agent's criticisms against the original text."
+    },
+    "confidence": {
+      "R1.2": 0.95,
+      "R1.3": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

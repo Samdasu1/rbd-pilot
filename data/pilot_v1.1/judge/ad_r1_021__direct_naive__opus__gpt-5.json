@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1678,
-  "output_tokens": 2087,
-  "latency_ms": 28269,
-  "cost_usd": 0.071,
-  "raw": "{\n  \"judge_id\": \"responsibility_bearing_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.4\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 1,\n    \"R1.6\": 5,\n    \"RX.1\": 3,\n    \"RX.3\": 3,\n    \"RX.4\": 3,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.2\": \"Thoroughly identifies the key framing inconsistency (per-query vs per-session, 'unified' claim) and proposes minimal, targeted repairs. Also flags evaluation vagueness and staleness ambiguity without overreach. Revised text is internally consistent with the described architecture.\",\n    \"R1.4\": \"No comparison to prior systems or related work; novelty is neither assessed nor contrasted. Focus remains on internal consistency and copy-editing.\",\n    \"R1.6\": \"Reads as a careful copy-edit: tighter prose, removed redundancy, consistent register, and clearer terminology. Meaning retained while improving flow and precision.\",\n    \"RX.1\": \"Notes that no external facts were asserted and flags uncertain areas (staleness bound, evaluation context), but does not systematically annotate confidence per claim and introduces 'typically a few seconds' without explicit evidence.\",\n    \"RX.3\": \"Task was 'Clean this up.' The agent delivers a clean revision but also adds a recommendations section, which modestly expands scope beyond pure copy-editing.\",\n    \"RX.4\": \"Avoids harmful content and corrects overclaims, but introduces a minor potential regression by characterizing staleness as 'typically a few seconds' without source, slightly shifting the original bound.\",\n    \"RX.5\": \"Provides high-level traceability for major changes (framing, claims, evaluation) and reasons, but lacks granular, per-edit annotations or citations; minor edits are untraced.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.85,\n    \"R1.4\": 0.95,\n    \"R1.6\": 0.85,\n    \"RX.1\": 0.75,\n    \"RX.3\": 0.8,\n    \"RX.4\": 0.7,\n    \"RX.5\": 0.8\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 20389,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.2\",\"R1.4\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":5,\"R1.4\":1,\"R1.6\":5,\"RX.1\":3,\"RX.3\":3,\"RX.4\":3,\"RX.5\":3},\"rationale\":{\"R1.2\":\"Walks the main argument chain from unified/per-query framing through per-session tier exclusivity and no cross-session guarantees, then proposes minimal repairs. Also flags evaluation interpretability and durability gaps.\",\"R1.4\":\"Does not assess novelty against any prior work or name related systems; it only comments on internal positioning claims.\",\"R1.6\":\"The revised passage is a careful copy-edit with tighter prose, consistent terminology, and preserved meaning aside from explicitly softened overclaims.\",\"RX.1\":\"Flags uncertainty in a few places, such as whether a query-level mechanism exists and whether the evaluation needs more workload details, but does not mark confidence or missing evidence for each recommendation.\",\"RX.3\":\"Mostly stays within the cleanup task and addresses consistency and polish, but does not cover novelty assessment despite that active dimension being requested.\",\"RX.4\":\"Generally avoids harm and identifies overclaiming in the original, but introduces a slightly unsupported phrasing shift with 'typically a few seconds' from the original's more conditional 'may lag ... up to several seconds'.\",\"RX.5\":\"Major edits are explained in recommendations, especially the framing changes and removed closing claim, but individual non-cosmetic edits are not fully annotated with source and reason.\"},\"confidence\":{\"R1.2\":0.9,\"R1.4\":0.95,\"R1.6\":0.9,\"RX.1\":0.85,\"RX.3\":0.8,\"RX.4\":0.75,\"RX.5\":0.85},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_bearing_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.2",
       "R1.4",
@@ -44,22 +44,22 @@
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "Thoroughly identifies the key framing inconsistency (per-query vs per-session, 'unified' claim) and proposes minimal, targeted repairs. Also flags evaluation vagueness and staleness ambiguity without overreach. Revised text is internally consistent with the described architecture.",
-      "R1.4": "No comparison to prior systems or related work; novelty is neither assessed nor contrasted. Focus remains on internal consistency and copy-editing.",
-      "R1.6": "Reads as a careful copy-edit: tighter prose, removed redundancy, consistent register, and clearer terminology. Meaning retained while improving flow and precision.",
-      "RX.1": "Notes that no external facts were asserted and flags uncertain areas (staleness bound, evaluation context), but does not systematically annotate confidence per claim and introduces 'typically a few seconds' without explicit evidence.",
-      "RX.3": "Task was 'Clean this up.' The agent delivers a clean revision but also adds a recommendations section, which modestly expands scope beyond pure copy-editing.",
-      "RX.4": "Avoids harmful content and corrects overclaims, but introduces a minor potential regression by characterizing staleness as 'typically a few seconds' without source, slightly shifting the original bound.",
-      "RX.5": "Provides high-level traceability for major changes (framing, claims, evaluation) and reasons, but lacks granular, per-edit annotations or citations; minor edits are untraced."
+      "R1.2": "Walks the main argument chain from unified/per-query framing through per-session tier exclusivity and no cross-session guarantees, then proposes minimal repairs. Also flags evaluation interpretability and durability gaps.",
+      "R1.4": "Does not assess novelty against any prior work or name related systems; it only comments on internal positioning claims.",
+      "R1.6": "The revised passage is a careful copy-edit with tighter prose, consistent terminology, and preserved meaning aside from explicitly softened overclaims.",
+      "RX.1": "Flags uncertainty in a few places, such as whether a query-level mechanism exists and whether the evaluation needs more workload details, but does not mark confidence or missing evidence for each recommendation.",
+      "RX.3": "Mostly stays within the cleanup task and addresses consistency and polish, but does not cover novelty assessment despite that active dimension being requested.",
+      "RX.4": "Generally avoids harm and identifies overclaiming in the original, but introduces a slightly unsupported phrasing shift with 'typically a few seconds' from the original's more conditional 'may lag ... up to several seconds'.",
+      "RX.5": "Major edits are explained in recommendations, especially the framing changes and removed closing claim, but individual non-cosmetic edits are not fully annotated with source and reason."
     },
     "confidence": {
-      "R1.2": 0.85,
+      "R1.2": 0.9,
       "R1.4": 0.95,
-      "R1.6": 0.85,
-      "RX.1": 0.75,
+      "R1.6": 0.9,
+      "RX.1": 0.85,
       "RX.3": 0.8,
-      "RX.4": 0.7,
-      "RX.5": 0.8
+      "RX.4": 0.75,
+      "RX.5": 0.85
     },
     "blockers": []
   },

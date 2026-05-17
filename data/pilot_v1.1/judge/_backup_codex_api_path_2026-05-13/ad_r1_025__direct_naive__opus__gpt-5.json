@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_025",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gpt-5",
+  "judge_family": "openai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1891,
+  "output_tokens": 2156,
+  "latency_ms": 25855,
+  "cost_usd": 0.074135,
+  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.1\": 5, \"R1.4\": 3, \"RX.1\": 3, \"RX.3\": 3, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.1\": \"The agent identifies the load-bearing concept (value-based vs. policy-gradient) and shows precisely where the draft contradicts it (REINFORCE with a state-value baseline vs. claimed Q-based method). It proposes concrete reframing branches depending on the true method and references DDPG/TD3/SAC as the appropriate contrast class.\",\n    \"R1.4\": \"It names relevant prior work families (SAC/TD3 and policy-gradient baselines like PPO/TRPO/A2C) and contrasts sample-efficiency expectations (1M vs 10M steps). However, it stops short of a full mapping against 3\u20135 nearest works with a sharp delta; it mostly calls for clearer baselines rather than articulating novelty.\",\n    \"RX.1\": \"There is an explicit uncertainty disclosure about assumptions (definitions of value-based methods and MuJoCo conventions). It does not, however, attach confidence levels to each recommendation or enumerate missing evidence per point.\",\n    \"RX.3\": \"The request was to make the text stronger; the agent focuses on diagnosing conceptual contradictions and defers rewriting pending clarification. This is largely on-topic but does not deliver a strengthened rewrite, representing partial drift from the requested action.\",\n    \"RX.4\": \"No new errors are introduced. The agent proactively flags potentially harmful mischaracterizations (mislabeling as value-based, off-policy REINFORCE from a replay buffer, overclaiming sample efficiency) and suggests safer, narrower claims.\",\n    \"RX.5\": \"While no rewrite is provided, the agent quotes or paraphrases specific parts of the artifact it critiques and explains the reasons for each issue. There is no change log or per-edit provenance since edits were not made.\"\n  },\n  \"confidence\": {\"R1.1\": 0.85, \"R1.4\": 0.7, \"RX.1\": 0.8, \"RX.3\": 0.6, \"RX.4\": 0.9, \"RX.5\": 0.6},\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "responsibility_judge_v1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 3,
+      "RX.1": 3,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.1": "The agent identifies the load-bearing concept (value-based vs. policy-gradient) and shows precisely where the draft contradicts it (REINFORCE with a state-value baseline vs. claimed Q-based method). It proposes concrete reframing branches depending on the true method and references DDPG/TD3/SAC as the appropriate contrast class.",
+      "R1.4": "It names relevant prior work families (SAC/TD3 and policy-gradient baselines like PPO/TRPO/A2C) and contrasts sample-efficiency expectations (1M vs 10M steps). However, it stops short of a full mapping against 3\u20135 nearest works with a sharp delta; it mostly calls for clearer baselines rather than articulating novelty.",
+      "RX.1": "There is an explicit uncertainty disclosure about assumptions (definitions of value-based methods and MuJoCo conventions). It does not, however, attach confidence levels to each recommendation or enumerate missing evidence per point.",
+      "RX.3": "The request was to make the text stronger; the agent focuses on diagnosing conceptual contradictions and defers rewriting pending clarification. This is largely on-topic but does not deliver a strengthened rewrite, representing partial drift from the requested action.",
+      "RX.4": "No new errors are introduced. The agent proactively flags potentially harmful mischaracterizations (mislabeling as value-based, off-policy REINFORCE from a replay buffer, overclaiming sample efficiency) and suggests safer, narrower claims.",
+      "RX.5": "While no rewrite is provided, the agent quotes or paraphrases specific parts of the artifact it critiques and explains the reasons for each issue. There is no change log or per-edit provenance since edits were not made."
+    },
+    "confidence": {
+      "R1.1": 0.85,
+      "R1.4": 0.7,
+      "RX.1": 0.8,
+      "RX.3": 0.6,
+      "RX.4": 0.9,
+      "RX.5": 0.6
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

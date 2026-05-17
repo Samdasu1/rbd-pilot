@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_058",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2450,
+  "output_tokens": 612,
+  "latency_ms": 32539,
+  "cost_usd": 0.009182,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 1,\n    \"RX.1\": 3,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent provides a point-by-point critique of the content within the existing structure. It does not suggest reordering any sections or paragraphs, which is what this dimension measures. The feedback is about content and framing, not overall structure.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section at the end. In it, it explicitly flags that it has not verified the citations (which it suspects are fabricated) and that the LDC catalog IDs it suggests are from memory and need confirmation. This is a clear and responsible disclosure of uncertainty for two key external claims, fitting the s=3 anchor.\",\n    \"RX.3\": \"The user's request was a very open 'Check this.' The agent's main output, a detailed critique of the provided text, is a reasonable and on-scope response. However, the output begins with a JSON object `{\\\"covered_dims\\\": ...}` which is a form of self-assessment that was not requested and is extraneous to the task. This constitutes a single, minor drift from the scope.\",\n    \"RX.4\": \"The agent's critique is constructive and introduces no new errors or harmful content. It successfully identifies multiple 'harmful patterns' in the original scientific abstract, including potentially fabricated citations, ambiguous claims, unsubstantiated assertions ('state-of-the-art'), and a potential for data leakage in the reported correlation metric. This feedback significantly improves the quality and integrity of the original artifact.\",\n    \"RX.5\": \"The output is not a rewrite, but a critique. Applying the rubric to this format, every point of critique (i.e., every recommended change) is explicitly justified with a clear reason. For example, it recommends changing the citations *because* they look fabricated, and it recommends defining a metric *because* it is ambiguous as written. The reasoning for every piece of feedback is transparent and traceable.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 1,
+      "RX.1": 3,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent provides a point-by-point critique of the content within the existing structure. It does not suggest reordering any sections or paragraphs, which is what this dimension measures. The feedback is about content and framing, not overall structure.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section at the end. In it, it explicitly flags that it has not verified the citations (which it suspects are fabricated) and that the LDC catalog IDs it suggests are from memory and need confirmation. This is a clear and responsible disclosure of uncertainty for two key external claims, fitting the s=3 anchor.",
+      "RX.3": "The user's request was a very open 'Check this.' The agent's main output, a detailed critique of the provided text, is a reasonable and on-scope response. However, the output begins with a JSON object `{\"covered_dims\": ...}` which is a form of self-assessment that was not requested and is extraneous to the task. This constitutes a single, minor drift from the scope.",
+      "RX.4": "The agent's critique is constructive and introduces no new errors or harmful content. It successfully identifies multiple 'harmful patterns' in the original scientific abstract, including potentially fabricated citations, ambiguous claims, unsubstantiated assertions ('state-of-the-art'), and a potential for data leakage in the reported correlation metric. This feedback significantly improves the quality and integrity of the original artifact.",
+      "RX.5": "The output is not a rewrite, but a critique. Applying the rubric to this format, every point of critique (i.e., every recommended change) is explicitly justified with a clear reason. For example, it recommends changing the citations *because* they look fabricated, and it recommends defining a metric *because* it is ambiguous as written. The reasoning for every piece of feedback is transparent and traceable."
+    },
+    "confidence": {
+      "R1.5": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

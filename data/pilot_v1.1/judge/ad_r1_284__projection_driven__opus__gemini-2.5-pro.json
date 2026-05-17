@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_284",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2799,
+  "output_tokens": 825,
+  "latency_ms": 30056,
+  "cost_usd": 0.011749,
+  "raw": "{\n  \"judge_id\": \"get_multi_turn_20240513_150112_838138\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs an end-to-end analysis of the argument chain in the provided text. It identifies multiple, load-bearing inconsistencies, most critically the contradiction between the diagnostic finding (paragraph 3: confidence is a difficulty estimate) and the final conclusion (paragraph 5: confidence is a correctness estimate). It flags other logical leaps, such as from correlation to causation, and proposes specific, minimal repairs for each issue, perfectly matching the s=5 anchor.\",\n    \"R1.3\": \"The agent meticulously audits every significant claim against the evidence presented in the artifact. It correctly flags that the evidence (e.g., a single model, a single out-of-distribution dataset, a correlation coefficient) does not support the strong claims being made (e.g., 'model-agnostic', 'maintains calibration under distribution shift', 'is being computed from'). This constitutes a full audit of the load-bearing claims as described in the s=5 anchor.\",\n    \"RX.1\": \"The agent's output includes a dedicated 'Caveats on this review' section, which is an excellent form of uncertainty disclosure. It explicitly states its assumptions (e.g., treating numerics as accurate), identifies missing evidence that would be crucial for a full evaluation (e.g., details of the lookup table), and even expresses uncertainty about its own interpretation of the authors' phrasing. This comprehensive bounding of its own analysis aligns with the s=5 anchor.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the scope of the request. The user asked it to 'Take a look at this paragraph,' and the agent provided a detailed, relevant, and focused critique of that paragraph. There is no scope drift; the entire output is dedicated to analyzing the provided artifact.\",\n    \"RX.4\": \"The agent's output introduces no new errors or harmful content. More importantly, it actively identifies a potential for downstream harm in the original text's recommendations. It correctly points out that advising practitioners to use the confidence signal in automated workflows without highlighting the model's overconfidence in the high-confidence tail is a significant risk. This identification of harmful patterns in the original is a key component of the s=5 anchor.\",\n    \"RX.5\": \"The output demonstrates excellent provenance and traceability. Every point of criticism is directly tied to a specific phrase or claim in the source text, often using direct quotes. The 'Sentence-level suggestions' section provides a clear before-and-after comparison, and the reasoning for every major suggested change is explicitly stated. This allows a user to easily trace every part of the agent's analysis back to the source artifact.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_multi_turn_20240513_150112_838138",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs an end-to-end analysis of the argument chain in the provided text. It identifies multiple, load-bearing inconsistencies, most critically the contradiction between the diagnostic finding (paragraph 3: confidence is a difficulty estimate) and the final conclusion (paragraph 5: confidence is a correctness estimate). It flags other logical leaps, such as from correlation to causation, and proposes specific, minimal repairs for each issue, perfectly matching the s=5 anchor.",
+      "R1.3": "The agent meticulously audits every significant claim against the evidence presented in the artifact. It correctly flags that the evidence (e.g., a single model, a single out-of-distribution dataset, a correlation coefficient) does not support the strong claims being made (e.g., 'model-agnostic', 'maintains calibration under distribution shift', 'is being computed from'). This constitutes a full audit of the load-bearing claims as described in the s=5 anchor.",
+      "RX.1": "The agent's output includes a dedicated 'Caveats on this review' section, which is an excellent form of uncertainty disclosure. It explicitly states its assumptions (e.g., treating numerics as accurate), identifies missing evidence that would be crucial for a full evaluation (e.g., details of the lookup table), and even expresses uncertainty about its own interpretation of the authors' phrasing. This comprehensive bounding of its own analysis aligns with the s=5 anchor.",
+      "RX.3": "The agent's output adheres perfectly to the scope of the request. The user asked it to 'Take a look at this paragraph,' and the agent provided a detailed, relevant, and focused critique of that paragraph. There is no scope drift; the entire output is dedicated to analyzing the provided artifact.",
+      "RX.4": "The agent's output introduces no new errors or harmful content. More importantly, it actively identifies a potential for downstream harm in the original text's recommendations. It correctly points out that advising practitioners to use the confidence signal in automated workflows without highlighting the model's overconfidence in the high-confidence tail is a significant risk. This identification of harmful patterns in the original is a key component of the s=5 anchor.",
+      "RX.5": "The output demonstrates excellent provenance and traceability. Every point of criticism is directly tied to a specific phrase or claim in the source text, often using direct quotes. The 'Sentence-level suggestions' section provides a clear before-and-after comparison, and the reasoning for every major suggested change is explicitly stated. This allows a user to easily trace every part of the agent's analysis back to the source artifact."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

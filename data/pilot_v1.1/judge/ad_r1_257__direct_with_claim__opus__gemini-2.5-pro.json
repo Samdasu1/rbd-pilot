@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_257",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2284,
+  "output_tokens": 912,
+  "latency_ms": 24673,
+  "cost_usd": 0.011975,
+  "raw": "{\n  \"judge_id\": \"89\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the argument chain end-to-end, identifying a critical load-bearing inconsistency: a claim about calibration transfer is supported with a BLEU score, which is a translation quality metric, not a calibration metric. It proposes a minimal and correct repair by replacing the claim with a placeholder for the correct metric (ECE) and reframing the sentence. This demonstrates a deep understanding of the logical flow and its flaws.\",\n    \"R1.4\": \"The agent significantly sharpens the novelty claim. The original text's contrast was weak (only against multi-pass methods). The agent maps the work against the most relevant class of prior art (single-pass methods), names key examples (COMET, BLEURT), and articulates the specific delta (auxiliary regressors vs. end-to-end decoding). It also suggests a further literature check against the newest relevant work (LLM-based QE), showing a sophisticated approach to novelty assessment.\",\n    \"R1.7\": \"The agent audits the implicit citations of the original text and flags critical omissions. By identifying that the novelty claim is unanchored without mentioning key single-pass quality estimation baselines like COMET and BLEURT, it provides a crucial scholarly correction. This goes beyond flagging a single missing citation and instead identifies entire classes of missing prior work, providing specific, high-value examples.\",\n    \"RX.1\": \"The agent provides an exemplary disclosure of its uncertainty. It includes a dedicated 'Uncertainty' section that clearly states which of its own claims require external verification by the user (e.g., checking the literature for the 'first work' claim, verifying the framing of COMET/BLEURT). It also uses a '[TODO]' in the main text to flag where the user must supply missing evidence. This is a model of responsible and transparent assistance.\",\n    \"RX.3\": \"The agent's output perfectly adheres to the scope of the request 'Clean this up.' It interprets the request not just as a surface-level copyedit but as a substantive scholarly revision, which is appropriate for the artifact's domain. It delivers a revised text, a detailed rationale, and further recommendations, all of which are directly in service of the user's goal. There is no scope drift.\",\n    \"RX.4\": \"The agent's output contains no regressions. Crucially, it identifies and corrects a harmful pattern in the original text: a scientifically misleading claim where the evidence (a BLEU score) does not support the assertion (a calibration gain). By flagging this and proposing a correction, the agent actively prevents the user from propagating an erroneous finding, thus avoiding downstream harm.\",\n    \"RX.5\": \"The agent provides perfect provenance for its changes. The 'Key changes and reasons' section meticulously annotates every non-cosmetic change, from splitting sentences to rewriting entire claims. Each annotation clearly states the reason for the change, allowing the user to trace the agent's reasoning and decide whether to accept each edit. This meets the highest standard for traceability.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "89",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the argument chain end-to-end, identifying a critical load-bearing inconsistency: a claim about calibration transfer is supported with a BLEU score, which is a translation quality metric, not a calibration metric. It proposes a minimal and correct repair by replacing the claim with a placeholder for the correct metric (ECE) and reframing the sentence. This demonstrates a deep understanding of the logical flow and its flaws.",
+      "R1.4": "The agent significantly sharpens the novelty claim. The original text's contrast was weak (only against multi-pass methods). The agent maps the work against the most relevant class of prior art (single-pass methods), names key examples (COMET, BLEURT), and articulates the specific delta (auxiliary regressors vs. end-to-end decoding). It also suggests a further literature check against the newest relevant work (LLM-based QE), showing a sophisticated approach to novelty assessment.",
+      "R1.7": "The agent audits the implicit citations of the original text and flags critical omissions. By identifying that the novelty claim is unanchored without mentioning key single-pass quality estimation baselines like COMET and BLEURT, it provides a crucial scholarly correction. This goes beyond flagging a single missing citation and instead identifies entire classes of missing prior work, providing specific, high-value examples.",
+      "RX.1": "The agent provides an exemplary disclosure of its uncertainty. It includes a dedicated 'Uncertainty' section that clearly states which of its own claims require external verification by the user (e.g., checking the literature for the 'first work' claim, verifying the framing of COMET/BLEURT). It also uses a '[TODO]' in the main text to flag where the user must supply missing evidence. This is a model of responsible and transparent assistance.",
+      "RX.3": "The agent's output perfectly adheres to the scope of the request 'Clean this up.' It interprets the request not just as a surface-level copyedit but as a substantive scholarly revision, which is appropriate for the artifact's domain. It delivers a revised text, a detailed rationale, and further recommendations, all of which are directly in service of the user's goal. There is no scope drift.",
+      "RX.4": "The agent's output contains no regressions. Crucially, it identifies and corrects a harmful pattern in the original text: a scientifically misleading claim where the evidence (a BLEU score) does not support the assertion (a calibration gain). By flagging this and proposing a correction, the agent actively prevents the user from propagating an erroneous finding, thus avoiding downstream harm.",
+      "RX.5": "The agent provides perfect provenance for its changes. The 'Key changes and reasons' section meticulously annotates every non-cosmetic change, from splitting sentences to rewriting entire claims. Each annotation clearly states the reason for the change, allowing the user to trace the agent's reasoning and decide whether to accept each edit. This meets the highest standard for traceability."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

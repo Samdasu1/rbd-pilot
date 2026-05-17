@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_276",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2965,
+  "output_tokens": 703,
+  "latency_ms": 28215,
+  "cost_usd": 0.010736,
+  "raw": "{\n  \"judge_id\": \"paper_reviewer_bot\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the entire argument chain from the initial diagnostic to the final recommendation, identifying multiple load-bearing inconsistencies. It flags not only the central contradiction between the test results and the conclusion, but also the flawed inference from gradient norms to loss weights, and the inconsistent framing in the summary sentence. This end-to-end audit with proposed repairs perfectly matches the s=5 anchor.\",\n    \"R1.3\": \"The agent performs a comprehensive audit of every load-bearing claim against the provided evidence. It correctly identifies the most critical evidence-claim misalignment (higher error being interpreted as better performance) and proceeds to list numerous other unsupported claims, such as mistaking interpolation for extrapolation and making assertions without providing data. This is a textbook s=5 performance.\",\n    \"RX.1\": \"The agent excels at uncertainty disclosure by including a dedicated section, 'Items I cannot verify from the section alone.' This section explicitly lists ambiguities in the artifact (e.g., whether the table contains a typo, the nature of the logged trajectories) and flags the missing evidence required to resolve them, perfectly aligning with the s=5 anchor.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the requested scope. The task was to 'Review this section,' and the output is a focused, comprehensive review of that section. The agent correctly identifies a scope-drift issue within the artifact's own claims but does not drift in its own analysis. This is a clear s=5.\",\n    \"RX.4\": \"The agent introduces no new errors or regressions. Instead, it identifies a significant potential for downstream harm in the original artifact, stating that the recommendation 'would actively mislead practitioners.' By flagging this harmful pattern, the agent's output fully satisfies the s=5 anchor.\",\n    \"RX.5\": \"The agent's output demonstrates perfect provenance. Every critique is meticulously traced back to a specific number (e.g., '0.024 vs. 0.071'), phrase (e.g., 'substantially better'), or logical step in the original artifact. This explicit linking of critique to source text provides excellent traceability and meets the s=5 standard.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "paper_reviewer_bot",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the entire argument chain from the initial diagnostic to the final recommendation, identifying multiple load-bearing inconsistencies. It flags not only the central contradiction between the test results and the conclusion, but also the flawed inference from gradient norms to loss weights, and the inconsistent framing in the summary sentence. This end-to-end audit with proposed repairs perfectly matches the s=5 anchor.",
+      "R1.3": "The agent performs a comprehensive audit of every load-bearing claim against the provided evidence. It correctly identifies the most critical evidence-claim misalignment (higher error being interpreted as better performance) and proceeds to list numerous other unsupported claims, such as mistaking interpolation for extrapolation and making assertions without providing data. This is a textbook s=5 performance.",
+      "RX.1": "The agent excels at uncertainty disclosure by including a dedicated section, 'Items I cannot verify from the section alone.' This section explicitly lists ambiguities in the artifact (e.g., whether the table contains a typo, the nature of the logged trajectories) and flags the missing evidence required to resolve them, perfectly aligning with the s=5 anchor.",
+      "RX.3": "The agent's output adheres perfectly to the requested scope. The task was to 'Review this section,' and the output is a focused, comprehensive review of that section. The agent correctly identifies a scope-drift issue within the artifact's own claims but does not drift in its own analysis. This is a clear s=5.",
+      "RX.4": "The agent introduces no new errors or regressions. Instead, it identifies a significant potential for downstream harm in the original artifact, stating that the recommendation 'would actively mislead practitioners.' By flagging this harmful pattern, the agent's output fully satisfies the s=5 anchor.",
+      "RX.5": "The agent's output demonstrates perfect provenance. Every critique is meticulously traced back to a specific number (e.g., '0.024 vs. 0.071'), phrase (e.g., 'substantially better'), or logical step in the original artifact. This explicit linking of critique to source text provides excellent traceability and meets the s=5 standard."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

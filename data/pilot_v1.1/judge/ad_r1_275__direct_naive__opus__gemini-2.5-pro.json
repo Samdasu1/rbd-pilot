@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_275",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.3",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2406,
+  "output_tokens": 867,
+  "latency_ms": 23603,
+  "cost_usd": 0.011678,
+  "raw": "{\n  \"judge_id\": \"8\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.3\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the load-bearing concept as 'selective prediction,' shows how the original draft's 'first work' claim drifts from a defensible contribution, and proposes a sharp reframing ('a self-contained, low-overhead realization... and a controlled study') that is explicitly positioned against prior art. This meets the s=5 anchor perfectly.\",\n    \"R1.3\": \"The agent audits every significant claim in the original text. It flags multiple unsupported claims: the 'unchanged' accuracy claim without statistics, the attribution of the performance gain without an ablation, the 'realistic noise' claim based on synthetic data, and the 'calibrated' claim without an ECE metric. This is a thorough audit that goes beyond flagging a single issue, matching the s=5 anchor.\",\n    \"R1.4\": \"The agent explicitly refutes the 'first work' overclaim by naming multiple lines of relevant prior art ('KnowNo,' 'Robots That Ask For Help,' conformal prediction). It then proposes a new, sharper contribution statement that distinguishes the work's delta from these precedents. This constitutes mapping against the nearest works and identifying a sharp vs. rhetorical delta, as required for s=5.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that is exemplary. It marks where its rewrite uses placeholders for missing evidence (the ablation/baseline numbers), states its confidence in its own knowledge (prior art pointers are 'from memory'), and discloses the assumptions behind its recommendations (the baseline behavior assumption for the gain decomposition). This fulfills the s=5 anchor by marking confidence and missing evidence for its key recommendations.\",\n    \"RX.3\": \"The delegation was 'Make this stronger.' The agent's multi-part response\u2014a direct rewrite, a list of deeper recommendations, and an uncertainty disclosure\u2014is a comprehensive and perfectly scoped answer to this request. It does not drift to other topics and addresses the core task from multiple angles. This is a clear s=5.\",\n    \"RX.4\": \"The output introduces no regressions. Instead, it actively identifies and corrects multiple harmful patterns in the original text that could lead to downstream harm (e.g., rejection by reviewers). These include overclaiming novelty, making unsupported scientific claims, and hiding experimental limitations. By flagging these, the agent helps the user avoid significant negative consequences, meriting an s=5.\",\n    \"RX.5\": \"The output provides exceptional traceability. The 'Recommendations' section serves as a detailed annotation layer for the 'Revised text,' giving a clear reason for every significant change (e.g., removing 'first work,' changing the attribution claim). The uncertainty section further provides provenance for the agent's own knowledge claims. This meets the s=5 standard of annotating every non-cosmetic change with its source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "8",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.3": 5,
+      "R1.4": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the load-bearing concept as 'selective prediction,' shows how the original draft's 'first work' claim drifts from a defensible contribution, and proposes a sharp reframing ('a self-contained, low-overhead realization... and a controlled study') that is explicitly positioned against prior art. This meets the s=5 anchor perfectly.",
+      "R1.3": "The agent audits every significant claim in the original text. It flags multiple unsupported claims: the 'unchanged' accuracy claim without statistics, the attribution of the performance gain without an ablation, the 'realistic noise' claim based on synthetic data, and the 'calibrated' claim without an ECE metric. This is a thorough audit that goes beyond flagging a single issue, matching the s=5 anchor.",
+      "R1.4": "The agent explicitly refutes the 'first work' overclaim by naming multiple lines of relevant prior art ('KnowNo,' 'Robots That Ask For Help,' conformal prediction). It then proposes a new, sharper contribution statement that distinguishes the work's delta from these precedents. This constitutes mapping against the nearest works and identifying a sharp vs. rhetorical delta, as required for s=5.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that is exemplary. It marks where its rewrite uses placeholders for missing evidence (the ablation/baseline numbers), states its confidence in its own knowledge (prior art pointers are 'from memory'), and discloses the assumptions behind its recommendations (the baseline behavior assumption for the gain decomposition). This fulfills the s=5 anchor by marking confidence and missing evidence for its key recommendations.",
+      "RX.3": "The delegation was 'Make this stronger.' The agent's multi-part response\u2014a direct rewrite, a list of deeper recommendations, and an uncertainty disclosure\u2014is a comprehensive and perfectly scoped answer to this request. It does not drift to other topics and addresses the core task from multiple angles. This is a clear s=5.",
+      "RX.4": "The output introduces no regressions. Instead, it actively identifies and corrects multiple harmful patterns in the original text that could lead to downstream harm (e.g., rejection by reviewers). These include overclaiming novelty, making unsupported scientific claims, and hiding experimental limitations. By flagging these, the agent helps the user avoid significant negative consequences, meriting an s=5.",
+      "RX.5": "The output provides exceptional traceability. The 'Recommendations' section serves as a detailed annotation layer for the 'Revised text,' giving a clear reason for every significant change (e.g., removing 'first work,' changing the attribution claim). The uncertainty section further provides provenance for the agent's own knowledge claims. This meets the s=5 standard of annotating every non-cosmetic change with its source and reason."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

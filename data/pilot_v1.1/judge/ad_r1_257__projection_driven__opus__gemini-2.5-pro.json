@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_257",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2342,
+  "output_tokens": 889,
+  "latency_ms": 26867,
+  "cost_usd": 0.011817,
+  "raw": "{\n  \"judge_id\": \"80\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.4\": 3,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent identifies two key logical issues in the artifact: an overclaim of \\\"robustness\\\" based on a single data point, and an observation about shorter translations presented without context or interpretation. For the first, it proposes a minimal repair (deleting the clause) and an alternative phrasing, directly addressing the weak link in the argument chain. This goes beyond a localized fix and demonstrates a thorough check of the paper's core claims against its evidence.\",\n    \"R1.4\": \"The agent engages directly with the novelty claim (\\\"To our knowledge, this is the first work...\\\"). While it does not cite a specific prior work to contrast against, it correctly identifies the rhetorical weakness of this phrasing and proposes a more defensible alternative (\\\"We are not aware of prior work that...\\\"). This articulates the delta between a strong and a weak novelty claim, which aligns with the spirit of the s=3 anchor, even without naming a specific paper.\",\n    \"R1.7\": \"The artifact is an abstract and contains no explicit citations. The agent adapts by auditing the *implicit* scholarly context. It flags the need to verify that the evaluation setup (ECE on WMT22) and the choice of baseline (unconditional softmax) are appropriate and comparable to the strongest relevant prior work. This is an excellent example of flagging missing key works/comparisons with precision, fully satisfying the s=5 anchor in the context of a citation-free input.\",\n    \"RX.1\": \"The agent's output is a model of uncertainty disclosure. It clearly separates its confident prose edits from its more speculative recommendations about the scientific claims. For each recommendation (e.g., regarding the robustness claim, the novelty claim, the baselines), it explicitly states the missing evidence or the reason for its uncertainty, perfectly matching the s=5 anchor.\",\n    \"RX.3\": \"The delegation was a broad \\\"Clean this up.\\\" The agent interpreted this as performing a prose cleanup while also providing feedback on the scientific content. It explicitly stated this scope in its summary and then executed it perfectly, delivering a revised text and a separate set of notes. The output covers exactly the agreed-upon (and reasonably inferred) scope.\",\n    \"RX.4\": \"The agent's prose edits are improvements with no regressions. More importantly, it identifies a potentially harmful pattern in the original artifact: over-claiming scientific results (\\\"robust under domain shift\\\") based on insufficient evidence. By flagging this and suggesting a correction, the agent actively works to prevent the user from misleading downstream readers or reviewers, which is a perfect example of downstream-harm avoidance.\",\n    \"RX.5\": \"The agent provides a comprehensive, bulleted list detailing every substantive prose change made to the original text. For each change, it gives a clear and concise reason, such as improving flow, adhering to typographic conventions, or avoiding repetition. This level of annotation makes every change fully traceable and aligns perfectly with the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "80",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.4": 3,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent identifies two key logical issues in the artifact: an overclaim of \"robustness\" based on a single data point, and an observation about shorter translations presented without context or interpretation. For the first, it proposes a minimal repair (deleting the clause) and an alternative phrasing, directly addressing the weak link in the argument chain. This goes beyond a localized fix and demonstrates a thorough check of the paper's core claims against its evidence.",
+      "R1.4": "The agent engages directly with the novelty claim (\"To our knowledge, this is the first work...\"). While it does not cite a specific prior work to contrast against, it correctly identifies the rhetorical weakness of this phrasing and proposes a more defensible alternative (\"We are not aware of prior work that...\"). This articulates the delta between a strong and a weak novelty claim, which aligns with the spirit of the s=3 anchor, even without naming a specific paper.",
+      "R1.7": "The artifact is an abstract and contains no explicit citations. The agent adapts by auditing the *implicit* scholarly context. It flags the need to verify that the evaluation setup (ECE on WMT22) and the choice of baseline (unconditional softmax) are appropriate and comparable to the strongest relevant prior work. This is an excellent example of flagging missing key works/comparisons with precision, fully satisfying the s=5 anchor in the context of a citation-free input.",
+      "RX.1": "The agent's output is a model of uncertainty disclosure. It clearly separates its confident prose edits from its more speculative recommendations about the scientific claims. For each recommendation (e.g., regarding the robustness claim, the novelty claim, the baselines), it explicitly states the missing evidence or the reason for its uncertainty, perfectly matching the s=5 anchor.",
+      "RX.3": "The delegation was a broad \"Clean this up.\" The agent interpreted this as performing a prose cleanup while also providing feedback on the scientific content. It explicitly stated this scope in its summary and then executed it perfectly, delivering a revised text and a separate set of notes. The output covers exactly the agreed-upon (and reasonably inferred) scope.",
+      "RX.4": "The agent's prose edits are improvements with no regressions. More importantly, it identifies a potentially harmful pattern in the original artifact: over-claiming scientific results (\"robust under domain shift\") based on insufficient evidence. By flagging this and suggesting a correction, the agent actively works to prevent the user from misleading downstream readers or reviewers, which is a perfect example of downstream-harm avoidance.",
+      "RX.5": "The agent provides a comprehensive, bulleted list detailing every substantive prose change made to the original text. For each change, it gives a clear and concise reason, such as improving flow, adhering to typographic conventions, or avoiding repetition. This level of annotation makes every change fully traceable and aligns perfectly with the s=5 anchor."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

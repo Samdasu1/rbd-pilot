@@ -1,0 +1,66 @@
+{
+  "example_id": "ad_r1_277",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2653,
+  "output_tokens": 833,
+  "latency_ms": 30171,
+  "cost_usd": 0.011646,
+  "raw": "{\n  \"judge_id\": \"esr-1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 4,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the conjunctive nature of the novelty claim and points to the classes of prior art for each component (e.g., \\\"typed actor systems,\\\" \\\"content-addressed build/workspace systems\\\"). This is more specific than simply asserting novelty is weak, but it falls short of mapping against 3-5 specific named works, which would be a 5. The agent also correctly discloses its inability to perform a full literature search in its \\\"What I did not verify\\\" section.\",\n    \"R1.7\": \"The agent does not audit existing citations (as there are none) but excels at flagging missing scholarship. It points out the need to cite prior systems for the novelty claim (issue #3), the need to specify the benchmark's origin (e.g., SWE-bench) (issue #5), and the need to situate the \\\"ReAct-style\\\" baseline within the literature (issue #6). This is a systematic identification of missing scholarly context, well beyond flagging a single missing citation, but it lacks the bibliographic precision of a 5.\",\n    \"RX.1\": \"The agent's output is a model of uncertainty disclosure. It includes a dedicated section, \\\"What I did not verify,\\\" which explicitly lists the claims it cannot assess from the provided text alone (novelty against literature, benchmark contamination, baseline fidelity, statistical correctness). This directly marks the confidence and missing evidence for its own recommendations, advising they are not \\\"final\\\" until these points are checked. This meets the s=5 anchor perfectly.\",\n    \"RX.3\": \"The delegation was a broad \\\"Check this.\\\" The agent performed a comprehensive critique, which fully encompasses the dimensions in the active set. Its analysis of novelty, missing citations, overclaiming, and evidence-claim gaps directly provides the material needed to score R1.4, R1.7, RX.4, etc. The output is perfectly aligned with the task and allows for scoring on exactly the agreed J*(d).\",\n    \"RX.4\": \"The agent's output introduces no new errors. Instead, it actively identifies and proposes corrections for harmful patterns in the original artifact. It flags multiple instances of overclaiming (\\\"deployment-ready,\\\" \\\"binding constraint\\\") and unsupported causal inference. Correcting such scientific misrepresentations is a key form of downstream harm avoidance in a research context. This is a clear example of the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique is exceptionally traceable. Each of the eight \\\"Substantive issues\\\" quotes or precisely refers to a specific part of the source artifact and then provides a clear reason for the recommended change. The \\\"Suggested minimal rewrite\\\" is a direct synthesis of the fixes for several of these identified issues, making the provenance of every change obvious. This meets the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 4,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the conjunctive nature of the novelty claim and points to the classes of prior art for each component (e.g., \"typed actor systems,\" \"content-addressed build/workspace systems\"). This is more specific than simply asserting novelty is weak, but it falls short of mapping against 3-5 specific named works, which would be a 5. The agent also correctly discloses its inability to perform a full literature search in its \"What I did not verify\" section.",
+      "R1.7": "The agent does not audit existing citations (as there are none) but excels at flagging missing scholarship. It points out the need to cite prior systems for the novelty claim (issue #3), the need to specify the benchmark's origin (e.g., SWE-bench) (issue #5), and the need to situate the \"ReAct-style\" baseline within the literature (issue #6). This is a systematic identification of missing scholarly context, well beyond flagging a single missing citation, but it lacks the bibliographic precision of a 5.",
+      "RX.1": "The agent's output is a model of uncertainty disclosure. It includes a dedicated section, \"What I did not verify,\" which explicitly lists the claims it cannot assess from the provided text alone (novelty against literature, benchmark contamination, baseline fidelity, statistical correctness). This directly marks the confidence and missing evidence for its own recommendations, advising they are not \"final\" until these points are checked. This meets the s=5 anchor perfectly.",
+      "RX.3": "The delegation was a broad \"Check this.\" The agent performed a comprehensive critique, which fully encompasses the dimensions in the active set. Its analysis of novelty, missing citations, overclaiming, and evidence-claim gaps directly provides the material needed to score R1.4, R1.7, RX.4, etc. The output is perfectly aligned with the task and allows for scoring on exactly the agreed J*(d).",
+      "RX.4": "The agent's output introduces no new errors. Instead, it actively identifies and proposes corrections for harmful patterns in the original artifact. It flags multiple instances of overclaiming (\"deployment-ready,\" \"binding constraint\") and unsupported causal inference. Correcting such scientific misrepresentations is a key form of downstream harm avoidance in a research context. This is a clear example of the s=5 anchor.",
+      "RX.5": "The agent's critique is exceptionally traceable. Each of the eight \"Substantive issues\" quotes or precisely refers to a specific part of the source artifact and then provides a clear reason for the recommended change. The \"Suggested minimal rewrite\" is a direct synthesis of the fixes for several of these identified issues, making the provenance of every change obvious. This meets the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

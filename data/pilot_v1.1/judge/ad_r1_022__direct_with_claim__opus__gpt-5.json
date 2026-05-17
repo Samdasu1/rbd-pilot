@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2100,
-  "output_tokens": 3229,
-  "latency_ms": 40804,
-  "cost_usd": 0.10737,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 5, \"R1.3\": 4, \"R1.4\": 4, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 4},\n  \"rationale\": {\n    \"R1.2\": \"Walks through the main argument, pinpoints the core contradiction between the headline claim and reported WERs, notes inconsistent relative vs absolute framing, and proposes targeted fixes (reframing, clearer positioning, consistent metrics).\",\n    \"R1.3\": \"Audits key claims against the reported numbers (win/tie/loss tally, relative deltas), flags the misaligned 'consistent improvements' claim and ambiguous latency reporting; however, does not fully interrogate claims like edge deployability or constant-memory with direct evidence.\",\n    \"R1.4\": \"Challenges the 'novel chunked-attention' assertion by naming relevant prior art (Emformer, streaming Conformer, block-recurrent variants) and asks for the concrete delta, but stops short of mapping a precise sharp vs rhetorical novelty gap.\",\n    \"RX.1\": \"Calls out missing evidence (significance, aggregation, latency details) and suggests remedies, but does not provide per-recommendation confidence or systematically mark uncertainty for each point.\",\n    \"RX.3\": \"Stays focused on the requested critique dimensions for the provided section (consistency, evidence alignment, novelty, reporting), without drifting into unrelated areas.\",\n    \"RX.4\": \"Introduces no fabrications; arithmetic checks are correct; proactively flags potentially misleading framings and suggests safer, more accurate claims.\",\n    \"RX.5\": \"References specific sentences and reported numbers from the artifact and ties critiques to them; the suggested revision is helpful but not annotated line-by-line for every change.\"\n  },\n  \"confidence\": {\"R1.2\": 0.86, \"R1.3\": 0.78, \"R1.4\": 0.76, \"RX.1\": 0.72, \"RX.3\": 0.85, \"RX.4\": 0.88, \"RX.5\": 0.76},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 47224,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex_judge\",\"active_set_recognized\":[\"R1.2\",\"R1.3\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":5,\"R1.3\":4,\"R1.4\":4,\"RX.1\":3,\"RX.3\":2,\"RX.4\":4,\"RX.5\":3},\"rationale\":{\"R1.2\":\"Walks the main argument chain from the opening claim through the benchmark results and conclusion, flagging the central contradiction and additional consistency issues such as inconsistent relative/absolute framing.\",\"R1.3\":\"Checks the major evidence-claim mismatch around 'consistent improvements' against all five reported WER results and flags unsupported latency/deployment and streaming-comparison claims, but does not fully audit every claim such as edge-device suitability against concrete evidence.\",\"R1.4\":\"Names several relevant prior-work areas, including Emformer, streaming Conformer, Mocha, transducer variants, and block-recurrent variants, and identifies that the novelty delta is asserted rather than demonstrated, but the mapping is brief rather than a full 3-5 work comparison.\",\"RX.1\":\"Discloses missing evidence for several recommendations, such as need for significance intervals, streaming baselines, training details, and latency measurement details, but does not mark confidence or missing evidence for each recommendation individually.\",\"RX.3\":\"The substantive critique overlaps several active dimensions, but the output explicitly reports a different covered-dimension set with non-active keys and omits explicit handling of the RX dimensions, so scope adherence is weak.\",\"RX.4\":\"Avoids major harmful regressions and identifies the original overclaiming pattern that could mislead readers. Minor risk remains from confident unsupported statements such as calling CallHome the hardest benchmark and from a truncated suggested revision.\",\"RX.5\":\"Major critique points are traceable to quoted claims and reported numbers, but the suggested rewrite and prior-work recommendations are not fully annotated with source and reason for every non-cosmetic change.\"},\"confidence\":{\"R1.2\":0.9,\"R1.3\":0.85,\"R1.4\":0.8,\"RX.1\":0.85,\"RX.3\":0.8,\"RX.4\":0.8,\"RX.5\":0.85},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex_judge",
     "active_set_recognized": [
       "R1.2",
       "R1.3",
@@ -39,27 +39,27 @@
       "R1.3": 4,
       "R1.4": 4,
       "RX.1": 3,
-      "RX.3": 5,
-      "RX.4": 5,
-      "RX.5": 4
+      "RX.3": 2,
+      "RX.4": 4,
+      "RX.5": 3
     },
     "rationale": {
-      "R1.2": "Walks through the main argument, pinpoints the core contradiction between the headline claim and reported WERs, notes inconsistent relative vs absolute framing, and proposes targeted fixes (reframing, clearer positioning, consistent metrics).",
-      "R1.3": "Audits key claims against the reported numbers (win/tie/loss tally, relative deltas), flags the misaligned 'consistent improvements' claim and ambiguous latency reporting; however, does not fully interrogate claims like edge deployability or constant-memory with direct evidence.",
-      "R1.4": "Challenges the 'novel chunked-attention' assertion by naming relevant prior art (Emformer, streaming Conformer, block-recurrent variants) and asks for the concrete delta, but stops short of mapping a precise sharp vs rhetorical novelty gap.",
-      "RX.1": "Calls out missing evidence (significance, aggregation, latency details) and suggests remedies, but does not provide per-recommendation confidence or systematically mark uncertainty for each point.",
-      "RX.3": "Stays focused on the requested critique dimensions for the provided section (consistency, evidence alignment, novelty, reporting), without drifting into unrelated areas.",
-      "RX.4": "Introduces no fabrications; arithmetic checks are correct; proactively flags potentially misleading framings and suggests safer, more accurate claims.",
-      "RX.5": "References specific sentences and reported numbers from the artifact and ties critiques to them; the suggested revision is helpful but not annotated line-by-line for every change."
+      "R1.2": "Walks the main argument chain from the opening claim through the benchmark results and conclusion, flagging the central contradiction and additional consistency issues such as inconsistent relative/absolute framing.",
+      "R1.3": "Checks the major evidence-claim mismatch around 'consistent improvements' against all five reported WER results and flags unsupported latency/deployment and streaming-comparison claims, but does not fully audit every claim such as edge-device suitability against concrete evidence.",
+      "R1.4": "Names several relevant prior-work areas, including Emformer, streaming Conformer, Mocha, transducer variants, and block-recurrent variants, and identifies that the novelty delta is asserted rather than demonstrated, but the mapping is brief rather than a full 3-5 work comparison.",
+      "RX.1": "Discloses missing evidence for several recommendations, such as need for significance intervals, streaming baselines, training details, and latency measurement details, but does not mark confidence or missing evidence for each recommendation individually.",
+      "RX.3": "The substantive critique overlaps several active dimensions, but the output explicitly reports a different covered-dimension set with non-active keys and omits explicit handling of the RX dimensions, so scope adherence is weak.",
+      "RX.4": "Avoids major harmful regressions and identifies the original overclaiming pattern that could mislead readers. Minor risk remains from confident unsupported statements such as calling CallHome the hardest benchmark and from a truncated suggested revision.",
+      "RX.5": "Major critique points are traceable to quoted claims and reported numbers, but the suggested rewrite and prior-work recommendations are not fully annotated with source and reason for every non-cosmetic change."
     },
     "confidence": {
-      "R1.2": 0.86,
-      "R1.3": 0.78,
-      "R1.4": 0.76,
-      "RX.1": 0.72,
-      "RX.3": 0.85,
-      "RX.4": 0.88,
-      "RX.5": 0.76
+      "R1.2": 0.9,
+      "R1.3": 0.85,
+      "R1.4": 0.8,
+      "RX.1": 0.85,
+      "RX.3": 0.8,
+      "RX.4": 0.8,
+      "RX.5": 0.85
     },
     "blockers": []
   },

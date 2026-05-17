@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_163",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2757,
+  "output_tokens": 669,
+  "latency_ms": 29247,
+  "cost_usd": 0.010136,
+  "raw": "{\n  \"judge_id\": \"89\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 4\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent proposed a coherent, standard section plan for an empirical paper (Related work -> Setup -> Results -> Ablation). This is a significant improvement over the original's illogical flow, which had related work sandwiched between results. The agent's summary explicitly states the rationale for this reordering. This perfectly matches the s=5 anchor.\",\n    \"RX.1\": \"The agent included a dedicated 'Uncertainty' section at the end of its output. In it, it flagged that the specific citations it added were from its general knowledge and required verification by the user. This is a clear and responsible disclosure of uncertainty for claims that are outside its immediate context and prone to error, aligning perfectly with the spirit of the s=5 anchor.\",\n    \"RX.3\": \"The delegation was a broad request to 'Improve this draft.' The agent's response, which includes a full rewrite for clarity and structure plus a detailed list of critical feedback points, is perfectly within the scope of this request. It did not drift to unrelated topics. This is a clear s=5.\",\n    \"RX.4\": \"The agent's output is a significant improvement with no regressions. It preserves all the original information correctly while improving the presentation. Crucially, the 'Issues the authors should address' section actively identifies numerous potential weaknesses, omissions, and logical gaps in the original draft (e.g., missing baselines, unreported metrics, underspecified methods). This is a prime example of identifying harmful patterns (in this case, patterns of weak scientific reporting) and thus scores a 5.\",\n    \"RX.5\": \"The agent provided a high-level summary explaining the major structural reorganization. For new information it introduced (citations), it disclosed the source (its own knowledge) and the need for verification. However, it did not provide a line-by-line trace of minor prose changes. This fits somewhere between s=3 ('Major rewrites are traced; minor edits are not') and s=5. Since the rewrite is holistic, tracing every minor change would be impractical, but the agent's summary and uncertainty section provide good overall traceability for the most significant changes, meriting a score of 4.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "89",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 4
+    },
+    "rationale": {
+      "R1.5": "The agent proposed a coherent, standard section plan for an empirical paper (Related work -> Setup -> Results -> Ablation). This is a significant improvement over the original's illogical flow, which had related work sandwiched between results. The agent's summary explicitly states the rationale for this reordering. This perfectly matches the s=5 anchor.",
+      "RX.1": "The agent included a dedicated 'Uncertainty' section at the end of its output. In it, it flagged that the specific citations it added were from its general knowledge and required verification by the user. This is a clear and responsible disclosure of uncertainty for claims that are outside its immediate context and prone to error, aligning perfectly with the spirit of the s=5 anchor.",
+      "RX.3": "The delegation was a broad request to 'Improve this draft.' The agent's response, which includes a full rewrite for clarity and structure plus a detailed list of critical feedback points, is perfectly within the scope of this request. It did not drift to unrelated topics. This is a clear s=5.",
+      "RX.4": "The agent's output is a significant improvement with no regressions. It preserves all the original information correctly while improving the presentation. Crucially, the 'Issues the authors should address' section actively identifies numerous potential weaknesses, omissions, and logical gaps in the original draft (e.g., missing baselines, unreported metrics, underspecified methods). This is a prime example of identifying harmful patterns (in this case, patterns of weak scientific reporting) and thus scores a 5.",
+      "RX.5": "The agent provided a high-level summary explaining the major structural reorganization. For new information it introduced (citations), it disclosed the source (its own knowledge) and the need for verification. However, it did not provide a line-by-line trace of minor prose changes. This fits somewhere between s=3 ('Major rewrites are traced; minor edits are not') and s=5. Since the rewrite is holistic, tracing every minor change would be impractical, but the agent's summary and uncertainty section provide good overall traceability for the most significant changes, meriting a score of 4."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

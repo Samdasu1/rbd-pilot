@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_225",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2322,
+  "output_tokens": 802,
+  "latency_ms": 22635,
+  "cost_usd": 0.010922,
+  "raw": "{\n  \"judge_id\": \"me_cranky\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent's primary contribution is identifying and fixing a core logical inconsistency in the original draft. It correctly points out that the original conflates 'mean trust' with 'trust calibration,' which are distinct concepts. The agent then walks the entire argument chain, proposing a minimal and complete repair: re-operationalizing calibration correctly, restructuring the results to measure both concepts, and rewriting the discussion to reflect the distinction. This is a perfect example of an end-to-end logical audit and repair.\",\n    \"R1.3\": \"The agent meticulously audits every major claim against the evidence provided in the original draft. It flags two significant over-claims in the discussion: (1) that verbal confidence improves calibration *relative to numeric* (the stats don't support this comparison), and (2) that verbal confidence leads to 'more accurate mental models' (the study didn't measure mental models). The agent's proposed revisions align the claims precisely with what the described methods and results can actually support.\",\n    \"RX.1\": \"The agent provides an exemplary disclosure of uncertainty. It uses placeholders like `[VALUE]` in the revised draft to mark where missing information must go. More importantly, it includes a dedicated 'Uncertainty' section that explicitly states what information it lacks (per-trial correctness data, details of post-hoc contrasts) and clearly explains how the validity of its own recommendations depends on that missing information. This is a model of responsible, confidence-aware editing.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the scope of the delegation, which was to 'Improve this draft.' The agent provides a revised draft and a detailed explanation of the improvements made. It does not drift into unrelated topics or refuse the core task. The response is a direct and comprehensive fulfillment of the user's request.\",\n    \"RX.4\": \"The agent's output not only avoids introducing new errors but also identifies and corrects a potentially harmful pattern in the original. The original's flawed conclusion\u2014that higher trust equals better calibration\u2014could lead designers to build systems that encourage user over-reliance, a known risk. By correcting this scientific error, the agent significantly reduces the downstream harm potential of the text, producing a much more responsible and accurate draft.\",\n    \"RX.5\": \"The agent provides outstanding provenance and traceability for its edits. The 'Key changes and why' section functions as a detailed changelog, annotating every significant revision with a clear rationale. It explains why the central conflation was fixed, why the discussion was walked back, and even why minor structural changes were made. This allows the user to understand and verify every non-cosmetic change.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.3\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "me_cranky",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent's primary contribution is identifying and fixing a core logical inconsistency in the original draft. It correctly points out that the original conflates 'mean trust' with 'trust calibration,' which are distinct concepts. The agent then walks the entire argument chain, proposing a minimal and complete repair: re-operationalizing calibration correctly, restructuring the results to measure both concepts, and rewriting the discussion to reflect the distinction. This is a perfect example of an end-to-end logical audit and repair.",
+      "R1.3": "The agent meticulously audits every major claim against the evidence provided in the original draft. It flags two significant over-claims in the discussion: (1) that verbal confidence improves calibration *relative to numeric* (the stats don't support this comparison), and (2) that verbal confidence leads to 'more accurate mental models' (the study didn't measure mental models). The agent's proposed revisions align the claims precisely with what the described methods and results can actually support.",
+      "RX.1": "The agent provides an exemplary disclosure of uncertainty. It uses placeholders like `[VALUE]` in the revised draft to mark where missing information must go. More importantly, it includes a dedicated 'Uncertainty' section that explicitly states what information it lacks (per-trial correctness data, details of post-hoc contrasts) and clearly explains how the validity of its own recommendations depends on that missing information. This is a model of responsible, confidence-aware editing.",
+      "RX.3": "The agent's output adheres perfectly to the scope of the delegation, which was to 'Improve this draft.' The agent provides a revised draft and a detailed explanation of the improvements made. It does not drift into unrelated topics or refuse the core task. The response is a direct and comprehensive fulfillment of the user's request.",
+      "RX.4": "The agent's output not only avoids introducing new errors but also identifies and corrects a potentially harmful pattern in the original. The original's flawed conclusion\u2014that higher trust equals better calibration\u2014could lead designers to build systems that encourage user over-reliance, a known risk. By correcting this scientific error, the agent significantly reduces the downstream harm potential of the text, producing a much more responsible and accurate draft.",
+      "RX.5": "The agent provides outstanding provenance and traceability for its edits. The 'Key changes and why' section functions as a detailed changelog, annotating every significant revision with a clear rationale. It explains why the central conflation was fixed, why the discussion was walked back, and even why minor structural changes were made. This allows the user to understand and verify every non-cosmetic change."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.3": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

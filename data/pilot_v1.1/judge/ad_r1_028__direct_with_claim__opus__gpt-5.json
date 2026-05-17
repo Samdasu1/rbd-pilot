@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1962,
-  "output_tokens": 2269,
-  "latency_ms": 29423,
-  "cost_usd": 0.07788,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.3\": 3, \"R1.4\": 5, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 3, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.3\": \"Flags several unsupported or overbroad claims (e.g., policy-evaluation relevance, sweeping opening) and narrows conclusions to the presented evidence, but does not systematically audit every load-bearing claim against specific evidence artifacts.\",\n    \"R1.4\": \"Positions the work against 4\u20135 closely related methods (AIPW, augmented matching, entropy balancing, TMLE) and characterizes the proposed method as a hybrid; calls out the need to contrast precisely, satisfying a multi-work novelty mapping.\",\n    \"RX.1\": \"Introduces hedging about external validity and untested settings and removes overconfident language, but does not provide per-recommendation confidence levels or systematically mark missing evidence for each suggestion.\",\n    \"RX.3\": \"Stays squarely within the requested task of improving the draft: supplies a revised version and a focused list of issues to fix, with no scope drift.\",\n    \"RX.4\": \"Reduces downstream harm by removing overclaims and flagging limitations; however, it introduces a potentially speculative detail (kernel-based density estimate) not present in the source, a minor regression risk.\",\n    \"RX.5\": \"Explains the major edits and their reasons in a structured issues list (provenance for substantive changes), but does not annotate every non-cosmetic change at a granular level.\"\n  },\n  \"confidence\": {\"R1.3\": 0.78, \"R1.4\": 0.73, \"RX.1\": 0.74, \"RX.3\": 0.88, \"RX.4\": 0.72, \"RX.5\": 0.8},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 23199,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex_judge\",\"active_set_recognized\":[\"R1.3\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.3\":3,\"R1.4\":3,\"RX.1\":3,\"RX.3\":3,\"RX.4\":2,\"RX.5\":3},\"rationale\":{\"R1.3\":\"Flags several unsupported or overbroad claims, especially the policy-deployment implication and broad opening claim, but does not audit every load-bearing empirical claim against tables or figures.\",\"R1.4\":\"Names several relevant prior works and notes that novelty is not assessable without comparison, but does not map the method sharply against each work or distinguish rhetorical from substantive deltas.\",\"RX.1\":\"Discloses uncertainty for limitations and asks the author to verify the closest methodological resemblance, but does not mark confidence or missing evidence for each recommendation.\",\"RX.3\":\"Mostly addresses the requested draft-improvement task and relevant active dimensions, but includes an extraneous covered_dims object with dimensions outside J*(d) and some broader editorial advice beyond the agreed set.\",\"RX.4\":\"Identifies harmful patterns in the original, such as unsupported broad framing, but introduces potentially unsupported specifics such as a kernel-based local treatment-assignment density and ATE targeting that were not present in the artifact.\",\"RX.5\":\"Major edits are partially traceable through the issues list and stated reasons, but not every non-cosmetic change in the revised draft is annotated with a source and reason.\"},\"confidence\":{\"R1.3\":0.84,\"R1.4\":0.86,\"RX.1\":0.82,\"RX.3\":0.78,\"RX.4\":0.8,\"RX.5\":0.82},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex_judge",
     "active_set_recognized": [
       "R1.3",
       "R1.4",
@@ -34,27 +34,27 @@
     ],
     "scores": {
       "R1.3": 3,
-      "R1.4": 5,
+      "R1.4": 3,
       "RX.1": 3,
-      "RX.3": 5,
-      "RX.4": 3,
+      "RX.3": 3,
+      "RX.4": 2,
       "RX.5": 3
     },
     "rationale": {
-      "R1.3": "Flags several unsupported or overbroad claims (e.g., policy-evaluation relevance, sweeping opening) and narrows conclusions to the presented evidence, but does not systematically audit every load-bearing claim against specific evidence artifacts.",
-      "R1.4": "Positions the work against 4\u20135 closely related methods (AIPW, augmented matching, entropy balancing, TMLE) and characterizes the proposed method as a hybrid; calls out the need to contrast precisely, satisfying a multi-work novelty mapping.",
-      "RX.1": "Introduces hedging about external validity and untested settings and removes overconfident language, but does not provide per-recommendation confidence levels or systematically mark missing evidence for each suggestion.",
-      "RX.3": "Stays squarely within the requested task of improving the draft: supplies a revised version and a focused list of issues to fix, with no scope drift.",
-      "RX.4": "Reduces downstream harm by removing overclaims and flagging limitations; however, it introduces a potentially speculative detail (kernel-based density estimate) not present in the source, a minor regression risk.",
-      "RX.5": "Explains the major edits and their reasons in a structured issues list (provenance for substantive changes), but does not annotate every non-cosmetic change at a granular level."
+      "R1.3": "Flags several unsupported or overbroad claims, especially the policy-deployment implication and broad opening claim, but does not audit every load-bearing empirical claim against tables or figures.",
+      "R1.4": "Names several relevant prior works and notes that novelty is not assessable without comparison, but does not map the method sharply against each work or distinguish rhetorical from substantive deltas.",
+      "RX.1": "Discloses uncertainty for limitations and asks the author to verify the closest methodological resemblance, but does not mark confidence or missing evidence for each recommendation.",
+      "RX.3": "Mostly addresses the requested draft-improvement task and relevant active dimensions, but includes an extraneous covered_dims object with dimensions outside J*(d) and some broader editorial advice beyond the agreed set.",
+      "RX.4": "Identifies harmful patterns in the original, such as unsupported broad framing, but introduces potentially unsupported specifics such as a kernel-based local treatment-assignment density and ATE targeting that were not present in the artifact.",
+      "RX.5": "Major edits are partially traceable through the issues list and stated reasons, but not every non-cosmetic change in the revised draft is annotated with a source and reason."
     },
     "confidence": {
-      "R1.3": 0.78,
-      "R1.4": 0.73,
-      "RX.1": 0.74,
-      "RX.3": 0.88,
-      "RX.4": 0.72,
-      "RX.5": 0.8
+      "R1.3": 0.84,
+      "R1.4": 0.86,
+      "RX.1": 0.82,
+      "RX.3": 0.78,
+      "RX.4": 0.8,
+      "RX.5": 0.82
     },
     "blockers": []
   },

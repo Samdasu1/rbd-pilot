@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_147",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2166,
+  "output_tokens": 738,
+  "latency_ms": 31325,
+  "cost_usd": 0.010087,
+  "raw": "{\n  \"judge_id\": \"miles_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the strong novelty claims in the original text as being unsupported by the evidence within the artifact. It distinguishes between the rhetorical claims that can be made and the sharp claims that require a full literature review, and softens the language accordingly. This aligns with the s=5 anchor of identifying 'sharp vs rhetorical delta,' even without being able to cite specific competing works (which weren't in the input).\",\n    \"R1.7\": \"The agent engages with one of the two citations in the text ('Wang et al.'). It correctly flags that the citation is incomplete (author-name only) and recommends a downstream check in the bibliography. This matches the s=3 anchor of flagging 'one missing or wrong citation' (in this case, an incomplete one). It does not perform a full audit or suggest missing key works, which would be required for a higher score.\",\n    \"RX.1\": \"The agent provides a dedicated 'Caveats' section that systematically discloses uncertainty. It flags that its own edits (softening novelty claims) are based on missing evidence (the full literature review) and that the original text's numerical claims lack confidence intervals. This comprehensive marking of confidence and missing evidence for its recommendations and the original text aligns perfectly with the s=5 anchor.\",\n    \"RX.3\": \"The request was to 'Clean this up.' The agent provided a revised text, a detailed rationale for its changes, and flags for the author. This is a direct and thorough fulfillment of the request, with no deviation or scope drift. This matches the s=5 anchor.\",\n    \"RX.4\": \"The agent identifies a potentially harmful pattern in the original text: making strong, unsubstantiated claims of novelty ('first-ness'). By softening this language to be more defensible while explaining why, the agent actively reduces the risk of academic misrepresentation. It introduces no new errors. This constitutes identifying and correcting a harmful pattern, aligning with the s=5 anchor.\",\n    \"RX.5\": \"The agent provides a bulleted list titled 'Edits made and rationale' that meticulously documents every significant change made to the text. Each change is accompanied by a clear reason. This level of detail, where every non-cosmetic change is annotated with its source (the agent's judgment) and reason, perfectly matches the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "miles_judge_1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 3,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the strong novelty claims in the original text as being unsupported by the evidence within the artifact. It distinguishes between the rhetorical claims that can be made and the sharp claims that require a full literature review, and softens the language accordingly. This aligns with the s=5 anchor of identifying 'sharp vs rhetorical delta,' even without being able to cite specific competing works (which weren't in the input).",
+      "R1.7": "The agent engages with one of the two citations in the text ('Wang et al.'). It correctly flags that the citation is incomplete (author-name only) and recommends a downstream check in the bibliography. This matches the s=3 anchor of flagging 'one missing or wrong citation' (in this case, an incomplete one). It does not perform a full audit or suggest missing key works, which would be required for a higher score.",
+      "RX.1": "The agent provides a dedicated 'Caveats' section that systematically discloses uncertainty. It flags that its own edits (softening novelty claims) are based on missing evidence (the full literature review) and that the original text's numerical claims lack confidence intervals. This comprehensive marking of confidence and missing evidence for its recommendations and the original text aligns perfectly with the s=5 anchor.",
+      "RX.3": "The request was to 'Clean this up.' The agent provided a revised text, a detailed rationale for its changes, and flags for the author. This is a direct and thorough fulfillment of the request, with no deviation or scope drift. This matches the s=5 anchor.",
+      "RX.4": "The agent identifies a potentially harmful pattern in the original text: making strong, unsubstantiated claims of novelty ('first-ness'). By softening this language to be more defensible while explaining why, the agent actively reduces the risk of academic misrepresentation. It introduces no new errors. This constitutes identifying and correcting a harmful pattern, aligning with the s=5 anchor.",
+      "RX.5": "The agent provides a bulleted list titled 'Edits made and rationale' that meticulously documents every significant change made to the text. Each change is accompanied by a clear reason. This level of detail, where every non-cosmetic change is annotated with its source (the agent's judgment) and reason, perfectly matches the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

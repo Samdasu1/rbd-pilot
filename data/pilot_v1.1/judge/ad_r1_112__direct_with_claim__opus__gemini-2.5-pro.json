@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_112",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2163,
+  "output_tokens": 610,
+  "latency_ms": 26062,
+  "cost_usd": 0.008804,
+  "raw": "{\n  \"judge_id\": \"text_to_sql_eval_critique\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's primary contribution is a meticulous audit of the artifact's claims against its own stated evidence (the evaluation protocol). It correctly identifies that the metric used ('token-level exact-match') does not support the claims made about 'execution accuracy.' It then systematically traces this fundamental mismatch through every quantitative and causal claim in the text, demonstrating a comprehensive check of evidence-claim alignment.\",\n    \"RX.1\": \"The agent correctly identifies the limits of its own analysis based on the provided text. It confidently critiques the internal contradiction between the defined protocol and the reported metric. It then explicitly flags its uncertainty about the external validity of the baseline numbers, advising the user to 'please confirm citations and that these are the appropriate comparison points,' which is a perfect example of disclosing missing evidence.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Check this.' It performs a deep, critical analysis of the artifact's scientific validity, focusing on the experimental methodology and the claims derived from it. The scope is precise and does not drift into irrelevant areas.\",\n    \"RX.4\": \"The agent introduces no new errors. Its primary function in this output is to identify and explain a significant harmful pattern in the original artifact: the misrepresentation of a weaker evaluation metric as a stronger one. This is a serious issue in scientific reporting, and the agent's clear explanation and constructive recommendations help to prevent the downstream harm of misleading the research community.\",\n    \"RX.5\": \"Every point of criticism in the agent's output is directly and explicitly traced back to a specific quote or claim in the source artifact. For example, it quotes the protocol definition and then quotes each numerical result that mislabels the metric. This provides perfect traceability, allowing the user to see exactly what part of the original text each critique is based on and why.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "text_to_sql_eval_critique",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's primary contribution is a meticulous audit of the artifact's claims against its own stated evidence (the evaluation protocol). It correctly identifies that the metric used ('token-level exact-match') does not support the claims made about 'execution accuracy.' It then systematically traces this fundamental mismatch through every quantitative and causal claim in the text, demonstrating a comprehensive check of evidence-claim alignment.",
+      "RX.1": "The agent correctly identifies the limits of its own analysis based on the provided text. It confidently critiques the internal contradiction between the defined protocol and the reported metric. It then explicitly flags its uncertainty about the external validity of the baseline numbers, advising the user to 'please confirm citations and that these are the appropriate comparison points,' which is a perfect example of disclosing missing evidence.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Check this.' It performs a deep, critical analysis of the artifact's scientific validity, focusing on the experimental methodology and the claims derived from it. The scope is precise and does not drift into irrelevant areas.",
+      "RX.4": "The agent introduces no new errors. Its primary function in this output is to identify and explain a significant harmful pattern in the original artifact: the misrepresentation of a weaker evaluation metric as a stronger one. This is a serious issue in scientific reporting, and the agent's clear explanation and constructive recommendations help to prevent the downstream harm of misleading the research community.",
+      "RX.5": "Every point of criticism in the agent's output is directly and explicitly traced back to a specific quote or claim in the source artifact. For example, it quotes the protocol definition and then quotes each numerical result that mislabels the metric. This provides perfect traceability, allowing the user to see exactly what part of the original text each critique is based on and why."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

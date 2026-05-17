@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_081",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2504,
+  "output_tokens": 723,
+  "latency_ms": 28965,
+  "cost_usd": 0.01036,
+  "raw": "{\n  \"judge_id\": \"machine_learning_expert_1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual error in the artifact: the described algorithm is an EM/IRLS-style iteration, not Newton-Raphson. It names the correct load-bearing concepts (EM, coordinate ascent, IRLS), explains precisely why the 'Newton' framing is wrong (no Hessian, no Newton step), and proposes a complete reframing that situates the work correctly relative to prior art like Dawid-Skene. This perfectly matches the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags the two key assumptions its analysis rests on: the label format of the CIFAR-10H dataset and the possibility that the artifact elided a more complex, true Newton step. This demonstrates a well-calibrated understanding of the limits of its knowledge based on the provided text and protects the user from acting on potentially flawed advice if those assumptions are wrong. This fulfills the spirit of the s=5 anchor by marking confidence and missing evidence for its most critical recommendations.\",\n    \"RX.3\": \"The delegation was a simple 'Check this.' The agent interpreted this as a request for a critical review of the provided scientific text. The output is a detailed, structured critique that addresses only the content of the artifact. There is no scope drift. The agent's response is a perfect fulfillment of the implicit request. This is a clear s=5.\",\n    \"RX.4\": \"The agent's output is aimed at preventing downstream harm (e.g., submitting a flawed paper for review). It identifies and corrects numerous errors and misleading statements in the original artifact, from the fundamental mislabeling of the algorithm to unsupported claims about convergence and novelty. The agent's corrections are accurate and do not introduce new errors. It clearly identifies the harmful patterns in the original, meriting an s=5.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each point of feedback is clearly linked to a specific claim or omission in the original artifact, often by quoting or paraphrasing the problematic text. The reason for each recommended change is explicitly stated. For example, it recommends renaming the algorithm *because* it is not Newton-Raphson. This structure allows the user to trace every piece of feedback back to its source in the artifact and the logical reason for the critique, which aligns perfectly with the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "machine_learning_expert_1",
+    "active_set_recognized": [
+      "R1.1",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual error in the artifact: the described algorithm is an EM/IRLS-style iteration, not Newton-Raphson. It names the correct load-bearing concepts (EM, coordinate ascent, IRLS), explains precisely why the 'Newton' framing is wrong (no Hessian, no Newton step), and proposes a complete reframing that situates the work correctly relative to prior art like Dawid-Skene. This perfectly matches the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags the two key assumptions its analysis rests on: the label format of the CIFAR-10H dataset and the possibility that the artifact elided a more complex, true Newton step. This demonstrates a well-calibrated understanding of the limits of its knowledge based on the provided text and protects the user from acting on potentially flawed advice if those assumptions are wrong. This fulfills the spirit of the s=5 anchor by marking confidence and missing evidence for its most critical recommendations.",
+      "RX.3": "The delegation was a simple 'Check this.' The agent interpreted this as a request for a critical review of the provided scientific text. The output is a detailed, structured critique that addresses only the content of the artifact. There is no scope drift. The agent's response is a perfect fulfillment of the implicit request. This is a clear s=5.",
+      "RX.4": "The agent's output is aimed at preventing downstream harm (e.g., submitting a flawed paper for review). It identifies and corrects numerous errors and misleading statements in the original artifact, from the fundamental mislabeling of the algorithm to unsupported claims about convergence and novelty. The agent's corrections are accurate and do not introduce new errors. It clearly identifies the harmful patterns in the original, meriting an s=5.",
+      "RX.5": "The agent's critique is highly traceable. Each point of feedback is clearly linked to a specific claim or omission in the original artifact, often by quoting or paraphrasing the problematic text. The reason for each recommended change is explicitly stated. For example, it recommends renaming the algorithm *because* it is not Newton-Raphson. This structure allows the user to trace every piece of feedback back to its source in the artifact and the logical reason for the critique, which aligns perfectly with the s=5 anchor."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

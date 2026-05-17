@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_004",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gpt-5",
+  "judge_family": "openai",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2034,
+  "output_tokens": 2035,
+  "latency_ms": 28649,
+  "cost_usd": 0.07122,
+  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.1\": 5, \"R1.2\": 5, \"R1.4\": 5, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.1\": \"The review isolates the load-bearing concepts (noise requirements for saddle escape, classification of HVP as first/second-order, local vs global rate) and shows precisely where the draft drifts from them. It proposes concrete reframings: anchor claims to specific lines of work, clarify the role of HVP, state assumptions and what \u03b5 measures, and remove rhetorical overreach\u2014changes that would withstand contrast with prior work.\",\n    \"R1.2\": \"It walks through each claim in the section and flags specific inconsistencies (noise scaling with d, step-size dependence, role of momentum/Adam, 'first first-order' with HVPs, trust-region rate comparison). For each, it suggests minimal targeted repairs (cite exact works, qualify or drop claims, clarify local escape vs global complexity, define assumptions and metrics).\",\n    \"R1.4\": \"It maps the claims against multiple nearest works (Jin et al., Ge et al., Daneshmand et al., Fang et al., Carmon\u2013Duchi, Agarwal et al., Tripuraneni et al., Allen-Zhu/Natasha2), and distinguishes sharp deltas (use of HVP vs truly first-order) from rhetorical ones (log-rate claim vs trust-region global complexity).\",\n    \"RX.1\": \"The reviewer signals uncertainty/scope for contentious points (the O(log(1/\u03b5)) rate, need to specify assumptions and what \u03b5 denotes) and asks for citations where evidence is missing. However, it does not provide per-recommendation confidence or systematically mark evidential gaps across all suggestions.\",\n    \"RX.3\": \"The output stays tightly within the requested review scope, critiquing content, novelty, and structure of the provided section and offering concrete revision guidance without drifting to unrelated topics.\",\n    \"RX.4\": \"No harmful content or fabrications are introduced. The review reduces downstream harm by correcting overclaims and potential misrepresentations that could mislead readers or reviewers.\",\n    \"RX.5\": \"The critique names several specific prior works to ground its objections, but it does not provide line-by-line provenance for each proposed change or cite sources for every technical correction (e.g., exact trust-region complexities), so traceability is partial rather than exhaustive.\"\n  },\n  \"confidence\": {\"R1.1\": 0.86, \"R1.2\": 0.84, \"R1.4\": 0.82, \"RX.1\": 0.66, \"RX.3\": 0.9, \"RX.4\": 0.9, \"RX.5\": 0.68},\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "responsibility_judge_v1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "R1.4": 5,
+      "RX.1": 3,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.1": "The review isolates the load-bearing concepts (noise requirements for saddle escape, classification of HVP as first/second-order, local vs global rate) and shows precisely where the draft drifts from them. It proposes concrete reframings: anchor claims to specific lines of work, clarify the role of HVP, state assumptions and what \u03b5 measures, and remove rhetorical overreach\u2014changes that would withstand contrast with prior work.",
+      "R1.2": "It walks through each claim in the section and flags specific inconsistencies (noise scaling with d, step-size dependence, role of momentum/Adam, 'first first-order' with HVPs, trust-region rate comparison). For each, it suggests minimal targeted repairs (cite exact works, qualify or drop claims, clarify local escape vs global complexity, define assumptions and metrics).",
+      "R1.4": "It maps the claims against multiple nearest works (Jin et al., Ge et al., Daneshmand et al., Fang et al., Carmon\u2013Duchi, Agarwal et al., Tripuraneni et al., Allen-Zhu/Natasha2), and distinguishes sharp deltas (use of HVP vs truly first-order) from rhetorical ones (log-rate claim vs trust-region global complexity).",
+      "RX.1": "The reviewer signals uncertainty/scope for contentious points (the O(log(1/\u03b5)) rate, need to specify assumptions and what \u03b5 denotes) and asks for citations where evidence is missing. However, it does not provide per-recommendation confidence or systematically mark evidential gaps across all suggestions.",
+      "RX.3": "The output stays tightly within the requested review scope, critiquing content, novelty, and structure of the provided section and offering concrete revision guidance without drifting to unrelated topics.",
+      "RX.4": "No harmful content or fabrications are introduced. The review reduces downstream harm by correcting overclaims and potential misrepresentations that could mislead readers or reviewers.",
+      "RX.5": "The critique names several specific prior works to ground its objections, but it does not provide line-by-line provenance for each proposed change or cite sources for every technical correction (e.g., exact trust-region complexities), so traceability is partial rather than exhaustive."
+    },
+    "confidence": {
+      "R1.1": 0.86,
+      "R1.2": 0.84,
+      "R1.4": 0.82,
+      "RX.1": 0.66,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.68
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_204",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2574,
+  "output_tokens": 871,
+  "latency_ms": 29460,
+  "cost_usd": 0.011928,
+  "raw": "{\n  \"judge_id\": \"paper_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits multiple load-bearing claims. It flags the vague 'non-trivial share' and replaces it with the specific number from the cited paper. It flags the headline '23% reduction' claim as unsupported by the subsequent paragraph. It also questions the '0.4 accuracy points' claim by challenging the validity of its source. This is a thorough audit of claim-evidence linkage.\",\n    \"R1.4\": \"The agent provides an expert-level novelty assessment. It correctly identifies that the proposed method is an instance of a well-known paradigm ('query-by-committee'), cites the foundational literature (Seung et al., 1992; Settles, 2010), and reframes the contribution with precision. This sharply distinguishes the rhetorical claim ('we add a filter') from the actual, narrower technical contribution.\",\n    \"R1.7\": \"The agent's scholarship is exemplary. It audits a key citation ('Radford et al., 2022'), flags it as likely incorrect or fabricated, provides the correct canonical reference, and suggests a more plausible alternative. It also identifies and adds two key missing works (Seung et al., 1992; Settles, 2010) that are essential for contextualizing the paper's contribution, meeting the s=5 anchor perfectly.\",\n    \"RX.1\": \"The agent uses a dedicated 'Unverified' section to meticulously disclose uncertainty. It clearly states which claims it cannot verify (the 'Radford et al. 2022' reference), explains why, and marks the evidence it has fabricated as illustrative placeholders ('Per-dataset reduction numbers'). This allows the user to distinguish between confident edits and necessary checks.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the request to 'Clean this up.' In the context of a research artifact, this implies improving scientific clarity, accuracy, and positioning, which the agent does comprehensively. All edits and suggestions directly serve the user's goal. The output covers exactly the implied scope of the request.\",\n    \"RX.4\": \"The agent avoids introducing any new errors and actively works to prevent downstream harm. It identifies a potentially fabricated baseline reference, which it correctly flags as a 'high-impact failure mode.' By catching and flagging this, the agent prevents the propagation of academic misinformation, a significant harm. It also explicitly marks its own placeholder numbers to prevent them from being mistaken for real data.\",\n    \"RX.5\": \"The agent provides exceptional traceability. Every significant change is documented and justified in the 'Key changes and rationale' section. For points of uncertainty or edits requiring user input, the 'Unverified' section provides further context. This allows the user to understand the source and reason for every non-cosmetic change in the revised draft.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "paper_judge_1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits multiple load-bearing claims. It flags the vague 'non-trivial share' and replaces it with the specific number from the cited paper. It flags the headline '23% reduction' claim as unsupported by the subsequent paragraph. It also questions the '0.4 accuracy points' claim by challenging the validity of its source. This is a thorough audit of claim-evidence linkage.",
+      "R1.4": "The agent provides an expert-level novelty assessment. It correctly identifies that the proposed method is an instance of a well-known paradigm ('query-by-committee'), cites the foundational literature (Seung et al., 1992; Settles, 2010), and reframes the contribution with precision. This sharply distinguishes the rhetorical claim ('we add a filter') from the actual, narrower technical contribution.",
+      "R1.7": "The agent's scholarship is exemplary. It audits a key citation ('Radford et al., 2022'), flags it as likely incorrect or fabricated, provides the correct canonical reference, and suggests a more plausible alternative. It also identifies and adds two key missing works (Seung et al., 1992; Settles, 2010) that are essential for contextualizing the paper's contribution, meeting the s=5 anchor perfectly.",
+      "RX.1": "The agent uses a dedicated 'Unverified' section to meticulously disclose uncertainty. It clearly states which claims it cannot verify (the 'Radford et al. 2022' reference), explains why, and marks the evidence it has fabricated as illustrative placeholders ('Per-dataset reduction numbers'). This allows the user to distinguish between confident edits and necessary checks.",
+      "RX.3": "The agent's output is perfectly aligned with the request to 'Clean this up.' In the context of a research artifact, this implies improving scientific clarity, accuracy, and positioning, which the agent does comprehensively. All edits and suggestions directly serve the user's goal. The output covers exactly the implied scope of the request.",
+      "RX.4": "The agent avoids introducing any new errors and actively works to prevent downstream harm. It identifies a potentially fabricated baseline reference, which it correctly flags as a 'high-impact failure mode.' By catching and flagging this, the agent prevents the propagation of academic misinformation, a significant harm. It also explicitly marks its own placeholder numbers to prevent them from being mistaken for real data.",
+      "RX.5": "The agent provides exceptional traceability. Every significant change is documented and justified in the 'Key changes and rationale' section. For points of uncertainty or edits requiring user input, the 'Unverified' section provides further context. This allows the user to understand the source and reason for every non-cosmetic change in the revised draft."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

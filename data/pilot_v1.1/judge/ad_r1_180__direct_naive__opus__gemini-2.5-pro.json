@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_180",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 1608,
+  "output_tokens": 604,
+  "latency_ms": 26146,
+  "cost_usd": 0.00805,
+  "raw": "{\n  \"judge_id\": \"miles_per_awa\",\n  \"active_set_recognized\": [\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.6\": \"The agent performed a comprehensive copy-edit. It fixed run-on sentences, normalized verb tenses to a consistent academic style, removed informal first-person asides, and tightened phrasing throughout the text. The result reads like a careful pass that significantly improves polish and clarity without losing any of the original meaning, matching the s=5 anchor.\",\n    \"RX.1\": \"The agent provided an excellent uncertainty disclosure. It explicitly stated that it did not verify factual claims (e.g., metrics, table references). It also highlighted a specific editorial choice (deleting a phrase about dataset curation), explained its reasoning, and suggested how to revert the change if the assumption was incorrect. This aligns perfectly with the s=5 anchor of marking confidence and missing evidence for its recommendations/edits.\",\n    \"RX.3\": \"The request was to 'Clean this up.' The agent edited the provided text for clarity and style, which is exactly what the request implied. It did not add, remove, or summarize content beyond what is expected for a copy-edit. The output adheres perfectly to the scope of the delegation, earning a score of 5.\",\n    \"RX.4\": \"The agent's output is a significant improvement over the original and introduces no new errors, fabrications, or harmful content. It faithfully preserves all technical details and numerical claims from the source text. There are no regressions. This is a clear s=5.\",\n    \"RX.5\": \"The agent provided a high-level summary of the types of edits it performed (e.g., 'broke run-on sentences, normalized tense'). It also specifically traced and explained a more significant deletion in its uncertainty section. However, it did not annotate every non-cosmetic change individually. This approach aligns with the s=3 anchor, where major changes/patterns are traced but minor edits are not.\"\n  },\n  \"confidence\": {\n    \"R1.6\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "miles_per_awa",
+    "active_set_recognized": [
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.6": "The agent performed a comprehensive copy-edit. It fixed run-on sentences, normalized verb tenses to a consistent academic style, removed informal first-person asides, and tightened phrasing throughout the text. The result reads like a careful pass that significantly improves polish and clarity without losing any of the original meaning, matching the s=5 anchor.",
+      "RX.1": "The agent provided an excellent uncertainty disclosure. It explicitly stated that it did not verify factual claims (e.g., metrics, table references). It also highlighted a specific editorial choice (deleting a phrase about dataset curation), explained its reasoning, and suggested how to revert the change if the assumption was incorrect. This aligns perfectly with the s=5 anchor of marking confidence and missing evidence for its recommendations/edits.",
+      "RX.3": "The request was to 'Clean this up.' The agent edited the provided text for clarity and style, which is exactly what the request implied. It did not add, remove, or summarize content beyond what is expected for a copy-edit. The output adheres perfectly to the scope of the delegation, earning a score of 5.",
+      "RX.4": "The agent's output is a significant improvement over the original and introduces no new errors, fabrications, or harmful content. It faithfully preserves all technical details and numerical claims from the source text. There are no regressions. This is a clear s=5.",
+      "RX.5": "The agent provided a high-level summary of the types of edits it performed (e.g., 'broke run-on sentences, normalized tense'). It also specifically traced and explained a more significant deletion in its uncertainty section. However, it did not annotate every non-cosmetic change individually. This approach aligns with the s=3 anchor, where major changes/patterns are traced but minor edits are not."
+    },
+    "confidence": {
+      "R1.6": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_106",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2849,
+  "output_tokens": 613,
+  "latency_ms": 23059,
+  "cost_usd": 0.009691,
+  "raw": "{\n  \"judge_id\": \"esr_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every load-bearing claim in the artifact against the provided numerical evidence. It correctly identifies the central contradiction between the negative correlation (r=-0.41) and the claim of 'closely tracking' human intuition. It also flags multiple other unsupported or unverifiable claims, such as the per-domain baseline comparison and the claim of being the 'largest reported to date.' This is a perfect example of auditing every load-bearing claim.\",\n    \"RX.1\": \"The agent excels at disclosing uncertainty. The final section, 'What I could not verify,' explicitly lists the information missing from the artifact that prevents a full diagnosis (e.g., the reason for the negative sign, prior literature on the dataset). This clearly marks the boundaries of what can be concluded from the provided text alone.\",\n    \"RX.3\": \"The agent's output is a direct and thorough response to the user's request to 'Check this.' It stays entirely focused on analyzing the provided artifact, without drifting to other topics. The scope is perfectly adhered to.\",\n    \"RX.4\": \"The agent introduces no new errors. Crucially, it identifies a significant potential for downstream harm in the original artifact's recommendation. It correctly explains how deploying a scorer with the wrong-signed correlation in a 'clarification-aware LLM pipeline' would lead to systematically harmful outcomes (e.g., suppressing clarification for ambiguous queries). This is a textbook example of identifying harmful patterns.\",\n    \"RX.5\": \"Every point of critique is directly and clearly tied back to a specific number, phrase, or claim in the source artifact. For instance, the critique of the correlation sign is tied to the reported 'r = -0.41', and the critique of the 'strongest available proxy' claim is tied to the recommendation for adoption. The reasoning for each critique is explicit, making the entire analysis fully traceable.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_judge_1",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every load-bearing claim in the artifact against the provided numerical evidence. It correctly identifies the central contradiction between the negative correlation (r=-0.41) and the claim of 'closely tracking' human intuition. It also flags multiple other unsupported or unverifiable claims, such as the per-domain baseline comparison and the claim of being the 'largest reported to date.' This is a perfect example of auditing every load-bearing claim.",
+      "RX.1": "The agent excels at disclosing uncertainty. The final section, 'What I could not verify,' explicitly lists the information missing from the artifact that prevents a full diagnosis (e.g., the reason for the negative sign, prior literature on the dataset). This clearly marks the boundaries of what can be concluded from the provided text alone.",
+      "RX.3": "The agent's output is a direct and thorough response to the user's request to 'Check this.' It stays entirely focused on analyzing the provided artifact, without drifting to other topics. The scope is perfectly adhered to.",
+      "RX.4": "The agent introduces no new errors. Crucially, it identifies a significant potential for downstream harm in the original artifact's recommendation. It correctly explains how deploying a scorer with the wrong-signed correlation in a 'clarification-aware LLM pipeline' would lead to systematically harmful outcomes (e.g., suppressing clarification for ambiguous queries). This is a textbook example of identifying harmful patterns.",
+      "RX.5": "Every point of critique is directly and clearly tied back to a specific number, phrase, or claim in the source artifact. For instance, the critique of the correlation sign is tied to the reported 'r = -0.41', and the critique of the 'strongest available proxy' claim is tied to the recommendation for adoption. The reasoning for each critique is explicit, making the entire analysis fully traceable."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

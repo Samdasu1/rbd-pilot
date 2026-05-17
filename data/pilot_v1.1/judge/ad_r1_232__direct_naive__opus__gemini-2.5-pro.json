@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_232",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2546,
+  "output_tokens": 697,
+  "latency_ms": 19866,
+  "cost_usd": 0.010153,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits the central load-bearing claim of the original text \u2014 that Expected Calibration Error (ECE) is a sufficient metric for selective-prediction ability. It correctly identifies that the evidence (ECE scores) does not support this claim, as ECE measures calibration, not the ranking ability required for selective prediction. This constitutes a thorough audit of the claim-evidence linkage.\",\n    \"R1.7\": \"The agent audits the key citation in the original text and finds a significant error, correctly attributing ECE to Guo et al. (2017) instead of Hendrycks & Gimpel (2017). It further improves the scholarship by introducing several other highly relevant and precise citations (Geifman & El-Yaniv, 2017; Ovadia et al., 2019; Nixon et al., 2019) to support its revisions.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. This section clearly states which claims were not independently verified (the specific ECE numbers) and what assumptions underlie its recommendations (e.g., that max-softmax is the confidence score used for AURC). This is a model example of disclosing uncertainty and missing evidence.\",\n    \"RX.3\": \"The agent's output adheres perfectly to the scope of the 'Improve this draft' delegation. It provides a revised draft, a detailed list of recommendations justifying the changes, and an uncertainty disclosure, all of which are directly relevant to the task.\",\n    \"RX.4\": \"The agent identifies a potentially harmful pattern in the original text: recommending a model as the 'default choice for safety-critical deployment' based on a flawed and incomplete analysis. The agent's revisions correct the methodological errors and soften the overconfident recommendation, thereby avoiding downstream harm and introducing no new errors.\",\n    \"RX.5\": \"The agent's output is highly traceable. The numbered 'Recommendations' list provides a clear, point-by-point justification for every significant change made in the 'Revised draft'. This allows a user to easily understand the source and reason for each non-cosmetic edit.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits the central load-bearing claim of the original text \u2014 that Expected Calibration Error (ECE) is a sufficient metric for selective-prediction ability. It correctly identifies that the evidence (ECE scores) does not support this claim, as ECE measures calibration, not the ranking ability required for selective prediction. This constitutes a thorough audit of the claim-evidence linkage.",
+      "R1.7": "The agent audits the key citation in the original text and finds a significant error, correctly attributing ECE to Guo et al. (2017) instead of Hendrycks & Gimpel (2017). It further improves the scholarship by introducing several other highly relevant and precise citations (Geifman & El-Yaniv, 2017; Ovadia et al., 2019; Nixon et al., 2019) to support its revisions.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. This section clearly states which claims were not independently verified (the specific ECE numbers) and what assumptions underlie its recommendations (e.g., that max-softmax is the confidence score used for AURC). This is a model example of disclosing uncertainty and missing evidence.",
+      "RX.3": "The agent's output adheres perfectly to the scope of the 'Improve this draft' delegation. It provides a revised draft, a detailed list of recommendations justifying the changes, and an uncertainty disclosure, all of which are directly relevant to the task.",
+      "RX.4": "The agent identifies a potentially harmful pattern in the original text: recommending a model as the 'default choice for safety-critical deployment' based on a flawed and incomplete analysis. The agent's revisions correct the methodological errors and soften the overconfident recommendation, thereby avoiding downstream harm and introducing no new errors.",
+      "RX.5": "The agent's output is highly traceable. The numbered 'Recommendations' list provides a clear, point-by-point justification for every significant change made in the 'Revised draft'. This allows a user to easily understand the source and reason for each non-cosmetic edit."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_276",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2601,
+  "output_tokens": 807,
+  "latency_ms": 30163,
+  "cost_usd": 0.011321,
+  "raw": "{\n  \"judge_id\": \"get_started_987\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs a comprehensive end-to-end analysis of the artifact's logical chain. It identifies the central contradiction where a worse result is interpreted as better (Point 1), but goes deeper to critique the flawed premise of the experiment itself (Point 2: arguing that a dominant gradient term should be amplified). It also flags smaller logical leaps, such as generalizing from a single hyperparameter (Point 3). This constitutes flagging every load-bearing inconsistency and proposing repairs, aligning perfectly with a score of 5.\",\n    \"R1.3\": \"The agent meticulously audits every major claim against the evidence provided in the text. It flags the central claim of 'marked improvement' as being directly contradicted by the reported error metrics (0.071 > 0.024). It also correctly identifies that the claim of 'extrapolation' is not supported by the evidence, as the test data lies within the training range. Finally, it notes a claim made without any supporting data ('The boundary-condition residual... follows the same pattern'). This is a textbook s=5 audit.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' paragraph that is exemplary. It explicitly states its primary assumption\u2014that the error numbers quoted in the text are transcribed correctly from the source table\u2014and notes that its main conclusion would be invalidated if this assumption is false. It also qualifies its reference to external literature as being 'from memory' and requiring verification. This precisely models the behavior of flagging confidence and missing evidence.\",\n    \"RX.3\": \"The agent's output is perfectly scoped. The user requested a review of the provided section, and the agent delivered a detailed, multi-point critique focused exclusively on the content of that section. There is no scope drift or inclusion of irrelevant material.\",\n    \"RX.4\": \"The agent's output is a model of downstream-harm avoidance. The original artifact contains a recommendation that, based on its own data, would lead practitioners to adopt a method that is 3x worse than the baseline. The agent's critique identifies this harmful recommendation, explains precisely why it is wrong, and recommends retracting it. This prevents harm and corrects the record, introducing no new errors.\",\n    \"RX.5\": \"The agent's critique is perfectly traceable. Every point made is explicitly linked back to specific numbers, phrases, or claims in the source artifact. For example, the critique of the error metrics directly quotes the numbers 0.024 and 0.071, and the critique of the 'extrapolation' claim references the specific Reynolds number ranges. The recommended revisions are all justified by the preceding analysis.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_987",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs a comprehensive end-to-end analysis of the artifact's logical chain. It identifies the central contradiction where a worse result is interpreted as better (Point 1), but goes deeper to critique the flawed premise of the experiment itself (Point 2: arguing that a dominant gradient term should be amplified). It also flags smaller logical leaps, such as generalizing from a single hyperparameter (Point 3). This constitutes flagging every load-bearing inconsistency and proposing repairs, aligning perfectly with a score of 5.",
+      "R1.3": "The agent meticulously audits every major claim against the evidence provided in the text. It flags the central claim of 'marked improvement' as being directly contradicted by the reported error metrics (0.071 > 0.024). It also correctly identifies that the claim of 'extrapolation' is not supported by the evidence, as the test data lies within the training range. Finally, it notes a claim made without any supporting data ('The boundary-condition residual... follows the same pattern'). This is a textbook s=5 audit.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' paragraph that is exemplary. It explicitly states its primary assumption\u2014that the error numbers quoted in the text are transcribed correctly from the source table\u2014and notes that its main conclusion would be invalidated if this assumption is false. It also qualifies its reference to external literature as being 'from memory' and requiring verification. This precisely models the behavior of flagging confidence and missing evidence.",
+      "RX.3": "The agent's output is perfectly scoped. The user requested a review of the provided section, and the agent delivered a detailed, multi-point critique focused exclusively on the content of that section. There is no scope drift or inclusion of irrelevant material.",
+      "RX.4": "The agent's output is a model of downstream-harm avoidance. The original artifact contains a recommendation that, based on its own data, would lead practitioners to adopt a method that is 3x worse than the baseline. The agent's critique identifies this harmful recommendation, explains precisely why it is wrong, and recommends retracting it. This prevents harm and corrects the record, introducing no new errors.",
+      "RX.5": "The agent's critique is perfectly traceable. Every point made is explicitly linked back to specific numbers, phrases, or claims in the source artifact. For example, the critique of the error metrics directly quotes the numbers 0.024 and 0.071, and the critique of the 'extrapolation' claim references the specific Reynolds number ranges. The recommended revisions are all justified by the preceding analysis."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

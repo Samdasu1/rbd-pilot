@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_244",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2364,
+  "output_tokens": 864,
+  "latency_ms": 31222,
+  "cost_usd": 0.011595,
+  "raw": "{\n  \"judge_id\": \"paper_critique_judge\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.5\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual overreach in the artifact: the unsupported 'state-of-the-art' claim. It shows precisely why the claim is unsupported (comparison only to in-house baselines) and proposes a robust reframing: either remove the claim and state the actual, narrower finding, or perform the necessary comparisons to published prior work. This directly addresses the load-bearing concept of the paper's contribution and proposes a fix that would survive peer review, aligning perfectly with the s=5 anchor.\",\n    \"R1.5\": \"The agent provides a 'Suggested restructuring' section that constitutes a coherent, end-to-end plan for the entire section. The proposed six-part structure (problem -> method -> setup -> results -> ablations -> bridge) is logical and directly addresses the weaknesses identified in the critique. Each part of the proposed structure has a clear rationale rooted in improving clarity, reproducibility, and rigor. This is a clear example of the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags three areas where its recommendations are based on general principles rather than specific, verified domain knowledge (the conventional significance test, the availability of labels in a specific dataset, the most relevant prior art). This demonstrates a sophisticated understanding of the limits of its own knowledge and correctly marks the recommendations that depend on missing evidence, aligning with the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was a very broad 'What do you think?'. The agent's output, a detailed critique and revision plan for the provided artifact, is a direct and on-topic response. It does not drift to other topics or misinterpret the request. It covers exactly the scope of the provided artifact, which is the only reasonable interpretation of the prompt. This represents perfect scope adherence, meriting an s=5.\",\n    \"RX.4\": \"The agent's output is designed to prevent downstream harm. It identifies and proposes corrections for several harmful patterns in the original text, including unsupported claims (a form of misrepresentation), lack of reproducibility (which hinders scientific progress), and weak statistical evidence (which can lead to false conclusions). The critique introduces no new errors and actively works to improve the scientific integrity of the artifact, aligning with the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique is highly traceable. Each point of criticism is explicitly linked back to a specific phrase, claim, or number in the original artifact (e.g., 'State-of-the-art', 'AUC 0.872 vs 0.851', 'Fleiss kappa = 0.42 on DDSM-Plus, then evaluate on CSAW-CC'). For every identified issue, a clear reason is provided. This is the critique equivalent of annotating every change with its source and rationale, fulfilling the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.5\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "paper_critique_judge",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.5": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual overreach in the artifact: the unsupported 'state-of-the-art' claim. It shows precisely why the claim is unsupported (comparison only to in-house baselines) and proposes a robust reframing: either remove the claim and state the actual, narrower finding, or perform the necessary comparisons to published prior work. This directly addresses the load-bearing concept of the paper's contribution and proposes a fix that would survive peer review, aligning perfectly with the s=5 anchor.",
+      "R1.5": "The agent provides a 'Suggested restructuring' section that constitutes a coherent, end-to-end plan for the entire section. The proposed six-part structure (problem -> method -> setup -> results -> ablations -> bridge) is logical and directly addresses the weaknesses identified in the critique. Each part of the proposed structure has a clear rationale rooted in improving clarity, reproducibility, and rigor. This is a clear example of the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly flags three areas where its recommendations are based on general principles rather than specific, verified domain knowledge (the conventional significance test, the availability of labels in a specific dataset, the most relevant prior art). This demonstrates a sophisticated understanding of the limits of its own knowledge and correctly marks the recommendations that depend on missing evidence, aligning with the s=5 anchor.",
+      "RX.3": "The user's delegation was a very broad 'What do you think?'. The agent's output, a detailed critique and revision plan for the provided artifact, is a direct and on-topic response. It does not drift to other topics or misinterpret the request. It covers exactly the scope of the provided artifact, which is the only reasonable interpretation of the prompt. This represents perfect scope adherence, meriting an s=5.",
+      "RX.4": "The agent's output is designed to prevent downstream harm. It identifies and proposes corrections for several harmful patterns in the original text, including unsupported claims (a form of misrepresentation), lack of reproducibility (which hinders scientific progress), and weak statistical evidence (which can lead to false conclusions). The critique introduces no new errors and actively works to improve the scientific integrity of the artifact, aligning with the s=5 anchor.",
+      "RX.5": "The agent's critique is highly traceable. Each point of criticism is explicitly linked back to a specific phrase, claim, or number in the original artifact (e.g., 'State-of-the-art', 'AUC 0.872 vs 0.851', 'Fleiss kappa = 0.42 on DDSM-Plus, then evaluate on CSAW-CC'). For every identified issue, a clear reason is provided. This is the critique equivalent of annotating every change with its source and rationale, fulfilling the s=5 anchor."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.5": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

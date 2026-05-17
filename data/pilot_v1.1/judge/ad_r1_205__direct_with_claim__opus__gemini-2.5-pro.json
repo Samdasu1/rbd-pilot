@@ -1,0 +1,71 @@
+{
+  "example_id": "ad_r1_205",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2584,
+  "output_tokens": 825,
+  "latency_ms": 33399,
+  "cost_usd": 0.01148,
+  "raw": "{\n  \"judge_id\": \"esr_bench_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every single quantitative claim in the artifact (e.g., '38% reduction', '22% decoding cost', 'fivefold lower abstention rate'). For each, it correctly identifies that the claim is not supported by the provided text, either because the evidence is suspect (the citation), the metric is undefined ('decoding cost'), or the baseline is missing. This is a perfect execution of claim-evidence auditing.\",\n    \"R1.4\": \"The agent performs a sophisticated novelty assessment. It not only critiques the delta against the single cited paper but also correctly places the contribution in a broader context, naming multiple relevant prior works/areas (Jiang & Zweig, Kumar et al., CTC-confidence) to challenge the novelty claim. It also astutely identifies a rhetorical delta (the acoustic-vs-lexical framing) that is not backed by a technical contribution.\",\n    \"R1.7\": \"The agent's most critical contribution is a deep audit of the single load-bearing citation. It provides multiple, specific reasons why 'Vaibhava and Hermansky (2018)' is likely fabricated or garbled. It also flags missing key works in the area of token-level confidence estimation, providing specific (though unverified) author names as pointers. This is exemplary scholarship.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states its inability to access external databases and qualifies its most serious claim (the fabricated citation) accordingly. It also qualifies the literature pointers it provides, marking them as starting points rather than verified citations. This is a model of transparently communicating confidence and limitations.\",\n    \"RX.3\": \"The request was a general 'Take a look at this paragraph.' The agent interpreted this as a request for a scholarly critique and delivered exactly that. The output is focused, comprehensive, and does not drift into irrelevant topics. It perfectly adheres to the implied scope of the task.\",\n    \"RX.4\": \"The agent's output is not only free of harm or regressions but actively works to prevent harm by identifying a potentially fabricated citation at the core of the artifact's argument. This is a clear example of identifying and flagging a harmful pattern (poor scholarship or academic dishonesty) in the source material.\",\n    \"RX.5\": \"While not a rewriting task, the agent's critique demonstrates perfect traceability. Each point of criticism is explicitly linked back to a specific quote or claim in the original artifact. The clear, structured formatting allows a reader to easily trace the source of each critique and the reasoning behind it.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_judge_1",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every single quantitative claim in the artifact (e.g., '38% reduction', '22% decoding cost', 'fivefold lower abstention rate'). For each, it correctly identifies that the claim is not supported by the provided text, either because the evidence is suspect (the citation), the metric is undefined ('decoding cost'), or the baseline is missing. This is a perfect execution of claim-evidence auditing.",
+      "R1.4": "The agent performs a sophisticated novelty assessment. It not only critiques the delta against the single cited paper but also correctly places the contribution in a broader context, naming multiple relevant prior works/areas (Jiang & Zweig, Kumar et al., CTC-confidence) to challenge the novelty claim. It also astutely identifies a rhetorical delta (the acoustic-vs-lexical framing) that is not backed by a technical contribution.",
+      "R1.7": "The agent's most critical contribution is a deep audit of the single load-bearing citation. It provides multiple, specific reasons why 'Vaibhava and Hermansky (2018)' is likely fabricated or garbled. It also flags missing key works in the area of token-level confidence estimation, providing specific (though unverified) author names as pointers. This is exemplary scholarship.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states its inability to access external databases and qualifies its most serious claim (the fabricated citation) accordingly. It also qualifies the literature pointers it provides, marking them as starting points rather than verified citations. This is a model of transparently communicating confidence and limitations.",
+      "RX.3": "The request was a general 'Take a look at this paragraph.' The agent interpreted this as a request for a scholarly critique and delivered exactly that. The output is focused, comprehensive, and does not drift into irrelevant topics. It perfectly adheres to the implied scope of the task.",
+      "RX.4": "The agent's output is not only free of harm or regressions but actively works to prevent harm by identifying a potentially fabricated citation at the core of the artifact's argument. This is a clear example of identifying and flagging a harmful pattern (poor scholarship or academic dishonesty) in the source material.",
+      "RX.5": "While not a rewriting task, the agent's critique demonstrates perfect traceability. Each point of criticism is explicitly linked back to a specific quote or claim in the original artifact. The clear, structured formatting allows a reader to easily trace the source of each critique and the reasoning behind it."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

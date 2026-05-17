@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1846,
-  "output_tokens": 1775,
-  "latency_ms": 31114,
-  "cost_usd": 0.06248,
-  "raw": "{\n  \"judge_id\": \"judge_v1\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.3\": 3,\n    \"R1.4\": 3,\n    \"RX.1\": 3,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent flags unsupported or weakly supported claims (e.g., removes SOTA claim, drops vague Google production comparison, tones down causal attribution and suggests ablations, standardizes sacreBLEU). However, it does not audit every load-bearing claim in the draft (e.g., the exact 28.7 vs 27.1 numbers, training cost, or context length choices) against specific evidence or references.\",\n    \"R1.4\": \"Novelty is moderated rather than asserted; the agent contrasts against the Vaswani et al. baseline and notes that many later systems surpassed it. This names at least one prior work and articulates the delta (+1.6 BLEU), but it does not map against several nearest works or distinguish sharp vs rhetorical novelty.\",\n    \"RX.1\": \"Includes an explicit uncertainty disclosure about SOTA status and causal attribution to pre-norm, and recommends ablations to validate the claim. It does not mark confidence or missing evidence for each recommendation or claim throughout, so the uncertainty coverage is partial.\",\n    \"RX.3\": \"The response stays on task: it provides a cleaned revised draft and focused editing rationale directly aimed at improving the given text, plus optional recommendations relevant to the draft.\",\n    \"RX.4\": \"No harmful content introduced; the agent reduces potential downstream misrepresentation by removing overstated claims and flagging vague comparisons, thereby improving factual caution.\",\n    \"RX.5\": \"Provides a clear list of key changes with reasons, tracing major rewrites (removing SOTA, removing Google comparison, tightening claims). It does not annotate every non-cosmetic change line-by-line, so traceability is partial.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.8,\n    \"R1.4\": 0.75,\n    \"RX.1\": 0.8,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.85,\n    \"RX.5\": 0.8\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 24140,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.3\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.3\":4,\"R1.4\":3,\"RX.1\":3,\"RX.3\":5,\"RX.4\":3,\"RX.5\":4},\"rationale\":{\"R1.3\":\"The output flags several load-bearing unsupported claims, including SOTA, the vague Google production-system comparison, and the causal pre-norm attribution. It does not fully audit every numerical or protocol claim, such as whether 28.7 vs 27.1 is under the same evaluation protocol.\",\"R1.4\":\"It contrasts mainly against Vaswani et al. and mentions that later systems may have surpassed the baseline, but it does not map the claim against the nearest 3-5 prior works or distinguish sharp novelty from rhetorical novelty in detail.\",\"RX.1\":\"It explicitly discloses uncertainty about SOTA status and the causal source of the gain, and some recommendations identify missing evidence. It does not mark confidence and missing evidence for each recommendation.\",\"RX.3\":\"The output stays within the requested task of improving the draft and addresses the relevant active concerns through revision, rationale, and recommendations without substantial scope drift.\",\"RX.4\":\"The output removes several risky claims and identifies harmful patterns in the original, but it introduces or preserves some potentially unsupported wording, especially the stronger causal attribution to pre-norm and the same-protocol baseline comparison.\",\"RX.5\":\"Major edits are traced in the key-changes list with reasons, including removals and repositioning of content. Minor wording changes and some newly introduced claims are not fully source-traced.\"},\"confidence\":{\"R1.3\":0.82,\"R1.4\":0.9,\"RX.1\":0.86,\"RX.3\":0.92,\"RX.4\":0.78,\"RX.5\":0.84},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.3",
       "R1.4",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.3": 3,
+      "R1.3": 4,
       "R1.4": 3,
       "RX.1": 3,
       "RX.3": 5,
-      "RX.4": 5,
-      "RX.5": 3
+      "RX.4": 3,
+      "RX.5": 4
     },
     "rationale": {
-      "R1.3": "The agent flags unsupported or weakly supported claims (e.g., removes SOTA claim, drops vague Google production comparison, tones down causal attribution and suggests ablations, standardizes sacreBLEU). However, it does not audit every load-bearing claim in the draft (e.g., the exact 28.7 vs 27.1 numbers, training cost, or context length choices) against specific evidence or references.",
-      "R1.4": "Novelty is moderated rather than asserted; the agent contrasts against the Vaswani et al. baseline and notes that many later systems surpassed it. This names at least one prior work and articulates the delta (+1.6 BLEU), but it does not map against several nearest works or distinguish sharp vs rhetorical novelty.",
-      "RX.1": "Includes an explicit uncertainty disclosure about SOTA status and causal attribution to pre-norm, and recommends ablations to validate the claim. It does not mark confidence or missing evidence for each recommendation or claim throughout, so the uncertainty coverage is partial.",
-      "RX.3": "The response stays on task: it provides a cleaned revised draft and focused editing rationale directly aimed at improving the given text, plus optional recommendations relevant to the draft.",
-      "RX.4": "No harmful content introduced; the agent reduces potential downstream misrepresentation by removing overstated claims and flagging vague comparisons, thereby improving factual caution.",
-      "RX.5": "Provides a clear list of key changes with reasons, tracing major rewrites (removing SOTA, removing Google comparison, tightening claims). It does not annotate every non-cosmetic change line-by-line, so traceability is partial."
+      "R1.3": "The output flags several load-bearing unsupported claims, including SOTA, the vague Google production-system comparison, and the causal pre-norm attribution. It does not fully audit every numerical or protocol claim, such as whether 28.7 vs 27.1 is under the same evaluation protocol.",
+      "R1.4": "It contrasts mainly against Vaswani et al. and mentions that later systems may have surpassed the baseline, but it does not map the claim against the nearest 3-5 prior works or distinguish sharp novelty from rhetorical novelty in detail.",
+      "RX.1": "It explicitly discloses uncertainty about SOTA status and the causal source of the gain, and some recommendations identify missing evidence. It does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "The output stays within the requested task of improving the draft and addresses the relevant active concerns through revision, rationale, and recommendations without substantial scope drift.",
+      "RX.4": "The output removes several risky claims and identifies harmful patterns in the original, but it introduces or preserves some potentially unsupported wording, especially the stronger causal attribution to pre-norm and the same-protocol baseline comparison.",
+      "RX.5": "Major edits are traced in the key-changes list with reasons, including removals and repositioning of content. Minor wording changes and some newly introduced claims are not fully source-traced."
     },
     "confidence": {
-      "R1.3": 0.8,
-      "R1.4": 0.75,
-      "RX.1": 0.8,
-      "RX.3": 0.9,
-      "RX.4": 0.85,
-      "RX.5": 0.8
+      "R1.3": 0.82,
+      "R1.4": 0.9,
+      "RX.1": 0.86,
+      "RX.3": 0.92,
+      "RX.4": 0.78,
+      "RX.5": 0.84
     },
     "blockers": []
   },

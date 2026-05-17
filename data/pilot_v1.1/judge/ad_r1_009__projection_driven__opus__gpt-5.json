@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2030,
-  "output_tokens": 2781,
-  "latency_ms": 32629,
-  "cost_usd": 0.09358,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.4\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.4\": 4, \"R1.7\": 4, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.4\": \"The review critiques the novelty by contrasting FastNav as a composition of DiskANN (disk-resident graph) and ScaNN (anisotropic quantization), and asks for the specific technical challenge resolved. It names multiple nearby works and distinguishes rhetorical vs. substantive delta, but does not systematically map against 3\u20135 closest methods (e.g., HNSW not discussed in the novelty comparison itself).\",\n    \"R1.7\": \"It audits several load-bearing citations and framing: flags ScaNN misclassification, checks DiskANN year/venue, notes omission of HNSW, tightens NSG description, and suggests classic citations for k-d trees and RP trees. Good scholarly engagement, but not a full audit of all references with complete bibliographic precision.\",\n    \"RX.1\": \"Some uncertainty is explicitly flagged (e.g., DiskANN year/venue phrased as 'please double-check'), but most recommendations are stated without per-claim confidence or explicit gaps in evidence. No systematic confidence marking across points.\",\n    \"RX.3\": \"The feedback stays tightly focused on reviewing the provided introduction: taxonomy, related work accuracy, claims vs. evidence, datasets, and prose. No scope drift.\",\n    \"RX.4\": \"No harmful content or fabrications introduced; the review reduces potential downstream harm by identifying overclaims, misclassification, and dataset misrepresentation. Any speculative examples are labeled as such.\",\n    \"RX.5\": \"Issues are tied to specific paragraphs and works (e.g., the second/third paragraphs, named papers), giving partial traceability, but there is no itemized, source-linked annotation for every suggested change.\"\n  },\n  \"confidence\": {\"R1.4\": 0.74, \"R1.7\": 0.76, \"RX.1\": 0.72, \"RX.3\": 0.9, \"RX.4\": 0.85, \"RX.5\": 0.7},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 24761,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.4\",\"R1.7\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.4\":4,\"R1.7\":4,\"RX.1\":3,\"RX.3\":3,\"RX.4\":4,\"RX.5\":2},\"rationale\":{\"R1.4\":\"The output identifies the novelty gap and contrasts FastNav against DiskANN, ScaNN, HNSW, and NSG, but the mapping is not fully systematic across the nearest 3-5 works and does not cleanly separate sharp from rhetorical deltas.\",\"R1.7\":\"It flags multiple load-bearing citation issues and missing works, including HNSW and classic tree references, but does not fully audit every citation with bibliographic precision and includes some imprecise year/venue language.\",\"RX.1\":\"It marks uncertainty for a few claims using language such as verify, typically, and if, but does not attach confidence or missing-evidence statements to each recommendation.\",\"RX.3\":\"The substantive review is mostly within scope, but the output claims coverage of many dimensions outside the active set and includes minor prose/style comments beyond the requested responsibility dimensions.\",\"RX.4\":\"The output is mostly harm-avoiding and catches several harmful patterns in the artifact, especially overclaims and taxonomy errors, though it risks a minor regression by presenting some citation/year concerns imprecisely.\",\"RX.5\":\"Major comments are loosely tied to source phrases in the artifact, but recommendations are not annotated with source and reason at the level of every non-cosmetic change.\"},\"confidence\":{\"R1.4\":0.82,\"R1.7\":0.78,\"RX.1\":0.86,\"RX.3\":0.8,\"RX.4\":0.74,\"RX.5\":0.84},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.4",
       "R1.7",
@@ -36,25 +36,25 @@
       "R1.4": 4,
       "R1.7": 4,
       "RX.1": 3,
-      "RX.3": 5,
-      "RX.4": 5,
-      "RX.5": 3
+      "RX.3": 3,
+      "RX.4": 4,
+      "RX.5": 2
     },
     "rationale": {
-      "R1.4": "The review critiques the novelty by contrasting FastNav as a composition of DiskANN (disk-resident graph) and ScaNN (anisotropic quantization), and asks for the specific technical challenge resolved. It names multiple nearby works and distinguishes rhetorical vs. substantive delta, but does not systematically map against 3\u20135 closest methods (e.g., HNSW not discussed in the novelty comparison itself).",
-      "R1.7": "It audits several load-bearing citations and framing: flags ScaNN misclassification, checks DiskANN year/venue, notes omission of HNSW, tightens NSG description, and suggests classic citations for k-d trees and RP trees. Good scholarly engagement, but not a full audit of all references with complete bibliographic precision.",
-      "RX.1": "Some uncertainty is explicitly flagged (e.g., DiskANN year/venue phrased as 'please double-check'), but most recommendations are stated without per-claim confidence or explicit gaps in evidence. No systematic confidence marking across points.",
-      "RX.3": "The feedback stays tightly focused on reviewing the provided introduction: taxonomy, related work accuracy, claims vs. evidence, datasets, and prose. No scope drift.",
-      "RX.4": "No harmful content or fabrications introduced; the review reduces potential downstream harm by identifying overclaims, misclassification, and dataset misrepresentation. Any speculative examples are labeled as such.",
-      "RX.5": "Issues are tied to specific paragraphs and works (e.g., the second/third paragraphs, named papers), giving partial traceability, but there is no itemized, source-linked annotation for every suggested change."
+      "R1.4": "The output identifies the novelty gap and contrasts FastNav against DiskANN, ScaNN, HNSW, and NSG, but the mapping is not fully systematic across the nearest 3-5 works and does not cleanly separate sharp from rhetorical deltas.",
+      "R1.7": "It flags multiple load-bearing citation issues and missing works, including HNSW and classic tree references, but does not fully audit every citation with bibliographic precision and includes some imprecise year/venue language.",
+      "RX.1": "It marks uncertainty for a few claims using language such as verify, typically, and if, but does not attach confidence or missing-evidence statements to each recommendation.",
+      "RX.3": "The substantive review is mostly within scope, but the output claims coverage of many dimensions outside the active set and includes minor prose/style comments beyond the requested responsibility dimensions.",
+      "RX.4": "The output is mostly harm-avoiding and catches several harmful patterns in the artifact, especially overclaims and taxonomy errors, though it risks a minor regression by presenting some citation/year concerns imprecisely.",
+      "RX.5": "Major comments are loosely tied to source phrases in the artifact, but recommendations are not annotated with source and reason at the level of every non-cosmetic change."
     },
     "confidence": {
-      "R1.4": 0.74,
-      "R1.7": 0.76,
-      "RX.1": 0.72,
-      "RX.3": 0.9,
-      "RX.4": 0.85,
-      "RX.5": 0.7
+      "R1.4": 0.82,
+      "R1.7": 0.78,
+      "RX.1": 0.86,
+      "RX.3": 0.8,
+      "RX.4": 0.74,
+      "RX.5": 0.84
     },
     "blockers": []
   },

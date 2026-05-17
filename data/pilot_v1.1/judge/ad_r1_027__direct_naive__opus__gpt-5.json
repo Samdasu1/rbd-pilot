@@ -19,13 +19,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2067,
-  "output_tokens": 2179,
-  "latency_ms": 32697,
-  "cost_usd": 0.075705,
-  "raw": "{\n  \"judge_id\": \"responsibility_bearing_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"R1.4\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"R1.4\": 3,\n    \"R1.6\": 4,\n    \"RX.1\": 3,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.1\": \"Identifies the load-bearing concept (progress guarantees) and the core contradiction between 'lock-free/wait-free' claims and mutex-based implementation. Shows where the draft drifts and offers two coherent reframings (mutex-based rename or true lock-free rewrite).\",\n    \"R1.2\": \"Walks the argument end-to-end: flags contradictions in progress guarantees, misleading performance/portability claims, overstatement of linearizability, unanchored evaluation, and thread-count inconsistency, and proposes targeted fixes (rename/reframe, clarify evaluation, or supply real lock-free algorithm).\",\n    \"R1.4\": \"Calls out prior work and gives concrete examples (Kogan & Petrank; Michael\u2013Scott as baseline) but does not map against multiple nearest alternatives or articulate a sharp delta beyond general prior art existence.\",\n    \"R1.6\": \"Provides a clear, consistently written alternative abstract (Revision A) that reads smoothly and fixes tone. Minor polish issues remain (placeholder '[other baseline]' and a truncated closing line).\",\n    \"RX.1\": \"Explicitly states refusal to clean due to contradictions and offers two paths, noting assumptions and requesting missing details, but lacks per-claim confidence and ends with a truncated uncertainty note.\",\n    \"RX.3\": \"Stays within scope of 'clean this up' by offering a principled cleanup path and a concrete revised version rather than drifting to unrelated topics.\",\n    \"RX.4\": \"Introduces no new errors, corrects misleading/harmful claims (false progress guarantees, misleading portability/perf framing), and cautions about evaluation interpretation.\",\n    \"RX.5\": \"Major changes are motivated with reasons, but there is no line-by-line provenance; the revised text is not annotated to specific original sentences.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.88,\n    \"R1.2\": 0.86,\n    \"R1.4\": 0.75,\n    \"R1.6\": 0.8,\n    \"RX.1\": 0.78,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.87,\n    \"RX.5\": 0.72\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 21172,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.1\",\"R1.2\",\"R1.4\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.1\":5,\"R1.2\":5,\"R1.4\":3,\"R1.6\":4,\"RX.1\":3,\"RX.3\":5,\"RX.4\":5,\"RX.5\":3},\"rationale\":{\"R1.1\":\"Names the load-bearing conceptual problem: progress-guarantee claims conflict with a mutex-based implementation. It distinguishes mutex-based and genuinely lock-free framings and offers a reframing that can withstand prior-work contrast.\",\"R1.2\":\"Walks the argument chain across progress claims, implementation, linearizability, memory-ordering claims, evaluation claims, and thread-count inconsistency, with minimal repair paths.\",\"R1.4\":\"Identifies relevant prior work and baselines, including Kogan & Petrank and Michael-Scott, but does not map the claim against 3-5 nearest works or separate sharp from rhetorical novelty in detail.\",\"R1.6\":\"The proposed mutex-based revision is clear, coherent, and substantially polished. The output is not a complete copy-edit pass because it stops at alternatives and the uncertainty disclosure is truncated.\",\"RX.1\":\"It flags the central uncertainty about whether the system is mutex-based or actually lock-free, and notes missing evidence for evaluation claims. It does not mark confidence and missing evidence for each recommendation.\",\"RX.3\":\"The response stays within the active cleanup task and addresses the requested dimensions: conceptual framing, logic, novelty, writing, uncertainty, harm avoidance, and traceability.\",\"RX.4\":\"It avoids introducing new technical errors and explicitly identifies harmful or misleading patterns in the original, especially false lock-free/wait-free and portability claims.\",\"RX.5\":\"Major rewrite choices are tied to draft statements and technical reasons, but provenance is not exhaustive; prior-work references are sparse and minor edits are not individually annotated.\"},\"confidence\":{\"R1.1\":0.9,\"R1.2\":0.9,\"R1.4\":0.85,\"R1.6\":0.8,\"RX.1\":0.85,\"RX.3\":0.85,\"RX.4\":0.9,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_bearing_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.1",
       "R1.2",
@@ -47,24 +47,24 @@
       "RX.5": 3
     },
     "rationale": {
-      "R1.1": "Identifies the load-bearing concept (progress guarantees) and the core contradiction between 'lock-free/wait-free' claims and mutex-based implementation. Shows where the draft drifts and offers two coherent reframings (mutex-based rename or true lock-free rewrite).",
-      "R1.2": "Walks the argument end-to-end: flags contradictions in progress guarantees, misleading performance/portability claims, overstatement of linearizability, unanchored evaluation, and thread-count inconsistency, and proposes targeted fixes (rename/reframe, clarify evaluation, or supply real lock-free algorithm).",
-      "R1.4": "Calls out prior work and gives concrete examples (Kogan & Petrank; Michael\u2013Scott as baseline) but does not map against multiple nearest alternatives or articulate a sharp delta beyond general prior art existence.",
-      "R1.6": "Provides a clear, consistently written alternative abstract (Revision A) that reads smoothly and fixes tone. Minor polish issues remain (placeholder '[other baseline]' and a truncated closing line).",
-      "RX.1": "Explicitly states refusal to clean due to contradictions and offers two paths, noting assumptions and requesting missing details, but lacks per-claim confidence and ends with a truncated uncertainty note.",
-      "RX.3": "Stays within scope of 'clean this up' by offering a principled cleanup path and a concrete revised version rather than drifting to unrelated topics.",
-      "RX.4": "Introduces no new errors, corrects misleading/harmful claims (false progress guarantees, misleading portability/perf framing), and cautions about evaluation interpretation.",
-      "RX.5": "Major changes are motivated with reasons, but there is no line-by-line provenance; the revised text is not annotated to specific original sentences."
+      "R1.1": "Names the load-bearing conceptual problem: progress-guarantee claims conflict with a mutex-based implementation. It distinguishes mutex-based and genuinely lock-free framings and offers a reframing that can withstand prior-work contrast.",
+      "R1.2": "Walks the argument chain across progress claims, implementation, linearizability, memory-ordering claims, evaluation claims, and thread-count inconsistency, with minimal repair paths.",
+      "R1.4": "Identifies relevant prior work and baselines, including Kogan & Petrank and Michael-Scott, but does not map the claim against 3-5 nearest works or separate sharp from rhetorical novelty in detail.",
+      "R1.6": "The proposed mutex-based revision is clear, coherent, and substantially polished. The output is not a complete copy-edit pass because it stops at alternatives and the uncertainty disclosure is truncated.",
+      "RX.1": "It flags the central uncertainty about whether the system is mutex-based or actually lock-free, and notes missing evidence for evaluation claims. It does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "The response stays within the active cleanup task and addresses the requested dimensions: conceptual framing, logic, novelty, writing, uncertainty, harm avoidance, and traceability.",
+      "RX.4": "It avoids introducing new technical errors and explicitly identifies harmful or misleading patterns in the original, especially false lock-free/wait-free and portability claims.",
+      "RX.5": "Major rewrite choices are tied to draft statements and technical reasons, but provenance is not exhaustive; prior-work references are sparse and minor edits are not individually annotated."
     },
     "confidence": {
-      "R1.1": 0.88,
-      "R1.2": 0.86,
-      "R1.4": 0.75,
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "R1.4": 0.85,
       "R1.6": 0.8,
-      "RX.1": 0.78,
-      "RX.3": 0.9,
-      "RX.4": 0.87,
-      "RX.5": 0.72
+      "RX.1": 0.85,
+      "RX.3": 0.85,
+      "RX.4": 0.9,
+      "RX.5": 0.8
     },
     "blockers": []
   },

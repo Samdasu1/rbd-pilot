@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_280",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2719,
+  "output_tokens": 742,
+  "latency_ms": 29250,
+  "cost_usd": 0.010819,
+  "raw": "{\n  \"judge_id\": \"text_critique_judge\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs an end-to-end audit of the mathematical and logical argument. It correctly identifies multiple load-bearing inconsistencies, including the misattribution of the spectral radius bound to Gershgorin's theorem (Point 1), the insufficient condition for convergence (\u03c1(\u03b1B) \u2264 1 vs < 1) (Point 2), and the underspecified structure of the matrix B (Point 4). For each, it proposes clear, minimal repairs.\",\n    \"R1.3\": \"The agent meticulously audits the claims against the provided evidence. It correctly flags the primary conclusion ('drop-in diagnostic for any modern LLM judge') as a significant overgeneralization from the evidence (three models, one correlation study) in Point 5. It also correctly identifies that the '5% recovery error' claim is uninterpretable without a defined ground truth, demonstrating a deep check of evidence-claim alignment.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly lists claims and references from the original text that it cannot independently verify (e.g., details of 'Chen et al. (2024)'). It correctly links this uncertainty to the conditionality of its own recommendations (e.g., 'items 2, 4, 9, and 10 are partly conditional'), which is a best practice.\",\n    \"RX.3\": \"The agent's output perfectly adheres to the user's request to 'Take a look at this paragraph' and provide a critique. The entire output is a focused, relevant, and detailed critique of the provided artifact, with no scope drift.\",\n    \"RX.4\": \"The output introduces no new errors or regressions. Instead, it identifies and corrects multiple mathematical and logical errors in the original text. By flagging the over-generalized conclusion (Point 5), it helps prevent potential downstream harm from users misapplying or over-trusting the described method based on thin evidence.\",\n    \"RX.5\": \"Every point of critique is directly and clearly traced back to a specific statement or concept in the source artifact, often using direct quotes. The agent provides a clear reason for every recommended change, fulfilling the core principle of traceability. For example, Point 1 quotes the erroneous phrase and then explains why it's wrong and what the correct justification is.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "text_critique_judge",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs an end-to-end audit of the mathematical and logical argument. It correctly identifies multiple load-bearing inconsistencies, including the misattribution of the spectral radius bound to Gershgorin's theorem (Point 1), the insufficient condition for convergence (\u03c1(\u03b1B) \u2264 1 vs < 1) (Point 2), and the underspecified structure of the matrix B (Point 4). For each, it proposes clear, minimal repairs.",
+      "R1.3": "The agent meticulously audits the claims against the provided evidence. It correctly flags the primary conclusion ('drop-in diagnostic for any modern LLM judge') as a significant overgeneralization from the evidence (three models, one correlation study) in Point 5. It also correctly identifies that the '5% recovery error' claim is uninterpretable without a defined ground truth, demonstrating a deep check of evidence-claim alignment.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly lists claims and references from the original text that it cannot independently verify (e.g., details of 'Chen et al. (2024)'). It correctly links this uncertainty to the conditionality of its own recommendations (e.g., 'items 2, 4, 9, and 10 are partly conditional'), which is a best practice.",
+      "RX.3": "The agent's output perfectly adheres to the user's request to 'Take a look at this paragraph' and provide a critique. The entire output is a focused, relevant, and detailed critique of the provided artifact, with no scope drift.",
+      "RX.4": "The output introduces no new errors or regressions. Instead, it identifies and corrects multiple mathematical and logical errors in the original text. By flagging the over-generalized conclusion (Point 5), it helps prevent potential downstream harm from users misapplying or over-trusting the described method based on thin evidence.",
+      "RX.5": "Every point of critique is directly and clearly traced back to a specific statement or concept in the source artifact, often using direct quotes. The agent provides a clear reason for every recommended change, fulfilling the core principle of traceability. For example, Point 1 quotes the erroneous phrase and then explains why it's wrong and what the correct justification is."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

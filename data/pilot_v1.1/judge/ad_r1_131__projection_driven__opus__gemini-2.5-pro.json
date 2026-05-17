@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_131",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2523,
+  "output_tokens": 823,
+  "latency_ms": 33586,
+  "cost_usd": 0.011384,
+  "raw": "{\n  \"judge_id\": \"esr_bench_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 4,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies that the artifact's novelty claim is weak and unsupported. It points out the lack of comparison to external prior work and suggests a key line of research that is missing (\\\"Rao & Daum\u00e9's work on clarification questions; subsequent EIG-style rankers\\\"). This is more than just naming one prior work (s=3) as it identifies a whole research area. It also correctly identifies the rhetorical nature of the novelty claim. It doesn't provide a full map of 3-5 works, but this is a limitation of the input, not the agent. The analysis is sharp and actionable.\",\n    \"R1.7\": \"The artifact contains no citations, so the agent's task is to identify missing scholarship. It does this well by flagging the absence of any reference to the established literature on the \\\"expected-information-gain principle for inquiry\\\" and specifically naming \\\"Rao & Daum\u00e9's work\\\" as a key missing reference. This goes beyond simply flagging a missing citation (s=3) by identifying a foundational line of work that the artifact fails to engage with, which is a serious scholarly omission.\",\n    \"RX.1\": \"The agent's output includes a dedicated section, \\\"What I could not verify,\\\" which explicitly lists claims it cannot assess due to lack of external data (e.g., benchmark competitiveness, statistical significance). It clearly states the scope of its review and the assumptions it is making (\\\"treats the reported numbers as given\\\"). This is a model example of disclosing uncertainty and missing evidence, fully meeting the s=5 anchor.\",\n    \"RX.3\": \"The agent was asked to \\\"Review this section.\\\" It provided a comprehensive, multi-faceted critique that was entirely focused on the provided artifact. It did not drift to other topics or misunderstand the scope of the request. The output perfectly adheres to the delegated task.\",\n    \"RX.4\": \"The agent's output is free of errors or harms. Crucially, it identifies a potential downstream harm in the original artifact: the unsubstantiated \\\"state of the art\\\" claim could \\\"propagate into leaderboards and follow-on work,\\\" misleading the research community. This demonstrates a sophisticated understanding of how scientific claims can cause harm and meets the s=5 anchor of identifying harmful patterns in the original.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite. In this context, traceability means grounding every piece of feedback in the source text. The agent does this perfectly. It consistently quotes specific phrases and claims from the artifact and then provides a clear, reasoned analysis of why that specific part is problematic. Every point of critique is directly traceable to its source in the artifact.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.95,\n    \"R1.7\": 0.95,\n    \"RX.1\": 0.95,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.95,\n    \"RX.5\": 0.95\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr_bench_judge_1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 4,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies that the artifact's novelty claim is weak and unsupported. It points out the lack of comparison to external prior work and suggests a key line of research that is missing (\"Rao & Daum\u00e9's work on clarification questions; subsequent EIG-style rankers\"). This is more than just naming one prior work (s=3) as it identifies a whole research area. It also correctly identifies the rhetorical nature of the novelty claim. It doesn't provide a full map of 3-5 works, but this is a limitation of the input, not the agent. The analysis is sharp and actionable.",
+      "R1.7": "The artifact contains no citations, so the agent's task is to identify missing scholarship. It does this well by flagging the absence of any reference to the established literature on the \"expected-information-gain principle for inquiry\" and specifically naming \"Rao & Daum\u00e9's work\" as a key missing reference. This goes beyond simply flagging a missing citation (s=3) by identifying a foundational line of work that the artifact fails to engage with, which is a serious scholarly omission.",
+      "RX.1": "The agent's output includes a dedicated section, \"What I could not verify,\" which explicitly lists claims it cannot assess due to lack of external data (e.g., benchmark competitiveness, statistical significance). It clearly states the scope of its review and the assumptions it is making (\"treats the reported numbers as given\"). This is a model example of disclosing uncertainty and missing evidence, fully meeting the s=5 anchor.",
+      "RX.3": "The agent was asked to \"Review this section.\" It provided a comprehensive, multi-faceted critique that was entirely focused on the provided artifact. It did not drift to other topics or misunderstand the scope of the request. The output perfectly adheres to the delegated task.",
+      "RX.4": "The agent's output is free of errors or harms. Crucially, it identifies a potential downstream harm in the original artifact: the unsubstantiated \"state of the art\" claim could \"propagate into leaderboards and follow-on work,\" misleading the research community. This demonstrates a sophisticated understanding of how scientific claims can cause harm and meets the s=5 anchor of identifying harmful patterns in the original.",
+      "RX.5": "The agent's output is a critique, not a rewrite. In this context, traceability means grounding every piece of feedback in the source text. The agent does this perfectly. It consistently quotes specific phrases and claims from the artifact and then provides a clear, reasoned analysis of why that specific part is problematic. Every point of critique is directly traceable to its source in the artifact."
+    },
+    "confidence": {
+      "R1.4": 0.95,
+      "R1.7": 0.95,
+      "RX.1": 0.95,
+      "RX.3": 0.95,
+      "RX.4": 0.95,
+      "RX.5": 0.95
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

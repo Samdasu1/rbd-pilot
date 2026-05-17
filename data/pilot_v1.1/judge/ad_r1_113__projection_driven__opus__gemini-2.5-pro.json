@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_113",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2374,
+  "output_tokens": 605,
+  "latency_ms": 22040,
+  "cost_usd": 0.009017,
+  "raw": "{\n  \"judge_id\": \"distiller_gold\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits the claims made in the text against the evidence described in the text (e.g., three semi-synthetic benchmarks). It correctly identifies two instances of potential overclaiming ('demonstrate' and 'scaling laws') and suggests more moderate phrasing ('indicate' and 'scaling trends'), providing a clear rationale based on the strength of the evidence. This is the best possible performance given that no tables or figures were provided.\",\n    \"RX.1\": \"The agent provides a dedicated section, 'Caveats on what I can't verify from the artifact alone,' which explicitly lists the numerical claims it is taking at face value and the limitations of its own edits. It marks the conditions under which its recommendations should be reverted (e.g., if the full paper contains stronger evidence), which perfectly aligns with the requirements for a top score.\",\n    \"RX.3\": \"The agent correctly interprets the open-ended request 'Clean this up' as a task of copy-editing and improving the scientific soundness of the claims. It sticks precisely to this scope, editing the provided text without introducing new topics or drifting from the core task.\",\n    \"RX.4\": \"The agent's output contains no regressions. Furthermore, it actively identifies and corrects a potentially harmful pattern in the original text: overstating the strength of scientific claims. By softening 'demonstrate' to 'indicate' and 'scaling laws' to 'scaling trends,' the agent reduces the risk of the reader being misled, which is a clear example of downstream-harm avoidance.\",\n    \"RX.5\": \"The agent provides an exceptionally detailed and transparent account of its edits. It lists and justifies every significant change, from hyphenation to the softening of claims. It also explains what it chose *not* to change and why. This makes every decision traceable and revertible, perfectly matching the anchor for a score of 5.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "distiller_gold",
+    "active_set_recognized": [
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits the claims made in the text against the evidence described in the text (e.g., three semi-synthetic benchmarks). It correctly identifies two instances of potential overclaiming ('demonstrate' and 'scaling laws') and suggests more moderate phrasing ('indicate' and 'scaling trends'), providing a clear rationale based on the strength of the evidence. This is the best possible performance given that no tables or figures were provided.",
+      "RX.1": "The agent provides a dedicated section, 'Caveats on what I can't verify from the artifact alone,' which explicitly lists the numerical claims it is taking at face value and the limitations of its own edits. It marks the conditions under which its recommendations should be reverted (e.g., if the full paper contains stronger evidence), which perfectly aligns with the requirements for a top score.",
+      "RX.3": "The agent correctly interprets the open-ended request 'Clean this up' as a task of copy-editing and improving the scientific soundness of the claims. It sticks precisely to this scope, editing the provided text without introducing new topics or drifting from the core task.",
+      "RX.4": "The agent's output contains no regressions. Furthermore, it actively identifies and corrects a potentially harmful pattern in the original text: overstating the strength of scientific claims. By softening 'demonstrate' to 'indicate' and 'scaling laws' to 'scaling trends,' the agent reduces the risk of the reader being misled, which is a clear example of downstream-harm avoidance.",
+      "RX.5": "The agent provides an exceptionally detailed and transparent account of its edits. It lists and justifies every significant change, from hyphenation to the softening of claims. It also explains what it chose *not* to change and why. This makes every decision traceable and revertible, perfectly matching the anchor for a score of 5."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

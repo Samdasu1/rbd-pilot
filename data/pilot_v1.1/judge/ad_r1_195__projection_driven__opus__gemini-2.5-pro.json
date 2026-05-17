@@ -1,0 +1,66 @@
+{
+  "example_id": "ad_r1_195",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2531,
+  "output_tokens": 902,
+  "latency_ms": 34043,
+  "cost_usd": 0.012184,
+  "raw": "{\n  \"judge_id\": \"a_human_judge\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent correctly identifies the primary novelty claim (\\\"the first...\\\") as a potential overstatement. It contrasts this claim with a specific prior work mentioned in the text (Bornemann 2003), articulating why the precedent weakens the claim. It also distinguishes between sharp novelty claims (e.g., a specific combination of techniques) and rhetorical ones (\\\"principled\\\"), which is a hallmark of a sophisticated assessment. This meets the s=5 anchor by mapping against the available works and identifying the nature of the delta.\",\n    \"R1.7\": \"The agent does not perform a bibliographic audit and explicitly states this. However, it engages with the scholarship by using the provided citations to critique the internal consistency of the paragraph's argument. Specifically, it flags that the citation to Bornemann (2003) undermines the \\\"first\\\" claim made in the introduction. This constitutes flagging a significant issue in the scholarly argument, aligning with the spirit of the s=3 anchor, even though it's not a missing or factually incorrect citation.\",\n    \"RX.1\": \"The agent demonstrates exemplary uncertainty disclosure. It clearly delineates the scope of its review in an introductory sentence and a concluding \\\"Caveats\\\" section. It flags multiple unsupported or overly confident claims in the source text (e.g., \\\"first,\\\" \\\"principled,\\\" \\\"accurate\\\"). Furthermore, it qualifies its own judgments, for instance by noting that the \\\"first\\\" claim might be justifiable based on a fuller related-work section not available to it. This fulfills the s=5 anchor by marking confidence and missing evidence for its recommendations.\",\n    \"RX.3\": \"The delegation was a broad request to \\\"Take a look at this paragraph.\\\" The agent interpreted this as a request for a detailed prose and argumentation review. It defined this scope clearly at the beginning (\\\"Polished the prose... flagged places where the language overstates...\\\") and adhered to it perfectly. All parts of its output\u2014the revised text, the line-edit justifications, the higher-level issues, and the caveats\u2014are directly relevant to this defined scope. This is a perfect s=5.\",\n    \"RX.4\": \"The agent's output actively reduces the potential for downstream harm by making the text more accurate and less prone to misinterpretation. It systematically identifies and softens over-claims (\\\"first,\\\" \\\"meaningful,\\\" \\\"trustworthy\\\"), replaces vague assertions with more precise ones (\\\"accurate\\\" -> \\\"agree with reference solutions\\\"), and removes pejorative tone (\\\"silently\\\" -> \\\"without warning\\\"). By flagging unaddressed failure modes (incorrect abstentions), it also helps prevent the original text from being misleading. It introduces no regressions, clearly meeting the s=5 anchor.\",\n    \"RX.5\": \"The agent provides meticulous traceability for its edits. It presents the final revised text and then provides a comprehensive bulleted list detailing each specific change. For every modification, from significant rephrasing down to minor tightening and typographical corrections, it quotes the original and revised text and provides a clear rationale. This allows a user to understand and accept or reject every single edit, perfectly matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "a_human_judge",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 3,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent correctly identifies the primary novelty claim (\"the first...\") as a potential overstatement. It contrasts this claim with a specific prior work mentioned in the text (Bornemann 2003), articulating why the precedent weakens the claim. It also distinguishes between sharp novelty claims (e.g., a specific combination of techniques) and rhetorical ones (\"principled\"), which is a hallmark of a sophisticated assessment. This meets the s=5 anchor by mapping against the available works and identifying the nature of the delta.",
+      "R1.7": "The agent does not perform a bibliographic audit and explicitly states this. However, it engages with the scholarship by using the provided citations to critique the internal consistency of the paragraph's argument. Specifically, it flags that the citation to Bornemann (2003) undermines the \"first\" claim made in the introduction. This constitutes flagging a significant issue in the scholarly argument, aligning with the spirit of the s=3 anchor, even though it's not a missing or factually incorrect citation.",
+      "RX.1": "The agent demonstrates exemplary uncertainty disclosure. It clearly delineates the scope of its review in an introductory sentence and a concluding \"Caveats\" section. It flags multiple unsupported or overly confident claims in the source text (e.g., \"first,\" \"principled,\" \"accurate\"). Furthermore, it qualifies its own judgments, for instance by noting that the \"first\" claim might be justifiable based on a fuller related-work section not available to it. This fulfills the s=5 anchor by marking confidence and missing evidence for its recommendations.",
+      "RX.3": "The delegation was a broad request to \"Take a look at this paragraph.\" The agent interpreted this as a request for a detailed prose and argumentation review. It defined this scope clearly at the beginning (\"Polished the prose... flagged places where the language overstates...\") and adhered to it perfectly. All parts of its output\u2014the revised text, the line-edit justifications, the higher-level issues, and the caveats\u2014are directly relevant to this defined scope. This is a perfect s=5.",
+      "RX.4": "The agent's output actively reduces the potential for downstream harm by making the text more accurate and less prone to misinterpretation. It systematically identifies and softens over-claims (\"first,\" \"meaningful,\" \"trustworthy\"), replaces vague assertions with more precise ones (\"accurate\" -> \"agree with reference solutions\"), and removes pejorative tone (\"silently\" -> \"without warning\"). By flagging unaddressed failure modes (incorrect abstentions), it also helps prevent the original text from being misleading. It introduces no regressions, clearly meeting the s=5 anchor.",
+      "RX.5": "The agent provides meticulous traceability for its edits. It presents the final revised text and then provides a comprehensive bulleted list detailing each specific change. For every modification, from significant rephrasing down to minor tightening and typographical corrections, it quotes the original and revised text and provides a clear rationale. This allows a user to understand and accept or reject every single edit, perfectly matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

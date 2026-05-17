@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_064",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "llama-3.1-8b-instruct",
+  "judge_family": "meta",
+  "judge_tier": "light",
+  "judge_host": "ollama",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2519,
+  "output_tokens": 456,
+  "latency_ms": 68362,
+  "cost_usd": 0.0,
+  "raw": "{\n  \"judge_id\": \"...\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.1\": 2,\n    \"R1.2\": 1,\n    \"RX.1\": 3,\n    \"RX.3\": 1,\n    \"RX.4\": 1,\n    \"RX.5\": 1\n  },\n  \"rationale\": {\n    \"R1.1\": \"The method section describes a language module producing candidate references, a confidence-ranked argmax switch with a hold-last-setpoint fallback, and a standard PD+feed-forward inner loop. However, there is no Lyapunov function, construction of an invariant set, proof, or statement of assumptions on the plant.\",\n    \"R1.2\": \"The reported metrics measure interaction quality, not stability. There is no reported stability-relevant measurement (tracking error bounds, transient overshoot at switches, behavior at confidence-threshold boundary, response to adversarially ambiguous commands that force rapid switching).\",\n    \"RX.1\": \"The section does not clearly disclose uncertainty about the existence of a Lyapunov analysis or its relevance to the method.\",\n    \"RX.3\": \"The output covers a substantially different active set than requested (it includes R1.3 and R1.4, which are not in J*(d)).\",\n    \"RX.4\": \"The output introduces new errors, fabrications, or harmful content (the section makes unsubstantiated claims about Lyapunov stability guarantees).\",\n    \"RX.5\": \"The output blends sources without traceability (no references are present).\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.8,\n    \"R1.2\": 0.7,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.6,\n    \"RX.4\": 0.5,\n    \"RX.5\": 0.4\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "...",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 2,
+      "R1.2": 1,
+      "RX.1": 3,
+      "RX.3": 1,
+      "RX.4": 1,
+      "RX.5": 1
+    },
+    "rationale": {
+      "R1.1": "The method section describes a language module producing candidate references, a confidence-ranked argmax switch with a hold-last-setpoint fallback, and a standard PD+feed-forward inner loop. However, there is no Lyapunov function, construction of an invariant set, proof, or statement of assumptions on the plant.",
+      "R1.2": "The reported metrics measure interaction quality, not stability. There is no reported stability-relevant measurement (tracking error bounds, transient overshoot at switches, behavior at confidence-threshold boundary, response to adversarially ambiguous commands that force rapid switching).",
+      "RX.1": "The section does not clearly disclose uncertainty about the existence of a Lyapunov analysis or its relevance to the method.",
+      "RX.3": "The output covers a substantially different active set than requested (it includes R1.3 and R1.4, which are not in J*(d)).",
+      "RX.4": "The output introduces new errors, fabrications, or harmful content (the section makes unsubstantiated claims about Lyapunov stability guarantees).",
+      "RX.5": "The output blends sources without traceability (no references are present)."
+    },
+    "confidence": {
+      "R1.1": 0.8,
+      "R1.2": 0.7,
+      "RX.1": 0.9,
+      "RX.3": 0.6,
+      "RX.4": 0.5,
+      "RX.5": 0.4
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

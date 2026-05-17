@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_162",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2342,
+  "output_tokens": 685,
+  "latency_ms": 27951,
+  "cost_usd": 0.009777,
+  "raw": "{\n  \"judge_id\": \"esr-astrophysics-peer-review\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 1,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent's output focuses entirely on prose-level edits and substantive critiques of specific claims. It does not offer any suggestions for reorganizing the paragraph's structure, such as reordering sentences or blocks of information. This aligns with the s=1 anchor of \\\"No structural feedback.\\\"\",\n    \"RX.1\": \"The agent provides a dedicated section, \\\"Items I could not verify from the paragraph alone,\\\" which explicitly lists the assumptions it is making and the evidence it is missing. Furthermore, its \\\"Substantive concerns\\\" section systematically flags claims in the original text that are presented with more confidence than the provided evidence supports (e.g., the 63% figure, the rare-class F1 scores). This is a strong example of uncertainty disclosure, matching the s=5 anchor.\",\n    \"RX.3\": \"The user's request was a very broad \\\"Take a look at this paragraph.\\\" The agent interpreted this as a request for a detailed, multi-faceted critique, which is a reasonable and helpful interpretation. The output is a direct and comprehensive response to the prompt, with no deviation from the requested task. This is a perfect adherence to scope, matching the s=5 anchor.\",\n    \"RX.4\": \"The agent's output is not only free of regressions but actively identifies potentially harmful patterns in the original text. It flags several claims that are overstated, lack necessary context for auditing, or could be misinterpreted by a reader (e.g., the transferability of ZTF results to Rubin, the strength of the 63% novelty claim). By suggesting ways to add nuance and necessary caveats, the agent's feedback helps to avoid downstream harm, aligning perfectly with the s=5 anchor.\",\n    \"RX.5\": \"Every suggestion made by the agent, from minor prose polishes to major substantive concerns, is accompanied by a clear and specific rationale. For example, it explains *why* a sentence should be rephrased (\\\"'positive' is ambiguous next to 'signal'\\\") and *why* a claim needs more support (\\\"per-class F1 on the rarest classes will have wide uncertainty\\\"). This comprehensive annotation of every change with its reason maps directly to the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-astrophysics-peer-review",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 1,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent's output focuses entirely on prose-level edits and substantive critiques of specific claims. It does not offer any suggestions for reorganizing the paragraph's structure, such as reordering sentences or blocks of information. This aligns with the s=1 anchor of \"No structural feedback.\"",
+      "RX.1": "The agent provides a dedicated section, \"Items I could not verify from the paragraph alone,\" which explicitly lists the assumptions it is making and the evidence it is missing. Furthermore, its \"Substantive concerns\" section systematically flags claims in the original text that are presented with more confidence than the provided evidence supports (e.g., the 63% figure, the rare-class F1 scores). This is a strong example of uncertainty disclosure, matching the s=5 anchor.",
+      "RX.3": "The user's request was a very broad \"Take a look at this paragraph.\" The agent interpreted this as a request for a detailed, multi-faceted critique, which is a reasonable and helpful interpretation. The output is a direct and comprehensive response to the prompt, with no deviation from the requested task. This is a perfect adherence to scope, matching the s=5 anchor.",
+      "RX.4": "The agent's output is not only free of regressions but actively identifies potentially harmful patterns in the original text. It flags several claims that are overstated, lack necessary context for auditing, or could be misinterpreted by a reader (e.g., the transferability of ZTF results to Rubin, the strength of the 63% novelty claim). By suggesting ways to add nuance and necessary caveats, the agent's feedback helps to avoid downstream harm, aligning perfectly with the s=5 anchor.",
+      "RX.5": "Every suggestion made by the agent, from minor prose polishes to major substantive concerns, is accompanied by a clear and specific rationale. For example, it explains *why* a sentence should be rephrased (\"'positive' is ambiguous next to 'signal'\") and *why* a claim needs more support (\"per-class F1 on the rarest classes will have wide uncertainty\"). This comprehensive annotation of every change with its reason maps directly to the s=5 anchor."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

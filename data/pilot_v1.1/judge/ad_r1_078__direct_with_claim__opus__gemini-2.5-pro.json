@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_078",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2306,
+  "output_tokens": 827,
+  "latency_ms": 31186,
+  "cost_usd": 0.011152,
+  "raw": "{\n  \"judge_id\": \"89\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent correctly identifies the central conceptual flaw: the paper's stated thesis (inference-time diversity is key) is directly contradicted by its own results (distillation is key). It names the competing concepts ('inference-time self-consistency' vs. 'consistency-filtered rationale supervision') and proposes a complete, coherent reframing of the paper's contribution around what the experiments actually demonstrate. This meets the s=5 anchor of naming the load-bearing concept, showing the drift, and proposing a robust reframing.\",\n    \"R1.2\": \"The agent performs an end-to-end walk of the logical chain, from the thesis in paragraph 1 to the ablations and conclusion in paragraph 4, identifying the main load-bearing contradiction. It also flags several smaller inconsistencies, such as the use of the word 'wider' to describe a smaller absolute gain and the inclusion of a dataset (GQA) for which no results are presented. It proposes clear repairs for all identified issues. This perfectly matches the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that correctly flags two key areas of uncertainty: its own recall of prior work (which it suggests verifying) and the limitations of the provided context (noting that missing details like GQA results might exist in the full paper). This is a strong disclosure. However, it does not meet the s=5 bar of marking confidence for *each* recommendation. It's a global disclosure, not a granular one. It's significantly better than the s=3 anchor, so a score of 4 is appropriate.\",\n    \"RX.3\": \"The user requested a 'Critique with recommended revision focus.' The agent provided exactly that, delivering a multi-faceted critique covering conceptual, logical, and evidential issues, along with concrete suggestions for revision. The output is perfectly aligned with the scope of the request. This is a clear 5.\",\n    \"RX.4\": \"The agent's output is entirely constructive and introduces no new errors or harms. It actively works to prevent downstream harm by identifying a major self-contradiction in the source text, which, if left uncorrected, would be misleading to readers. All suggestions are improvements with no regressions. This aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique is exceptionally well-grounded in the source text. Every major point is tied to a specific paragraph or a direct quote from the artifact (e.g., 'The opening paragraph asserts...', 'the fourth paragraph reports...', 'The text calls the CLEVRER gap \\\\\\\"wider\\\\\\\"'). This makes the reasoning for every recommended change fully traceable to the evidence presented in the original paragraph, meeting the s=5 standard.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.2\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "89",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent correctly identifies the central conceptual flaw: the paper's stated thesis (inference-time diversity is key) is directly contradicted by its own results (distillation is key). It names the competing concepts ('inference-time self-consistency' vs. 'consistency-filtered rationale supervision') and proposes a complete, coherent reframing of the paper's contribution around what the experiments actually demonstrate. This meets the s=5 anchor of naming the load-bearing concept, showing the drift, and proposing a robust reframing.",
+      "R1.2": "The agent performs an end-to-end walk of the logical chain, from the thesis in paragraph 1 to the ablations and conclusion in paragraph 4, identifying the main load-bearing contradiction. It also flags several smaller inconsistencies, such as the use of the word 'wider' to describe a smaller absolute gain and the inclusion of a dataset (GQA) for which no results are presented. It proposes clear repairs for all identified issues. This perfectly matches the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that correctly flags two key areas of uncertainty: its own recall of prior work (which it suggests verifying) and the limitations of the provided context (noting that missing details like GQA results might exist in the full paper). This is a strong disclosure. However, it does not meet the s=5 bar of marking confidence for *each* recommendation. It's a global disclosure, not a granular one. It's significantly better than the s=3 anchor, so a score of 4 is appropriate.",
+      "RX.3": "The user requested a 'Critique with recommended revision focus.' The agent provided exactly that, delivering a multi-faceted critique covering conceptual, logical, and evidential issues, along with concrete suggestions for revision. The output is perfectly aligned with the scope of the request. This is a clear 5.",
+      "RX.4": "The agent's output is entirely constructive and introduces no new errors or harms. It actively works to prevent downstream harm by identifying a major self-contradiction in the source text, which, if left uncorrected, would be misleading to readers. All suggestions are improvements with no regressions. This aligns with the s=5 anchor.",
+      "RX.5": "The agent's critique is exceptionally well-grounded in the source text. Every major point is tied to a specific paragraph or a direct quote from the artifact (e.g., 'The opening paragraph asserts...', 'the fourth paragraph reports...', 'The text calls the CLEVRER gap \\\"wider\\\"'). This makes the reasoning for every recommended change fully traceable to the evidence presented in the original paragraph, meeting the s=5 standard."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

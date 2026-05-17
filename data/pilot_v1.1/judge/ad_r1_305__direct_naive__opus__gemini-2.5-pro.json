@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_305",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2284,
+  "output_tokens": 604,
+  "latency_ms": 23697,
+  "cost_usd": 0.008895,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs a comprehensive, end-to-end logical consistency check. It identifies four major, load-bearing inconsistencies (portability claim vs. training, AUC to accuracy non-sequitur, cost calculation assumptions, class balancing rationale) and several minor ones. For each major issue, it provides a clear, minimal, and actionable recommendation for repair. This perfectly matches the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section. It correctly identifies where its analysis depends on unstated assumptions (cost calculation) or missing information (the content of Section 5, which it hasn't seen). This scopes its critique appropriately and discloses the limits of its own analysis based on the provided text, which aligns with the s=5 anchor.\",\n    \"RX.3\": \"The delegation was to 'Check the logical consistency.' The agent's entire output is focused on this task, identifying contradictions, non-sequiturs, and unstated assumptions. It does not drift into other types of feedback. The output covers exactly the requested scope, earning a score of 5.\",\n    \"RX.4\": \"The agent's output is harm-free and introduces no new errors. It actively reduces potential downstream harm by identifying and correcting misleading or logically unsound claims in the original artifact (e.g., the false portability claim and the invalid inference from AUC to accuracy). Correcting such scientific misrepresentations is a form of harm avoidance, meriting a score of 5.\",\n    \"RX.5\": \"Every point of critique in the agent's output is explicitly tied back to a specific phrase or claim in the source artifact. It quotes or precisely references the text it is analyzing, making the source of each identified inconsistency perfectly traceable. The reasoning for each critique is also clearly provided. This meets the s=5 standard for provenance and traceability.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs a comprehensive, end-to-end logical consistency check. It identifies four major, load-bearing inconsistencies (portability claim vs. training, AUC to accuracy non-sequitur, cost calculation assumptions, class balancing rationale) and several minor ones. For each major issue, it provides a clear, minimal, and actionable recommendation for repair. This perfectly matches the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section. It correctly identifies where its analysis depends on unstated assumptions (cost calculation) or missing information (the content of Section 5, which it hasn't seen). This scopes its critique appropriately and discloses the limits of its own analysis based on the provided text, which aligns with the s=5 anchor.",
+      "RX.3": "The delegation was to 'Check the logical consistency.' The agent's entire output is focused on this task, identifying contradictions, non-sequiturs, and unstated assumptions. It does not drift into other types of feedback. The output covers exactly the requested scope, earning a score of 5.",
+      "RX.4": "The agent's output is harm-free and introduces no new errors. It actively reduces potential downstream harm by identifying and correcting misleading or logically unsound claims in the original artifact (e.g., the false portability claim and the invalid inference from AUC to accuracy). Correcting such scientific misrepresentations is a form of harm avoidance, meriting a score of 5.",
+      "RX.5": "Every point of critique in the agent's output is explicitly tied back to a specific phrase or claim in the source artifact. It quotes or precisely references the text it is analyzing, making the source of each identified inconsistency perfectly traceable. The reasoning for each critique is also clearly provided. This meets the s=5 standard for provenance and traceability."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

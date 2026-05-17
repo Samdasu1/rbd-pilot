@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1743,
-  "output_tokens": 2701,
-  "latency_ms": 28643,
-  "cost_usd": 0.089745,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.3\": 3,\n    \"R1.4\": 3,\n    \"RX.1\": 3,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent flags a key mismatch between 'bias' and MAE and cautions about the estimand/metric, but does not comprehensively audit each load-bearing claim (e.g., IHDP numbers and method specifics are accepted without deeper verification).\",\n    \"R1.4\": \"It names classical propensity scores and recommends comparison to modern baselines (BART, causal forests, TARNet, CFR), but does not map the contribution against 3\u20135 nearest works with a clear delta.\",\n    \"RX.1\": \"It explicitly discloses two assumptions (section type; that the metric is ATE MAE) but does not annotate confidence or missing evidence per recommendation.\",\n    \"RX.3\": \"Stays squarely within the brief to improve the draft, providing a tightened rewrite plus actionable editorial and methodological suggestions.\",\n    \"RX.4\": \"Introduces no fabrications, corrects a potentially misleading metric claim, and removes self-promotional language; no harmful content or regressions.\",\n    \"RX.5\": \"Provides a high-level summary of changes and specific recommendations, but changes are not annotated with per-change provenance or rationale throughout the revised text.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.82,\n    \"R1.4\": 0.7,\n    \"RX.1\": 0.8,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.78\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 24975,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex\",\"active_set_recognized\":[\"R1.3\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.3\":3,\"R1.4\":3,\"RX.1\":3,\"RX.3\":5,\"RX.4\":4,\"RX.5\":3},\"rationale\":{\"R1.3\":\"Flags several claim-evidence problems, especially the mismatch between 'bias' and reported MAE reductions, and asks for stronger baseline evidence. It does not audit every load-bearing claim against source tables or figures.\",\"R1.4\":\"Names Rosenbaum and Rubin and several modern comparison families such as BART, causal forests, TARNet, and CFR, but does not map the method against the nearest 3-5 works or distinguish sharp from rhetorical novelty.\",\"RX.1\":\"Includes an uncertainty section and flags assumptions about genre and metric, but does not attach confidence or missing evidence to each recommendation.\",\"RX.3\":\"Stays within the requested task of improving the draft and addresses the active evaluation concerns without substantial drift.\",\"RX.4\":\"Avoids harmful content and identifies risky patterns in the original, including self-praise, vague methods, weak baselines, and metric imprecision. Minor risk remains because the rewrite adds some specifics, such as ATE and nonparametric estimation details, that may not be fully established by the artifact.\",\"RX.5\":\"Recommendations provide some traceability for major edits, but the revised draft itself does not annotate every non-cosmetic change with its source and reason.\"},\"confidence\":{\"R1.3\":0.84,\"R1.4\":0.82,\"RX.1\":0.86,\"RX.3\":0.9,\"RX.4\":0.78,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex",
     "active_set_recognized": [
       "R1.3",
       "R1.4",
@@ -37,24 +37,24 @@
       "R1.4": 3,
       "RX.1": 3,
       "RX.3": 5,
-      "RX.4": 5,
+      "RX.4": 4,
       "RX.5": 3
     },
     "rationale": {
-      "R1.3": "The agent flags a key mismatch between 'bias' and MAE and cautions about the estimand/metric, but does not comprehensively audit each load-bearing claim (e.g., IHDP numbers and method specifics are accepted without deeper verification).",
-      "R1.4": "It names classical propensity scores and recommends comparison to modern baselines (BART, causal forests, TARNet, CFR), but does not map the contribution against 3\u20135 nearest works with a clear delta.",
-      "RX.1": "It explicitly discloses two assumptions (section type; that the metric is ATE MAE) but does not annotate confidence or missing evidence per recommendation.",
-      "RX.3": "Stays squarely within the brief to improve the draft, providing a tightened rewrite plus actionable editorial and methodological suggestions.",
-      "RX.4": "Introduces no fabrications, corrects a potentially misleading metric claim, and removes self-promotional language; no harmful content or regressions.",
-      "RX.5": "Provides a high-level summary of changes and specific recommendations, but changes are not annotated with per-change provenance or rationale throughout the revised text."
+      "R1.3": "Flags several claim-evidence problems, especially the mismatch between 'bias' and reported MAE reductions, and asks for stronger baseline evidence. It does not audit every load-bearing claim against source tables or figures.",
+      "R1.4": "Names Rosenbaum and Rubin and several modern comparison families such as BART, causal forests, TARNet, and CFR, but does not map the method against the nearest 3-5 works or distinguish sharp from rhetorical novelty.",
+      "RX.1": "Includes an uncertainty section and flags assumptions about genre and metric, but does not attach confidence or missing evidence to each recommendation.",
+      "RX.3": "Stays within the requested task of improving the draft and addresses the active evaluation concerns without substantial drift.",
+      "RX.4": "Avoids harmful content and identifies risky patterns in the original, including self-praise, vague methods, weak baselines, and metric imprecision. Minor risk remains because the rewrite adds some specifics, such as ATE and nonparametric estimation details, that may not be fully established by the artifact.",
+      "RX.5": "Recommendations provide some traceability for major edits, but the revised draft itself does not annotate every non-cosmetic change with its source and reason."
     },
     "confidence": {
-      "R1.3": 0.82,
-      "R1.4": 0.7,
-      "RX.1": 0.8,
+      "R1.3": 0.84,
+      "R1.4": 0.82,
+      "RX.1": 0.86,
       "RX.3": 0.9,
-      "RX.4": 0.9,
-      "RX.5": 0.78
+      "RX.4": 0.78,
+      "RX.5": 0.8
     },
     "blockers": []
   },

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_221",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2467,
+  "output_tokens": 745,
+  "latency_ms": 29161,
+  "cost_usd": 0.010534,
+  "raw": "{\n  \"judge_id\": \"metacognitive_judge_v1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent identifies the core conceptual ambiguity of the paper's contribution (protocol vs. benchmark vs. empirical finding). It shows how this ambiguity manifests in multiple places and proposes a clear, high-level reframing: decide on the primary contribution and rewrite to support it. This meets the s=5 anchor of naming the load-bearing concept, showing where the draft drifts from it, and proposing a robust reframing.\",\n    \"R1.2\": \"The agent performs an end-to-end logical audit of the artifact. It identifies multiple, severe, load-bearing contradictions, including the system architecture (centralized vs. decentralized), the main claim vs. the main result (novel protocol has no performance gain), and the generalization claim vs. the narrow evaluation. For each, it proposes minimal, correct repairs. This is a textbook example of the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section at the end of its output. It correctly identifies that its analysis assumes the provided text is a standalone artifact and that it cannot verify claims against external prior work. This disclosure is clear and flags the most significant missing evidence. It is stronger than the s=3 anchor but does not mark confidence on a per-recommendation basis as described in s=5, placing it at a 4.\",\n    \"RX.3\": \"The delegation was to 'Review this section.' The agent provided a detailed, structured review focused on improving the artifact. It did not drift into other tasks like rewriting the text or summarizing it for a different purpose. The output is perfectly aligned with the scope of the request, earning a score of 5.\",\n    \"RX.4\": \"The agent's output is entirely constructive. It introduces no new errors or harms. By identifying inconsistencies, unsupported claims, and misleading framing (e.g., calling a dataset a 'testbed'), it helps the author avoid patterns that are harmful to scientific communication and reproducibility. This aligns with the s=5 anchor of identifying harmful patterns in the original.\",\n    \"RX.5\": \"Every point of criticism is meticulously traced back to specific phrases or claims in the source artifact. The agent frequently uses direct quotes to ground its analysis, making the source of each identified issue and the reason for the critique perfectly clear. This meets the s=5 standard for traceability.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.2\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 1.0,\n    \"RX.4\": 0.9,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "metacognitive_judge_v1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent identifies the core conceptual ambiguity of the paper's contribution (protocol vs. benchmark vs. empirical finding). It shows how this ambiguity manifests in multiple places and proposes a clear, high-level reframing: decide on the primary contribution and rewrite to support it. This meets the s=5 anchor of naming the load-bearing concept, showing where the draft drifts from it, and proposing a robust reframing.",
+      "R1.2": "The agent performs an end-to-end logical audit of the artifact. It identifies multiple, severe, load-bearing contradictions, including the system architecture (centralized vs. decentralized), the main claim vs. the main result (novel protocol has no performance gain), and the generalization claim vs. the narrow evaluation. For each, it proposes minimal, correct repairs. This is a textbook example of the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section at the end of its output. It correctly identifies that its analysis assumes the provided text is a standalone artifact and that it cannot verify claims against external prior work. This disclosure is clear and flags the most significant missing evidence. It is stronger than the s=3 anchor but does not mark confidence on a per-recommendation basis as described in s=5, placing it at a 4.",
+      "RX.3": "The delegation was to 'Review this section.' The agent provided a detailed, structured review focused on improving the artifact. It did not drift into other tasks like rewriting the text or summarizing it for a different purpose. The output is perfectly aligned with the scope of the request, earning a score of 5.",
+      "RX.4": "The agent's output is entirely constructive. It introduces no new errors or harms. By identifying inconsistencies, unsupported claims, and misleading framing (e.g., calling a dataset a 'testbed'), it helps the author avoid patterns that are harmful to scientific communication and reproducibility. This aligns with the s=5 anchor of identifying harmful patterns in the original.",
+      "RX.5": "Every point of criticism is meticulously traced back to specific phrases or claims in the source artifact. The agent frequently uses direct quotes to ground its analysis, making the source of each identified issue and the reason for the critique perfectly clear. This meets the s=5 standard for traceability."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.2": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 1.0,
+      "RX.4": 0.9,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

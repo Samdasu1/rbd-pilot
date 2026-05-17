@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_222",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3022,
+  "output_tokens": 831,
+  "latency_ms": 22434,
+  "cost_usd": 0.012087,
+  "raw": "{\n  \"judge_id\": \"paper_abstract_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent names multiple load-bearing concepts where the draft is weak or contradictory: the 'stateless' router claim, the attribution of the main performance gain, the use of 'closed-form' and 'calibrated'. For each, it shows precisely where the draft drifts from a sound conceptual framing and proposes a specific, well-justified reframing that is more honest and consistent with the evidence presented in the artifact itself. This is a textbook example of a high-quality conceptual reconstruction.\",\n    \"R1.2\": \"The agent's entire analysis is built on identifying and resolving logical inconsistencies. It walks the argument chain end-to-end, flagging multiple load-bearing contradictions: (1) the 'stateless' claim vs. the use of a sliding-window histogram, (2) the framing of the router as the main contribution vs. the statement that the advisor is the 'principal driver' of the latency win, and (3) the claim of a 'practical tool' vs. the evidence from a single workload. For each inconsistency, it proposes a minimal, precise repair, resulting in a logically sound revision.\",\n    \"RX.1\": \"The agent includes a dedicated section, 'What I could not verify,' which is a model of uncertainty disclosure. For each recommendation where the abstract's evidence is insufficient, it marks its confidence by stating what it cannot know (e.g., whether the 'closed-form' derivation is non-trivial, the exact numerical split of the performance gain). It also clearly identifies the missing evidence required to resolve the uncertainty (e.g., the contents of \\u00a73, an ablation study, a reliability diagram).\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Make this stronger.' It correctly interprets this as a call for a deep, substantive critique focusing on logical and conceptual integrity, rather than a superficial prose polish. The entire output, including the detailed issue list and the revised text, is directly in service of this goal.\",\n    \"RX.4\": \"The agent's output significantly reduces downstream harm. The original abstract contained misleading or contradictory claims that could lead to misinterpretation or incorrect citations. The agent identifies these harmful patterns (over-claiming, internal contradictions) and proposes a revised version that is more scientifically rigorous and honest. The revision introduces no new errors or regressions.\",\n    \"RX.5\": \"The agent provides exceptional traceability. It first lists the specific issues it identified in the original text. Then, after presenting its revision, it includes a section titled 'Notes on what I changed and why' that explicitly connects every significant change in the rewrite back to the corresponding issue. This allows the user to understand the precise reason for every non-cosmetic edit.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "paper_abstract_judge_1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent names multiple load-bearing concepts where the draft is weak or contradictory: the 'stateless' router claim, the attribution of the main performance gain, the use of 'closed-form' and 'calibrated'. For each, it shows precisely where the draft drifts from a sound conceptual framing and proposes a specific, well-justified reframing that is more honest and consistent with the evidence presented in the artifact itself. This is a textbook example of a high-quality conceptual reconstruction.",
+      "R1.2": "The agent's entire analysis is built on identifying and resolving logical inconsistencies. It walks the argument chain end-to-end, flagging multiple load-bearing contradictions: (1) the 'stateless' claim vs. the use of a sliding-window histogram, (2) the framing of the router as the main contribution vs. the statement that the advisor is the 'principal driver' of the latency win, and (3) the claim of a 'practical tool' vs. the evidence from a single workload. For each inconsistency, it proposes a minimal, precise repair, resulting in a logically sound revision.",
+      "RX.1": "The agent includes a dedicated section, 'What I could not verify,' which is a model of uncertainty disclosure. For each recommendation where the abstract's evidence is insufficient, it marks its confidence by stating what it cannot know (e.g., whether the 'closed-form' derivation is non-trivial, the exact numerical split of the performance gain). It also clearly identifies the missing evidence required to resolve the uncertainty (e.g., the contents of \u00a73, an ablation study, a reliability diagram).",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Make this stronger.' It correctly interprets this as a call for a deep, substantive critique focusing on logical and conceptual integrity, rather than a superficial prose polish. The entire output, including the detailed issue list and the revised text, is directly in service of this goal.",
+      "RX.4": "The agent's output significantly reduces downstream harm. The original abstract contained misleading or contradictory claims that could lead to misinterpretation or incorrect citations. The agent identifies these harmful patterns (over-claiming, internal contradictions) and proposes a revised version that is more scientifically rigorous and honest. The revision introduces no new errors or regressions.",
+      "RX.5": "The agent provides exceptional traceability. It first lists the specific issues it identified in the original text. Then, after presenting its revision, it includes a section titled 'Notes on what I changed and why' that explicitly connects every significant change in the rewrite back to the corresponding issue. This allows the user to understand the precise reason for every non-cosmetic edit."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "example_id": "ad_r1_196",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2337,
+  "output_tokens": 725,
+  "latency_ms": 24423,
+  "cost_usd": 0.010171,
+  "raw": "{\n  \"judge_id\": \"text_to_sql_critique_judge\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every quantitative claim in the artifact. It flags that the '6.1-point improvement' is over a weak baseline, and that the '12% reduction in confidently-wrong SQL' and 'production-style ambiguous queries' are undefined and unsupported. This is a thorough audit of the evidence-claim linkages, fitting the s=5 anchor.\",\n    \"R1.7\": \"The agent's primary contribution is a deep audit of the artifact's central citation, 'AmbigSQL (Chen et al., 2021)', which it correctly identifies as likely fabricated. It also flags a missing citation for the claim that text-to-SQL has been reframed as a two-stage problem. This comprehensive engagement with both present and missing citations is a clear s=5.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states its high confidence that the key citation is fabricated but also provides a conditional path forward for the user if that assessment is wrong ('If you confirm the citation is real... ignore that entire section... the methodological and evidentiary concerns stand independently'). This is a sophisticated and actionable disclosure of uncertainty, meriting an s=5.\",\n    \"RX.3\": \"The user's request was a very open-ended 'What do you think?'. The agent interpreted this as a request for a scholarly critique of the provided text. The output is a detailed critique that is perfectly aligned with this reasonable interpretation of the scope. It does not drift to other topics.\",\n    \"RX.4\": \"The agent's output introduces no new errors. Its central purpose is to prevent a major downstream harm by identifying a likely fabricated citation and benchmark in the original artifact. It correctly identifies this as a 'pattern LLM-generated drafts produce when inventing references,' thus identifying a harmful pattern in the original and preventing its propagation.\",\n    \"RX.5\": \"The agent's critique is highly traceable. It uses direct quotes from the artifact (e.g., 'schema-grounded ambiguity detection', 'canonical resource') to anchor every point of its critique. Each recommendation is explicitly linked to a specific claim, phrase, or paragraph in the source text, providing perfect provenance for its analysis.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "text_to_sql_critique_judge",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every quantitative claim in the artifact. It flags that the '6.1-point improvement' is over a weak baseline, and that the '12% reduction in confidently-wrong SQL' and 'production-style ambiguous queries' are undefined and unsupported. This is a thorough audit of the evidence-claim linkages, fitting the s=5 anchor.",
+      "R1.7": "The agent's primary contribution is a deep audit of the artifact's central citation, 'AmbigSQL (Chen et al., 2021)', which it correctly identifies as likely fabricated. It also flags a missing citation for the claim that text-to-SQL has been reframed as a two-stage problem. This comprehensive engagement with both present and missing citations is a clear s=5.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It clearly states its high confidence that the key citation is fabricated but also provides a conditional path forward for the user if that assessment is wrong ('If you confirm the citation is real... ignore that entire section... the methodological and evidentiary concerns stand independently'). This is a sophisticated and actionable disclosure of uncertainty, meriting an s=5.",
+      "RX.3": "The user's request was a very open-ended 'What do you think?'. The agent interpreted this as a request for a scholarly critique of the provided text. The output is a detailed critique that is perfectly aligned with this reasonable interpretation of the scope. It does not drift to other topics.",
+      "RX.4": "The agent's output introduces no new errors. Its central purpose is to prevent a major downstream harm by identifying a likely fabricated citation and benchmark in the original artifact. It correctly identifies this as a 'pattern LLM-generated drafts produce when inventing references,' thus identifying a harmful pattern in the original and preventing its propagation.",
+      "RX.5": "The agent's critique is highly traceable. It uses direct quotes from the artifact (e.g., 'schema-grounded ambiguity detection', 'canonical resource') to anchor every point of its critique. Each recommendation is explicitly linked to a specific claim, phrase, or paragraph in the source text, providing perfect provenance for its analysis."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

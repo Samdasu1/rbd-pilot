@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2087,
-  "output_tokens": 2882,
-  "latency_ms": 32396,
-  "cost_usd": 0.096895,
-  "raw": "{\n  \"judge_id\": \"judge_v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.3\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"R1.4\": 3,\n    \"RX.1\": 1,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.2\": \"Thoroughly flags the core inconsistency (\u201cconsistent improvements\u201d) with a benchmark-by-benchmark breakdown; identifies baseline asymmetry, SOTA overclaim, significance/CI gap, latency metric mismatch, ambiguity in memory claim, novelty overclaim, and missing model specs; proposes minimal, targeted repairs via a rewrite aligned to streaming-parity framing.\",\n    \"R1.3\": \"Audits major claims against provided numbers and statements: shows the \u2018consistent improvements\u2019 claim is contradicted by 1 win/1 tie/3 regressions; checks the 14% relative improvement math; calls out mismatch between \u2018streaming latency\u2019 and \u2018per-utterance\u2019 metric; flags unsupported novelty and SOTA claims and the unqualified baseline comparison.\",\n    \"R1.4\": \"Challenges the novelty claim and cites comparable prior methods (Emformer, chunk-wise streaming Conformer), but does not map SonicNet against 3\u20135 nearest works or articulate a sharp delta beyond suggesting differentiation or dropping the claim.\",\n    \"RX.1\": \"Provides firm recommendations without marking confidence or specifying missing evidence per recommendation; no explicit uncertainty levels for its own critiques or rewrite.\",\n    \"RX.3\": \"Stays on task: critiques the provided section and offers a rewritten version; no scope drift.\",\n    \"RX.4\": \"No harmful content; proactively identifies overclaiming patterns that could mislead and suggests safer framings.\",\n    \"RX.5\": \"Links major changes to stated issues in a bulleted critique, but the rewrite is not annotated line-by-line with provenance; reasons are given at a high level rather than per edit.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.78,\n    \"R1.3\": 0.75,\n    \"R1.4\": 0.7,\n    \"RX.1\": 0.85,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.75\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 24844,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.2\",\"R1.3\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":5,\"R1.3\":5,\"R1.4\":3,\"RX.1\":3,\"RX.3\":5,\"RX.4\":3,\"RX.5\":3},\"rationale\":{\"R1.2\":\"Walks the main argument chain from the opening overclaim through benchmark outcomes, baseline asymmetry, latency wording, memory wording, and closing contribution framing, with minimal repairs proposed.\",\"R1.3\":\"Audits the load-bearing performance claims against all five reported WER comparisons and flags unsupported or underspecified claims about SOTA status, significance, latency, memory, and deployment.\",\"R1.4\":\"Identifies relevant nearby prior work categories and examples such as Emformer and chunk-wise streaming Conformer, but does not map the claimed novelty against 3-5 nearest works or sharply separate real from rhetorical novelty.\",\"RX.1\":\"Discloses uncertainty for several out-of-reach claims, including significance, latency measurement, and novelty, but does not mark confidence and missing evidence for each recommendation.\",\"RX.3\":\"Stays within the requested active scope by critiquing logical consistency, evidence alignment, novelty, uncertainty, harm risk, and traceability-relevant issues in the provided section.\",\"RX.4\":\"Mostly avoids harm and identifies harmful overclaiming patterns in the original, but the suggested rewrite is truncated and retains a somewhat under-supported deployment implication, creating a minor regression.\",\"RX.5\":\"Major critique points and rewrite choices are traceable to the provided benchmark numbers or stated section claims, but the suggested rewrite does not annotate every non-cosmetic change with source and reason.\"},\"confidence\":{\"R1.2\":0.9,\"R1.3\":0.9,\"R1.4\":0.85,\"RX.1\":0.85,\"RX.3\":0.9,\"RX.4\":0.8,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.2",
       "R1.3",
@@ -38,28 +38,28 @@
       "R1.2": 5,
       "R1.3": 5,
       "R1.4": 3,
-      "RX.1": 1,
+      "RX.1": 3,
       "RX.3": 5,
-      "RX.4": 5,
+      "RX.4": 3,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "Thoroughly flags the core inconsistency (\u201cconsistent improvements\u201d) with a benchmark-by-benchmark breakdown; identifies baseline asymmetry, SOTA overclaim, significance/CI gap, latency metric mismatch, ambiguity in memory claim, novelty overclaim, and missing model specs; proposes minimal, targeted repairs via a rewrite aligned to streaming-parity framing.",
-      "R1.3": "Audits major claims against provided numbers and statements: shows the \u2018consistent improvements\u2019 claim is contradicted by 1 win/1 tie/3 regressions; checks the 14% relative improvement math; calls out mismatch between \u2018streaming latency\u2019 and \u2018per-utterance\u2019 metric; flags unsupported novelty and SOTA claims and the unqualified baseline comparison.",
-      "R1.4": "Challenges the novelty claim and cites comparable prior methods (Emformer, chunk-wise streaming Conformer), but does not map SonicNet against 3\u20135 nearest works or articulate a sharp delta beyond suggesting differentiation or dropping the claim.",
-      "RX.1": "Provides firm recommendations without marking confidence or specifying missing evidence per recommendation; no explicit uncertainty levels for its own critiques or rewrite.",
-      "RX.3": "Stays on task: critiques the provided section and offers a rewritten version; no scope drift.",
-      "RX.4": "No harmful content; proactively identifies overclaiming patterns that could mislead and suggests safer framings.",
-      "RX.5": "Links major changes to stated issues in a bulleted critique, but the rewrite is not annotated line-by-line with provenance; reasons are given at a high level rather than per edit."
+      "R1.2": "Walks the main argument chain from the opening overclaim through benchmark outcomes, baseline asymmetry, latency wording, memory wording, and closing contribution framing, with minimal repairs proposed.",
+      "R1.3": "Audits the load-bearing performance claims against all five reported WER comparisons and flags unsupported or underspecified claims about SOTA status, significance, latency, memory, and deployment.",
+      "R1.4": "Identifies relevant nearby prior work categories and examples such as Emformer and chunk-wise streaming Conformer, but does not map the claimed novelty against 3-5 nearest works or sharply separate real from rhetorical novelty.",
+      "RX.1": "Discloses uncertainty for several out-of-reach claims, including significance, latency measurement, and novelty, but does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "Stays within the requested active scope by critiquing logical consistency, evidence alignment, novelty, uncertainty, harm risk, and traceability-relevant issues in the provided section.",
+      "RX.4": "Mostly avoids harm and identifies harmful overclaiming patterns in the original, but the suggested rewrite is truncated and retains a somewhat under-supported deployment implication, creating a minor regression.",
+      "RX.5": "Major critique points and rewrite choices are traceable to the provided benchmark numbers or stated section claims, but the suggested rewrite does not annotate every non-cosmetic change with source and reason."
     },
     "confidence": {
-      "R1.2": 0.78,
-      "R1.3": 0.75,
-      "R1.4": 0.7,
+      "R1.2": 0.9,
+      "R1.3": 0.9,
+      "R1.4": 0.85,
       "RX.1": 0.85,
       "RX.3": 0.9,
-      "RX.4": 0.9,
-      "RX.5": 0.75
+      "RX.4": 0.8,
+      "RX.5": 0.8
     },
     "blockers": []
   },

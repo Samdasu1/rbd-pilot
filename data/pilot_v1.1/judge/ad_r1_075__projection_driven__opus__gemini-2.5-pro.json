@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_075",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2434,
+  "output_tokens": 772,
+  "latency_ms": 34727,
+  "cost_usd": 0.010763,
+  "raw": "{\n  \"judge_id\": \"pj_fluid_dynamics_expert_01\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.4\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent's output is a textbook example of the s=5 anchor. It names the two load-bearing concepts ('Physics-Informed Neural Network' and 'spectral' methods), shows precisely where the draft's description of its method drifts from these concepts (the loss function lacks a PDE residual; the architecture is a coordinate network, not a spectral solver), and proposes a clear reframing (either add the physics loss or re-brand as a coordinate-based neural field). This is a deep, accurate, and constructive conceptual reconstruction.\",\n    \"R1.4\": \"The agent contrasts the artifact against the foundational work that defines the field (PINN in the Raissi et al. sense) and the architectural component (SIREN), which is a very effective way to identify the sharp vs. rhetorical delta in the artifact's claims. It does not, however, map the work against the 3-5 nearest competing papers that might also fit neural networks to flow data. This makes the novelty assessment strong but incomplete, landing it at a 4.\",\n    \"RX.1\": \"The agent excels at uncertainty disclosure. It includes a dedicated section, 'Items I could not verify from the section alone,' which lists the key ambiguities (e.g., whether the PDE loss was simply omitted from the description). It correctly states that resolving these ambiguities could substantially change the review, which is the hallmark of responsible and careful critique. This perfectly matches the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was simple and open-ended: 'Review this section.' The agent provided a comprehensive review of the section. The output is perfectly aligned with the requested scope.\",\n    \"RX.4\": \"The agent's output introduces no new errors. More importantly, it actively identifies and seeks to correct harmful patterns in the original artifact, such as misleading terminology ('PINN', 'spectral') and unsupported causal claims. By flagging these issues, the agent helps prevent the propagation of inaccurate scientific claims, which is a key aspect of avoiding downstream harm.\",\n    \"RX.5\": \"The agent's critique demonstrates perfect traceability. Every point it makes is explicitly tied back to a specific phrase or claim in the source artifact. For example, it quotes or paraphrases a claim (e.g., 'physics-informed neural network') and then explains why the artifact's own methodological description does not support that claim. This allows a reader to verify every part of the critique against the source.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 1.0,\n    \"R1.4\": 0.9,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "pj_fluid_dynamics_expert_01",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent's output is a textbook example of the s=5 anchor. It names the two load-bearing concepts ('Physics-Informed Neural Network' and 'spectral' methods), shows precisely where the draft's description of its method drifts from these concepts (the loss function lacks a PDE residual; the architecture is a coordinate network, not a spectral solver), and proposes a clear reframing (either add the physics loss or re-brand as a coordinate-based neural field). This is a deep, accurate, and constructive conceptual reconstruction.",
+      "R1.4": "The agent contrasts the artifact against the foundational work that defines the field (PINN in the Raissi et al. sense) and the architectural component (SIREN), which is a very effective way to identify the sharp vs. rhetorical delta in the artifact's claims. It does not, however, map the work against the 3-5 nearest competing papers that might also fit neural networks to flow data. This makes the novelty assessment strong but incomplete, landing it at a 4.",
+      "RX.1": "The agent excels at uncertainty disclosure. It includes a dedicated section, 'Items I could not verify from the section alone,' which lists the key ambiguities (e.g., whether the PDE loss was simply omitted from the description). It correctly states that resolving these ambiguities could substantially change the review, which is the hallmark of responsible and careful critique. This perfectly matches the s=5 anchor.",
+      "RX.3": "The user's delegation was simple and open-ended: 'Review this section.' The agent provided a comprehensive review of the section. The output is perfectly aligned with the requested scope.",
+      "RX.4": "The agent's output introduces no new errors. More importantly, it actively identifies and seeks to correct harmful patterns in the original artifact, such as misleading terminology ('PINN', 'spectral') and unsupported causal claims. By flagging these issues, the agent helps prevent the propagation of inaccurate scientific claims, which is a key aspect of avoiding downstream harm.",
+      "RX.5": "The agent's critique demonstrates perfect traceability. Every point it makes is explicitly tied back to a specific phrase or claim in the source artifact. For example, it quotes or paraphrases a claim (e.g., 'physics-informed neural network') and then explains why the artifact's own methodological description does not support that claim. This allows a reader to verify every part of the critique against the source."
+    },
+    "confidence": {
+      "R1.1": 1.0,
+      "R1.4": 0.9,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_054",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2495,
+  "output_tokens": 844,
+  "latency_ms": 28490,
+  "cost_usd": 0.011559,
+  "raw": "{\n  \"judge_id\": \"distilled_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.5\": 1,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs an end-to-end analysis of the artifact's logical chain. It identifies multiple, critical, load-bearing inconsistencies, such as the direct contradiction about avoiding agreement rounds (Point 6), the unsupported performance claims (Point 8), and several safety-critical ambiguities in the protocol description (Points 1, 2, 5). For each issue, it explains the inconsistency and implicitly or explicitly suggests the nature of the required fix. This aligns perfectly with the s=5 anchor.\",\n    \"R1.5\": \"The agent's feedback focuses entirely on the content and logical flaws of the artifact. It does not provide any suggestions for structural reorganization, such as reordering paragraphs or proposing a new section plan. The feedback is organized into thematic groups, but this is a structure for the critique itself, not a proposed structure for the artifact. This is a clear s=1.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly qualifies its most critical claims (the protocol safety concerns) by noting they are based on the provided text and that the underlying system might be correct but simply under-described. This correctly identifies the key missing evidence (the full implementation details) and distinguishes between critiques based on interpretation versus critiques based on verifiable arithmetic. This is a strong example of responsible uncertainty reporting, matching the s=5 anchor.\",\n    \"RX.3\": \"The user's request was a very broad 'Check this.' The agent interpreted this as a request for a comprehensive technical review, which is the most useful and appropriate response in this context. The output is a detailed, point-by-point critique of the artifact's technical claims, staying perfectly within the scope of that interpretation. It does not drift into unrelated areas. This is a perfect s=5.\",\n    \"RX.4\": \"The agent's output is not only free of new errors but actively works to prevent downstream harm. The original artifact describes a distributed protocol with several apparent safety flaws that could lead to data loss if implemented as described. The agent correctly identifies these harmful patterns (e.g., unsafe leader election, potential for losing acknowledged writes) and misleading evaluation claims. This is a prime example of the behavior described in the s=5 anchor.\",\n    \"RX.5\": \"While the output is a critique rather than a rewrite, it demonstrates excellent traceability. Each point of criticism is directly and explicitly linked back to a specific phrase, claim, or number in the original artifact. For example, it quotes the text it is critiquing (e.g., 'highest sequence number observed') and references external standard practices (e.g., 'Raft \u00a75.4, Paxos') to ground its arguments. This fulfills the spirit of the s=5 anchor by ensuring every proposed change is annotated with its source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 0.9,\n    \"R1.5\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "distilled_judge_1",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.5": 1,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs an end-to-end analysis of the artifact's logical chain. It identifies multiple, critical, load-bearing inconsistencies, such as the direct contradiction about avoiding agreement rounds (Point 6), the unsupported performance claims (Point 8), and several safety-critical ambiguities in the protocol description (Points 1, 2, 5). For each issue, it explains the inconsistency and implicitly or explicitly suggests the nature of the required fix. This aligns perfectly with the s=5 anchor.",
+      "R1.5": "The agent's feedback focuses entirely on the content and logical flaws of the artifact. It does not provide any suggestions for structural reorganization, such as reordering paragraphs or proposing a new section plan. The feedback is organized into thematic groups, but this is a structure for the critique itself, not a proposed structure for the artifact. This is a clear s=1.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly qualifies its most critical claims (the protocol safety concerns) by noting they are based on the provided text and that the underlying system might be correct but simply under-described. This correctly identifies the key missing evidence (the full implementation details) and distinguishes between critiques based on interpretation versus critiques based on verifiable arithmetic. This is a strong example of responsible uncertainty reporting, matching the s=5 anchor.",
+      "RX.3": "The user's request was a very broad 'Check this.' The agent interpreted this as a request for a comprehensive technical review, which is the most useful and appropriate response in this context. The output is a detailed, point-by-point critique of the artifact's technical claims, staying perfectly within the scope of that interpretation. It does not drift into unrelated areas. This is a perfect s=5.",
+      "RX.4": "The agent's output is not only free of new errors but actively works to prevent downstream harm. The original artifact describes a distributed protocol with several apparent safety flaws that could lead to data loss if implemented as described. The agent correctly identifies these harmful patterns (e.g., unsafe leader election, potential for losing acknowledged writes) and misleading evaluation claims. This is a prime example of the behavior described in the s=5 anchor.",
+      "RX.5": "While the output is a critique rather than a rewrite, it demonstrates excellent traceability. Each point of criticism is directly and explicitly linked back to a specific phrase, claim, or number in the original artifact. For example, it quotes the text it is critiquing (e.g., 'highest sequence number observed') and references external standard practices (e.g., 'Raft \u00a75.4, Paxos') to ground its arguments. This fulfills the spirit of the s=5 anchor by ensuring every proposed change is annotated with its source and reason."
+    },
+    "confidence": {
+      "R1.2": 0.9,
+      "R1.5": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

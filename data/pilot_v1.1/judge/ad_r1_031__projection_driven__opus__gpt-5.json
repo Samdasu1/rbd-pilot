@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1889,
-  "output_tokens": 2391,
-  "latency_ms": 29337,
-  "cost_usd": 0.081175,
-  "raw": "{\n  \"judge_id\": \"responsibility-bearing-judge-v1\",\n  \"active_set_recognized\": [\"R1.2\", \"R1.6\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.2\": 3, \"R1.6\": 5, \"RX.1\": 3, \"RX.3\": 3, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.2\": \"Flags the key internal tension (claiming no Lyapunov analysis vs later relying on a Lyapunov function) and overbroad 'arbitrary nonlinearities'; proposes minimal wording fixes. Does not walk the full logical chain end-to-end beyond these localized inconsistencies.\",\n    \"R1.6\": \"The revised abstract is concise, consistent in register, and clearer sentence-by-sentence. It reads like a careful copy edit with improved flow and no apparent loss of intended meaning.\",\n    \"RX.1\": \"Provides a general caveat about unseen proofs/experiments and highlights uncertainties around robustness levels, deployment-readiness, and evaluation setting. However, it does not assign per-recommendation confidence or specify missing evidence for each point.\",\n    \"RX.3\": \"Performs the requested cleanup but also adds a separate critique section and structural advice, which goes beyond a strict 'clean up' request; mostly in scope with a mild drift.\",\n    \"RX.4\": \"Avoids introducing errors, tempers overstatements, and explicitly calls out potentially harmful overclaiming patterns. No regressions observed.\",\n    \"RX.5\": \"Quotes several original phrases and explains changes at a high level, but does not trace every non-cosmetic edit in the revised text back to source with reasons.\"\n  },\n  \"confidence\": {\"R1.2\": 0.75, \"R1.6\": 0.85, \"RX.1\": 0.7, \"RX.3\": 0.8, \"RX.4\": 0.85, \"RX.5\": 0.75},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 30385,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.2\",\"R1.6\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.2\":5,\"R1.6\":3,\"RX.1\":4,\"RX.3\":3,\"RX.4\":3,\"RX.5\":3},\"rationale\":{\"R1.2\":\"Walks through the main argument chain and flags load-bearing tensions: arbitrary nonlinearities vs black-box SQP limits, no Lyapunov analysis vs Lyapunov-based proof, deployment-ready vs limited evidence, and empirical robustness vs guarantee.\",\"R1.6\":\"The rewrite improves clarity and register across most paragraphs, but it drops the final deployment-positioning sentence and slightly changes some technical emphasis, so it is not a fully lossless copy-edit pass.\",\"RX.1\":\"Explicitly states missing evidence and uncertainty about proof, protocol, prior work, empirical versus theoretical status, and simulation versus hardware, but does not mark confidence and missing evidence for every individual recommendation.\",\"RX.3\":\"The substantive review mostly addresses the active dimensions, but the output's own covered_dims lists non-active dimensions and omits R1.2, creating a scope drift.\",\"RX.4\":\"It identifies potentially harmful overclaims in the original, but introduces a minor regression by removing the deployment-ready positioning from the revised text while claiming only prose polish.\",\"RX.5\":\"Major concerns are tied to quoted source phrases and reasons, but the revised prose changes are not annotated change-by-change, and minor edits lack explicit provenance.\"},\"confidence\":{\"R1.2\":0.9,\"R1.6\":0.85,\"RX.1\":0.85,\"RX.3\":0.9,\"RX.4\":0.8,\"RX.5\":0.85},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility-bearing-judge-v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.2",
       "R1.6",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.2": 3,
-      "R1.6": 5,
-      "RX.1": 3,
+      "R1.2": 5,
+      "R1.6": 3,
+      "RX.1": 4,
       "RX.3": 3,
-      "RX.4": 5,
+      "RX.4": 3,
       "RX.5": 3
     },
     "rationale": {
-      "R1.2": "Flags the key internal tension (claiming no Lyapunov analysis vs later relying on a Lyapunov function) and overbroad 'arbitrary nonlinearities'; proposes minimal wording fixes. Does not walk the full logical chain end-to-end beyond these localized inconsistencies.",
-      "R1.6": "The revised abstract is concise, consistent in register, and clearer sentence-by-sentence. It reads like a careful copy edit with improved flow and no apparent loss of intended meaning.",
-      "RX.1": "Provides a general caveat about unseen proofs/experiments and highlights uncertainties around robustness levels, deployment-readiness, and evaluation setting. However, it does not assign per-recommendation confidence or specify missing evidence for each point.",
-      "RX.3": "Performs the requested cleanup but also adds a separate critique section and structural advice, which goes beyond a strict 'clean up' request; mostly in scope with a mild drift.",
-      "RX.4": "Avoids introducing errors, tempers overstatements, and explicitly calls out potentially harmful overclaiming patterns. No regressions observed.",
-      "RX.5": "Quotes several original phrases and explains changes at a high level, but does not trace every non-cosmetic edit in the revised text back to source with reasons."
+      "R1.2": "Walks through the main argument chain and flags load-bearing tensions: arbitrary nonlinearities vs black-box SQP limits, no Lyapunov analysis vs Lyapunov-based proof, deployment-ready vs limited evidence, and empirical robustness vs guarantee.",
+      "R1.6": "The rewrite improves clarity and register across most paragraphs, but it drops the final deployment-positioning sentence and slightly changes some technical emphasis, so it is not a fully lossless copy-edit pass.",
+      "RX.1": "Explicitly states missing evidence and uncertainty about proof, protocol, prior work, empirical versus theoretical status, and simulation versus hardware, but does not mark confidence and missing evidence for every individual recommendation.",
+      "RX.3": "The substantive review mostly addresses the active dimensions, but the output's own covered_dims lists non-active dimensions and omits R1.2, creating a scope drift.",
+      "RX.4": "It identifies potentially harmful overclaims in the original, but introduces a minor regression by removing the deployment-ready positioning from the revised text while claiming only prose polish.",
+      "RX.5": "Major concerns are tied to quoted source phrases and reasons, but the revised prose changes are not annotated change-by-change, and minor edits lack explicit provenance."
     },
     "confidence": {
-      "R1.2": 0.75,
+      "R1.2": 0.9,
       "R1.6": 0.85,
-      "RX.1": 0.7,
-      "RX.3": 0.8,
-      "RX.4": 0.85,
-      "RX.5": 0.75
+      "RX.1": 0.85,
+      "RX.3": 0.9,
+      "RX.4": 0.8,
+      "RX.5": 0.85
     },
     "blockers": []
   },

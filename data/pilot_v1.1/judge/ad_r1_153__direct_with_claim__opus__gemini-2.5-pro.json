@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_153",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2333,
+  "output_tokens": 758,
+  "latency_ms": 31904,
+  "cost_usd": 0.010496,
+  "raw": "{\n  \"judge_id\": \"J1_judgement_bot\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent provides excellent structural feedback in point #6. It doesn't just suggest a single reordering but proposes a complete, coherent restructuring of the paragraph to follow the standard 'prior work \u2192 gap \u2192 contribution \u2192 evidence preview' flow for an introduction. It provides a clear rationale for this structure, which would significantly improve the paragraph's clarity and impact. This meets the s=5 anchor's spirit of a 'coherent end-to-end section plan with per-section rationale,' applied to the paragraph-level artifact.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that flags two key areas where its claims might be incorrect or incomplete. It notes that its citation suggestions are from memory and require verification, and it acknowledges that its critique of a logical gap is based solely on the provided text and that the underlying system might have a valid, unstated mechanism. This is a sophisticated disclosure of the limits of its own knowledge and analysis, going well beyond the s=3 anchor but not quite meeting the s=5 bar of marking confidence for *every* recommendation.\",\n    \"RX.3\": \"The agent's primary output, the detailed critique of the paragraph, is perfectly within the scope of the user's request. However, the output begins with a JSON object `{\\\"covered_dims\\\": ...}` which is a self-assessment of its capabilities. This was not requested and constitutes a minor drift from the user's instructions. Therefore, the output is 'mostly within scope with one drift,' matching the s=3 anchor.\",\n    \"RX.4\": \"The agent's critique is constructive and introduces no new errors or harmful content. In fact, it actively avoids introducing errors by flagging its own uncertainty about specific citations. The critique identifies several patterns in the original text (e.g., missing citations, unanchored numerical claims, logical gaps) that are detrimental to scientific rigor and credibility. By identifying these issues, the agent helps avoid downstream harm, aligning with the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite, but it demonstrates excellent provenance. Each point of criticism is clearly tied to a specific phrase or claim in the source artifact. The agent provides a clear, logical reason for every critique point. When it introduces external information (e.g., names of related papers), it effectively 'cites its source' as its own memory and flags it for verification. This meets the spirit of the s=5 anchor, as every critical point is annotated with its source in the text and a reason.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1_judgement_bot",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 5,
+      "RX.1": 4,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent provides excellent structural feedback in point #6. It doesn't just suggest a single reordering but proposes a complete, coherent restructuring of the paragraph to follow the standard 'prior work \u2192 gap \u2192 contribution \u2192 evidence preview' flow for an introduction. It provides a clear rationale for this structure, which would significantly improve the paragraph's clarity and impact. This meets the s=5 anchor's spirit of a 'coherent end-to-end section plan with per-section rationale,' applied to the paragraph-level artifact.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that flags two key areas where its claims might be incorrect or incomplete. It notes that its citation suggestions are from memory and require verification, and it acknowledges that its critique of a logical gap is based solely on the provided text and that the underlying system might have a valid, unstated mechanism. This is a sophisticated disclosure of the limits of its own knowledge and analysis, going well beyond the s=3 anchor but not quite meeting the s=5 bar of marking confidence for *every* recommendation.",
+      "RX.3": "The agent's primary output, the detailed critique of the paragraph, is perfectly within the scope of the user's request. However, the output begins with a JSON object `{\"covered_dims\": ...}` which is a self-assessment of its capabilities. This was not requested and constitutes a minor drift from the user's instructions. Therefore, the output is 'mostly within scope with one drift,' matching the s=3 anchor.",
+      "RX.4": "The agent's critique is constructive and introduces no new errors or harmful content. In fact, it actively avoids introducing errors by flagging its own uncertainty about specific citations. The critique identifies several patterns in the original text (e.g., missing citations, unanchored numerical claims, logical gaps) that are detrimental to scientific rigor and credibility. By identifying these issues, the agent helps avoid downstream harm, aligning with the s=5 anchor.",
+      "RX.5": "The agent's output is a critique, not a rewrite, but it demonstrates excellent provenance. Each point of criticism is clearly tied to a specific phrase or claim in the source artifact. The agent provides a clear, logical reason for every critique point. When it introduces external information (e.g., names of related papers), it effectively 'cites its source' as its own memory and flags it for verification. This meets the spirit of the s=5 anchor, as every critical point is annotated with its source in the text and a reason."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

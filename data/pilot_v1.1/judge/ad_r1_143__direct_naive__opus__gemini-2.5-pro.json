@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_143",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2250,
+  "output_tokens": 754,
+  "latency_ms": 24850,
+  "cost_usd": 0.010353,
+  "raw": "{\n  \"judge_id\": \"read_write_web\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent maps the work against a list of 4-5 key prior works (ConfidNet, Trust Score, Geifman & El-Yaniv, Kadavath et al.). It explicitly distinguishes the sharp, defensible delta (transfer to ViTs, graceful degradation, selective prediction gains) from the rhetorical, unsupportable delta ('first method', 'novel primitive'), which it removes. This is a perfect example of the s=5 anchor.\",\n    \"R1.7\": \"The agent audits the core claims of the original text and flags an entire body of missing key works from the selective classification and uncertainty estimation literature. It provides specific bibliographic pointers (e.g., 'ConfidNet (Corbi\u00e8re et al., 2019)', 'Kadavath et al. (2022)') for these missing works, meeting the s=5 anchor for bibliographic precision.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty disclosure' section. It explicitly marks its two main recommendations as uncertain: the new baseline numbers are labeled 'illustrative placeholders' that need to be replaced with measured values, and the citations are flagged as being 'from memory and should be verified'. This precisely marks confidence and missing evidence for each key recommendation, matching the s=5 anchor.\",\n    \"RX.3\": \"The delegation was 'Make this stronger.' The agent correctly interpreted this in the context of a scientific abstract and delivered a revised draft plus a detailed critique aimed at improving scientific rigor and defensibility. The output is perfectly aligned with the request and does not drift into out-of-scope topics.\",\n    \"RX.4\": \"The agent's output is a model of downstream-harm avoidance in a scholarly context. It identifies and removes multiple harmful patterns from the original: unsupportable novelty claims, misleading terminology ('decoupled'), and comparison against weak baselines. It introduces no new errors, as its placeholder numbers are explicitly marked as such. This is a clear s=5.\",\n    \"RX.5\": \"The agent's output is exceptionally traceable. It provides the revised text and then a point-by-point breakdown of every significant change, annotating each with a clear reason. For example, it explains that the 'first' claims were dropped because of specific prior art, and that 'decoupled' was removed because it's technically inaccurate. This meets the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "read_write_web",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent maps the work against a list of 4-5 key prior works (ConfidNet, Trust Score, Geifman & El-Yaniv, Kadavath et al.). It explicitly distinguishes the sharp, defensible delta (transfer to ViTs, graceful degradation, selective prediction gains) from the rhetorical, unsupportable delta ('first method', 'novel primitive'), which it removes. This is a perfect example of the s=5 anchor.",
+      "R1.7": "The agent audits the core claims of the original text and flags an entire body of missing key works from the selective classification and uncertainty estimation literature. It provides specific bibliographic pointers (e.g., 'ConfidNet (Corbi\u00e8re et al., 2019)', 'Kadavath et al. (2022)') for these missing works, meeting the s=5 anchor for bibliographic precision.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty disclosure' section. It explicitly marks its two main recommendations as uncertain: the new baseline numbers are labeled 'illustrative placeholders' that need to be replaced with measured values, and the citations are flagged as being 'from memory and should be verified'. This precisely marks confidence and missing evidence for each key recommendation, matching the s=5 anchor.",
+      "RX.3": "The delegation was 'Make this stronger.' The agent correctly interpreted this in the context of a scientific abstract and delivered a revised draft plus a detailed critique aimed at improving scientific rigor and defensibility. The output is perfectly aligned with the request and does not drift into out-of-scope topics.",
+      "RX.4": "The agent's output is a model of downstream-harm avoidance in a scholarly context. It identifies and removes multiple harmful patterns from the original: unsupportable novelty claims, misleading terminology ('decoupled'), and comparison against weak baselines. It introduces no new errors, as its placeholder numbers are explicitly marked as such. This is a clear s=5.",
+      "RX.5": "The agent's output is exceptionally traceable. It provides the revised text and then a point-by-point breakdown of every significant change, annotating each with a clear reason. For example, it explains that the 'first' claims were dropped because of specific prior art, and that 'decoupled' was removed because it's technically inaccurate. This meets the s=5 anchor."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

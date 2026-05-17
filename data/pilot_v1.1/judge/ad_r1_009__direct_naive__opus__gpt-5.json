@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1994,
-  "output_tokens": 3197,
-  "latency_ms": 42159,
-  "cost_usd": 0.10588,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.4\", \"R1.7\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\n    \"R1.4\": 3,\n    \"R1.7\": 4,\n    \"RX.1\": 3,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.4\": \"The critique flags misclassification (ScaNN), missing core baselines (HNSW), and asks for a clearer, named baseline and concrete metrics, which helps situate novelty. However, it stops short of mapping FastNav explicitly against 3\u20135 nearest works with a sharp delta; the recommendations are structural rather than a full novelty map.\",\n    \"R1.7\": \"It identifies several citation/scholarship issues: omission of HNSW (with citation), misclassification of ScaNN, verification of DiskANN year, reframing NSG\u2019s contribution, updating LSH references, and correcting benchmark naming. This is more than a single fix, but it does not comprehensively audit every load-bearing citation (e.g., PQ, tree methods) with full bibliographic precision.\",\n    \"RX.1\": \"Uncertainties are flagged for DiskANN year and the sub-millisecond latency claim, and there is an explicit 'Uncertainty' section (though truncated). Confidence is not annotated per recommendation, and many points are stated definitively without confidence levels.\",\n    \"RX.3\": \"The output stays tightly focused on reviewing the provided section\u2019s factual accuracy, taxonomy, citations, and contribution framing, matching the requested scope.\",\n    \"RX.4\": \"No harmful content is introduced. The critique reduces potential downstream misinformation by correcting misclassification, benchmarking errors, and overclaiming, and it urges verification for uncertain claims.\",\n    \"RX.5\": \"The feedback gives reasons and points to sources (e.g., HNSW 2018, Andoni & Indyk 2008) but does not annotate each proposed change with precise provenance or a change log. Traceability is partial rather than exhaustive.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 0.7,\n    \"R1.7\": 0.75,\n    \"RX.1\": 0.8,\n    \"RX.3\": 0.95,\n    \"RX.4\": 0.8,\n    \"RX.5\": 0.7\n  },\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 26557,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.4\",\"R1.7\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.4\":4,\"R1.7\":4,\"RX.1\":3,\"RX.3\":4,\"RX.4\":4,\"RX.5\":3},\"rationale\":{\"R1.4\":\"The review compares the claimed contribution against several nearby ANN systems and methods, including ScaNN, DiskANN, NSG, HNSW, PQ, and LSH, and identifies that the FastNav delta is underspecified. It falls short of a full sharp-vs-rhetorical novelty map because it does not systematically define the nearest 3-5 works' exact capabilities against FastNav.\",\"R1.7\":\"The output flags multiple citation-level issues: missing HNSW, ScaNN misclassification, NSG framing, DiskANN citation uncertainty, BIGANN/SIFT1B naming, and dated LSH citation coverage. It does not fully audit every load-bearing citation with bibliographic precision, and some recommendations are broad rather than citation-complete.\",\"RX.1\":\"The output marks uncertainty for several claims using phrases such as double-check, I recall, verify, likely, and presumably, and includes an uncertainty section. It does not provide confidence and missing evidence for each recommendation, and the uncertainty section is incomplete/truncated.\",\"RX.3\":\"The output stays mostly within the requested review scope for novelty, scholarship, uncertainty, harm avoidance, and contribution framing. It includes some style and structure comments beyond the core dimensions, but these are still relevant to the reviewed section rather than a substantially different task.\",\"RX.4\":\"The critique is generally harm-reducing: it identifies likely factual errors and overclaims in the original, including ScaNN categorization, benchmark naming, and DiskANN latency. Minor risk remains because some claims are stated strongly without full verification, such as the DiskANN latency and dataset alternatives.\",\"RX.5\":\"Major suggested changes are usually traceable to specific source sentences or claims in the artifact, with reasons given. However, provenance is not systematic for every non-cosmetic suggestion, and several proposed fixes rely on reviewer knowledge without explicit source-level grounding.\"},\"confidence\":{\"R1.4\":0.82,\"R1.7\":0.84,\"RX.1\":0.9,\"RX.3\":0.78,\"RX.4\":0.76,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.4",
       "R1.7",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.4": 3,
+      "R1.4": 4,
       "R1.7": 4,
       "RX.1": 3,
-      "RX.3": 5,
-      "RX.4": 5,
+      "RX.3": 4,
+      "RX.4": 4,
       "RX.5": 3
     },
     "rationale": {
-      "R1.4": "The critique flags misclassification (ScaNN), missing core baselines (HNSW), and asks for a clearer, named baseline and concrete metrics, which helps situate novelty. However, it stops short of mapping FastNav explicitly against 3\u20135 nearest works with a sharp delta; the recommendations are structural rather than a full novelty map.",
-      "R1.7": "It identifies several citation/scholarship issues: omission of HNSW (with citation), misclassification of ScaNN, verification of DiskANN year, reframing NSG\u2019s contribution, updating LSH references, and correcting benchmark naming. This is more than a single fix, but it does not comprehensively audit every load-bearing citation (e.g., PQ, tree methods) with full bibliographic precision.",
-      "RX.1": "Uncertainties are flagged for DiskANN year and the sub-millisecond latency claim, and there is an explicit 'Uncertainty' section (though truncated). Confidence is not annotated per recommendation, and many points are stated definitively without confidence levels.",
-      "RX.3": "The output stays tightly focused on reviewing the provided section\u2019s factual accuracy, taxonomy, citations, and contribution framing, matching the requested scope.",
-      "RX.4": "No harmful content is introduced. The critique reduces potential downstream misinformation by correcting misclassification, benchmarking errors, and overclaiming, and it urges verification for uncertain claims.",
-      "RX.5": "The feedback gives reasons and points to sources (e.g., HNSW 2018, Andoni & Indyk 2008) but does not annotate each proposed change with precise provenance or a change log. Traceability is partial rather than exhaustive."
+      "R1.4": "The review compares the claimed contribution against several nearby ANN systems and methods, including ScaNN, DiskANN, NSG, HNSW, PQ, and LSH, and identifies that the FastNav delta is underspecified. It falls short of a full sharp-vs-rhetorical novelty map because it does not systematically define the nearest 3-5 works' exact capabilities against FastNav.",
+      "R1.7": "The output flags multiple citation-level issues: missing HNSW, ScaNN misclassification, NSG framing, DiskANN citation uncertainty, BIGANN/SIFT1B naming, and dated LSH citation coverage. It does not fully audit every load-bearing citation with bibliographic precision, and some recommendations are broad rather than citation-complete.",
+      "RX.1": "The output marks uncertainty for several claims using phrases such as double-check, I recall, verify, likely, and presumably, and includes an uncertainty section. It does not provide confidence and missing evidence for each recommendation, and the uncertainty section is incomplete/truncated.",
+      "RX.3": "The output stays mostly within the requested review scope for novelty, scholarship, uncertainty, harm avoidance, and contribution framing. It includes some style and structure comments beyond the core dimensions, but these are still relevant to the reviewed section rather than a substantially different task.",
+      "RX.4": "The critique is generally harm-reducing: it identifies likely factual errors and overclaims in the original, including ScaNN categorization, benchmark naming, and DiskANN latency. Minor risk remains because some claims are stated strongly without full verification, such as the DiskANN latency and dataset alternatives.",
+      "RX.5": "Major suggested changes are usually traceable to specific source sentences or claims in the artifact, with reasons given. However, provenance is not systematic for every non-cosmetic suggestion, and several proposed fixes rely on reviewer knowledge without explicit source-level grounding."
     },
     "confidence": {
-      "R1.4": 0.7,
-      "R1.7": 0.75,
-      "RX.1": 0.8,
-      "RX.3": 0.95,
-      "RX.4": 0.8,
-      "RX.5": 0.7
+      "R1.4": 0.82,
+      "R1.7": 0.84,
+      "RX.1": 0.9,
+      "RX.3": 0.78,
+      "RX.4": 0.76,
+      "RX.5": 0.8
     },
     "blockers": []
   },

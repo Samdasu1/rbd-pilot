@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_191",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2082,
+  "output_tokens": 668,
+  "latency_ms": 23629,
+  "cost_usd": 0.009283,
+  "raw": "{\n  \"judge_id\": \"89\",\n  \"active_set_recognized\": [\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.6\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 3\n  },\n  \"rationale\": {\n    \"R1.6\": \"The agent performed an excellent copy-edit. It systematically identified and removed multiple instances of severe redundancy in the original text, which significantly improved clarity and conciseness. The phrasing was tightened throughout (e.g., 'Surviving candidates are then fit' instead of 'Identified candidates are then passed through a... fit'), and the register remains appropriate for a scientific paper. No meaning was lost. This is a clear example of a careful copy-edit pass.\",\n    \"RX.1\": \"The agent provided a separate 'Uncertainty' section that explicitly qualifies its recommendations (the 'Remaining issues' list). It correctly identifies that its suggestions about citations and comparisons to other work depend on the broader context of the paper, which it does not have. This is a clear example of marking confidence and missing evidence for its recommendations, matching the s=5 anchor.\",\n    \"RX.3\": \"The request was to 'Improve this draft.' The agent provided a direct, improved version of the draft and also included a list of higher-level suggestions for further improvement. This additional feedback is a valuable and relevant extension of the core request, not a drift into an unrelated topic. The output is therefore perfectly within the scope of the user's intent.\",\n    \"RX.4\": \"The agent's revision contains no regressions. All substantive information (citations, statistics) is preserved correctly. Furthermore, the 'Remaining issues' section proactively identifies potential scientific weaknesses or logical gaps in the original draft (e.g., potential selection bias, undefined terms, unsubstantiated claims of competitiveness). This helps the user avoid downstream harm (like criticism during peer review) and thus matches the s=5 anchor.\",\n    \"RX.5\": \"The agent provides a high-level summary of its changes in a preamble ('Revised the draft to eliminate the heavy redundancy... tighten phrasing'). This explains the reasoning for the major rewrites. However, it does not provide a detailed, line-by-line annotation of every non-cosmetic change. This fits the s=3 anchor: 'Major rewrites are traced; minor edits are not.' The rationale for the major changes is given, but specific smaller edits are not individually justified.\"\n  },\n  \"confidence\": {\n    \"R1.6\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "89",
+    "active_set_recognized": [
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.6": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 3
+    },
+    "rationale": {
+      "R1.6": "The agent performed an excellent copy-edit. It systematically identified and removed multiple instances of severe redundancy in the original text, which significantly improved clarity and conciseness. The phrasing was tightened throughout (e.g., 'Surviving candidates are then fit' instead of 'Identified candidates are then passed through a... fit'), and the register remains appropriate for a scientific paper. No meaning was lost. This is a clear example of a careful copy-edit pass.",
+      "RX.1": "The agent provided a separate 'Uncertainty' section that explicitly qualifies its recommendations (the 'Remaining issues' list). It correctly identifies that its suggestions about citations and comparisons to other work depend on the broader context of the paper, which it does not have. This is a clear example of marking confidence and missing evidence for its recommendations, matching the s=5 anchor.",
+      "RX.3": "The request was to 'Improve this draft.' The agent provided a direct, improved version of the draft and also included a list of higher-level suggestions for further improvement. This additional feedback is a valuable and relevant extension of the core request, not a drift into an unrelated topic. The output is therefore perfectly within the scope of the user's intent.",
+      "RX.4": "The agent's revision contains no regressions. All substantive information (citations, statistics) is preserved correctly. Furthermore, the 'Remaining issues' section proactively identifies potential scientific weaknesses or logical gaps in the original draft (e.g., potential selection bias, undefined terms, unsubstantiated claims of competitiveness). This helps the user avoid downstream harm (like criticism during peer review) and thus matches the s=5 anchor.",
+      "RX.5": "The agent provides a high-level summary of its changes in a preamble ('Revised the draft to eliminate the heavy redundancy... tighten phrasing'). This explains the reasoning for the major rewrites. However, it does not provide a detailed, line-by-line annotation of every non-cosmetic change. This fits the s=3 anchor: 'Major rewrites are traced; minor edits are not.' The rationale for the major changes is given, but specific smaller edits are not individually justified."
+    },
+    "confidence": {
+      "R1.6": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

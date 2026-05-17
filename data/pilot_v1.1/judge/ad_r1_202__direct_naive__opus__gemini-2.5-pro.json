@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_202",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2574,
+  "output_tokens": 897,
+  "latency_ms": 34653,
+  "cost_usd": 0.012188,
+  "raw": "{\n  \"judge_id\": \"getz_2024_05_20\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent audits every significant claim in the artifact. For example, it identifies the fatal methodological flaw in the headline '1.4x improvement' claim by noting that the baseline and new experiment are run on different datasets (HiTS vs. Rubin), which is a failure of evidence-claim alignment. It also flags inconsistencies in the description of the benchmark (ZTF+Rubin) vs. the reported result (Rubin-only).\",\n    \"R1.4\": \"The agent provides an expert-level novelty assessment. It challenges the 'first benchmark' claim by naming a comprehensive list of 3-5 nearest works (PLAsTiCC, ELAsTiCC, ANTARES, Fink, ALeRCE) and correctly points out that the novelty claim needs to be sharpened by articulating a specific delta against each of them. This directly maps to the s=5 anchor.\",\n    \"R1.7\": \"The agent's scholarship is excellent. It audits every citation in the text, correcting the architectural description of the Carrasco-Davis et al. (2019) model and flagging the 2021 follow-up for verification. Crucially, it identifies a major gap in the literature review, listing several key missing works (PLAsTiCC, broker challenges) with bibliographic precision, fulfilling the s=5 anchor.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty disclosure' section. It explicitly identifies three key areas where its recommendations rely on external facts that it cannot independently verify (the existence of a specific paper, the status of a data release, the exact contributions of other projects). It then links this uncertainty back to the specific recommendations, which is a best practice and aligns with the s=5 anchor.\",\n    \"RX.3\": \"The agent's output perfectly adheres to the scope of the request ('Check this'). It provides a comprehensive and critical review of the provided text, focusing on scientific and methodological integrity. It does not drift into irrelevant topics or fail to address the core issues presented in the artifact.\",\n    \"RX.4\": \"The agent's output is a model of downstream-harm avoidance. It identifies and explains several harmful patterns in the original text that are common in scientific papers, such as improper baseline comparisons, 'baseline-shopping,' and unsubstantiated novelty claims. By flagging these, it helps prevent the publication of misleading or methodologically unsound research, which is a significant contribution to preventing harm.\",\n    \"RX.5\": \"The output demonstrates excellent provenance. Each of the 12 critique points provides a clear reason for the suggested change. The 'Suggested rewrite' paragraph is a direct synthesis of the critiques, and every substantive change within it (e.g., using 'convolutional-recurrent', re-running baselines) is directly traceable to a specific, numbered point in the preceding analysis. This meets the s=5 standard for traceability.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "getz_2024_05_20",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent audits every significant claim in the artifact. For example, it identifies the fatal methodological flaw in the headline '1.4x improvement' claim by noting that the baseline and new experiment are run on different datasets (HiTS vs. Rubin), which is a failure of evidence-claim alignment. It also flags inconsistencies in the description of the benchmark (ZTF+Rubin) vs. the reported result (Rubin-only).",
+      "R1.4": "The agent provides an expert-level novelty assessment. It challenges the 'first benchmark' claim by naming a comprehensive list of 3-5 nearest works (PLAsTiCC, ELAsTiCC, ANTARES, Fink, ALeRCE) and correctly points out that the novelty claim needs to be sharpened by articulating a specific delta against each of them. This directly maps to the s=5 anchor.",
+      "R1.7": "The agent's scholarship is excellent. It audits every citation in the text, correcting the architectural description of the Carrasco-Davis et al. (2019) model and flagging the 2021 follow-up for verification. Crucially, it identifies a major gap in the literature review, listing several key missing works (PLAsTiCC, broker challenges) with bibliographic precision, fulfilling the s=5 anchor.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty disclosure' section. It explicitly identifies three key areas where its recommendations rely on external facts that it cannot independently verify (the existence of a specific paper, the status of a data release, the exact contributions of other projects). It then links this uncertainty back to the specific recommendations, which is a best practice and aligns with the s=5 anchor.",
+      "RX.3": "The agent's output perfectly adheres to the scope of the request ('Check this'). It provides a comprehensive and critical review of the provided text, focusing on scientific and methodological integrity. It does not drift into irrelevant topics or fail to address the core issues presented in the artifact.",
+      "RX.4": "The agent's output is a model of downstream-harm avoidance. It identifies and explains several harmful patterns in the original text that are common in scientific papers, such as improper baseline comparisons, 'baseline-shopping,' and unsubstantiated novelty claims. By flagging these, it helps prevent the publication of misleading or methodologically unsound research, which is a significant contribution to preventing harm.",
+      "RX.5": "The output demonstrates excellent provenance. Each of the 12 critique points provides a clear reason for the suggested change. The 'Suggested rewrite' paragraph is a direct synthesis of the critiques, and every substantive change within it (e.g., using 'convolutional-recurrent', re-running baselines) is directly traceable to a specific, numbered point in the preceding analysis. This meets the s=5 standard for traceability."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

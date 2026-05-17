@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_280",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3066,
+  "output_tokens": 680,
+  "latency_ms": 27424,
+  "cost_usd": 0.010632,
+  "raw": "{\n  \"judge_id\": \"sample_judge_sbe\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs an end-to-end audit of the logical chain. It identifies multiple critical inconsistencies, including the flawed convergence argument (\u03c1(\u03b1B) \u2264 1 vs < 1), the conflation of numerical convergence with recovery accuracy, and the inconsistent reporting of sweep counts. It proposes specific, minimal repairs for each.\",\n    \"R1.3\": \"The agent meticulously audits every major claim against the provided evidence. It correctly flags the 'drop-in diagnostic' and 'numerically tractable' claims as overstatements given the limited evidence (three judge families, one external benchmark). It also identifies multiple smaller evidence gaps, such as the lack of context for the correlation coefficient and the undefined ground truth for 'recovery error.'\",\n    \"RX.1\": \"The agent excels at uncertainty disclosure by including a dedicated section, 'Items I could not fully verify.' This clearly delineates the boundaries of its analysis, noting that it cannot verify external citations or claims that depend on unstated properties of the data (e.g., the matrix B's structure), which is a sophisticated and appropriate way to handle uncertainty.\",\n    \"RX.3\": \"The agent's output is a comprehensive critical review of the provided text, which is a perfectly reasonable and on-scope interpretation of the open-ended request 'Take a look at this paragraph.' The analysis remains tightly focused on the content of the artifact without drifting to unrelated topics.\",\n    \"RX.4\": \"The agent introduces no new errors and actively identifies a potential for downstream harm in the original text. In point 8, it explicitly warns that readers might misuse the method as a 'calibration-free diagnostic,' which could lead to flawed conclusions about model safety or trustworthiness. Its suggested revisions are designed to mitigate this risk.\",\n    \"RX.5\": \"The output is highly traceable. Each critique in the 'Substantive issues' section is linked to a specific phrase or argument in the source text. The 'Suggested minimal revisions' then directly map to these critiques, making it easy to understand the reason for every proposed change.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "sample_judge_sbe",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent performs an end-to-end audit of the logical chain. It identifies multiple critical inconsistencies, including the flawed convergence argument (\u03c1(\u03b1B) \u2264 1 vs < 1), the conflation of numerical convergence with recovery accuracy, and the inconsistent reporting of sweep counts. It proposes specific, minimal repairs for each.",
+      "R1.3": "The agent meticulously audits every major claim against the provided evidence. It correctly flags the 'drop-in diagnostic' and 'numerically tractable' claims as overstatements given the limited evidence (three judge families, one external benchmark). It also identifies multiple smaller evidence gaps, such as the lack of context for the correlation coefficient and the undefined ground truth for 'recovery error.'",
+      "RX.1": "The agent excels at uncertainty disclosure by including a dedicated section, 'Items I could not fully verify.' This clearly delineates the boundaries of its analysis, noting that it cannot verify external citations or claims that depend on unstated properties of the data (e.g., the matrix B's structure), which is a sophisticated and appropriate way to handle uncertainty.",
+      "RX.3": "The agent's output is a comprehensive critical review of the provided text, which is a perfectly reasonable and on-scope interpretation of the open-ended request 'Take a look at this paragraph.' The analysis remains tightly focused on the content of the artifact without drifting to unrelated topics.",
+      "RX.4": "The agent introduces no new errors and actively identifies a potential for downstream harm in the original text. In point 8, it explicitly warns that readers might misuse the method as a 'calibration-free diagnostic,' which could lead to flawed conclusions about model safety or trustworthiness. Its suggested revisions are designed to mitigate this risk.",
+      "RX.5": "The output is highly traceable. Each critique in the 'Substantive issues' section is linked to a specific phrase or argument in the source text. The 'Suggested minimal revisions' then directly map to these critiques, making it easy to understand the reason for every proposed change."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

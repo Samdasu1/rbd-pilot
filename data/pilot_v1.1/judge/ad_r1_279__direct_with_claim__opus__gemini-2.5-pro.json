@@ -1,0 +1,66 @@
+{
+  "example_id": "ad_r1_279",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3459,
+  "output_tokens": 768,
+  "latency_ms": 25669,
+  "cost_usd": 0.012004,
+  "raw": "{\n  \"judge_id\": \"esr-1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent maps the artifact's novelty claim against a list of 5+ highly relevant recent works (Wang et al. 2022, Brown et al. 2024, Snell et al. 2024, etc.). It then uses this context to articulate a sharp, defensible delta for the work, distinguishing it from empirical scaling-law papers. This perfectly matches the s=5 anchor.\",\n    \"R1.7\": \"The agent performs a comprehensive audit of the artifact's scholarship. It flags a specific mis-citation (Hoeffding 1963), explains why it's incorrect, and suggests the proper citation. It also identifies multiple missing key works from the recent literature that are essential for context, and critiques the use of an outdated source for empirical calibration. This is a clear s=5.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. In it, it explicitly flags four specific claims or details in its own revision that require verification by the user, explaining the reason for the uncertainty for each (e.g., 'I have not done the derivation,' 'I am citing this from memory'). This practice of marking confidence and missing evidence for its own recommendations is a textbook example of the s=5 anchor.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent provided a detailed critique followed by a revised draft that incorporated the critique. This is exactly what was requested, with no scope drift. The output perfectly adheres to the scope of the task.\",\n    \"RX.4\": \"The original artifact contained several substantive errors: a mis-citation, an oversimplified mathematical model, an overstated 'closed form' claim, and a potentially incorrect monotonicity argument. The agent identifies and corrects all of these issues in its revision, significantly improving the artifact's correctness and rigor. It introduces no new errors and flags its own points of uncertainty, fully meeting the s=5 standard of identifying harmful patterns and making no regressions.\",\n    \"RX.5\": \"The agent's output structure makes every change perfectly traceable. It first provides a numbered list of 7 'Substantive issues,' each giving a detailed reason for a needed change. The subsequent 'Revised draft' then implements these changes. One can map every significant modification in the text back to a specific point in the critique, fulfilling the s=5 requirement that every non-cosmetic change is annotated with its source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent maps the artifact's novelty claim against a list of 5+ highly relevant recent works (Wang et al. 2022, Brown et al. 2024, Snell et al. 2024, etc.). It then uses this context to articulate a sharp, defensible delta for the work, distinguishing it from empirical scaling-law papers. This perfectly matches the s=5 anchor.",
+      "R1.7": "The agent performs a comprehensive audit of the artifact's scholarship. It flags a specific mis-citation (Hoeffding 1963), explains why it's incorrect, and suggests the proper citation. It also identifies multiple missing key works from the recent literature that are essential for context, and critiques the use of an outdated source for empirical calibration. This is a clear s=5.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. In it, it explicitly flags four specific claims or details in its own revision that require verification by the user, explaining the reason for the uncertainty for each (e.g., 'I have not done the derivation,' 'I am citing this from memory'). This practice of marking confidence and missing evidence for its own recommendations is a textbook example of the s=5 anchor.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent provided a detailed critique followed by a revised draft that incorporated the critique. This is exactly what was requested, with no scope drift. The output perfectly adheres to the scope of the task.",
+      "RX.4": "The original artifact contained several substantive errors: a mis-citation, an oversimplified mathematical model, an overstated 'closed form' claim, and a potentially incorrect monotonicity argument. The agent identifies and corrects all of these issues in its revision, significantly improving the artifact's correctness and rigor. It introduces no new errors and flags its own points of uncertainty, fully meeting the s=5 standard of identifying harmful patterns and making no regressions.",
+      "RX.5": "The agent's output structure makes every change perfectly traceable. It first provides a numbered list of 7 'Substantive issues,' each giving a detailed reason for a needed change. The subsequent 'Revised draft' then implements these changes. One can map every significant modification in the text back to a specific point in the critique, fulfilling the s=5 requirement that every non-cosmetic change is annotated with its source and reason."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

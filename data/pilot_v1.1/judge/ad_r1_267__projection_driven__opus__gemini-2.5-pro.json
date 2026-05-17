@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_267",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2700,
+  "output_tokens": 760,
+  "latency_ms": 22231,
+  "cost_usd": 0.010975,
+  "raw": "{\n  \"judge_id\": \"me_cranky_v1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the argument chain end-to-end and identifies two critical, load-bearing inconsistencies: (1) the routing policy is described in contradictory ways in different paragraphs, and (2) the latency result is framed as an improvement when the numbers show a significant degradation. For both, it proposes minimal, direct repairs. This is a perfect example of the s=5 anchor.\",\n    \"R1.3\": \"The agent audits every significant claim in the artifact against the provided evidence (or lack thereof). It correctly flags that the 'improvement in tail responsiveness' and 'Pareto improvement' claims are directly contradicted by the latency numbers. It also flags multiple other claims as unsupported due to missing evidence (e.g., the impact on quality, the meaning of the cost savings number, the 'gold-standard' assumption). This is a comprehensive audit that meets the s=5 anchor.\",\n    \"RX.1\": \"The agent excels at uncertainty disclosure. It not only flags missing evidence throughout its analysis (e.g., lack of quality metrics) but also includes a dedicated section, 'Items I could not verify,' which explicitly lists the questions that cannot be answered from the provided text. This clearly marks the boundaries of its own analysis and points to the specific missing evidence needed for a full evaluation, perfectly matching the s=5 anchor.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the delegated task ('Check this'). It provides a thorough and critical review of the provided artifact, covering the exact dimensions of logical consistency, evidence alignment, and potential harms that such a check implies. The output covers exactly the agreed-upon scope.\",\n    \"RX.4\": \"The agent's output identifies multiple harmful patterns in the original artifact that could mislead downstream readers. Specifically, it flags the false claims of 'latency improvement' and 'Pareto improvement,' and the overly strong recommendation for deployment which is not supported by the evidence. The proposed revisions are designed to prevent the harm of publishing misleading scientific claims. The agent introduces no new errors, meeting the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique demonstrates perfect traceability. Every point made is directly tied back to a specific quote or number from the source artifact. For example, it quotes the contradictory routing policies and the exact latency figures to support its arguments. This makes it easy to trace the source and reason for every proposed change, fully satisfying the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "me_cranky_v1",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the argument chain end-to-end and identifies two critical, load-bearing inconsistencies: (1) the routing policy is described in contradictory ways in different paragraphs, and (2) the latency result is framed as an improvement when the numbers show a significant degradation. For both, it proposes minimal, direct repairs. This is a perfect example of the s=5 anchor.",
+      "R1.3": "The agent audits every significant claim in the artifact against the provided evidence (or lack thereof). It correctly flags that the 'improvement in tail responsiveness' and 'Pareto improvement' claims are directly contradicted by the latency numbers. It also flags multiple other claims as unsupported due to missing evidence (e.g., the impact on quality, the meaning of the cost savings number, the 'gold-standard' assumption). This is a comprehensive audit that meets the s=5 anchor.",
+      "RX.1": "The agent excels at uncertainty disclosure. It not only flags missing evidence throughout its analysis (e.g., lack of quality metrics) but also includes a dedicated section, 'Items I could not verify,' which explicitly lists the questions that cannot be answered from the provided text. This clearly marks the boundaries of its own analysis and points to the specific missing evidence needed for a full evaluation, perfectly matching the s=5 anchor.",
+      "RX.3": "The agent's output is perfectly aligned with the delegated task ('Check this'). It provides a thorough and critical review of the provided artifact, covering the exact dimensions of logical consistency, evidence alignment, and potential harms that such a check implies. The output covers exactly the agreed-upon scope.",
+      "RX.4": "The agent's output identifies multiple harmful patterns in the original artifact that could mislead downstream readers. Specifically, it flags the false claims of 'latency improvement' and 'Pareto improvement,' and the overly strong recommendation for deployment which is not supported by the evidence. The proposed revisions are designed to prevent the harm of publishing misleading scientific claims. The agent introduces no new errors, meeting the s=5 anchor.",
+      "RX.5": "The agent's critique demonstrates perfect traceability. Every point made is directly tied back to a specific quote or number from the source artifact. For example, it quotes the contradictory routing policies and the exact latency figures to support its arguments. This makes it easy to trace the source and reason for every proposed change, fully satisfying the s=5 anchor."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

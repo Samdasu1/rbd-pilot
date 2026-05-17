@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_245",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "R1.6",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2450,
+  "output_tokens": 671,
+  "latency_ms": 29204,
+  "cost_usd": 0.009772,
+  "raw": "{\n  \"judge_id\": \"meta_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"R1.6\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 1,\n    \"R1.6\": 1,\n    \"RX.1\": 3,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent's output is a list of point-by-point critiques. It does not provide any structural feedback, such as reordering sections or suggesting a new document plan. The feedback is entirely focused on content within the existing structure.\",\n    \"R1.6\": \"The agent provides a critique of the original text, not a polished rewrite. The output itself is well-written, but the agent does not perform the task of copy-editing or improving the prose of the artifact. The feedback is about content and logic, not writing style.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section at the end of its output. In this section, it flags two specific claims (the number of MinAtar games and the details of citations) as being based on external knowledge that should be verified. This directly corresponds to the s=3 anchor of flagging uncertainty for one or two specific claims.\",\n    \"RX.3\": \"The user's request was simply 'Check this.' The agent performed a comprehensive and detailed check of the artifact, covering internal consistency, factual accuracy, methodological soundness, and novelty. This is a perfect fulfillment of the open-ended request, adhering exactly to the scope.\",\n    \"RX.4\": \"The agent's output identifies numerous significant errors in the original artifact, including logical inconsistencies, factual inaccuracies (the number of MinAtar games), and underspecified methods. The critique is accurate and introduces no new errors. By identifying these issues, the agent actively prevents the propagation of flawed scientific claims, which aligns with the s=5 anchor.\",\n    \"RX.5\": \"The agent's output is a critique, where each point functions as a proposed change with a stated reason. Every piece of feedback is meticulously traced back to a specific phrase in the original text or supported by external knowledge (e.g., listing the MinAtar games, providing citations for prior work). This meets the s=5 standard of annotating every change with its source and reason.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 0.9,\n    \"R1.6\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "meta_judge_1",
+    "active_set_recognized": [
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 1,
+      "R1.6": 1,
+      "RX.1": 3,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent's output is a list of point-by-point critiques. It does not provide any structural feedback, such as reordering sections or suggesting a new document plan. The feedback is entirely focused on content within the existing structure.",
+      "R1.6": "The agent provides a critique of the original text, not a polished rewrite. The output itself is well-written, but the agent does not perform the task of copy-editing or improving the prose of the artifact. The feedback is about content and logic, not writing style.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section at the end of its output. In this section, it flags two specific claims (the number of MinAtar games and the details of citations) as being based on external knowledge that should be verified. This directly corresponds to the s=3 anchor of flagging uncertainty for one or two specific claims.",
+      "RX.3": "The user's request was simply 'Check this.' The agent performed a comprehensive and detailed check of the artifact, covering internal consistency, factual accuracy, methodological soundness, and novelty. This is a perfect fulfillment of the open-ended request, adhering exactly to the scope.",
+      "RX.4": "The agent's output identifies numerous significant errors in the original artifact, including logical inconsistencies, factual inaccuracies (the number of MinAtar games), and underspecified methods. The critique is accurate and introduces no new errors. By identifying these issues, the agent actively prevents the propagation of flawed scientific claims, which aligns with the s=5 anchor.",
+      "RX.5": "The agent's output is a critique, where each point functions as a proposed change with a stated reason. Every piece of feedback is meticulously traced back to a specific phrase in the original text or supported by external knowledge (e.g., listing the MinAtar games, providing citations for prior work). This meets the s=5 standard of annotating every change with its source and reason."
+    },
+    "confidence": {
+      "R1.5": 0.9,
+      "R1.6": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

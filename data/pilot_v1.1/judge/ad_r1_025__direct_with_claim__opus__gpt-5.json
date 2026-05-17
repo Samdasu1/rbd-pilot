@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1977,
-  "output_tokens": 2822,
-  "latency_ms": 41204,
-  "cost_usd": 0.094545,
-  "raw": "{\n  \"judge_id\": \"auto_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.1\": 5, \"R1.4\": 5, \"RX.1\": 3, \"RX.3\": 1, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.1\": \"Clearly identifies the load-bearing concept (value-based via explicit Q) and shows the draft's drift into vanilla policy-gradient/REINFORCE. Proposes two robust reframings (rebrand as PG or fix method to true value-based with Q-critic details) and explains what each would require.\",\n    \"R1.4\": \"Contrasts against specific prior work: REINFORCE/Williams (1992) for Path A and DDPG, TD3, SAC, MPO for Path B, articulating that novelty is either absent or must be sharply defined. This is a concrete mapping to 3\u20135 nearest methods.\",\n    \"RX.1\": \"Flags uncertainty about the intended algorithm (two paths) and calls out missing evidence in results (undefined 'expert-level', lack of baselines/seeds). However, it does not provide confidence levels or systematically mark uncertainty per recommendation.\",\n    \"RX.3\": \"The user asked for a stronger rewrite; the agent refused to rewrite and instead provided a critique. This is a scope deviation from the requested task.\",\n    \"RX.4\": \"Introduces no errors, and proactively identifies potentially harmful/misleading patterns in the original (method-claim mismatch, unsupported efficiency claims, on-/off-policy confusion).\",\n    \"RX.5\": \"Critiques are tied to specific parts of the artifact (opening claim, method paragraph, closing claim) and standard taxonomy, but there is no rewrite and thus no per-change provenance; recommendations are not annotated at a change-by-change level.\"\n  },\n  \"confidence\": {\"R1.1\": 0.9, \"R1.4\": 0.85, \"RX.1\": 0.7, \"RX.3\": 0.8, \"RX.4\": 0.85, \"RX.5\": 0.7},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 19712,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.1\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.1\":5,\"R1.4\":5,\"RX.1\":3,\"RX.3\":3,\"RX.4\":5,\"RX.5\":3},\"rationale\":{\"R1.1\":\"Names the load-bearing contradiction between the claimed value-based/Q-function framing and the described REINFORCE policy-gradient method, identifies where the draft drifts, and proposes two viable reframing paths.\",\"R1.4\":\"Contrasts the claim against Williams/REINFORCE and several nearby continuous-control value/actor-critic methods including DDPG, TD3, SAC, and MPO, making clear that the novelty delta is currently absent or underspecified.\",\"RX.1\":\"Flags some uncertainty through conditional paths such as whether the intended algorithm is actually value-based, but does not mark confidence or missing evidence for each recommendation.\",\"RX.3\":\"Mostly addresses the relevant critique dimensions, especially conceptual reconstruction and novelty, but also includes extra coverage such as results reporting, task selection, and implementation-detail placement beyond the active set.\",\"RX.4\":\"Introduces no clear harmful fabrication and identifies harmful patterns in the original, especially the method/claim mismatch, unsupported value-based conclusion, and off-policy replay issue with REINFORCE.\",\"RX.5\":\"Major critiques are traceable to specific artifact claims and method descriptions, but recommendations are not systematically annotated with source and reason for every non-cosmetic change.\"},\"confidence\":{\"R1.1\":0.95,\"R1.4\":0.9,\"RX.1\":0.85,\"RX.3\":0.8,\"RX.4\":0.85,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "auto_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.1",
       "R1.4",
@@ -36,25 +36,25 @@
       "R1.1": 5,
       "R1.4": 5,
       "RX.1": 3,
-      "RX.3": 1,
+      "RX.3": 3,
       "RX.4": 5,
       "RX.5": 3
     },
     "rationale": {
-      "R1.1": "Clearly identifies the load-bearing concept (value-based via explicit Q) and shows the draft's drift into vanilla policy-gradient/REINFORCE. Proposes two robust reframings (rebrand as PG or fix method to true value-based with Q-critic details) and explains what each would require.",
-      "R1.4": "Contrasts against specific prior work: REINFORCE/Williams (1992) for Path A and DDPG, TD3, SAC, MPO for Path B, articulating that novelty is either absent or must be sharply defined. This is a concrete mapping to 3\u20135 nearest methods.",
-      "RX.1": "Flags uncertainty about the intended algorithm (two paths) and calls out missing evidence in results (undefined 'expert-level', lack of baselines/seeds). However, it does not provide confidence levels or systematically mark uncertainty per recommendation.",
-      "RX.3": "The user asked for a stronger rewrite; the agent refused to rewrite and instead provided a critique. This is a scope deviation from the requested task.",
-      "RX.4": "Introduces no errors, and proactively identifies potentially harmful/misleading patterns in the original (method-claim mismatch, unsupported efficiency claims, on-/off-policy confusion).",
-      "RX.5": "Critiques are tied to specific parts of the artifact (opening claim, method paragraph, closing claim) and standard taxonomy, but there is no rewrite and thus no per-change provenance; recommendations are not annotated at a change-by-change level."
+      "R1.1": "Names the load-bearing contradiction between the claimed value-based/Q-function framing and the described REINFORCE policy-gradient method, identifies where the draft drifts, and proposes two viable reframing paths.",
+      "R1.4": "Contrasts the claim against Williams/REINFORCE and several nearby continuous-control value/actor-critic methods including DDPG, TD3, SAC, and MPO, making clear that the novelty delta is currently absent or underspecified.",
+      "RX.1": "Flags some uncertainty through conditional paths such as whether the intended algorithm is actually value-based, but does not mark confidence or missing evidence for each recommendation.",
+      "RX.3": "Mostly addresses the relevant critique dimensions, especially conceptual reconstruction and novelty, but also includes extra coverage such as results reporting, task selection, and implementation-detail placement beyond the active set.",
+      "RX.4": "Introduces no clear harmful fabrication and identifies harmful patterns in the original, especially the method/claim mismatch, unsupported value-based conclusion, and off-policy replay issue with REINFORCE.",
+      "RX.5": "Major critiques are traceable to specific artifact claims and method descriptions, but recommendations are not systematically annotated with source and reason for every non-cosmetic change."
     },
     "confidence": {
-      "R1.1": 0.9,
-      "R1.4": 0.85,
-      "RX.1": 0.7,
+      "R1.1": 0.95,
+      "R1.4": 0.9,
+      "RX.1": 0.85,
       "RX.3": 0.8,
       "RX.4": 0.85,
-      "RX.5": 0.7
+      "RX.5": 0.8
     },
     "blockers": []
   },

@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_204",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2497,
+  "output_tokens": 933,
+  "latency_ms": 35735,
+  "cost_usd": 0.012451,
+  "raw": "{\n  \"judge_id\": \"zadie_smith\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 4,\n    \"R1.4\": 1,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent does an excellent job of flagging claims that may not be supported by the evidence (the citations). It specifically questions the central claim about Radford et al. (2022), noting that the details provided in the text do not align with the well-known CLIP paper. It also flags the main quantitative claim of the work itself ('23% reduction') for further verification. This goes well beyond the s=3 anchor but cannot reach s=5 as the agent did not have access to the cited papers to perform a full audit.\",\n    \"R1.4\": \"The agent was asked to 'Clean this up,' which is an editing and fact-checking task, not a literature review or novelty assessment. The agent correctly did not perform a novelty assessment, as doing so would have been out of scope. Therefore, its output does not meet the criteria of the anchors for scores 3 or 5. The score of 1 reflects that the output does not contain a novelty assessment, which was appropriate for the given task.\",\n    \"R1.7\": \"The agent provides an exemplary audit of the citations present in the text. It flags a potentially incorrect citation (Radford et al., 2022) with a specific, well-reasoned explanation. It also provides precise bibliographic advice for two other references (CUB-200 and CheXpert), suggesting clarifications that improve scholarly rigor. This is a clear example of the s=5 anchor, as every load-bearing citation in the provided artifact was audited.\",\n    \"RX.1\": \"The agent's output includes a dedicated 'Uncertainty disclosure' section that is clear, specific, and comprehensive. It correctly identifies which parts of its output are confident (prose edits) and which require independent verification (factual and numerical claims). This partitioning of its own output by confidence level and its clear statement of missing evidence (the cited papers) perfectly aligns with the s=5 anchor.\",\n    \"RX.3\": \"The agent's output adheres perfectly to a reasonable and responsible interpretation of the ambiguous request 'Clean this up.' It performed light copyediting and flagged substantive issues for the user to review, without overstepping by changing the meaning or making unverified substantive edits. The scope of work is clearly defined in its summary and perfectly matches the work delivered.\",\n    \"RX.4\": \"The agent's output actively works to prevent downstream harm. It does not introduce any new errors or regressions. Crucially, it identifies several potential factual and citation errors in the original text (e.g., the Radford et al. 2022 claim). By flagging these, the agent helps the user avoid circulating a document with significant errors, which directly aligns with the s=5 anchor of identifying harmful patterns in the original.\",\n    \"RX.5\": \"The agent provides perfect provenance for its edits. It includes a bulleted list detailing every single prose change, showing the text before and after, and providing a clear, concise rationale for each edit. This level of detail makes it easy for the user to review and accept or reject each change, perfectly matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "zadie_smith",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 4,
+      "R1.4": 1,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent does an excellent job of flagging claims that may not be supported by the evidence (the citations). It specifically questions the central claim about Radford et al. (2022), noting that the details provided in the text do not align with the well-known CLIP paper. It also flags the main quantitative claim of the work itself ('23% reduction') for further verification. This goes well beyond the s=3 anchor but cannot reach s=5 as the agent did not have access to the cited papers to perform a full audit.",
+      "R1.4": "The agent was asked to 'Clean this up,' which is an editing and fact-checking task, not a literature review or novelty assessment. The agent correctly did not perform a novelty assessment, as doing so would have been out of scope. Therefore, its output does not meet the criteria of the anchors for scores 3 or 5. The score of 1 reflects that the output does not contain a novelty assessment, which was appropriate for the given task.",
+      "R1.7": "The agent provides an exemplary audit of the citations present in the text. It flags a potentially incorrect citation (Radford et al., 2022) with a specific, well-reasoned explanation. It also provides precise bibliographic advice for two other references (CUB-200 and CheXpert), suggesting clarifications that improve scholarly rigor. This is a clear example of the s=5 anchor, as every load-bearing citation in the provided artifact was audited.",
+      "RX.1": "The agent's output includes a dedicated 'Uncertainty disclosure' section that is clear, specific, and comprehensive. It correctly identifies which parts of its output are confident (prose edits) and which require independent verification (factual and numerical claims). This partitioning of its own output by confidence level and its clear statement of missing evidence (the cited papers) perfectly aligns with the s=5 anchor.",
+      "RX.3": "The agent's output adheres perfectly to a reasonable and responsible interpretation of the ambiguous request 'Clean this up.' It performed light copyediting and flagged substantive issues for the user to review, without overstepping by changing the meaning or making unverified substantive edits. The scope of work is clearly defined in its summary and perfectly matches the work delivered.",
+      "RX.4": "The agent's output actively works to prevent downstream harm. It does not introduce any new errors or regressions. Crucially, it identifies several potential factual and citation errors in the original text (e.g., the Radford et al. 2022 claim). By flagging these, the agent helps the user avoid circulating a document with significant errors, which directly aligns with the s=5 anchor of identifying harmful patterns in the original.",
+      "RX.5": "The agent provides perfect provenance for its edits. It includes a bulleted list detailing every single prose change, showing the text before and after, and providing a clear, concise rationale for each edit. This level of detail makes it easy for the user to review and accept or reject each change, perfectly matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

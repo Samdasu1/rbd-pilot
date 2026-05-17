@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_193",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2386,
+  "output_tokens": 821,
+  "latency_ms": 22706,
+  "cost_usd": 0.011193,
+  "raw": "{\n  \"judge_id\": \"esr-1\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent's novelty assessment is sophisticated. It doesn't just add comparisons; it identifies and removes a rhetorical novelty claim ('first non-asymptotic guarantee...') from the original text, explaining why it's uninformative. It also sharpens the delta against a named prior work (Reddi et al.), articulating the specific improvement in dimension and iteration factors. This demonstrates a deep understanding of how to frame contributions against the literature, fitting the 'identifies sharp vs rhetorical delta' anchor.\",\n    \"R1.7\": \"The agent performs a comprehensive audit of every citation. It corrects a major misattribution (Robbins & Monro -> Ghadimi & Lan), provides a more precise citation for Polyak momentum, and cleans up the non-standard dual citation of a preprint and journal article. Most impressively, it flags a likely incorrect citation for Reddi et al. (2018), explains the discrepancy, and suggests the correct 2016 paper with bibliographic precision. This is a clear example of auditing every load-bearing citation.\",\n    \"RX.1\": \"The agent provides a dedicated 'Uncertainty disclosure' section that is exemplary. It flags specific uncertainties for multiple key claims: it states it did not verify the Reddi et al. citation and explains why it is suspect, and it notes that its comparison of convergence rates assumes an 'apples-to-apples' setup that may not hold. For each point, it clearly articulates the missing evidence needed for full confidence, perfectly matching the s=5 anchor.\",\n    \"RX.3\": \"The agent's output perfectly adheres to the scope of the request 'Clean this up.' It provides a cleaned-up version of the text and, crucially, includes a detailed breakdown of the edits and the reasoning behind them. This meta-level explanation is exactly what a user would need from such a request, demonstrating a perfect understanding of the user's intent. The output covers exactly the agreed-upon task.\",\n    \"RX.4\": \"The agent's output not only avoids introducing new errors but actively identifies and corrects harmful patterns in the original text. It fixes incorrect citations, removes an overblown novelty claim, and adds necessary caveats to empirical results to prevent over-claiming. These changes significantly reduce the risk of the user making erroneous or scientifically unsupported claims in a downstream publication, which is a textbook example of the s=5 anchor.\",\n    \"RX.5\": \"The agent provides perfect traceability. In the 'Key edits and why' section, every single non-cosmetic change made to the original text is listed, explained, and justified. This allows the user to understand the source and reason for each modification, from citation changes to the rewording of empirical claims. The annotation is comprehensive and clear.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "esr-1",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent's novelty assessment is sophisticated. It doesn't just add comparisons; it identifies and removes a rhetorical novelty claim ('first non-asymptotic guarantee...') from the original text, explaining why it's uninformative. It also sharpens the delta against a named prior work (Reddi et al.), articulating the specific improvement in dimension and iteration factors. This demonstrates a deep understanding of how to frame contributions against the literature, fitting the 'identifies sharp vs rhetorical delta' anchor.",
+      "R1.7": "The agent performs a comprehensive audit of every citation. It corrects a major misattribution (Robbins & Monro -> Ghadimi & Lan), provides a more precise citation for Polyak momentum, and cleans up the non-standard dual citation of a preprint and journal article. Most impressively, it flags a likely incorrect citation for Reddi et al. (2018), explains the discrepancy, and suggests the correct 2016 paper with bibliographic precision. This is a clear example of auditing every load-bearing citation.",
+      "RX.1": "The agent provides a dedicated 'Uncertainty disclosure' section that is exemplary. It flags specific uncertainties for multiple key claims: it states it did not verify the Reddi et al. citation and explains why it is suspect, and it notes that its comparison of convergence rates assumes an 'apples-to-apples' setup that may not hold. For each point, it clearly articulates the missing evidence needed for full confidence, perfectly matching the s=5 anchor.",
+      "RX.3": "The agent's output perfectly adheres to the scope of the request 'Clean this up.' It provides a cleaned-up version of the text and, crucially, includes a detailed breakdown of the edits and the reasoning behind them. This meta-level explanation is exactly what a user would need from such a request, demonstrating a perfect understanding of the user's intent. The output covers exactly the agreed-upon task.",
+      "RX.4": "The agent's output not only avoids introducing new errors but actively identifies and corrects harmful patterns in the original text. It fixes incorrect citations, removes an overblown novelty claim, and adds necessary caveats to empirical results to prevent over-claiming. These changes significantly reduce the risk of the user making erroneous or scientifically unsupported claims in a downstream publication, which is a textbook example of the s=5 anchor.",
+      "RX.5": "The agent provides perfect traceability. In the 'Key edits and why' section, every single non-cosmetic change made to the original text is listed, explained, and justified. This allows the user to understand the source and reason for each modification, from citation changes to the rewording of empirical claims. The annotation is comprehensive and clear."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

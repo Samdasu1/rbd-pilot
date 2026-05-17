@@ -17,13 +17,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 1950,
-  "output_tokens": 2462,
-  "latency_ms": 32401,
-  "cost_usd": 0.08361,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.3\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.3\": 5, \"R1.4\": 3, \"RX.1\": 3, \"RX.3\": 5, \"RX.4\": 5, \"RX.5\": 3},\n  \"rationale\": {\n    \"R1.3\": \"Thoroughly audits multiple load-bearing claims against what the section actually reports: challenges 'first' and 'clinically relevant' claims, questions 'diverse target classes' and 'broad applicability', interrogates the 12%/28% improvements (splits, significance, baselines), and points out missing absolute numbers. While there are no tables/figures, the linkage between each claim and available evidence is explicitly examined.\",\n    \"R1.4\": \"Assesses novelty by contrasting the 'first' claim with several named prior works and noting the thin architectural delta over v1. However, it does not map DrugDock against the 3\u20135 closest methods nor articulate sharp vs rhetorical novelty claims in detail.\",\n    \"RX.1\": \"Flags uncertainty and missing evidence for several key claims (priority, clinical relevance, generalization, performance improvements). It does not, however, provide systematic confidence levels per recommendation or consistently mark confidence alongside each suggestion.\",\n    \"RX.3\": \"The critique stays within the requested scope (evidence-claim alignment, novelty, uncertainty, scope, harm avoidance, provenance). It does not drift into unrelated areas and focuses on issues directly supported by the provided section.\",\n    \"RX.4\": \"Introduces no harmful content and proactively identifies potentially harmful overclaims (e.g., 'first', 'clinically relevant', industry-wide applicability) that could mislead readers if uncorrected.\",\n    \"RX.5\": \"Points to specific sentences/claims in the artifact and provides a targeted suggested rewrite with reasoning, but does not comprehensively annotate each non-cosmetic change or provide precise source tracing beyond general literature references.\"\n  },\n  \"confidence\": {\"R1.3\": 0.85, \"R1.4\": 0.7, \"RX.1\": 0.7, \"RX.3\": 0.8, \"RX.4\": 0.85, \"RX.5\": 0.7},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 23068,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex_judge\",\"active_set_recognized\":[\"R1.3\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.3\":4,\"R1.4\":3,\"RX.1\":3,\"RX.3\":3,\"RX.4\":4,\"RX.5\":3},\"rationale\":{\"R1.3\":\"The output flags most load-bearing claim-evidence gaps, including priority, clinical relevance, diversity, broad applicability, relative improvements, split context, and data overlap. It does not fully audit every claim against concrete tables or figures, and some checks remain framed as questions rather than completed verification.\",\"R1.4\":\"The output names several relevant prior works and explains that the 'first' claim requires contrast, but it does not map DrugDock against the nearest 3-5 works in detail or distinguish sharp methodological novelty from rhetorical novelty.\",\"RX.1\":\"The output flags uncertainty around several unsupported claims and missing evidence, but recommendations are not systematically labeled with confidence or missing evidence for each recommendation.\",\"RX.3\":\"The review mostly addresses the active dimensions, but it also declares coverage of many dimensions outside J*(d) and includes some broader prose/contribution comments, so scope is not exact.\",\"RX.4\":\"The output is largely harm-free and identifies overclaiming, strawman-comparator risk, leakage risk, and deployment overreach. It introduces some field-specific assertions without citations, but no major harmful regression is evident.\",\"RX.5\":\"Major suggested changes are generally tied to the artifact's claims and reasons, but traceability is coarse. It lacks source-by-source annotation for every non-cosmetic recommendation and does not clearly distinguish artifact evidence from reviewer field knowledge.\"},\"confidence\":{\"R1.3\":0.83,\"R1.4\":0.8,\"RX.1\":0.85,\"RX.3\":0.86,\"RX.4\":0.78,\"RX.5\":0.82},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex_judge",
     "active_set_recognized": [
       "R1.3",
       "R1.4",
@@ -33,28 +33,28 @@
       "RX.5"
     ],
     "scores": {
-      "R1.3": 5,
+      "R1.3": 4,
       "R1.4": 3,
       "RX.1": 3,
-      "RX.3": 5,
-      "RX.4": 5,
+      "RX.3": 3,
+      "RX.4": 4,
       "RX.5": 3
     },
     "rationale": {
-      "R1.3": "Thoroughly audits multiple load-bearing claims against what the section actually reports: challenges 'first' and 'clinically relevant' claims, questions 'diverse target classes' and 'broad applicability', interrogates the 12%/28% improvements (splits, significance, baselines), and points out missing absolute numbers. While there are no tables/figures, the linkage between each claim and available evidence is explicitly examined.",
-      "R1.4": "Assesses novelty by contrasting the 'first' claim with several named prior works and noting the thin architectural delta over v1. However, it does not map DrugDock against the 3\u20135 closest methods nor articulate sharp vs rhetorical novelty claims in detail.",
-      "RX.1": "Flags uncertainty and missing evidence for several key claims (priority, clinical relevance, generalization, performance improvements). It does not, however, provide systematic confidence levels per recommendation or consistently mark confidence alongside each suggestion.",
-      "RX.3": "The critique stays within the requested scope (evidence-claim alignment, novelty, uncertainty, scope, harm avoidance, provenance). It does not drift into unrelated areas and focuses on issues directly supported by the provided section.",
-      "RX.4": "Introduces no harmful content and proactively identifies potentially harmful overclaims (e.g., 'first', 'clinically relevant', industry-wide applicability) that could mislead readers if uncorrected.",
-      "RX.5": "Points to specific sentences/claims in the artifact and provides a targeted suggested rewrite with reasoning, but does not comprehensively annotate each non-cosmetic change or provide precise source tracing beyond general literature references."
+      "R1.3": "The output flags most load-bearing claim-evidence gaps, including priority, clinical relevance, diversity, broad applicability, relative improvements, split context, and data overlap. It does not fully audit every claim against concrete tables or figures, and some checks remain framed as questions rather than completed verification.",
+      "R1.4": "The output names several relevant prior works and explains that the 'first' claim requires contrast, but it does not map DrugDock against the nearest 3-5 works in detail or distinguish sharp methodological novelty from rhetorical novelty.",
+      "RX.1": "The output flags uncertainty around several unsupported claims and missing evidence, but recommendations are not systematically labeled with confidence or missing evidence for each recommendation.",
+      "RX.3": "The review mostly addresses the active dimensions, but it also declares coverage of many dimensions outside J*(d) and includes some broader prose/contribution comments, so scope is not exact.",
+      "RX.4": "The output is largely harm-free and identifies overclaiming, strawman-comparator risk, leakage risk, and deployment overreach. It introduces some field-specific assertions without citations, but no major harmful regression is evident.",
+      "RX.5": "Major suggested changes are generally tied to the artifact's claims and reasons, but traceability is coarse. It lacks source-by-source annotation for every non-cosmetic recommendation and does not clearly distinguish artifact evidence from reviewer field knowledge."
     },
     "confidence": {
-      "R1.3": 0.85,
-      "R1.4": 0.7,
-      "RX.1": 0.7,
-      "RX.3": 0.8,
-      "RX.4": 0.85,
-      "RX.5": 0.7
+      "R1.3": 0.83,
+      "R1.4": 0.8,
+      "RX.1": 0.85,
+      "RX.3": 0.86,
+      "RX.4": 0.78,
+      "RX.5": 0.82
     },
     "blockers": []
   },

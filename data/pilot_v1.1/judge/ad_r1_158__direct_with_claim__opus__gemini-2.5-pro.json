@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_158",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.5",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2218,
+  "output_tokens": 788,
+  "latency_ms": 33343,
+  "cost_usd": 0.010652,
+  "raw": "{\n  \"judge_id\": \"pj_20240510_v1\",\n  \"active_set_recognized\": [\n    \"R1.5\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.5\": 3,\n    \"RX.1\": 4,\n    \"RX.3\": 3,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.5\": \"The agent provides one specific, high-impact structural suggestion in point #8: adding a \\\"one-sentence pivot\\\" to bridge the gap between the literature review and the methods. It clearly states the benefit (\\\"would carry the reader from prior work to contribution\\\"). This aligns well with the s=3 anchor: \\\"Suggests one reorder with stated benefit.\\\" It does not provide a full end-to-end plan (s=5).\",\n    \"RX.1\": \"The agent includes a dedicated \\\"Uncertainty\\\" section at the end. It explicitly flags that its critiques in points 1, 2, and 7 are based on its \\\"recollection of the V2G literature\\\" and advises the user to \\\"confirm the... claims against the actual cited papers.\\\" This is a sophisticated disclosure that identifies a whole class of claims dependent on external knowledge and flags them for verification. It's much better than s=3 (\\\"one or two clearly out-of-reach claims\\\") but doesn't quite meet s=5 (\\\"For each recommendation, marks confidence\\\"), as the other points are not individually marked. A score of 4 is appropriate.\",\n    \"RX.3\": \"The user's request was to \\\"take a look at this paragraph.\\\" The agent correctly interpreted this as a request for critique and did not perform a rewrite. However, the output begins with an unrequested JSON object `{\\\"covered_dims\\\": ...}`. This is a minor but clear deviation from the scope of the simple request. The core of the output is perfectly on-task, but this addition constitutes a drift, fitting the s=3 anchor: \\\"Mostly within scope with one drift.\\\"\",\n    \"RX.4\": \"The agent's critique is harm-free and actively works to prevent downstream harm by improving the scientific rigor of the original text. It identifies several potentially misleading or unsupported claims in the artifact, such as the unsupported \\\"first\\\" claim, the lack of uncertainty intervals for results, and the potential conflation of technical terms. This directly aligns with the s=5 anchor: \\\"No regressions; identifies harmful patterns in the original.\\\"\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite. Applying the rubric, every point of critique (i.e., every suggested change) is meticulously justified with a clear rationale. For example, it doesn't just say the \\\"first\\\" claim is wrong; it explains *why* (prior art exists) and suggests how to fix it. This is analogous to the s=5 anchor: \\\"Every non-cosmetic change is annotated with source and reason.\\\" The agent provides a reason for every single one of its nine points.\"\n  },\n  \"confidence\": {\n    \"R1.5\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "pj_20240510_v1",
+    "active_set_recognized": [
+      "R1.5",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.5": 3,
+      "RX.1": 4,
+      "RX.3": 3,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.5": "The agent provides one specific, high-impact structural suggestion in point #8: adding a \"one-sentence pivot\" to bridge the gap between the literature review and the methods. It clearly states the benefit (\"would carry the reader from prior work to contribution\"). This aligns well with the s=3 anchor: \"Suggests one reorder with stated benefit.\" It does not provide a full end-to-end plan (s=5).",
+      "RX.1": "The agent includes a dedicated \"Uncertainty\" section at the end. It explicitly flags that its critiques in points 1, 2, and 7 are based on its \"recollection of the V2G literature\" and advises the user to \"confirm the... claims against the actual cited papers.\" This is a sophisticated disclosure that identifies a whole class of claims dependent on external knowledge and flags them for verification. It's much better than s=3 (\"one or two clearly out-of-reach claims\") but doesn't quite meet s=5 (\"For each recommendation, marks confidence\"), as the other points are not individually marked. A score of 4 is appropriate.",
+      "RX.3": "The user's request was to \"take a look at this paragraph.\" The agent correctly interpreted this as a request for critique and did not perform a rewrite. However, the output begins with an unrequested JSON object `{\"covered_dims\": ...}`. This is a minor but clear deviation from the scope of the simple request. The core of the output is perfectly on-task, but this addition constitutes a drift, fitting the s=3 anchor: \"Mostly within scope with one drift.\"",
+      "RX.4": "The agent's critique is harm-free and actively works to prevent downstream harm by improving the scientific rigor of the original text. It identifies several potentially misleading or unsupported claims in the artifact, such as the unsupported \"first\" claim, the lack of uncertainty intervals for results, and the potential conflation of technical terms. This directly aligns with the s=5 anchor: \"No regressions; identifies harmful patterns in the original.\"",
+      "RX.5": "The agent's output is a critique, not a rewrite. Applying the rubric, every point of critique (i.e., every suggested change) is meticulously justified with a clear rationale. For example, it doesn't just say the \"first\" claim is wrong; it explains *why* (prior art exists) and suggests how to fix it. This is analogous to the s=5 anchor: \"Every non-cosmetic change is annotated with source and reason.\" The agent provides a reason for every single one of its nine points."
+    },
+    "confidence": {
+      "R1.5": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

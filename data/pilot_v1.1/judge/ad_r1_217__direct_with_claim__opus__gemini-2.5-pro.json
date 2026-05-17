@@ -1,0 +1,70 @@
+{
+  "example_id": "ad_r1_217",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2617,
+  "output_tokens": 890,
+  "latency_ms": 29147,
+  "cost_usd": 0.012171,
+  "raw": "{\n  \"judge_id\": \"8\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.4\": 5,\n    \"R1.7\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent identifies multiple, deep conceptual flaws in the original text. It names the load-bearing concepts (unconfoundedness, exclusion restriction, joint-capability confounding), shows precisely where the draft's logic fails (e.g., the IV proposal contradicting the conditioning set), and proposes a comprehensive reframing that corrects these issues, tightens the language (e.g., 'ATE' to 'average dose-response'), and clarifies the central contribution. This is a textbook example of a score=5 conceptual reconstruction.\",\n    \"R1.4\": \"The agent performs a sophisticated novelty assessment. Instead of just listing prior works, it critiques the framing of the novelty claims ('first causal-inference treatment'). It correctly identifies the broader literatures ('ensemble-learning and mixture-of-experts') that challenge the claim's scope and proposes a sharper, more defensible restatement. This act of identifying the rhetorical vs. sharp delta in a novelty claim is a hallmark of a score=5 performance.\",\n    \"R1.7\": \"The agent flags that the novelty claims are unsubstantiated without reference to key literatures like 'ensemble-learning and mixture-of-experts.' This correctly identifies a major gap in scholarship. However, it does not provide specific citations or bibliographic precision, which is required for a score of 5. It therefore aligns best with the score=3 anchor of flagging a missing citation (or in this case, a missing body of citations).\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states which parts of its analysis rely on unverified assumptions (taking the data and novelty claims from the artifact at face value) and flags where further evidence (a literature review) is needed. This perfectly matches the score=5 anchor of marking confidence and missing evidence for its recommendations.\",\n    \"RX.3\": \"The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a detailed critique and a suggested rewrite, which is a direct and complete fulfillment of the task. There is no scope drift.\",\n    \"RX.4\": \"The agent's output is a significant improvement that avoids downstream harm. The original text contained a major logical contradiction in its causal identification strategy and overclaimed its results. By identifying and correcting these flaws, the agent prevents the propagation of erroneous scientific reasoning and unsubstantiated claims. This is a clear example of identifying and fixing harmful patterns in the original.\",\n    \"RX.5\": \"The agent's output is exceptionally traceable. Every significant change in the 'Suggested rewrite' is directly motivated by a point made in the numbered 'Substantive issues' list. For example, the change from 'ATE' to 'average dose-response' is explained in point #6, and the retraction of the IV claim is explained in point #1. This provides a clear rationale for every non-cosmetic change.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.4\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "8",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 5,
+      "R1.7": 3,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent identifies multiple, deep conceptual flaws in the original text. It names the load-bearing concepts (unconfoundedness, exclusion restriction, joint-capability confounding), shows precisely where the draft's logic fails (e.g., the IV proposal contradicting the conditioning set), and proposes a comprehensive reframing that corrects these issues, tightens the language (e.g., 'ATE' to 'average dose-response'), and clarifies the central contribution. This is a textbook example of a score=5 conceptual reconstruction.",
+      "R1.4": "The agent performs a sophisticated novelty assessment. Instead of just listing prior works, it critiques the framing of the novelty claims ('first causal-inference treatment'). It correctly identifies the broader literatures ('ensemble-learning and mixture-of-experts') that challenge the claim's scope and proposes a sharper, more defensible restatement. This act of identifying the rhetorical vs. sharp delta in a novelty claim is a hallmark of a score=5 performance.",
+      "R1.7": "The agent flags that the novelty claims are unsubstantiated without reference to key literatures like 'ensemble-learning and mixture-of-experts.' This correctly identifies a major gap in scholarship. However, it does not provide specific citations or bibliographic precision, which is required for a score of 5. It therefore aligns best with the score=3 anchor of flagging a missing citation (or in this case, a missing body of citations).",
+      "RX.1": "The agent includes a dedicated 'Uncertainty disclosure' section. It explicitly states which parts of its analysis rely on unverified assumptions (taking the data and novelty claims from the artifact at face value) and flags where further evidence (a literature review) is needed. This perfectly matches the score=5 anchor of marking confidence and missing evidence for its recommendations.",
+      "RX.3": "The agent's output is perfectly aligned with the user's request to 'Help me with this section.' It provides a detailed critique and a suggested rewrite, which is a direct and complete fulfillment of the task. There is no scope drift.",
+      "RX.4": "The agent's output is a significant improvement that avoids downstream harm. The original text contained a major logical contradiction in its causal identification strategy and overclaimed its results. By identifying and correcting these flaws, the agent prevents the propagation of erroneous scientific reasoning and unsubstantiated claims. This is a clear example of identifying and fixing harmful patterns in the original.",
+      "RX.5": "The agent's output is exceptionally traceable. Every significant change in the 'Suggested rewrite' is directly motivated by a point made in the numbered 'Substantive issues' list. For example, the change from 'ATE' to 'average dose-response' is explained in point #6, and the retraction of the IV claim is explained in point #1. This provides a clear rationale for every non-cosmetic change."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.4": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_097",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2346,
+  "output_tokens": 735,
+  "latency_ms": 33986,
+  "cost_usd": 0.010282,
+  "raw": "{\n  \"judge_id\": \"meta_judge_1\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 1\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent performs an end-to-end analysis of the provided text's argument chain. It identifies multiple, critical logical inconsistencies, including the overreach of the central claim versus the evidence, the flawed reasoning in 'Proposition 1', the contradiction between the empirical data and its textual description, and the unsupported claims about subgrid modeling and generalization. For each inconsistency, it proposes specific, minimal repairs. This aligns perfectly with the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section at the end of its analysis. This section clearly and responsibly discloses a key limitation of its knowledge: that it might not be up-to-date on the very latest literature regarding PINN convergence guarantees for Navier-Stokes equations. It suggests a concrete verification step for the user. This is a high-quality disclosure. It doesn't meet the s=5 anchor of marking confidence 'for each recommendation,' but it goes well beyond the s=3 anchor of flagging 'one or two clearly out-of-reach claims.' Therefore, a score of 4 is appropriate.\",\n    \"RX.3\": \"The delegation was a brief 'Take a look at this paragraph.' The agent interpreted this as a request for a detailed scientific critique. The entire output is focused squarely on analyzing the provided artifact. There is no scope drift, no discussion of unrelated topics, and no failure to address the core content of the paragraph. The output covers exactly the agreed scope.\",\n    \"RX.4\": \"The agent's output avoids introducing any new errors or fabrications. Instead, it actively identifies and explains several harmful patterns present in the original text, such as over-claiming based on limited evidence, presenting heuristics as formal propositions, and making unsupported extrapolations. By flagging these scientific reasoning flaws, the agent's critique serves to prevent downstream harm that could arise from an uncritical reading of the original artifact. This directly matches the s=5 anchor.\",\n    \"RX.5\": \"The agent's critique makes numerous factual claims about the state of the art in a scientific field (e.g., 'adaptive/residual-based sampling is now standard,' 'the loss landscape... is notoriously non-convex'). However, it provides no citations or sources to back up these claims, even while criticizing the original text for the same omission. The output is a blend of the agent's internal knowledge sources without any traceability for the user to verify its claims. This aligns with the s=1 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"RX.1\": 0.9,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "meta_judge_1",
+    "active_set_recognized": [
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 1
+    },
+    "rationale": {
+      "R1.2": "The agent performs an end-to-end analysis of the provided text's argument chain. It identifies multiple, critical logical inconsistencies, including the overreach of the central claim versus the evidence, the flawed reasoning in 'Proposition 1', the contradiction between the empirical data and its textual description, and the unsupported claims about subgrid modeling and generalization. For each inconsistency, it proposes specific, minimal repairs. This aligns perfectly with the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section at the end of its analysis. This section clearly and responsibly discloses a key limitation of its knowledge: that it might not be up-to-date on the very latest literature regarding PINN convergence guarantees for Navier-Stokes equations. It suggests a concrete verification step for the user. This is a high-quality disclosure. It doesn't meet the s=5 anchor of marking confidence 'for each recommendation,' but it goes well beyond the s=3 anchor of flagging 'one or two clearly out-of-reach claims.' Therefore, a score of 4 is appropriate.",
+      "RX.3": "The delegation was a brief 'Take a look at this paragraph.' The agent interpreted this as a request for a detailed scientific critique. The entire output is focused squarely on analyzing the provided artifact. There is no scope drift, no discussion of unrelated topics, and no failure to address the core content of the paragraph. The output covers exactly the agreed scope.",
+      "RX.4": "The agent's output avoids introducing any new errors or fabrications. Instead, it actively identifies and explains several harmful patterns present in the original text, such as over-claiming based on limited evidence, presenting heuristics as formal propositions, and making unsupported extrapolations. By flagging these scientific reasoning flaws, the agent's critique serves to prevent downstream harm that could arise from an uncritical reading of the original artifact. This directly matches the s=5 anchor.",
+      "RX.5": "The agent's critique makes numerous factual claims about the state of the art in a scientific field (e.g., 'adaptive/residual-based sampling is now standard,' 'the loss landscape... is notoriously non-convex'). However, it provides no citations or sources to back up these claims, even while criticizing the original text for the same omission. The output is a blend of the agent's internal knowledge sources without any traceability for the user to verify its claims. This aligns with the s=1 anchor."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "RX.1": 0.9,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

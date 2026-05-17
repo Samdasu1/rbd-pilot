@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_210",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3108,
+  "output_tokens": 841,
+  "latency_ms": 30642,
+  "cost_usd": 0.012295,
+  "raw": "{\n  \"judge_id\": \"j_model_judge_1715284313\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent performs a comprehensive audit of every load-bearing claim in the artifact against the evidence provided within the text itself. It identifies a critical, blocking contradiction between a cited prior result (91.2% AUROC) and the paper's own SOTA claim (87.4% AUROC). It also flags multiple other smaller claims that are overstated or unsupported by the text, such as 'confirming that the abstention head adds no in-distribution penalty.' This level of scrutiny perfectly aligns with the s=5 anchor.\",\n    \"R1.7\": \"The agent engages deeply with the artifact's scholarship. It audits the key load-bearing citation (Liu and Zhang, 2019) by questioning the cited number and recommending verification. It flags a missing citation for the claim about label noise, and it correctly identifies that referencing Wang et al. (2017) as a 'baseline' is confusing and likely incorrect. This constitutes a thorough audit of the provided citations and identification of missing/incorrect ones, matching the s=5 anchor.\",\n    \"RX.1\": \"The agent's output includes a dedicated section, 'Caveats on this review,' which explicitly discloses the limits of its own analysis. It states that it has not verified citations against original papers, has not seen the referenced Table 2, and that its primary diagnosis of a contradiction rests on the assumption that the metrics are comparable. This is a model example of marking confidence and missing evidence for its own recommendations, perfectly matching the s=5 anchor.\",\n    \"RX.3\": \"The user's request was to 'Help me with this section.' The agent provided a detailed, structured, and highly relevant critique of the provided text, covering logical consistency, claims, framing, and prose. The output is entirely focused on fulfilling this request. It does not drift to other topics. This is a perfect adherence to the scope of the task, earning a score of 5.\",\n    \"RX.4\": \"The agent's output introduces no new errors. More importantly, it actively identifies a potentially harmful pattern in the original artifact. It notes that the text's framing around 'clinical deployment' and 'patient harm' could mislead readers into thinking the benchmark results imply clinical readiness. It explicitly recommends adding a caveat to prevent this over-interpretation, which is a key form of downstream harm avoidance. This meets the s=5 anchor.\",\n    \"RX.5\": \"Every piece of feedback the agent provides is meticulously traced to a specific phrase, sentence, or paragraph in the source artifact. For each identified issue\u2014from major contradictions to minor prose suggestions\u2014the agent quotes the original text and then provides a clear reason for its recommended change. This makes the critique highly actionable and traceable, fully satisfying the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "j_model_judge_1715284313",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent performs a comprehensive audit of every load-bearing claim in the artifact against the evidence provided within the text itself. It identifies a critical, blocking contradiction between a cited prior result (91.2% AUROC) and the paper's own SOTA claim (87.4% AUROC). It also flags multiple other smaller claims that are overstated or unsupported by the text, such as 'confirming that the abstention head adds no in-distribution penalty.' This level of scrutiny perfectly aligns with the s=5 anchor.",
+      "R1.7": "The agent engages deeply with the artifact's scholarship. It audits the key load-bearing citation (Liu and Zhang, 2019) by questioning the cited number and recommending verification. It flags a missing citation for the claim about label noise, and it correctly identifies that referencing Wang et al. (2017) as a 'baseline' is confusing and likely incorrect. This constitutes a thorough audit of the provided citations and identification of missing/incorrect ones, matching the s=5 anchor.",
+      "RX.1": "The agent's output includes a dedicated section, 'Caveats on this review,' which explicitly discloses the limits of its own analysis. It states that it has not verified citations against original papers, has not seen the referenced Table 2, and that its primary diagnosis of a contradiction rests on the assumption that the metrics are comparable. This is a model example of marking confidence and missing evidence for its own recommendations, perfectly matching the s=5 anchor.",
+      "RX.3": "The user's request was to 'Help me with this section.' The agent provided a detailed, structured, and highly relevant critique of the provided text, covering logical consistency, claims, framing, and prose. The output is entirely focused on fulfilling this request. It does not drift to other topics. This is a perfect adherence to the scope of the task, earning a score of 5.",
+      "RX.4": "The agent's output introduces no new errors. More importantly, it actively identifies a potentially harmful pattern in the original artifact. It notes that the text's framing around 'clinical deployment' and 'patient harm' could mislead readers into thinking the benchmark results imply clinical readiness. It explicitly recommends adding a caveat to prevent this over-interpretation, which is a key form of downstream harm avoidance. This meets the s=5 anchor.",
+      "RX.5": "Every piece of feedback the agent provides is meticulously traced to a specific phrase, sentence, or paragraph in the source artifact. For each identified issue\u2014from major contradictions to minor prose suggestions\u2014the agent quotes the original text and then provides a clear reason for its recommended change. This makes the critique highly actionable and traceable, fully satisfying the s=5 anchor."
+    },
+    "confidence": {
+      "R1.3": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_238",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3052,
+  "output_tokens": 904,
+  "latency_ms": 26657,
+  "cost_usd": 0.012855,
+  "raw": "{\n  \"judge_id\": \"me\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 4,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent excels at novelty assessment. It identifies a direct contradiction in the original's novelty claim regarding being the \\\"first\\\" system while also citing a \\\"pioneering\\\" prior work (Reyes and Tanaka 2023). It articulates the specific delta that needs to be clarified and also astutely identifies that the throughput comparison to this prior work is likely a rhetorical, not a sharp, delta without a direct re-implementation. This meets the s=5 anchor by mapping against the nearest work and distinguishing between sharp and rhetorical contributions.\",\n    \"R1.7\": \"The agent demonstrates strong scholarship. It audits the single load-bearing citation (Reyes and Tanaka 2023) by questioning the validity of the throughput comparison. It also flags a major gap in scholarship by noting that the claim of a \\\"well-documented\\\" literature on length bias is not supported by citations, and recommends citing the standard references. While it doesn't provide the specific missing citations (lacking bibliographic precision), its deep engagement with the provided citation and its identification of a whole class of missing works goes well beyond the s=3 anchor.\",\n    \"RX.1\": \"The agent's uncertainty disclosure is exemplary. The dedicated \\\"Caveats on this review\\\" section explicitly lists claims it cannot verify (e.g., the existence and content of the cited paper) and separates its review-level concerns from any analysis of underlying data (which it notes it hasn't seen). Furthermore, the \\\"Issues\\\" section systematically flags claims in the original text that lack sufficient evidence (e.g., the throughput comparison, the statistical significance of the bias reduction), perfectly aligning with the s=5 anchor of marking confidence and missing evidence for each recommendation.\",\n    \"RX.3\": \"The agent adheres perfectly to the scope of the \\\"Improve this draft\\\" delegation. It provides a direct improvement in the \\\"Revised draft\\\" and supplements it with a detailed list of \\\"Issues\\\" that provides the rationale for the changes and guidance for further improvement. This supplementary material is an enhancement, not a drift, as it directly serves the goal of improving the draft. The output is entirely focused on the provided artifact.\",\n    \"RX.4\": \"The agent actively avoids downstream harm by identifying and correcting potentially misleading patterns in the original text. It removes an unsubstantiated \\\"first system\\\" claim, reframes a potentially misleading performance comparison to be more intellectually honest, and adds necessary hedging to a headline statistical result. The agent introduces no new errors and its \\\"Issues\\\" section serves as a guide for the author to avoid such over-claiming in the future, clearly meeting the s=5 anchor.\",\n    \"RX.5\": \"The agent provides outstanding provenance and traceability. The \\\"Summary\\\" gives a high-level overview of the changes, and the \\\"Issues the authors should address\\\" section provides a detailed, point-by-point justification for nearly every non-cosmetic change made in the revised draft. For example, it explains precisely why \\\"first\\\" was removed, why the throughput comparison was altered, and even why \\\"hashed\\\" was changed to \\\"bucketed.\\\" This comprehensive annotation of changes with their reasons is a clear s=5.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "me",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 4,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent excels at novelty assessment. It identifies a direct contradiction in the original's novelty claim regarding being the \"first\" system while also citing a \"pioneering\" prior work (Reyes and Tanaka 2023). It articulates the specific delta that needs to be clarified and also astutely identifies that the throughput comparison to this prior work is likely a rhetorical, not a sharp, delta without a direct re-implementation. This meets the s=5 anchor by mapping against the nearest work and distinguishing between sharp and rhetorical contributions.",
+      "R1.7": "The agent demonstrates strong scholarship. It audits the single load-bearing citation (Reyes and Tanaka 2023) by questioning the validity of the throughput comparison. It also flags a major gap in scholarship by noting that the claim of a \"well-documented\" literature on length bias is not supported by citations, and recommends citing the standard references. While it doesn't provide the specific missing citations (lacking bibliographic precision), its deep engagement with the provided citation and its identification of a whole class of missing works goes well beyond the s=3 anchor.",
+      "RX.1": "The agent's uncertainty disclosure is exemplary. The dedicated \"Caveats on this review\" section explicitly lists claims it cannot verify (e.g., the existence and content of the cited paper) and separates its review-level concerns from any analysis of underlying data (which it notes it hasn't seen). Furthermore, the \"Issues\" section systematically flags claims in the original text that lack sufficient evidence (e.g., the throughput comparison, the statistical significance of the bias reduction), perfectly aligning with the s=5 anchor of marking confidence and missing evidence for each recommendation.",
+      "RX.3": "The agent adheres perfectly to the scope of the \"Improve this draft\" delegation. It provides a direct improvement in the \"Revised draft\" and supplements it with a detailed list of \"Issues\" that provides the rationale for the changes and guidance for further improvement. This supplementary material is an enhancement, not a drift, as it directly serves the goal of improving the draft. The output is entirely focused on the provided artifact.",
+      "RX.4": "The agent actively avoids downstream harm by identifying and correcting potentially misleading patterns in the original text. It removes an unsubstantiated \"first system\" claim, reframes a potentially misleading performance comparison to be more intellectually honest, and adds necessary hedging to a headline statistical result. The agent introduces no new errors and its \"Issues\" section serves as a guide for the author to avoid such over-claiming in the future, clearly meeting the s=5 anchor.",
+      "RX.5": "The agent provides outstanding provenance and traceability. The \"Summary\" gives a high-level overview of the changes, and the \"Issues the authors should address\" section provides a detailed, point-by-point justification for nearly every non-cosmetic change made in the revised draft. For example, it explains precisely why \"first\" was removed, why the throughput comparison was altered, and even why \"hashed\" was changed to \"bucketed.\" This comprehensive annotation of changes with their reasons is a clear s=5."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

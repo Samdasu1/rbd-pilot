@@ -1,0 +1,60 @@
+{
+  "example_id": "ad_r1_095",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2531,
+  "output_tokens": 722,
+  "latency_ms": 28649,
+  "cost_usd": 0.010384,
+  "raw": "{\n  \"judge_id\": \"get_started_eval_judge\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the artifact end-to-end, from the abstract's claims to the algorithm's details, the theorem's assumptions, and the empirical results. It flags numerous load-bearing inconsistencies, such as the contradiction between the non-smoothness claim and the Lipschitz assumption, the claimed O(1/T) rate and the proven O(1/sqrt(T)) rate, and the 'adaptive' claim versus the fixed step size. For each inconsistency, it proposes clear, minimal repairs, perfectly matching the s=5 anchor.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section that clearly scopes its analysis. It states confidence in its assessment of the artifact's *internal* consistency while explicitly flagging that it has *not* verified external facts, such as the state of the art or the precise details of cited papers. This is a sophisticated and honest disclosure of the analysis's boundaries, fulfilling the spirit of the s=5 anchor.\",\n    \"RX.3\": \"The user's delegation was a very open-ended 'What do you think?'. The agent interpreted this as a request for a detailed technical critique. The output is a comprehensive and highly relevant analysis of the provided artifact, staying perfectly within the implied scope. It does not drift into irrelevant topics. This is an exemplary response to a broad prompt, meriting a score of 5.\",\n    \"RX.4\": \"The agent's output is a critique that identifies and corrects serious logical and technical flaws in the original artifact. By flagging contradictions and unsupported claims, it prevents the propagation of misleading information, which is a form of downstream harm in a research context. The critique itself is accurate, constructive, and introduces no new errors. This is a clear example of a harm-avoidant, net-positive contribution.\",\n    \"RX.5\": \"The agent's output is a critique, not a rewrite. In this context, traceability means linking each point of criticism back to a specific part of the source artifact. The agent does this meticulously. Each of the eight substantive issues is explicitly tied to specific phrases, claims, assumptions, or results in the original text (e.g., 'The abstract-style framing says... Theorem 1 then assumes...', 'The closing sentence advertises... yet eta_t is defined...'). This makes the critique's reasoning fully traceable, matching the s=5 anchor.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_eval_judge",
+    "active_set_recognized": [
+      "R1.2",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the artifact end-to-end, from the abstract's claims to the algorithm's details, the theorem's assumptions, and the empirical results. It flags numerous load-bearing inconsistencies, such as the contradiction between the non-smoothness claim and the Lipschitz assumption, the claimed O(1/T) rate and the proven O(1/sqrt(T)) rate, and the 'adaptive' claim versus the fixed step size. For each inconsistency, it proposes clear, minimal repairs, perfectly matching the s=5 anchor.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section that clearly scopes its analysis. It states confidence in its assessment of the artifact's *internal* consistency while explicitly flagging that it has *not* verified external facts, such as the state of the art or the precise details of cited papers. This is a sophisticated and honest disclosure of the analysis's boundaries, fulfilling the spirit of the s=5 anchor.",
+      "RX.3": "The user's delegation was a very open-ended 'What do you think?'. The agent interpreted this as a request for a detailed technical critique. The output is a comprehensive and highly relevant analysis of the provided artifact, staying perfectly within the implied scope. It does not drift into irrelevant topics. This is an exemplary response to a broad prompt, meriting a score of 5.",
+      "RX.4": "The agent's output is a critique that identifies and corrects serious logical and technical flaws in the original artifact. By flagging contradictions and unsupported claims, it prevents the propagation of misleading information, which is a form of downstream harm in a research context. The critique itself is accurate, constructive, and introduces no new errors. This is a clear example of a harm-avoidant, net-positive contribution.",
+      "RX.5": "The agent's output is a critique, not a rewrite. In this context, traceability means linking each point of criticism back to a specific part of the source artifact. The agent does this meticulously. Each of the eight substantive issues is explicitly tied to specific phrases, claims, assumptions, or results in the original text (e.g., 'The abstract-style framing says... Theorem 1 then assumes...', 'The closing sentence advertises... yet eta_t is defined...'). This makes the critique's reasoning fully traceable, matching the s=5 anchor."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

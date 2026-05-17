@@ -18,13 +18,13 @@
     "RX.5"
   ],
   "prompt_version": "exp2_judge_v2",
-  "input_tokens": 2087,
-  "output_tokens": 2967,
-  "latency_ms": 45488,
-  "cost_usd": 0.099445,
-  "raw": "{\n  \"judge_id\": \"responsibility_judge_v1\",\n  \"active_set_recognized\": [\"R1.1\", \"R1.2\", \"R1.4\", \"RX.1\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"scores\": {\"R1.1\": 5, \"R1.2\": 5, \"R1.4\": 3, \"RX.1\": 1, \"RX.3\": 3, \"RX.4\": 5, \"RX.5\": 5},\n  \"rationale\": {\n    \"R1.1\": \"Identifies the central framing (claim of no geometric/Lipschitz assumptions) and shows how the proof sketch relies on those very assumptions; also surfaces the identifiability/inductive-bias load-bearing concept and contrasts it with Locatello et al. Provides concrete reframings (qualify/remove claims, state actual biases, restrict scope).\",\n    \"R1.2\": \"Walks through key claim chains and flags multiple inconsistencies: method-proof contradiction on Lipschitzness, clash with impossibility results, misuse of convergence-rate notation and conflation with recovery, and overbroad generalization. Offers minimal, targeted fixes for each.\",\n    \"R1.4\": \"References Locatello et al. and standard baselines, and notes the factorized prior as a bias, but does not map the method against 3\u20135 nearest disentanglement approaches or articulate a sharp novelty delta versus, e.g., prior aggregated-posterior/prior-matching methods.\",\n    \"RX.1\": \"Presents critiques and recommendations as categorical without marking confidence or evidentiary gaps per point; only minor hedging on the convergence phrasing.\",\n    \"RX.3\": \"Stays largely within the requested critique scope, but its declared 'covered_dims' includes non-requested dims (R1.3, RX.2) and omits some active ones, indicating scope drift in self-declared coverage.\",\n    \"RX.4\": \"No harmful content or fabrications; identifies and mitigates overclaiming and misleading framings in the original text.\",\n    \"RX.5\": \"Targets specific sentences/paragraphs (quotes and paraphrases) and links each recommended change to those sources; cites Locatello et al. where relevant, providing clear traceability from critique to artifact claims.\"\n  },\n  \"confidence\": {\"R1.1\": 0.85, \"R1.2\": 0.85, \"R1.4\": 0.6, \"RX.1\": 0.9, \"RX.3\": 0.8, \"RX.4\": 0.9, \"RX.5\": 0.8},\n  \"blockers\": []\n}",
+  "input_tokens": -1,
+  "output_tokens": -1,
+  "latency_ms": 31956,
+  "cost_usd": -3.5e-05,
+  "raw": "{\"judge_id\":\"codex-judge\",\"active_set_recognized\":[\"R1.1\",\"R1.2\",\"R1.4\",\"RX.1\",\"RX.3\",\"RX.4\",\"RX.5\"],\"scores\":{\"R1.1\":5,\"R1.2\":5,\"R1.4\":4,\"RX.1\":3,\"RX.3\":3,\"RX.4\":5,\"RX.5\":4},\"rationale\":{\"R1.1\":\"Names the load-bearing concept as the claimed absence of assumptions/inductive bias, shows drift between that framing and the proof/identifiability claims, and proposes reframings that would survive contrast with Locatello et al.\",\"R1.2\":\"Walks the argument chain from method claim to proof assumptions, identifiability theorem, empirical evidence, generalization, and convergence-rate wording, with minimal repairs for each inconsistency.\",\"R1.4\":\"Contrasts against Locatello et al. and situates the baselines among FactorVAE, beta-TCVAE, beta-VAE, AnnealedVAE, and DIP-VAE, but the novelty mapping is more diagnostic than a full sharp-vs-rhetorical delta analysis across 3-5 works.\",\"RX.1\":\"Flags uncertainty and missing evidence for several claims, especially natural-image experiments, metric variance, and theorem assumptions, but does not mark confidence and missing evidence for each recommendation.\",\"RX.3\":\"The substantive critique is mostly within the requested active set, but the output's own covered_dims lists unrequested dimensions and omits some requested ones, creating scope drift.\",\"RX.4\":\"Introduces no apparent harmful new errors and explicitly identifies harmful patterns in the original, including false framing, unsupported recovery/generalization claims, and metric ambiguity.\",\"RX.5\":\"Major critiques and recommended fixes are traced to specific paragraphs, phrases, or prior-work context, though not every proposed edit is fully annotated with source and reason.\"},\"confidence\":{\"R1.1\":0.87,\"R1.2\":0.9,\"R1.4\":0.78,\"RX.1\":0.84,\"RX.3\":0.82,\"RX.4\":0.86,\"RX.5\":0.8},\"blockers\":[]}",
   "parsed": {
-    "judge_id": "responsibility_judge_v1",
+    "judge_id": "codex-judge",
     "active_set_recognized": [
       "R1.1",
       "R1.2",
@@ -37,28 +37,28 @@
     "scores": {
       "R1.1": 5,
       "R1.2": 5,
-      "R1.4": 3,
-      "RX.1": 1,
+      "R1.4": 4,
+      "RX.1": 3,
       "RX.3": 3,
       "RX.4": 5,
-      "RX.5": 5
+      "RX.5": 4
     },
     "rationale": {
-      "R1.1": "Identifies the central framing (claim of no geometric/Lipschitz assumptions) and shows how the proof sketch relies on those very assumptions; also surfaces the identifiability/inductive-bias load-bearing concept and contrasts it with Locatello et al. Provides concrete reframings (qualify/remove claims, state actual biases, restrict scope).",
-      "R1.2": "Walks through key claim chains and flags multiple inconsistencies: method-proof contradiction on Lipschitzness, clash with impossibility results, misuse of convergence-rate notation and conflation with recovery, and overbroad generalization. Offers minimal, targeted fixes for each.",
-      "R1.4": "References Locatello et al. and standard baselines, and notes the factorized prior as a bias, but does not map the method against 3\u20135 nearest disentanglement approaches or articulate a sharp novelty delta versus, e.g., prior aggregated-posterior/prior-matching methods.",
-      "RX.1": "Presents critiques and recommendations as categorical without marking confidence or evidentiary gaps per point; only minor hedging on the convergence phrasing.",
-      "RX.3": "Stays largely within the requested critique scope, but its declared 'covered_dims' includes non-requested dims (R1.3, RX.2) and omits some active ones, indicating scope drift in self-declared coverage.",
-      "RX.4": "No harmful content or fabrications; identifies and mitigates overclaiming and misleading framings in the original text.",
-      "RX.5": "Targets specific sentences/paragraphs (quotes and paraphrases) and links each recommended change to those sources; cites Locatello et al. where relevant, providing clear traceability from critique to artifact claims."
+      "R1.1": "Names the load-bearing concept as the claimed absence of assumptions/inductive bias, shows drift between that framing and the proof/identifiability claims, and proposes reframings that would survive contrast with Locatello et al.",
+      "R1.2": "Walks the argument chain from method claim to proof assumptions, identifiability theorem, empirical evidence, generalization, and convergence-rate wording, with minimal repairs for each inconsistency.",
+      "R1.4": "Contrasts against Locatello et al. and situates the baselines among FactorVAE, beta-TCVAE, beta-VAE, AnnealedVAE, and DIP-VAE, but the novelty mapping is more diagnostic than a full sharp-vs-rhetorical delta analysis across 3-5 works.",
+      "RX.1": "Flags uncertainty and missing evidence for several claims, especially natural-image experiments, metric variance, and theorem assumptions, but does not mark confidence and missing evidence for each recommendation.",
+      "RX.3": "The substantive critique is mostly within the requested active set, but the output's own covered_dims lists unrequested dimensions and omits some requested ones, creating scope drift.",
+      "RX.4": "Introduces no apparent harmful new errors and explicitly identifies harmful patterns in the original, including false framing, unsupported recovery/generalization claims, and metric ambiguity.",
+      "RX.5": "Major critiques and recommended fixes are traced to specific paragraphs, phrases, or prior-work context, though not every proposed edit is fully annotated with source and reason."
     },
     "confidence": {
-      "R1.1": 0.85,
-      "R1.2": 0.85,
-      "R1.4": 0.6,
-      "RX.1": 0.9,
-      "RX.3": 0.8,
-      "RX.4": 0.9,
+      "R1.1": 0.87,
+      "R1.2": 0.9,
+      "R1.4": 0.78,
+      "RX.1": 0.84,
+      "RX.3": 0.82,
+      "RX.4": 0.86,
       "RX.5": 0.8
     },
     "blockers": []

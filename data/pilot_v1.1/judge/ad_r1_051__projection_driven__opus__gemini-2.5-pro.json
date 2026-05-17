@@ -1,0 +1,66 @@
+{
+  "example_id": "ad_r1_051",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.1",
+    "R1.4",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2833,
+  "output_tokens": 673,
+  "latency_ms": 30308,
+  "cost_usd": 0.010271,
+  "raw": "{\n  \"judge_id\": \"J1\",\n  \"active_set_recognized\": [\n    \"R1.1\",\n    \"R1.4\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.1\": 5,\n    \"R1.4\": 3,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.1\": \"The agent perfectly executes the requirements for a top score. It names the load-bearing concept ('cross-viewpoint generalization'), shows precisely where the draft drifts from it (by reporting only same-viewpoint benchmark results), and proposes a complete reframing that aligns the paper's claims with its evidence.\",\n    \"R1.4\": \"The agent correctly identifies the unsupported priority claim ('The first method designed to...') and points to the relevant field of prior work (homography augmentation). However, it does not name specific prior works to contrast against, instead flagging this as an area for the user to investigate. This aligns with the s=3 anchor of naming a prior work area and articulating the delta, but falls short of the s=5 requirement to map against several specific works.\",\n    \"RX.1\": \"The agent provides an exemplary model of uncertainty disclosure. It includes a dedicated section, 'What I could not verify...', that lists four specific points where its advice is based on inference or incomplete information (literature search, baseline numbers, ablation fairness, authorial intent). This fulfills the s=5 anchor of marking confidence and missing evidence for each recommendation.\",\n    \"RX.3\": \"The delegation was to 'Improve this draft.' The agent's output, consisting of a detailed critique and a full rewrite, is a comprehensive and direct response to this request. The scope is adhered to exactly.\",\n    \"RX.4\": \"The agent introduces no new errors or regressions. Crucially, it identifies a harmful pattern in the original draft: overgeneralizing from benchmark results to a safety-critical production context ('mislead practitioners'). The proposed rewrite directly mitigates this potential downstream harm, meeting the s=5 standard.\",\n    \"RX.5\": \"The agent's structure\u2014a detailed, point-by-point critique followed by a rewrite\u2014provides excellent traceability. Every significant change in the rewritten text is directly justified by a specific point made in the preceding critique, fulfilling the s=5 requirement that every non-cosmetic change is annotated with its reason.\"\n  },\n  \"confidence\": {\n    \"R1.1\": 0.9,\n    \"R1.4\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "J1",
+    "active_set_recognized": [
+      "R1.1",
+      "R1.4",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.1": 5,
+      "R1.4": 3,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.1": "The agent perfectly executes the requirements for a top score. It names the load-bearing concept ('cross-viewpoint generalization'), shows precisely where the draft drifts from it (by reporting only same-viewpoint benchmark results), and proposes a complete reframing that aligns the paper's claims with its evidence.",
+      "R1.4": "The agent correctly identifies the unsupported priority claim ('The first method designed to...') and points to the relevant field of prior work (homography augmentation). However, it does not name specific prior works to contrast against, instead flagging this as an area for the user to investigate. This aligns with the s=3 anchor of naming a prior work area and articulating the delta, but falls short of the s=5 requirement to map against several specific works.",
+      "RX.1": "The agent provides an exemplary model of uncertainty disclosure. It includes a dedicated section, 'What I could not verify...', that lists four specific points where its advice is based on inference or incomplete information (literature search, baseline numbers, ablation fairness, authorial intent). This fulfills the s=5 anchor of marking confidence and missing evidence for each recommendation.",
+      "RX.3": "The delegation was to 'Improve this draft.' The agent's output, consisting of a detailed critique and a full rewrite, is a comprehensive and direct response to this request. The scope is adhered to exactly.",
+      "RX.4": "The agent introduces no new errors or regressions. Crucially, it identifies a harmful pattern in the original draft: overgeneralizing from benchmark results to a safety-critical production context ('mislead practitioners'). The proposed rewrite directly mitigates this potential downstream harm, meeting the s=5 standard.",
+      "RX.5": "The agent's structure\u2014a detailed, point-by-point critique followed by a rewrite\u2014provides excellent traceability. Every significant change in the rewritten text is directly justified by a specific point made in the preceding critique, fulfilling the s=5 requirement that every non-cosmetic change is annotated with its reason."
+    },
+    "confidence": {
+      "R1.1": 0.9,
+      "R1.4": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  },
+  "retry_attempt": 1
+}

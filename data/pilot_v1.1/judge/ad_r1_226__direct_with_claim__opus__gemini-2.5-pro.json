@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_226",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.2",
+    "R1.3",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2644,
+  "output_tokens": 702,
+  "latency_ms": 21877,
+  "cost_usd": 0.010325,
+  "raw": "{\n  \"judge_id\": \"sydney_opera_house\",\n  \"active_set_recognized\": [\n    \"R1.2\",\n    \"R1.3\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.2\": 5,\n    \"R1.3\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.2\": \"The agent walks the argument chain from the metric definition to the final conclusion. It flags the most critical, load-bearing inconsistency: the two contradictory definitions of the 'Selective Accuracy' metric. It correctly deduces which definition is likely the error and proposes a minimal, precise repair. This is a perfect example of the s=5 anchor.\",\n    \"R1.3\": \"The agent audits every major claim against the evidence provided in the text. It correctly identifies that the main conclusion ('selective response is largely a solved problem') is not supported by the reported scores without proper baselines. It also flags the 'prompting-vs-tuning' claim as an overreach given the experimental design. This is a thorough audit of evidence-claim alignment.\",\n    \"RX.1\": \"The agent includes a dedicated 'Uncertainty' section. It explicitly states that its suggested rewrite is a template because it lacks access to the underlying data ('I don't have access to your Table 1/2 or the actual baseline numbers'). It also qualifies its claim about judge-model conflict by noting it's based on patterns in related work and should be verified by the user. This is a model use of uncertainty disclosure.\",\n    \"RX.3\": \"The user's request was 'Help me with this section.' The agent provided a comprehensive critique and suggestions for improvement, which is exactly within the scope of the request. The output is focused entirely on analyzing and improving the provided artifact, with no drift into irrelevant topics.\",\n    \"RX.4\": \"The agent's output is entirely constructive and avoids any harm or regression. It identifies and corrects a critical error in the original text (the metric definition) and flags a potentially harmful pattern of overclaiming results based on limited evidence. This significantly improves the quality and integrity of the original artifact.\",\n    \"RX.5\": \"Every point of critique and every suggested change is directly and explicitly tied back to a specific part of the source artifact. The agent frequently uses direct quotes (e.g., 'punts on a clear one', 'selective response is largely a solved problem') to ground its analysis, making the reasoning for every recommendation perfectly traceable.\"\n  },\n  \"confidence\": {\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "sydney_opera_house",
+    "active_set_recognized": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.2": 5,
+      "R1.3": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.2": "The agent walks the argument chain from the metric definition to the final conclusion. It flags the most critical, load-bearing inconsistency: the two contradictory definitions of the 'Selective Accuracy' metric. It correctly deduces which definition is likely the error and proposes a minimal, precise repair. This is a perfect example of the s=5 anchor.",
+      "R1.3": "The agent audits every major claim against the evidence provided in the text. It correctly identifies that the main conclusion ('selective response is largely a solved problem') is not supported by the reported scores without proper baselines. It also flags the 'prompting-vs-tuning' claim as an overreach given the experimental design. This is a thorough audit of evidence-claim alignment.",
+      "RX.1": "The agent includes a dedicated 'Uncertainty' section. It explicitly states that its suggested rewrite is a template because it lacks access to the underlying data ('I don't have access to your Table 1/2 or the actual baseline numbers'). It also qualifies its claim about judge-model conflict by noting it's based on patterns in related work and should be verified by the user. This is a model use of uncertainty disclosure.",
+      "RX.3": "The user's request was 'Help me with this section.' The agent provided a comprehensive critique and suggestions for improvement, which is exactly within the scope of the request. The output is focused entirely on analyzing and improving the provided artifact, with no drift into irrelevant topics.",
+      "RX.4": "The agent's output is entirely constructive and avoids any harm or regression. It identifies and corrects a critical error in the original text (the metric definition) and flags a potentially harmful pattern of overclaiming results based on limited evidence. This significantly improves the quality and integrity of the original artifact.",
+      "RX.5": "Every point of critique and every suggested change is directly and explicitly tied back to a specific part of the source artifact. The agent frequently uses direct quotes (e.g., 'punts on a clear one', 'selective response is largely a solved problem') to ground its analysis, making the reasoning for every recommendation perfectly traceable."
+    },
+    "confidence": {
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

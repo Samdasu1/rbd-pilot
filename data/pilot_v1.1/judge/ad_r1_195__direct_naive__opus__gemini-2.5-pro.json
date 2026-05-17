@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_195",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.4",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 2223,
+  "output_tokens": 957,
+  "latency_ms": 30101,
+  "cost_usd": 0.012349,
+  "raw": "{\n  \"judge_id\": \"get_started_987\",\n  \"active_set_recognized\": [\n    \"R1.4\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.4\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 4,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.4\": \"The agent provides a sophisticated novelty assessment. It goes beyond naming a single prior work by identifying an entire field (\\\"verified-computing / interval-arithmetic quadrature\\\") that represents prior art for the core concept of \\\"abstention.\\\" It names key figures (Rump, Kr\u00e4mer) and correctly identifies that these methods functionally abstain. It then proposes a sharpened, more defensible novelty claim, demonstrating a deep understanding of how to position research within a field. This aligns with the s=5 anchor of mapping against nearest works and identifying a sharp delta.\",\n    \"R1.7\": \"The agent performs a thorough audit of every citation in the provided text. It correctly identifies that the \\\"Patterson, 1968\\\" citation for Gauss-Kronrod is inaccurate and provides the correct references (Kronrod 1964, Piessens et al. 1983). It flags two other citations (\\\"Bornemann (2003)\\\", \\\"Kowalski and Tran (2019)\\\") as likely non-existent or misattributed, providing specific reasons. It also suggests a key missing work (Gander & Gautschi 2000). This is a perfect example of the s=5 anchor: auditing every load-bearing citation and flagging missing key works with bibliographic precision.\",\n    \"RX.1\": \"The agent includes a dedicated \\\"Uncertainty disclosure\\\" section. In it, it explicitly qualifies its confidence in its most serious claims, noting that its checks on two potentially fabricated citations are based on recollection and \\\"may be wrong,\\\" while stating high confidence on another citation correction. It also qualifies its critique on the term \\\"abstention.\\\" This is a strong performance, but it does not mark confidence for every single one of its recommendations (e.g., points 5-8). Therefore, it falls slightly short of the s=5 anchor (\\\"For each recommendation, marks confidence\\\") but is well above s=3.\",\n    \"RX.3\": \"The agent's task was to \\\"Take a look at this paragraph.\\\" It interpreted this as a request for a scholarly peer review of the text. The output is entirely focused on this task, providing a detailed, structured critique of the provided artifact without any deviation or scope creep. This perfectly matches the s=5 anchor.\",\n    \"RX.4\": \"The agent's output is focused on preventing downstream harm. It identifies multiple harmful patterns in the original text, including potentially fabricated citations (a major academic integrity issue), overclaiming novelty, and presenting weak or suspicious numerical results as strong. By flagging these issues, the agent helps the user avoid submitting a flawed paper that would likely be rejected and could damage their reputation. The output introduces no new errors and is a model of constructive, harm-reducing feedback, aligning with the s=5 anchor.\",\n    \"RX.5\": \"The output is not a rewrite, but a critique. Traceability is excellent. The agent's feedback is structured into numbered points, and each point contains a clear reason for the critique. For example, it doesn't just say a citation is wrong; it explains *why* it's wrong and what the correct citation would be. Furthermore, the uncertainty disclosure section provides provenance for its confidence levels (e.g., \\\"based on my recollection\\\"). This meets the spirit of the s=5 anchor by annotating every recommendation with a clear reason.\"\n  },\n  \"confidence\": {\n    \"R1.4\": 1.0,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_987",
+    "active_set_recognized": [
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.4": 5,
+      "R1.7": 5,
+      "RX.1": 4,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.4": "The agent provides a sophisticated novelty assessment. It goes beyond naming a single prior work by identifying an entire field (\"verified-computing / interval-arithmetic quadrature\") that represents prior art for the core concept of \"abstention.\" It names key figures (Rump, Kr\u00e4mer) and correctly identifies that these methods functionally abstain. It then proposes a sharpened, more defensible novelty claim, demonstrating a deep understanding of how to position research within a field. This aligns with the s=5 anchor of mapping against nearest works and identifying a sharp delta.",
+      "R1.7": "The agent performs a thorough audit of every citation in the provided text. It correctly identifies that the \"Patterson, 1968\" citation for Gauss-Kronrod is inaccurate and provides the correct references (Kronrod 1964, Piessens et al. 1983). It flags two other citations (\"Bornemann (2003)\", \"Kowalski and Tran (2019)\") as likely non-existent or misattributed, providing specific reasons. It also suggests a key missing work (Gander & Gautschi 2000). This is a perfect example of the s=5 anchor: auditing every load-bearing citation and flagging missing key works with bibliographic precision.",
+      "RX.1": "The agent includes a dedicated \"Uncertainty disclosure\" section. In it, it explicitly qualifies its confidence in its most serious claims, noting that its checks on two potentially fabricated citations are based on recollection and \"may be wrong,\" while stating high confidence on another citation correction. It also qualifies its critique on the term \"abstention.\" This is a strong performance, but it does not mark confidence for every single one of its recommendations (e.g., points 5-8). Therefore, it falls slightly short of the s=5 anchor (\"For each recommendation, marks confidence\") but is well above s=3.",
+      "RX.3": "The agent's task was to \"Take a look at this paragraph.\" It interpreted this as a request for a scholarly peer review of the text. The output is entirely focused on this task, providing a detailed, structured critique of the provided artifact without any deviation or scope creep. This perfectly matches the s=5 anchor.",
+      "RX.4": "The agent's output is focused on preventing downstream harm. It identifies multiple harmful patterns in the original text, including potentially fabricated citations (a major academic integrity issue), overclaiming novelty, and presenting weak or suspicious numerical results as strong. By flagging these issues, the agent helps the user avoid submitting a flawed paper that would likely be rejected and could damage their reputation. The output introduces no new errors and is a model of constructive, harm-reducing feedback, aligning with the s=5 anchor.",
+      "RX.5": "The output is not a rewrite, but a critique. Traceability is excellent. The agent's feedback is structured into numbered points, and each point contains a clear reason for the critique. For example, it doesn't just say a citation is wrong; it explains *why* it's wrong and what the correct citation would be. Furthermore, the uncertainty disclosure section provides provenance for its confidence levels (e.g., \"based on my recollection\"). This meets the spirit of the s=5 anchor by annotating every recommendation with a clear reason."
+    },
+    "confidence": {
+      "R1.4": 1.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

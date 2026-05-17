@@ -1,0 +1,65 @@
+{
+  "example_id": "ad_r1_285",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "judge_model_id": "gemini-2.5-pro",
+  "judge_family": "google",
+  "judge_tier": "frontier",
+  "judge_host": "api",
+  "judge_ollama_digest": null,
+  "active_set": [
+    "R1.3",
+    "R1.7",
+    "RX.1",
+    "RX.3",
+    "RX.4",
+    "RX.5"
+  ],
+  "prompt_version": "exp2_judge_v2",
+  "input_tokens": 3003,
+  "output_tokens": 725,
+  "latency_ms": 26570,
+  "cost_usd": 0.011004,
+  "raw": "{\n  \"judge_id\": \"get_started_987\",\n  \"active_set_recognized\": [\n    \"R1.3\",\n    \"R1.7\",\n    \"RX.1\",\n    \"RX.3\",\n    \"RX.4\",\n    \"RX.5\"\n  ],\n  \"scores\": {\n    \"R1.3\": 5,\n    \"R1.7\": 5,\n    \"RX.1\": 5,\n    \"RX.3\": 5,\n    \"RX.4\": 5,\n    \"RX.5\": 5\n  },\n  \"rationale\": {\n    \"R1.3\": \"The agent's primary finding is a critical failure of evidence-claim alignment: the reported numerical results (ResAdapt residual 4.7e-2 vs. baseline 8.1e-3) directly contradict the central claim that ResAdapt is an improvement. The agent correctly calculates the discrepancy (~5.8x worse) and audits this load-bearing claim perfectly. It also correctly flags the mismatch between a single-N experiment and claims about asymptotic rates. This is a comprehensive audit of all key claims.\",\n    \"R1.7\": \"The agent performs an exemplary audit of the single, load-bearing citation ('Hassanpour & Mehta (1987)'). It identifies multiple, severe issues: anachronism (deep ReLU in 1987), architecture mismatch (ReLU theory vs. tanh experiment), and misuse of the theoretical result. It also correctly flags a vague sentence that lacks necessary citations to prior work, even suggesting the relevant sub-field.\",\n    \"RX.1\": \"The agent excels at uncertainty disclosure. It includes a dedicated final paragraph explicitly stating what it could not verify from the artifact alone (e.g., whether the citation is real, whether the numbers are a typo). It carefully frames these points as 'questions to the authors rather than confirmed defects,' clearly delineating between confident findings and necessary clarifications.\",\n    \"RX.3\": \"The agent's output is a comprehensive and structured review of the provided scientific text, which is exactly what the delegation 'Review this section' implies. All points raised are relevant to a scientific critique and fall well within the scope of the request.\",\n    \"RX.4\": \"The agent's output is designed to prevent downstream harm by identifying and correcting serious flaws in the original artifact. It flags a major numerical contradiction, a highly suspect citation, and significant over-claiming. By catching these errors, it prevents the propagation of misinformation. The output introduces no new errors or regressions.\",\n    \"RX.5\": \"Every point of criticism in the agent's output is meticulously traced back to a specific claim, number, or sentence in the source artifact. This makes the reasoning transparent and easy to verify. For example, it quotes the residual numbers before analyzing them and identifies the specific components of the citation claim that are problematic.\"\n  },\n  \"confidence\": {\n    \"R1.3\": 0.9,\n    \"R1.7\": 0.9,\n    \"RX.1\": 0.9,\n    \"RX.3\": 0.9,\n    \"RX.4\": 0.9,\n    \"RX.5\": 0.9\n  },\n  \"blockers\": []\n}",
+  "parsed": {
+    "judge_id": "get_started_987",
+    "active_set_recognized": [
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "scores": {
+      "R1.3": 5,
+      "R1.7": 5,
+      "RX.1": 5,
+      "RX.3": 5,
+      "RX.4": 5,
+      "RX.5": 5
+    },
+    "rationale": {
+      "R1.3": "The agent's primary finding is a critical failure of evidence-claim alignment: the reported numerical results (ResAdapt residual 4.7e-2 vs. baseline 8.1e-3) directly contradict the central claim that ResAdapt is an improvement. The agent correctly calculates the discrepancy (~5.8x worse) and audits this load-bearing claim perfectly. It also correctly flags the mismatch between a single-N experiment and claims about asymptotic rates. This is a comprehensive audit of all key claims.",
+      "R1.7": "The agent performs an exemplary audit of the single, load-bearing citation ('Hassanpour & Mehta (1987)'). It identifies multiple, severe issues: anachronism (deep ReLU in 1987), architecture mismatch (ReLU theory vs. tanh experiment), and misuse of the theoretical result. It also correctly flags a vague sentence that lacks necessary citations to prior work, even suggesting the relevant sub-field.",
+      "RX.1": "The agent excels at uncertainty disclosure. It includes a dedicated final paragraph explicitly stating what it could not verify from the artifact alone (e.g., whether the citation is real, whether the numbers are a typo). It carefully frames these points as 'questions to the authors rather than confirmed defects,' clearly delineating between confident findings and necessary clarifications.",
+      "RX.3": "The agent's output is a comprehensive and structured review of the provided scientific text, which is exactly what the delegation 'Review this section' implies. All points raised are relevant to a scientific critique and fall well within the scope of the request.",
+      "RX.4": "The agent's output is designed to prevent downstream harm by identifying and correcting serious flaws in the original artifact. It flags a major numerical contradiction, a highly suspect citation, and significant over-claiming. By catching these errors, it prevents the propagation of misinformation. The output introduces no new errors or regressions.",
+      "RX.5": "Every point of criticism in the agent's output is meticulously traced back to a specific claim, number, or sentence in the source artifact. This makes the reasoning transparent and easy to verify. For example, it quotes the residual numbers before analyzing them and identifies the specific components of the citation claim that are problematic."
+    },
+    "confidence": {
+      "R1.3": 0.9,
+      "R1.7": 0.9,
+      "RX.1": 0.9,
+      "RX.3": 0.9,
+      "RX.4": 0.9,
+      "RX.5": 0.9
+    },
+    "blockers": []
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}
