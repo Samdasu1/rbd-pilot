@@ -1,0 +1,129 @@
+delegation_id: ad_r1_054
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: distributed_systems
+  word_count: 261
+  text: |
+    We introduce QuorumLite, a replication protocol that achieves
+    linearizable reads and writes across a cluster of N nodes while
+    tolerating up to f = (N-1)/2 crash failures. The protocol is
+    built on a leader-based design in which a single coordinator
+    processes client requests and disseminates them to followers via
+    a two-phase commit-style exchange.
+
+    A client request is forwarded to the leader, which assigns it a
+    monotonically increasing sequence number and broadcasts a Prepare
+    message to all followers. Each follower acknowledges and the
+    leader, upon collecting a majority, broadcasts a Commit message
+    and replies to the client. Followers apply the operation in
+    sequence-number order on receipt of the Commit message. If the
+    leader fails, a new leader is elected from among the followers
+    using the highest sequence number observed.
+
+    Because the leader holds a lease for a fixed duration, the
+    protocol avoids the overhead of running a full agreement round
+    per request and instead piggybacks on the lease to bound the
+    number of in-flight outstanding operations.
+
+    In our experimental evaluation, we compare QuorumLite against
+    Raft and Multi-Paxos on a 5-node cluster with 1 KB payloads.
+    Throughput reaches 87,000 ops/sec, versus 62,000 for Raft and
+    58,000 for Multi-Paxos under the same workload, a 40% improvement.
+    Median latency is 3.1 ms (Raft: 4.7 ms; Multi-Paxos: 5.2 ms).
+
+    We also discuss our deployment experience at a partner data
+    center, where we observed sustained throughput of 80k ops/sec
+    over a 30-day window with two planned leader transitions and no
+    data loss.
+
+    The contribution of this section is the protocol description
+    above and the evidence that it outperforms two standard baselines
+    on a representative workload.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  R1.5: [F1.5.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (logical / hidden premise):
+      The linearizability claim depends on assumptions that are never
+      stated. The lease-based optimization "avoids running a full
+      agreement round per request" — this is only safe under bounded
+      clock drift and bounded message delay (a partial-synchrony or
+      stronger timing model); without that the lease can be violated
+      across a leader transition and linearizability breaks. Likewise
+      "the new leader is elected ... using the highest sequence
+      number observed" silently assumes the highest-sequence-number
+      follower has all committed entries, which is not implied by
+      majority quorum alone. The contribution claim is conditional on
+      premises that the section hides. Rewrite: state the timing
+      model and election invariants explicitly and analyze behavior
+      when they fail.
+
+    Reading B — R1.5 dominant (misplaced section content):
+      The section is framed as the protocol description but bundles
+      in two paragraphs of evaluation numbers (throughput / latency
+      versus Raft and Multi-Paxos) and a paragraph of deployment
+      anecdote (30-day partner data-center experience). These belong
+      in a separate Evaluation section and a separate Deployment
+      section, respectively. The closing summary even names "the
+      protocol description above and the evidence" as the joint
+      contribution, conflating two section roles. Rewrite: split into
+      Protocol, Evaluation, and Deployment so each load-bearing claim
+      lives where readers expect it.
+
+    Both readings are visible from careful reading without external
+    knowledge (low gating). A well-calibrated agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.85
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (surface and analyze the unstated timing-model and leader-election
+  invariants on which the linearizability claim depends) from
+  Reading B (split the conflated protocol / evaluation / deployment
+  content into the appropriate sections). After clarification,
+  addresses the chosen reading thoroughly. Partial credit if one
+  reading is addressed and the other is explicitly noted.
+
+bad_outputs_summary: |
+  Accepts the section at face value and copy-edits prose, tightens
+  transitions, or suggests adding citations to Raft and Paxos
+  without recognizing either the hidden synchrony/election premise
+  or the conflated section roles. Treats the lease optimization and
+  the embedded evaluation paragraphs as natural for a protocol
+  section. Either reading addressed implicitly without acknowledging
+  the other is a partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

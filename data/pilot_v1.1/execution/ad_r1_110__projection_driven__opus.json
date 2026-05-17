@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_110",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2042,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 28132,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 1.0, \"RX.5\": 0.9}}\n\nSummary: I revised the passage to correct a sign-error in the interpretation of the negative correlation, soften the causal language, scope the recommendation to what the data actually support, and surface the analysis's limitations.\n\nThe single most important problem with the original draft is that the interpretation contradicts the sign of the reported statistic. A Pearson r of \u22120.38 between round-one disagreement and final COMET-22 means that **more disagreement is associated with *lower* final quality**, not higher. Every downstream sentence \u2014 the \"strong evidence that disagreement is informative\" reading, the chrF/BLEU corroboration, the per-language consistency claim, and especially the closing recommendation \u2014 inverts this. The recommendation in the final paragraph is internally consistent with the correlation's sign (flag low-disagreement segments... wait: low disagreement \u2192 high r-implied quality under negative r, so low-disagreement segments would actually be the *high*-quality ones, meaning the closing paragraph is *also* inverted). The artifact is therefore internally inconsistent in two directions at once: the body misreads the sign, and the recommendation misapplies the (misread) sign a second time.\n\nA revised version that fixes the logic and tightens the prose:\n\n---\n\nWe investigate whether multi-agent debate produces a useful internal quality signal for low-resource machine translation. Our setup convenes three independently fine-tuned NLLB-1.3B agents that propose, critique, and refine candidate translations over two debate rounds before emitting a single consensus translation. We examine whether the panel's round-one disagreement \u2014 the dispersion among the three agents' initial hypotheses \u2014 carries information about the quality of the eventual consensus.\n\nTo test this, we compute the Pearson correlation between (a) inter-agent disagreement at round one, measured as the mean pairwise normalized edit distance among the three agents' hypotheses, and (b) the COMET-22 score of the final consensus translation against a human reference. Across 1,012 segments sampled uniformly from FLORES-200 devtest (English\u2192Swahili, English\u2192Bengali, English\u2192Yoruba), we obtain a Pearson r of \u22120.38 (p < 0.001). The negative sign indicates that segments on which the agents disagree more at round one tend to receive *lower* COMET-22 scores after deliberation. In other words, round-one disagreement is an inverse \u2014 not a positive \u2014 indicator of final consensus quality: the debate procedure does not fully recover from initial disagreement.\n\nThe same direction holds under chrF (r = \u22120.31) and BLEU (r = \u22120.27). All three metrics are correlational and share known biases (chrF and BLEU are surface-form metrics; COMET-22 is a learned metric trained on WMT data with limited low-resource coverage), so the agreement among them is suggestive rather than independent corroboration.\n\nBroken down by language pair, the correlation is r = \u22120.42 for English\u2192Swahili, r = \u22120.35 for English\u2192Bengali, and r = \u22120.36 for English\u2192Yoruba. The sign is stable across three typologically distinct target languages, though the magnitude (|r| \u2264 0.42) leaves the majority of variance in final quality unexplained by round-one disagreement alone.\n\nWe are cautious about prescribing deployment changes from a single correlational study. Subject to replication on held-out data and on translation systems other than NLLB-1.3B, one defensible use of the signal would be the reverse of what a positive correlation would suggest: flag *high*-disagreement segments \u2014 not low-disagreement ones \u2014 for human review, since these are the segments on which the panel's consensus is most likely to be weak. We do not claim that debate improves translation quality, nor that the disagreement signal is calibrated well enough to be used as a standalone gate.\n\n---\n\nKey changes and why:\n\n- **Sign correction.** Negative r means disagreement and quality move in opposite directions. The original's \"high disagreement reliably signals strong final outputs\" and the closing \"flagging low-disagreement segments for human review\" are both inverted relative to the data; I reversed both.\n- **Removed the causal gloss.** \"Presumably because the debate surfaces translation difficulties that the panel then resolves through deliberation\" is a mechanism story that the correlation cannot support (and, given the actual sign, is the opposite of what the data suggest).\n- **Tempered the \"robustness\" framing.** Three metrics that all reward n-gram or embedding overlap are not independent witnesses; I noted this rather than letting it stand as triangulation.\n- **Scoped the recommendation.** The original prescribed a deployment change (\"practitioners deploying single-model MT systems augment their stack...\"); I downgraded it to a conditional, replication-gated suggestion to avoid overreaching from one observational study on one model family.\n- **Noted unexplained variance.** |r| \u2264 0.42 implies r\u00b2 \u2264 0.18; most of the variation in final quality is not captured by this signal, which matters for anyone considering using it as a flag.\n\nItems I cannot verify and that the authors should check before publication: (i) the sign and magnitude of the reported r values against the actual computation \u2014 given the inversion in the prose, it is worth confirming that the numbers themselves were not also mis-signed; (ii) whether COMET-22's training distribution adequately covers Swahili, Bengali, and Yoruba, since the per-language correlations depend on the metric being meaningful in each; (iii) whether the 1,012-segment sample is balanced across the three language pairs or pooled, which affects how the aggregate r should be interpreted relative to the per-pair values; (iv) whether \"consensus translation\" is deterministic given the three round-one hypotheses, since stochastic aggregation would add noise that should be reported. I did not assess novelty against prior debate-for-MT or disagreement-as-confidence literature, citation coverage, or section-level placement within the larger paper.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Making the passage stronger centrally involves reframing the contribution and quality-signal claim at the section level.",
+      "R1.2": "The delegation is load-bearing on fixing or strengthening the argument chain, especially the interpretation of negative correlations as positive evidence.",
+      "R1.3": "The requested strengthening depends on aligning the stated claims with the reported COMET, chrF, BLEU, and language-pair results.",
+      "R1.6": "A stronger version would be expected to improve sentence-level clarity, register, concision, and argumentative flow.",
+      "RX.1": "The projection must preserve uncertainty around what kind of strengthening is intended and around the evidential limits of the artifact.",
+      "RX.2": "The artifact contains strong reliability and deployment claims, so avoiding overclaiming is an active responsibility.",
+      "RX.3": "The agent must stay within projecting responsibilities rather than editing or rewriting the passage.",
+      "RX.4": "Deployment recommendations involving human review and MT quality flags create downstream-risk considerations.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's reported claims and metrics."
+    }
+  }
+}

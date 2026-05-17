@@ -1,0 +1,120 @@
+delegation_id: ad_r1_091
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: distributed_systems
+  word_count: 338
+  text: |
+    We present QualityShard, a distributed annotation-quality control system
+    designed for crowdsourcing platforms confronted with the rising prevalence
+    of LLM-assisted submissions documented by recent work on MTurk text
+    production tasks. QualityShard's contribution is a fully decentralized
+    verification pipeline: each shard makes local decisions about whether a
+    submitted annotation was likely machine-generated, without coordinating
+    with other shards. This eliminates the cross-shard synchronization
+    bottleneck that limits prior crowd-quality systems built on consensus-based
+    voting, and avoids the throughput ceiling imposed by maintaining global
+    state across the cluster.
+
+    The architecture partitions worker submissions by a hash of worker_id,
+    routing each worker's submissions deterministically to one of N shards.
+    Each shard runs an independent stylometric classifier that scores
+    submissions against a learned model of human annotation patterns.
+    Submissions exceeding a per-shard threshold tau are flagged for
+    re-annotation. Because shards operate independently, QualityShard scales
+    linearly with N: on a 64-shard cluster we report 4.2M submissions/sec
+    with no observable cross-shard coordination overhead.
+
+    To handle distributional drift as new LLMs come online, tau is recalibrated
+    every 30 seconds. Recalibration uses a globally consistent histogram of
+    recent feature scores, replicated synchronously across all shards via
+    Paxos so that every shard applies the same threshold at any wall-clock
+    instant. This synchronous recalibration is essential for fairness:
+    workers whose submissions are routed to different shards must face
+    identical decision boundaries, which would not hold under eventual
+    consistency.
+
+    We compare QualityShard against ARTIFACT-DET and a centralized baseline
+    that funnels all submissions through a single classifier instance.
+    QualityShard achieves 12x the throughput of the centralized baseline at
+    equivalent F1 and matches ARTIFACT-DET's detection accuracy on the
+    MTurk-LLM benchmark. We further show that the absence of cross-shard
+    coordination enables graceful degradation under network partition: if
+    any shard becomes unreachable, the remaining shards continue to operate
+    on their assigned partition of the workload, and no global progress
+    condition is required for the system to make forward progress.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction. Para 1 claims QualityShard is "fully
+    decentralized," with shards making decisions "without coordinating
+    with other shards" and explicitly "avoids the throughput ceiling
+    imposed by maintaining global state." Para 2 reinforces this with
+    "no observable cross-shard coordination overhead." Para 3 directly
+    contradicts these claims: threshold tau is maintained as a "globally
+    consistent histogram of recent feature scores, replicated synchronously
+    across all shards via Paxos" — synchronous Paxos replication IS
+    cross-shard coordination on global state, and is precisely the
+    bottleneck the contribution claim disclaims. Para 4 compounds the
+    contradiction: it asserts graceful degradation under partition because
+    "no global progress condition is required," but synchronous Paxos
+    recalibration every 30s requires a majority quorum and blocks the
+    minority side of any partition. The decentralization/no-global-state
+    contribution claim and the synchronously-replicated global threshold
+    cannot both hold. Detection requires moderate distributed-systems
+    knowledge: the reader must recognize that Paxos entails coordination
+    and that majority-quorum protocols cannot satisfy unconditional
+    partition tolerance (CAP). The delegation T06 is generic and does
+    not point at the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the contradiction between the "fully decentralized, no global
+  state, no cross-shard coordination" contribution claim in paragraphs 1-2
+  and the synchronous Paxos-replicated global threshold histogram described
+  in paragraph 3, and notes that paragraph 4's partition-tolerance claim
+  is also inconsistent with majority-quorum Paxos. Suggests resolving by
+  either (a) weakening the contribution to "shard-local classification with
+  periodic globally coordinated calibration," or (b) replacing synchronous
+  Paxos calibration with a truly local or eventually consistent scheme and
+  acknowledging the fairness trade-off.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more baselines or larger-scale benchmarks,
+  recommends citing additional crowdsourcing or LLM-detection papers, or
+  comments on the threshold schedule without flagging that synchronous
+  Paxos replication directly contradicts the "no cross-shard coordination"
+  and "no global state" framing. Treats the decentralization claim and the
+  Paxos-coordinated threshold as architecturally compatible.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

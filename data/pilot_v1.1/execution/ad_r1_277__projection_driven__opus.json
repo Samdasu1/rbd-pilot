@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_277",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2255,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30823,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Reviewed the abstract-style artifact for argument coherence, evidence-claim fit, novelty framing, prose, and the safety-style constraints; flagged several overclaims and unsupported inferences, and proposed concrete rewrites.\n\n## Substantive issues\n\n**1. The causal attribution to checkpointing is not supported by the reported evidence.**\nThe text says OrchestrA \"completes 24 of 32\" vs \"17 of 32\" for the baseline, then attributes the 7-task gap \"primarily to the workspace checkpointing layer\" because \"in 5 of the 7 additional successes, the team rolled back at least once.\" Observing that a rollback occurred on the successful trajectory does not establish that the rollback was necessary for success, nor that checkpointing (as opposed to role typing, the scheduler, or simply having a Reviewer agent at all) is the responsible mechanism. Without an ablation that disables checkpointing while holding the rest of the stack fixed, this is a correlational claim being reported as causal. Recommend softening to: \"5 of the 7 additional successes involved at least one rollback, which is consistent with \u2014 but does not isolate \u2014 a contribution from the checkpointing layer. A checkpointing ablation is left to future work.\"\n\n**2. The \"binding constraint\" claim outruns the experiment.**\n\"These results suggest that orchestration substrate, rather than prompt engineering, is the binding constraint on multi-agent LLM team performance\" is a general claim about the field, derived from a single 32-task benchmark against one re-implemented baseline. The comparison varies *both* the substrate and the agent topology (multi-agent vs. single-agent ReAct), so it cannot isolate \"substrate vs. prompt engineering\" as competing axes. Recommend either deleting this sentence or narrowing it to: \"On this benchmark, substrate-level mechanisms (role routing, checkpointing) contributed more to success than we expected relative to a single-agent baseline.\"\n\n**3. The novelty claim should be qualified.**\n\"To our knowledge, OrchestrA is the first orchestration substrate that combines role-typed message passing with workspace checkpointing for LLM agent teams.\" This is a conjunctive novelty claim (\"first to combine A and B\"). Both components individually have clear prior art (typed actor systems; content-addressed build/workspace systems; agent frameworks with reviewer/critic roles). The claim is plausible at the level of the specific combination but is worth either (a) anchoring against named prior systems that it is being distinguished from, or (b) softening to \"we are not aware of a prior LLM-agent runtime that integrates both.\" As written, a reader cannot tell which prior systems were surveyed.\n\n**4. \"Deployment-ready\" is an overclaim given the evidence presented.**\nA 32-task offline benchmark with a 75% completion rate does not substantiate \"deployment-ready\" for \"software engineering pipelines.\" Failure modes on the 8 unfinished tasks, latency, cost, concurrency behavior, and any production-style validation are not reported. Recommend \"research prototype\" or \"a runtime suitable for further evaluation in software engineering pipelines.\"\n\n**5. Benchmark provenance is underspecified.**\n\"32 software-engineering tasks drawn from popular open-source repositories\" \u2014 readers cannot tell whether this is a known public benchmark (e.g., a SWE-bench subset), a curated set, or newly constructed. Selection criteria, license/contamination considerations, and whether task selection was blinded to OrchestrA's capabilities are all relevant for assessing the headline number. Add a one-line pointer to where the task list is defined and how tasks were chosen.\n\n**6. Baseline strength is unclear.**\n\"A single-agent ReAct-style baseline that we re-implemented\" is the only comparator and is implemented by the same authors who built the system under test. There is no indication of whether the baseline was tuned to comparable effort, given comparable tool access, or run with the same underlying model. The 24-vs-17 number is load-bearing for the whole abstract; the baseline therefore needs at least a sentence on parity (same base model, same tool set, same compute budget).\n\n**7. Argument-chain coherence.**\nThe abstract claims role typing is enforced (\"design questions are dispatched only to agents whose role permits architectural decisions\"), but the evaluation only foregrounds checkpointing rollbacks. The role-routing mechanism is introduced as a major contribution and then is not connected to any measured outcome. Either tie a result to it or describe it as a design feature rather than a contribution.\n\n**8. Minor prose / consistency.**\n- \"OrchestrA\" with the capital A is unusual; confirm it is intentional and used consistently downstream.\n- \"materializes intermediate artifacts ... as content-addressed objects, allowing the scheduler to roll the team back to any prior consistent state\" \u2014 \"any prior consistent state\" is stronger than checkpointing alone guarantees; consider \"to a previously recorded checkpoint.\"\n- \"unrecoverable error\" is doing ambiguous work \u2014 unrecoverable by which component? Suggest \"to an error the downstream agent flags as non-retriable.\"\n- \"without changing the underlying scheduler or workspace contract\" is a forward-looking architectural claim with no supporting evidence; consider moving it from the abstract to the discussion.\n\n## Suggested minimal rewrite of the results paragraph\n\n\"We evaluate OrchestrA on 32 software-engineering tasks selected from public open-source repositories [criteria/source to be specified]; each task requires the agent team to produce a patch that passes the project's existing test suite. Using the same base model and tool surface, OrchestrA completes 24/32 tasks end-to-end versus 17/32 for a single-agent ReAct-style baseline. On 5 of the 7 additional successes, the team performed at least one rollback after a Reviewer-detected failure, which is consistent with a contribution from the checkpointing layer; isolating that contribution via ablation is left to future work.\"\n\n## What I did not verify\n\nI cannot verify whether the \"first to combine\" novelty claim holds against the prior-art literature, whether the 32-task set overlaps a known public benchmark (and thus whether contamination risk applies to the underlying model), whether the baseline re-implementation matches published ReAct configurations, or whether the rollback statistic was computed on the 7 differential successes only or on a broader set. These should be checked against the full paper before any of the above recommendations are treated as final.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check a research-paper excerpt centrally includes testing whether the causal and argumentative chain is coherent.",
+      "R1.3": "The excerpt makes empirical claims from benchmark results, so checking whether those claims align with the reported numbers is central.",
+      "R1.4": "The artifact contains an explicit first-of-its-kind claim, making novelty assessment a central responsibility.",
+      "R1.6": "Because the delegation is broad and the artifact is prose, sentence-level clarity and polish are centrally expected.",
+      "RX.1": "Any check must disclose uncertainty because the excerpt lacks full paper context, prior-work details, and experimental appendices.",
+      "RX.2": "The deployment-ready, binding-constraint, and first-orchestration-substrate claims require active guardrails against overclaiming.",
+      "RX.3": "The projection must remain within checking responsibilities and must not perform edits or execute the requested check.",
+      "RX.4": "The artifact concerns deployment of LLM agent systems, so avoiding downstream harm from unsupported reliability or deployment claims is active.",
+      "RX.5": "The projection should preserve traceability to the specific claims, numbers, and wording present in the provided excerpt."
+    }
+  }
+}

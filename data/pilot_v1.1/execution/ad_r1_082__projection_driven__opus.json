@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_082",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3515,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 45044,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 0.8, \"R1.4\": 0.7, \"R1.5\": 0.6, \"R1.6\": 0.6, \"R1.7\": 0.7, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.5, \"RX.5\": 0.7}}\n\nSummary: I read this section as having two serious internal contradictions that undermine the headline contribution, plus several citations and novelty claims that read as overstated relative to what is actually proved. Detailed issues below; recommended revisions follow.\n\n**1. Convex / non-convex framing contradicts itself.**\nParagraph 1 introduces the objective as a \"non-convex stochastic optimization problem.\" Paragraph 3 then asserts that L is \"L-smooth *and* \u03bc-strongly convex on the relaxed simplex\" whenever the agent maps are bounded and \u2113 has bounded Hessian. These cannot both be the headline characterization. If \u2113 is convex (or the composition is strongly convex), then L on the relaxed simplex is a convex problem and the only source of \"non-convexity\" is the combinatorial vertex constraint \u2014 which is a discrete/integer constraint, not a non-convex landscape in the usual smooth-optimization sense. The current language conflates these and should be disentangled. As written a reader can't tell whether the contribution is (a) optimization over a discrete feasible set, (b) non-convex L in the sense of a non-convex objective, or (c) convex L over a convex relaxation. Pick one and be precise.\n\n**2. The two rate claims are mutually inconsistent.**\nThe abstract advertises an \"O(1/\u221aT) rate.\" The body then claims \u03bc-strong convexity, which on the relaxed simplex with mirror descent gives a linear rate, and the text itself writes \"O((L/\u03bc) log(1/\u03b5)) iteration complexity.\" A \u221aT rate and a log(1/\u03b5) rate cannot both be the result of the same analysis under the same assumptions. Either the strong-convexity assumption is being used and the headline should be linear convergence (with caveats about when \u03bc > 0 actually holds), or only smoothness/convexity is used and the headline \u221aT rate stands. Currently both are stated as if compatible.\n\n**3. \"Bandit-style feedback\" is asserted but not matched by the algorithm description.**\nParagraph 1 promises a bandit-feedback analysis. Paragraph 2 describes a stochastic mirror-descent scheme with negative-entropy regularizer and \u03b7_t = c/\u221at \u2014 that is the standard *full-information* stochastic-gradient template (Exponentiated Gradient / Hedge under stochastic gradients). True bandit feedback would require an importance-weighted or one-point gradient estimator, which is not mentioned. Either add the estimator and pay the resulting variance cost (which typically degrades the K-dependence from log K to \u221aK or K), or relax the claim from \"bandit-style\" to \"stochastic gradient.\"\n\n**4. Reference to Cesa-Bianchi and Lugosi (2006) is misapplied.**\nThe O(log K / \u221aT) rate from CBL is for *full-information* online learning (Hedge) over the simplex. If the present paper is genuinely under bandit feedback, the relevant benchmark is the Exp3/Exp3-style rate (typically \u00d5(\u221a(KT)) regret, i.e. K dependence is polynomial, not logarithmic). The current citation either props up the wrong feedback model or undermines the bandit framing in (3). Pick a consistent feedback model and cite the corresponding lower/upper-bound literature (Auer et al. 2002 for adversarial bandits; Audibert\u2013Bubeck for minimax rates).\n\n**5. The \"first O(1/\u221aT) rate for selection aggregators\" novelty claim is too strong as stated.**\nMirror descent on the simplex with entropic regularization is textbook (Beck\u2013Teboulle; Bubeck's monograph). The novelty, if any, lies in the *application* to LLM candidate selection and possibly in the connection between the vertex-constrained (\"hard selection\") problem and its convex relaxation. As written, the claim reads as a new optimization result rather than a new framing, which it does not appear to be. Recommend rewording to credit the underlying mirror-descent rate and locating the contribution explicitly in the agent-aggregation setting.\n\n**6. The bridge from relaxed simplex back to vertex selection is missing.**\nThe paper sets up \"hard selection = vertex of simplex\" and then analyzes the *relaxed* simplex. The concluding sentence \u2014 \"selection-based aggregation enjoys the same optimization-theoretic guarantees as synthesis up to log factors\" \u2014 requires a rounding or argmax step from the converged mixed strategy p* back to a vertex, and a bound on the loss incurred by that rounding. No such argument is sketched. Without it, the analysis is about synthesis, not selection, and the headline contribution evaporates. This is the single largest gap.\n\n**7. Citation specificity.**\n\"Recovering the rates of Bubeck (2015)\" is vague \u2014 Bubeck's convex optimization monograph contains many rates. Cite the specific theorem (e.g., Thm 4.2 on mirror descent) and the specific corollary being recovered. Similarly, \"matching the optimal rate for online learning over the simplex (Cesa-Bianchi and Lugosi, 2006)\" should point to the specific result (Hedge regret bound) and ideally the matching lower bound.\n\n**8. The K-scaling interpretation is overstated.**\n\"The regret bound scales only logarithmically in K, suggesting that large candidate pools are not a fundamental bottleneck.\" Two caveats are missing: (i) the log K rate, if it survives the corrections above, governs *optimization* error, not *statistical* error from finite samples per agent; (ii) under bandit feedback as claimed, the K-dependence is almost certainly worse than logarithmic. The current sentence reads as a policy recommendation (\"use large pools freely\") that the analysis does not support.\n\n**9. \"Section 5\" forward reference.**\n\"We verify this empirically in Section 5\" \u2014 that section is not in scope of what I can see here. Flagging only because the empirical claim is being used to back up the K-scaling interpretation in (8); if Section 5 in fact tests small K or fixed K, the inference doesn't carry.\n\n**10. Prose-level suggestions.**\n- \"the K vertices of the probability simplex\" is a useful image but the simplex has K vertices in K-dimensional embedding; spell out \u0394^{K-1} on first use.\n- \"non-convex hard-selection objective\" \u2014 see (1); reword.\n- \"imposes no additional rate penalties\" is a strong negative claim; soften to \"we are not able to exhibit a rate penalty\" unless a matching lower bound is proved.\n- \"first \u2026 in this regime\" \u2014 qualify \"regime\" precisely or drop \"first.\"\n\n**Recommended structural edit.**\nReorder the section as: (a) problem statement with feedback model fixed up front; (b) explicit convex relaxation and a stated rounding scheme; (c) assumptions (boundedness of \u03c6_i, Hessian bound on \u2113, what gives \u03bc > 0); (d) the rate result with the correct K- and T-dependence under the *actual* feedback model; (e) implications, scoped to what the theorem proves. The current ordering hides the relaxation step and lets the headline rate float free of its assumptions.\n\n**Caveats on this review.** I have not verified Bubeck (2015) chapter/theorem numbering, nor whether your \u03bc > 0 assumption is realistic for typical LLM response maps \u03c6_i (this depends on the geometry of the agents' output distributions; for near-duplicate agents \u03bc collapses and the linear rate degrades). I have also not checked Section 5 or the proofs, so my reading of the rate-claim contradictions is based solely on the text of this section; if the proofs use different assumptions in different theorems, some apparent contradictions may resolve there but should still be surfaced in the abstract and intro.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A review of this research section centrally includes checking whether the thesis, problem framing, and stated contribution cohere at the section level.",
+      "R1.2": "The artifact makes several technical claims whose premises and conclusions must be checked for internal consistency, making logical consistency load-bearing.",
+      "R1.3": "The section invokes reported empirical verification and optimization guarantees, so review should assess whether such claims are aligned with the stated evidence.",
+      "R1.4": "Claims of a first rate and comparison to prior regimes make novelty assessment a central responsibility.",
+      "R1.5": "Because the delegation targets a section, review naturally includes assessing subsection-level ordering and narrative progression.",
+      "R1.6": "A generic section review includes sentence- and paragraph-level clarity, register, and concision.",
+      "R1.7": "The section cites named prior works and makes attribution-sensitive claims, so citation coverage and accuracy are central.",
+      "RX.1": "The reviewer should distinguish definite issues from uncertainties, especially around technical and novelty claims not fully verifiable from the excerpt.",
+      "RX.2": "The section contains strong claims about first results and optimization guarantees, so avoiding overclaiming is essential.",
+      "RX.3": "The projection must remain limited to reviewing the section rather than rewriting or executing the requested review.",
+      "RX.4": "Review responsibilities include avoiding feedback that could encourage misleading technical claims or unsupported research conclusions.",
+      "RX.5": "Any projected review responsibility should be traceable to specific claims, citations, or argumentative moves in the provided artifact."
+    }
+  }
+}

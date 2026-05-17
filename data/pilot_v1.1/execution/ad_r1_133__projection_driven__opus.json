@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_133",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2783,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37938,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 0.7}}\n\nSummary: I rewrote the artifact to sharpen the framing and argument chain, pull every claim back to what the reported evidence actually supports, soften overclaims about novelty and generalization, add explicit limitations and a clinical-use disclaimer, and improve sentence-level readability \u2014 while keeping the scope and contribution unchanged.\n\n---\n\nRevised text:\n\n**GenoReason: Sampling-and-Voting over LLM Reasoning Traces for Variant-of-Unknown-Significance Classification**\n\nClassifying variants of unknown significance (VUS) is a persistent bottleneck in medical genetics, and recent work has begun to probe whether large language models (LLMs) can assist by reasoning over the heterogeneous evidence types that human curators weigh. A practical obstacle is that any single LLM reasoning trace over such evidence is brittle: small changes in prompt phrasing or sampling can flip the predicted label. We present GenoReason, a framework that addresses this brittleness by aggregating multiple independent LLM reasoning traces for each variant into a single classification, and we report an empirical comparison against a single-trace baseline on a curated ClinVar subset.\n\nFor each variant, GenoReason assembles a structured evidence template populated from public sources: gnomAD allele frequency, ClinVar entries for the surrounding gene, a predicted impact-on-protein-structure feature, and membership in curated disease-pathway annotations. The model is then sampled N = 20 times at temperature 0.7, each sample producing a free-text reasoning trace and a terminal label drawn from the five-class ACMG-style scheme (Benign / Likely Benign / VUS / Likely Pathogenic / Pathogenic). We take the plurality label across the 20 traces as the final prediction. The design choice we focus on is the aggregation step itself; the prompt template, evidence sources, and underlying model are otherwise held fixed between conditions.\n\nWe evaluate on a held-out set of 1,840 ClinVar variants restricted to entries with high review-status confidence, and we compare GenoReason (N = 20, majority vote) against an otherwise-identical single-trace baseline (N = 1, same model, same prompt, same temperature). Macro-F1 rises from 0.61 to 0.74 in this comparison. We also report subgroup results split by allele-frequency bin (rare vs. common) and by coding vs. non-coding region; the direction of improvement is preserved in each subgroup, though absolute gains and per-class behavior vary and we report these in full in the supplementary tables rather than summarizing them as a uniform effect.\n\nWe frame the contribution narrowly. Sampling-and-voting (and the closely related self-consistency family of methods) is a known technique in LLM reasoning; our claim is not that the aggregation idea is new, but that it produces a measurable single-number improvement in this specific clinical-genomics setting, on this specific benchmark, against a matched baseline. We have not compared against established non-LLM pathogenicity predictors, against human curator agreement, or across multiple base models, and we do not claim state-of-the-art performance relative to the broader variant-interpretation literature.\n\nSeveral limitations bound the interpretation of these results. (1) Evaluation labels are drawn from ClinVar, which is known to contain label noise, curator disagreement, and gene-level coverage imbalances; macro-F1 on this set is an imperfect proxy for ground-truth pathogenicity. (2) Some of the evidence features supplied to the model (notably ClinVar entries for the surrounding gene) are derived from the same database used for evaluation, which raises a leakage concern that we partially but not fully mitigate by held-out splitting at the variant level. (3) The 0.61 \u2192 0.74 gap is reported as a single run; we have not estimated variance across reseeded ensembles, prompt rewordings, or alternative aggregation rules (e.g., confidence-weighted voting), so the magnitude of the gain should be treated as indicative rather than precise. (4) We do not provide calibration analysis, per-class confusion matrices in the main text, or analysis of failure modes on borderline Likely-Pathogenic / VUS cases, where clinical cost asymmetries are largest.\n\nGenoReason is a research artifact and is not a clinical decision-support tool. The outputs are not validated for use in patient care, do not constitute a medical device, and should not be used to guide diagnostic, reproductive, or treatment decisions. Pathogenicity classification in practice requires ACMG/AMP-aligned review by qualified clinical personnel, and any downstream use of LLM-generated reasoning in that workflow would require separate validation, auditability of the reasoning traces, and consideration of patient-population coverage in the underlying databases. We release code and prompts to support reproducibility of the reported benchmark numbers, not to support clinical deployment.\n\n---\n\nKey revisions I made to the original, with reasoning:\n\n- Reframed the contribution to a narrow, defensible empirical claim (\"sampling-and-voting improves macro-F1 from 0.61 to 0.74 on this ClinVar subset against a matched single-trace baseline\") rather than the broader claim that benefits \"transfer cleanly\" \u2014 the original generalization is not supported by a single benchmark.\n- Removed \"novel framework\" and \"to our knowledge, the first\" \u2014 these are unverifiable and self-consistency / sampling-and-voting for LLM reasoning is established prior art; flagged the relationship explicitly instead of claiming priority.\n- Softened \"consistent gains across rare and common variants and across coding and non-coding regions\" to direction-preserved-in-each-subgroup with magnitudes deferred to supplementary tables, because \"consistent\" implies a uniformity the reported numbers may not actually support.\n- Added an explicit limitations paragraph covering ClinVar label noise, the leakage concern from using ClinVar-derived features to predict ClinVar labels, the lack of variance estimates, and the absence of calibration / failure-mode analysis.\n- Added an explicit non-clinical-use disclaimer, since the artifact frames a patient-facing prediction task and the framing in the original (\"we expect this approach to motivate a new line of \u2026 clinical NLP systems\") risks reading as a clinical-readiness claim.\n- Tightened sentence-level prose: removed \"central bottleneck,\" \"core methodological innovation,\" and the closing motivational sentence; replaced with verb-driven sentences.\n- Reorganized into: problem \u2192 method \u2192 evaluation \u2192 scope of claim \u2192 limitations \u2192 clinical-use disclaimer, so each section earns the next.\n- \"Majority vote\" \u2192 \"plurality label,\" since with 5 classes and N=20 a strict majority is not guaranteed; this matches what the procedure actually does.\n- Preserved the original scope (no new experiments proposed, no new datasets, no expanded literature review) per the delegation.\n\n---\n\nItems I could not fully verify and would flag back to the author before submission:\n\n- Whether the \"predicted impact on protein structure\" feature and the \"disease-pathway\" feature are themselves derived from sources that overlap with ClinVar labeling, which would compound the leakage concern beyond what I noted.\n- Whether N = 20 at temperature 0.7 was selected on the test set or on a separate development split; if the former, the 0.74 number is optimistic and the methods section should say so.\n- Whether the 1,840-variant set is balanced across the five ACMG classes; macro-F1 is sensitive to per-class support, and a heavily skewed test set can make the 0.61 \u2192 0.74 jump easier or harder to interpret.\n- Whether the underlying model, its version, and its training cutoff are disclosed elsewhere in the paper; if the model was trained on data that includes ClinVar, that is a first-order caveat that belongs in the abstract-level framing, not buried in an appendix.\n- Whether \"code and prompts\" release also includes the exact evidence-assembly pipeline and the held-out split, which is what would actually be needed to reproduce the headline number.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Strengthening the passage centrally involves sharpening the thesis, gap, and contribution claim above the sentence level.",
+      "R1.2": "The request implies improving whether the motivation, method, results, and conclusion form a coherent argument chain.",
+      "R1.3": "Because the artifact makes performance and subgroup-gain claims, strengthening it requires checking that claims track the reported evidence.",
+      "R1.5": "Making the draft stronger includes improving the section-level narrative arc from problem to method to evaluation to contribution.",
+      "R1.6": "The broad instruction naturally includes sentence- and paragraph-level clarity, concision, and register improvements.",
+      "RX.1": "Any projection of strengthening should preserve uncertainty around unsupported novelty, clinical, and generalization claims.",
+      "RX.2": "The artifact contains strong claims such as novelty, clean transfer, and clinical relevance, so avoiding overclaim is load-bearing.",
+      "RX.3": "The delegation is broad but still bounded to improving this research-writing artifact rather than executing research or changing facts.",
+      "RX.4": "Because the topic concerns clinical pathogenicity, projected responsibilities must avoid language that could imply unsafe clinical reliability.",
+      "RX.5": "Strengthening should preserve traceability to the artifact's stated methods, evidence sources, and reported results."
+    }
+  }
+}

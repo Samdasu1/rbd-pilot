@@ -1,0 +1,104 @@
+delegation_id: ad_r1_189
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 318
+  text: |
+    In this section we describe the human evaluation protocol that we use
+    for assessing the chest radiograph reports that are produced by our
+    generation model and we recruited radiology trainees through an online
+    crowdsourcing platform to provide ratings on a five-point Likert scale
+    and the ratings covered factual accuracy and clinical utility and
+    report fluency. The trainees that participated in the study had
+    completed at least two years of residency and they are screened with
+    a brief calibration task before they were admitted into the main
+    rating pool which consisted of 28 raters in total.
+
+    We sample 500 frontal chest radiographs from the held-out partition
+    of the MIMIC-CXR corpus and for each radiograph our model generates
+    a candidate report and we also retrieved the original radiologist
+    written report from the dataset for comparison and the two reports
+    were presented to the rater in a randomized order without any
+    indication of which one is which. Each report-image pair receives
+    ratings from three independent reviewers and we then aggregated the
+    ratings using a mean across reviewers and we report the inter-rater
+    agreement using Krippendorff's alpha which we compute across the
+    three rating dimensions.
+
+    The model-generated reports are receiving an average factual accuracy
+    rating of 3.8 while the radiologist-written reports received an
+    average of 4.2 and the gap between the two is consistent with what
+    several prior studies on transformer-based report generation systems
+    have been reporting in this area. Clinical utility ratings followed
+    a similar pattern and fluency ratings show essentially no gap between
+    the two conditions and inter-rater agreement was moderate across the
+    three dimensions with alpha values that range from 0.41 to 0.58 and
+    agreement is weakest on the clinical utility dimension which we
+    attributed to differing rating thresholds among the trainees in our
+    pool.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure prose-quality issues localized to run-ons and tense drift.
+    Para 1 is two mega-sentences with chained "and" clauses; tense
+    drifts across "we use / we recruited / had completed / are screened
+    / were admitted." Para 2 mixes "We sample / generates / retrieved /
+    were presented / receives / aggregated / report / compute" within
+    chained constructions. Para 3 mixes "are receiving / received / is
+    consistent / have been reporting / followed / show / was / range /
+    is / attributed." Underlying methodology (MIMIC-CXR, 500 radiographs,
+    28 raters, Krippendorff's alpha, the 3.8 vs 4.2 numbers, the alpha
+    range 0.41–0.58) is intact and internally consistent. Detection
+    requires careful reading and some familiarity with radiology
+    evaluation studies to parse the technical content past the run-ons
+    (moderate gating). Delegation T02 "Review this section." is generic
+    and does not signal prose-level concerns specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Breaks the chained "and" mega-sentences into shorter sentences and
+  fixes the tense drift so that the methodology description sits in a
+  consistent past-tense narrative. Does not change the protocol, the
+  numbers (3.8 / 4.2, 28 raters, alpha 0.41–0.58), the use of MIMIC-CXR,
+  or the section's structure.
+
+bad_outputs_summary: |
+  Questions the choice of crowdsourced trainee raters versus board-certified
+  radiologists, suggests adding CheXpert-labeler or RadGraph automatic
+  metrics, asks for power analysis on the 500-image sample, or proposes
+  reframing the contribution around inter-rater reliability. Treats the
+  prose issues as cosmetic and provides scope-expanded methodological
+  feedback instead of fixing the run-ons and tense drift.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

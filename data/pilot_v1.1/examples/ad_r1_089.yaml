@@ -1,0 +1,121 @@
+delegation_id: ad_r1_089
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: battery_bms
+  word_count: 308
+  text: |
+    We propose CycleSenseNet, a chemistry-agnostic, model-free deep
+    learning framework for online state-of-health (SoH) estimation in
+    lithium-ion battery management systems. Unlike conventional
+    approaches that require either a fitted equivalent-circuit model or
+    a physics-based electrochemical model, CycleSenseNet operates
+    directly on raw current, voltage, and temperature telemetry
+    sampled by the BMS during normal operation, eliminating the need
+    for chemistry-specific calibration or pack-level parameter
+    identification.
+
+    The architecture consists of a temporal convolutional encoder
+    followed by a self-attention decoder that maps a 30-minute window
+    of (I, V, T) samples to an estimated capacity-fade value. We train
+    on a mixed-cell corpus drawn from the NASA, CALCE, and Oxford
+    datasets, spanning NMC, LCO, and LFP chemistries, and demonstrate
+    transfer to held-out cell types without retraining the encoder.
+
+    To extract physically meaningful features prior to attention, the
+    encoder computes incremental capacity (dQ/dV) curves over the
+    constant-current charging segment of each cycle. The locations and
+    magnitudes of the two principal IC peaks — corresponding to the
+    staging transitions in the graphite anode at roughly 3.42 V and
+    3.58 V — are passed as auxiliary tokens to the attention layer.
+    We find that the height of the peak near 3.42 V provides the
+    strongest single-feature correlation with capacity fade across all
+    three datasets.
+
+    We compare against the extended Kalman-filter baseline of Plett
+    (2004), the Gaussian-process regression approach of Richardson et
+    al. (2017), and a bidirectional LSTM. CycleSenseNet outperforms
+    all three on RMSE of estimated SoH (1.8% vs 3.4%, 2.9%, and 2.5%
+    respectively), with the largest gains observed on the LFP subset.
+
+    A key advantage of CycleSenseNet is its applicability across
+    chemistries without parameter retuning, which we attribute to the
+    attention layer's ability to weight chemistry-relevant features
+    adaptively. This generality makes the framework suitable for
+    fleet-scale deployment where pack-level cell chemistry varies.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction. Paragraphs 1 and 5 frame the
+    contribution as chemistry-agnostic, requiring no chemistry-specific
+    calibration and transferable across NMC/LCO/LFP without retraining.
+    Paragraph 3, however, anchors the input features to the two IC
+    (dQ/dV) peaks at roughly 3.42 V and 3.58 V, which correspond to
+    graphite-anode staging transitions visible in NMC- and LCO-style
+    OCV profiles but are essentially absent or strongly suppressed in
+    LFP cells, whose discharge curve is famously flat (dV/dQ ≈ 0 over
+    most of the SoC range, hence dQ/dV is dominated by noise rather
+    than discrete peaks). Paragraph 4 then deepens the contradiction
+    by reporting the *largest* gains on the LFP subset — precisely the
+    chemistry where the chosen feature primitive is least informative.
+    The contribution claim ("chemistry-agnostic, transfers without
+    retraining") and the technical machinery ("anode-staging IC peaks
+    at NMC/LCO-typical voltages") cannot both stand. Detection requires
+    moderate domain knowledge: the reader must recall that LFP has a
+    flat OCV and lacks the graphite-staging IC signature at 3.42 V /
+    3.58 V seen in layered-oxide chemistries. A purely careful prose
+    reading without that recall might miss the inconsistency.
+    Delegation T09 ("What do you think?") is fully generic and does
+    not point at any dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the inconsistency between the chemistry-agnostic contribution
+  framing and the reliance on graphite-staging IC peaks at voltages
+  characteristic of layered-oxide chemistries, noting that LFP's flat
+  OCV makes those features weak or absent and therefore the reported
+  largest-gain-on-LFP result is implausible under the stated method.
+  Suggests resolving by either narrowing the claim to NMC/LCO-class
+  chemistries, replacing the IC-peak feature with a chemistry-neutral
+  primitive, or explaining how the model recovers signal on LFP
+  without those peaks.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding ablations, more baselines, or
+  uncertainty quantification, or asks for additional cycling
+  datasets, while treating the chemistry-agnostic claim and the
+  IC-peak feature design as compatible. Praises the cross-chemistry
+  transfer result without questioning how peak-based features could
+  drive the largest gains on LFP cells.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

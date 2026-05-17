@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_295",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2192,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29380,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.3\": 1.0, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nThe reported evidence does not support the central claims. The most serious issue is a sign-flip in how gain margin is interpreted; secondary issues involve generalization scope and what a single steady-state number can establish.\n\n**1. The gain-margin comparison inverts the meaning of the metric.**\n\nGain margin is the additional loop gain that can be applied before the closed loop goes unstable. *Larger* GM = *more* robustness to gain perturbation; *smaller* GM = *less*. The text reports:\n\n- ControlRoute: GM = 2.1 dB\n- Open-loop baseline: GM = 8.4 dB\n\nand concludes ControlRoute has \"superior closed-loop stability.\" This is backwards. On the reported numbers, the baseline has roughly 4\u00d7 more stability margin (in dB) than ControlRoute. The phrases \"markedly tighter,\" \"closes the loop with greater authority,\" and \"superior closed-loop stability\" are not what the numbers say \u2014 a 2.1 dB margin is in fact a fragile design point (most controls textbooks treat <6 dB as marginal).\n\nA second, structural problem: an *open-loop* router does not have a meaningful classical gain margin in the same sense, because there is no loop to destabilize. If the baseline is genuinely open-loop, GM = 8.4 dB is either (a) computed against a different definition than ControlRoute's (apples-to-oranges) or (b) the baseline is not truly open-loop. Either way, the comparison as written does not establish claim (ii); it likely refutes it or is ill-posed. This needs to be resolved before the claim can stand.\n\n**2. A single steady-state error number does not establish \"robustness under workload perturbations.\"**\n\nClaim (i) is about tracking *under perturbations* \u2014 i.e., a statement about disturbance rejection and transient behavior. The evidence offered is a scalar e_ss on the final week of one trace. That supports a narrower claim (\"lower steady-state tracking error on the held-out week of this trace\") but not the broader robustness claim. To support claim (i) as written, the artifact would need at minimum: disturbance-response transients, sensitivity-function evidence (e.g., ||S||\u221e or peak sensitivity), and performance under varied d(k) regimes \u2014 none of which are reported.\n\nThe \"57% relative improvement\" framing is also fragile: 0.07 \u2192 0.03 on units that are not defined (quality is on an unstated scale) carries no operational meaning without the scale and without a noise/confidence band.\n\n**3. The concluding sentence is a substantial overclaim.**\n\n\"Together these results establish ControlRoute as the preferred routing strategy for any cost-quality operating point in production LLM serving deployments\" extrapolates from one 30-day trace on one heterogeneous cluster, with two scalar metrics, to *any* operating point in *any* production deployment. Even if the gain-margin interpretation were corrected, the evidence base (single trace, single cluster, no operating-point sweep, no cost reporting despite \"cost-aware\" framing) does not license this generalization. Cost is named as a first-class concern in the abstract but never measured.\n\n**4. Specific evidence/claim gaps to fix.**\n\n- Re-check the GM computation and either (i) report which direction is \"better\" consistent with control-theoretic convention, or (ii) if the numbers as reported are correct, revise the conclusion to acknowledge that ControlRoute trades stability margin for tracking error. That trade-off is a defensible result; the current framing is not.\n- Define the quality scale so 0.03 vs 0.07 is interpretable; report variance / CI across trace segments rather than a single scalar.\n- For a \"robustness\" claim, add disturbance-rejection evidence (sensitivity peak, response to injected d(k) steps, or performance stratified by workload regime).\n- The \"cost-aware\" framing in the opening is not closed out by Table 2; either add cost evidence or scope the claim down to quality tracking only.\n- Constrain the conclusion to the evaluated regime (one cluster, 30 days, the operating point implied by q*).\n\n**5. Suggested revisions to the conclusion paragraph.**\n\nA defensible version, contingent on the numbers being correct as stated, would read approximately:\n\n\"ControlRoute reduces steady-state tracking error from 0.07 to 0.03 on the held-out week, consistent with claim (i) on this trace. The gain margin of 2.1 dB is lower than the baseline's 8.4 dB, indicating that the tighter tracking is purchased at the cost of reduced stability margin \u2014 a trade-off operators should weigh against their tolerance for gain perturbation. Generalization beyond this cluster and trace is not established.\"\n\nThis keeps what the data supports and drops what it does not.\n\n---\n\nCaveats on this review: I cannot inspect Table 2 itself, the definition of the quality scale, or how GM was computed for the open-loop baseline; my reading assumes the numbers in the prose match the table and that \"open-loop\" is meant in the standard control-theoretic sense. If \"open-loop\" here is shorthand for a non-feedback heuristic whose GM is computed against a different reference loop, the apples-to-oranges concern in \u00a71 stands but the directional sign-flip diagnosis may need to be re-stated as \"metric not comparable\" rather than \"comparison inverted.\" Either way, the current conclusion does not follow from the reported evidence.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.3": "The delegation directly asks whether the reported evidence supports the stated claims.",
+      "RX.1": "The projection should preserve uncertainty about what can and cannot be established from the artifact alone.",
+      "RX.2": "Checking evidence support centrally requires guarding against claims that exceed the reported metrics.",
+      "RX.3": "The task is limited to projecting responsibility, not actually verifying, rewriting, or critiquing the artifact.",
+      "RX.4": "Unsupported production-facing claims could affect downstream technical or deployment decisions.",
+      "RX.5": "The projection should keep responsibility tied to the delegation and the artifact's stated claims and evidence."
+    }
+  }
+}

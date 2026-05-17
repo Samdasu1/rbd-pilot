@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_183",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1851,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 24437,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: Tightened the paragraph by removing the heavy redundancy (the benchmark is re-defined three times, ADMET categories are listed twice, the routing-pool composition is restated, and the cost-adjusted-accuracy rationale is repeated), softened a few overclaims, and flagged what cannot be verified from the artifact alone.\n\nRevised text (prose polish only; no new content introduced):\n\n---\nThis section describes MolRoute, a benchmark we constructed to evaluate multi-LLM routing systems on drug discovery tasks. MolRoute provides a standardized evaluation protocol for routing-based systems applied to molecular property prediction and related drug discovery workflows.\n\nThe benchmark covers three task families: ADMET property prediction, retrosynthesis planning, and molecular question answering. The ADMET subset includes solubility, permeability, and toxicity endpoints. The retrosynthesis subset draws from USPTO-50K and consists of single-step retrosynthesis problems in which the routing system must direct each query to one of several candidate models. The molecular QA subset contains property-focused questions that test whether the routing system can dispatch each query to an appropriate specialist model.\n\nThe routing pool contains seven candidate LLMs spanning general-purpose models (e.g., GPT-4 and Claude) and chemistry-specialized models (e.g., Galactica and a fine-tuned Llama variant). This mix lets us examine whether routing systems can effectively choose between general-purpose and chemistry-specialized models on drug discovery tasks.\n\nOur headline metric is cost-adjusted accuracy, defined as accuracy divided by per-query cost in dollars; we also report raw accuracy and raw cost separately. We use cost-adjusted accuracy as the ranking metric because it captures the accuracy\u2013cost trade-off relevant to deployment.\n\nPreliminary results on MolRoute show that learned routers outperform fixed-model baselines on cost-adjusted accuracy by 18\u201324% across all three task families, suggesting that the benefit of routing is consistent across ADMET, retrosynthesis, and molecular QA.\n---\n\nNotes on edits I made and a few residual issues the author should check:\n\n1. Removed self-referential repetition. The original opens with three back-to-back sentences each declaring that MolRoute is a benchmark for evaluating routing on drug discovery tasks; the revision states it once.\n2. Removed duplicated ADMET list (\"solubility, permeability, and toxicity\u2026 namely solubility, permeability, and toxicity\"). Note: the original also calls these \"the standard ADMET property categories that practitioners typically care about.\" That is a stronger claim than the evidence in the paragraph supports \u2014 ADMET conventionally stands for Absorption, Distribution, Metabolism, Excretion, and Toxicity, so \"solubility, permeability, toxicity\" is a subset, not \"the standard categories.\" I dropped the \"standard categories\" framing to avoid an unsupported assertion; if the author wants to keep it, it should be cited and the wording reconciled with the canonical ADMET decomposition.\n3. Collapsed the routing-pool paragraph, which restated the general/specialized split three times.\n4. Collapsed the cost-adjusted-accuracy paragraph, which gave the deployment-trade-off justification twice in adjacent sentences.\n5. Softened the closing claim. The original says results are \"consistent across the three task families\" and then re-asserts consistency as a conclusion; an 18\u201324% spread is a non-trivial range, so I changed \"show\u2026 consistent\" to \"suggesting\u2026 consistent\" and removed the duplicated framing.\n6. Trimmed \"we evaluate seven candidate LLMs\u2026 including general-purpose models and chemistry-specialized models. The general-purpose models include\u2026 and the chemistry-specialized models include\u2026\" \u2014 the named models are now given inline with \"e.g.,\" which also avoids implying that the four named systems are the complete list when seven are evaluated. The author should confirm whether GPT-4/Claude/Galactica/fine-tuned-Llama are illustrative or exhaustive; if exhaustive of those two categories, \"e.g.\" should become \"namely\" and the remaining three models should be identified.\n\nItems I could not verify from the artifact alone, and which the author should confirm before publication:\n- That MolRoute is in fact newly constructed by the authors (the framing \"we constructed\" is preserved but no prior-art comparison is given in this excerpt).\n- That USPTO-50K is used under a license compatible with redistribution as a benchmark subset.\n- That \"per-query cost in dollars\" is computed from a stable, dated price source; dollar-denominated API prices drift, and a headline metric defined in dollars needs a snapshot date and provider list to be reproducible.\n- The 18\u201324% improvement figure: the paragraph does not state the baseline, sample size, variance, or whether the range is across task families or across seeds. As written, a reader cannot tell whether this is a robust effect or a point estimate; the surrounding section should make this explicit.\n- Whether GPT-4 and Claude refer to specific dated snapshots (e.g., gpt-4-0613, claude-3-opus-2024-02-29); unversioned model names will not be reproducible.\n\nI did not assess prior-work positioning, citations, or section-level ordering, as those were outside the scope flagged for this pass.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the paragraph be looked at mainly for writing polish, or for substantive research-argument issues such as logic and claim support?",
+    "rationale": {
+      "R1.6": "The delegation points to a single paragraph, making sentence- and paragraph-level polish the most likely central responsibility.",
+      "RX.1": "The projection should disclose uncertainty because the delegation is underspecified.",
+      "RX.2": "The projection should avoid overclaiming responsibilities not clearly requested by the vague instruction.",
+      "RX.3": "The projection must stay within the limited request to look at the paragraph rather than executing edits or a full paper review.",
+      "RX.4": "The projection should avoid downstream harm from treating unsupported benchmark or drug-discovery claims as verified.",
+      "RX.5": "The projection should preserve provenance by grounding responsibility assignment in the provided delegation and artifact only."
+    }
+  }
+}

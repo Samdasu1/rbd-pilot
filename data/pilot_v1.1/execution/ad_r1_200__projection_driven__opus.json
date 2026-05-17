@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_200",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1949,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 25977,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.4\": 0.95, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nSummary: Reviewed the paragraph and found a direct internal contradiction in the novelty story, plus several phrasings that overreach; recommend targeted rewrites and explicit hedging.\n\n**Core problem: the novelty claim contradicts the related-work section**\n\nThe first paragraph of the contribution states that \"no prior IR system has offered this form of explicit, tunable underspecification across a multi-step retrieval trajectory.\" The related-work paragraph then describes Park et al. (2023) as having \"introduced a tunable specificity parameter for sub-query generation in multi-hop retrieval\" with an \"alpha-controller\" that is \"the closest predecessor to ours.\" Multi-hop retrieval is a multi-step retrieval trajectory, and a tunable specificity parameter is a tunable underspecification dial. As written, the two paragraphs cannot both be true.\n\nThe follow-up paragraph attempts to recover by saying the work \"differs architecturally\" (learned planner vs. retrieval-time post-processor; five-step vs. two-hop). Those are real differences, but they are *architectural and scale* deltas, not a *first-of-its-kind* delta. The opening framing (\"the first retrieval framework that exposes a controllable underspecification dial\") and the closing claim (\"the first practical controllable-underspecification framework for long-horizon IR\") should be downgraded accordingly.\n\n**Suggested rewrites**\n\n- Replace \"the first retrieval framework that exposes a controllable underspecification dial for long-horizon tasks\" with something like: \"a retrieval framework that exposes a controllable underspecification dial integrated directly into a learned multi-step planner.\"\n- Replace \"no prior IR system has offered this form of explicit, tunable underspecification across a multi-step retrieval trajectory\" with: \"prior tunable-specificity work (notably Park et al., 2023) operates as a retrieval-time post-processor over two-hop trajectories; we are not aware of a learned planner that internalizes such a control parameter across longer horizons.\" This preserves a genuine delta without contradicting the cited predecessor.\n- Replace the closing \"establish LongQuest as the first practical controllable-underspecification framework for long-horizon IR\" with: \"position LongQuest as a controllable-underspecification framework targeted at long-horizon IR, extending tunable-specificity control from two-hop post-processing to five-step learned planning.\" The word \"first\" and \"practical\" together do a lot of unsupported lifting.\n\n**Other issues worth flagging**\n\n- \"6.8-point gain over the strongest fixed-specificity baseline at matched recall\" \u2014 the paragraph does not say on which dataset, at which alpha, or whether the gain is averaged across alpha settings. A reader cannot tell whether this is a headline number on one split or a robust average. Either name the dataset and alpha, or hedge (\"up to 6.8 nDCG@10 points on [dataset] at alpha=...\").\n- \"TREC-LongTask\" and \"MS-MARCO-Horizon\" \u2014 I cannot confirm these benchmark names from memory; if \"MS-MARCO-Horizon\" is a derived split introduced in this paper, say so explicitly (\"a long-horizon split of MS-MARCO that we construct\"). The current phrasing \"derived MS-MARCO-Horizon split\" is ambiguous about who derived it.\n- \"Real users rarely issue a fully specified request\" is asserted without citation; either drop the universal quantifier (\"Users often issue underspecified requests\") or cite a user-study source.\n- \"the core problem of underspecification in IR\" is a strong framing claim. Softening to \"a core problem\" avoids overreach.\n- Sentence-level polish: \"Modeling this gap \u2014 between what the user typed and what they actually want \u2014\" reads well but the em-dash aside is doing the same work as the preceding clause; tightening to \"Modeling the gap between the typed query and the user's underlying intent is the core problem of underspecification in IR\" removes a redundancy.\n- \"allowing operators to trade exploration breadth against precision at the corpus level\" \u2014 \"at the corpus level\" is unclear; if it means \"over the entire corpus rather than per-query,\" say so.\n\n**Minor**\n\n- \"First\u2026 Second\u2026 Third, and most directly relevant\" is fine, but consider promoting Park et al. (2023) to its own paragraph since the rest of the contribution is defined against it.\n- \"five-step rather than two-hop trajectories\" mixes vocabulary (\"step\" vs. \"hop\"); pick one for consistency with the rest of the paper.\n\n**Items I cannot verify and which the authors should check**\n\n- Whether Park et al. (2023) actually used the term \"alpha-controller\" or whether the parameter names happen to coincide; if they coincide, a footnote disambiguating the two alphas is warranted to avoid implying inheritance.\n- Whether \"HotpotQA-Multistep,\" \"TREC-LongTask,\" and \"MS-MARCO-Horizon\" are the canonical names of these benchmarks as of the paper's writing \u2014 I have low confidence these are standard names and recommend the authors confirm against their references.\n- The \"6.8-point\" headline number is unverifiable from the paragraph alone; the body of the paper should make the comparison conditions (dataset, alpha, recall operating point, baseline identity) unambiguous.\n- I did not assess whether the framing risks downstream harms; nothing in the excerpt suggests a concrete harm vector beyond the standard concern that \"exploration breadth vs. precision\" knobs in retrieval can surface lower-quality content, which the paper should acknowledge if relevant to its deployment claims.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general request to look at the paragraph centrally includes checking whether the contribution narrative is internally consistent, especially where the claimed firstness interacts with the closest predecessor.",
+      "R1.4": "The paragraph makes explicit novelty and nearest-prior-work claims, so assessing the responsibility for novelty positioning is central to the implied review.",
+      "R1.6": "Because the artifact is a paragraph-level research-writing passage, sentence and paragraph polish is a central expected responsibility of taking a look.",
+      "RX.1": "Any projection of such a broad delegation must preserve uncertainty about the user's intended depth of review.",
+      "RX.2": "The paragraph contains strong firstness and practical-framework claims, making overclaim avoidance an always-active responsibility.",
+      "RX.3": "The agent must remain within projection rather than performing the requested review or editing the artifact.",
+      "RX.4": "The projection must avoid encouraging misleading scholarly claims that could cause downstream research or attribution harm.",
+      "RX.5": "The projection should remain traceable to concrete features of the delegation and artifact, such as the novelty claims and paragraph-review framing."
+    }
+  }
+}

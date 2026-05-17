@@ -1,0 +1,130 @@
+delegation_id: ad_r1_257
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 278
+  text: |
+    Neural machine translation (NMT) systems routinely produce fluent
+    outputs even when the underlying translation is unreliable, leading
+    downstream users to over-trust erroneous translations in
+    safety-sensitive contexts such as medical interpretation and legal
+    documents. We address this by fine-tuning NMT decoders to emit a
+    calibrated quality token alongside each translation, allowing the
+    model itself to flag low-confidence outputs.
+
+    Our fine-tuning corpus combines WMT direct-assessment scores with
+    synthetic perturbations that probe the boundary between high- and
+    low-quality translations. We discretize the human z-scores into
+    five quality bins and append the bin label as a special token
+    after the EOS marker; the decoder is then trained with standard
+    cross-entropy on the concatenated (translation, quality-token)
+    sequence. The resulting model produces quality tokens whose
+    distribution closely tracks held-out human judgments (ECE = 0.041
+    on WMT22 en-de, down from 0.187 for the unconditional
+    softmax-probability baseline).
+
+    To our knowledge, this is the first work to elicit calibrated
+    translation-quality signals directly from a decoder by treating
+    quality estimation as a continuation of the translation sequence.
+    Earlier approaches such as Monte Carlo dropout and ensemble
+    disagreement require multiple forward passes and substantially
+    increase inference cost; our single-pass token approach removes
+    this overhead.
+
+    The calibration gains transfer to language pairs absent from the
+    fine-tuning data. Because the quality tokens use a shared
+    embedding across languages, the model achieves 31.2 BLEU on the
+    held-out fr-de evaluation set, demonstrating that the approach is
+    robust under domain shift. We further observe that the fine-tuned
+    model outputs shorter translations on average (mean length ratio
+    0.94 vs 1.02 for the base model), and we discuss the practical
+    implications for downstream post-editing workflows in §5.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  R1.4: [F1.4.b]
+  notes: |
+    Two compound issues:
+
+    R1.4 missing nearest neighbor: the section claims to be "the first
+    work to elicit calibrated translation-quality signals directly
+    from a decoder" and only contrasts with MC-dropout and ensemble
+    disagreement. The actual nearest neighbors are reference-free
+    quality estimation systems — COMET-Kiwi (Rei et al. 2022),
+    TransQuest (Ranasinghe et al. 2020), and the broader OpenKiwi /
+    WMT QE shared-task lineage — which predict translation quality
+    from (source, translation) pairs in a single forward pass.
+    Several recent QE-as-decoding / prompted-LLM-QE variants also
+    produce a quality token from the generation model itself. Without
+    contrasting against this line, the novelty claim is unsupported.
+
+    R1.2 non-sequitur: para 4 says "calibration gains transfer to
+    language pairs absent from the fine-tuning data" and then
+    supports this with a BLEU score on fr-de (31.2 BLEU). BLEU
+    measures translation adequacy/fluency against a reference; it
+    does not measure calibration of the quality tokens. The
+    follow-on "demonstrating that the approach is robust under
+    domain shift" does not follow from the cited evidence — to
+    support transferred calibration, the paragraph would need an ECE
+    or reliability-diagram statistic on fr-de, not a BLEU number.
+    The cross-lingual-embedding rationale also does not connect
+    embedding sharing to BLEU performance.
+
+    Combined: fixing R1.4 (anchor against COMET-Kiwi / TransQuest /
+    LLM-QE) reframes the contribution as an architectural variant of
+    QE rather than a "first," and fixing R1.2 (replace the BLEU
+    evidence with a calibration metric on the held-out pair) is
+    needed for the transfer claim to stand. Either fix alone leaves
+    the section's headline claims broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.85
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the "first work" framing ignores reference-free
+  quality-estimation systems (COMET-Kiwi, TransQuest, OpenKiwi, and
+  prompted-LLM-QE variants) that already predict translation quality
+  in a single forward pass; the section must position against this
+  line and sharpen the actual delta (e.g., quality token emitted by
+  the generator itself vs a separate QE model). (2) The cross-lingual
+  transfer claim in para 4 is supported by a BLEU number, which does
+  not speak to calibration; the evidence needs to be a calibration
+  metric (ECE, reliability) on fr-de, not BLEU. Both fixes are
+  required.
+
+bad_outputs_summary: |
+  Polishes prose, accepts the "first work" framing, suggests adding
+  more language pairs or a larger fine-tuning corpus. Treats the
+  BLEU-supports-calibration sentence as fine and recommends adding
+  more BLEU baselines, or accepts the "domain shift" framing without
+  noticing that the cited evidence is unrelated to calibration.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

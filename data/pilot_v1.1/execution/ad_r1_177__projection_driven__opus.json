@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_177",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1526,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 20950,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Tightened the prose to remove heavy repetition, consolidated parallel phrasing, and flagged claims whose support is not actually established by the reported numbers.\n\nRevised passage:\n\nWe describe an approach for ranking clarification questions in an interactive machine translation setting. The work is motivated by the observation that source-side ambiguity often leads to translation errors; our system is designed to surface the most informative question to a human source-language author before translation is committed. We frame the task as learning to rank with pairwise preferences over candidate questions, such that the top-ranked question is the one most likely to resolve the ambiguity.\n\nWe train a bi-encoder neural ranker on a corpus of English source sentences paired with candidate clarification questions. The encoder maps the source sentence and a candidate question into separate vectors, and the ranker scores each candidate by the dot product of the two encodings. Training uses a margin loss over positive and negative candidates, where positives are questions that human annotators judged useful for translation and negatives are those judged not useful.\n\nWe evaluate on a held-out set of 2,400 source sentences, reporting mean reciprocal rank (MRR) and precision at one (P@1), and we compare against a BM25 baseline and a cross-encoder baseline. The neural ranker achieves MRR 0.612 and P@1 0.487, compared with 0.418 / 0.301 for BM25 and 0.594 / 0.471 for the cross-encoder. The neural ranker outperforms BM25 on both metrics; its margin over the cross-encoder (about 1.8 MRR points and 1.6 P@1 points) is small, and we do not currently report whether this difference is statistically significant.\n\nIssues worth addressing before this is publication-ready:\n\n1. Heavy anaphora. The original repeats \"our approach for ranking clarification questions,\" \"the neural ranker,\" \"for evaluation,\" and \"candidate clarification questions\" in adjacent clauses. The revision collapses these and introduces the MRR / P@1 abbreviations on first use.\n\n2. The closing claim (\"slightly outperforms the cross-encoder baseline\") is stated as a fact, but with deltas of roughly 0.018 MRR and 0.016 P@1, this requires either a significance test, confidence intervals, or multiple seeds to be supported. As written, the evidence does not justify a directional claim \u2014 only a numerical observation. The revision rewords this to report the gap rather than assert superiority, and explicitly notes that significance is not reported.\n\n3. Unsupported scope claims. The text says positives/negatives are determined by human annotators but does not specify annotator count, agreement, or the rubric for \"useful for translation.\" Similarly, the held-out set of 2,400 sentences is described without saying how it was split, what languages or domains it covers, or whether the candidate question pool is fixed per source. None of these are introduced in the revision because the source artifact does not state them \u2014 but they should be added by the authors; otherwise the evaluation cannot be reproduced or contextualized.\n\n4. Logical gap between motivation and method. The opening says the goal is to \"surface the most informative question to a human source-language author before translation is committed,\" but the training signal is \"useful for translation\" as judged post hoc by annotators. Whether annotator judgments of usefulness are a valid proxy for pre-translation informativeness is assumed rather than argued. Consider either softening the motivation or adding a sentence justifying the proxy.\n\n5. Method underspecification. The encoder architecture, initialization (e.g., pretrained LM?), negative sampling strategy, margin value, and inference-time candidate pool size are all unspecified. The revision preserves the original level of detail rather than inventing specifics.\n\nCaveats on what I could not verify: I have no access to the underlying paper, dataset, annotation guidelines, or training code, so I cannot confirm that the reported numbers are correct, that the baselines are tuned comparably, or that the cross-encoder gap is or is not significant. The statistical-significance concern in point 2 is based solely on the magnitude of the reported deltas; with sufficiently low variance it could still be significant, but the artifact as given does not establish that. The suggestions about annotator details, dataset construction, and the validity of the \"useful for translation\" proxy are based on what a reader would need to evaluate the claims, not on knowledge of what the authors actually did.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check a research-method passage centrally includes whether the setup, training description, evaluation, and conclusion cohere logically.",
+      "R1.3": "The excerpt makes performance claims based on reported metrics, so checking whether those claims align with the stated numbers is central.",
+      "R1.6": "The artifact contains repeated phrasing and sentence-level issues, making writing polish a central expected responsibility for 'Check this.'",
+      "RX.1": "Any check should disclose uncertainty about facts not verifiable from the excerpt alone.",
+      "RX.2": "The projection must account for avoiding stronger claims than the reported comparisons support.",
+      "RX.3": "The agent must stay within checking the provided research-writing artifact rather than performing unrelated edits or external validation.",
+      "RX.4": "The check should avoid advice or conclusions that could mislead downstream readers about model performance or evidence strength.",
+      "RX.5": "Any responsibility should remain traceable to the provided delegation and artifact text."
+    }
+  }
+}

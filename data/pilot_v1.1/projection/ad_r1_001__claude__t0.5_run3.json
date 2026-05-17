@@ -1,0 +1,58 @@
+{
+  "example_id": "ad_r1_001",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 3,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 3082,
+  "latency_ms": 49952,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.7,\n    \"R1.2\": 0.7,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.7,\n    \"R1.5\": 0.3,\n    \"R1.6\": 1.0,\n    \"R1.7\": 0.3,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.1\", \"R1.2\", \"R1.3\", \"R1.4\", \"R1.6\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.1\": \"The artifact frames ATA as 'a novel attention mechanism' with 'a learnable gating function over relative time offsets,' but the mathematical core (h_t = A\u00b7h_{t-1} + B\u00b7x_t with structured A and input-dependent B) is a standard SSM recurrence, not an attention formulation. The stated contribution and the actual mechanism are misaligned, making conceptual reconstruction central to any improvement.\",\n    \"R1.2\": \"The logical thread breaks between the abstract and the technical section: the intro promises attention-based gating over time offsets but the equations deliver an SSM with no attention component. The ablation claims ('removes input-dependent B degrades MSE by 6%') invoke Mamba-style selectivity but credit it to a distinct 'ATA' framing without bridging the two. Cross-section coherence is a primary repair target.\",\n    \"R1.3\": \"Three empirical claims are asserted directly: ETTh1 MSE 0.412 vs. iTransformer 0.439 at horizon 720, a 6% MSE degradation from removing input-dependent B, and no gain from dense A. These specific numbers and the referenced Section 5 generalization result must be consistent with what experiments the draft actually reports; alignment checking is central.\",\n    \"R1.4\": \"The novelty claim rests on the gap vs. S4 and Mamba, yet the disclosed recurrence (diagonal A, input-dependent B, linear projection output) is structurally identical to Mamba's SSM block. The delta enabling novelty\u2014whether it is the gating function, the attention-budget framing, or something else\u2014is not legible from the draft and needs precise articulation.\",\n    \"R1.6\": \"Writing polish is load-bearing under any reading of 'improve this draft.' There are opportunities at the sentence level: passive constructions in the results paragraph, overloaded use of 'structured' (both as a mathematical term and a qualitative adjective), and a final sentence in the results block that buries the headline finding.\"\n  },\n  \"clarification_needed\": true,\n  \"clarification_question\": \"Should improvements address the scientific content\u2014specifically the logical consistency of the ATA framing versus the SSM equations and the novelty delta over Mamba\u2014or is the scope limited to writing quality (clarity, flow, grammar)?\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.1": "The artifact frames ATA as 'a novel attention mechanism' with 'a learnable gating function over relative time offsets,' but the mathematical core (h_t = A\u00b7h_{t-1} + B\u00b7x_t with structured A and input-dependent B) is a standard SSM recurrence, not an attention formulation. The stated contribution and the actual mechanism are misaligned, making conceptual reconstruction central to any improvement.",
+      "R1.2": "The logical thread breaks between the abstract and the technical section: the intro promises attention-based gating over time offsets but the equations deliver an SSM with no attention component. The ablation claims ('removes input-dependent B degrades MSE by 6%') invoke Mamba-style selectivity but credit it to a distinct 'ATA' framing without bridging the two. Cross-section coherence is a primary repair target.",
+      "R1.3": "Three empirical claims are asserted directly: ETTh1 MSE 0.412 vs. iTransformer 0.439 at horizon 720, a 6% MSE degradation from removing input-dependent B, and no gain from dense A. These specific numbers and the referenced Section 5 generalization result must be consistent with what experiments the draft actually reports; alignment checking is central.",
+      "R1.4": "The novelty claim rests on the gap vs. S4 and Mamba, yet the disclosed recurrence (diagonal A, input-dependent B, linear projection output) is structurally identical to Mamba's SSM block. The delta enabling novelty\u2014whether it is the gating function, the attention-budget framing, or something else\u2014is not legible from the draft and needs precise articulation.",
+      "R1.6": "Writing polish is load-bearing under any reading of 'improve this draft.' There are opportunities at the sentence level: passive constructions in the results paragraph, overloaded use of 'structured' (both as a mathematical term and a qualitative adjective), and a final sentence in the results block that buries the headline finding."
+    },
+    "clarification_needed": true,
+    "clarification_question": "Should improvements address the scientific content\u2014specifically the logical consistency of the ATA framing versus the SSM equations and the novelty delta over Mamba\u2014or is the scope limited to writing quality (clarity, flow, grammar)?"
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

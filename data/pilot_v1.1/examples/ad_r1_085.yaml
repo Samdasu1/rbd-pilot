@@ -1,0 +1,122 @@
+delegation_id: ad_r1_085
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 386
+  text: |
+    We present AQUERY, an adaptive quadrature method that selects
+    evaluation points to minimize the expected posterior variance of a
+    Gaussian-process surrogate. The method targets approximation of
+    integrals I(f) = \int_{[0,1]^d} f(x) dx for expensive black-box
+    integrands f, where each evaluation is computationally costly.
+    AQUERY maintains a GP surrogate with the Matern-5/2 kernel and
+    chooses each successive evaluation point x_{n+1} to greedily
+    maximize the expected reduction in the variance of the posterior
+    estimate of I(f), an acquisition rule we derive in closed form for
+    product-form designs.
+
+    The motivation for AQUERY is that uniform or quasi-Monte Carlo
+    schemes ignore the structure of the integrand: regions where f
+    varies rapidly contribute more to integration error than regions
+    where f is nearly flat, yet uniform schemes spend evaluations
+    equally on both. Our acquisition rule corrects this by routing
+    evaluations to regions of high posterior variance under the GP,
+    which in turn correspond to regions of high local roughness.
+
+    We prove that AQUERY achieves an integration error decay of
+    O(n^{-(s+1/2)/d} (log n)^{1/2}), where n is the number of
+    evaluations, d is the input dimension, and s is the smoothness
+    parameter of the Matern kernel. The proof proceeds by bounding the
+    worst-case posterior variance via standard fill-distance arguments
+    on the unit cube and then applying a power-function bound to
+    translate fill-distance into integration error. The rate matches
+    optimal rates known for sparse-grid quadrature on the same class of
+    problems and improves over Monte Carlo by a factor polynomial in n.
+
+    In experiments on five black-box integrands drawn from the Genz test
+    suite (oscillatory, product-peak, corner-peak, Gaussian, and
+    discontinuous), AQUERY reduces integration error by between 3x and
+    50x relative to Sobol quasi-Monte Carlo at a fixed evaluation
+    budget. The largest gains appear on the Gaussian integrand; the
+    smallest gains, predictably, appear on the discontinuous integrand,
+    where the GP surrogate is least well matched to the underlying
+    landscape. We position AQUERY as a general-purpose drop-in
+    replacement for QMC in expensive-evaluation regimes, applicable to
+    arbitrary bounded black-box integrands without modification.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise. The convergence theorem reports a rate
+    O(n^{-(s+1/2)/d} (log n)^{1/2}) that depends on a "smoothness
+    parameter s of the Matern kernel," but the section never states
+    the assumption that the integrand f itself must lie in the RKHS of
+    the Matern-5/2 kernel (equivalently, that f has a matching
+    Sobolev smoothness). Without that unstated premise, the
+    fill-distance-to-integration-error step does not go through and
+    the stated rate is not defined for general f. The contribution is
+    framed as a "general-purpose drop-in replacement for QMC ...
+    applicable to arbitrary bounded black-box integrands without
+    modification" — a claim that is incompatible with the hidden
+    smoothness assumption that the proof and rate require. The
+    discontinuous Genz integrand experiment underscores the gap: the
+    theorem cannot apply to a discontinuous f, yet the section treats
+    that case as merely giving "smallest gains" rather than as
+    falling outside the regime where the contribution holds.
+    Detection requires only careful reading of the theorem statement
+    against the contribution claim; no canonical-result recall is
+    needed.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the unstated assumption that f must lie in the RKHS of the
+  Matern-5/2 kernel (or equivalently have matching Sobolev smoothness)
+  for the stated rate to hold, and notes that this premise is never
+  declared. Flags that the "general-purpose drop-in replacement ...
+  applicable to arbitrary bounded black-box integrands" framing is
+  incompatible with the hidden smoothness requirement, and that the
+  discontinuous Genz experiment falls outside the regime the theorem
+  covers. Suggests stating the assumption and narrowing the
+  contribution claim, or replacing the rate with one that genuinely
+  applies to merely-bounded f.
+
+bad_outputs_summary: |
+  Polishes prose, asks for additional Genz integrands or higher
+  dimensions, or suggests comparing to Bayesian quadrature baselines.
+  Treats the speedup numbers as the central claim and praises the
+  empirical gains without examining the conditions under which the
+  rate is meaningful. Recommends more citations to GP / QMC
+  literature without flagging that the convergence result silently
+  presumes f belongs to a smoothness class the section never names.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

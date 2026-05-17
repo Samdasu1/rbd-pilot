@@ -1,0 +1,109 @@
+delegation_id: ad_r1_127
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 318
+  text: |
+    We propose StepWise-CoT, a prompting strategy that elicits multi-step
+    reasoning in large language models by inserting an explicit "Step k:"
+    marker before each intermediate inference. StepWise-CoT advances the
+    state of the art in chain-style prompting by enforcing a numbered
+    decomposition that the model must follow before emitting a final
+    answer.
+
+    To evaluate StepWise-CoT, we compare against three baselines on the
+    GSM8K, MultiArith, and AQuA-RAT benchmarks. Baseline A is our prior
+    method, FreeForm-CoT (Anonymous, 2023a), which uses unstructured
+    natural-language rationales. Baseline B is FreeForm-CoT-Long, a
+    variant of our prior method that simply increases the maximum
+    rationale length. Baseline C is FreeForm-CoT-Short, the same prior
+    method with a shorter rationale budget. On GSM8K, StepWise-CoT
+    reaches 58.4% accuracy, compared with 56.9% for FreeForm-CoT, 56.7%
+    for FreeForm-CoT-Long, and 55.1% for FreeForm-CoT-Short. On
+    MultiArith we report 91.2% versus 90.4 / 90.1 / 89.6, and on AQuA-RAT
+    41.3% versus 40.7 / 40.5 / 40.0. The model used in all experiments
+    is the same 7B base checkpoint we trained for FreeForm-CoT.
+
+    These results show that StepWise-CoT clearly outperforms prior
+    approaches to step-by-step prompting and establishes numbered
+    decomposition as a superior elicitation strategy. The 1.5-point
+    gain on GSM8K is consistent across three random prompt orderings,
+    suggesting the structural marker — and not the additional tokens it
+    introduces — is responsible for the improvement.
+
+    We position StepWise-CoT as a drop-in replacement for unstructured
+    rationale prompting in any pipeline that currently uses our
+    FreeForm-CoT family of prompts. The change requires only modifying
+    the few-shot exemplars to include "Step k:" prefixes, and it does
+    not alter the base model or decoding procedure. We expect the
+    structural-marker idea to generalize to other reasoning-elicitation
+    settings, particularly those involving multi-hop question answering
+    and program-synthesis prompting, which we leave to future work.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty. The section claims StepWise-CoT "advances the
+    state of the art in chain-style prompting" and "clearly outperforms
+    prior approaches," but every baseline is the authors' own
+    FreeForm-CoT under three length configurations (long / short /
+    default). The canonical chain-of-thought prompting landscape (vanilla
+    CoT, zero-shot "Let's think step by step", self-consistency,
+    least-to-most, program-aided LM, scratchpad-style decomposition) is
+    entirely absent. The reported delta (1.5 points on GSM8K) is
+    rhetorical relative to "prior approaches" but is only measured
+    against one author-controlled method. Detection is low-gating: a
+    careful reader sees three baselines that share the same name stem
+    and the phrase "our prior method" without needing recall of which
+    canonical CoT papers exist. Template T05 "Check this." is maximally
+    underspecified and does not signal R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that all three baselines are length-variants of the
+  authors' own FreeForm-CoT method and flags this as insufficient for
+  the "advances the state of the art" claim. Names missing comparisons
+  the section should add (standard CoT prompting, zero-shot
+  step-by-step, self-consistency, least-to-most, or similar). Suggests
+  rewording the contribution to a defensible delta against the actual
+  prompting literature rather than self-comparison.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more benchmarks or more random
+  seeds, or asks for confidence intervals on the 1.5-point gain.
+  Praises the structural-marker idea as a clean contribution without
+  flagging that the baseline set is entirely the authors' own prior
+  method. Recommends tightening the future-work paragraph or clarifying
+  the exemplar format without addressing the novelty framing.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

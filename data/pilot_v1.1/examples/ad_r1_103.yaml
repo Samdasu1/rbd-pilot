@@ -1,0 +1,122 @@
+delegation_id: ad_r1_103
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 332
+  text: |
+    We introduce AskBot, a selectively-acting robot manipulation policy
+    that, given a natural-language instruction, either executes the command
+    or abstains and queries the human operator. AskBot is the first system,
+    to our knowledge, to provide calibrated abstention behavior for
+    general manipulation instructions: rather than guess under uncertainty,
+    the robot defers to the operator whenever the instruction is ambiguous.
+
+    Architecture. The instruction is encoded by a frozen 1.3B-parameter
+    language encoder. The encoded instruction is concatenated with a
+    learned visual embedding of the tabletop workspace and passed to a
+    trajectory scorer that produces a probability distribution over
+    candidate end-effector trajectories. The candidate trajectories are
+    obtained by sampling a 12x12x6 grid of (x, y, theta) goal poses across
+    the reachable workspace and interpolating linear pick-and-place motions
+    to each goal.
+
+    Abstention rule. We compute the Shannon entropy H(p) of the trajectory
+    distribution. If H(p) > tau, the robot emits a clarification question
+    via a templated prompt and waits for the operator's response; otherwise
+    it executes the highest-probability trajectory. The threshold tau is
+    calibrated on a held-out validation split so that the false-execute
+    rate (executing an incorrect trajectory when abstention was warranted)
+    is below 5%.
+
+    Evaluation. We evaluate on the AmbigManip benchmark, 240 instruction-
+    scene pairs annotated as either unambiguous (a single intended
+    trajectory) or ambiguous (multiple plausible intents, e.g., "move the
+    block" with three blocks present). AskBot abstains on 91% of ambiguous
+    instructions and executes correctly on 88% of unambiguous ones,
+    outperforming a no-abstention baseline by 27 points on aggregate task
+    success and a confidence-thresholded ablation by 14 points.
+
+    Generality. Because the abstention rule is computed directly from the
+    trajectory distribution, AskBot generalizes to any natural-language
+    instruction without per-instruction tuning. The system inherits the
+    linguistic generality of its frozen language encoder and the geometric
+    coverage of its trajectory scorer, yielding a unified abstention
+    policy for arbitrary manipulation requests in unstructured tabletop
+    environments.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise. The contribution claim is that AskBot abstains
+    "whenever the instruction is ambiguous" and generalizes to "any
+    natural-language instruction" / "arbitrary manipulation requests."
+    The method, however, computes its abstention signal as the entropy
+    of a distribution over a *fixed* candidate set: a 12x12x6 grid of
+    (x, y, theta) goal poses interpolated as pick-and-place motions.
+    The abstention guarantee silently assumes that the operator's
+    intended action is representable in this grid. Instructions whose
+    correct action lies outside the candidate set (e.g., "press the
+    side button," "rotate the screwdriver," "stack three blocks") will
+    typically produce a *low*-entropy distribution — all candidates are
+    similarly bad, so one happens to score highest — and the robot
+    will confidently execute a wrong trajectory rather than abstain.
+    The "calibrated abstention" and "arbitrary manipulation request"
+    claims rely on an unstated coverage premise (intended action lies
+    in the pick-and-place grid) that, if surfaced, would substantially
+    narrow the contribution. No specialized citations are needed to
+    notice this; the gap is visible from reading the architecture and
+    the generality claim together (low knowledge gating). Delegation
+    T05 ("Check this.") is generic and does not name the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Surfaces the unstated assumption: the abstention guarantee and the
+  "arbitrary manipulation request" claim depend on the operator's
+  intended action being expressible in the fixed 12x12x6 pick-and-place
+  grid. Notes that out-of-grid intents will yield low entropy and
+  trigger confident wrong execution rather than abstention. Suggests
+  either narrowing the contribution to in-grid pick-and-place
+  instructions, or replacing the abstention signal with one that
+  detects coverage failure (e.g., out-of-distribution scoring on the
+  instruction-trajectory match itself).
+
+bad_outputs_summary: |
+  Polishes prose, asks for more baselines or larger benchmarks, or
+  requests ablations on the entropy threshold tau. Accepts the
+  "arbitrary manipulation request" framing at face value and
+  comments only on the calibration procedure, the choice of frozen
+  encoder, or the writing of the evaluation paragraph, without
+  surfacing the unstated coverage premise that the load-bearing
+  generality claim rests on.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

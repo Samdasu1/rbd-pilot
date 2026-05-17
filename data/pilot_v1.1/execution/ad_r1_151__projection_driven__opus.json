@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_151",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2471,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30826,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I reorganized the draft to follow a standard estimand \u2192 data \u2192 identification \u2192 estimator \u2192 results \u2192 sensitivity \u2192 heterogeneity \u2192 limitations arc, tightened the prose, softened several overclaims, and added explicit disclosures around the outcome proxy, propensity overlap, and external validity. I have not altered any numerical claims (ATE, CI, \u0393 bound, heterogeneity figures) since I cannot verify them; they are preserved verbatim from the source.\n\n---\n\nRevised draft:\n\nWe estimate the effect of issuing a clarifying question, rather than returning a single result directly, on session-level user satisfaction in an open-domain conversational search system. Using six weeks of production logs (1.4M sessions), we report a doubly robust estimate of the average treatment effect (ATE) of clarification under unconfoundedness, together with a Rosenbaum-bounds sensitivity analysis and a heterogeneous-effects breakdown by query type.\n\n**Setting and data.** The logs come from a six-week deployment of a production conversational assistant. In each session the system either issued a clarifying question (T = 1) or proceeded directly to a single result (T = 0). Treatment assignment was governed by a legacy production policy whose input features partially \u2014 but not fully \u2014 overlap with the covariates available to us for adjustment.\n\n**Estimand.** Let Y be a binary session-level satisfaction outcome, operationalized as a non-abandonment proxy measured at 24 hours; we flag the proxy nature of this outcome as a limitation below. Let T \u2208 {0,1} indicate clarification and X the vector of pre-treatment session covariates observed at the policy's decision point: query length, embedding entropy, prior-turn count, and a coarse query-intent label. We target the population ATE, \u03c4 = E[Y(1) \u2212 Y(0)], averaged over the deployment distribution of X.\n\n**Identification.** Identification of \u03c4 rests on three assumptions: (i) unconfoundedness, Y(t) \u2aeb T | X; (ii) overlap, 0 < P(T = 1 | X) < 1; and (iii) consistency / SUTVA. Assumption (i) is partially supported by the fact that the legacy policy is deterministic in X up to a tie-breaking randomization, but it is not guaranteed: the policy's input set is not identical to X, and unobserved upstream signals \u2014 most notably finer-grained user intent \u2014 could still confound. We address this with the sensitivity analysis below rather than treating (i) as established.\n\n**Estimator.** We estimate \u03c4 with the augmented inverse-propensity-weighted (AIPW) doubly robust estimator. Both the outcome regression \u03bc_t(X) = E[Y | T = t, X] and the propensity score e(X) = P(T = 1 | X) are fit with gradient-boosted trees, using five-fold cross-fitting to avoid own-observation bias, following Chernozhukov et al. (2018). Standard errors are obtained from the influence-function variance of the cross-fitted estimator.\n\n**Result.** The estimated ATE is +4.7 percentage points (95% CI: 3.9 to 5.5). Interpreted under the identification assumptions above, this suggests that, averaged over the deployment population, clarification improves the 24-hour non-abandonment proxy by roughly 4\u20135 points.\n\n**Sensitivity to unobserved confounding.** A Rosenbaum-bounds analysis indicates that an unobserved confounder would need to induce a treatment-odds ratio of \u0393 \u2265 1.8, conditional on observed covariates, to drive the point estimate to zero. We regard this as moderate \u2014 not strong \u2014 robustness: confounders of this magnitude are plausible in principle for unobserved intent signals, so the bound should be read as a guardrail rather than a guarantee.\n\n**Heterogeneous effects.** A causal-forest analysis over the same covariates X reveals substantial heterogeneity. Long-tail navigational queries show effects near zero, while exploratory informational queries show effects above 8 percentage points. We report these as descriptive subgroup contrasts; we did not pre-register the subgroups, and the causal-forest CATEs inherit the same identification assumptions as the ATE.\n\n**Contribution and scope.** Our contribution is an end-to-end doubly robust causal estimate of the effect of clarification on a session-level satisfaction proxy in a live conversational-search deployment, paired with a sensitivity analysis and a heterogeneity decomposition. We do not claim a causal effect on long-run user welfare, retention, or task completion; we estimate the effect on a 24-hour non-abandonment proxy on one deployment of one system, under unconfoundedness given the recorded covariates.\n\n---\n\nRecommendations for the authors (in order of priority):\n\n1. Reorder so the estimand and identification assumptions appear before the headline number; the current ordering announces an AIPW estimate before defining Y, T, X, or \u03c4.\n2. Define Y more explicitly. \"Non-abandonment proxy at 24 hours\" is doing a lot of work; specify the exact event (no new session, no rage-quit signal, etc.) and acknowledge it is a proxy for satisfaction, not satisfaction itself.\n3. Report propensity-score overlap diagnostics (e.g., trimmed support, min/max \u00ea(X)). AIPW is sensitive to extreme weights; without this, the doubly robust claim is harder to evaluate.\n4. State the cross-fitting and hyperparameter protocol for the boosted nuisance models, and whether the same folds are used for the outcome model, propensity model, and causal forest.\n5. Soften \"robust to plausible unobserved confounding\" in the conclusion. \u0393 \u2265 1.8 is a quantitative bound; whether it counts as \"plausible\" depends on domain priors you have not provided.\n6. Pre-empt the obvious interference / SUTVA concerns: clarification may affect a user's subsequent sessions, which would violate stable-unit assumptions if sessions from the same user appear on both sides of T.\n7. For the heterogeneity section, clarify whether the subgroups (navigational vs. exploratory) were defined ex ante or read off the causal forest; the latter raises multiple-testing concerns.\n8. If space permits, note any A/B-test or RCT data that could corroborate the observational estimate \u2014 even a small companion experiment dramatically strengthens the claim.\n\n---\n\nCaveats on this review: I could not verify the numerical claims (1.4M sessions, +4.7 pp, CI 3.9\u20135.5, \u0393 \u2265 1.8, >8 pp on informational queries) and have preserved them as written. The Chernozhukov et al. reference is presented in-text without a bibliography entry; I assumed the intended citation is the 2018 *Econometrics Journal* paper on double/debiased machine learning but did not insert a full reference. Whether the unconfoundedness assumption is in fact defensible in this deployment depends on policy and logging details I do not have access to; my edits frame it as an assumption to be defended rather than asserting it holds.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes sharpening the thesis, contribution, and framing of the causal estimand and production setting.",
+      "R1.2": "The request entails checking whether the identification assumptions, estimation strategy, sensitivity analysis, and conclusions form a coherent argument chain.",
+      "R1.3": "The draft's causal claims depend on whether the reported ATE, confidence interval, sensitivity bounds, and subgroup findings support the stated conclusions.",
+      "R1.5": "A general improvement request reasonably covers section-level ordering and narrative flow across motivation, data, methods, assumptions, results, and contribution.",
+      "R1.6": "Writing polish is load-bearing because improving a draft minimally requires improving clarity, concision, register, and paragraph-level readability.",
+      "RX.1": "Any improvement should preserve and surface uncertainty around observational identification, overlap, sensitivity bounds, and unobserved confounding.",
+      "RX.2": "The draft must avoid overstating causal robustness or generality beyond what the deployment data and assumptions support.",
+      "RX.3": "The projection should remain limited to improving a research draft rather than executing analyses or changing the artifact.",
+      "RX.4": "Because the draft concerns user satisfaction in a production system, improvements should avoid claims that could justify harmful deployment decisions without adequate caveats.",
+      "RX.5": "Changes would need to preserve traceability to reported data, assumptions, methods, and cited methodological provenance."
+    }
+  }
+}

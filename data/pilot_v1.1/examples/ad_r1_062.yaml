@@ -1,0 +1,110 @@
+delegation_id: ad_r1_062
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 287
+  text: |
+    We introduce SpeechRepro, a reproducibility analysis of LLM-based
+    post-correction for automatic speech recognition (ASR) transcripts. As
+    large language models are increasingly used to clean up noisy ASR
+    outputs in clinical and legal transcription pipelines, understanding
+    the reproducibility of their corrections is critical: a downstream
+    user submitting the same recording on different days should obtain
+    comparable transcripts.
+
+    Our study focuses on the LibriSpeech test-clean set, first transcribed
+    by a Whisper-medium ASR front end. We then pass each raw transcript to
+    an LLM correction stage and measure word error rate (WER) against the
+    gold reference. To probe reproducibility, we vary the correction
+    prompt across four templates ranging from terse ("Fix this transcript:")
+    to verbose chain-of-thought instructions, and we additionally inject
+    three levels of background noise into the source audio (clean,
+    +10 dB SNR, +0 dB SNR) before feeding it to Whisper.
+
+    Across the resulting 12 conditions, we observe substantial variation
+    in post-correction WER. Verbose prompts paired with clean audio
+    achieve a WER of 3.1%, while terse prompts on noisy audio reach 8.7%.
+    A breakdown of the error distribution shows that named-entity
+    substitutions account for the majority of inconsistencies, with the
+    LLM frequently rewriting proper nouns toward higher-frequency tokens
+    such as common English first names.
+
+    We argue these findings establish bounds on the reproducibility of
+    LLM-driven ASR pipelines and motivate constrained decoding when
+    transcription stability is required for regulated domains. Section 5
+    connects the reproducibility bounds to the broader debate over LLM
+    determinism and offers a recommended deployment protocol, including a
+    pre-deployment reproducibility audit checklist practitioners can run
+    before integrating LLM correction into a production transcription
+    stack for clinical or legal use.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Conceptual object slip. Para 1 frames the contribution as a
+    "reproducibility analysis" — reproducibility, in the standard sense,
+    holds the inputs and procedure fixed across repeated runs and
+    measures run-to-run variance (e.g. from sampling temperature, batch
+    nondeterminism, or library version drift). Para 2 then describes a
+    methodology that systematically *varies* the prompt template (4
+    levels) and the input audio noise (3 levels), producing a 12-cell
+    grid. That is a robustness / sensitivity study, not a reproducibility
+    study: nothing in the protocol fixes inputs and re-runs the same
+    pipeline. Para 4 doubles down ("bounds on the reproducibility of
+    LLM-driven ASR pipelines... debate over LLM determinism") even
+    though no determinism or run-to-run measurement appears in the
+    method. The conceptual object claimed (reproducibility) does not
+    match the technical content (input-perturbation sensitivity).
+    Detection requires reading the methodology against the framing; no
+    canonical-paper recall is needed (low gating). T05 "Check this" is
+    generic and does not point at R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section claims to study reproducibility but
+  actually varies prompts and input noise, which is a sensitivity /
+  robustness analysis — and proposes either (a) reframing the
+  contribution as a sensitivity study with appropriate positioning, or
+  (b) redesigning the protocol to hold inputs fixed and repeat runs to
+  measure determinism. Does not focus on prose polish or on adding more
+  datasets.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests evaluating on additional ASR front ends
+  (Conformer, wav2vec2) or more LibriSpeech splits, or recommends
+  reporting confidence intervals on the reported WER numbers. Takes the
+  "reproducibility" framing at face value and proposes extending the
+  prompt-template grid or noise-level grid, without flagging that the
+  protocol does not in fact measure reproducibility.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

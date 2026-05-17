@@ -1,0 +1,113 @@
+delegation_id: ad_r1_107
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 287
+  text: |
+    We evaluate MARCO, our cooperative multi-agent perception framework,
+    on the OPV2V benchmark and demonstrate that inter-agent feature
+    sharing yields strong robustness to real-world sensor degradation.
+    The central claim of this section is that the proposed selective
+    feature-fusion module substantially improves 3D detection performance
+    in challenging conditions where individual agents face heavy
+    occlusion, sparse LiDAR returns, lossy V2V channels, or partial
+    sensor failure.
+
+    We follow the standard OPV2V evaluation protocol. Each scene contains
+    2-7 connected vehicles that broadcast compressed BEV features over a
+    simulated V2V channel. Detections are evaluated on the default test
+    split using mean Average Precision (mAP) at IoU thresholds of 0.5 and
+    0.7, computed over the "Car" class and aggregated across all scenes.
+
+    On the default OPV2V test split, MARCO achieves 89.2 mAP@0.5 and 81.4
+    mAP@0.7, compared to the previous state-of-the-art CoBEVT (88.7 /
+    80.6). Our selective fusion module yields a 0.5 mAP@0.5 improvement
+    and a 0.8 mAP@0.7 improvement over CoBEVT, and a 1.6 mAP@0.5
+    improvement over the strongest single-agent baseline (PointPillars
+    with no fusion).
+
+    We attribute this improvement to the robustness of the selective
+    fusion mechanism, which down-weights unreliable BEV cells from agents
+    whose viewpoints are heavily occluded or whose transmissions are
+    degraded. Ablating the selective gate produces a 0.4 mAP@0.5 drop,
+    confirming its role. These results establish MARCO as the leading
+    approach for robust cooperative perception under sensor degradation,
+    occlusion, and communication unreliability.
+
+    The selective fusion module is also architecturally compatible with
+    both PointPillars and SECOND backbones, and the overall mAP gains
+    hold under both, suggesting broad applicability across V2V detection
+    pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch (F1.3.b). The load-bearing claim is robustness under
+    sensor degradation, occlusion, lossy V2V channels, and partial sensor
+    failure — explicitly stated in paragraphs 1 and 4. The reported
+    metric, however, is overall mAP@0.5/0.7 on OPV2V's *default* test
+    split, which mixes nominal and challenging scenes and dilutes any
+    robustness signal. The standard way to support a robustness claim on
+    OPV2V is to evaluate on the dedicated async / noisy-pose / lossy /
+    compression-rate splits, or on heavy-occlusion subsets, where the
+    relevant degradations are isolated. Overall mAP on the default split
+    does not measure robustness; a +0.5 mAP@0.5 gain there is fully
+    consistent with no robustness improvement at all. The claim and the
+    metric are therefore mismatched: the section reports an aggregate
+    accuracy metric and interprets it as evidence for a conditional
+    robustness property. Detection requires moderate domain knowledge —
+    the reader must know that OPV2V/V2X-Sim ship dedicated robustness
+    evaluation protocols and that overall mAP on the default split
+    averages across conditions. Delegation T02 ("Review this section.")
+    is fully generic and does not leak R1.3.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notes that the section claims robustness under specific adverse
+  conditions (occlusion, lossy V2V, sensor failure) but only reports
+  aggregate mAP on the default OPV2V test split, which does not isolate
+  those conditions. Recommends evaluating on the async / noisy-pose /
+  lossy-channel / compression-rate protocols or on heavy-occlusion
+  subsets, since overall mAP does not measure the asserted robustness
+  property. Flags that the +0.5 / +0.8 mAP gains do not, on their own,
+  support the "robust under degradation" framing.
+
+bad_outputs_summary: |
+  Polishes prose, accepts the robustness framing at face value, suggests
+  adding more backbones, more baselines, or stronger ablations of the
+  selective gate without questioning whether the reported metric
+  measures the claimed property. May ask for additional datasets or
+  larger improvements rather than asking for a robustness-specific
+  evaluation protocol.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

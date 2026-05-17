@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_074",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2675,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 34681,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.9}}\n\nSummary: I reviewed the four-paragraph section for thesis clarity, argument coherence, claim-evidence fit, prose, and the strength of its language, and below I flag specific issues with line-level pointers plus a suggested revision of the most problematic passages.\n\n## Substantive issues\n\n**1. The thesis overclaims relative to what the evidence supports.**\nThe abstract-style paragraph asserts that the learned selector \"strictly dominates synthesis-based aggregation across both stiff and non-stiff parametric regimes, and recovers the operator's true solution even when no single ensemble member is uniformly best.\" The experimental section reports a *single* PDE (1D viscous Burgers), a *single* viscosity range, and one baseline (mean-pool). That cannot license \"strictly dominates \u2026 across both stiff and non-stiff parametric regimes.\" Burgers at \u03bd \u2208 [0.005, 0.05] is mildly stiff at best; there is no separate stiff regime tested. Similarly, \"recovers the operator's true solution\" implies convergence to the ground-truth PDE solution, which a 2.5\u00d7 reduction in relative L2 from 4.3e-2 to 1.7e-2 does not demonstrate \u2014 the residual error is still ~2%.\n\nSuggested revisions:\n- Replace \"strictly dominates \u2026 across both stiff and non-stiff parametric regimes\" with \"outperforms mean-pool aggregation on the 1D viscous Burgers benchmark across the tested viscosity range \u03bd \u2208 [0.005, 0.05].\"\n- Replace \"recovers the operator's true solution even when no single ensemble member is uniformly best\" with something falsifiable, e.g., \"improves accuracy in regions where the best ensemble member varies with the parameter,\" or drop the claim if it is not directly measured.\n\n**2. A central empirical claim is asserted but not shown.**\n\"Recovers the operator's true solution even when no single ensemble member is uniformly best across the parameter domain\" is the most interesting claim in the section, but nothing in paragraph 3 demonstrates it. To support it you would need either (a) per-parameter rankings of ensemble members showing that the best member changes with \u03bd, and (b) a comparison against an oracle-best-member baseline. Neither is reported. Either add such an analysis or remove the claim.\n\n**3. Baseline coverage is thin for the framing.**\nThe framing positions the work against \"synthesis-based aggregation\" as a class, but only one synthesis baseline (pointwise mean) is reported. Common alternatives \u2014 residual-weighted averaging, variance-weighted ensembling, Bayesian model averaging, stacking \u2014 are not evaluated. The \"leaving accuracy on the table\" conclusion in the final paragraph generalizes well past what one baseline supports. Either narrow the comparative claim to mean-pool, or add at least one weighted-aggregation baseline.\n\n**4. The novelty framing skirts adjacent literature.**\nThe section reads as if learned routing over candidate solutions is novel to PINN ensembling, but mixture-of-experts and gating-network ideas are well established and have been applied to neural surrogates. The piece would be stronger if it explicitly situated the contribution relative to mixture-of-experts gating and prior PINN-ensembling work (uncertainty-weighted, Bayesian PINN, etc.), even briefly.\n\n**5. The ablation is under-described.**\n\"An ablation freezing the selector to a uniform distribution recovers the mean-pool error within noise\" is the right ablation to run, but \"within noise\" is undefined \u2014 over how many seeds, with what variance? Without that, \"confirming that the gains are due to the routing decisions\" is stronger than the evidence. State the seed count and the standard deviation, or soften to \"is consistent with.\"\n\n**6. A potential training-objective issue is not acknowledged.**\nThe selector is trained by minimizing PDE residual of the selected combination, which is the same signal the underlying PINNs were trained against. If the candidate PINNs already overfit the residual at training collocation points (a known PINN failure mode where residual is low but true error is non-trivial), the selector inherits that bias. The section asserts the gains are not from \"the auxiliary residual signal\" based on the uniform ablation, but the uniform ablation only rules out the residual signal acting as a *uniform* corrector \u2014 it does not rule out the residual signal being a biased oracle for the *routing* decision. Worth at least a sentence of disclosure.\n\n**7. Logical gap between paragraphs 1 and 2.**\nParagraph 1 motivates selection over synthesis. Paragraph 2 jumps straight to architecture without stating why a *learned* selector should outperform a fixed rule (e.g., per-point pick-lowest-residual). A one-sentence bridge explaining why the residual norm alone is insufficient for selection \u2014 and what the MLP adds \u2014 would tighten the argument.\n\n**8. Structural suggestion.**\nConsider moving the inference-cost claim from the final paragraph into paragraph 2 (where the architecture is introduced) and reserving the final paragraph for the scope-limited takeaway. The current ending paragraph mixes a strong generalization (\"selection is the right primitive\") with a deployment observation, which dilutes both.\n\n**9. Prose-level edits.**\n- \"forfeits the structural information embedded in any single high-quality candidate\" \u2014 vague; what structural information? Consider \"smooths over sharp features that individual candidates resolve correctly,\" if that is what is meant.\n- \"materially different solution surrogates\" \u2014 \"materially\" is doing rhetorical work; prefer a quantitative anchor (e.g., \"differ by up to X% in pointwise L2\").\n- \"multi-objective drift that joint training has been reported to induce\" \u2014 \"has been reported\" is unsourced; either cite or rephrase to \"that joint training can induce.\"\n- \"making the swap effectively free in deployment\" \u2014 \"effectively free\" is colloquial; \"negligible amortized cost\" reads more cleanly.\n- \"comparable improvements at the other sampled viscosities\" \u2014 quantify or tabulate; this phrasing is the weakest part of the empirical paragraph.\n\n## Suggested rewrite of the opening paragraph\n\n> We introduce CandidateSelectPINN, a framework for resolving disagreement among ensembles of physics-informed neural networks (PINNs) trained on parametric PDEs. Independent PINNs initialized with different seeds routinely converge to distinct local minima of the residual loss, producing surrogates that differ pointwise over the same parameter sweep. The common practice of averaging these candidates pointwise can smooth over sharp features that individual candidates resolve correctly. We propose instead a learned selection mechanism that routes each query point to one ensemble member, and we evaluate it on the 1D viscous Burgers equation with \u03bd \u2208 [0.005, 0.05]. On this benchmark, selection outperforms mean-pool aggregation across the tested viscosity range; whether the gains transfer to stiffer regimes or other PDE families remains to be tested.\n\n## Items I could not verify\n\n- Whether the reported numbers (4.3e-2 \u2192 1.7e-2 at \u03bd = 0.01) come from a single seed or are averaged; I have only the text as given.\n- Whether \"comparable improvements at the other sampled viscosities\" reflects a uniform trend or hides regressions at the endpoints of the \u03bd range.\n- Whether prior PINN-ensembling work has already proposed gating-based selection \u2014 the section does not cite, and I have not searched the literature; the novelty comment above is conditional on that gap being real.\n- Whether the uniform-selector ablation was run with matched random seeds and equal training budget to the trained selector. If not, the comparison is confounded.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus primarily on sentence-level polish, argument/contribution framing, or section-level organization?",
+    "rationale": {
+      "R1.1": "The broad request could include reframing the contribution claim and gap statement in the section.",
+      "R1.2": "Helping with the section may require checking whether the argument from ensemble disagreement to selection-based aggregation follows coherently.",
+      "R1.3": "The section makes empirical claims, so assistance may need to check whether the reported results support those claims.",
+      "R1.5": "Because the user refers to the whole section, section-level ordering and narrative arc are central possible responsibilities.",
+      "R1.6": "A generic request to help with a section centrally includes sentence- and paragraph-level improvement.",
+      "RX.1": "Any assistance should disclose uncertainty caused by the broad delegation and limited surrounding paper context.",
+      "RX.2": "The section contains strong claims, so avoiding overstatement is an active cross-cutting responsibility.",
+      "RX.3": "The projection must stay within the requested section-help scope and not execute edits or broader review.",
+      "RX.4": "The projection should avoid enabling misleading scientific claims or unsupported deployment assertions.",
+      "RX.5": "Any projected responsibility should preserve traceability to the provided section text and reported results."
+    }
+  }
+}

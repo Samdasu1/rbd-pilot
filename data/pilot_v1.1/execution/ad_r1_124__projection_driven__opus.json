@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_124",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2568,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 34805,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.8, \"R1.3\": 1.0, \"R1.6\": 0.6, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.7}}\n\nSummary: The section's framing and conclusions are sharply misaligned with the reported numbers \u2014 three of four domains show null or negative effects, yet the abstract and closing both claim consistent improvement. Below I flag the specific contradictions, then offer a rewritten version that the data actually supports.\n\n## Core problem: the headline contradicts the body\n\nThe opening claims CoT \"consistently improves user trust, task accuracy, and subjective satisfaction across all task types.\" The body reports:\n\n- **Arithmetic**: accuracy +14pp, trust +1.3 \u2014 significant gains.\n- **Legal**: accuracy +2pp, trust +0.2 \u2014 both null (p=.42, p=.61).\n- **Medical**: accuracy **\u22129pp**, trust **\u22121.1** (p<.05) \u2014 a significant *decrease*.\n- **Creative**: preference essentially split (22 vs 24), satisfaction null (p=.78).\n\nSo the actual pattern is: one domain shows gains, two show null effects, one shows a significant harm. \"Consistently improves \u2026 across all task types\" is not a defensible reading of these numbers. The closing paragraph compounds this by calling the direction of effects \"consistent\" \u2014 it is not; the medical condition goes the other way.\n\n## Specific issues to fix\n\n1. **Medical triage reinterpretation.** Framing a significant accuracy *drop* plus a significant trust *drop* as participants becoming \"appropriately calibrated\" is a post-hoc rescue that the design cannot support. Calibration would require a measure of trust-accuracy alignment (e.g., trust conditional on correctness), not just lower trust. As reported, the CoT condition produced worse outcomes in a safety-critical domain. This needs to be stated plainly, and the calibration claim either dropped or explicitly marked as speculative and untested.\n\n2. **Recommendation does not follow from evidence.** \"We recommend CoT-style transparency as a default design pattern for LLM-assisted productivity tools\" generalizes from one positive domain to a universal default, while ignoring a domain where it caused measurable harm. The recommendation should be narrowed to the task profile where the effect was observed (structured, verifiable reasoning), and should explicitly flag the medical finding as a contraindication.\n\n3. **\"Robust UI primitive\" overclaim.** A 4-domain, N=48, within-subjects study with one positive, two null, and one negative result does not establish a \"robust UI primitive.\" This phrase should be removed.\n\n4. **Multiple-comparison silence.** Four domains \u00d7 multiple outcomes (accuracy, trust, satisfaction, preference) are tested without any correction or even acknowledgement. At minimum this should be noted as a limitation; ideally the p-values should be reported alongside the family being controlled.\n\n5. **Effect-size and CI absence.** Only p-values and point estimates appear. Means without confidence intervals (and without effect sizes such as Cohen's d for the trust shifts) understate uncertainty, especially for the null results where the question is really about the power to detect a meaningful effect.\n\n6. **Creative-brainstorming framing.** \"22 preferred baseline, 24 preferred CoT\" with N=48 is essentially a coin flip; framing this as part of a \"consistent direction of effects\" is misleading. It should be reported as null.\n\n7. **Generalization scope.** \"Diverse task domains\" suggests broad coverage; four tasks with one participant pool, one model, one CoT rendering, and one session do not warrant generalization to \"LLM-assisted productivity tools\" writ large. Scope claims should be tightened to the conditions actually tested.\n\n8. **Minor prose.** \"Surfaces the model's intermediate reasoning steps\" \u2014 note that what is shown is the model's *displayed* chain of thought, which is not necessarily its actual reasoning; consider \"displays a chain-of-thought trace\" to avoid implying mechanistic transparency. \"Otherwise correct triage suggestions\" presumes the baseline answers were correct \u2014 given baseline accuracy was 61%, ~39% were not; rephrase.\n\n## Suggested rewrite (data-faithful)\n\n> We report a within-subjects user study (N=48) comparing two LLM-assisted decision-support interfaces: a baseline that shows only the model's final answer, and a chain-of-thought (CoT) interface that additionally displays a reasoning trace. Participants completed tasks in four domains: arithmetic word problems, legal contract review, medical triage vignettes, and creative brainstorming. Effects of the CoT display varied substantially by domain: it improved accuracy and trust on arithmetic problems, had no detectable effect on legal review or creative brainstorming, and was associated with reduced accuracy and reduced trust on medical triage.\n>\n> On arithmetic word problems, CoT participants reached 78% accuracy versus 64% for baseline (+14pp; paired t(47)=3.2, p<.01), and trust on a 7-point Likert scale rose from M=4.1 (SD=1.3) to M=5.4 (SD=1.1, p<.01). On legal contract review, accuracy differed by 2pp (71% vs 69%, p=.42) and trust by 0.2 points (M=4.8 vs 4.6, p=.61); we cannot distinguish these from null effects at this sample size. On medical triage vignettes, CoT participants were less accurate than baseline participants (52% vs 61%) and reported lower trust (M=3.8 vs 4.9, p<.05); qualitative responses suggested the visible reasoning prompted second-guessing of the model's suggestions, but we did not measure trust-accuracy calibration directly and cannot characterize the shift as well-calibrated skepticism. On creative brainstorming, preference was effectively split (22 baseline, 24 CoT, 2 no preference) and mean satisfaction differed by less than 0.1 points (p=.78).\n>\n> Taken together, the results suggest that the benefit of surfacing chain-of-thought reasoning is task-dependent, with the clearest gains in domains where intermediate steps can be locally verified by the user (here, arithmetic). The medical-triage result, in particular, indicates that CoT displays can degrade performance in domains where users lack the expertise to audit individual steps, and we do not recommend CoT-by-default in safety-sensitive settings on the basis of these data. Limitations include a single participant pool, one model and one CoT rendering, four task instances per domain, and uncorrected comparisons across multiple domains and outcomes; the null findings on legal and creative tasks should be read as inconclusive rather than as evidence of equivalence.\n\n## Caveats on the rewrite\n\n- I have preserved the reported numbers as-is; I have not re-derived t-values, p-values, or SDs from the data and cannot verify them.\n- The qualitative claim about \"second-guessing\" is repeated from the original; I have softened it but the underlying quote/coding source is not described in the artifact, so the strength of that evidence is unknown to me.\n- The line about \"locally verifiable\" steps in arithmetic is a hypothesis consistent with the pattern, not something the study as described directly tests; it is offered as interpretation, and the rewrite frames it that way.\n- I assumed the four domains were the pre-registered set of comparisons rather than a selection from a larger pool; if they were selected post-hoc, the multiple-comparison concern is stronger than noted.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation broadly asks for help with a research section whose thesis and contribution claim may need reframing in light of mixed results.",
+      "R1.2": "The section contains an argument from domain-specific findings to a broad conclusion, making the internal reasoning chain central to the requested help.",
+      "R1.3": "The reported results are the main basis for the section's claims, so checking whether the claims match the evidence is load-bearing.",
+      "R1.6": "A general request for help with a section centrally includes sentence- and paragraph-level clarity, register, and concision.",
+      "RX.1": "Any projection of this broad delegation should preserve uncertainty about the intended kind of help and about what the artifact alone can establish.",
+      "RX.2": "Because the artifact makes broad claims from mixed empirical outcomes, avoiding overclaiming is load-bearing.",
+      "RX.3": "The agent must stay within helping with the provided section rather than expanding into unrelated paper-level or study-design tasks.",
+      "RX.4": "The section discusses medical and legal decision-support contexts, so downstream-harm risks from broad CoT recommendations are relevant.",
+      "RX.5": "Any responsible handling should keep claims traceable to the specific results reported in the section."
+    }
+  }
+}

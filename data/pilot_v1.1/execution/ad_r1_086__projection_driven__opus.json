@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_086",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2228,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 30458,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: The abstract contains several internal contradictions between its stated design principles and the inference machinery it actually describes, plus claims that overreach beyond what the reported evidence can support.\n\n**Internal contradictions in the method description**\n\n1. The abstract claims the framework \"makes no parametric assumptions about the distribution of latent preferences\" and contrasts this with \"regression-based debiasers, which assume a linear bias model and a Gaussian preference distribution.\" Yet two paragraphs later it states that a Beta(\u03b1\u2080, \u03b2\u2080) prior is placed on each latent preference z. A Beta prior is itself a parametric assumption on the latent preference distribution. The framework is therefore parametric in the latent preference, not non-parametric. Either the wording in paragraph 1 needs to be softened (e.g., \"more flexible than a Gaussian assumption\") or the prior needs to be redescribed (e.g., as a hierarchical/Dirichlet-process construction, if that is in fact what is used).\n\n2. The same paragraph also asserts that the framework \"does not impose a linear functional form on the relationship between bias covariates \u2026 and the observed preference.\" But the inference section then introduces the bias parameters through \"a logistic-linear link, \u03b8\u1d40x.\" A logistic-linear link is a linear functional form on the logit scale \u2014 i.e., a generalized linear model in the covariates. This directly contradicts the earlier claim. If the nonlinearity is meant to come from elsewhere (e.g., learned features of x, a GP, a neural component), that needs to be stated; otherwise the contrast with \"linear bias models\" of prior work is not supported.\n\n3. The closing sentence attributes the 38% reduction in rank inversion to \"the flexibility of the non-parametric prior over latent preferences.\" Given (1) and (2), this causal attribution is not justified by the model as described; no ablation is reported that isolates the prior's contribution from the link function, the variational family, or the data conditioning.\n\n4. The inference description is also internally inconsistent. It invokes \"conditional conjugacy of the Beta-Bernoulli likelihood\" and a \"closed-form posterior\" for z, but simultaneously says the bias parameters \u03b8 are updated via SVI with a mean-field guide. A mean-field guide over (z, \u03b8) breaks the very conjugacy being claimed, because the Bernoulli likelihood for y depends on both z and \u03b8 jointly through the link. Either z is updated in closed form conditional on \u03b8 inside a coordinate scheme (which should be stated), or the whole posterior is approximated variationally (in which case \"closed-form posterior\" is misleading). Please clarify which.\n\n**Claims that outrun the evidence presented**\n\n- \"Reduces length-bias-induced rank inversion by 38% relative to the regression baseline of Dubois et al.\" A single point estimate is reported with no confidence interval, no seed variance, and no description of the rank-inversion metric. Recommend reporting an uncertainty interval and defining the metric, or softening to \"we observe a reduction of ~38% in our evaluation.\"\n\n- \"Maintaining comparable agreement with human preferences (Spearman \u03c1=0.91).\" \"Comparable\" is asserted without the baseline's \u03c1 for side-by-side comparison. Add the baseline value, or rephrase.\n\n- The contribution is framed as recovering \"the latent quantity\" (the true preference). This is a strong identifiability claim: with only observed annotator labels and chosen covariates, the latent \"true\" preference is not in general identifiable without further assumptions (e.g., a subset of unbiased labels, or an instrument). Recommend reframing as \"we infer a debiased preference estimate under the stated assumptions\" and stating the identifying assumptions explicitly.\n\n- \"Drawn from the AlpacaEval-2 release\" \u2014 please specify how many (model, prompt) pairs, which models, and which split, so the evaluation is reproducible.\n\n**Prose-level suggestions**\n\n- Paragraph 1 mixes the system name, the contribution claim, and the contrast with prior work in a single dense run. Split into (i) what BiasFlow is, (ii) what assumption it relaxes, (iii) how it differs from prior debiasers \u2014 after the parametric/non-parametric issue above is resolved.\n- \"noisy, biased signal of an underlying latent 'true' preference\" \u2014 the scare quotes acknowledge the construct is contested; consider naming it explicitly (e.g., \"annotator-bias-free preference under model M\") rather than relying on quotation marks.\n- \"we attribute this gain to \u2026\" is causal language; \"consistent with\" would be more defensible absent an ablation.\n- Define acronyms on first use (SVI) and use consistent notation (\u03b8\u1d40x vs. theta^T x).\n- \"MT-Bench\" is mentioned in the opening but never revisited; either evaluate on it or drop it from the motivating sentence.\n\n**Downstream-use considerations**\n\nA debiasing tool whose output is presented as recovering \"true\" preference can be misread as a license to retire human evaluation or to publish leaderboard rankings without caveats. Recommend an explicit sentence stating that (i) the debiased estimate is conditional on the covariates modeled (length, formatting, refusal) and does not correct for unmodeled biases (sycophancy, topical preference, persona), and (ii) downstream consumers should not treat the output as ground truth for model ranking without human validation on their distribution of interest.\n\n**Provenance items to add**\n\n- Code / NumPyro model release statement, including seed, prior hyperparameters (\u03b1\u2080, \u03b2\u2080, \u03c3\u00b2), and the exact covariate set.\n- Version/commit of AlpacaEval-2 used, and the date of the annotator-model snapshot (annotator behavior drifts).\n- Whether the human-preference set used for the \u03c1=0.91 figure is the AlpacaEval crowd set, Chatbot Arena, or a held-out internal set.\n\n**Uncertainty disclosure**\n\nI have not verified the cited Dubois et al. baseline's exact reported numbers, the AlpacaEval-2 metric definitions, or whether a \"non-parametric\" variant of the prior exists elsewhere in the BiasFlow codebase that the abstract is gesturing at; my critique of the parametric/linear contradictions is based on the description as written and could be moot if the actual implementation differs from this abstract. The identifiability concern is a general point about latent-preference models from biased labels and would need to be checked against the paper's full assumption set.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check a research draft centrally includes verifying whether the modeling description and causal/technical argument chain are internally consistent.",
+      "R1.3": "The artifact makes empirical performance claims, so checking whether the stated claims are supported by the reported benchmark results is a central expected responsibility.",
+      "R1.6": "Because the delegation is broad and the artifact is prose, sentence-level clarity, grammar, and register are expected parts of checking it.",
+      "RX.1": "The checker should disclose uncertainty where the artifact lacks sufficient information to verify technical or empirical claims.",
+      "RX.2": "The artifact contains strong claims about non-parametric assumptions, bias reduction, and prior baselines, making overclaim control load-bearing.",
+      "RX.3": "The response must stay within checking the provided research-writing artifact rather than executing revisions or external validation unless requested.",
+      "RX.4": "Checking should avoid endorsing unsupported benchmark or debiasing claims that could mislead downstream research use.",
+      "RX.5": "Any projected checking responsibility should preserve traceability to specific statements in the provided artifact."
+    }
+  }
+}

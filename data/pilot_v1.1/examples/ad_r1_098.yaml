@@ -1,0 +1,118 @@
+delegation_id: ad_r1_098
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 358
+  text: |
+    We present MA-IMEX, a communicative multi-agent framework for
+    implicit-explicit time integration of stiff initial-value problems
+    arising from semi-discretized partial differential equations. In
+    MA-IMEX, three cooperative agents — a stiff-component handler, a
+    non-stiff-component handler, and a coordinator — exchange residual
+    estimates at each step to determine the partition between implicit
+    and explicit treatment. Unlike fixed-splitting IMEX schemes, MA-IMEX
+    adapts the partition online and is unconditionally A-stable across
+    the full range of stiffness ratios encountered in convection-
+    diffusion-reaction systems.
+
+    The scheme proceeds in three phases per step. The stiff-component
+    agent performs an SDIRK update on the partition it currently owns,
+    producing a provisional state. The non-stiff agent advances its
+    partition with a third-order explicit Runge-Kutta step on the same
+    provisional state. The coordinator then reconciles the two updates
+    by applying a corrector that minimizes the residual of the full
+    discretized operator. We prove that this three-agent protocol
+    achieves order O(h^3) per step under the standard regularity
+    assumptions on f.
+
+    The stability analysis proceeds by examining the amplification
+    factor of the coordinator's corrector applied to Dahlquist's linear
+    test problem y' = λy. For Re(λ) ≤ 0, the amplification factor
+    satisfies |R(z)| ≤ 1 provided h|λ| ≤ 2, which establishes stability
+    across the relevant stiffness range. Beyond this regime, the
+    explicit agent's update dominates and the scheme reverts to
+    standard ERK behavior with a step-size restriction proportional
+    to the inverse spectral radius of the stiff operator.
+
+    Our evaluation considers three benchmark problems: the Brusselator,
+    a 2D advection-diffusion system with stiff reaction, and the
+    Allen-Cahn equation with sharp interfaces. On each problem,
+    MA-IMEX achieves 4-7x speedup over fixed-splitting ARK4 at matched
+    accuracy, while preserving the unconditional-stability guarantee
+    that motivates using IMEX methods on truly stiff systems. The
+    communicative-agent design generalizes naturally to higher-
+    dimensional partitions and to operator-split formulations of
+    multi-physics problems, and we view it as a step toward
+    cooperative numerical methods in which subroutines exchange
+    state rather than execute a fixed pipeline.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]    # cross-section contradiction
+  notes: |
+    Paragraph 1 (and reaffirmed in paragraph 4) claims MA-IMEX is
+    "unconditionally A-stable across the full range of stiffness
+    ratios." Paragraph 3 then derives a stability condition of the
+    form h|λ| ≤ 2 on the linear test problem, and explicitly notes a
+    "step-size restriction proportional to the inverse spectral
+    radius of the stiff operator" beyond that regime. By definition,
+    A-stability requires |R(z)| ≤ 1 for all z with Re(z) ≤ 0,
+    independent of h; a bound of the form h|λ| ≤ 2 is exactly the
+    conditional-stability profile of an explicit scheme and
+    contradicts the unconditional-A-stability claim. The contribution
+    framing in paragraphs 1 and 4 and the analysis in paragraph 3
+    cannot both be correct. Moderate gating: the reader needs to
+    recall the definition of A-stability (Dahlquist) and recognize
+    that any finite step-size bound on the linear test problem
+    invalidates the claim. Other elements (problem framing, proof of
+    local order, evaluation setup) are internally consistent.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9     # load-bearing — internal contradiction across sections
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the unconditional-A-stability claim in the opening
+  and closing paragraphs is incompatible with the step-size bound
+  h|λ| ≤ 2 derived in the stability analysis, since A-stability by
+  definition requires the amplification factor to be bounded for all
+  step sizes in the left half-plane. Recommends either restating the
+  contribution as conditional stability (or A(α)-stability over a
+  bounded sector) or replacing the corrector with one whose
+  amplification factor is genuinely bounded for all h|λ|.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more benchmark PDEs or extending the
+  order analysis, or asks for clearer notation in the three-agent
+  protocol description. Accepts both the "unconditionally A-stable"
+  framing and the h|λ| ≤ 2 derivation without noticing the conflict,
+  or treats the step-size bound as a minor implementation caveat
+  rather than a refutation of the headline stability claim.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

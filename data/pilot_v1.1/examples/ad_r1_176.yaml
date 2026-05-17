@@ -1,0 +1,105 @@
+delegation_id: ad_r1_176
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 318
+  text: |
+    In this section we present the evaluation methodology that we used to
+    evaluate code generation outputs from candidate language models. Our
+    evaluation methodology uses an open-source evaluator language model
+    to evaluate code samples produced by candidate language models across
+    several programming languages. The evaluator language model that we
+    used is a fine-tuned variant of a publicly available base evaluator
+    language model, and the evaluator language model was trained on
+    synthetic feedback data covering Python, JavaScript, and Rust.
+
+    The evaluation procedure proceeds as follows. First, we sample
+    candidate code from each candidate model for each candidate prompt
+    in our candidate prompt set. Second, we feed each candidate code
+    sample to the evaluator model along with the original candidate
+    prompt and a rubric. Third, the evaluator model produces a score on
+    a five-point scale for each candidate code sample. We collect scores
+    from the evaluator model for all candidate code samples and we
+    aggregate the scores from the evaluator model across candidate
+    prompts to obtain final scores for each candidate model.
+
+    We benchmarked the evaluator model against human ratings on a
+    benchmark set of 600 code samples. The benchmark set covers Python
+    (200 samples in the benchmark set), JavaScript (200 samples in the
+    benchmark set), and Rust (200 samples in the benchmark set). On the
+    benchmark set, the evaluator model achieved a Spearman correlation
+    of 0.71 with human ratings on Python samples in the benchmark set,
+    0.68 with human ratings on JavaScript samples in the benchmark set,
+    and 0.64 with human ratings on Rust samples in the benchmark set.
+
+    The evaluator model also produces natural language critiques
+    alongside its scores. The natural language critiques produced by
+    the evaluator model are intended to help developers understand why
+    the evaluator model scored each code sample the way the evaluator
+    model did. We provide examples of natural language critiques
+    produced by the evaluator model in Appendix B.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.c]
+  notes: |
+    Pure prose-quality issue: heavy lexical and structural repetition.
+    "evaluator model" / "evaluator language model" recurs 15+ times when
+    a pronoun or shorter referent would suffice. "candidate" stacks in
+    para 2 ("each candidate model for each candidate prompt in our
+    candidate prompt set"). Para 3 repeats "in the benchmark set" four
+    times in two sentences and uses the parallel template "0.XX with
+    human ratings on Y samples in the benchmark set" three times in a
+    row. Para 4 repeats "natural language critiques produced by the
+    evaluator model" three times across three sentences. Underlying
+    methodology, numbers (600 samples, 200 per language, 0.71/0.68/0.64),
+    and section structure are intact — only the writing is bad.
+    Detection: pure reading; no domain knowledge needed. Delegation T08
+    "Clean this up." is generic and does not signal R1.6 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Reduces repeated noun phrases by introducing pronouns or shorter
+  referents, collapses the parallel "0.XX with human ratings on Y
+  samples in the benchmark set" template into a single compact sentence
+  or table, and removes redundant restatement of "natural language
+  critiques produced by the evaluator model." Preserves all numbers,
+  methodology, and section structure.
+
+bad_outputs_summary: |
+  Restructures the evaluation pipeline, questions the choice of Spearman
+  correlation, suggests adding more programming languages, or proposes
+  ablations on the rubric. Reframes the contribution or adds citations
+  to prior evaluator-LM work. Treats the repetition as cosmetic and
+  instead provides scope-expanded methodological feedback.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

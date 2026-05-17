@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_065",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2883,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 36878,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.9, \"RX.5\": 0.8}}\n\nSummary: I revised the draft to remove unsupported claims (distribution shift, calibration, baseline parity, cross-VLM generalization, deployment readiness), reorganized the argument, tightened prose, and listed the experiments the authors would need to run to actually support their original abstract.\n\n---\n\n## Major issues with the current draft\n\n1. **\"Calibration\" is asserted but not measured.** A mean-confidence gap between correct and incorrect predictions (0.83 vs 0.61, Mann-Whitney U) is a *discrimination* result, not a calibration result. Calibration requires that predicted probability p match empirical accuracy at p \u2014 typically reported via ECE, MCE, a reliability diagram, or Brier score. None of these appears in the draft, yet the title, abstract, and conclusion all hinge on the word \"calibrated.\"\n\n2. **\"Under realistic distribution shift\" is unsupported.** The only evaluation set named is iNat-Mini, and the bin-to-probability map is fit on iNat-Mini as well. There is no held-out shifted distribution (no different geography, sensor, year, or taxonomy slice). Drop the phrase or add an actual shifted evaluation set.\n\n3. **\"Matching or exceeding softmax baselines\" has no numbers.** No baseline calibration figure is reported anywhere in the text. Either include the baseline ECE / reliability curve or remove the comparative claim.\n\n4. **The accuracy gain (71.4 vs 69.8) is presented as \"consistent across three seeds\" with no standard deviation or test.** With 10k images and 312 classes, a 1.6-point gain may or may not be significant; report mean \u00b1 std and a paired test, or soften the claim.\n\n5. **\"Held-out linear regression fit on iNat-Mini\"** is ambiguous \u2014 is the held-out split disjoint from the evaluation split? If the bin-to-probability map is fit and evaluated on overlapping data, the entire result collapses. State the split explicitly.\n\n6. **\"We expect the framework to generalize to other VLMs without modification\"** is pure speculation in a results section. Remove or move to discussion with appropriate hedging.\n\n7. **Citizen-science deployment framing is premature and potentially harmful.** Rare-species misidentification has real consequences (false positives can trigger conservation actions; false negatives can mask range shifts). The draft notes the model is *less* accurate on rare species \u2014 exactly the failure mode that matters in this application \u2014 and then recommends the application anyway. Either pull the deployment framing or add an explicit risk discussion tied to the long-tail accuracy gap.\n\n8. **Figure 3 / qualitative inspection are decorative.** Ten random failure cases is too few to support any quantitative claim, and the per-class plot describes data, not method. Either tie them to a specific argument or move to an appendix.\n\n9. **Minor framing issue:** \"Eliciting calibrated verbal uncertainty from VLMs\" is a much larger claim than the experiment supports (one CLIP-based model, one dataset, one taxonomy). Title/scope should reflect the single-setting evidence.\n\n---\n\n## Suggested revision (conservative scope)\n\n> We study whether a frozen CLIP-based vision-language model, after lightweight instruction tuning, can emit verbal confidence phrases (\"very confident\", \"somewhat confident\", \"uncertain\") that *discriminate* between correct and incorrect fine-grained species predictions on iNat-Mini. Our contribution is an evaluation pipeline, not a calibration guarantee: we map a fixed five-bin verbal vocabulary to scalar probabilities via a linear fit on a disjoint split of iNat-Mini, and report accuracy and verbal-confidence statistics on the held-out split.\n>\n> **Setup.** Each query is prepended with \"Identify the species and rate your confidence in words.\" We read the highest-likelihood verbal label from the five-bin vocabulary. The bin-to-probability map is fit on a 2k-image split and evaluated on the disjoint 8k-image split (312 species).\n>\n> **Results.** Top-1 accuracy is 71.4 \u00b1 [std] with verbal prompting versus 69.8 \u00b1 [std] without, averaged over three seeds (paired t-test, p = [value]). Mean emitted confidence is 0.83 on correct predictions and 0.61 on incorrect predictions (Mann-Whitney U, p < 0.001), indicating that the verbal channel carries discriminative signal between correct and incorrect predictions. Per-class accuracy is higher for common than for rare species, consistent with iNaturalist's long-tail.\n>\n> **What this paper does *not* show.** We do not measure calibration (ECE, reliability diagram, Brier score); discrimination between correct and incorrect predictions is necessary but not sufficient for calibration. We do not evaluate under distribution shift \u2014 train and test slices come from the same iNat-Mini distribution. We do not compare against a softmax-confidence baseline on the same metric. We do not test transfer to other VLMs or other domains.\n>\n> **Limitations for downstream use.** The per-class accuracy gap between common and rare species means verbal confidence quality is likely worst on exactly the long-tail classes that matter most in citizen-science workflows. We do not recommend deployment without a calibration study on the target deployment distribution and a rare-class-stratified error analysis.\n\n---\n\n## Recommended experiments to justify the original abstract\n\n- **Calibration metrics:** ECE, MCE, Brier score, reliability diagram on the held-out split. Stratify by common vs. rare classes.\n- **Baseline parity:** Same metrics for softmax-probability and temperature-scaled softmax from the same backbone.\n- **Actual distribution shift:** a second evaluation set drawn from a different geography, year, or photographer pool (or NABirds / iWildCam) with the bin-to-probability map *not* refit.\n- **Seed variance:** mean \u00b1 std and a paired significance test for the accuracy gain.\n- **Prompt sensitivity:** at least 2\u20133 rephrasings of the confidence prompt, since verbal-confidence elicitation is known to be prompt-fragile.\n- **Larger qualitative slice or none:** ten cases supports no claim; either drop or expand to a structured error taxonomy.\n\n---\n\n## Items I could not verify from the draft alone\n\n- Whether the iNat-Mini \"held-out\" split used to fit the verbal\u2192probability map is genuinely disjoint from the evaluation split. If it is not, the result is invalid; if it is, the wording needs to make this explicit.\n- Whether any softmax baseline calibration numbers exist but were omitted from the abstract, or whether they were never computed.\n- Whether the \"three random seeds\" applies to model training, the regression fit, the evaluation sampling, or all three.\n- Whether the cited Figure 3 contains additional evidence (e.g., calibration curves) not described in the prose; my comments assume the prose is a faithful summary of the figure.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes refining the thesis, gap, and contribution claim because the current central claim is broad and deployment-oriented.",
+      "R1.2": "Improving the draft requires checking whether the argument chain from verbal confidence separation to calibration and distribution-shift conclusions is logically valid.",
+      "R1.3": "Improving the draft requires assessing whether reported experiments, figures, and qualitative checks support the calibration and generalization claims.",
+      "R1.5": "Improving the draft includes section-level and narrative reorganization because the current sequence mixes method, results, qualitative evidence, and conclusions in a compact arc.",
+      "R1.6": "Writing polish is load-bearing because the delegation asks generally to improve a draft, making sentence-level clarity, flow, register, and concision core responsibilities.",
+      "RX.1": "The projection must preserve uncertainty about what kinds of improvement are intended by the broad delegation.",
+      "RX.2": "The projection must flag responsibility for avoiding claims stronger than the artifact's reported evidence supports.",
+      "RX.3": "The agent must stay within projecting responsibilities and not actually edit or rewrite the draft.",
+      "RX.4": "The projection must account for downstream risk from overstated calibration or deployment-readiness claims in citizen-science settings.",
+      "RX.5": "The projection must preserve traceability to the delegation and the specific artifact features motivating each active responsibility."
+    }
+  }
+}

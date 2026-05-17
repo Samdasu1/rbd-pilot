@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_290",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2394,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32589,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.3\": 0.3, \"R1.6\": 0.2, \"R1.7\": 1.0, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.3, \"RX.5\": 1.0}}\n\nCitation check for the NumClarify excerpt. Summary: three of the four named citations have factual problems that need correction before this section can be circulated.\n\n**Citation-by-citation findings**\n\n1. *Hageman and Young (1981) \u2014 \"Applied Iterative Methods.\"*\n   - Author/date: matches the standard bibliographic record I am familiar with (Academic Press, 1981; a Dover reprint exists from 2004). This citation appears correct as stated.\n   - Caveat: the text calls it \"the most comprehensive prior treatment of iterative-solver taxonomy\" \u2014 that is an editorial claim, not a citation defect, but it is contestable (see overclaim note below).\n\n2. *Anderson et al., 1992 \u2014 \"LAPACK Users' Guide, first edition.\"*\n   - Year and edition: the first edition of the LAPACK Users' Guide was published by SIAM in 1992. That part is correct.\n   - Routine names: `?gesv` and `?posv` are the correct LAPACK driver names for general and symmetric-positive-definite linear systems. Correct.\n   - Concern: the first edition is an unusual choice to cite as \"the standard interface specification.\" Subsequent editions (2nd 1995, 3rd 1999) substantially revised the driver-routine documentation and are what practitioners typically reference. If there is a specific reason to anchor to the 1st edition, it should be stated; otherwise the 3rd edition is the conventional citation. I cannot fully verify whether the `?posv` driver was already documented under that exact name in the 1st edition vs. introduced/renamed later \u2014 please verify against the actual 1st-edition table of contents.\n\n3. *PLASMA and SLATE (uncited, mentioned by name).*\n   - These are real projects (ICL/UTK), but the text names them without citation. Standard references would be the PLASMA Users' Guide / Agullo et al. 2009 (\"Numerical linear algebra on emerging architectures: the PLASMA and MAGMA projects\") and the SLATE working notes / Gates et al. (the SLATE design papers in the ICL Working Notes series, ~2017\u20132019). At minimum these need citations if the section is going to lean on them.\n\n4. *\"GMRES-IR family of mixed-precision iterative refinement \u2026 recently formalized for ill-conditioned systems on modern GPUs\" (uncited).*\n   - The canonical references here are Carson and Higham (SIMAX 2017, \"A new analysis of iterative refinement and its application to accurate solution of ill-conditioned sparse linear systems\") and Carson and Higham (SISC 2018, \"Accelerating the solution of linear systems by iterative refinement in three precisions\"), with GPU-specific follow-ups by Haidar, Tomov, Dongarra and collaborators (SC'18 and later). This claim needs citation; it is a load-bearing technical attribution.\n\n5. *Saad (2003) \u2014 \"preconditioner family selection follows Saad (2003).\"*\n   - The intended reference is almost certainly *Iterative Methods for Sparse Linear Systems*, 2nd edition, SIAM, 2003. The year and edition match. Correct.\n   - However, \"preconditioner family selection follows Saad (2003)\" is vague: Saad's book discusses many preconditioner families (ILU(k), ILUT, approximate inverse, multilevel, block Jacobi, etc.) without prescribing a *selection procedure*. The citation supports the menu of preconditioners, not a selection rule. Either narrow the claim (e.g., \"we restrict the preconditioner menu to the ILU and approximate-inverse families described in Saad, 2003\") or add a citation that actually proposes a selection heuristic.\n\n6. *\"standard backward-error analysis\" for tolerance-semantics probe (uncited).*\n   - This should cite Higham, *Accuracy and Stability of Numerical Algorithms* (SIAM, 2nd ed. 2002), which is the conventional reference for the distinction between relative residual, normwise backward error, and forward error in this context.\n\n**Other concerns surfaced by the citation check**\n\n- \"Reduces the candidate solver pool by at least one order\" is asserted as a design property of each clarification probe, but no source or derivation is given. If this is a theoretical guarantee it needs a proof sketch or citation; if it is an empirical observation it should be labeled as such.\n- The 4.1\u00d7 wall-clock improvement and 17% \u2192 3% failure-rate numbers come from an internal evaluation on 412 queries from \"a graduate-course homework forum.\" No prior-work baseline is cited beyond an internal no-clarification straw-man. Readers will want at least one external baseline (e.g., a generic LLM-to-code pipeline) cited.\n- Phrasing: \"drawn from the past decade\" combined with citing a 1981 book and a 1992 manual reads inconsistently. The decade framing applies to the randomized NLA / communication-avoiding Krylov / mixed-precision IR strand, not to the foundational citations \u2014 consider separating those sentences.\n- \"Recently formalized\" is doing work that a date-stamped citation should do; replace with the actual year of the Carson\u2013Higham analyses.\n\n**Recommended minimal citation additions**\n\n- LAPACK Users' Guide, 3rd edition (Anderson et al., SIAM, 1999) \u2014 or justify the 1st-edition choice.\n- Agullo et al. 2009 (PLASMA/MAGMA) and the SLATE working-note series (Gates et al.) for the tile/task-parallel runtime claim.\n- Carson and Higham 2017 (SIMAX) and 2018 (SISC) for GMRES-IR; Haidar et al. SC'18 for the GPU instantiation.\n- Higham, *Accuracy and Stability of Numerical Algorithms*, 2nd ed., SIAM 2002, for the backward/forward-error distinction.\n- A specific reference for randomized NLA (e.g., Martinsson and Tropp, *Acta Numerica* 2020) and for communication-avoiding Krylov (e.g., Hoemmen's 2010 thesis, or Carson, Demmel et al.) if those strands actually feed the taxonomy as claimed.\n\n**What I could not verify and why**\n\n- I could not independently confirm the exact wording of driver-routine categories (`?gesv`, `?posv`) in the *1st* edition of the LAPACK Users' Guide as opposed to later editions; please cross-check against a copy.\n- I could not verify the 412-query corpus, the 4.1\u00d7 number, or the 17% \u2192 3% figure \u2014 these are internal to the artifact.\n- Publication-year details above are reported from memory of the standard references in numerical linear algebra; before submission, every year and edition should be confirmed against the actual volumes, especially the Carson\u2013Higham and Haidar et al. dates, which are easy to mis-cite by one year.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.0,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 1.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.7": "The delegation directly asks to check citations, making reference accuracy, attribution, and scholarship coverage the load-bearing responsibility.",
+      "RX.1": "Citation checking requires disclosing uncertainty where source details or bibliographic claims cannot be verified from the artifact alone.",
+      "RX.2": "The projection should avoid expanding the task into claims about novelty, method quality, or experimental validity beyond citation-related issues.",
+      "RX.3": "The responsibility must stay limited to citation checking rather than rewriting or evaluating the paper more broadly.",
+      "RX.4": "Incorrect citation judgments could misattribute work or distort scholarly credit, so harm avoidance remains active.",
+      "RX.5": "Checking citations depends on traceable links between textual claims, named sources, and bibliographic provenance."
+    }
+  }
+}

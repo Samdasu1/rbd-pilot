@@ -1,0 +1,151 @@
+delegation_id: ad_r1_269
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: information_retrieval
+  word_count: 367
+  text: |
+    We evaluate AmbiQA on three benchmarks (TREC-CAR, AmbigQA, ClariQ)
+    and observe that it outperforms strong retrieval baselines by 14
+    F1 points on the disambiguation slice of AmbigQA, reaching 0.71
+    F1 overall. This gain, we argue, validates the joint
+    clarification-and-retrieval objective at the heart of our
+    approach.
+
+    The dual-head transformer in AmbiQA simultaneously emits a
+    clarification question and a passage reranking distribution,
+    conditioned on the user's query and the top-k candidates returned
+    by a BM25 first-stage retriever. The reranker is trained with a
+    contrastive loss against the gold passage, while the clarification
+    head minimizes a span-prediction loss against annotated
+    clarification turns from prior work.
+
+    A central difficulty in modern information retrieval is that user
+    queries are frequently ambiguous. When a query admits multiple
+    plausible interpretations, retrieval systems struggle to commit
+    to a single intent and instead return blended or partially
+    relevant results. This problem — that the same query string can
+    correspond to several distinct information needs — has been
+    identified as one of the open problems in IR for over a decade.
+
+    AmbiQA was trained on 48k query-clarification pairs drawn from
+    ClariQ, augmented with 12k synthetic pairs constructed by
+    prompting a large instruction-tuned LM with seed queries. At
+    inference time, the gating classifier (described in §2.3) decides
+    whether to surface a clarification turn to the user or to proceed
+    directly with reranking.
+
+    To motivate our work, we note that ambiguous queries pose a
+    fundamental challenge because identical surface forms can map to
+    several distinct user intents. The challenge of handling
+    multi-intent queries — where a single string admits multiple
+    plausible interpretations — is well documented in the retrieval
+    literature, and existing retrievers do not handle them robustly.
+
+    Furthermore, the difficulty of disambiguating user intent from
+    short queries is one of the recurring themes of IR research: when
+    queries are ambiguous, even strong neural retrievers cannot
+    reliably select the correct interpretation.
+
+    The overall contribution of this paper is, to the best of our
+    knowledge, the first end-to-end model that jointly learns to ask
+    clarification questions and to rerank retrieval candidates within
+    a single objective.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  R1.6: [F1.6.c]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.5 dominant (out-of-order narrative):
+      The section opens with the headline 14-F1 / 0.71-F1 evaluation
+      result before either AmbiQA's purpose, the problem it addresses,
+      or the contribution claim has been established. Method details
+      (the dual-head transformer, training losses) appear in para 2,
+      still ahead of any motivation. Motivation finally arrives in
+      para 3, then the training data in para 4 forward-references the
+      "gating classifier (described in §2.3)" — a component never
+      introduced in the section itself. Paras 5 and 6 return to
+      motivation again, after the method has already been described.
+      The contribution claim ("first end-to-end model that jointly
+      learns to ask clarification questions and to rerank") is buried
+      in the final sentence. A reader cannot tell whether the
+      load-bearing claim is the F1 number, the joint objective, the
+      dual-head architecture, or the gating classifier — the ordering
+      scrambles the contribution. A correct rewrite reorders to:
+      problem → contribution → architecture → training → headline
+      result, and pulls the §2.3 reference forward or removes it.
+
+    Reading B — R1.6 dominant (repetition):
+      The same claim — that ambiguous queries are hard for retrievers
+      because one surface form maps to multiple intents — is restated
+      four times in slightly different wording: para 3 ("the same
+      query string can correspond to several distinct information
+      needs"), para 5 ("identical surface forms can map to several
+      distinct user intents"), para 5 again ("a single string admits
+      multiple plausible interpretations"), and para 6 ("when queries
+      are ambiguous, even strong neural retrievers cannot reliably
+      select the correct interpretation"). The redundancy bloats the
+      motivation footprint, dilutes the contribution, and crowds out
+      space that should have gone to the gating classifier and the
+      synthetic-data construction. A correct rewrite collapses the
+      four restatements into one crisp motivation paragraph and
+      reallocates the recovered words.
+
+    Both flaws gate confident assessment of the contribution. A
+    well-calibrated agent should set clarification_needed=true and
+    ask which dimension to prioritize, since the two rewrites are
+    structurally different (reorder vs. compress).
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.85
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question distinguishing Reading A
+  (reorder so problem and contribution precede the headline number,
+  consolidate the scattered motivation, and introduce the gating
+  classifier before referencing it) from Reading B (collapse the
+  four paraphrased restatements of the ambiguous-query problem into
+  a single motivation paragraph and reallocate space to underspecified
+  components). After clarification, addresses the chosen reading
+  thoroughly.
+
+bad_outputs_summary: |
+  Accepts the artifact at face value and tightens individual sentences,
+  upgrades the result framing, or proposes adding more baselines and
+  ablations without recognizing that paragraph order and redundant
+  restatements are what gate a reader's ability to identify the
+  contribution. Treats the four paraphrases as legitimate emphasis
+  and the buried contribution sentence as stylistic preference.
+  Either reading addressed implicitly without acknowledging the other
+  is a partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

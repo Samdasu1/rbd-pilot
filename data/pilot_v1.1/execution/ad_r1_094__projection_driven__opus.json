@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_094",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2541,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 36158,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nSummary: Substantive review of the RoboJudge section identifying argument gaps, an overreaching final recommendation, missing methodological details, and prose/structure suggestions.\n\n## Core concerns\n\n**1. The headline recommendation outruns the evidence.** The section's closing move \u2014 \"advocate replacing predicate-based success metrics \u2026 as the default evaluation protocol\" \u2014 is materially stronger than what the reported experiments support. Concretely:\n\n- One robot embodiment (Franka Panda tabletop), one scene type (tabletop), three policy families, 14 instruction families, and a single LLM backbone (GPT-4o). Generalization to mobile manipulation, deformables, multi-step long-horizon tasks, or non-tabletop scenes is asserted by the framing (\"any new task family\") but not tested.\n- \"Reference-free\" is contradicted by the experimental design: human raters were used as ground truth for the headline \u03c1 numbers. The judge does not need a reference at deployment time, but its validation does. That distinction should be made explicit.\n- A correlation of \u03c1 = 0.78 with humans is presented as a victory over predicates (\u03c1 = 0.69), but no statistical test, confidence interval, or per-family breakdown is given. With 14 families and 1,820 rollouts (roughly 130/family), per-family \u03c1 estimates are noisy; a single bad family could move the average meaningfully.\n\nRecommend softening the conclusion to something like: \"On the tabletop regimes we tested, LLM-based judging matches or exceeds hand-crafted predicates, suggesting it is a viable default for similar settings; broader deployment requires validation on additional embodiments and task structures.\"\n\n**2. The judge's input representation is underspecified.** The section says GPT-4o receives \"a description of the post-execution scene.\" This is the load-bearing detail of the entire method, and the reader cannot tell:\n\n- Is the scene description produced by a separate perception module (object detector + pose estimator)? By a VLM captioner? By privileged simulator state?\n- Does the judge see only the final frame's description, or any trajectory information? \"Rollout trajectory \u03c4\" is mentioned in the setup but only \"post-execution scene\" is described as entering the prompt \u2014 these are inconsistent.\n- If a perception module is in the loop, then RoboJudge inherits its failure modes and the \"zero per-task engineering\" claim is partially shifted, not eliminated. This needs to be stated.\n\n**3. Baseline fairness and the compositional claim.** The CLIPScore and hand-coded predicate baselines need more detail:\n\n- Were the predicates authored by the RoboJudge authors, by the original benchmark authors, or pulled from the upstream RT-1/RT-2/OpenVLA evaluation code? Author-written baselines invite an obvious bias concern.\n- The compositional-instructions improvement (0.81 vs 0.62) is the most interesting result but lacks sample size for that subset. How many of the 1,820 rollouts are compositional? If it is a small slice, the gap may not be reliable.\n- A natural confound: hand-coded predicates for compositional instructions are typically conjunctions of simpler predicates and tend to underweight partial success. GPT-4o may be giving partial credit that humans also give. Whether that is \"superior judging\" or \"matching a different scoring convention\" deserves discussion.\n\n**4. Missing reliability and failure analysis.** Several pieces of evidence a reader will expect are absent:\n\n- Inter-rater agreement among the human raters (you use the median, but the spread matters for interpreting \u03c1 = 0.78 as a ceiling).\n- Test-retest stability of GPT-4o judgments (LLM outputs are stochastic; what is the seed/temperature, and does the same rollout get the same score on re-query?).\n- Calibration: is the scalar score in [0,1] meaningful, or only the binarized label? You say the binary label is the primary metric, which is fine, but then the scalar should either be dropped from the description or analyzed.\n- Known failure modes. Any LLM judge will hallucinate object identities, miss occluded outcomes, and be sycophantic to the instruction wording. A paragraph naming the failure cases observed would substantially strengthen credibility.\n\n**5. Cost, latency, and reproducibility.** A proposal to make an LLM call the default evaluator across a community benchmark should address:\n\n- Per-rollout dollar/latency cost at evaluation scale.\n- Model-version drift: GPT-4o is a moving target; \u03c1 values measured today may not replicate in six months. This is a serious reproducibility concern for a benchmark proposal and should be acknowledged, with mitigation (pinned API versions, open-weights fallback judge, or a frozen judge checkpoint).\n\n## Structural and prose notes\n\n- The current four paragraphs follow Intro \u2192 Method \u2192 Results \u2192 Claim. Consider splitting the method paragraph: one short paragraph on the judging prompt and I/O, one on what the judge does *not* see (privileged state, references). The current single paragraph buries the perception-input question flagged above.\n- Paragraph 3 mixes setup (\"1,820 rollouts \u2026 14 instruction families\") with results. Lead with a one-sentence experimental setup, then results, to let the reader hold the design in mind before the numbers.\n- \"thin wrapper around GPT-4o\" is colloquial and undersells the contribution while also being a hostage to fortune if the wrapper turns out to matter (prompt engineering, parsing, retries). Either describe what the wrapper does, or drop the phrase.\n- \"eliminating per-task annotation effort\" \u2014 replace with \"eliminating per-task *predicate-authoring* effort,\" since human annotation is in fact required to validate the judge.\n- \"competitive with \u2014 and in compositional regimes, superior to\" \u2014 the em-dash construction is fine but the claim \"superior\" is doing more work than \u03c1 = 0.81 vs 0.62 on an unspecified subset can carry. Soften to \"and on the compositional subset we tested, outperforms.\"\n- \"score in [0, 1]\" and the binary label are introduced together but only the binary label is used downstream; consider stating that up front so the scalar does not look like dead weight.\n\n## Suggested revision of the final paragraph\n\n> On the tabletop regimes evaluated here, LLM-based judging is at least competitive with hand-crafted predicates and shows a larger margin on compositional instructions, while removing the need to author per-task predicates. We view this as evidence that LLM judges are a viable evaluation component for instruction-following manipulation benchmarks in similar settings, and we discuss in Section X the validation steps (additional embodiments, judge-version pinning, human spot-checks) required before adopting them as a default.\n\n## Things I could not verify from the section alone\n\n- Whether the human raters were independent of the authors and whether they were blinded to which policy produced each rollout.\n- The provenance and exact form of the hand-coded predicate baseline.\n- Whether \"rollout trajectory \u03c4\" is actually consumed by the prompt or only the terminal scene description.\n- The size of the compositional-instruction subset.\n- The GPT-4o version, decoding parameters, and whether judgments were aggregated over multiple samples.\n\nThese five items are the highest-leverage things to clarify in a revision; several of the recommendations above are conditional on how they resolve.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A review of this section centrally includes assessing whether the thesis, gap, and contribution claim are framed appropriately.",
+      "R1.2": "The section makes a multi-step argument from benchmark limitations to RoboJudge design, empirical results, and a recommended default protocol.",
+      "R1.3": "The empirical claims and final recommendation depend on whether the reported correlations and comparisons support the stated conclusions.",
+      "R1.5": "Reviewing a paper section includes checking whether the ordering and narrative arc from motivation to method to results to implication work at section level.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, register, concision, and flow.",
+      "RX.1": "The reviewer should disclose uncertainty where the artifact lacks methodological or contextual detail needed for firm judgments.",
+      "RX.2": "The section contains strong claims about replacing default evaluation protocols, making overclaim avoidance load-bearing.",
+      "RX.3": "The delegation is only to review the section, so the response must stay within that review scope rather than executing edits or broader research work.",
+      "RX.4": "Because evaluation protocols can affect downstream robotics benchmarking decisions, the review should avoid endorsing unsupported or harmful extrapolations.",
+      "RX.5": "Review comments should remain traceable to specific statements and evidence presented in the section."
+    }
+  }
+}

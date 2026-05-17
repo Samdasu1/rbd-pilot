@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_309",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2093,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 27858,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.3\": 1.0, \"R1.2\": 0.3, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: The passage contains a critical internal contradiction \u2014 the reported PIT statistic actually favors the baseline, not FlowPhot \u2014 and several other places where the stated evidence does not unambiguously underwrite the calibration claim.\n\nKey issues with evidence-to-claim alignment\n\n1. The PIT / Cram\u00e9r\u2013von Mises result contradicts the calibration claim.\n   - The Cram\u00e9r\u2013von Mises statistic W\u00b2 measures deviation of the PIT distribution from uniform; smaller W\u00b2 means closer to uniform, i.e., better calibration.\n   - Reported: FlowPhot W\u00b2 = 0.084, baseline W\u00b2 = 0.031. The baseline value is smaller (~2.7\u00d7 closer to uniform).\n   - The text nonetheless calls FlowPhot's W\u00b2 \"favorable\" and asserts it \"confirms\" better calibration. This is the opposite of what the numbers show. Either (a) the values are swapped/mistyped, (b) the labels in Figure 4 are reversed, or (c) the directional interpretation of W\u00b2 has been inverted. Until that is resolved, the PIT evidence does not support \u2014 and in fact contradicts \u2014 the central claim.\n\n2. \u03c3_NMAD and \u03b7_0.15 are scatter/outlier metrics, not calibration metrics.\n   - \u03c3_NMAD quantifies the *width* of the residual distribution; \u03b7_0.15 quantifies the *tail* fraction. Both are measures of point-estimate accuracy/robustness, not of whether the predictive *uncertainty* matches the empirical error distribution.\n   - A model can have lower \u03c3_NMAD while being over- or under-confident in its 1\u03c3 intervals. The phrase \"calibration improving by approximately 30%\" is not justified by a 0.027 \u2192 0.021 NMAD change, which is a scatter reduction, not a calibration measurement.\n   - The only metric in the passage that directly probes interval calibration is the PIT/W\u00b2 \u2014 and that one points the wrong way (see issue 1).\n\n3. The \"30% improvement in calibration\" figure is not traceable.\n   - (4.7 \u2212 3.1)/4.7 \u2248 34%; (0.027 \u2212 0.021)/0.027 \u2248 22%; (0.034 \u2212 0.029)/0.034 \u2248 15%. None of these is \"approximately 30%\" as a calibration statement, and none is a calibration metric to begin with. The text should specify which quantity changed by which percentage, on what subset, and why that quantity indexes calibration.\n\n4. \"Tighter and more reliable confidence intervals\" conflates two distinct properties.\n   - \"Tighter\" (narrower intervals) follows from lower NMAD only if the predicted \u03c3 tracks the empirical scatter \u2014 which is precisely the calibration question the paper has not yet evidenced. Without a coverage test (e.g., empirical coverage of the nominal 68% interval, or a reliability diagram), the claim of \"more reliable\" intervals is not supported by the reported numbers.\n\n5. The faint-bin result is presented as evidence of calibration but again uses \u03c3_NMAD only.\n   - 0.029 vs 0.034 in the i > 23 bin is again a scatter comparison. Whether the faint-bin posteriors are well-calibrated requires a per-bin PIT or coverage check, which is not reported. The sentence \"again indicating improved calibration in the regime that dominates the cosmological volume\" overreaches relative to the evidence shown.\n\n6. Sample-description / scope items that should be tightened.\n   - The COSMOS2020 spectroscopic-overlap subset at i < 24.5 is a selection-biased reference set (spectroscopic confirmation is easier for typical SEDs and brighter sources). A calibration claim \"across the full magnitude range\" and a claim of suitability \"for ingestion into Stage-IV survey pipelines\" extrapolate beyond the evaluation set. Without a discussion of selection function and transfer to Stage-IV depths/colors, the closing sentence is broader than the evidence.\n\nConcrete recommended edits\n\n- Recompute or recheck the PIT result; if the W\u00b2 values are correct as stated, the conclusion in that paragraph must be reversed (the baseline is closer to uniform). If the values are swapped, correct them and note which figure panel is which.\n- Replace the phrase \"calibration improving by approximately 30%\" with a quantity tied to an actual calibration metric (e.g., empirical 68% coverage vs nominal 68%, or |W\u00b2 \u2212 0|, with the direction made explicit).\n- Re-label \u03c3_NMAD and \u03b7_0.15 in the prose as *point-estimate scatter* and *catastrophic-outlier rate*, not as calibration metrics. Reserve \"calibration\" for the PIT / coverage analysis.\n- Add a coverage table or reliability diagram if claiming \"tighter and more reliable confidence intervals,\" or weaken the wording to \"lower scatter and lower outlier rate; calibration is assessed separately via the PIT.\"\n- For the faint-bin paragraph, either add per-bin PIT/coverage or rewrite to claim improved scatter in the faint regime, not improved calibration.\n- Soften the Stage-IV-suitability conclusion to reflect that evaluation is on a magnitude-limited spectroscopic overlap, and note known selection effects.\n\nItems I cannot fully verify from the artifact alone\n\n- Whether the W\u00b2 values are transcription errors versus genuine results \u2014 only the authors' Figure 4 and computation code can disambiguate. The contradiction is unambiguous given the standard meaning of W\u00b2, but the *source* of the contradiction (typo vs. swapped labels vs. inverted interpretation) is not determinable from the text shown.\n- Whether Table 2 / Table 3 contain additional calibration columns (e.g., coverage) not quoted in the prose; if they do, some of the criticisms above could be mitigated by surfacing those columns in the narrative.\n- The exact denominator the authors had in mind for \"approximately 30%\"; my arithmetic above assumes the quoted numbers are the intended inputs.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.3": "The delegation directly asks whether the reported experimental quantities, tables, and figure evidence support the stated claims.",
+      "RX.1": "The projection must preserve uncertainty where the artifact lacks enough information to verify support conclusively.",
+      "RX.2": "Checking evidential support centrally requires identifying claims that exceed what the reported evidence can justify.",
+      "RX.3": "The task is limited to support verification and excludes rewriting, critique beyond support, or broader methodological review.",
+      "RX.4": "Because the artifact invokes downstream survey-pipeline suitability, unsupported claims could create downstream misuse risk.",
+      "RX.5": "The verification responsibility depends on tracing each claim to the specific reported metrics, tables, and figure descriptions."
+    }
+  }
+}

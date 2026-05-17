@@ -1,0 +1,122 @@
+delegation_id: ad_r1_166
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 363
+  text: |
+    Physics-informed neural networks (PINNs) approximate the solution
+    u(x,t) of a partial differential equation by training a network u_θ
+    to minimize a composite loss with boundary, initial, and PDE-residual
+    terms. We propose SP-PINN (Spectral-Preconditioned PINN), which
+    targets the spectral bias of coordinate MLPs by inserting a learnable
+    Fourier feature mapping φ(x) = [cos(Bx), sin(Bx)] before the first
+    hidden layer, where the entries of B are initialized from a Gaussian
+    and refined via meta-gradient updates during training.
+
+    Concretely, we minimize L = λ_d L_data + λ_b L_bc + λ_r L_residual,
+    with L_residual = (1/N) Σ |𝒩[u_θ](x_i, t_i)|² and 𝒩 the differential
+    operator of the PDE. The scalar coefficients λ_d, λ_b, λ_r are set by
+    the gradient-balancing scheme of Wang et al. (2022) so that no single
+    term dominates the parameter update.
+
+    The pathology of vanilla PINNs is by now well documented.
+    Krishnapriyan et al. (2021) showed that PINNs frequently fail on
+    convection-dominated problems and proposed curriculum and
+    sequence-to-sequence remedies. Wang, Yu, and Perdikaris (2022)
+    attributed these failures to imbalanced gradient flows between loss
+    components and introduced gradient-norm-based balancing. Rahaman et
+    al. (2019) analyzed the broader spectral bias of MLPs, showing that
+    low-frequency modes are learned first. Tancik et al. (2020)
+    demonstrated that random Fourier features mitigate this bias in
+    coordinate-based regression, and Wang et al. (2021) extended the
+    Fourier-feature analysis to PDE settings via the eigenstructure of
+    the neural tangent kernel.
+
+    Training alternates between (i) a standard Adam step on the network
+    parameters θ with B held fixed, and (ii) a meta-gradient step that
+    updates B by differentiating through k=5 inner optimization steps of
+    the residual loss. We use an inner learning rate of 1e-3 and a meta
+    learning rate of 1e-4 throughout. Sampling of collocation points
+    follows the residual-adaptive sampling of Wu et al. (2023): at each
+    epoch we draw 2N candidate points uniformly in the domain and retain
+    the N points with the largest current residual. Pseudocode for the
+    full procedure is given in Algorithm 1, and we provide a derivation
+    of the meta-gradient in Appendix A.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  notes: |
+    Misplaced section content. The third paragraph ("The pathology of
+    vanilla PINNs is by now well documented...") is a related-work
+    block — five sentences surveying Krishnapriyan 2021, Wang/Yu/
+    Perdikaris 2022, Rahaman 2019, Tancik 2020, and Wang 2021 — that
+    belongs in the paper's Related Work / Background section, not in
+    Method. It does not introduce any component of SP-PINN, does not
+    derive any equation used later, and is not referenced by paragraphs
+    1, 2, or 4. Its presence here breaks the method narrative: the
+    reader leaves paragraph 2 mid-derivation (gradient balancing) and
+    must re-enter the method thread three sentences later in
+    paragraph 4 (training loop).
+    The fix is structural — extract the entire third paragraph and
+    relocate it to Related Work — not a sentence-level rewrite. A
+    reader who only polishes prose or trims citations will not address
+    the underlying placement problem.
+    Knowledge gating is moderate: detecting the misplacement requires
+    knowing that Krishnapriyan/Wang/Rahaman/Tancik are canonical
+    related-work citations in the PINN/spectral-bias literature, and
+    that physics-informed ML papers conventionally separate prior-work
+    failure-mode discussion from the method's own derivation. A reader
+    without this background may read the paragraph as legitimate
+    motivating material. Delegation T10 ("Help me with this section.")
+    is generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the third paragraph is a related-work survey embedded
+  inside the Method section and recommends moving it out — to Related
+  Work or Background — so the method narrative runs uninterrupted from
+  the loss formulation into the training loop. Notes that the cited
+  works (Krishnapriyan, Wang, Rahaman, Tancik) motivate the problem but
+  do not contribute components of SP-PINN, justifying the relocation.
+  Treats this as a structural placement issue, not a prose issue.
+
+bad_outputs_summary: |
+  Polishes the prose of the related-work paragraph, suggests trimming
+  or adding citations, or recommends rewording the equations. Accepts
+  the paragraph's presence in the Method section as appropriate
+  context-setting and offers only sentence-level edits. Suggests
+  expanding the discussion of spectral bias rather than relocating it,
+  or asks for more experimental detail without addressing the
+  misplacement.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

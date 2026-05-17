@@ -1,0 +1,110 @@
+delegation_id: ad_r1_144
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 295
+  text: |
+    Diagnostic image interpretation increasingly relies on multi-step
+    reasoning that mirrors how radiologists triage findings. We present
+    RadCollab, a multi-agent framework in which one LLM agent plays a
+    "junior reader" that proposes candidate findings from a chest
+    radiograph captioning backbone, while a second "attending" agent
+    challenges, prunes, and ranks those findings before a structured
+    report is emitted. RadCollab improves on prior work by allowing the
+    role-conditioned debate to terminate adaptively when the two agents
+    converge on a finding set.
+
+    We evaluate on three chest X-ray benchmarks: MIMIC-CXR, IU X-Ray,
+    and a private dataset of 4,200 frontal radiographs collected at our
+    partner hospital. On MIMIC-CXR, RadCollab achieves a CheXbert F1 of
+    0.408, compared to 0.391 for RadCollab-base (Anonymous Authors,
+    2024), our previously published single-agent variant. On IU X-Ray,
+    we achieve 0.512 versus 0.498 for RadCollab-base. On the private
+    set, we achieve 0.467 versus 0.451 for RadCollab-base.
+
+    Section 4 ablates the role-conditioning prompt and shows that
+    removing the attending-challenge loop drops F1 by 1.5 points on
+    average across the three datasets, confirming that the debate
+    dynamic, not raw scale, drives the gain. Section 5 inspects 60
+    agent transcripts and finds that disagreements concentrate on
+    subtle pleural findings — the exact category where junior radiology
+    trainees are known to over-call.
+
+    We position RadCollab as a successor to RadCollab-base, building on
+    its captioning backbone with the addition of two-agent role-play.
+    Because the attending agent operates purely at the language layer,
+    the framework is image-encoder agnostic and can be retrofitted onto
+    any deployed report-generation system, which we believe marks a
+    meaningful step toward agent-mediated radiology drafting in
+    production pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty. The section claims RadCollab "improves on prior
+    work," but every quantitative comparison on every dataset is
+    RadCollab vs. RadCollab-base — the authors' own previous
+    single-agent variant. The standard chest-X-ray report-generation
+    landscape (R2Gen, R2GenCMN, M2 Transformer, KGAE, CXR-RePaiR,
+    PPKED, CvT2DistilGPT2, METransformer) is entirely absent, as are
+    other multi-agent / LLM-debate frameworks for clinical text. The
+    delta over RadCollab-base (≈1–2 F1 points) is real-but-narrow and
+    is unclaimed against the actual field. Detection is low-gating: a
+    careful reader simply notices that all three baselines on all three
+    datasets are RadCollab-base, with no external comparator anywhere.
+    Template T05 ("Check this.") is maximally generic and does not
+    signal R1.4 specifically — the surface form is consistent with
+    requests for proofreading, fact-checking, sanity-checking numbers,
+    or stats review.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that every baseline across all three datasets is the
+  authors' own RadCollab-base and flags this as an insufficient basis
+  for the "improves on prior work" framing. Names concrete missing
+  comparators from the chest-X-ray report-generation field (e.g.
+  R2Gen / R2GenCMN / M2 Transformer / KGAE or similar) that the section
+  should be benchmarked against. Recommends rewording the contribution
+  to a defensible delta against the actual field rather than self-
+  comparison.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the abstract-style framing, or suggests
+  reporting additional metrics (BLEU, ROUGE) and confidence intervals
+  on the existing RadCollab-vs-RadCollab-base comparisons. Praises the
+  attending-agent debate mechanism as a meaningful innovation and adds
+  peripheral citations to multi-agent LLM work without questioning that
+  no external report-generation baseline appears anywhere in the
+  evaluation.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

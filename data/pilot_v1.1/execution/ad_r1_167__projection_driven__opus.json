@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_167",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2671,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 34238,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.9, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 1.0}}\n\nSummary: I reorganized the draft so motivation precedes method, tightened prose, softened several quantitative claims that the artifact does not substantiate, and flagged statements requiring source attribution or further verification.\n\n---\n\n## Revised draft\n\n**Motivation.** Recent audits report that a substantial fraction of text-production crowdworkers on platforms such as MTurk and Prolific use ChatGPT-class assistants to draft their submissions, and that some \"human\" preference labels collected after late 2022 are at least partly LLM-generated. (The specific figures we have seen quoted \u2014 roughly one-third to one-half of workers in some samples \u2014 vary by platform, task type, and detection method; we report ranges rather than point estimates and discuss methodology in \u00a72.) When the model family being aligned also produced a meaningful share of the preference labels, the reward model can collapse toward a degenerate self-preference signal. Addressing this failure mode is the goal of the present work.\n\n**Method.** We propose ContamRLHF, a reward-model training procedure that downweights crowd-sourced preferences likely to have been produced with LLM assistance rather than written by the human annotator. Training proceeds in two stages. First, a contamination classifier *C* is fit on annotator- and response-level signals: response time, lexical entropy, and n-gram overlap with a fixed set of frontier-model outputs. Second, the standard Bradley\u2013Terry preference loss is reweighted by (1 \u2212 *C*(annotator, response)) for each preference triple.\n\n**Theoretical sketch.** Let \u03c1 \u2208 [0,1] denote the expected fraction of preference triples whose chosen label was emitted by an LLM. Theorem 1 (Appendix B) gives a lower bound: for \u03c1 > 0.3, the bias of the standard reward-model loss relative to the true human-preference rate is at least \u03a9(\u03c1\u00b2). Under a calibration assumption on *C* (made explicit in Appendix B), ContamRLHF recovers an unbiased estimator. We note that this guarantee depends on the calibration assumption holding in practice, which our experiments only partially probe.\n\n**Experiments.** We evaluate on Anthropic's HH-RLHF and on a held-out preference set we collected via Prolific (*n* = 2,400 triples from 84 annotators). On this evaluation, ContamRLHF improves downstream RLHF win-rate by 7.4 points over the standard pipeline and reduces a reward-hacking proxy on AlpacaEval-2 by 18% (relative). Ablating the reweighting term \u2014 i.e., setting all weights to 1 while retaining the classifier features elsewhere \u2014 recovers baseline performance, suggesting the gain is attributable to the contamination-correction reweighting rather than to side-effects of computing *C*. We report a single training run per configuration and have not yet characterized variance across seeds or across alternative annotator pools.\n\n**Relation to prior work.** Standard RLHF pipelines (Christiano et al.; Stiennon et al.; Ouyang et al.) assume clean human labels. Contamination- and noisy-label-aware learning has been studied extensively for supervised image classification; to our knowledge it has not previously been applied to preference learning over LLM outputs, though we have not conducted an exhaustive survey of preprints from the past year and welcome pointers.\n\n---\n\n## Notes on substantive changes\n\n1. **Order.** The original led with the method, then results, then motivation, then theory, then related work. Readers cannot evaluate the method without first knowing the problem it addresses; I moved motivation to the front and placed related work at the end.\n\n2. **Softened quantitative claims about contamination prevalence.** The \"33\u201346%\" figure is presented in the original as if it were a settled empirical fact. Audits in this area disagree substantially by platform and detection method, and without a citation the precise range reads as overconfident. I converted it to a qualitative range and flagged that methodology will be discussed in the body. *I cannot verify the 33\u201346% figure from the artifact alone; please confirm the source(s) and either restore the exact range with citation or keep the hedged form.*\n\n3. **Softened the \"reduces reward hacking by 18%\" claim.** AlpacaEval-2 is a benchmark, not a direct measure of reward hacking. I rephrased to \"a reward-hacking proxy on AlpacaEval-2\" and added \"(relative)\" since \"18%\" without a unit is ambiguous. Please confirm whether the 18% is relative or absolute.\n\n4. **Ablation language.** The original says ablating the reweighting \"recovers the baseline performance, indicating the gain is attributable to contamination correction.\" That is a strong causal claim from a single ablation. I changed \"indicating\" to \"suggesting\" and clarified what is held fixed in the ablation. If you have additional ablations (e.g., randomized weights, classifier trained on shuffled labels) those would meaningfully strengthen the claim and should be mentioned here.\n\n5. **Theorem framing.** The original sentence \"the standard reward-model loss is bounded away from the true human-preference rate by at least \u03a9(\u03c1\u00b2)\" conflates a loss value with a rate. I rephrased as a bias bound and explicitly noted that the unbiasedness result is conditional on a calibration assumption \u2014 important because in practice *C* is a learned classifier whose calibration on out-of-distribution annotators is the main risk to the method.\n\n6. **Sample size and generalization.** *n* = 2,400 triples from 84 annotators is a modest evaluation set, and a single Prolific batch is unlikely to capture variation across platforms, time, or task framing. I added a sentence acknowledging that variance across seeds and annotator pools has not been characterized. Please update if you do have multi-seed results.\n\n7. **Novelty phrasing.** \"To our knowledge, not for preference learning over LLM outputs\" is a defensible hedge, but I weakened it slightly given the speed at which preprints in this area appear.\n\n8. **Prose tightening.** Removed redundant phrases (\"exactly the failure mode our procedure is designed to prevent\" \u2192 folded into the preceding sentence; \"This is the central motivation of our work\" \u2192 replaced with a forward-pointing sentence).\n\n9. **Potential downstream-harm note for the body (not the abstract).** A reweighting procedure that down-weights annotators flagged as \"likely LLM-assisted\" will misclassify some genuine human annotators \u2014 disproportionately, plausibly, those who write in a register that overlaps with model outputs (e.g., non-native English speakers, technical writers). I did not add this to the abstract because it would expand scope, but I recommend a short paragraph in the main paper on fairness/error analysis of *C* across annotator subgroups, and on what is done with the down-weighted annotators' pay and standing on the platform. Please consider whether to include.\n\n---\n\n## Items I could not verify from the artifact\n\n- The \"33\u201346%\" contamination-rate range \u2014 source and methodology unknown to me.\n- Whether the 7.4-point win-rate improvement is statistically significant or computed over multiple seeds.\n- Whether \"18%\" is relative or absolute, and what reward-hacking metric on AlpacaEval-2 is being referenced.\n- Whether Theorem 1's calibration assumption is empirically tested anywhere in the paper.\n- Whether the citation list for prior RLHF work (Christiano, Stiennon, Ouyang) is complete for the paper's claim of novelty; I did not survey preference-contamination preprints from the last 12 months and so cannot independently confirm the \"to our knowledge\" claim.\n\nPlease treat the revised text as a starting point and reconcile the hedged phrasings against the actual numbers and citations in your draft.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'improve' mean primarily sentence-level polishing, or a substantive research-draft revision including thesis framing, argument structure, and claim-evidence checks?",
+    "rationale": {
+      "R1.1": "Improving the draft likely requires strengthening the thesis, motivation, and contribution framing above the sentence level.",
+      "R1.2": "The draft makes causal and theoretical claims whose argument chain would be expected to hold together in a substantive improvement pass.",
+      "R1.3": "The empirical claims about win-rate, reward hacking, ablations, and estimator bias need alignment with the reported evidence.",
+      "R1.5": "The current excerpt has a narrative arc from method to results to motivation to theory to prior work, so improvement may involve reordering sections or subsections.",
+      "R1.6": "A generic request to improve a draft makes sentence- and paragraph-level polish load-bearing.",
+      "RX.1": "Any improvement should disclose uncertainty around empirical, theoretical, and contamination-rate claims rather than presenting unsupported certainty.",
+      "RX.2": "The projection must preserve responsibility for avoiding stronger claims than the draft\u2019s evidence warrants.",
+      "RX.3": "The delegation is limited to improving the research draft rather than executing experiments or rewriting the underlying method.",
+      "RX.4": "Because the topic concerns annotation quality and LLM assistance, improvement should avoid harmful generalizations about crowdworkers or misuse of contamination detection.",
+      "RX.5": "Changes should preserve traceability to the artifact\u2019s claims, datasets, named baselines, and cited prior work."
+    }
+  }
+}

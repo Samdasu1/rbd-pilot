@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_203",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2287,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29640,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.4\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: I revised the abstract/intro to soften an unsupportable \"first\" claim, sharpen the contribution against the cited prior work, tighten the prose, and add a brief assumptions/limitations line; I also flag verification gaps below.\n\n---\n\n**Revised text**\n\nAdaptive finite element methods for convection-dominated PDEs require error estimators that capture both the magnitude and the directional structure of solution features. We present GoalAniso, an algorithm that integrates goal-oriented dual-weighted residual (DWR) estimation with anisotropic metric-based mesh refinement for steady-state convection-diffusion problems with sharp internal layers. The distinguishing element is that a single DWR quantity supplies both the refinement indicator and the metric tensor used to shape elements \u2014 in particular, the metric's principal directions are taken from the dual solution rather than from a Hessian of the primal.\n\nResidual-based isotropic adaptation in the energy norm is known to perform poorly on convection-dominated problems: layers are inherently anisotropic, and isotropic refinement pays for directional resolution by over-refining in the layer-parallel direction. Resolving layer structure efficiently therefore requires elements aligned with the solution's directional features, not merely sized by an error magnitude.\n\nTwo lines of prior work are directly relevant. Becker and Rannacher (2001) introduced the DWR framework for goal-oriented estimation on (predominantly isotropic) meshes. Formaggia and Perotto (2003) derived element-wise anisotropic DWR estimators for advection-diffusion problems and demonstrated layer-adapted meshes driven by those estimators. Separately, metric-based anisotropic adaptation (e.g., Frey and Alauzet, 2005) aligns elements with a Hessian-derived metric of the primal solution, without reference to a goal functional. GoalAniso differs from Formaggia\u2013Perotto in how the anisotropy is constructed \u2014 using the dual solution's directional information to orient the metric, rather than localizing an anisotropic DWR bound per element \u2014 and differs from Hessian-metric methods in being driven by a user-chosen goal functional rather than by primal curvature.\n\nAt each adaptive iteration the algorithm (i) solves the primal and dual problems on the current mesh, (ii) assembles element-wise DWR contributions to the goal error, and (iii) constructs a Riemannian metric whose principal directions follow the dual solution's gradient frame and whose eigenvalues are scaled by the local DWR contribution. Elements with the largest goal-error contribution are refined, with new elements shaped according to this metric.\n\nWe report three benchmarks: a rotating-pulse problem, a 2D boundary-layer problem at P\u00e9clet number 10^4, and the Hemker test problem. On Hemker, to reach a fixed tolerance on the target functional, GoalAniso uses 41% fewer degrees of freedom than goal-oriented isotropic refinement and 28% fewer than Hessian-driven anisotropic refinement under the same solver, polynomial order, and stopping criterion. Reductions are in the same range on the other two benchmarks (full tables in \u00a7X).\n\nThese results suggest GoalAniso is a practical choice for goal-oriented adaptivity when layer structure dominates the goal error. We do not claim improvements in regimes where the goal functional is insensitive to layer orientation, nor for time-dependent or strongly nonlinear problems, which lie outside the present scope.\n\n---\n\n**Key changes and why**\n\n1. **\"First\" claim removed.** The original asserts GoalAniso is \"the first algorithm to combine goal-oriented DWR with anisotropic mesh refinement,\" but the same paragraph then cites Formaggia and Perotto (2003) doing exactly that combination for advection-diffusion problems. That is a direct internal contradiction and the strongest weakness in the draft. The revision keeps a defensible novelty claim \u2014 *how* the anisotropy is constructed (dual-aligned metric from a single DWR quantity) \u2014 and makes the delta against Formaggia\u2013Perotto explicit instead of papering over it.\n\n2. **Contribution sharpened against both baselines.** The original framing (\"couples these threads\") is vague. The revision states two specific differences: vs. Formaggia\u2013Perotto (metric orientation source); vs. Hessian-metric (goal-driven vs. primal-curvature-driven). This is the contribution that survives once the \"first\" claim is dropped.\n\n3. **Benchmark statement made falsifiable.** \"Achieves the target functional accuracy\" did not specify what is held fixed across methods. The revision fixes the comparison: same tolerance, same solver, same polynomial order, same stopping criterion. \"Consistent across the suite\" is softened to \"in the same range,\" because without numbers for the other two cases the stronger phrasing is not earned by the text shown.\n\n4. **Scope fenced.** A closing sentence states what is *not* claimed (orientation-insensitive functionals, time-dependent, strongly nonlinear). This removes implicit overreach without weakening the actual result.\n\n5. **Prose tightened.** Shorter sentences in the mechanism paragraph; \"P\u00e9clet\" with the accent; \"DWR\" expanded on first use; the mechanism described as three numbered steps so a reader can audit the loop.\n\n---\n\n**Items I could not verify and that you should confirm before submission**\n\n- Whether Formaggia and Perotto (2003) \u2014 or a follow-up by the same group \u2014 already use the dual solution to orient the metric. If they do, the remaining novelty claim collapses to \"a particular metric construction,\" and the framing needs another pass. A targeted check of their later papers (Micheletti, Perotto, and co-authors, ~2006\u20132010) is worth doing.\n- The 41% / 28% Hemker numbers and \"consistent across the suite\" claim. The abstract should match the tables; if the rotating-pulse or boundary-layer reductions are materially smaller, \"in the same range\" should be replaced with the actual range.\n- Whether the dual solution is regular enough on the benchmarks shown for \"principal directions from the dual\" to be well-defined where it matters (near layers the dual can itself be rough). If you rely on a smoothed/recovered dual gradient, that should be named, since it affects reproducibility.\n- The Becker\u2013Rannacher (2001) citation: the canonical DWR reference is often cited as the 2001 *Acta Numerica* article; please confirm the exact entry matches what your bibliography contains.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation asks to make the draft stronger, which centrally includes improving the thesis, contribution framing, and gap statement.",
+      "R1.2": "Strengthening the artifact requires checking whether the argument from problem motivation to method to claimed contribution holds together.",
+      "R1.3": "Because the passage relies on benchmark results to justify the method, claim-evidence alignment is a central responsibility.",
+      "R1.4": "The draft makes a first-algorithm claim and positions itself against prior work, so novelty assessment is central.",
+      "R1.5": "Improving strength may require section- or paragraph-level reordering of the narrative arc in the presented draft.",
+      "R1.6": "A request to make prose stronger centrally includes sentence- and paragraph-level polish, emphasis, and concision.",
+      "RX.1": "Any projection must preserve uncertainty about what kind of strengthening is intended by the broad delegation.",
+      "RX.2": "The projection must account for avoiding inflated novelty, performance, or practical-impact claims.",
+      "RX.3": "The agent must stay within the requested strengthening task and not expand into executing unrelated review or research work.",
+      "RX.4": "The projection must account for avoiding changes that could mislead readers about scientific validity or applicability.",
+      "RX.5": "The projection must preserve traceability to the artifact's stated claims, citations, and reported results."
+    }
+  }
+}

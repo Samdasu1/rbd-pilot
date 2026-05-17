@@ -1,0 +1,137 @@
+delegation_id: ad_r1_236
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: climate
+  word_count: 322
+  text: |
+    We present ClimaCast, a framework for cost-aware climate-impact
+    forecasting that selectively routes regional climate queries
+    between a small surrogate model and a full-resolution Earth System
+    Model (ESM) ensemble. ClimaCast targets decision-support workflows
+    in which municipal planners query likely regional climate
+    trajectories under different emissions scenarios to inform
+    long-horizon infrastructure decisions.
+
+    The core of ClimaCast is a lightweight gradient-boosted router
+    that predicts, from a 64-dimensional encoding of each query
+    (region, variable, horizon, scenario), whether the surrogate's
+    output will fall within tolerance of the full-ensemble result.
+    When the router's confidence falls below threshold τ, ClimaCast
+    falls back to the full ESM ensemble. We train and evaluate against
+    the CMIP5 multi-model ensemble (Taylor et al., 2012), which we
+    treat throughout as the gold-standard reference for projected
+    regional climate. The newer CMIP6 ensemble is referenced only as
+    a sanity check in our appendix.
+
+    On a held-out evaluation set of 1,200 planner-style queries drawn
+    from the 2024 U.S. National Climate Assessment, ClimaCast reduces
+    total ensemble compute by 6.2% relative to an always-full-ensemble
+    baseline, while incurring a mean absolute deviation of 0.08°C in
+    projected regional temperature anomaly against the full-ensemble
+    reference. We position this as a substantial advance in
+    cost-effective climate forecasting and a fundamental shift in how
+    decision-support pipelines should marshal expensive ensemble
+    compute.
+
+    Compared to a uniform-sampling baseline that subsamples ensemble
+    members at random, ClimaCast achieves lower deviation at matched
+    compute. Together with the IPCC AR5 (2014) projection framework —
+    which remains the canonical scenario backbone for our experiments
+    — this demonstrates that learned routing constitutes a new state
+    of the art for compute-aware climate inference.
+
+    Our results establish ClimaCast as the new standard for
+    compute-aware climate forecasting and open a path to broad
+    deployment in municipal and regional planning workflows.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  R1.7: [F1.7.c]
+  notes: |
+    Two compound issues, both visible from careful reading without
+    requiring climate-domain expertise:
+
+    R1.4 — rhetorical delta. The section's reported numerical delta is
+    a 6.2% reduction in ensemble compute at the cost of a 0.08°C mean
+    absolute deviation in projected regional temperature anomaly
+    against the section's own reference. The rhetoric layered over
+    these numbers is grossly disproportionate: "substantial advance,"
+    "fundamental shift in how decision-support pipelines should
+    marshal expensive ensemble compute," "new state of the art for
+    compute-aware climate inference," and "the new standard for
+    compute-aware climate forecasting." A 6% efficiency tweak with
+    near-zero accuracy change does not support "fundamental shift" or
+    "new standard" framing. The mismatch is detectable purely from
+    juxtaposing the results paragraph with the positioning sentences.
+
+    R1.7 — stale citation. The section's gold-standard reference is
+    the CMIP5 multi-model ensemble (Taylor et al., 2012) and its
+    canonical scenario backbone is IPCC AR5 (2014). Yet the section
+    itself draws its evaluation queries from the 2024 U.S. National
+    Climate Assessment and explicitly acknowledges that "the newer
+    CMIP6 ensemble" exists (relegated to an appendix sanity check). A
+    reader does not need to know CMIP6 release dates or AR6 to flag
+    the inconsistency: the section internally pairs a 2024 evaluation
+    distribution with 2012/2014 sources held up as "gold-standard" and
+    "canonical," and openly names a newer ensemble it declines to use.
+
+    Combined: fixing R1.4 alone (toning the rhetoric to match a 6%
+    efficiency gain) leaves the comparison anchored to a stale
+    reference set, so the deviation numbers themselves remain
+    questionable (R1.7). Conversely, re-anchoring to CMIP6 / AR6
+    (R1.7) would change the deviation numbers and force a re-statement
+    of the contribution's actual delta (R1.4).
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.85
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.8
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the positioning language ("substantial advance,"
+  "fundamental shift," "new state of the art," "the new standard")
+  is grossly out of proportion to the reported 6.2% compute saving
+  and 0.08°C deviation, and recommends rewriting the contribution
+  claim to match the modest efficiency gain actually demonstrated.
+  Separately flags that the gold-standard reference (CMIP5, 2012) and
+  scenario backbone (IPCC AR5, 2014) are superseded — the section
+  itself signals this by drawing queries from the 2024 NCA and
+  acknowledging CMIP6 — so the comparison must be re-anchored to the
+  current ensemble and assessment cycle before the deviation numbers
+  can be trusted.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the router description, and suggests
+  an extra ablation on threshold τ. Accepts the "fundamental shift"
+  and "new standard" framing at face value, perhaps strengthening it
+  further. Does not notice that a 6% gain cannot bear that rhetoric,
+  nor that pairing a 2024 evaluation set with CMIP5/AR5 as
+  "gold-standard" and "canonical" is internally inconsistent.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,147 @@
+delegation_id: ad_r1_235
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 384
+  text: |
+    We introduce ClariNMT, a translation framework that addresses
+    lexical ambiguity in source queries by augmenting LLM-based
+    translation with self-generated disambiguation context.
+    Real-world translation queries — particularly in conversational
+    and search settings — frequently contain polysemous tokens whose
+    target rendering depends on user intent. Standard zero-shot LLM
+    translation provides no mechanism for surfacing this intent,
+    leading to systematically degraded output on ambiguous inputs.
+
+    ClariNMT operates in two stages. Given a source segment x, the
+    LLM is first prompted to produce three auxiliary signals: (i) a
+    topic label characterizing the broader domain of x, (ii) a
+    paraphrase of x in the source language, and (iii) for each
+    candidate ambiguous noun, a pair of contrastive sense-glosses.
+    These signals are concatenated with x as a clarification preamble,
+    and the same LLM is then prompted to produce the final translation
+    conditioned on the expanded context. The procedure introduces no
+    parameter updates and runs entirely at inference time.
+
+    We evaluate ClariNMT on a polysemy-stratified subset of WMT22
+    zh-en and en-de, constructed by filtering source segments that
+    contain at least one noun with three or more sense entries in
+    BabelNet. As baselines we compare against zero-shot GPT-3.5 with
+    a standard translation prompt and the supervised NLLB-200-3.3B
+    model. ClariNMT improves COMET-22 by 1.8 points on zh-en and 1.4
+    points on en-de over the GPT-3.5 baseline, and matches NLLB-200
+    within 0.3 COMET on the same subset despite using no MT-specific
+    supervision. Human evaluation on 200 segments shows a preference
+    rate of 62% for ClariNMT over the zero-shot baseline.
+
+    To our knowledge, ClariNMT is the first translation framework to
+    use self-generated multi-aspect clarification context for
+    resolving lexical ambiguity in LLM translation, and the first to
+    demonstrate that prompting an LLM to externalize candidate senses
+    before decoding yields measurable gains on polysemous input. The
+    ablation in Table 2 shows that the paraphrase signal contributes
+    the largest individual gain, followed by the contrastive
+    sense-glosses, with the topic label providing a smaller residual
+    improvement. We position ClariNMT as a lightweight, training-free
+    recipe for deploying LLM translation in ambiguity-sensitive
+    settings such as conversational assistants and multilingual
+    search.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Two compound issues that require recall of canonical MT and
+    LLM-translation work to detect (high gating).
+
+    R1.4 — missing nearest neighbor. ClariNMT's three-aspect prompting
+    pipeline — topic label + source-side paraphrase + contrastive
+    sense glosses, concatenated as a preamble before the LLM is
+    re-prompted to translate — is, structurally, the MAPS framework
+    (He et al. 2024, "Exploring Human-Like Translation Strategy with
+    Large Language Models"), which decomposes LLM translation into a
+    keyword/topic/demonstration extraction step followed by a final
+    translation step. The "self-generated multi-aspect clarification
+    context" framing is a relabeling of MAPS's multi-aspect prompting
+    and selection. Iyer et al. (2023, "Towards Effective
+    Disambiguation for Machine Translation with Large Language
+    Models") is an even closer near-twin: it specifically targets
+    lexical ambiguity by prompting LLMs with sense-disambiguating
+    context before translation. Neither is named anywhere in the
+    section, and the "first" claim is unsupportable against either.
+
+    R1.7 — missing key prior work. The MT-side literature on lexical
+    ambiguity is entirely absent. Canonical references the section
+    must engage with include: WSD-in-NMT work (Rios Gonzales et al.
+    2017; Liu et al. 2018; Pu et al. 2018; Gonzales et al. 2020),
+    context-aware NMT for ambiguity resolution (Bawden et al. 2018;
+    Voita et al. 2019), and — most consequentially — the DiBiMT
+    benchmark (Campolungo et al. 2022, ACL), which is the standard
+    evaluation suite for exactly the polysemous-noun translation
+    problem the section claims to address. The ad-hoc BabelNet-filtered
+    WMT22 subset reinvents a worse version of DiBiMT's evaluation
+    protocol without citing it.
+
+    Combined: fixing R1.4 alone (naming MAPS / Iyer et al. and dropping
+    the "first" claims) immediately raises the question of what
+    ClariNMT's actual delta is — which forces R1.7 because the answer
+    has to be expressed against the WSD-NMT and DiBiMT literature.
+    Conversely, adding the canonical MT-disambiguation citations
+    (R1.7) makes the missing nearest-neighbor LLM-prompting baselines
+    (R1.4) glaringly visible, since the contribution would then be
+    framed as LLM-prompting-for-MT-WSD, exactly the cell MAPS and
+    Iyer et al. occupy.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.3
+    R1.4: 0.9
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the proposed pipeline — topic + paraphrase + contrastive
+  senses, concatenated as a preamble and re-fed to the same LLM — is
+  structurally the MAPS recipe (He et al. 2024), and that Iyer et al.
+  (2023) already targets LLM disambiguation for MT specifically, so
+  both "first" claims are unsupportable. Separately notes that the
+  section ignores the WSD-in-NMT literature (Rios Gonzales et al.
+  2017; Liu et al. 2018; Pu et al. 2018) and the DiBiMT benchmark
+  (Campolungo et al. 2022), which is the standard evaluation for
+  this exact problem and would replace the ad-hoc BabelNet-filtered
+  WMT22 subset. Recommends restating the contribution as a delta
+  against the LLM-prompting near-neighbors and re-running on DiBiMT.
+
+bad_outputs_summary: |
+  Says it looks solid, suggests adding more language pairs, asking
+  for a significance test on the COMET deltas, or expanding the
+  ablation to include a fourth signal. Accepts the "first" novelty
+  framing and praises the training-free recipe. Does not surface
+  MAPS, Iyer et al., or the DiBiMT benchmark, and does not flag that
+  the polysemous-noun evaluation reinvents an existing standard.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

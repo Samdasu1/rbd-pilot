@@ -1,0 +1,147 @@
+delegation_id: ad_r1_242
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 348
+  text: |
+    Section 3. Design of LACUNA
+
+    LACUNA is a storage and serving layer for ML annotation datasets
+    that preserves the full per-annotator label distribution rather
+    than collapsing it to majority-vote consensus. The central
+    contribution of this section is a copy-on-write multi-version
+    index that exposes per-annotator label histories with O(1)
+    amortized random-read cost. We build on LSM-tree compaction
+    primitives in the spirit of O'Neil et al. but treat annotator
+    provenance as a first-class indexed dimension; unlike Delta
+    Lake, which versions table state at row granularity, LACUNA
+    versions per-cell label trajectories.
+
+    Storage Layout. We adopt a column-major sstable format derived
+    from Parquet, with one annotator-id column per labeling pass.
+    To bound write amplification, compaction follows the size-tiered
+    policy of Cassandra rather than RocksDB's leveled scheme, on
+    the grounds that annotation datasets are append-mostly: once a
+    labeling round closes, its sstables are immutable. The resulting
+    read amplification -- scaling with the number of tiers -- is
+    tolerable because typical annotation queries touch O(log N)
+    tiers in expectation.
+
+    Threat Model. We assume a non-adversarial setting: annotators
+    may disagree but do not collude to corrupt the label distribution.
+    Adversarial annotation poisoning is out of scope and is handled
+    by orthogonal upstream defenses in the spirit of Steinhardt et
+    al. Sybil-resistant annotator-identity binding is likewise
+    deferred to the auth layer.
+
+    Query Interface and Scheduler. The user-facing API exposes
+    per-item label distributions as first-class values. The
+    load-bearing contribution of this section, however, is the
+    scheduling policy by which fresh annotation tasks are dispatched:
+    rather than uniformly sampling unlabeled items, LACUNA's
+    scheduler prioritizes items whose current per-annotator
+    distribution maximizes expected information gain over the
+    posterior on true label distributions, in the spirit of
+    BALD-style acquisition [Houlsby et al.]. We show in Section 5
+    that this policy reduces annotator-hours to convergence by 38%
+    on three benchmark corpora. The storage layer described above
+    exists to make this scheduler tractable: without per-annotator
+    history indexing, recomputing acquisition scores over candidates
+    would dominate scheduling cost.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  R1.5: [F1.5.b]
+  notes: |
+    Two compound issues. Detecting the thesis drift cleanly requires
+    recall of canonical systems and active-learning references --
+    without knowing what LSM/Delta Lake/Cassandra-vs-RocksDB and
+    BALD respectively contribute, a reader cannot tell that the
+    storage claim and the scheduler claim are two separate research
+    contributions rather than one layered argument.
+
+    R1.1 thesis drift (F1.1.a): The opening commits the section's
+    "central contribution" to a copy-on-write multi-version index
+    with O(1) amortized per-annotator read -- a storage-systems
+    contribution positioned against O'Neil-style LSM and Delta Lake.
+    The closing subsection then asserts that "the load-bearing
+    contribution of this section, however, is the scheduling policy"
+    -- a BALD-style active-learning acquisition contribution. The
+    section never reconciles these: the hand-wave that "the storage
+    layer exists to make the scheduler tractable" reframes the
+    storage work as infrastructure, contradicting the opening's
+    framing of it as the central contribution. A reader who knows
+    the LSM/Delta Lake reference frame will read the opening as a
+    storage-indexing paper; a reader who knows BALD will read the
+    closing as an active-learning paper. The thesis defended at
+    the end is not the thesis announced at the start.
+
+    R1.5 misplaced section (F1.5.b): The "Threat Model" subsection
+    is inserted between Storage Layout (a design detail) and Query
+    Interface (a design detail), interrupting the design narrative.
+    In standard systems-paper structure, threat models belong in
+    Section 2 (Background / Assumptions) or in a dedicated security
+    section, not wedged mid-Design. Its placement forces the reader
+    to context-switch out of and back into the storage/scheduler
+    design discussion.
+
+    Compound: resolving R1.1 (committing to either the storage
+    index or the scheduling policy as the load-bearing contribution)
+    forces a structural rewrite that subsumes the threat-model
+    placement question (R1.5), since the threat-model subsection's
+    relevance and location depend on which contribution is primary.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.8
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section announces a storage-indexing
+  contribution (copy-on-write multi-version index over per-annotator
+  histories) but ends by defending a different contribution (a
+  BALD-style scheduling policy for annotation dispatch), and asks
+  the authors to commit to one as load-bearing and demote the other
+  to supporting infrastructure or move it to a separate section.
+  Also flags that the Threat Model subsection is wedged mid-Design
+  between Storage Layout and Query Interface and should move to the
+  background/assumptions section or a dedicated security section so
+  the design narrative is uninterrupted.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests a system diagram, or accepts the
+  "storage layer exists to make the scheduler tractable" sentence
+  as adequate reconciliation of the two contribution claims.
+  Treats the Threat Model subsection's placement as a stylistic
+  matter rather than a structural defect, and does not notice that
+  the storage and scheduler claims are positioned against distinct
+  prior-work frames (LSM/Delta Lake vs BALD) and therefore read as
+  two separate contributions.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

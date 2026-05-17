@@ -1,0 +1,56 @@
+{
+  "example_id": "ad_r1_030",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 1,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 2552,
+  "latency_ms": 48670,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.7,\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"R1.4\": 0.7,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.3,\n    \"R1.7\": 0.3,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.1\", \"R1.2\", \"R1.3\", \"R1.4\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.1\": \"The core contribution claim ('curvature-adaptive step-size') and the thesis ('fewer iterations than PCG') must be reconstructed and validated; if the contribution claim is hollow or mislabeled, the paper has no thesis worth defending.\",\n    \"R1.2\": \"Multiple internal contradictions are load-bearing: (1) the described alpha_k = (r_k^T r_k)/(r_k^T A r_k) is algebraically identical to the standard Cauchy/steepest-descent step\u2014not a novel curvature-adaptive scheme; (2) the claimed convergence rate O(kappa * log(1/epsilon)) matches PCG's canonical O(sqrt(kappa) * log(1/epsilon)) in notation but steepest descent in fact converges as O(kappa), not O(sqrt(kappa))\u2014the bound is either wrong or mislabeled; (3) claiming the rate 'matches PCG' while also claiming fewer iterations than PCG is self-contradictory.\",\n    \"R1.3\": \"The experimental claim ('converges in fewer iterations than PCG with Jacobi preconditioner') is directly contradicted by the theoretical section, which asserts convergence parity with PCG. If both cannot be simultaneously true, at least one is unsupported by the evidence presented, making alignment failure load-bearing.\",\n    \"R1.4\": \"The 'key insight' is the steepest-descent Rayleigh-quotient step, which appears in Cauchy (1847) and every standard numerical linear algebra text. The novelty delta over prior art appears to be zero; this must be assessed to determine whether any genuine contribution exists.\"\n  },\n  \"clarification_needed\": false,\n  \"clarification_question\": \"\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.7,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.1": "The core contribution claim ('curvature-adaptive step-size') and the thesis ('fewer iterations than PCG') must be reconstructed and validated; if the contribution claim is hollow or mislabeled, the paper has no thesis worth defending.",
+      "R1.2": "Multiple internal contradictions are load-bearing: (1) the described alpha_k = (r_k^T r_k)/(r_k^T A r_k) is algebraically identical to the standard Cauchy/steepest-descent step\u2014not a novel curvature-adaptive scheme; (2) the claimed convergence rate O(kappa * log(1/epsilon)) matches PCG's canonical O(sqrt(kappa) * log(1/epsilon)) in notation but steepest descent in fact converges as O(kappa), not O(sqrt(kappa))\u2014the bound is either wrong or mislabeled; (3) claiming the rate 'matches PCG' while also claiming fewer iterations than PCG is self-contradictory.",
+      "R1.3": "The experimental claim ('converges in fewer iterations than PCG with Jacobi preconditioner') is directly contradicted by the theoretical section, which asserts convergence parity with PCG. If both cannot be simultaneously true, at least one is unsupported by the evidence presented, making alignment failure load-bearing.",
+      "R1.4": "The 'key insight' is the steepest-descent Rayleigh-quotient step, which appears in Cauchy (1847) and every standard numerical linear algebra text. The novelty delta over prior art appears to be zero; this must be assessed to determine whether any genuine contribution exists."
+    },
+    "clarification_needed": false,
+    "clarification_question": ""
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

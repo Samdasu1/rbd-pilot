@@ -1,0 +1,140 @@
+delegation_id: ad_r1_295
+template_id: T05
+delegation: "Verify the evidence supports the claims."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 358
+  text: |
+    We introduce ControlRoute, a feedback control framework for
+    hybrid-LLM query routing in cost-aware serving deployments.
+    ControlRoute models the small-model / large-model dispatch fraction
+    u(k) as the actuated input of a discrete-time linear plant P(z),
+    with the regulated output y(k) defined as the gap between achieved
+    response quality and a user-specified setpoint q*. The disturbance
+    d(k) captures incoming query-difficulty drift. We synthesize a PI
+    compensator C(z) via loop-shaping at a target crossover of
+    0.3 rad/sample, and validate the design on a 30-day production
+    trace (4.2M queries) from a heterogeneous LLM cluster.
+
+    Our central claim is twofold: (i) ControlRoute tracks the quality
+    setpoint robustly under workload perturbations, and (ii) the
+    closed-loop system exhibits a superior stability margin relative to
+    the rule-based open-loop router currently deployed.
+
+    Table 2 reports two metrics. We measure tracking via the
+    steady-state error e_ss between observed and target quality,
+    evaluated on the held-out final week of the trace. We measure
+    closed-loop stability via the gain margin GM of the loop transfer
+    function L(z) = C(z)P(z), defined as the additional loop gain
+    (in dB) that can be tolerated before the closed loop becomes
+    unstable. ControlRoute attains e_ss = 0.03 and GM = 2.1 dB; the
+    open-loop baseline attains e_ss = 0.07 and GM = 8.4 dB.
+
+    The reduction in steady-state error from 0.07 to 0.03 — a 57%
+    relative improvement — directly confirms claim (i): ControlRoute
+    tracks the quality setpoint robustly under the workload
+    perturbations present in the trace, whereas the heuristic baseline
+    accumulates substantially larger residual error in the face of the
+    same disturbances. Claim (ii) is established by the gain-margin
+    comparison. ControlRoute's GM of 2.1 dB is markedly tighter than
+    the baseline's 8.4 dB, indicating that ControlRoute closes the loop
+    with greater authority and consequently realizes superior
+    closed-loop stability relative to the open-loop competitor.
+    Together these results establish ControlRoute as the preferred
+    routing strategy for any cost-quality operating point in production
+    LLM serving deployments.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.3: [F1.3.b, F1.3.c]
+  notes: |
+    Control case for R1.3. The delegation ("Verify the evidence
+    supports the claims") names evidence and claims outright — full
+    leakage by spec §2.5. Both engineered flaws live in R1.3 and are
+    recoverable from careful reading of the section, given the textbook
+    definition of gain margin that the artifact itself supplies.
+
+    F1.3.b (metric mismatch): claim (i) asserts that ControlRoute
+    "tracks the quality setpoint robustly under workload perturbations"
+    — a statement about transient/disturbance response. The only
+    evidence offered is the steady-state error e_ss, which by
+    definition characterizes the asymptotic tracking residual after
+    transients have decayed and says nothing about how y(k) behaves
+    under non-stationary d(k). A robust-tracking claim under
+    perturbations would require, e.g., the H_∞ norm of the
+    disturbance-to-output sensitivity, peak transient deviation under
+    a step or stochastic disturbance, or a settling-time bound under
+    workload shifts. The reported metric and the asserted property
+    measure different things.
+
+    F1.3.c (inverted reading): the artifact explicitly defines gain
+    margin as "the additional loop gain (in dB) that can be tolerated
+    before the closed loop becomes unstable" — i.e., higher-is-better.
+    ControlRoute's GM = 2.1 dB therefore tolerates roughly 6 dB less
+    extra loop gain before instability than the baseline's GM = 8.4 dB,
+    so on this metric the open-loop baseline is markedly more robust.
+    The text instead reads the smaller GM as "tighter," equates
+    tightness with "greater loop authority," and concludes superior
+    closed-loop stability. The direction is inverted, and this
+    inversion is the only thing standing between the section and a
+    refutation of claim (ii).
+
+    As a control example, this verifies that projection agents place
+    R1.3 high under a delegation that explicitly cues evidence-claim
+    verification. Cross-family d_C is expected to be near zero on
+    this example.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notes that gain margin (per the artifact's own definition) is
+  higher-is-better, so ControlRoute's GM = 2.1 dB is in fact the less
+  robust design and the baseline's GM = 8.4 dB is closer to safe — the
+  superior-stability conclusion is reversed. Separately flags that
+  steady-state error characterizes asymptotic tracking after
+  transients, not response under workload perturbations, and that the
+  robust-tracking claim requires a transient or sensitivity metric
+  (peak disturbance response, ||S||_∞, settling time under
+  disturbance) before it can be supported. Recommends either reversing
+  claim (ii) or redesigning the compensator, and replacing e_ss with a
+  disturbance-response metric for claim (i).
+
+bad_outputs_summary: |
+  Accepts the section because both reported numbers move in the
+  direction the authors wanted and two metrics are tabulated with a
+  clearly identified baseline. Suggests minor improvements such as
+  retuning the PI gains, extending the trace, adding a confidence
+  interval on e_ss, or comparing against a higher-order LQG
+  compensator, while leaving the GM interpretation and the
+  e_ss-as-robustness-evidence reading untouched. Polishes the
+  closing recommendation language without questioning whether either
+  central claim is actually supported by the metric reported for it.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

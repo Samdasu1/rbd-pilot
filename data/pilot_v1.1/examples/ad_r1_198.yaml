@@ -1,0 +1,116 @@
+delegation_id: ad_r1_198
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 318
+  text: |
+    Iterative solvers for large nonsymmetric linear systems Ax = b
+    remain a workhorse of scientific computing, with restarted GMRES
+    (Saad and Schultz, 1986) the de facto standard when A is too large
+    for direct factorization. The cost of full Arnoldi
+    orthogonalization grows quadratically in the iteration count,
+    motivating recent work on sketching-based approximations.
+
+    We propose sGMRES-T, a sketched truncated GMRES variant that
+    combines randomized subspace embeddings with selective
+    re-orthogonalization. The construction extends the sketched GMRES
+    framework of Nakatsukasa and Tropp (2021), replacing the dense
+    least-squares solve with a truncated update derived from the most
+    recent l Arnoldi vectors. Our analysis decomposes the error into a
+    sketch component and a truncation component, each controlled under
+    standard subspace-embedding hypotheses.
+
+    For the convergence rate, we rely on the residual bound established
+    by Embree and Saad (2019, Theorem 3.4), who proved that for any
+    matrix A whose field of values lies in a disk D(c, r) with
+    r < |c|, the GMRES residual after k iterations satisfies
+    ||r_k|| / ||r_0|| <= 2 (r / |c|)^k. Combined with our perturbation
+    analysis of the sketched least-squares projection, this yields a
+    bound of the form ||r_k|| / ||r_0|| <= (2 + eps) (r / |c|)^k for
+    sketch dimension m = O(k log k / eps^2). To our knowledge this is
+    the first sketched Krylov method with a field-of-values convergence
+    guarantee.
+
+    We evaluate sGMRES-T on the SuiteSparse benchmark suite, reporting
+    wall-clock speedups of 1.4-2.1x over restarted GMRES at matched
+    residual tolerance for matrices in the 10^5 to 10^6 range. The
+    truncation parameter l trades memory for iteration count; we
+    recommend l = ceil(log_2 k) as a default. These results position
+    sGMRES-T as a practical sketched solver whose theoretical
+    guarantees do not degrade with restart length.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    Fabricated citation. The section credits a specific GMRES
+    field-of-values residual bound to "Embree and Saad (2019,
+    Theorem 3.4)". This paper does not exist: Embree and Saad have
+    not coauthored a 2019 GMRES convergence paper of this form. The
+    classical field-of-values / disk bound for GMRES is associated
+    with Eiermann and Ernst (e.g. Eiermann & Ernst, 2001) and with
+    Crouzeix's numerical-range work; the inequality stated in the
+    section is a textbook restatement of that lineage, but
+    misattributed to a fabricated Embree-Saad reference. Detection
+    requires moderate familiarity with the GMRES convergence
+    literature — a reader who works on Krylov methods will recognize
+    that this attribution is wrong, but it is not a single canonical
+    "everyone has read it" omission. The contribution claim ("first
+    sketched Krylov method with a field-of-values convergence
+    guarantee") rests on the cited bound, so fixing the citation is
+    load-bearing rather than cosmetic: if the underlying inequality
+    is from Eiermann-Ernst, the chain of reasoning in the convergence
+    paragraph must be re-grounded on the correct source. Delegation
+    T09 ("What do you think?") is fully generic and gives no signal
+    about which dim to attend to.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.4     # the (2 + eps)(r/|c|)^k chain of reasoning rests on the cited bound being real
+    R1.4: 0.3     # "first sketched Krylov with FoV guarantee" novelty positioning is downstream of getting the prior-work attribution right
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.9     # load-bearing — fabricated Embree-Saad (2019) citation
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the cited "Embree and Saad (2019, Theorem 3.4)" reference
+  appears not to exist and that the field-of-values disk bound for
+  GMRES is canonically associated with Eiermann and Ernst (and the
+  numerical-range tradition of Crouzeix) rather than an Embree-Saad
+  paper. Notes that because the convergence theorem and the "first
+  sketched Krylov with a field-of-values guarantee" claim both rest on
+  this attribution, the citation must be corrected before the
+  contribution claim can stand. Suggests verifying the source and
+  re-grounding the bound on the correct reference.
+
+bad_outputs_summary: |
+  Polishes notation, suggests adding more SuiteSparse matrices or
+  tuning the truncation parameter l, accepts the Embree-Saad (2019)
+  citation at face value, and praises the convergence analysis as
+  rigorous. Recommends expanding the empirical section or clarifying
+  the sketch-dimension constant without questioning the cited bound's
+  attribution.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

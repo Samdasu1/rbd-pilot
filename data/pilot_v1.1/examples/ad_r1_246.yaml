@@ -1,0 +1,147 @@
+delegation_id: ad_r1_246
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 332
+  text: |
+    Static analyzers for production codebases vary widely in their
+    precision-recall profiles, language coverage, and runtime cost.
+    Infer specializes in interprocedural memory-safety reasoning on
+    C/C++ and Java; CodeQL emphasizes taint-tracking on a unified
+    dataflow graph; SpotBugs targets idiomatic Java bug patterns; and
+    Semgrep favors syntactic patterns expressible by lightweight rules.
+    In practice, teams running CI pipelines against repositories with
+    mixed language and structural composition tend to invoke several
+    of these tools in parallel, which inflates compute cost and
+    produces overlapping or contradictory reports that engineers then
+    triage by hand.
+
+    A range of recent work has explored this tooling redundancy.
+    SARIF-based aggregation pipelines normalize finding formats;
+    differential analyzers attempt to deduplicate across tools; and
+    several authors have proposed cost models for analyzer scheduling.
+    We tentatively surveyed roughly thirty such systems and found
+    that, broadly speaking, they tend to share a common assumption —
+    namely, that all analyzers are run, and the question is only how
+    to merge or filter their outputs after the fact. It seems
+    reasonable to suppose that a more selective approach might, in
+    principle, offer some benefits, although the magnitude of those
+    benefits would presumably depend on workload characteristics that
+    are not always easy to characterize precisely in advance.
+
+    Section 4 reports on our experiments. We collected 11,400 commits
+    from 47 open-source repositories spanning C, C++, Java, Python,
+    and TypeScript. For each commit we ran all four analyzers to
+    ground truth and recorded findings, runtimes, and false-positive
+    rates against a manually adjudicated subset. We then trained a
+    lightweight gradient-boosted classifier over commit-level features
+    (changed-file types, AST-level edit summaries, repository priors)
+    to predict, per commit, the analyzer most likely to produce a
+    true-positive finding within a fixed time budget.
+
+    In this paper we introduce ANALYZE-ROUTE, the first per-commit
+    routing benchmark for static analyzer selection, together with a
+    routing policy that achieves 78% of the union-recall of the
+    four-tool ensemble at 31% of its compute cost. The benchmark,
+    dataset, and reference router are released under an open license.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  R1.6: [F1.6.b]
+  notes: |
+    Two interacting flaws.
+
+    R1.5 — buried contribution. The section's actual contribution
+    ("we introduce ANALYZE-ROUTE, the first per-commit routing
+    benchmark for static analyzer selection, together with a routing
+    policy achieving 78% union-recall at 31% compute cost") is the
+    final paragraph. Paragraphs 1–3 read as background, related work,
+    and experimental setup — none of them announces what the paper
+    contributes. A reader scanning the opening cannot tell whether
+    this is a benchmark paper, a measurement study, an aggregation
+    proposal, or a router proposal until the very last paragraph. The
+    canonical fix is to lead with the contribution sentence — name
+    ANALYZE-ROUTE and the headline result up front — and then frame
+    paragraphs 1–3 as motivation and methodology supporting that
+    claim. The current ordering also makes paragraph 2's literature
+    survey land as the de facto thesis of the section, since it is
+    the only paragraph that articulates a positional view ("a more
+    selective approach might offer some benefits"). That placement
+    inverts the relationship between contribution and motivation.
+
+    R1.6 — hedging cascade. Paragraph 2 stacks hedges across two
+    sentences: "tentatively surveyed", "roughly thirty", "broadly
+    speaking", "tend to share", "seems reasonable to suppose",
+    "might, in principle", "some benefits", "presumably depend",
+    "not always easy to characterize precisely in advance". The
+    cascade weakens what should be the section's positional argument
+    (that selective routing is preferable to ensemble-and-merge) into
+    an unfalsifiable softening. The fix is to commit to the claim:
+    state directly that prior work assumes all analyzers run, and
+    that the gap is selective dispatch.
+
+    Detection: identifying the buried contribution requires recognizing
+    that ANALYZE-ROUTE is the load-bearing artifact of the paper and
+    that PL/SE benchmark papers conventionally foreground the named
+    benchmark and its headline number; this is moderate field
+    knowledge. The hedging cascade is surface-detectable on careful
+    reading.
+
+    T02 "Review this section." is generic and does not hint at
+    structure, contribution placement, or prose register.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.8
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural issue, identifies
+  that the paper's actual contribution — naming ANALYZE-ROUTE and the
+  78%/31% headline result — is buried in the final paragraph, and
+  proposes reordering so the contribution leads the section with
+  paragraphs 1–3 reframed as motivation and methodology supporting
+  that claim. For the prose issue, flags the stacked hedges in
+  paragraph 2 ("tentatively", "roughly", "broadly speaking", "seems
+  reasonable to suppose", "might, in principle", "presumably", etc.)
+  and rewrites the paragraph to commit to the positional claim that
+  prior work assumes ensemble execution and the gap is selective
+  dispatch.
+
+bad_outputs_summary: |
+  Polishes individual sentences, suggests adding more analyzers or
+  languages to the benchmark, or recommends a stronger classifier,
+  without recognizing that the contribution is buried at the end of
+  the section. Treats paragraph 4 as a natural conclusion rather than
+  a misplaced lede. Addresses only one of the two flaws — e.g., tones
+  down a single hedge in paragraph 2 while leaving the contribution
+  in the final paragraph, or reorders the section while leaving the
+  hedging cascade intact.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

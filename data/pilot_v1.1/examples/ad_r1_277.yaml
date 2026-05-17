@@ -1,0 +1,136 @@
+delegation_id: ad_r1_277
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 332
+  text: |
+    We present OrchestrA, a runtime framework for orchestrating teams
+    of LLM-based agents that collaborate on multi-step software
+    engineering tasks. OrchestrA introduces a typed message bus, a
+    scheduler that respects role-based capability constraints, and a
+    checkpointed shared workspace that lets agents recover from
+    intermediate failures without restarting the team. To our
+    knowledge, OrchestrA is the first orchestration substrate that
+    combines role-typed message passing with workspace checkpointing
+    for LLM agent teams.
+
+    The system is organized around three components. A role registry
+    binds each agent to a declarative role specification (e.g.,
+    Architect, Coder, Reviewer) and exposes its tool surface as a
+    typed interface. A scheduler routes inbound messages through the
+    role registry so that, for instance, design questions are
+    dispatched only to agents whose role permits architectural
+    decisions. A workspace layer materializes intermediate artifacts
+    (specifications, code, test results) as content-addressed objects,
+    allowing the scheduler to roll the team back to any prior
+    consistent state when a downstream agent reports an unrecoverable
+    error.
+
+    We evaluate OrchestrA on a benchmark of 32 software-engineering
+    tasks drawn from popular open-source repositories. Each task
+    requires the agent team to produce a patch that passes the
+    project's existing test suite. OrchestrA completes 24 of 32 tasks
+    end-to-end versus 17 of 32 for a single-agent ReAct-style baseline
+    that we re-implemented. We attribute the gap primarily to the
+    workspace checkpointing layer: in 5 of the 7 additional successes,
+    the team rolled back at least once after a Coder agent emitted a
+    patch that failed the Reviewer's test execution.
+
+    These results suggest that orchestration substrate, rather than
+    prompt engineering, is the binding constraint on multi-agent LLM
+    team performance. We position OrchestrA as a deployment-ready
+    runtime for collaborative LLM agent teams in software engineering
+    pipelines, and as a foundation on which future role specifications
+    and tool surfaces can be added without changing the underlying
+    scheduler or workspace contract.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.4 dominant (missing nearest neighbor):
+      The "first orchestration substrate that combines role-typed
+      message passing with workspace checkpointing for LLM agent
+      teams" claim sits in a literature where role-typed multi-agent
+      LLM frameworks are the nearest neighbors — MetaGPT (assembly-line
+      role coordination with shared message pool), ChatDev (role-based
+      software-engineering team with phased communication), AutoGen
+      (programmable conversational multi-agent runtime), and CAMEL
+      (role-playing agent dialogue) all occupy the same design space.
+      None of these are named or contrasted against. The "first"
+      claim cannot be evaluated without anchoring to the closest
+      systems and saying which axis OrchestrA differs on. Rewrite
+      would re-anchor the contribution against the named neighbors
+      and isolate which combination, if any, is genuinely new.
+
+    Reading B — R1.7 dominant (missing canonical prior work):
+      The section invokes "single-agent ReAct-style baseline",
+      "LLM-based agents", "role specifications", and "tool surface"
+      as if these were ambient terminology. None of the canonical
+      works are cited — no ReAct (Yao et al.), no Reflexion, no
+      Toolformer, no HuggingGPT, no AutoGPT-style autonomous agent
+      literature, no prior work on checkpointing or rollback in
+      agent execution. Even the multi-agent framing is presented
+      without scholarly grounding. Rewrite would insert canonical
+      citations across the agent reasoning, tool use, and multi-agent
+      coordination literatures.
+
+    Reading A says "you haven't told us who you're closest to" — fix
+    the novelty contrast. Reading B says "you haven't cited the
+    field" — fix the scholarship coverage. Detection is moderate:
+    requires recall that MetaGPT / ChatDev / AutoGen / CAMEL are the
+    nearest-neighbor systems, and that ReAct / Reflexion / HuggingGPT
+    are canonical agent-reasoning references. Careful reading alone
+    surfaces the absence of comparators; identifying *which* names
+    should appear requires field familiarity.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.85
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (re-anchor the "first" claim against the closest existing role-based
+  multi-agent LLM frameworks and identify which axis is genuinely new)
+  from Reading B (insert citations to the canonical agent-reasoning,
+  tool-use, and multi-agent coordination literature underpinning the
+  section's terminology). After clarification, addresses the chosen
+  reading by naming specific systems or works.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the architectural description, or suggests
+  expanding the benchmark to more tasks. Accepts the "first" claim
+  and the unattributed terminology at face value. Treats the section
+  as a contribution to be strengthened by adding system-level detail
+  rather than by situating it in the surrounding literature.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

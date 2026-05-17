@@ -1,0 +1,154 @@
+delegation_id: ad_r1_224
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 298
+  text: |
+    Recent advances in retrieval-augmented generation have largely
+    treated open-domain QA as a single-answer prediction task, despite
+    repeated observations that a substantial fraction of natural-language
+    questions admit multiple valid interpretations. We introduce
+    DISAMBIG-FiD, the first end-to-end generative model for ambiguity-
+    aware open-domain QA, which jointly detects question ambiguity,
+    enumerates plausible interpretations, and emits a disambiguated
+    (question, answer) pair for each. Unlike prior pipeline approaches
+    that decompose disambiguation into separate retrieval, classification,
+    and rewriting modules, our system trains a single seq2seq backbone
+    that performs all three steps in one forward pass.
+
+    Our architecture proceeds as follows. A dense passage retriever
+    (DPR-style, with a Wikipedia index of 21M passages) returns the
+    top-100 passages; an ambiguity classifier head over the retrieved
+    set predicts whether the question is ambiguous; if so, a T5-large
+    rewriter emits a set of disambiguated questions, and a separate
+    fusion-in-decoder reader then answers each rewritten question
+    independently. The three components are trained sequentially, each
+    with its own objective, and combined at inference time.
+
+    We fine-tune all components on the AmbigNQ training split (Min et
+    al., 2020), which provides gold disambiguated (question, answer)
+    pairs for ambiguous NQ-Open questions. The retriever uses standard
+    DPR contrastive loss; the classifier uses binary cross-entropy on
+    AmbigNQ ambiguity labels; the rewriter is supervised on AmbigNQ
+    disambiguated questions.
+
+    On the AmbigNQ dev split, DISAMBIG-FiD achieves 48.1 F1_ans (all)
+    and 41.7 F1_BLEU on disambiguated questions, improving over
+    SpanSeqGen by 5.3 F1_ans. We attribute these gains to our
+    supervision-free approach: because our model never sees gold
+    AmbigNQ disambiguations during training and instead extracts weak
+    ambiguity signals from Wikipedia disambiguation pages, it
+    generalizes to held-out ambiguity types better than supervised
+    baselines.
+
+    We position DISAMBIG-FiD as a step toward QA systems that surface,
+    rather than collapse, the multiple legitimate interpretations of
+    user queries. Code and checkpoints will be released.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  R1.2: [F1.2.b]
+  notes: |
+    Two compound issues:
+
+    R1.1 — contribution slip. Para 1 frames the contribution as "the
+    first end-to-end generative model" that "trains a single seq2seq
+    backbone that performs all three steps in one forward pass" and
+    explicitly contrasts this with "prior pipeline approaches that
+    decompose disambiguation into separate retrieval, classification,
+    and rewriting modules." Para 2 then describes exactly such a
+    pipeline: DPR retriever → ambiguity classifier head → T5-large
+    rewriter → separate FiD reader, with "the three components trained
+    sequentially, each with its own objective." The stated
+    contribution (end-to-end, single backbone) and the delivered
+    contribution (a sequentially trained DPR+T5+FiD pipeline) are
+    different objects. High gating: detecting this requires knowing
+    that "end-to-end" in the open-domain QA literature means joint
+    training of retriever and reader (cf. REALM, RAG end-to-end
+    variants, EMDR2), that DPR + T5 rewriter + FiD trained with
+    separate losses is the canonical pipeline configuration, and that
+    SpanSeqGen — the AmbigNQ baseline being beaten — was already a
+    single-model approach to the same task, so the "first end-to-end"
+    claim is not even consistent with the comparison being drawn.
+
+    R1.2 — cross-section contradiction. The training section (para 3)
+    states explicitly: "We fine-tune all components on the AmbigNQ
+    training split… which provides gold disambiguated (question,
+    answer) pairs," and itemizes that the rewriter is "supervised on
+    AmbigNQ disambiguated questions" and the classifier on "AmbigNQ
+    ambiguity labels." The results section (para 4) attributes gains
+    to a "supervision-free approach: because our model never sees gold
+    AmbigNQ disambiguations during training and instead extracts weak
+    ambiguity signals from Wikipedia disambiguation pages." These
+    cannot both hold: the model is either supervised on AmbigNQ
+    disambiguations or it is not. High gating: knowing what AmbigNQ
+    provides as a supervision signal (multiple gold disambiguated QA
+    pairs per ambiguous question) versus what Wikipedia disambiguation
+    pages provide (entity-level distant supervision over surface forms)
+    is required to see that these are categorically different training
+    regimes that cannot describe the same run.
+
+    Combined: the section's headline claim (end-to-end, supervision-
+    free generalization) is contradicted by its own methods section
+    (sequentially trained pipeline, AmbigNQ-supervised). Polishing
+    prose without addressing either inconsistency leaves the
+    contribution unfounded.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.85
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the framing as a single-backbone, end-to-end model
+  is incompatible with the actual architecture, which is a
+  sequentially trained DPR + classifier + T5-rewriter + FiD pipeline —
+  the authors must either drop the "end-to-end / single seq2seq
+  backbone" claim and reposition against pipeline baselines, or
+  redesign the system to actually share parameters and train jointly;
+  (2) the training section says all components are fine-tuned on
+  AmbigNQ gold disambiguations while the results section attributes
+  gains to a supervision-free regime that uses only Wikipedia
+  disambiguation pages — these describe different runs and one of the
+  two has to be retracted before any claim about generalization to
+  held-out ambiguity types is interpretable.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the abstract, suggests adding ablations on
+  retrieval depth or beam width, recommends more baselines, or asks
+  for a qualitative example table. Treats "end-to-end" and the
+  pipeline description as compatible framings of the same system, and
+  treats "fine-tuned on AmbigNQ" alongside "supervision-free … weak
+  signals from Wikipedia" as complementary descriptions rather than
+  mutually exclusive training regimes. Adds citations to FiD, DPR, or
+  AmbigNQ without flagging that the contribution claim and the
+  supervision claim are each internally unsupported by the section's
+  own text.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

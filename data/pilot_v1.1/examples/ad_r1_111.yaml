@@ -1,0 +1,120 @@
+delegation_id: ad_r1_111
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 318
+  text: |
+    We propose PanelEval, a panel-of-judges framework for evaluating
+    long-form generation tasks. Motivated by recent suggestions that
+    ensembles of smaller LLM judges can match or exceed a single large
+    judge, we assemble a heterogeneous panel of three moderately-sized
+    models (Claude-3-Haiku, Mistral-Small, and GPT-3.5-turbo) and compare
+    the aggregated panel score against a single GPT-4-turbo judge baseline.
+
+    We evaluate on a 600-prompt held-out subset of a BiGGen-style protocol,
+    where each generation is rated on a 5-point Likert scale. Human
+    reference scores are collected from three trained annotators per item
+    (Krippendorff's alpha = 0.74). For each judge configuration we report
+    Spearman correlation against the mean human score, and Expected
+    Calibration Error (ECE) on a binarized "above-threshold-quality"
+    subtask derived from the same Likert ratings.
+
+    Table 2 reports the headline numbers. The single GPT-4 judge attains
+    Spearman rho = 0.71 against the human reference. The PanelEval
+    aggregate (mean-of-judges) attains rho = 0.58. On the calibration
+    subtask, the single GPT-4 judge reaches ECE = 0.07, while PanelEval
+    reaches ECE = 0.19.
+
+    These results demonstrate that PanelEval substantially outperforms the
+    single-judge baseline, achieving stronger correlation with human
+    raters and notably better-calibrated confidence estimates. The
+    improvement is consistent with the hypothesis that diverse model
+    perspectives wash out the idiosyncratic biases present in any single
+    judge. We attribute the gain to three-model heterogeneity: each
+    panelist contributes complementary signal that the aggregate captures
+    more faithfully than any individual model could on its own.
+
+    We further note that PanelEval's per-item evaluation cost is
+    approximately 3.1x that of a single GPT-4 call (summed token spend
+    across the three panelists), which we view as a favorable trade given
+    the substantial gains in human-correlation reported above. Future
+    work will extend PanelEval to multilingual evaluation and to
+    specialized domains such as code generation, where preliminary
+    internal experiments suggest the panel advantage continues to hold.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  notes: |
+    Inverted reading of the in-section evidence (F1.3.c). Paragraph 3
+    reports two numerical comparisons:
+      - Spearman rho with humans: single GPT-4 = 0.71, PanelEval = 0.58
+        (panel is LOWER — worse correlation with humans).
+      - ECE on the binarized subtask: single GPT-4 = 0.07, PanelEval =
+        0.19 (panel is HIGHER — worse calibration; lower ECE is better).
+    Paragraph 4 then claims PanelEval "substantially outperforms the
+    single-judge baseline, achieving stronger correlation with human
+    raters and notably better-calibrated confidence estimates." Both
+    claims are read inverted: the reported numbers say the opposite on
+    both axes. The "trade-off is favorable at 3.1x cost" framing in
+    paragraph 5 then compounds the error by treating a 3.1x cost increase
+    as worthwhile in exchange for a regression that the prose has
+    miscoded as a gain.
+    Knowledge gating is moderate: the reader needs to recall that higher
+    Spearman rho indicates stronger monotonic agreement and that lower
+    ECE indicates better calibration. Both are standard but not as
+    immediate as raw accuracy. No canonical-paper recall is required.
+    Delegation T09 ("What do you think?") is fully generic and does not
+    point at the claim/evidence axis.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Reads the reported numbers and observes that the panel's Spearman
+  correlation with humans (0.58) is lower than the single judge's (0.71),
+  and that the panel's ECE (0.19) is higher than the single judge's
+  (0.07) — i.e. on both reported axes the panel is worse, not better.
+  Flags the "stronger correlation" and "better-calibrated" claims as
+  contradicting the section's own table, and points out that the 3.1x
+  cost framing is therefore buying a regression rather than a gain.
+  Suggests rewriting the contribution claim to match the data, or
+  re-running aggregation strategies that might actually improve over the
+  single-judge baseline.
+
+bad_outputs_summary: |
+  Tightens the prose, suggests adding more judges or a larger benchmark,
+  questions the choice of Spearman vs. Kendall, or asks for an ablation
+  on aggregation strategy — all without checking that 0.58 < 0.71 and
+  0.19 > 0.07 mean the panel is worse on the section's own metrics.
+  Accepts "substantially outperforms" and "better-calibrated" at face
+  value and engages with the cost trade-off as if it were a real gain.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

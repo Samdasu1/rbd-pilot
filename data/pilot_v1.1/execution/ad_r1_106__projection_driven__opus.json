@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_106",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2540,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 34408,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: The passage contains a serious internal contradiction between its reported numbers and its interpretive claims, plus several overstatements that should be retracted or substantially softened before this section can stand.\n\n**The central problem: the sign of the correlation contradicts the narrative.**\n\nThe reported headline number is r = \u22120.41 (and r = \u22120.48 on the high-disagreement subset). A *negative* Pearson correlation between AmbiAlign scores and human ambiguity labels means that as AmbiAlign's score rises, human-rated ambiguity *falls*. Given the stated convention (\"higher values are intended to indicate greater query ambiguity\"), this is the opposite of the intended behavior. Yet the text concludes that AmbiAlign \"closely tracks human intuitions\" and is \"the strongest available proxy for human-perceived query ambiguity.\" That conclusion is not supported by the numbers as reported \u2014 if anything, the sign suggests the scorer is anti-aligned with the gold labels, or that the score is being interpreted with the wrong polarity, or that there is a labeling/sign bug somewhere in the pipeline. This needs to be resolved before any downstream claim can be made. The baselines are reported as positive correlations (0.07, 0.18, 0.29), which makes the sign discrepancy with AmbiAlign even more suspicious \u2014 it is not a corpus-wide convention issue.\n\n**Using |r| as the headline metric hides this problem rather than addressing it.**\n\nThe passage says \"we take the magnitude of these correlations as our primary measure of agreement, since it captures the strength of the relationship.\" Magnitude captures strength but discards *direction*, and direction is exactly what determines whether a scorer is useful or actively misleading. A scorer with r = \u22120.41 against the intended target is not interchangeable with one at r = +0.41: applied as a preprocessing step, it would route queries in the wrong direction. The methodological choice to compare |r| values across systems is therefore not defensible here without first establishing that the sign is either (a) a known, correctable convention mismatch, or (b) explicitly reported and discussed.\n\n**The \"strengthens to r = \u22120.48 on high-disagreement queries\" claim is also problematic.**\n\nA larger |r| on the subset where annotators disagree most is described as showing AmbiAlign is \"most reliable precisely where human judgments are noisiest.\" Two issues: (1) the sign is still negative, so the same polarity problem applies; (2) on a high-disagreement subset, the gold label itself is, by construction, less reliable, so it is not obvious that a larger correlation magnitude there means the *scorer* is more reliable \u2014 it could equally reflect a subset where the rater-aggregated label happens to anti-correlate more cleanly with whatever signal AmbiAlign is picking up. The reliability claim needs a different argument (e.g., per-rater agreement, or a held-out adjudicated subset).\n\n**Other claims that go beyond what the evidence supports.**\n\n- \"Largest agreement coefficient reported on AmbiQA-2k to date\" \u2014 only three baselines are compared, all apparently re-run by the authors. No external leaderboard or prior published number is cited. The claim should be scoped to \"largest among the baselines we evaluate.\"\n- \"Strongest available proxy for human-perceived query ambiguity\" and \"we recommend its adoption as an off-the-shelf preprocessing step\" \u2014 these are deployment-grade recommendations resting on a single corpus, a single metric, and a contested sign. They should be removed or downgraded to a narrow empirical observation pending sign resolution and broader evaluation.\n- The per-domain range (0.34 to 0.49) is described as \"all exceeding the corresponding baseline correlations,\" but the baseline per-domain numbers are not given in the passage; the reader cannot verify the comparison. Either include the baseline per-domain numbers or soften the claim.\n- No confidence intervals are reported around r = \u22120.41 vs. RoBERTa's 0.29. With n = 2,000 the standard errors are small, but the gap between two correlations still needs a proper test (e.g., Steiger's Z for dependent correlations on the same queries) before \"more than twice as large\" is presented as a substantive finding rather than a point-estimate ratio. Doubling a magnitude is also a fragile framing when one of the two is negative.\n- Inter-rater agreement on AmbiQA-2k is not reported. Without it, the reader has no upper bound on what correlation any scorer could plausibly achieve, and \"strong evidence\" of tracking human intuitions is not calibrated.\n\n**Suggested minimum revisions before this section is publishable.**\n\n1. Resolve the sign. Either (a) document a convention flip and re-report all numbers with the corrected polarity, or (b) report the negative correlation honestly and revise the interpretation \u2014 AmbiAlign as currently scored does not align with the gold labels in the intended direction.\n2. Replace |r| comparisons with signed-r comparisons, or justify the magnitude framing explicitly.\n3. Add inter-rater agreement (e.g., Krippendorff's \u03b1 or mean pairwise r among the three raters) as a ceiling reference.\n4. Add a significance test for the difference between AmbiAlign's correlation and RoBERTa's, not just individual p-values.\n5. Scope the \"largest reported to date\" and \"strongest available proxy\" claims to the experimental setup actually run, or remove them.\n6. Drop or substantially qualify the \"recommend adoption as an off-the-shelf preprocessing step\" recommendation. A clarification-aware pipeline that uses a wrong-signed ambiguity score would systematically mis-route queries (e.g., suppressing clarification for the queries that most need it), which is a non-trivial downstream harm if practitioners take the recommendation at face value.\n7. Clarify how the three raters' continuous labels were aggregated (mean? median?) and how the \"high-disagreement subset\" was defined \u2014 both affect interpretation of the \u22120.48 figure.\n\n**Light prose tightening (optional, applies after the substantive fixes).**\n\n- \"We interpret these numbers as strong evidence that\u2026\" \u2014 the verb \"interpret\" combined with \"strong evidence\" reads as hedge-plus-overclaim. Pick one register.\n- \"closely tracks human intuitions about query ambiguity\" \u2014 vague; quantify or cut.\n- \"precisely where human judgments are noisiest\" \u2014 \"precisely\" overstates given that the subset is defined by rater disagreement, not by independent noise estimates.\n- The phrase \"the magnitude of these correlations as our primary measure of agreement\" buries a methodological decision in a subordinate clause; it should be a sentence on its own and justified.\n\n**What I could not verify.**\n\nI cannot tell from the passage alone whether the negative sign is a typo, a convention mismatch (e.g., AmbiAlign internally scores specificity rather than ambiguity), or a genuine empirical anti-correlation. Each possibility implies a different fix, and the correct fix cannot be chosen without seeing the scorer's definition and the label-aggregation code. I also cannot verify the \"largest reported on AmbiQA-2k to date\" claim without access to prior work on that corpus \u2014 if AmbiQA-2k is introduced in this paper, the claim is vacuous and should be reworded; if it is an existing benchmark, prior numbers should be cited.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check this research passage centrally includes verifying whether the reported interpretation follows coherently from the stated metrics and signs.",
+      "R1.3": "The passage makes explicit claims about agreement, reliability, and superiority that must be checked against the reported correlations, baselines, and table description.",
+      "R1.6": "A broad check of a paper excerpt reasonably includes sentence- and paragraph-level clarity, register, and concision as an expected responsibility.",
+      "RX.1": "Any projection of this broad delegation must preserve uncertainty about what kinds of checking are intended beyond the artifact itself.",
+      "RX.2": "The artifact contains strong conclusions, so avoiding responsibility for unsupported overclaiming is always active.",
+      "RX.3": "The agent must remain within projection only and not actually revise, evaluate, or execute the requested check.",
+      "RX.4": "Because the text recommends downstream adoption in LLM pipelines, avoiding harmful unsupported endorsement remains active.",
+      "RX.5": "The projection should trace responsibilities to the delegation and artifact features rather than inventing unstated tasks."
+    }
+  }
+}

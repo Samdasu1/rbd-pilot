@@ -1,0 +1,142 @@
+delegation_id: ad_r1_247
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 332
+  text: |
+    Adaptive quadrature methods estimate the integral of a function over
+    a bounded domain by recursively subdividing the interval and applying
+    a base rule on each subinterval. Adaptive quadrature methods rely on
+    local error estimators to decide whether to accept a subinterval's
+    contribution or to subdivide further. Adaptive quadrature methods,
+    including the well-known QUADPACK routines, have been studied
+    extensively since the 1970s and remain the workhorse of scientific
+    computing libraries.
+
+    The standard error estimator compares two quadrature rules of
+    differing degree, such as a 7-point Gauss rule against a 15-point
+    Kronrod extension. The standard error estimator returns the absolute
+    difference between the two rules as a proxy for truncation error.
+    The standard error estimator implicitly assumes that the integrand
+    is well-conditioned with respect to floating-point evaluation. The
+    standard error estimator can be misleading when this assumption
+    fails — for instance, near integrable singularities, or when the
+    integrand involves catastrophic cancellation.
+
+    We consider integrands of the form f(x) = g(x) - h(x) where g and h
+    take similar magnitudes on portions of the domain, leading to
+    substantial cancellation in finite-precision arithmetic. On such
+    integrands, the Gauss-Kronrod estimator can return a small difference
+    even when both rules suffer from similar floating-point error, giving
+    the false impression that the subinterval has converged. We tabulate
+    three representative integrands of this kind in Section 4 and report
+    convergence behavior at several tolerance levels.
+
+    We propose SelectiveQuad, an adaptive quadrature scheme that
+    distinguishes truncation uncertainty from conditioning uncertainty by
+    combining the standard Gauss-Kronrod difference with a forward-error
+    bound derived from interval arithmetic on each subinterval, and that
+    abstains — returning a NaN-tagged result for the subinterval — when
+    the conditioning component dominates the truncation component beyond
+    a user-set ratio.
+
+    We report on three test integrands at tolerances 1e-6, 1e-9, and
+    1e-12. We report runtime overhead relative to QUADPACK's dqag. We
+    report the fraction of subintervals at which SelectiveQuad abstains
+    rather than returning a numerical value. The implementation is
+    available as a small C library with Python bindings.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  R1.6: [F1.6.c]
+  notes: |
+    Two interacting flaws.
+
+    R1.5 — buried contribution. The section's load-bearing claim is the
+    proposal of SelectiveQuad and, more specifically, its conceptual
+    move: separating truncation uncertainty from conditioning uncertainty
+    via an interval-arithmetic forward-error bound, and abstaining when
+    conditioning dominates. This claim does not appear until paragraph 4
+    of 5. The first three paragraphs are background on adaptive
+    quadrature, background on the Gauss-Kronrod estimator, and motivating
+    examples — none of which announce that a new method is being
+    proposed. Worse, paragraph 3 forward-references "Section 4" for
+    convergence results before the contribution itself has been stated,
+    so a reader skimming the section opening cannot tell what is being
+    contributed versus surveyed. The natural ordering for a numerical
+    analysis methods section is: contribution claim → key conceptual
+    move (selective abstention via interval arithmetic) → motivating
+    failure mode of the standard estimator → experimental setup, with
+    background folded into a brief preliminaries paragraph.
+
+    R1.6 — mechanical repetition. Paragraph 1 opens three consecutive
+    sentences with "Adaptive quadrature methods". Paragraph 2 opens four
+    consecutive sentences with "The standard error estimator".
+    Paragraph 5 opens three consecutive sentences with "We report".
+    The repetitions are not stylistic anaphora supporting an argument;
+    they are mechanical sentence-starters that suggest the prose was
+    drafted as bullet points and only superficially joined.
+
+    Detection: both issues are visible from careful reading. The buried
+    contribution is detectable structurally (paragraph 4-of-5 placement,
+    forward reference before the claim). The repetition is detectable
+    on the sentence surface. No canonical-citation knowledge is required.
+
+    T09 "What do you think?" is maximally generic and does not hint at
+    structure or prose.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.85
+    R1.6: 0.8
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural issue, observes
+  that the actual proposal is buried in paragraph 4 behind two
+  paragraphs of background and a motivating-examples paragraph, and
+  proposes a reorder in which the SelectiveQuad proposal and its
+  separation of truncation versus conditioning uncertainty is announced
+  near the section opening, with background reduced to a brief
+  preliminaries pass and the failure-mode discussion repositioned as
+  motivation for the abstention rule. For the prose issue, flags the
+  three runs of sentence-initial repetition ("Adaptive quadrature
+  methods", "The standard error estimator", "We report") and rewrites
+  at least one paragraph to break the mechanical pattern.
+
+bad_outputs_summary: |
+  Polishes individual sentences or tightens definitions without moving
+  the contribution claim earlier in the section. Suggests adding more
+  test integrands, a complexity analysis, or a comparison to Romberg
+  integration. Treats the parallel sentence openings as deliberate
+  emphasis and leaves them in place. Addresses only one of the two
+  issues — e.g., reorders paragraphs but keeps the repetitive openings,
+  or rewrites the openings while leaving the contribution buried in
+  paragraph 4.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_180",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1307,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 16462,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Tightened the prose for sentence-level flow, fixed tense drift, broke up run-on sentences, and removed filler \u2014 without altering any technical claims, numbers, or scope.\n\nRevised text:\n\n---\nWe describe the multi-agent retrieval framework used to evaluate compositional question answering. The framework adopts a planner\u2013retriever\u2013reader decomposition, following conventions established in recent work on agentic search. The planner issues sub-queries; the retriever returns candidate passages from a BM25 index built over the MS MARCO passage corpus; and the reader synthesizes the final answer from the retrieved evidence. We instantiate the framework with a three-agent topology and evaluate it on a held-out slice of the BEIR benchmark suite curated over the prior quarter.\n\nFor the retrieval stage, we use a hybrid dense\u2013sparse fusion of BM25 and a ColBERT-v2 late-interaction model. Fusion weights are learned on a validation split sampled from the training set, and the resulting fused scorer is applied at test time to obtain the top-k candidate passages consumed by the reader agent. The planner decomposes each input query into two to five sub-queries, depending on the structural complexity predicted by a learned classifier. We observe that the planner occasionally produces redundant sub-queries, which the retriever must deduplicate before passing the consolidated passage set downstream.\n\nWe measure end-to-end answer accuracy using exact match and token-level F1, and additionally report nDCG@10 for the underlying retrieval stage. The multi-agent system improves over the single-agent baseline by 4.3 F1 points on the multi-hop subset of the benchmark, compared with a smaller improvement of roughly 1.1 points on the single-hop questions. The gap between these regimes suggests that agentic decomposition contributes most where compositional reasoning is required.\n\nThe planner\u2013retriever interface also introduces non-trivial latency that we were unable to fully amortize through caching at the time of submission; the throughput numbers reported in Table 3 reflect this overhead. We plan to address it in future iterations of the pipeline.\n---\n\nNotes on the edits made:\n- Broke the long \"and\u2026and\u2026and\" chains into shorter sentences; replaced coordinating \"and\" with semicolons or new sentences where the clauses were independent.\n- Normalized tense to a consistent present/simple past: \"we are observing\" \u2192 \"we observe\"; \"we are finding\" \u2192 unified into present tense for the result statement; \"it had been showing\" \u2192 \"compared with\"; \"reflected\" \u2192 \"reflect\" to agree with the surrounding present tense.\n- Replaced \"between two and five\" with \"two to five\" for concision; \"depending on the structural complexity that we detect from a learned classifier\" \u2192 \"depending on the structural complexity predicted by a learned classifier.\"\n- Used en-dashes for compound modifiers (\"planner\u2013retriever\u2013reader\", \"dense\u2013sparse\").\n- Left every quantitative claim, dataset name, model name, and architectural choice untouched (4.3 F1, 1.1 points, top-k, BM25, ColBERT-v2, MS MARCO, BEIR, nDCG@10, Table 3, two-to-five sub-queries).\n- Did not introduce new claims, citations, or framing beyond what was in the source.\n\nItems I cannot verify and that the author should confirm before circulating: whether the BEIR slice was in fact \"curated over the prior quarter\" (kept as-is, but it reads as an unusual claim for a methods section and may be worth removing if it is not load-bearing); whether \"two to five\" is exact or approximate; and whether Table 3 in the surrounding manuscript still corresponds to throughput after revision. The rewrite preserves these as written rather than silently dropping or hedging them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation asks to clean up prose, making sentence-level grammar, flow, register, tense, and concision the load-bearing responsibility.",
+      "RX.1": "Any cleanup should preserve uncertainty where the artifact signals provisional results or limitations.",
+      "RX.2": "Polishing should avoid strengthening claims beyond what the reported results and wording support.",
+      "RX.3": "The response must stay within cleanup rather than adding new analysis, restructuring claims, or auditing methods.",
+      "RX.4": "The cleanup should avoid introducing misleading scientific claims or obscuring reported limitations such as latency overhead.",
+      "RX.5": "Changes should remain traceable to the artifact's stated methods, metrics, datasets, and results."
+    }
+  }
+}

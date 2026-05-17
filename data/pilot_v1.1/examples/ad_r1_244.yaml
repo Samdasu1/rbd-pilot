@@ -1,0 +1,140 @@
+delegation_id: ad_r1_244
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 348
+  text: |
+    Section 3. Reader Disagreement and BI-RADS Classification
+
+    We turn now to the problem of training BI-RADS-category
+    classifiers from mammograms when reader disagreement is
+    non-negligible. In the DDSM-Plus cohort used throughout this
+    paper, the Fleiss kappa for BI-RADS 3 vs 4a discrimination
+    across our three reading radiologists is 0.42; majority-vote
+    labels mask substantial uncertainty in roughly 18% of cases.
+    Existing pipelines treat the majority label as ground truth and
+    report performance against it, but the resulting classifiers
+    inherit a bias toward the most confident reader and degrade
+    systematically on the disagreement subset. Our concern in this
+    section is therefore to develop a training procedure that is
+    robust to label noise induced by reader disagreement.
+
+    We adopt a multi-task ResNet-50 backbone that jointly predicts
+    the BI-RADS category and an auxiliary disagreement probability.
+    The disagreement head is supervised by a soft cross-entropy term
+    over the empirical reader distribution and contributes a
+    regularizer to the main classification loss via a learned
+    per-instance weight; we refer to this term as the
+    reader-distribution loss (RDL). The RDL differs from symmetric
+    label smoothing by anchoring on the actual reader-cohort
+    distribution rather than a uniform prior, and from prior
+    disagreement-aware approaches which typically discard or
+    down-weight high-disagreement cases rather than modeling them.
+    Training uses Adam with cosine decay; standard augmentations
+    apply. On the held-out CSAW-CC split, models trained with our
+    procedure achieve an AUC of 0.872 on the BI-RADS 3-vs-4a
+    sub-task, compared to 0.851 for majority-vote cross-entropy and
+    0.858 for symmetric label smoothing. Expected calibration error
+    on the disagreement subset improves from 0.071 to 0.039.
+
+    In summary, the multi-task formulation introduced here yields
+    state-of-the-art AUC on the BI-RADS 3-vs-4a sub-task and
+    substantially improved calibration on the CSAW-CC benchmark.
+    We carry this architecture forward into the cross-cohort
+    generalization study of Section 4.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  R1.5: [F1.5.a]
+  notes: |
+    Two compound issues; detecting them requires moderate familiarity
+    with how methods-vs-empirical contributions are typically framed
+    in medical-imaging papers, but no recall of canonical works.
+
+    R1.1 thesis drift (F1.1.a): The opening commits the section to a
+    methodological aim -- "develop a training procedure that is
+    robust to label noise induced by reader disagreement." The
+    closing paragraph reframes the contribution as architectural and
+    empirical: "the multi-task formulation introduced here yields
+    state-of-the-art AUC ... and substantially improved calibration."
+    These are related but distinct theses: a robust-training-procedure
+    paper section would foreground the loss-design choice and its
+    statistical justification; a SOTA-architecture section would
+    foreground the joint head and its inductive bias. The middle
+    paragraph supports both readings without committing, and the
+    section therefore drifts between "we introduce RDL" and "our
+    architecture wins on AUC" without nominating one as load-bearing.
+
+    R1.5 buried contribution (F1.5.a): The genuine technical novelty
+    is the reader-distribution loss (RDL): a regularizer anchored on
+    the empirical reader distribution rather than a uniform prior or
+    a teacher's soft labels, with a learned per-instance weight.
+    However, RDL is introduced mid-paragraph in para 2 as a
+    parenthetical naming move ("we refer to this term as the RDL"),
+    its differentiation from label smoothing and prior
+    disagreement-aware methods is given in a single sentence, and
+    neither the opening sentence nor the closing summary names RDL
+    as the contribution -- the closer instead credits "the multi-task
+    formulation," which is the generic scaffolding, not the novel
+    component.
+
+    Compound: committing the thesis (R1.1) to the methodological frame
+    forces RDL to be foregrounded as the section's contribution
+    (R1.5); conversely, foregrounding RDL (R1.5) requires the closing
+    summary to be rewritten so the thesis is methodological rather
+    than architectural-empirical (R1.1).
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.85
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the section never commits to a single load-bearing
+  claim: the opening promises a robust training procedure for
+  reader-disagreement-induced label noise, but the closing summary
+  credits the multi-task architecture and its AUC/calibration
+  numbers, leaving the contribution underdetermined. Identifies
+  that the genuine novelty -- the reader-distribution loss anchored
+  on the empirical reader cohort -- is buried as a mid-paragraph
+  naming aside and recommends reframing the section so that this
+  loss is foregrounded as the contribution and the opening and
+  closing both nominate it explicitly.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding an ablation table or a
+  calibration figure, or smooths the transition between paragraphs
+  while leaving both the opening (robust-training framing) and
+  closing (SOTA-architecture framing) intact. Treats the RDL as a
+  routine implementation detail rather than the section's
+  load-bearing contribution and does not notice that the closing
+  summary credits "the multi-task formulation" generically rather
+  than the actual novel component.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_306",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2937,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31773,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.7, \"R1.5\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.4, \"RX.5\": 1.0}}\n\nReordered the four paragraphs from results-first to setup \u2192 gap \u2192 method \u2192 results, so the kernel that the results paragraph depends on is introduced before the claims that rely on it; prose left almost verbatim, with only minimal connective tweaks at paragraph seams.\n\n---\n\n**Recommended order (4 \u2192 2 \u2192 3 \u2192 1 in the original numbering):**\n\n1. **Generative model (problem setup)** \u2014 currently paragraph 3\n2. **Related work (gap)** \u2014 currently paragraph 2\n3. **Methodological contribution (LLM-PMMH kernel)** \u2014 currently paragraph 4\n4. **Empirical results** \u2014 currently paragraph 1\n\n**Rationale for the reorder.** The original opens with quantitative results whose interpretation (\"identifiability is achievable\") presupposes (a) the generative model that defines what \"the latent trait\" means, (b) the prior-work gap that frames what is new, and (c) the kernel that the final paragraph itself credits with producing those results (\"It is this kernel \u2026 that produces the identifiability results reported in the opening paragraph\"). That forward reference is the clearest signal that the paragraphs are out of order: a reader hits the headline numbers before being given the model, the baseline context, or the inference machinery. Moving the results to the end resolves the dangling reference and lets each paragraph supply a premise the next one uses.\n\n**Restructured artifact (paragraphs reordered; minor connective edits flagged):**\n\n> Concretely, we consider a generative model in which each agent i carries a latent trait vector theta_i ~ N(0, I_d) with d=16, and a memory stream m_{i,1:T} of natural-language episodes. Conversational turns u_{i,t} are emitted by an LLM conditioned on (theta_i, m_{i,1:t-1}, u_{j,1:t-1}); we use a Llama-3-8B base model with a fixed prompt template. The likelihood p(u_{i,t} | theta_i, history) is intractable but admits an unbiased single-sample estimator via the LLM's logprobs.\n>\n> Earlier probabilistic-programming work on agent modeling has used Pyro and Gen to express discrete-choice models with low-dimensional preference parameters (Goodman and Stuhlm\u00fcller, 2014; Cusumano-Towner et al., 2019). More recent efforts wrap LLM samplers as stochastic primitives within a host PPL (Dohan et al., 2022; Lew et al., 2023), but typically marginalize over the LLM stochasticity rather than conditioning on it. None, to our knowledge, treat the LLM's per-turn output distribution as a likelihood over latent agent traits.\n>\n> The principal contribution of this section is a new pseudo-marginal Metropolis-Hastings kernel \u2014 which we call LLM-PMMH \u2014 that uses a Rao-Blackwellized importance estimator over k=8 prompt completions per proposal to obtain a low-variance unbiased likelihood. We show in Proposition 2 that LLM-PMMH preserves the correct posterior over theta_i despite the noisy likelihood, and that its mixing time scales as O(d log d / k) under standard log-concavity assumptions on the prompt-conditional logprobs. The kernel is specified in Algorithm 1; without it the chain stalls on flat-likelihood regions. [edit: replaced the forward reference \"It is this kernel \u2026 that produces the identifiability results reported in the opening paragraph\" with a self-contained sentence, since the results now follow.]\n>\n> Empirically, posterior estimates of the latent personality vector theta_i for each of the 25 simulated agents concentrate around the ground-truth values used to seed the LLM prompts, with mean L2 error of 0.18 (std 0.04) at 5,000 sweeps and 0.09 (std 0.02) at 20,000 sweeps. Posterior predictive log-likelihoods on held-out conversational turns exceed those of the maximum-a-posteriori baseline of Park et al. (2023) by 2.3 nats per turn, and the credible intervals contain the seeded traits 94% of the time at the nominal 95% level. We interpret these results as evidence that latent-trait identifiability is achievable from purely behavioral traces under the model and kernel above, even when the LLM backbone is treated as a black box. [edits: opening connective changed from \"In aggregate\" to \"Empirically\"; added \"under the model and kernel above\" so the interpretive claim is hedged to the specific setup just defined.]\n\n**Two follow-on flow notes (optional, not applied):**\n\n- The \"principal contribution of this section\" sentence currently lives mid-paragraph in what is now the method block. If the surrounding section has an introduction paragraph, that contribution sentence may belong there instead, with the method paragraph opening directly on the kernel definition. I cannot tell from the excerpt whether such an introduction exists.\n- Whether the related-work paragraph should sit between setup and method (as above) or be pushed to a dedicated related-work section depends on the venue's conventions; embedded placement is defensible because the gap statement directly motivates the kernel.\n\n**Caveats on what I did not verify.** I have not checked that the cited works (Goodman and Stuhlm\u00fcller 2014; Cusumano-Towner et al. 2019; Dohan et al. 2022; Lew et al. 2023; Park et al. 2023) exist or say what is attributed to them; the numeric claims (0.18 / 0.09 L2, 2.3 nats, 94% coverage), the assumptions behind Proposition 2's log-concavity premise, and the O(d log d / k) mixing-time scaling are taken as given and not audited. I have not assessed whether the contribution claim (\"None, to our knowledge, treat the LLM's per-turn output distribution as a likelihood over latent agent traits\") is accurate against current literature. The two connective edits I made (Empirically; under the model and kernel above; the replacement sentence after Algorithm 1) are intended to be conservative, but if the surrounding manuscript already establishes those qualifiers, they may be redundant and can be reverted without affecting the reorder.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 1.0,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.5",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "Restructuring section flow requires preserving a coherent argument chain across background, model, method, and results.",
+      "R1.5": "The delegation directly asks for section-level ordering and narrative arc changes.",
+      "RX.1": "Any projection should disclose uncertainty about the intended restructuring depth because the delegation is brief.",
+      "RX.2": "The restructure should avoid strengthening claims beyond what the artifact already states.",
+      "RX.3": "The responsibility is limited to section flow, not executing edits or evaluating novelty, citations, or experiments.",
+      "RX.4": "The projection should avoid enabling misleading presentation of empirical or theoretical claims.",
+      "RX.5": "The projected responsibilities should remain traceable to the delegation and the artifact\u2019s section-level organization."
+    }
+  }
+}

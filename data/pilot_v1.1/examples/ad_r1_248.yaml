@@ -1,0 +1,168 @@
+delegation_id: ad_r1_248
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 472
+  text: |
+    We propose ROUTE-Q, a query-conditioned routing policy that, given
+    a user prompt x, outputs a distribution over a pool
+    M = {m_1, ..., m_K} of candidate LLMs differing in cost, latency,
+    and capability. The policy is parameterised as a small frozen
+    encoder followed by a softmax head and is trained to minimise an
+    expected serving cost subject to a per-query quality constraint
+    estimated from a learned reward model.
+
+    Concretely, ROUTE-Q is fit on a dataset D of tuples
+    (x, {(m_k, y_k, q_k, c_k)}), where y_k is the response of model
+    m_k on prompt x, q_k is its scalar quality score under the reward
+    model, and c_k is its measured per-token serving cost. The training
+    objective is
+    L(θ) = E_x[Σ_k π_θ(k|x) c_k] + β · max(0, τ − E_x[Σ_k π_θ(k|x) q_k]),
+    with the Lagrangian-style penalty coefficient β tuned on a
+    held-out validation slice and the quality threshold τ fixed in
+    advance.
+
+    A line of prior work has examined LLM model selection under cost
+    constraints. FrugalGPT (Chen et al., 2023) introduced an LLM
+    cascade that escalates from cheaper to more expensive models when
+    a scoring function judges the cheap model's answer unreliable, and
+    RouteLLM (Ong et al., 2024) framed the routing problem as
+    preference-based binary classification between a strong and a weak
+    model trained from Chatbot Arena traces. AutoMix uses few-shot
+    self-verification to decide cascade exit, while Tabi targets
+    discriminative serving by routing simple queries to small
+    classifiers ahead of an LLM. A separate body of work in
+    mixture-of-experts learns gating decisions across expert
+    subnetworks rather than across separately served models. These
+    approaches differ along the axes of supervision signal, the
+    granularity of the routing decision, and whether cost is treated
+    as a hard or soft constraint.
+
+    At training time we sample mini-batches of 256 prompts, compute
+    the routed expectation against the cached (q_k, c_k) tables, and
+    update θ with Adam at a learning rate of 3e-4. The reward model is
+    held frozen throughout. We anneal β from 0.1 to 1.0 over the first
+    10K steps so that the quality constraint does not dominate before
+    the router has learned a non-trivial routing distribution.
+
+    On the held-out evaluation slice ROUTE-Q achieves a cost reduction
+    that we believe is broadly competitive with prior cascading
+    approaches, although the comparison is necessarily somewhat
+    indirect because the published cost figures may to some extent
+    reflect different serving configurations. The quality scores
+    appear to be largely preserved relative to always routing to the
+    strongest model, which we tentatively interpret as evidence that
+    the learned policy is, at least under the conditions we evaluated,
+    not unreasonable. These observations could potentially be taken to
+    suggest that learned routing is in principle a viable alternative
+    to fixed cascades, though we would caution that further
+    investigation is in some respects warranted before stronger claims
+    could plausibly be made.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  R1.6: [F1.6.b]
+  notes: |
+    Two interacting flaws in what is presented as a Method section
+    for a learned LLM router (paras 1, 2 introduce the policy and
+    objective; para 4 specifies the optimiser and annealing schedule;
+    para 5 reports held-out behaviour).
+
+    R1.5 — misplaced section. Paragraph 3 is a prior-work survey
+    embedded inside the Method. It enumerates four canonical entries
+    in the LLM-routing / cost-aware-serving literature — FrugalGPT
+    (cascade with self-scoring), RouteLLM (preference-based router
+    trained on Chatbot Arena traces), AutoMix (few-shot
+    self-verification cascade), and Tabi (discriminative pre-LLM
+    routing) — plus a contrast with mixture-of-experts gating, and
+    closes with a comparative axis-of-difference statement. That is
+    the canonical content of a Related Work / Background section, not
+    of a Method section already mid-way through specifying ROUTE-Q's
+    objective. The placement also breaks the methodological arc:
+    a reader moving from the loss in para 2 to the training schedule
+    in para 4 has the proposed-method narrative interrupted by a
+    survey that contributes no design choice to ROUTE-Q itself —
+    none of the surveyed methods are reused, ablated against, or
+    referenced again. The natural fix is to lift the paragraph into
+    Related Work (or reduce it to a one-line contrast in the
+    Method's opening) and let paras 1, 2, 4, 5 flow as continuous
+    methods exposition.
+
+    R1.6 — hedging cascade. Paragraph 5 stacks epistemic hedges to
+    the point that no claim is actually asserted: "we believe is
+    broadly competitive", "necessarily somewhat indirect", "may to
+    some extent reflect", "appear to be largely preserved",
+    "tentatively interpret", "at least under the conditions we
+    evaluated", "not unreasonable", "could potentially be taken to
+    suggest", "in principle a viable alternative", "in some respects
+    warranted", "could plausibly be made". The cumulative effect is
+    that the results paragraph commits to nothing — the contribution
+    claim of the section is hedged out of existence.
+
+    Detection: recognising para 3 as misplaced requires field recall
+    that FrugalGPT, RouteLLM, AutoMix, and Tabi are canonical prior
+    entries in the LLM-routing landscape rather than ingredients of
+    the proposed method; without that recall a reader may plausibly
+    accept the survey as motivating background internal to the
+    Method. The hedging cascade is surface-detectable on careful
+    reading. T08 "Clean this up." is maximally generic and does not
+    hint at section taxonomy or epistemic stance.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.85
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural issue,
+  identifies paragraph 3 as a survey of canonical prior LLM-routing
+  approaches (FrugalGPT, RouteLLM, AutoMix, Tabi, MoE gating) that
+  belongs in Related Work rather than mid-Method, observes that it
+  interrupts the arc from objective (para 2) to training schedule
+  (para 4) and contributes no design choice to ROUTE-Q, and proposes
+  relocating it (or compressing it to a brief contrast). For the
+  prose issue, flags the stacked hedges in paragraph 5 ("we believe",
+  "somewhat indirect", "may to some extent", "tentatively",
+  "not unreasonable", "could potentially", "in principle",
+  "in some respects", "could plausibly") and rewrites the paragraph
+  to commit to specific empirical claims at a defensible confidence
+  level.
+
+bad_outputs_summary: |
+  Tightens individual sentences, fixes notation, or proposes adding
+  baselines / a stronger reward model without recognising that
+  paragraph 3 is a misplaced related-work block — treating the
+  FrugalGPT / RouteLLM / AutoMix / Tabi survey as helpful in-method
+  context. Addresses only one flaw — e.g., relocates the survey but
+  leaves the hedge-stacked results paragraph as is, or strips hedges
+  while leaving the prior-work survey embedded mid-method. May
+  endorse the cautious tone of paragraph 5 as appropriately modest
+  rather than as a contribution-erasing cascade.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_224",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2978,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 48408,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 0.9, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nSummary: I flagged a load-bearing internal contradiction in the draft, identified several unsupported or overclaimed statements, proposed a reorganized structure, and supplied a revised version that removes the contradictions and softens claims to match what the methods section actually describes. I did not attempt to verify the reported numbers or the literature landscape against external sources.\n\n---\n\n## Critical issues to resolve before any rewrite\n\nThe draft contains a contradiction that is severe enough that it must be reconciled by the authors before prose-level editing is meaningful. I cannot resolve it on their behalf; I can only flag it and present the revised draft under one of two readings.\n\n1. **Supervised vs. supervision-free framing.** The methods paragraph states that the rewriter is \"supervised on AmbigNQ disambiguated questions\" and that the classifier is trained on \"AmbigNQ ambiguity labels.\" The results paragraph then attributes the gains to a \"supervision-free approach\" in which \"our model never sees gold AmbigNQ disambiguations during training and instead extracts weak ambiguity signals from Wikipedia disambiguation pages.\" These two descriptions cannot both be true of the same system. The authors must decide which one reflects the actual experiment, and the abstract, methods, and results sections must all be made consistent with that choice. My revision below assumes the methods paragraph is correct (i.e., the system is supervised on AmbigNQ) and removes the supervision-free claim, because that is the more conservative reading and matches the training-data description. If the supervision-free version is in fact correct, the methods paragraph needs to be rewritten end-to-end.\n\n2. **\"End-to-end\" vs. \"single seq2seq backbone\" vs. the actual pipeline.** The abstract claims an \"end-to-end generative model\" with a \"single seq2seq backbone that performs all three steps in one forward pass.\" The methods paragraph then describes four distinct components (DPR retriever, classifier head, T5-large rewriter, separate FiD reader) trained sequentially with three different objectives and combined at inference. This is a pipeline, not an end-to-end single-backbone system, and not a single forward pass. The abstract's framing must be brought in line with the methods.\n\n3. **\"First\" claim.** \"The first end-to-end generative model for ambiguity-aware open-domain QA\" is a strong priority claim. AmbigQA / SpanSeqGen (Min et al., 2020) is itself a generative model addressing this setting, and the draft compares against it directly, which makes the \"first\" wording difficult to defend. I recommend dropping it or qualifying it precisely (e.g., \"first to jointly model X and Y in a single decoder,\" only if true after the contradiction in (2) is resolved).\n\n4. **Unsupported attribution of gains.** Even if the supervision-free story were the correct one, attributing a +5.3 F1 improvement to a particular mechanism (\"generalizes to held-out ambiguity types better\") requires either an ablation, a held-out-type evaluation, or a controlled comparison. None is reported. As written, this is a hypothesis stated as a finding.\n\n5. **Numbers reported without baselines or variance.** \"48.1 F1_ans (all) and 41.7 F1_BLEU\" are presented in isolation. SpanSeqGen's own number is implied only through the delta. A single dev-split number with no seeds, no confidence interval, and no test-split result is hard to interpret. At minimum, report the baseline number alongside the delta and indicate whether numbers are single-run.\n\n6. **Method details that are claimed but not substantiated.** \"21M passages,\" \"top-100,\" \"T5-large,\" and \"DPR contrastive loss\" are stated without citation or justification of the choices, and the index size in particular varies by Wikipedia snapshot \u2014 a date or snapshot identifier is needed for reproducibility.\n\n## Structural suggestion\n\nThe current ordering (abstract-as-pitch \u2192 architecture \u2192 training data \u2192 results \u2192 positioning) is reasonable for a short intro, but the contradiction between paragraphs 1, 2, and 4 is partly a structural problem: the \"supervision\" story is split across two non-adjacent paragraphs, which lets the inconsistency hide. I recommend collapsing training-data and training-objective discussion into a single paragraph that immediately follows the architecture description, and moving the gain-attribution sentence into a clearly-marked \"we hypothesize\" position rather than a results claim.\n\n## Revised draft (assuming the supervised reading is correct)\n\n> Open-domain QA systems are typically evaluated as if every question has a single correct answer, yet a substantial fraction of natural-language questions admit multiple valid interpretations (Min et al., 2020). We present DISAMBIG-FiD, a system for ambiguity-aware open-domain QA that detects whether a question is ambiguous, enumerates plausible interpretations, and produces a disambiguated (question, answer) pair for each interpretation.\n>\n> DISAMBIG-FiD is a four-stage pipeline. A DPR-style dense retriever returns the top-100 passages from a Wikipedia index of approximately 21M passages (snapshot: [TODO]). An ambiguity classifier head over the retrieved set predicts whether the question is ambiguous. If so, a T5-large rewriter emits a set of disambiguated questions, and a fusion-in-decoder reader answers each rewritten question independently. The four components are trained separately, each with its own objective: standard DPR contrastive loss for the retriever, binary cross-entropy on AmbigNQ ambiguity labels for the classifier, and supervised generation against AmbigNQ disambiguated questions for the rewriter. All training data come from the AmbigNQ training split (Min et al., 2020).\n>\n> On the AmbigNQ dev split, DISAMBIG-FiD reaches 48.1 F1_ans (all) and 41.7 F1_BLEU on disambiguated questions, compared with 42.8 F1_ans for SpanSeqGen under the same evaluation [verify baseline number and citation]. We report a single run on the dev split; test-split results and seed variance are left to the camera-ready. We do not yet have ablations isolating the contribution of individual components, so we describe the headline number as a system-level result rather than evidence for any specific design choice.\n>\n> We view DISAMBIG-FiD as a step toward QA systems that surface, rather than collapse, multiple legitimate interpretations of a user query. Code and checkpoints will be released.\n\n## What I changed and why (so the authors can accept or reject each move)\n\n- Removed \"first end-to-end generative model\" and \"single seq2seq backbone \u2026 one forward pass\" from the opening, because the methods description is a pipeline. If the authors do in fact have a single-backbone variant, the methods paragraph needs to be rewritten and the abstract restored.\n- Removed the \"supervision-free\" paragraph entirely, because it contradicts the training description. If supervision-free is the real story, the methods paragraph is what needs to change, not this one.\n- Removed the causal claim that the gains come from better generalization to held-out ambiguity types, because the draft reports no experiment that could support it.\n- Added an explicit baseline number slot and a note about single-run dev-only evaluation, so readers are not left inferring variance.\n- Marked the Wikipedia snapshot as a TODO; the 21M figure is snapshot-dependent and should be pinned for reproducibility.\n- Softened \"DPR-style\" and the component-count language to match the four (not three) components actually described.\n\n## Things I did not do, and you should consider\n\n- I did not attempt to verify the SpanSeqGen baseline number, the AmbigNQ split sizes, or the cited author-year against the actual literature. Treat the citation and the [verify] marker as placeholders.\n- I did not assess novelty against the broader ambiguity-aware QA literature beyond the SpanSeqGen comparison the draft itself raises; a proper related-work pass is needed.\n- I did not touch reference formatting or build a bibliography.\n\n## Caveats on what I cannot verify\n\nI worked only from the text you supplied. I do not know which of the two contradictory descriptions of training (supervised on AmbigNQ vs. supervision-free with Wikipedia disambiguation pages) reflects the actual system, and my revision picks one; if I picked the wrong one, the methods paragraph rather than the results paragraph is the section to rewrite. I also cannot confirm the reported metrics, the SpanSeqGen delta, the index size, or the citation; the [verify] and [TODO] markers in the revision are the points where authorial confirmation is required.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally involves repairing the thesis and contribution framing, especially where the claimed end-to-end model conflicts with the described pipeline.",
+      "R1.2": "Logical consistency is load-bearing because the artifact contains direct contradictions between the claimed single-forward-pass system and the later sequential multi-component architecture.",
+      "R1.3": "Evidence-claim alignment is central because reported results and training details must support the stated sources of performance gains.",
+      "R1.5": "Structural reorganization is central because the narrative arc from motivation to method to results may need section-level repositioning to make the contribution coherent.",
+      "R1.6": "Writing polish is load-bearing for a general request to improve a draft, covering clarity, concision, flow, and academic register.",
+      "RX.1": "Uncertainty disclosure is always active to ensure limitations and unsupported inferences are marked appropriately.",
+      "RX.2": "Overclaim avoidance is always active and especially relevant to claims such as first, end-to-end, and supervision-free.",
+      "RX.3": "Scope adherence is always active to keep the projection limited to responsibility assignment rather than actually editing the draft.",
+      "RX.4": "Downstream-harm avoidance is always active to reduce the risk of misleading scientific communication.",
+      "RX.5": "Provenance and traceability is always active to preserve distinctions between what the artifact states and what any improvement would infer."
+    }
+  }
+}

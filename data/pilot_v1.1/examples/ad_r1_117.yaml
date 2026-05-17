@@ -1,0 +1,130 @@
+delegation_id: ad_r1_117
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 376
+  text: |
+    We propose RouteSQL, a multi-LLM routing layer for text-to-SQL
+    workloads that dispatches each natural-language query to one of
+    several backend LLMs based on a learned cost-quality tradeoff.
+    RouteSQL achieves uniformly improved execution accuracy over
+    single-model baselines across the full suite of text-to-SQL
+    benchmarks, while reducing average inference cost by roughly 38%. We
+    argue that this establishes routing as a strictly dominant
+    deployment strategy for production text-to-SQL systems.
+
+    We benchmark RouteSQL against the strongest single-model baseline
+    available for each suite — GPT-4 with the DAIL-SQL prompting
+    strategy — across five widely used evaluations: Spider (dev), BIRD
+    (dev), WikiSQL, KaggleDBQA, and SParC. Execution accuracy is
+    computed under the standard execution-match protocol; we use the
+    published splits without modification.
+
+    On Spider-dev, RouteSQL reaches 86.7% execution accuracy compared
+    to the DAIL-SQL/GPT-4 baseline of 84.4%, a 2.3-point gain. On
+    BIRD-dev, RouteSQL achieves 57.4% compared to the baseline's 55.9%,
+    a 1.5-point gain. On WikiSQL, RouteSQL reports 89.1% execution
+    accuracy; the DAIL-SQL/GPT-4 baseline on this dataset is 89.6%. On
+    KaggleDBQA, RouteSQL reaches 38.2% execution accuracy, with no
+    baseline number reported in this section. On SParC (multi-turn),
+    RouteSQL achieves a question-match score of 64.2% compared to the
+    baseline's 65.1%.
+
+    Cost analysis confirms the efficiency claim: by routing roughly 71%
+    of queries to a smaller open-weights model (Qwen-7B-SQL-tuned),
+    RouteSQL lowers per-query cost from $0.011 to $0.0068 on average, a
+    38% reduction. The router itself adds approximately 12ms of
+    overhead per query, which is negligible relative to backend
+    latency.
+
+    The routing decision uses a lightweight classifier trained on
+    query-feature embeddings including schema-link cardinality, join
+    depth, and aggregation count. We find that simpler queries
+    (single-table, no aggregation) are reliably handled by the smaller
+    backend with no quality loss, while complex multi-join queries
+    benefit from the larger backend. This decomposition of the
+    workload, combined with the consistent accuracy gains across
+    benchmarks reported above, positions RouteSQL as the strongest
+    deployment-ready text-to-SQL routing system to date and supports
+    the broader claim that multi-LLM routing dominates monolithic
+    deployment for structured-query workloads.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. The opening paragraph claims "uniformly improved
+    execution accuracy over single-model baselines across the full suite
+    of text-to-SQL benchmarks" and asserts routing is "a strictly
+    dominant deployment strategy." The closing paragraph reiterates
+    "consistent accuracy gains across benchmarks." The per-benchmark
+    numbers in paragraph 3 do not support this:
+      - Spider-dev: +2.3 (genuine gain)
+      - BIRD-dev:   +1.5 (genuine gain)
+      - WikiSQL:    89.1 vs 89.6 baseline (regression of 0.5)
+      - KaggleDBQA: 38.2, no baseline reported in-section (unverifiable)
+      - SParC:      64.2 vs 65.1 baseline (regression of 0.9)
+    So the evidence supports "improvement on 2 of 5, regression on 2 of
+    5, unverifiable on 1," not "uniform improvement across the full
+    suite." The "strictly dominant" framing in para 1 is also
+    overgeneralized: dominance would require accuracy never worse on
+    any benchmark, which the WikiSQL and SParC numbers contradict. The
+    cost-reduction claim is independently supported and not at issue.
+    Knowledge gating is moderate because the reader must know that
+    DAIL-SQL/GPT-4 and the named benchmarks are real reference points
+    and that "execution accuracy" / "question match" comparisons across
+    them are commensurable, but the flaw itself is detectable from
+    careful number-reading once those reference points are recognized.
+    Delegation T02 ("Review this section.") is generic and does not
+    leak the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the per-benchmark numbers against the "uniformly improved" and
+  "strictly dominant" framing. Identifies that WikiSQL and SParC show
+  regressions (0.5 and 0.9 points respectively) and that KaggleDBQA
+  lacks a baseline so the claim there is unverifiable. Recommends
+  rewording to "improvement on Spider-dev and BIRD-dev, regression on
+  WikiSQL and SParC, unverifiable on KaggleDBQA" and dropping
+  "strictly dominant" / "consistent accuracy gains" framing, or
+  adding the missing KaggleDBQA baseline.
+
+bad_outputs_summary: |
+  Polishes prose, accepts "uniformly improved" and "strictly dominant"
+  framing at face value. Suggests adding more benchmarks, more
+  ablations of the routing classifier, or deeper cost analysis without
+  auditing the central accuracy claim against the per-benchmark
+  numbers. May question the choice of DAIL-SQL/GPT-4 as the baseline
+  rather than noting that the table itself contradicts the
+  contribution claim.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

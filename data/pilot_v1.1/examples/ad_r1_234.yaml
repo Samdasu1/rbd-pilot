@@ -1,0 +1,138 @@
+delegation_id: ad_r1_234
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 348
+  text: |
+    Reproducibility is a foundational concern in data analysis, and the
+    introduction of large language models (LLMs) as analytical assistants
+    raises an immediate question: when given identical prompts and
+    identical data, does an LLM produce the same analytical outcome on
+    repeated invocations? This question is structurally distinct from the
+    much-discussed "analyst variability" — the well-known many-analysts
+    paradigm in which different human analysts, given the same dataset
+    and question, reach materially different conclusions. Here, the
+    analyst is fixed (the same model at the same temperature setting),
+    and the variability is purely stochastic.
+
+    In this section we describe our evaluation protocol. We sample N=200
+    data analysis prompts spanning regression, hypothesis testing, and
+    exploratory visualization tasks drawn from a published benchmark. For
+    each prompt, we issue K=20 independent calls to the LLM at
+    temperature T=0.7 and collect the full response — natural-language
+    explanation, code, and reported numerical results. The central
+    question is: across the K runs for a fixed prompt, how reproducible
+    is the analysis?
+
+    To answer this, we compute pairwise BLEU scores between the K
+    responses for each prompt and average across all (K choose 2) pairs.
+    Higher BLEU indicates higher reproducibility. We report mean BLEU per
+    prompt category and aggregate across categories. As Table 2 shows,
+    mean BLEU is 0.41 for regression prompts, 0.38 for hypothesis-testing
+    prompts, and 0.29 for exploratory tasks. We interpret these scores as
+    evidence that LLM-driven analysis is moderately reproducible for
+    structured tasks and substantially less reproducible for open-ended
+    ones, with the regression-task BLEU of 0.41 establishing a useful
+    upper bound on what current models achieve.
+
+    This framing builds directly on prior work in LLM run-to-run
+    variability and on the broader analyst-variability literature, which
+    together motivate our protocol. Our contribution is to extend these
+    threads into the specific setting of data analysis, where the
+    question of "same prompt, different outcomes" has not been directly
+    evaluated. We further note that K=20 is larger than is typical in
+    this evaluation tradition, yielding tighter confidence intervals on
+    the per-prompt reproducibility estimate.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Two load-bearing flaws, both detectable from careful internal
+    reading without recall of specific canonical papers.
+
+    R1.3 — metric mismatch. The section's stated object of measurement
+    is the reproducibility of *data analysis*: whether repeated LLM
+    invocations on the same prompt yield the same analytical outcome
+    (coefficients, p-values, conclusions). The metric chosen is BLEU,
+    a surface n-gram overlap score over the full response text. BLEU
+    does not measure agreement of analytical conclusions: two responses
+    can have near-zero BLEU while reporting identical regression
+    coefficients and identical conclusions (different prose, same
+    answer), and conversely two responses can have high BLEU while
+    differing on the load-bearing numerical result. The interpretive
+    sentence ("evidence that LLM-driven analysis is moderately
+    reproducible…") is therefore not supported by the metric. Fixing
+    this requires a metric tied to analytical outcomes — e.g., agreement
+    on reported test statistics, conclusion-equivalence over a parsed
+    result, or numerical-output stability — which would change what the
+    section is reporting.
+
+    R1.7 — missing prior work. The section explicitly invokes two named
+    bodies of work — "the well-known many-analysts paradigm" and "prior
+    work in LLM run-to-run variability and the broader analyst-
+    variability literature" — and uses them to motivate the protocol
+    and to position the contribution. Neither is cited. The gap is
+    detectable without specialist knowledge: the section names the
+    traditions but provides no anchors, so a reader cannot verify the
+    positioning claim ("has not been directly evaluated") nor the
+    methodological-budget claim ("K=20 is larger than is typical in
+    this evaluation tradition").
+
+    Low gating: a reader does not need to know which specific papers
+    are missing to see that the section names entire literatures and
+    cites none of them, nor to see that BLEU measures wording rather
+    than analytical agreement.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.85
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.8
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags both load-bearing issues. For the metric, points out that BLEU
+  scores text overlap and is not a measure of analytical agreement —
+  two responses can reach the same conclusion with low BLEU, or
+  diverge on the load-bearing numerical result with high BLEU — so the
+  interpretive claim about "reproducibility" of analysis is not
+  supported, and recommends an outcome-level metric (numerical-result
+  agreement, conclusion-equivalence). For prior work, notes that the
+  section names the many-analysts paradigm and the LLM run-to-run
+  variability literature without citing either, undermining the
+  positioning and budget claims, and asks for those anchors.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests reporting standard errors on BLEU,
+  recommends increasing K or N, or asks for a fancier figure. Accepts
+  BLEU as a reproducibility metric without questioning the construct
+  match. Leaves the named-but-uncited literatures untouched, or
+  addresses only one of the two issues (e.g., adds citations but keeps
+  the BLEU-based contribution claim intact).
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_143",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2434,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32002,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.4\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: I revised the abstract to tighten claims, remove unsupported \"firsts,\" sharpen the contribution against well-known prior work (confidence calibration, selective prediction, learned confidence estimators, deep ensembles), and add explicit caveats about scope and what was \u2014 and was not \u2014 measured.\n\n---\n\nRevised abstract:\n\nModern vision transformers (ViTs) trained for image classification are known to produce miscalibrated softmax confidence scores, particularly under distribution shift. A natural response is to train an auxiliary signal that estimates whether a given top-1 prediction is correct, independent of the raw softmax. Such \"learned confidence\" or failure-prediction heads have been studied for CNNs (e.g., ConfidNet, trust scores, selective classifiers) but are less well characterized for ViTs.\n\nWe present SelfProbe, a lightweight failure-prediction head for a frozen ViT-B/16. SelfProbe is a two-layer MLP attached to the [CLS] token representation and trained on a held-out ImageNet split to predict the binary \"top-1 correct\" signal. At inference, it outputs a scalar in [0,1] interpreted as the estimated probability that the backbone's top-1 prediction is correct on the current input.\n\nOn ImageNet-Val, SelfProbe attains an AUROC of 0.847 for correct-vs-incorrect separation, compared with 0.781 for thresholding the raw softmax of the same backbone. On ImageNet-C at severity 3, it attains 0.792 versus 0.703 for raw softmax. In a selective-prediction setting that abstains on 20% of inputs, routing by SelfProbe's score yields a 3.1-point accuracy improvement on the answered subset over routing by softmax confidence.\n\nWe position SelfProbe as a ViT-specific instantiation of learned failure prediction, not as a new conceptual primitive: the idea of training an auxiliary head to predict a base model's correctness predates this work, and we compare directly against softmax thresholding as the most common deployed baseline. We do not compare against temperature scaling, deep ensembles, Monte Carlo dropout, or CNN-based confidence learners in this abstract, and we make no claim that SelfProbe is calibrated in the probabilistic sense \u2014 only that its score ranks correct above incorrect predictions better than raw softmax on the evaluated splits. Generalization beyond ImageNet-Val and ImageNet-C (severity 3), to other backbones, or to stronger distribution shifts (e.g., ImageNet-R, ImageNet-A, ImageNet-Sketch) is not established here and is left to future work.\n\n---\n\nSpecific recommendations and the reasoning behind them:\n\n1. Drop the \"first\" claims. The original abstract makes three: \"first method that equips a vision transformer with an internal self-evaluation head,\" \"first demonstration that a vision transformer can be trained to introspect on its own classification decisions,\" and \"first introspective head architecture for ViTs.\" Learned confidence estimation for image classifiers is an established line of work (Hendrycks & Gimpel 2017 on softmax baselines; Corbi\u00e8re et al. 2019, ConfidNet; Jiang et al. 2018, trust scores; Geifman & El-Yaniv 2017, SelectiveNet). Whether nobody has previously attached such a head specifically to a ViT [CLS] token is plausible but is a narrow architectural \"first,\" not a conceptual one. The revised version says \"less well characterized for ViTs\" and \"ViT-specific instantiation,\" which is defensible without an exhaustive literature sweep.\n\n2. Reframe \"know what it knows\" / \"introspection.\" This framing borrows weight from the LM literature (Kadavath et al. 2022) and risks implying metacognition. What is actually being trained is a supervised binary classifier that predicts correctness from features. Calling that \"self-evaluation\" is acceptable; calling it \"introspection\" or claiming the model \"knows what it knows\" overstates the mechanism. The revision uses \"failure prediction\" / \"learned confidence,\" which is the standard term.\n\n3. Soften \"decoupled from softmax confidence.\" The head takes the [CLS] representation as input. Softmax confidence is a function of the logits, which are a function of that same representation (via the classifier head). The two signals are not statistically independent \u2014 they are computed from overlapping information. \"Decoupled from softmax confidence\" is at best imprecise. The revision drops this phrasing.\n\n4. Be explicit about the baseline. The comparison is against raw softmax thresholding only. Temperature scaling (Guo et al. 2017) is the standard, almost-free calibration baseline and is conspicuously absent. Even if the full paper includes it, the abstract should either name the baselines covered or not imply a complete comparison. The revision flags this directly.\n\n5. Distinguish ranking quality from calibration. AUROC measures whether correct predictions are ranked above incorrect ones \u2014 it says nothing about whether the scalar in [0,1] corresponds to an actual probability. The original abstract slides between \"self-estimated probability of being correct\" (a calibration claim) and AUROC numbers (a ranking claim). The revision separates these and explicitly disclaims calibration.\n\n6. Constrain generalization claims. \"Trustworthy vision systems\" and \"useful building block for downstream selective-prediction and abstention-aware vision pipelines\" are broad. The evidence is two evaluation conditions (ImageNet-Val, ImageNet-C severity 3) and one downstream setting (20% abstention) with one backbone (ViT-B/16). Stronger shift benchmarks (ImageNet-R, -A, -Sketch, -V2) are standard and notably absent. The revision keeps the claim to what was measured and names the missing conditions.\n\n7. The 3.1-point selective-prediction gain is reported without a confidence interval or seed variance. If the paper has multiple seeds, the abstract should reflect that; if it is single-seed, that is a meaningful limitation for a headline number.\n\n---\n\nItems I cannot fully verify from the artifact alone:\n\n- Whether SelfProbe's [CLS]-token + frozen-backbone + binary-correctness-target combination is in fact novel for ViTs. The conceptual move is not novel, but the specific instantiation may be \u2014 confirming this requires a literature check the abstract should at minimum cite rather than assert.\n- Whether the reported AUROC and accuracy numbers come from a single seed, multiple seeds, a single held-out split, or cross-validation. The revised text is silent on this rather than assume.\n- Whether the held-out training split for SelfProbe overlaps in any way with ImageNet-Val. If it does, the 0.847 figure is optimistic. The original artifact does not specify; I have not inserted a claim either way.\n- Whether the ImageNet-C result is averaged across all 15 corruption types at severity 3 or reported on a subset. The revision preserves the original phrasing rather than guess.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The request to make the passage stronger centrally implicates sharpening the thesis, gap, and contribution framing.",
+      "R1.2": "Strengthening the draft requires checking whether the progression from calibration limits to self-evaluation claims to downstream utility is coherent.",
+      "R1.3": "The artifact makes empirical claims from AUROC and selective-prediction results, so stronger writing depends on matching claims to the reported evidence.",
+      "R1.4": "Because the passage repeatedly asserts firstness and novelty, assessing the contribution delta is a central responsibility.",
+      "R1.6": "The broad instruction naturally includes improving sentence-level force, clarity, concision, and scholarly register.",
+      "RX.1": "Any projection must preserve uncertainty where the artifact makes claims that may depend on unstated evidence or literature context.",
+      "RX.2": "The artifact contains strong novelty and trustworthiness claims, making avoidance of overclaiming load-bearing.",
+      "RX.3": "The responsibility is limited to projecting the delegation rather than executing edits or evaluating the artifact beyond scope.",
+      "RX.4": "Claims about trustworthy vision systems and abstention pipelines require attention to possible downstream misuse or overstated reliability.",
+      "RX.5": "Reported metrics, datasets, and firstness claims require traceability to the artifact's stated evidence and provenance."
+    }
+  }
+}

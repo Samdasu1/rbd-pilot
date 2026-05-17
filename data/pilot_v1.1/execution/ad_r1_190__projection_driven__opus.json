@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_190",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1783,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 24235,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I rewrote the passage to strip the layered hedging, made the empirical claims match what the reported procedure can actually support, and flagged two internal inconsistencies that the authors need to resolve before this text can stand.\n\n---\n\n**Issues identified in the original**\n\n1. **Hedge stacking obscures the empirical content.** Phrases like \"seems to suggest that ... may perhaps offer some degree of improvement,\" \"arguably somewhat modest,\" \"could conceivably be sensitive,\" \"would seem reasonable to tentatively conclude,\" and \"might plausibly be regarded as a reasonable, if not necessarily decisive, addition\" pile three to five hedge tokens on a single proposition. The reader cannot tell whether the authors are reporting a real but small effect, a noisy null, or simply being polite. Hedging should encode genuine residual uncertainty, not be a default register.\n\n2. **Arithmetic inconsistency in the number of comparisons.** The text says a Wilcoxon test was applied to \"each pair of systems\" with \"Holm correction across the ten pairwise comparisons,\" but then reports results for \"all four pairings\" (reranker vs. four baselines). With five systems there are C(5,2) = 10 pairs; with the reranker vs. four baselines there are 4. The \"ten\" and \"four\" numbers cannot both be right \u2014 pick one and make the Holm family match it. This matters because the correction strength changes accordingly.\n\n3. **Mismatch between the test reported and the conclusion drawn.** A Wilcoxon signed-rank test on per-query nDCG@10 supports a statement about whether the median per-query difference is non-zero; it does not by itself license claims about \"practical\" gains or \"downstream utility.\" The original slides from one to the other in the cross-encoder paragraph.\n\n4. **\"Signed-rank statistics were non-trivial\" is not a result.** A test statistic without a p-value, effect size, or rejection decision tells the reader nothing. Either report the corrected p-values and an effect estimate (e.g., median paired difference in nDCG@10, or the proportion of queries on which the reranker wins/ties/loses), or do not characterize the outcome.\n\n5. **Unsupported generalization in the penultimate paragraph.** The claim that \"rank-based aggregation provides a more or less stable picture of relative system quality\" is not something a single benchmark with a single development split can establish, and the paragraph itself half-admits this. It should either be cut or relocated to the discussion as an explicit conjecture.\n\n6. **Prose-level polish.** \"Per-query effectiveness distributions are heavily skewed\" is asserted without citation or a figure; either cite or soften to motivation. \"Publicly available baselines\" is fine but the baselines should be named at first mention. \"Four publicly available baselines\" plus a \"cross-encoder baseline in particular\" \u2014 is the cross-encoder one of the four, or a fifth? Clarify.\n\n---\n\n**Suggested rewrite**\n\n> This section reports a head-to-head evaluation of the proposed reranker against four publicly available baselines [name them] on the MS-MARCO passage retrieval benchmark. Because the per-query nDCG@10 distributions are right-skewed [cite or show], we use a paired rank-based procedure rather than comparing aggregated means.\n>\n> For each of the 6,980 development queries we computed nDCG@10 under each system. A Wilcoxon signed-rank test was applied to each of the four reranker-vs-baseline pairs, with Holm correction across those four comparisons. The reranker achieved higher per-query nDCG@10 than each baseline on a majority of queries (win rates: [x\u2081, x\u2082, x\u2083, x\u2084]); all four Holm-corrected p-values were below [\u03b1]. Median paired differences in nDCG@10 were [\u0394\u2081 \u2026 \u0394\u2084].\n>\n> Against the strongest baseline, the cross-encoder, the median per-query gain was [\u0394] nDCG@10. This is a small but consistent effect: it is statistically distinguishable from zero under the paired test, but its practical significance depends on whether nDCG@10 tracks the downstream metric of interest in a given deployment, which we do not evaluate here.\n>\n> We therefore report the reranker as a competitive option on this benchmark under the stated protocol. We do not claim generalization beyond the MS-MARCO development split, and we have not characterized sensitivity to the choice of split; we flag both as open questions.\n\n---\n\n**Items I could not verify and that the authors must fill in**\n\n- The actual win-rate, median paired difference, and Holm-corrected p-values are not in the source paragraph; the rewrite shows placeholders. Do not ship the rewrite without those numbers.\n- Whether the cross-encoder is one of the four baselines or a fifth system \u2014 the original is ambiguous.\n- Whether 10 or 4 pairwise comparisons were actually run, and therefore which Holm family is correct.\n- Whether the skewness claim is established in prior work or needs a figure here.\n\nIf any of those four points resolves differently than I assumed, the rewrite needs corresponding adjustment before use.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The request to examine the paragraph centrally includes checking whether the statistical reasoning and conclusions follow coherently.",
+      "R1.3": "Because the paragraph interprets reported benchmark and test results, assessing whether the claims match the stated evidence is central.",
+      "R1.6": "The artifact is a single paragraph-like passage with notably hedged prose, making sentence- and paragraph-level polish load-bearing.",
+      "RX.1": "Any projection of responsibility should preserve uncertainty about what level of review was intended by the brief delegation.",
+      "RX.2": "The artifact itself is concerned with cautious claims, so avoiding inflated conclusions is a core cross-cutting responsibility.",
+      "RX.3": "The delegation only asks to look at the paragraph, so responsibilities must remain within review-oriented paper-writing dimensions.",
+      "RX.4": "The projection should avoid endorsing claims or interpretations that could mislead downstream readers about the model's strength.",
+      "RX.5": "The relevant responsibilities should remain traceable to features present in the provided paragraph, such as statistical interpretation and hedged wording."
+    }
+  }
+}

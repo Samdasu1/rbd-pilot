@@ -1,0 +1,120 @@
+delegation_id: ad_r1_158
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: power_systems_v2g
+  word_count: 289
+  text: |
+    The integration of electric vehicles into distribution grids through
+    vehicle-to-grid (V2G) services has been studied extensively. Wang
+    et al. demonstrated that aggregated V2G capacity can provide
+    frequency regulation comparable to conventional spinning reserve,
+    while Hossain and colleagues quantified revenue streams under FERC
+    Order 2222 participation rules. More recent work on commercial
+    aggregators has shown that day-ahead bidding strategies remain
+    limited by uncertainty in EV state-of-charge (SoC) trajectories and
+    plug-in availability windows.
+
+    We instrumented a fleet of 142 commuter EVs across a single feeder
+    of a midwestern investor-owned utility over six months. Each vehicle
+    reported SoC, GPS, and charging session telemetry every 60 seconds
+    via the OCPP 2.0.1 interface. Aggregated real and reactive power
+    were measured at the feeder substation transformer at 1-second
+    resolution.
+
+    We applied a two-stage dispatch policy: a local rule-based controller
+    resident on the EVSE that handles sub-minute regulation response,
+    and a centralized MILP optimizer on the utility side that issues
+    hourly setpoints. Setpoints pass through a confidence-weighted
+    blender that defers to the local controller whenever the optimizer's
+    forecast uncertainty exceeds a tunable threshold τ.
+
+    Across the six-month deployment, the hybrid scheme reduced peak
+    feeder loading by 18.4% relative to uncontrolled charging, captured
+    71% of the regulation revenue achievable by an oracle dispatcher
+    with perfect SoC forecasts, and held customer-side SoC-at-departure
+    violations below 1.2%. Backhaul traffic to the control center
+    dropped 63% relative to a fully centralized baseline.
+
+    In summary, our contribution is the first field-validated hybrid
+    local/central V2G dispatch architecture that meets utility-grade
+    reliability targets under realistic communication and
+    forecast-uncertainty constraints, demonstrating that a
+    threshold-blended two-stage policy is deployable on existing
+    OCPP 2.0.1 infrastructure without firmware modification.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]    # buried contribution
+  notes: |
+    The actual contribution claim — that this is the first
+    field-validated hybrid local/central V2G dispatch architecture
+    deployable on stock OCPP 2.0.1 infrastructure — is stated only in
+    the FINAL paragraph, after four paragraphs of related work,
+    deployment description, method, and results. A reader entering the
+    section does not learn what the paper claims to contribute until
+    paragraph 5 of 5. The natural section structure for a
+    contribution-style write-up would be:
+      contribution claim (1) → context / RW (2) → deployment + method
+      (3) → method detail (4) → result (5)
+    Here the order is:
+      RW (1) → deployment (2) → method (3) → result (4) → contribution (5)
+    Subtlety: the section reads naturally if read linearly, but the
+    contribution is genuinely buried — a section-level reorder is
+    required, not just a sentence-level move. Many systems-style
+    sections do bury the contribution and not all readers consider this
+    a flaw, which is why the example is intentionally subtle. Moderate
+    gating: identifying *what* the contribution claim actually is
+    requires recognizing that "field-validated hybrid dispatch on stock
+    OCPP" is the load-bearing novelty (not the MILP, not the 18.4%
+    peak reduction, not the FERC 2222 framing), which presumes
+    familiarity with what is and isn't novel in V2G control. Conceptual
+    object, evidence, and prose are otherwise intact.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9     # load-bearing — contribution buried
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the contribution is buried at the end and proposes a
+  section-level reorder so the claim — a field-validated hybrid
+  local/central V2G dispatch architecture deployable on stock OCPP
+  2.0.1 — is stated up front in paragraph 1 or 2. Provides a concrete
+  reordered structure such as "contribution → context → method →
+  result" and explains why the current order forces the reader to
+  wait until the final paragraph to learn what the paper claims.
+
+bad_outputs_summary: |
+  Polishes the prose, questions the 142-vehicle sample size or the
+  τ-threshold tuning, or suggests additional baselines. Accepts the
+  section ordering as-is and comments only on local sentence flow or
+  citation density in the related-work paragraph. Treats the buried
+  contribution as a stylistic systems-paper convention rather than a
+  structural issue requiring section-level reorder.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

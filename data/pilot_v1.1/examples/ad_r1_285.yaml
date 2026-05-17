@@ -1,0 +1,161 @@
+delegation_id: ad_r1_285
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 338
+  text: |
+    We present ResAdapt, a residual-adaptive collocation sampling
+    scheme for physics-informed neural networks (PINNs) applied to the
+    2D viscous Burgers' equation. Standard PINN training samples
+    collocation points uniformly over the spatiotemporal domain Ω,
+    which under-resolves regions of sharp gradient — most notably the
+    developing shock front near t = 0.5. ResAdapt instead resamples a
+    fraction p = 0.4 of collocation points per epoch from a
+    distribution proportional to the current pointwise PDE residual
+    |R(x, t; θ)|.
+
+    Setup. We solve u_t + u·∇u = ν∇²u on Ω = [0,1]² × [0,1] with
+    ν = 0.01, using the standard composite loss
+    L = L_data + λ L_PDE with λ = 1.0. The network is an 8-layer tanh
+    MLP of width 64. Training uses Adam with cosine learning-rate
+    decay over 50k epochs and N = 10,000 collocation points per batch.
+
+    Theoretical motivation. Adaptive collocation has been studied for
+    some time. Building on the rigorous analysis of Hassanpour & Mehta
+    (1987), whose Theorem 4.1 establishes an O(N^{-2}) residual-decay
+    rate for residual-weighted collocation under a deep ReLU ansatz on
+    bounded Lipschitz domains, we expect ResAdapt to achieve
+    substantially better residual minimization than uniform sampling,
+    which is bounded by O(N^{-1/2}) under the same analysis.
+
+    Results. After 50k epochs, ResAdapt achieves a mean PDE residual
+    of 4.7 × 10⁻² across Ω, compared with 8.1 × 10⁻³ for the
+    uniform-sampling baseline trained under identical hyperparameters.
+    The data-fit term L_data is within 4% of the baseline value. We
+    interpret these residual numbers as direct evidence that ResAdapt
+    better satisfies the underlying Burgers' PDE: the residual-adaptive
+    scheme concentrates network capacity where the equation is hardest
+    to satisfy, producing exactly the improvement predicted by the
+    convergence theory above.
+
+    Discussion. The empirical residual gap aligns with the predicted
+    O(N^{-2}) rate of Hassanpour & Mehta (1987), and we view ResAdapt
+    as a practical realization of residual-weighted collocation theory
+    in modern deep PINN training. Code, training logs, and the
+    resampling implementation will be released on acceptance.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  R1.7: [F1.7.a]
+  notes: |
+    The artifact admits two materially different load-bearing readings:
+
+    Reading A — R1.3 dominant (inverted reading of the headline metric):
+      The Results paragraph reports a mean PDE residual of 4.7 × 10⁻²
+      for ResAdapt versus 8.1 × 10⁻³ for the uniform-sampling baseline.
+      For a residual loss, lower is better — that is the entire point
+      of minimizing |R(x, t; θ)|. The numbers therefore show that
+      ResAdapt's PDE residual is roughly 5.8× *worse* than the
+      uniform baseline's. Yet the section interprets these numbers as
+      "direct evidence that ResAdapt better satisfies the underlying
+      Burgers' PDE" and claims they match the theoretical O(N^{-2})
+      improvement. The directionality of the metric is inverted: the
+      reported numbers, read straight, falsify rather than support the
+      contribution claim. Rewrite under this reading would either (a)
+      retract the "better satisfies the PDE" claim and re-anchor the
+      contribution against a different metric (e.g., shock-front
+      sharpness, downstream prediction error at fixed test points),
+      or (b) re-examine which run produced which residual value
+      before any improvement claim can stand.
+
+    Reading B — R1.7 dominant (fabricated citation as theoretical
+    anchor):
+      The contribution's theoretical justification rests on
+      "Hassanpour & Mehta (1987), whose Theorem 4.1 establishes an
+      O(N^{-2}) residual-decay rate for residual-weighted collocation
+      under a deep ReLU ansatz on bounded Lipschitz domains." The
+      Discussion then claims the empirical gap "aligns with the
+      predicted O(N^{-2}) rate of Hassanpour & Mehta (1987)." The
+      citation appears fabricated: a 1987 result proving residual-
+      decay rates specifically for *deep ReLU* network ansatzes on
+      PDE collocation problems is anachronistic on its face — deep
+      ReLU networks were not the operative model class in 1987, and
+      the entire PINN line of work that frames residual-weighted
+      collocation in these terms is a 2017-onwards development. The
+      attribution is therefore a load-bearing fabrication: the
+      O(N^{-2}) vs O(N^{-1/2}) rate gap that the section uses to
+      justify the method comes from a paper that almost certainly
+      does not exist as described. Rewrite under this reading would
+      remove the fabricated theoretical guarantee, re-anchor the
+      motivation against actual residual-adaptive PINN literature
+      (e.g., importance-sampling and RAR-style schemes from 2020+),
+      and reframe the contribution as a practical-method paper
+      without the formal convergence-rate claim.
+
+    Reading A is detectable by careful reading of the metric/claim
+    pair (4.7 × 10⁻² is larger than 8.1 × 10⁻²; the headline claim
+    points the wrong way). Reading B is detectable from internal
+    temporal inconsistency alone (a 1987 paper cannot establish a
+    convergence theorem for "deep ReLU" PINN-style training) without
+    needing recall of any specific PINN reference — hence low
+    knowledge gating. Both flaws are real and load-bearing; rewriting
+    under one reading does not fix the other; a well-calibrated agent
+    should set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the reported residual numbers actually point in the opposite
+  direction from the headline claim — ResAdapt's residual is roughly
+  6× larger than the baseline's, which on a loss metric means worse
+  PDE satisfaction, not better) from Reading B (the load-bearing
+  theoretical guarantee is anchored on a 1987 reference whose claimed
+  scope — convergence rates for deep ReLU PINN-style collocation — is
+  temporally implausible and almost certainly fabricated). After
+  clarification, addresses the chosen reading thoroughly: either
+  retracting or reorienting the empirical claim against the actual
+  direction of the numbers, or removing the fabricated theoretical
+  anchor and re-grounding the motivation in real residual-adaptive
+  PINN literature.
+
+bad_outputs_summary: |
+  Polishes prose, suggests more collocation points, additional PDE
+  benchmarks beyond Burgers', or a sweep over the resample fraction p.
+  Accepts the residual numbers at face value as evidence that ResAdapt
+  better satisfies the PDE without noticing that 4.7 × 10⁻² is larger
+  than 8.1 × 10⁻³. Accepts the Hassanpour & Mehta (1987) Theorem 4.1
+  citation as a real prior result and lets the O(N^{-2}) theoretical
+  alignment claim stand. Either reading addressed implicitly without
+  acknowledging the other is partial credit.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

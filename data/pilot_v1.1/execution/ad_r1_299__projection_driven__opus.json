@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_299",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1417,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 18567,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.5\": 1.0, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nReordered the four paragraphs so the section moves from prior work \u2192 contribution claim \u2192 experimental protocol \u2192 results \u2192 setup details, which is the conventional flow and surfaces the load-bearing claim before its supporting numbers. No prose was rewritten and no content was added or removed beyond reordering.\n\nRestructured section (paragraphs reordered, text otherwise unchanged):\n\n---\n\nEarlier work on hierarchical reinforcement learning has explored the option-critic framework, feudal networks, and meta-learned subroutines. These approaches share the assumption that subpolicies can be discovered or specified prior to deployment. More recently, language-conditioned RL has used pretrained LLMs as high-level controllers, but typically delegates atomic skills on a fixed schedule rather than reasoning over when to delegate at all. We discuss the relationship of our method to these lines of work in the next section.\n\nThe principal contribution of this section, then, is a new criterion for delegation timing - what we call the value-of-information gating rule - which opens an LLM call only when the entropy of the policy's action distribution exceeds a learned state-conditioned threshold tau(s). This rule, implemented in roughly fifty lines on top of standard PPO, accounts for essentially all of the gain over option-critic at low delegation budgets and is what enables the k=1 results above.\n\nOur experimental protocol followed the standard ProcGen evaluation: agents were trained on 200 levels and evaluated on the full distribution. We additionally introduced a delegation-budget constraint: agents were limited to k in {1, 3, 10} LLM calls per episode, mirroring deployment cost considerations. Returns on MiniGrid-DoorKey-8x8 averaged 0.71 +/- 0.04 for our method vs 0.58 +/- 0.06 for the option-critic baseline at k=3. ProcGen aggregate normalized return reached 0.42 vs 0.31 for the same baseline. The gap widens at k=1 (0.63 vs 0.41 on DoorKey), suggesting that delegation timing matters more under tighter budgets than under generous ones.\n\nWe trained agents in the MiniGrid-DoorKey-8x8 and ProcGen suite using PPO with default hyperparameters. Each agent was trained for 25M environment steps across 5 random seeds, with evaluation occurring every 500K steps on held-out task instances. Hardware was 4x A40 GPUs and training wall-clock averaged 18 hours per seed. Observations were preprocessed with the standard ProcGen impala-style encoder; for MiniGrid we used a three-layer convolutional trunk followed by a 256-unit GRU.\n\n---\n\nNotes on the reordering choices and residual frictions you may want to address in a follow-up pass (these are flagged, not fixed, since you only asked for restructuring):\n\n- The original ordering was setup \u2192 related work \u2192 protocol+results \u2192 contribution claim. Putting the contribution last buries the load-bearing claim; placing it after related work and before results lets the protocol/numbers read as evidence for an already-stated thesis.\n- The contribution paragraph contains the phrase \"the k=1 results above,\" which referred forward in the original ordering and now refers forward across one paragraph in the new ordering as well. A small textual fix (e.g., \"the k=1 results reported below\") would resolve this, but I have not altered prose.\n- Training-setup details (hardware, seeds, encoder) are demoted to the end because they support reproducibility rather than the argument. If the venue expects setup before protocol, the last two paragraphs can be swapped without affecting the rest.\n- I did not merge, split, or trim paragraphs, and I did not touch the related-work paragraph's forward reference (\"the next section\"), since that pointer is about sections outside this excerpt.\n\nOne thing I cannot verify: whether the broader paper places a separate \"Experimental Setup\" section earlier, in which case the final paragraph here may be redundant with that section rather than belonging at the end of this one. The right placement depends on document-level structure I do not have visibility into.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 1.0,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.5",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.5": "The delegation directly asks to restructure the section flow, making section-level ordering and narrative arc load-bearing.",
+      "RX.1": "Any projection should preserve uncertainty about whether deeper conceptual or evidentiary changes are intended beyond flow changes.",
+      "RX.2": "The projection must avoid inflating a flow-restructuring request into novelty, evidence, or scholarship review responsibilities.",
+      "RX.3": "Scope adherence is essential because the instruction is narrowly about restructuring rather than executing edits or evaluating the research.",
+      "RX.4": "Downstream-harm avoidance remains active to prevent assigning responsibilities that could distort the artifact's claims or intended meaning.",
+      "RX.5": "Provenance and traceability remain active so responsibility assignments are grounded in the delegation and artifact rather than inferred tasks."
+    }
+  }
+}

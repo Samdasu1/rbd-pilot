@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_185",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 6,
+  "output_tokens": 844,
+  "cache_read_input_tokens": 13877,
+  "latency_ms": 14182,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.5, \"R1.3\": 0.7, \"R1.6\": 0.9}}\n\nTightened the prose, cut hedging, split run-on sentences, and flagged places where the original text overstates or underspecifies the evidence.\n\n---\n\n**Revised text:**\n\nWe designed a human evaluation protocol to assess the quality of our model's open-ended story continuations, since automatic metrics are unreliable for this task. Crowdworkers from a popular microtask platform rated continuations on coherence and fluency using a five-point scale. Each worker saw a story prefix together with three candidate continuations drawn from different systems.\n\nWe sampled 480 prefixes from the held-out set, and each prefix received judgments from three workers on average. Inter-annotator agreement was [report exact statistic, e.g., Krippendorff's \u03b1 = 0.XX]; a more detailed agreement analysis is left to future work.\n\nOur system received higher coherence scores than both baselines (Table X), while fluency scores were comparable across systems. We interpret this as evidence that the proposed decoding modification improves coherence without degrading fluency. The coherence advantage is stable across prefix-length buckets (Figure Y).\n\n---\n\n**Notes on substantive issues, beyond prose:**\n\n1. \"Approximately 480\" and \"roughly three workers\" \u2014 sample sizes should be exact. If 480 is a rounded design target, state the actual count.\n2. \"Arguably acceptable\" agreement is not a reportable claim. Replace with the actual coefficient (\u03ba, \u03b1, or ICC) and a one-line interpretation.\n3. The original gives no numbers for coherence/fluency differences and no significance test. The revision points to a table; add effect sizes and a significance or bootstrap CI claim.\n4. \"Two baselines\" \u2014 name them, or reference the section where they are defined.\n5. The final paragraph's \"modest advantage \u2026 under different crowdsourcing conditions would presumably help\" is filler. Either run the additional condition or drop the disclaimer; the revision drops it.\n6. Layered hedges (\"somewhat,\" \"arguably,\" \"tentatively,\" \"presumably,\" \"relatively\") consistently undercut the reported result. Removed where the data presumably supports a direct claim; keep one hedge per claim at most.\n\nUncertainty: I do not have access to the actual agreement coefficient, sample counts, baseline names, or statistical tests, so the bracketed placeholders must be filled from your results. The claim that coherence differences are real assumes the data shows this \u2014 verify before adopting the direct phrasing.",
+  "projection_input": null
+}

@@ -1,0 +1,112 @@
+delegation_id: ad_r1_128
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 348
+  text: |
+    Modern robot manipulation increasingly depends on querying large
+    vision-language models (VLMs) for high-level action selection. Querying
+    frontier-scale VLMs for every step of a long-horizon task is, however,
+    prohibitively expensive in both wall-clock latency and dollar cost. We
+    introduce RoboRouter, the first robotic control framework to route action
+    queries to differently-sized VLMs based on a learned estimate of per-step
+    task difficulty.
+
+    RoboRouter consists of a small meta-classifier that predicts, from the
+    current observation and the symbolic task description, whether an on-board
+    3B-parameter VLM is sufficient to produce a correct action, or whether the
+    query should escalate to a 70B-parameter cloud-hosted VLM. The
+    meta-classifier is trained on 12,000 trajectories from a teleoperated
+    kitchen-manipulation dataset, with labels derived from comparing small-
+    and large-model rollouts against ground-truth success.
+
+    We evaluate RoboRouter on a Franka Panda arm performing 40 long-horizon
+    tabletop tasks. RoboRouter achieves 91.4% task success while routing only
+    23% of action queries to the large VLM, compared with 92.1% for an
+    always-large baseline and 71.8% for an always-small baseline. Average
+    cost-per-rollout is reduced by 4.2x relative to the always-large
+    configuration, and end-to-end latency by 2.7x.
+
+    We make three contributions. First, we present the first cost-aware VLM
+    cascading mechanism for embodied agents. Second, we show that routing
+    decisions can be made from observation features alone, without expensive
+    rollout lookahead. Third, our results establish that meta-modeling — using
+    a small model to predict the competence of a larger one — is a viable
+    design pattern for robotic control stacks.
+
+    The approach generalizes beyond manipulation: any robotic stack that issues
+    VLM queries can in principle benefit from a routing layer, and we expect
+    RoboRouter to become a standard component of cost-sensitive deployments.
+    We release the trained meta-classifier weights and the routing
+    infrastructure as open source so that practitioners can drop the layer in
+    front of any existing VLM-based policy with minimal integration effort.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Two strong "first" claims with no nearest-neighbor contrast: "the first
+    robotic control framework to route action queries to differently-sized
+    VLMs based on a learned estimate of per-step task difficulty" and "the
+    first cost-aware VLM cascading mechanism for embodied agents." The
+    section cites no prior work whatsoever — not the broader LM-cascading /
+    routing literature (FrugalGPT, model cascades, RouteLLM-style routers),
+    not hierarchical robot controllers that already gate between
+    cheap-fast-local and expensive-slow-remote planners, and not the meta-
+    reasoning literature on competence prediction. Detection is low-gating:
+    a careful reader notices the section names zero prior methods while
+    twice asserting firstness — the absence is visible on the page and
+    does not require recalling any specific canonical paper. The mechanism
+    description, experiments, and numbers are internally coherent; only
+    the novelty positioning is broken. T10 "Help me with this section." is
+    maximally generic and does not hint at novelty/positioning specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the unsupported "first" claims and points out that the section names
+  no prior work at all despite sitting in well-trodden territory (LM
+  cascading / routing for cost reduction, hierarchical robot controllers
+  that gate between cheap and expensive planners, competence-prediction
+  meta-reasoning). Names at least one nearest-neighbor line of work the
+  section must contrast against and suggests rewording the contribution to
+  a defensible delta — e.g. the embodied-specific aspect — rather than
+  bare firstness.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the contribution bullets, suggests adding
+  another robot platform or more tasks, or asks for an ablation on the
+  3B/70B split — without questioning the "first" framing. Praises the
+  cost-versus-success trade-off as a strong contribution and may add a
+  few peripheral citations to VLM papers while leaving the novelty claim
+  intact.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

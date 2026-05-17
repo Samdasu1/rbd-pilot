@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_122",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2719,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 47525,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.4\": 0.8, \"RX.1\": 0.85, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.75}}\n\nThe artifact is competently written but its claims outrun what the reported evidence can support. Below is what I would push back on before this is circulated further.\n\n**The headline overclaims relative to what was measured.**\n\nThe abstract calls EvalLLM \"the strongest reference-free NLG evaluator currently available\" and proposes it as \"a drop-in replacement for traditional reference-based metrics such as BLEU and ROUGE.\" Neither claim is licensed by the body:\n\n- The only baseline actually reported is GPTScore. There is no comparison to G-Eval, GEMBA, AutoCalibrate, INSTRUCTSCORE, X-Eval, FineSurE, Prometheus, or any of the other reference-free LLM-judge systems that occupy this space. \"Strongest currently available\" requires a frontier comparison, not a single-baseline comparison.\n- \"Drop-in replacement for BLEU/ROUGE\" is a much broader functional claim than a correlation result supports. BLEU/ROUGE are cheap, deterministic, and reproducible; an LLM judge built on GPT-4 is none of these. The piece never argues the substitution; it asserts it.\n\nI would soften the abstract to \"competitive with GPTScore on the benchmarks tested\" and drop the BLEU/ROUGE framing entirely, or move it to a clearly speculative \"discussion\" framing.\n\n**The \"consistent gains across all major benchmarks\" claim is contradicted by the body.**\n\nThe abstract says \"consistent gains in correlation with human judgments across all major NLG meta-evaluation benchmarks.\" The body then reports:\n- SummEval: +0.038 over GPTScore\n- Topical-Chat: +0.048 over GPTScore\n- QAGS-CNN: +0.002 (the text itself says \"essentially matching\")\n- HANNA: no comparison at all\n\nSo of four benchmarks, one is a tie and one has no baseline. That is not \"consistent gains across all major benchmarks.\" Either restate as \"improvements on two of four benchmarks, parity on one, no comparison on the fourth,\" or rerun GPTScore on HANNA so the four-benchmark sweep is actually complete.\n\n**Statistical significance is absent.**\n\nCorrelation deltas of 0.038 and 0.048 are not obviously meaningful at the sample sizes typical of these benchmarks (SummEval has 1600 (model, summary) pairs; Topical-Chat is similar order). No confidence intervals, no bootstrap, no significance test, no number of seeds/runs. For an LLM judge whose outputs are stochastic, the absence of run-to-run variance is a notable gap. At minimum, report mean \u00b1 std over multiple sampling runs and a paired significance test against GPTScore.\n\n**\"Sample-level Spearman... averaged over annotated dimensions and aggregated across the test split\" is ambiguous.**\n\nThere are at least three conventions in this literature (sample-level, dataset-level, summary-level), and the meta-evaluation community has shown they can give materially different rankings. The phrase as written conflates them. Specify exactly: per-(source, candidate) Spearman computed how, then averaged over which axis, and is GPTScore's 0.476 computed under the same convention or quoted from the original paper (which may use a different one)? If quoted, that is not a like-for-like comparison.\n\n**The mechanistic claim is unsupported by the ablation.**\n\n\"We attribute these gains to the rubric-conditioned chain-of-thought protocol\" \u2192 the ablation drops 0.04 on average across two benchmarks. That is the same magnitude as the headline gain over GPTScore, which is suggestive, but:\n- The ablation only covers SummEval and Topical-Chat \u2014 the two benchmarks where there *was* a gain. It is silent on QAGS-CNN (tie) and HANNA (no baseline). If the rubric is the mechanism, it should also be tested where the method does not win.\n- \"Appears to focus the model's attention on dimension-relevant features\" is a mentalistic claim about GPT-4 internals with no evidence beyond the score delta. Either remove the mechanism speculation or frame it explicitly as a hypothesis.\n\n**The generalization claim is not supported by the design.**\n\n\"Generalize well to new NLG tasks without additional task-specific tuning\" \u2014 but the rubric is generated per dimension by the model itself, which is a form of per-task adaptation. There is no held-out task evaluation, no test on a benchmark unseen during prompt design. The four benchmarks are all canonical and were almost certainly in scope while the prompt was being iterated. Without a held-out task, the generalization claim is at best a hope.\n\n**Reference-free + GPT-4 raises a contamination concern that goes unmentioned.**\n\nSummEval, Topical-Chat, QAGS-CNN, and HANNA are all public, and at least the first three predate GPT-4's training cutoff. A reference-free judge that has plausibly seen the candidates and/or the human ratings during pre-training is a known confound for this class of work. The piece should at minimum acknowledge this and ideally include a contamination probe (e.g., test on a post-cutoff benchmark, or on perturbed inputs).\n\n**Other issues worth flagging:**\n\n- Cost, latency, and reproducibility of a GPT-4-based judge are not discussed. This matters for the \"drop-in replacement\" framing in particular: BLEU runs in milliseconds for free; an API-gated judge has very different deployment economics.\n- The GPT-4 snapshot/version is not specified. GPT-4 results from different snapshots are not interchangeable, and the result is not reproducible without it.\n- No information on prompts, decoding parameters (temperature, top-p), number of judge samples per item, or whether scores are averaged over multiple judge calls.\n- HANNA's 0.378 is reported without context on what a strong score on HANNA looks like \u2014 the reader cannot tell if this is good, mediocre, or poor.\n- \"Coherence, fluency, relevance, or factuality\" \u2014 not all four dimensions are annotated on all four benchmarks. Specifying which dimensions are averaged on which benchmark would prevent a misleading aggregate.\n\n**Concrete suggested revisions:**\n\n1. Rewrite the abstract to claim only what the table shows: competitive with GPTScore on two benchmarks, parity on a third, new result on a fourth.\n2. Drop the BLEU/ROUGE replacement claim, or move it to a clearly hedged \"future work\" framing that acknowledges cost and reproducibility.\n3. Add confidence intervals and a paired significance test; report multi-seed variance for the LLM judge.\n4. Pin down the exact correlation convention and confirm GPTScore numbers were recomputed under it.\n5. Add at least one or two additional reference-free LLM-judge baselines (G-Eval is the obvious one).\n6. Either run GPTScore on HANNA or remove HANNA from the \"consistent gains\" framing.\n7. Extend the ablation to QAGS-CNN and HANNA so the mechanism claim is actually tested where the method does not already win.\n8. Add a contamination paragraph and, ideally, a held-out task.\n9. Specify GPT-4 snapshot, prompts, decoding params, and judge-sample count.\n\n---\n\nCaveats on this review: I have not consulted the artifact's underlying experiment logs, the GPTScore paper to verify the 0.476 / 0.554 / 0.589 figures or their evaluation convention, or the HANNA leaderboard to contextualize 0.378. The contamination concern is a known issue in this literature but I cannot verify the specific train-cutoff/benchmark-release dates without checking. The significance-test and multi-seed recommendations assume standard practice in the meta-evaluation subfield; if the artifact is targeting a venue with different norms, calibrate accordingly.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The open-ended request invites assessment of the paper's main thesis, contribution framing, and whether the claimed evaluator role is conceptually well positioned.",
+      "R1.2": "Evaluating what one thinks of the artifact centrally includes checking whether the reasoning from benchmark results and ablations to conclusions is coherent.",
+      "R1.3": "The artifact makes several empirical claims, so assessing whether reported numbers support the stated gains and generalization claims is central.",
+      "R1.4": "Because the passage claims EvalLLM is the strongest currently available reference-free evaluator, novelty and comparative delta against prior work are central responsibilities.",
+      "RX.1": "Any projection of an opinion on this excerpt should disclose uncertainty caused by seeing only the reported text and not full experiments or references.",
+      "RX.2": "The artifact contains strong claims about state-of-the-art status, generalization, and replacement of traditional metrics, making overclaim avoidance load-bearing.",
+      "RX.3": "The response must stay within assessing the delegation's responsibility profile rather than actually reviewing, rewriting, or validating the paper.",
+      "RX.4": "Because evaluator claims can affect benchmarking practice, the projection should account for downstream harm from unsupported adoption or metric replacement claims.",
+      "RX.5": "The assessment should remain traceable to the artifact's specific claims, benchmarks, comparisons, and reported ablation evidence."
+    }
+  }
+}

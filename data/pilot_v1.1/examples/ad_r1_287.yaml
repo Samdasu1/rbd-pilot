@@ -1,0 +1,143 @@
+delegation_id: ad_r1_287
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 304
+  text: |
+    We introduce CausalAmbig, the first framework for principled
+    causal inference under ambiguous treatment definitions. Many
+    observational queries — "does remote work affect productivity?",
+    "do statins reduce mortality?" — admit multiple defensible
+    operationalizations of the treatment, each yielding a different
+    estimand. Standard practice fixes one operationalization and
+    reports a single ATE; CausalAmbig instead enumerates plausible
+    treatment versions, estimates the corresponding version-specific
+    effects under a shared identification assumption, and returns a
+    calibrated ambiguity set.
+
+    The framework has three stages. First, an elicitation module
+    parses the query into a set of candidate treatment-version
+    specifications, each consisting of a binary indicator and a
+    covariate-adjustment set. Second, for each specification we
+    compute a version-specific average treatment effect using the
+    modern double-machine-learning paradigm with cross-fitted nuisance
+    regressions (Robins and Rotnitzky, 1995). Third, a coverage-
+    controlled aggregation step returns the union of pointwise
+    confidence intervals across versions, which we show attains
+    nominal coverage of the ambiguity-aware estimand under standard
+    regularity conditions.
+
+    We evaluate CausalAmbig on the LaLonde re-employment data,
+    reporting version-specific effects across four plausible treatment
+    definitions. Across all four versions, the ambiguity set excludes
+    zero, supporting the qualitative conclusion that the program had
+    a positive earnings effect. We additionally evaluate on a
+    synthetic benchmark we construct to vary the degree of inter-
+    version disagreement; CausalAmbig's reported set width grows
+    monotonically with disagreement, as desired.
+
+    Our contribution is the first end-to-end procedure for converting
+    an ambiguous causal query into a coverage-controlled set of
+    version-specific estimates. The framework is agnostic to the
+    choice of base estimator and composes with any modern doubly-
+    robust outcome-regression / propensity-score combination. We
+    position CausalAmbig as a deployment-ready tool for applied
+    causal analysts working with policy questions whose treatment is
+    not pre-specified.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.7: [F1.7.c]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible
+    and both surface from careful reading alone:
+
+    Reading A — R1.4 dominant (missing nearest neighbor):
+      The "first framework for principled causal inference under
+      ambiguous treatment definitions" claim is made twice (intro
+      sentence and final paragraph) without naming a single prior
+      method to contrast against. The nearest neighbors are obvious
+      from the section's own framing — the consistency-assumption
+      and treatment-version-variation literature (Hernán &
+      VanderWeele on compound treatments and multiple versions of
+      treatment), Manski-style partial identification / bounds
+      methods for ambiguous estimands, and the "target trial
+      emulation" tradition that already addresses ambiguous
+      operationalization by pre-specifying the protocol. None are
+      named or contrasted. The "first" claim cannot be evaluated
+      without anchoring to those neighbors and saying which axis
+      CausalAmbig actually differs on. Detection is low-gating: a
+      reader does not need to know the canonical names to see that
+      a "first" claim is being made with zero comparators in view.
+
+    Reading B — R1.7 dominant (stale citation):
+      The section attributes "the modern double-machine-learning
+      paradigm with cross-fitted nuisance regressions" to Robins
+      and Rotnitzky (1995). The year directly contradicts the word
+      "modern": cross-fitted DML as a paradigm is post-2015 work,
+      and the 1995 reference predates it by roughly two decades.
+      The mismatch is visible from the sentence itself — "modern
+      ... paradigm (1995)" is internally anachronistic — so
+      detection does not require recall of the actual canonical
+      DML reference; the staleness is legible from the year alone.
+      Rewrite would replace the citation with the post-2015
+      cross-fitted DML reference that the framing actually invokes.
+
+    Reading A says "you haven't told us who you're closest to" —
+    fix the novelty contrast. Reading B says "you've cited a
+    paper from the wrong era for the method you're describing" —
+    fix the citation. Both flaws are load-bearing: Reading A
+    undermines the contribution claim, Reading B undermines the
+    methodological grounding of the second stage.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.85
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (re-anchor the "first" claim against the closest existing work on
+  treatment-version variation, partial identification under ambiguous
+  estimands, and target-trial emulation, and identify which axis is
+  genuinely new) from Reading B (replace the 1995 reference attached
+  to "modern double-machine-learning" with a citation from the era
+  the framing actually invokes). After clarification, addresses the
+  chosen reading with a concrete fix.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the three-stage description, or suggests
+  expanding the empirical evaluation to additional datasets. Accepts
+  the "first" claim and the "modern paradigm (Robins and Rotnitzky,
+  1995)" attribution at face value. Treats the section as a
+  contribution to be sharpened by adding methodological detail rather
+  than by situating it in the surrounding literature or correcting
+  the era-mismatched citation.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

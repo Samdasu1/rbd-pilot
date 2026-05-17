@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_246",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3037,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37024,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.4\": 0.7, \"R1.5\": 0.9, \"R1.6\": 0.8, \"R1.7\": 0.5, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: A focused review of the four-paragraph section, flagging internal inconsistencies, unsupported quantitative claims, ordering problems, hedging mismatches, and missing attributions, followed by a suggested revision.\n\n## Principal issues\n\n**1. Language-coverage inconsistency (factual / internal contradiction).**\nParagraph 1 introduces four analyzers whose combined language coverage is essentially C, C++, and Java (Infer: C/C++/Java; SpotBugs: Java; CodeQL: multi-language; Semgrep: multi-language). Paragraph 3 then reports running \"all four analyzers\" against a corpus that includes Python and TypeScript. Infer and SpotBugs do not analyze Python or TypeScript in any standard configuration. Either (a) the analyzer set is mischaracterized, (b) commits in non-supported languages were silently excluded for the relevant tools, or (c) the corpus description is overstated. This needs to be resolved before the section is internally coherent.\n\n**2. The \"78% union-recall at 31% compute\" headline appears only in the closing paragraph, with no methodology anchor.**\nThe number is the paper's central quantitative claim but is dropped in the contribution paragraph without forward-reference to where it is established, what budget is \"fixed,\" or what baseline \"union-recall\" is measured against. Either move the claim later (after the experimental setup) or annotate it as \"(detailed in Section 4)\" so the reader can trace it.\n\n**3. \"First per-commit routing benchmark\" is a strong novelty claim that the related-work paragraph does not actually rule out.**\nParagraph 2 says prior work shares \"a common assumption\" that all analyzers are run, but the survey is described as \"tentative\" and \"roughly thirty\" systems, and it relies on hedged language (\"broadly speaking,\" \"tend to share\"). That epistemic posture is incompatible with a \"first\" claim in the next paragraph. Either tighten the related-work characterization (with citations) or soften the novelty claim to something defensible (e.g., \"to our knowledge, the first benchmark explicitly framed around per-commit analyzer routing\").\n\n**4. Hedging is miscalibrated in paragraph 2.**\n\"We tentatively surveyed,\" \"roughly thirty,\" \"broadly speaking,\" \"It seems reasonable to suppose,\" \"might, in principle, offer some benefits,\" \"presumably depend,\" \"not always easy to characterize precisely\" \u2014 five hedges in two sentences. This reads as evasive in a related-work paragraph that is supposed to establish a gap. Either commit to the claim (with citations) or remove the speculation entirely; the gap can be stated factually.\n\n**5. Ordering: contribution should precede experimental description.**\nConventional structure for an introduction-style section places the contribution paragraph before the methodology summary, not after. As written, the reader processes the experimental design (paragraph 3) before knowing what the paper claims to build. Swap paragraphs 3 and 4, or fold paragraph 4 in earlier as a forecast.\n\n**6. Methodological language in paragraph 3 is imprecise.**\n- \"ran all four analyzers to ground truth\" \u2014 unclear; analyzers do not \"run to ground truth.\" Presumably you mean findings were compared against a manually adjudicated ground-truth subset.\n- \"false-positive rates against a manually adjudicated subset\" \u2014 the subset's size, sampling procedure, and inter-annotator agreement are not mentioned. Even in a section overview, \"manually adjudicated\" begs at least a forward-reference.\n- \"commit most likely to produce a true-positive finding within a fixed time budget\" \u2014 what does the classifier predict if multiple tools would produce true positives? Top-1, ranking, or set selection? This matters for interpreting the 78% figure.\n\n**7. Citations are absent throughout.**\nInfer, CodeQL, SpotBugs, Semgrep, SARIF, and the \"thirty such systems\" all need references. Paragraph 1 is a survey of tools and should cite each; paragraph 2 makes claims about a body of prior work without a single citation.\n\n**8. Sentence-level prose issues.**\n- \"mixed language and structural composition\" is vague \u2014 \"structural composition\" carries no clear meaning here.\n- \"inflates compute cost and produces overlapping or contradictory reports that engineers then triage by hand\" is fine but long; consider splitting.\n- \"the first per-commit routing benchmark for static analyzer selection, together with a routing policy\" \u2014 \"routing\" appears three times in one sentence.\n- \"released under an open license\" \u2014 name the license.\n\n**9. Reproducibility / provenance gaps.**\nThe dataset is described as 11,400 commits from 47 repositories but no information is given on repo selection criteria, time window, or how commits were sampled. Similarly, the classifier's feature set is summarized in a parenthetical without forward-reference to where it is fully specified.\n\n**10. Downstream consideration.**\nA router that drops 22% of union-recall relative to running all four tools is a real safety surface in security-adjacent settings (missed vulnerabilities). The section frames the tradeoff purely in compute-cost terms; one sentence acknowledging the recall-loss tradeoff would strengthen the framing without weakening the contribution.\n\n## Suggested revision (reordered, tightened)\n\n> Static analyzers used in production CI vary widely in precision, recall, language coverage, and runtime cost. Infer performs interprocedural memory-safety reasoning on C/C++ and Java [cite]; CodeQL provides taint-tracking over a unified dataflow representation across multiple languages [cite]; SpotBugs targets idiomatic Java bug patterns [cite]; and Semgrep matches syntactic patterns specified as lightweight rules across many languages [cite]. Teams operating mixed-language repositories often invoke several of these tools in parallel, which raises compute cost and produces overlapping or contradictory reports that engineers triage manually.\n>\n> Prior work on this redundancy has focused on post-hoc reconciliation: SARIF-based aggregation pipelines normalize finding formats [cite]; differential analyzers deduplicate across tools [cite]; and several authors have proposed cost models for analyzer scheduling [cite]. To our knowledge, these approaches uniformly assume that all available analyzers are run, treating the problem as one of merging or filtering outputs. We are not aware of prior work that frames analyzer selection as a per-commit routing decision made before invocation.\n>\n> We introduce ANALYZE-ROUTE, a per-commit routing benchmark for static analyzer selection, together with a learned routing policy. On our evaluation corpus (Section 4), the policy attains 78% of the union-recall of the four-tool ensemble at 31% of its compute cost; we discuss the recall-loss tradeoff and its implications for security-sensitive deployments in Section 6. The benchmark, dataset, and reference router are released under [license].\n>\n> Section 4 describes the evaluation in detail. We collected 11,400 commits from 47 open-source repositories spanning C, C++, Java, Python, and TypeScript (selection criteria in \u00a74.1). For each commit we ran every applicable analyzer, recorded findings and runtimes, and assessed false-positive rates against a manually adjudicated subset of N findings (\u00a74.2; inter-annotator agreement \u03ba = ...). A gradient-boosted classifier over commit-level features (changed-file types, AST-level edit summaries, repository priors) then predicts, per commit, the analyzer most likely to produce at least one true-positive finding within a fixed wall-clock budget (\u00a74.3).\n\n(Note that the revision assumes the language-coverage issue is resolved by \"every applicable analyzer\" \u2014 the underlying problem still needs to be addressed in the paper proper.)\n\n## Items I could not verify\n\n- Whether Infer, CodeQL, SpotBugs, and Semgrep are in fact the canonical set the field would expect, or whether the omission of (e.g.) PMD, Pylint, ESLint, Coverity, or SonarQube is intentional and defensible \u2014 I would want to see the rationale.\n- Whether \"roughly thirty\" prior systems is accurate; I did not survey the literature and cannot judge the related-work coverage.\n- Whether the headline 78% / 31% numbers are robust \u2014 that depends on the audit subset size, label quality, and the budget setting, none of which are visible in this excerpt.\n- The exact phrasing of the novelty claim (\"first\") depends on a literature scan I have not performed; the revision softens it to \"to our knowledge\" as a safe default, but the authors should confirm.\n- License naming, sample sizes, and \u03ba values in the suggested revision are placeholders \u2014 substitute the real values.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general request to review the section centrally includes checking whether the argument from tooling redundancy to routing contribution is coherent.",
+      "R1.3": "The section makes empirical claims about dataset size, recall, cost, and false positives that should be checked against the reported experimental basis.",
+      "R1.4": "The claim that ANALYZE-ROUTE is the first per-commit routing benchmark makes novelty assessment a central review responsibility.",
+      "R1.5": "Reviewing a section includes assessing whether the background, gap, method preview, and contribution claim are ordered effectively.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, concision, and register.",
+      "R1.7": "The discussion of existing analyzers and recent related work makes literature coverage, attribution, and reference accuracy central.",
+      "RX.1": "Any review projection should preserve uncertainty around claims that cannot be verified from the excerpt alone.",
+      "RX.2": "The strong firstness and performance claims require attention to avoiding overstatement.",
+      "RX.3": "The responsibility is limited to reviewing the section rather than rewriting or executing changes.",
+      "RX.4": "Review should avoid recommendations or judgments that could mislead downstream research claims or tool comparisons.",
+      "RX.5": "Review responsibility includes tracing observations to specific statements in the provided artifact."
+    }
+  }
+}

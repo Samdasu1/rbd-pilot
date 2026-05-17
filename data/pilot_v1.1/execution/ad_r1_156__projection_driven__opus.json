@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_156",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2263,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 27739,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.2, \"RX.5\": 0.8}}\n\nSummary: I reordered the five paragraphs into a logical exposition (problem setup \u2192 duality \u2192 smoothing \u2192 proximal step \u2192 convergence rate), tightened the prose, and flagged technical claims I cannot fully verify without the surrounding paper.\n\n**Reordered and lightly edited version**\n\nWe formulate distributionally robust selective prediction as a saddle-point problem. The learner chooses a predictor h \u2208 H and an abstention policy \u03c4 : X \u2192 [0,1]; an adversary chooses a distribution Q from a KL-ball A_\u03c1 centered on the empirical distribution. The objective is the expected selective risk, subject to coverage of at least 1 \u2212 \u03b1.\n\nTo recast the saddle problem as a tractable convex program, we invoke strong duality. Because A_\u03c1 has nonempty relative interior (Slater's condition) for every \u03c1 > 0, the order of inf and sup may be exchanged. The resulting outer minimization is jointly convex in (h, \u03c4, \u03bb), where \u03bb is the multiplier on the coverage constraint.\n\nThe exchanged dual contains a pointwise maximum over Q \u2208 A_\u03c1 that is non-smooth. We apply Nesterov's smoothing with parameter \u03bc > 0, replacing the inner max by its Moreau envelope. The smoothed objective then has a Lipschitz-continuous gradient with modulus L_\u03bc = \u03c1/\u03bc, at the cost of a uniform bias of order \u03bc; choosing \u03bc = \u03b5/\u03c1 balances this bias against the iteration count below.\n\nThe required proximal step decomposes coordinate-wise. For the indicator I_{A_\u03c1} of the KL-ball, the proximal operator admits a closed form via Lagrangian rescaling: prox_{\u03b7I}(z) = exp(z \u2212 \u03b2(z)\u00b71), where \u03b2(z) is the unique scalar enforcing the radius constraint. We solve for \u03b2(z) by a one-dimensional bisection requiring O(log(1/\u03b4)) inner iterations.\n\nApplying the accelerated proximal scheme to the smoothed dual objective then yields a convergence rate of O(L_\u03bc \u00b7 \u03b5^{\u22121/2}) iterations to reach \u03b5-suboptimality, where L_\u03bc = \u03c1/\u03bc is the Lipschitz modulus of the gradient of the Moreau envelope of the inner maximum. This matches Nesterov's optimal first-order rate for smooth convex composite minimization, with the constant \u03c1 depending only on the radius of the ambiguity ball and the per-sample loss range.\n\n**Notes on the rewrite**\n\n- The original opens with the convergence-rate claim before setup, duality, smoothing, or the proximal step have been introduced. The reorder follows the natural derivation chain so each paragraph's premises are established before it speaks.\n- \"To express the saddle problem as a tractable convex program\" \u2192 \"To recast \u2026 as a tractable convex program\" \u2014 \"express \u2026 as\" is loose here; \"recast\" matches what the duality step actually does.\n- \"above\" in the rate paragraph was changed to \"below\" once the ordering moved that paragraph to the end. Likewise the opening \"Applying the accelerated proximal scheme\" now reads naturally as a consequence of the preceding setup; I added \"then\" to mark the chain.\n- \"of order \u03bc\" was retained; the original \"at the cost of a uniform bias of order \u03bc\" already balances precisely with the \u03bc = \u03b5/\u03c1 choice, so I left that as is.\n- Sentence-level: comma added in \"expected selective risk, subject to coverage\"; \"via Lagrangian rescaling\" tightened from \"a closed-form expression via Lagrangian rescaling\" to \"a closed form via Lagrangian rescaling.\"\n\n**Local consistency observations**\n\n- After the swap of inf and sup, the paragraph asserts the outer problem is \"jointly convex in (h, \u03c4, \u03bb).\" Joint convexity in h typically requires H to be a convex set of functions and the loss/risk to be convex in h; this is not stated. If H is, e.g., a neural-network hypothesis class, the joint-convexity claim is too strong as written. Worth checking against the assumptions section of the paper.\n- The choice \u03bc = \u03b5/\u03c1 together with L_\u03bc = \u03c1/\u03bc gives L_\u03bc = \u03c1\u00b2/\u03b5, so the rate O(L_\u03bc \u00b7 \u03b5^{\u22121/2}) becomes O(\u03c1\u00b2 \u00b7 \u03b5^{\u22123/2}). The paragraph asserts this \"matches Nesterov's optimal first-order rate,\" which is true in the sense that O(L/\u221a\u03b5) is optimal for L-smooth convex problems, but the effective dependence on \u03b5 after substituting \u03bc is \u03b5^{\u22123/2}, not \u03b5^{\u22121/2}. The text should clarify whether the stated O(L_\u03bc \u00b7 \u03b5^{\u22121/2}) is pre- or post-substitution to avoid an inadvertent overstatement.\n- The closed form prox_{\u03b7I}(z) = exp(z \u2212 \u03b2(z)\u00b71) is the standard projection onto a KL-ball intersected with the simplex (i.e., it requires z to live in log-probability space and \u03b2 to play the role of the normalizing/radius multiplier). The paragraph elides the simplex/normalization aspect; a reader unfamiliar with the construction may wonder why a single scalar \u03b2 suffices. One added clause (\"\u2026where the iterate is parameterized in log-density coordinates on the simplex\") would remove the ambiguity, but I did not insert it because doing so reaches beyond pure polish.\n\n**Items I cannot verify from the paragraph alone**\n\n- Whether \u03c1 in the rate constant truly depends \"only on the radius of the ambiguity ball and the per-sample loss range.\" That feels plausible but requires the proof's constants.\n- Whether the Moreau-envelope smoothing of the inner max over a KL-ball yields exactly Lipschitz modulus \u03c1/\u03bc (as opposed to some constant times \u03c1/\u03bc); the dependence on \u03c1 in the smoothness constant should be checked against the smoothing lemma being cited.\n- Whether Slater's condition is the right justification for the minimax swap here. For a KL-ball with \u03c1 > 0 the relative interior is nonempty, but the swap also typically needs compactness or a concavity/convexity pair; the paragraph asserts the swap follows from Slater alone, which may be a shortcut.\n- The bisection complexity O(log(1/\u03b4)) presumes a bracketing interval and Lipschitz behavior of the radius-as-function-of-\u03b2 map; both are standard but unstated.\n\nI have not made claims about novelty, citation coverage, or downstream applications, as these were outside the requested focus and the paragraph alone is insufficient evidence for them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the look focus primarily on technical argument validity or on sentence-level writing polish?",
+    "rationale": {
+      "R1.2": "A broad request to look at a technical research paragraph can reasonably include checking whether the mathematical and argumentative sequence holds together.",
+      "R1.6": "Because the delegation refers to a paragraph without specifying technical review, sentence- and paragraph-level readability is a central expected responsibility.",
+      "RX.1": "Any projection should disclose uncertainty because the delegation is highly underspecified.",
+      "RX.2": "The reviewer should avoid inferring stronger requested duties than the short delegation supports.",
+      "RX.3": "The projection must stay within assessing the requested paragraph rather than executing edits or broader review.",
+      "RX.4": "Technical feedback on optimization and robustness claims should avoid causing downstream misuse through unsupported validation.",
+      "RX.5": "Any responsibility assignment should remain traceable to the delegation wording and the artifact\u2019s research-writing content."
+    }
+  }
+}

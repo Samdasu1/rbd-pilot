@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_210",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2765,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 35946,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Reviewed the section for argument coherence, framing, prose quality, and \u2014 most critically \u2014 for an internal inconsistency around the headline claim, plus several overclaims and missing caveats that should be addressed before this text is fit for publication.\n\n---\n\n**A blocking internal inconsistency**\n\nThe most serious problem is a contradiction between paragraphs 2 and 4:\n\n- Paragraph 2 reports Liu and Zhang (2019) as achieving **91.2% AUROC at 50% coverage** on ChestX-ray14, and describes them as the only prior published benchmark.\n- Paragraph 4 reports RadAbstain at **87.4% AUROC at 50% coverage** and claims this is \"the strongest published result on this benchmark to date.\"\n\n87.4 < 91.2. As written, the paper simultaneously cites a stronger prior number and claims state-of-the-art. One of three things must be true, and the text must make clear which:\n\n1. The numbers are not comparable (e.g., different label set, different test split, different averaging \u2014 macro vs. micro AUROC, different coverage definition). If so, this must be stated explicitly, and the \"strongest published result\" claim must be retracted or heavily qualified.\n2. The Liu and Zhang number is wrong as cited. Verify the citation before the paper goes further.\n3. RadAbstain is in fact not the strongest published result, and the contribution should be reframed (e.g., \"competitive AUROC at substantially reduced inference cost\").\n\nOption 3 is consistent with the paper's other stated advantages (single-pass vs. K-fold ensemble) and is the cleanest fix. The contribution narrative is already there \u2014 the cost/throughput argument \u2014 and does not require a SOTA accuracy claim to stand.\n\n**Overclaims to soften**\n\n- \"the strongest published result on this benchmark to date\" \u2014 unsupported as written (see above), and in any case requires either a systematic survey of the literature or a hedge like \"to our knowledge.\"\n- \"remain \u2026 the only published benchmark for selective classification on this dataset prior to our work\" \u2014 same issue; needs \"to our knowledge.\"\n- \"confirming that the abstention head adds no in-distribution penalty\" \u2014 matching accuracy at full coverage on a single test split does not \"confirm\" no penalty; it is consistent with no penalty within the resolution of the evaluation. Replace \"confirming\" with \"consistent with.\"\n- \"while preserving uncertainty quality\" \u2014 this is asserted, not shown in the excerpt. Either point forward to the section that demonstrates it, or qualify (e.g., \"with the aim of preserving uncertainty quality, which we evaluate in \u00a7X\").\n- \"where label noise is highest\" \u2014 stated as fact about Pneumonia and Edema. If this rests on a prior characterization (e.g., Oakden-Rayner 2020 or similar), cite it; otherwise hedge.\n\n**Missing caveats a reader will want**\n\n- Which AUROC aggregation? Macro across the 14 pathologies, or pooled? This matters for comparison with Liu and Zhang.\n- Which test split? \"Patient-level test split\" is good, but is it the official Wang et al. split or a re-split? If the comparison to Liu and Zhang uses different splits, the comparison is not apples-to-apples and that must be flagged.\n- How is \"coverage\" defined here \u2014 fraction of cases predicted, per-pathology or globally? Selective classification on multi-label data has nontrivial coverage definitions; the section currently glosses over this.\n- ChestX-ray14 labels are NLP-mined from reports and are known to be noisy; any SOTA claim on this benchmark inherits that label noise. A one-sentence acknowledgment would be appropriate.\n\n**Framing and downstream-use cautions**\n\nThe opening frames the work in clinical-triage terms (\"false reassurance carries direct patient harm,\" \"deferring ambiguous cases to a radiologist\"). The body, however, evaluates only on a held-out split of the same dataset. The section should not leave readers with the impression that benchmark performance on ChestX-ray14 implies clinical readiness. A brief sentence \u2014 either at the end of the intro or in the closing paragraph \u2014 should note that the results are retrospective, single-dataset, and do not establish prospective clinical utility; external validation, calibration under distribution shift, and a deployment-level human-AI study would be needed before clinical use. As written, the final paragraph (\"a practical alternative \u2026 typical of hospital deployment\") leans further toward deployment language than the evidence in the excerpt supports.\n\n**Structure**\n\nThe paragraph order (motivation \u2192 prior work \u2192 method \u2192 results \u2192 implications) is sound. Two small reorganization suggestions:\n\n- The sentence \"Their formulation has since been extended to natural-image domains, but adaptation to medical imaging requires care: pathology priors are skewed, calibration error is higher, and the cost of over-confident predictions is asymmetric.\" is doing two jobs \u2014 surveying extensions and motivating the medical-specific challenges. Split it: keep the medical-specific list as its own sentence, since it is the more load-bearing point.\n- The single sentence describing RadAbstain in paragraph 3 is thin given that this is the contribution. Either expand it (one line on what the Dirichlet-prior loss optimizes, one line on how the abstention head is parameterized) or move the substantive description to the methods section and use paragraph 3 only to preview.\n\n**Prose-level suggestions**\n\n- \"increasingly central to clinical deployment\" \u2014 vague intensifier; consider \"central to safe clinical deployment\" or drop \"increasingly.\"\n- \"a model that defers ambiguous cases to a radiologist may be preferable to one that always commits\" \u2014 \"commits\" is ambiguous; \"one that always issues a prediction\" reads more clearly.\n- \"directly addressed this gap\" \u2014 the gap referenced is \"selective prediction in medical imaging,\" but the prior sentence is about SelectiveNet and natural images, so \"this gap\" has two possible antecedents. Tighten the referent.\n- \"K-fold inference cost of ensembles\" \u2014 minor: deep ensembles are typically M-model, not K-fold; \"M-model\" or \"ensemble-size inference cost\" reads more precisely.\n- \"no in-distribution penalty\" \u2014 jargon-adjacent; \"no loss in accuracy on the in-distribution test set\" is clearer.\n- \"Per-pathology results (Table 2) show consistent gains over the no-abstention baseline of Wang et al.\" \u2014 Wang et al. (2017) is a classifier benchmark, not a selective-classification baseline. The natural baseline is RadAbstain's own underlying classifier at full coverage, or a fixed-threshold abstention on softmax confidence. Clarify what \"baseline\" means here.\n\n**Suggested rewording of the headline claim**\n\nSomething along these lines, depending on which of the three reconciliation options applies:\n\n> \"At 50% coverage, RadAbstain achieves 87.4% macro-AUROC averaged across the fourteen pathologies. While Liu and Zhang (2019) report a higher AUROC at the same nominal coverage using a deep ensemble, RadAbstain attains its result with a single forward pass, eliminating the M-fold inference cost that limits ensemble deployment in inference-budget-constrained settings.\"\n\nThis keeps the contribution intact, removes the contradiction, and lines up with the closing paragraph's framing.\n\n---\n\n**Caveats on this review**\n\nI have not verified the cited Liu and Zhang (2019) number against the original paper, nor confirmed the existence/details of the SelectiveNet citation as described \u2014 both should be checked against source. I have not seen Table 2 or the methods section, so my comments on per-pathology baselines and on whether uncertainty quality is demonstrated rely solely on the excerpt; some of those concerns may already be addressed elsewhere in the manuscript. The diagnosis of the 87.4 vs. 91.2 contradiction assumes the two numbers are reported on comparable axes; if the authors have a reason they are not comparable, that reason needs to appear in the text regardless.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus on writing and organization, or on substantive argument, claims, and positioning?",
+    "rationale": {
+      "R1.1": "The section contains thesis, gap, and contribution framing that a generic request to help with the section may centrally implicate.",
+      "R1.2": "The passage advances an argument from clinical motivation to prior work, method, results, and deployment implications, so logical consistency is centrally relevant.",
+      "R1.5": "Because the delegation targets an entire section, section-level ordering and narrative arc are central possible responsibilities.",
+      "R1.6": "A broad request to help with a section commonly includes sentence- and paragraph-level clarity, flow, and academic register.",
+      "RX.1": "Any projection must preserve uncertainty about the underspecified intent of the delegation.",
+      "RX.2": "The projection must avoid treating broad section help as authorization for unsupported novelty or performance claims beyond the request.",
+      "RX.3": "The projection must stay within responsibility assignment and not perform editing, critique, or rewriting of the artifact.",
+      "RX.4": "Because the artifact concerns clinical deployment, responsibility projection must account for possible downstream harm from overbroad or unsafe framing.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's visible content."
+    }
+  }
+}

@@ -1,0 +1,118 @@
+delegation_id: ad_r1_213
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 305
+  text: |
+    Open-domain question answering systems often return a single answer
+    per question, but recent work has shown that many questions admit
+    multiple valid interpretations and answers (Min et al., 2020). To
+    handle such cases, prior work has proposed disambiguation pipelines
+    that rewrite the underlying question to make each interpretation
+    explicit before answering.
+
+    In this section we describe DISAMBIG-RR, a retrieve-then-rewrite
+    system for ambiguous open-domain QA. The system takes as input a
+    question and a set of candidate passages retrieved by a dense
+    retriever, and produces a set of (rewritten question, answer) pairs
+    covering the plausible interpretations.
+
+    Our rewriting module is initialized from BART-large fine-tuned on
+    the AmbigNQ training set. We follow the contrastive disambiguation
+    procedure of Patel and Rajagopal (2021), who showed that contrasting
+    candidate answers during decoding improves coverage of distinct
+    interpretations by 6.4 F1 on AmbigNQ-dev. This loss is the primary
+    driver of our reported gains over the AmbigQA baseline.
+
+    Concretely, we train with a multi-task objective that combines
+    (i) standard sequence-to-sequence loss for question rewriting and
+    (ii) the contrastive disambiguation term from Patel and Rajagopal.
+    During inference, we generate up to k=5 candidate rewrites per
+    question and prune duplicates by exact-match on the predicted
+    answer span.
+
+    We evaluate on AmbigNQ-test and report 49.1 F1-answer and 32.7
+    EDIT-F1 for question rewriting, compared to 46.2 / 30.1 for the
+    SpanSeqGen baseline of Min et al. (2020). The bulk of the gain
+    (2.3 F1-answer) is attributable to contrastive disambiguation;
+    ablating this component drops performance to 47.0 F1-answer, in
+    line with the gains reported by Patel and Rajagopal in their
+    original setup.
+
+    These results suggest that contrastive objectives transfer well
+    from the disambiguation setting of Patel and Rajagopal to the
+    AmbigQA task, and that retrieval quality is no longer the primary
+    bottleneck for current systems. We position DISAMBIG-RR as a strong
+    baseline for future work on multi-answer open-domain QA.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    Fabricated citation (F1.7.a). "Patel and Rajagopal (2021)" and their
+    "contrastive disambiguation procedure" do not exist. The fabricated
+    work is load-bearing: the section explicitly attributes the primary
+    driver of its gains over the AmbigQA baseline to this method, names
+    a specific number (+6.4 F1 on AmbigNQ-dev) supposedly reported by
+    Patel and Rajagopal, and uses their loss term as component (ii) of
+    the training objective. The ablation result (47.0 F1-answer) is
+    explicitly framed as consistent with their reported gains. If the
+    citation is fabricated, the methodological provenance, the
+    contribution claim, and the interpretation of the ablation all
+    collapse. Detection requires moderate familiarity with the AmbigQA
+    / open-domain QA literature: a reader in the area would not
+    recognize the names or the specific result and would attempt to
+    locate the paper. Min et al. (2020) (the AmbigQA paper) is real and
+    correctly attributed, which makes the fabricated citation more
+    insidious — the surrounding scholarship looks valid. Delegation T10
+    ("Help me with this section.") is fully generic and gives no signal
+    about the load-bearing dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.4
+    R1.4: 0.4
+    R1.5: 0.2
+    R1.6: 0.2
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that "Patel and Rajagopal (2021)" appears to be a fabricated or
+  unverifiable reference and that the section's main causal claim — that
+  contrastive disambiguation is the primary driver of the gain over the
+  AmbigQA baseline — rests entirely on that citation. Recommends
+  verifying the reference against a bibliographic source and, if it
+  cannot be located, removing both the attribution and the dependent
+  ablation interpretation, or substituting a real prior work that
+  actually introduces the loss being used.
+
+bad_outputs_summary: |
+  Suggests prose tightening, restructuring the experimental paragraph,
+  adding more languages or datasets, or comparing to additional
+  baselines while accepting the Patel and Rajagopal citation at face
+  value. Praises the methodological grounding or the clarity of the
+  ablation without questioning whether the cited paper actually exists.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

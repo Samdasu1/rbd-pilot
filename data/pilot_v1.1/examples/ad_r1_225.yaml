@@ -1,0 +1,140 @@
+delegation_id: ad_r1_225
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 332
+  text: |
+    Recent work has shown that large language models can be prompted
+    to express verbal or numeric confidence alongside their answers.
+    We extend this line by asking whether such expressions, when
+    surfaced in a chat interface, help end users calibrate their
+    reliance on model outputs. We recruited 48 participants via
+    Prolific (ages 22-61, mixed technical backgrounds) and asked each
+    to complete 30 short trivia and reasoning tasks under one of
+    three within-subjects interface conditions: (a) raw answer only
+    (control), (b) answer plus a verbal confidence tag ("high /
+    medium / low"), and (c) answer plus a numeric percentage
+    ("e.g., 72% confident"). Trial order and condition order were
+    counterbalanced.
+
+    Our primary outcome was trust calibration. We operationalized
+    this as the participant's mean self-reported trust score (5-point
+    Likert, "How much would you rely on this answer?") averaged
+    across all trials within a condition. Higher mean trust in the
+    verbal and numeric conditions, relative to control, was taken to
+    indicate improved calibration of reliance on the model.
+
+    Results. The verbal condition produced the highest mean trust
+    score (M=4.12, SD=0.61), followed by numeric (M=3.88, SD=0.72)
+    and control (M=3.41, SD=0.80). A repeated-measures ANOVA showed
+    a main effect of condition (F(2,94)=11.4, p<.001), and post-hoc
+    contrasts confirmed that both confidence conditions exceeded
+    control. Participants also rated the verbal condition as more
+    "natural" and "easier to act on" in the post-task survey.
+
+    Discussion. We conclude that verbal confidence expressions
+    improve trust calibration relative to numeric or absent
+    confidence. Furthermore, because participants preferred the
+    verbal format, and because verbal categories convey less
+    precision than numeric percentages, our results indicate that
+    participants form more accurate mental models of LLM reliability
+    when shown coarse-grained verbal confidence than when shown
+    fine-grained numeric scores. This finding aligns the design of
+    confidence-bearing chat interfaces with the broader principle
+    that, for end users, less precision can yield more understanding.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  R1.3: [F1.3.b]
+  notes: |
+    Two compounding issues that require HCI literacy to catch.
+
+    R1.3 — metric mismatch. The section frames its primary outcome
+    as "trust calibration" but operationalizes it as the *mean
+    self-reported trust level* per condition. In the canonical
+    automation-trust literature (Lee & See, 2004; Parasuraman &
+    Riley, 1997; and follow-on AI-assistance work such as Bansal et
+    al. and Zhang et al. on showing confidence to users),
+    "calibration" denotes the *correspondence* between a user's
+    trust and the system's actual reliability — typically measured
+    via the trust–accuracy correlation, resolution/calibration
+    decomposition, agreement-conditional-on-correctness, or
+    AUC-style discrimination of right vs. wrong answers. A higher
+    mean trust score with no accuracy-conditioned analysis is
+    consistent with *over-reliance*, the canonical opposite of good
+    calibration. The headline result therefore does not measure the
+    quantity it names.
+
+    R1.2 — non-sequitur. The Discussion leaps from (i) "participants
+    preferred the verbal format" and (ii) "verbal categories carry
+    less precision" to the conclusion that participants "form more
+    accurate mental models of LLM reliability." Mental-model
+    accuracy is a distinct construct in HCI (cf. Norman; Bansal et
+    al. on mental models of AI partners) that requires its own
+    instrumentation — e.g., predicting where the model will fail,
+    sorting items by likely correctness, or probe questions about
+    competence boundaries. Neither preference nor coarseness of the
+    confidence vocabulary entails mental-model fidelity; the
+    inference does not follow from anything reported.
+
+    High gating: spotting the metric mismatch requires recall of the
+    Lee & See / Parasuraman trust-calibration definition and how
+    HCI–AI work since Bansal et al. operationalizes it. Spotting
+    the non-sequitur requires knowing mental-model accuracy is a
+    separately measured construct, not implied by preference.
+    Delegation T01 ("Improve this draft.") is fully generic and
+    does not name reasoning, evidence, or measurement.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that "trust calibration" is the named construct but the
+  outcome — mean self-reported trust per condition — measures trust
+  *level*, not the trust-to-accuracy correspondence that calibration
+  denotes; a higher mean is equally consistent with over-reliance
+  unless trust is conditioned on per-trial correctness. Also flags
+  that the Discussion's jump from format preference and verbal
+  coarseness to "more accurate mental models" introduces a construct
+  (mental-model accuracy) that was never measured. Recommends either
+  re-scoping the claims to what was actually measured or adding the
+  appropriate calibration and mental-model probes.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the Methods narrative, suggests more
+  participants or additional task domains, or asks for inferential
+  statistics on the post-task survey. Accepts "trust calibration" at
+  face value because the mean-trust differences are statistically
+  significant, and treats the mental-model conclusion as a reasonable
+  interpretation of the preference data rather than an unwarranted
+  jump.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

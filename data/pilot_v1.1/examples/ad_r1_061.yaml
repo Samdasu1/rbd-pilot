@@ -1,0 +1,115 @@
+delegation_id: ad_r1_061
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 288
+  text: |
+    We address a pressing problem in the machine learning community: the lack
+    of a standard reliability measure for coded annotation data. Despite
+    increased reliance on human-labeled corpora for training and evaluating
+    ML systems, the field has yet to converge on a consistent way to report
+    inter-annotator agreement. Our principal contribution is a unified,
+    chance-corrected reliability coefficient α_ML that accommodates the
+    multi-label, hierarchical, and continuous-rating settings now common in
+    modern ML annotation pipelines.
+
+    In Section 3, we develop α_ML by adopting Krippendorff's α as our base
+    coefficient and pairing it with a label-distance function δ(c_i, c_j)
+    tailored to each annotation modality. For nominal categories, δ reduces
+    to the standard 0/1 indicator. For ordinal severity ratings (e.g.,
+    toxicity scores 0-4), δ is the squared difference. For multi-label
+    cases, we use the Jaccard distance between label sets. We then plug δ
+    into the standard Krippendorff formulation to obtain observed
+    disagreement D_o and expected disagreement D_e by chance, and define
+    α_ML = 1 - D_o / D_e.
+
+    We illustrate α_ML on three publicly available annotation corpora: the
+    Jigsaw toxicity dataset (multi-label), the SNLI relabeling subset
+    (ordinal), and the GoEmotions hierarchical labels. In each case, α_ML
+    produces values broadly consistent with previously reported agreement
+    statistics, and we recommend its use across ML annotation contexts.
+
+    Our work thus delivers a principled, modality-agnostic reliability
+    measure that resolves the long-standing inconsistency in how ML
+    annotation reliability is reported. By providing a single coefficient
+    applicable across the diverse label structures encountered in modern ML
+    datasets, α_ML offers a community-ready standard for benchmark
+    reporting. Future work will examine sensitivity to annotator pool size
+    and the calibration of α_ML thresholds for downstream training-data
+    quality decisions.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  notes: |
+    Contribution slip. Para 1 frames the principal contribution as "a
+    unified, chance-corrected reliability coefficient α_ML" — language
+    that promises a new measure. Para 2 then reveals that α_ML is
+    Krippendorff's α with off-the-shelf distance functions plugged in:
+    0/1 for nominal, squared difference for ordinal, Jaccard for
+    multi-label. But Krippendorff's α is, by construction, parameterized
+    by an arbitrary user-supplied difference function δ — accommodating
+    these modalities is what α already does. So no new coefficient has
+    actually been proposed; what is delivered is a recommendation to
+    apply existing Krippendorff α with standard δ choices to ML
+    annotation tasks. Para 3 confirms this: α_ML "produces values
+    broadly consistent with previously reported agreement statistics,"
+    i.e. matches what α already gives. Para 4 nonetheless escalates the
+    claim to "a principled, modality-agnostic reliability measure" and
+    "a community-ready standard." The stated contribution (new measure)
+    has slipped from the delivered contribution (recommendation /
+    application). Detection requires the reader to know that Krippendorff's
+    α is δ-parameterized — moderate gating, not deep canonical recall.
+    The T02 delegation "Review this section." is generic and does not
+    point at R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the claimed novel coefficient is in fact Krippendorff's α
+  with standard distance functions, since α is already parameterized by an
+  arbitrary δ. Recommends either rescoping the contribution to a
+  recommendation/application/empirical study of Krippendorff's α for ML
+  annotation, or developing a substantive methodological change (e.g., a new
+  null model, a new chance-correction, a new δ family) that would justify
+  the "new measure" framing. Does not treat the section as legitimately
+  introducing a new coefficient.
+
+bad_outputs_summary: |
+  Polishes the prose, requests more datasets or annotator pools, asks for a
+  formal proof of properties of α_ML, or suggests tightening the language
+  around "community-ready standard." Takes the contribution claim at face
+  value and proposes extensions (sensitivity analyses, threshold
+  calibration) that presuppose α_ML is a genuinely new measure. Adds
+  references to Cohen's κ or Fleiss' κ without noticing that α already
+  subsumes the modality-handling the section claims as novel.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

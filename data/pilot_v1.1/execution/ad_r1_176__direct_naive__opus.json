@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_176",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_naive",
+  "input_tokens": 6,
+  "output_tokens": 603,
+  "cache_read_input_tokens": 13389,
+  "latency_ms": 10175,
+  "cost_usd": 0.0,
+  "output_text": "Revised the section to remove repetitive phrasing (\"candidate,\" \"evaluator language model,\" \"benchmark set\"), tighten sentences, and present the benchmark numbers in a compact form.\n\n---\n\nWe evaluate code generation outputs from candidate models using an open-source evaluator LM. The evaluator is a fine-tuned variant of a publicly available base model, trained on synthetic feedback data covering Python, JavaScript, and Rust.\n\nThe procedure has three steps. (1) For each prompt in our evaluation set, we sample code from every candidate model. (2) Each sample is passed to the evaluator along with the originating prompt and a scoring rubric. (3) The evaluator returns a score on a five-point scale. We aggregate scores across prompts to obtain a final score per candidate model.\n\nTo validate the evaluator, we compared its scores against human ratings on a 600-sample benchmark (200 each in Python, JavaScript, and Rust). Spearman correlations with human ratings were 0.71 (Python), 0.68 (JavaScript), and 0.64 (Rust).\n\nThe evaluator also emits a natural-language critique alongside each score, intended to help developers understand the rating. Examples appear in Appendix B.\n\n---\n\nNotes on edits:\n- Collapsed the opening two sentences into one; \"candidate language models\" appeared 7 times in the original and is now reduced.\n- Replaced the prose listing of per-language sample counts and correlations with parenthetical/compact forms.\n- \"the evaluator model scored each code sample the way the evaluator model did\" \u2192 \"the rating.\"\n- Kept all factual content (model provenance, training languages, rubric, 5-point scale, 600 samples, 200 per language, the three correlations, Appendix B pointer) unchanged.\n\nNo unverified claims introduced; all numbers and references match the source.",
+  "projection_input": null
+}

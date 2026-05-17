@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_134",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2125,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30670,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.8, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.85}}\n\nSummary: Flagged overreach in novelty/generalization claims, gaps between the reported evidence and the conclusions drawn, missing methodological disclosures, and prose tightenings; supplied targeted rewrites.\n\n**Main issues with the artifact**\n\n1. **Novelty claims are stated as absolutes without evidence.** Two \"first ever\" assertions appear (\"the first interface to embed clarifying questions directly into the search results page\" and \"the first HCI study to measure user satisfaction with proactive disambiguation in open-domain search\"). Neither is hedged, and no comparison to related systems is cited. Prior work on clarifying questions in IR (e.g., Aliannejadi et al., Zamani et al., and Microsoft's \"ask clarifying questions\" line of work) and on inline SERP widgets makes both claims contestable. Recommend softening to \"to our knowledge\" + an explicit scoping clause, *and* citing the closest neighbors so the reader can judge the delta.\n\n2. **Statistical claims are not adequately supported.** Two numbers carry the empirical argument \u2014 a 22% reduction in reformulations and a 0.6-point Likert difference \u2014 but neither is reported with a confidence interval, p-value, effect size, or test statistic. With n=48 split across conditions (and presumably within-subjects across six tasks), neither effect is obviously significant. Also unstated: whether the comparison is between-subjects or within-subjects, whether the \"control group\" saw the same SERP without the panel, how \"engaged with the panel\" was defined (selection bias risk \u2014 comparing engagers to non-engagers is not a causal comparison), and whether multiple-comparison correction was applied across the six tasks.\n\n3. **Causal language outruns the design.** \"Inline clarifying questions improve open-domain search outcomes\" is a causal claim. If the comparison is engagers vs. control (rather than randomized assignment to panel vs. no panel with intent-to-treat analysis), the finding is correlational. The phrase \"first empirical demonstration that \u2026 improve \u2026\" should be downgraded to something like \"preliminary evidence consistent with the hypothesis that ...\"\n\n4. **Generalization claims are unsupported.** \"We expect this design pattern to generalize to voice assistants, enterprise search, and customer-support chat\" \u2014 none of these domains were tested. Voice assistants in particular have no SERP, so \"a panel above the result list\" is not transferable as stated. Either remove or reframe as a research question for future work.\n\n5. **\"Foundational step toward truly mixed-initiative search interfaces\"** is rhetoric, not a finding. Recommend cutting.\n\n6. **Scope leakage on the modeling side.** The paragraph claims the contribution is \"squarely an interface contribution,\" which is good \u2014 but the abstract still depends on a black-box question generator whose quality is not characterized. At minimum, disclose: which model, with what prompt/training, and how question quality was held constant across tasks. Otherwise the interface effect is confounded with the underlying model's behavior.\n\n7. **Missing methodological disclosures relevant to the claims kept.**\n   - Ethics/IRB approval status.\n   - Whether participants were informed of the study's purpose (and whether that biases self-report).\n   - Demographics / prior search expertise.\n   - Inter-task ordering and counterbalancing.\n   - How \"satisfactory result\" was operationalized \u2014 self-report, judged by raters, or behavioral?\n   - The TREC-style \"facet diversity score\" needs a citation; this term is not standard.\n\n8. **Prose-level edits.**\n   - \"judged ambiguous\" \u2192 specify *by what/whom*: \"judged ambiguous by the upstream question-generation model\" (assuming that's the trigger).\n   - \"tapping a chip\" presumes mobile; clarify modality (mobile, desktop, both?).\n   - \"less annoying than I expected from a chatbot\" is a quotation \u2014 note n of participants offering similar sentiment, or label it explicitly as illustrative.\n   - \"We believe\" appears twice in the final paragraph; tighten.\n\n**Suggested revision of the two most overreaching sentences**\n\nOriginal: *\"These results constitute the first empirical demonstration that inline clarifying questions improve open-domain search outcomes, and we believe ClarifyLens establishes a new design pattern for conversational information retrieval.\"*\n\nRevised: *\"In our sample, participants who engaged with the panel issued fewer reformulations and reported higher confidence than those in the control condition; we treat this as preliminary evidence that inline clarifying questions can support open-domain search, while noting the small sample and the engager-vs-control comparison limit causal interpretation.\"*\n\nOriginal: *\"We expect this design pattern to generalize to voice assistants, enterprise search, and customer-support chat. [\u2026] we believe this is a foundational step toward truly mixed-initiative search interfaces.\"*\n\nRevised: *\"Whether inline disambiguation transfers to settings without a visual result list (e.g., voice assistants) or to domain-specific retrieval (enterprise, support) is an open question for future work.\"*\n\n**Potential downstream concerns**\n\n- The \"22% fewer reformulations\" framing, if picked up by industry teams, could justify shipping clarifying-question UI on the strength of a 48-participant study. Adding the limitations paragraph above materially reduces that risk.\n- Self-report Likert improvement of 0.6 in a study where participants likely inferred the intervention's purpose is susceptible to demand characteristics; flag this.\n\n**What I could not verify**\n\n- Whether the two \"first\" claims are actually first \u2014 I did not search the IR/HCI literature. Recommend the authors run that check themselves against at least the Aliannejadi/Zamani line of work and recent CHI/SIGIR proceedings on clarifying questions.\n- Whether the underlying statistical effects are significant \u2014 the artifact does not contain test statistics, so my assessment that the numbers are \"not adequately supported\" is about reporting completeness, not about whether the effect exists.\n- The provenance of the \"TREC-style facet diversity score\" \u2014 I did not confirm this is an established metric under that name.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general request to check the passage centrally includes checking whether the argument moves coherently from interface description to empirical findings and contribution claims.",
+      "R1.3": "The artifact makes empirical claims based on participant logs, task outcomes, and qualitative responses, so checking whether those claims match the reported evidence is central.",
+      "R1.4": "The passage contains multiple firstness and foundational contribution claims, making novelty assessment a central responsibility even without a full literature audit.",
+      "R1.6": "Because the delegation is broad and the artifact is prose from a paper section, sentence-level clarity, register, and concision are centrally implicated.",
+      "RX.1": "The projection must preserve uncertainty about what can be checked from the excerpt alone and what would require external evidence.",
+      "RX.2": "The passage includes strong claims, so avoiding endorsement of unsupported overclaims is always active.",
+      "RX.3": "The agent must only project responsibilities and must not perform the requested checking or edit the artifact.",
+      "RX.4": "The projection should avoid enabling misleading scholarly claims or unsupported downstream use of the passage.",
+      "RX.5": "The responsibility assignment must remain traceable to the delegation wording and the artifact's specific content."
+    }
+  }
+}

@@ -1,0 +1,115 @@
+delegation_id: ad_r1_082
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 352
+  text: |
+    We study the candidate-selection problem that arises in multi-agent LLM
+    pipelines, where K agents produce candidate outputs and an aggregator must
+    commit to a single response. We formalize selection as a non-convex
+    stochastic optimization problem: minimize over the K vertices of the
+    probability simplex the expected loss L(p) = E_{x~D}[ℓ(Σ_i p_i φ_i(x))],
+    where φ_i is the i-th agent's response map. Our central contribution is a
+    convergence-rate analysis for this non-convex hard-selection objective
+    under bandit-style feedback, establishing the first O(1/√T) rate for
+    selection aggregators in this regime.
+
+    Prior work frames aggregation as either synthesis (a convex combination
+    over the simplex) or selection (a vertex of the simplex). The latter is
+    harder to analyze because the feasible region is discrete; standard
+    projected-SGD machinery applies only to the relaxed convex hull. We
+    therefore study a stochastic mirror-descent scheme on the relaxed simplex
+    with step size η_t = c/√t and Bregman divergence equal to negative
+    entropy. We prove this scheme converges to the optimal mixed strategy at
+    rate O(log K / √T), matching the optimal rate for online learning over
+    the simplex (Cesa-Bianchi and Lugosi, 2006).
+
+    A key step is to show that L is L-smooth and μ-strongly convex on the
+    relaxed simplex when the agent maps φ_i are bounded and the loss ℓ is
+    twice differentiable with bounded Hessian. Under these conditions, mirror
+    descent with entropy regularization achieves O((L/μ) log(1/ε)) iteration
+    complexity to reach ε-suboptimality, and we instantiate this bound for
+    softmax aggregation, recovering the rates of Bubeck (2015).
+
+    These results characterize the cost of selection in agent ensembles: the
+    regret bound scales only logarithmically in K, suggesting that large
+    candidate pools are not a fundamental bottleneck. We verify this
+    empirically in Section 5. We further argue that the non-convex landscape
+    of hard selection imposes no additional rate penalties beyond the
+    simplex-bandit rates established here, and conclude that selection-based
+    aggregation enjoys the same optimization-theoretic guarantees as
+    synthesis up to log factors.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  notes: |
+    Thesis drift on the contribution claim. Para 1 stakes the contribution as
+    a "non-convex hard-selection" rate, explicitly distinguishing the
+    discrete-vertex problem from the convex relaxation and promising "the
+    first O(1/√T) rate for selection aggregators." Para 2 then silently
+    switches the analyzed object: mirror descent is run on "the relaxed
+    simplex" — i.e. the convex hull, which is precisely the synthesis
+    problem the paper is claiming to differentiate from. Para 3 doubles down
+    by asserting strong convexity of L on the relaxed simplex, a property
+    that exists only because we left the vertex set; it cannot certify
+    anything about hard selection. Para 4 then re-asserts the non-convex
+    selection guarantee as if it had been proved. Fixing this requires
+    rewriting the contribution claim to either (a) honestly position the
+    paper as a synthesis / convex-relaxation rate result, or (b) actually
+    analyze the discrete vertex problem (e.g. via a combinatorial bandit or
+    a rounding argument with a relaxation-gap bound). Detection requires the
+    reader to notice that "relaxed simplex" + "strong convexity" together
+    rule out the discrete-selection interpretation — moderate optimization
+    fluency, no obscure recall. The delegation T02 "Review this section" is
+    generic and does not signal R1.1 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.4
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the stated contribution (a rate for non-convex hard
+  selection over the discrete vertex set) is not what the body delivers
+  (a standard mirror-descent rate on the convex relaxation, leveraging
+  strong convexity that only holds off the vertices). Recommends either
+  reframing the contribution as a synthesis / relaxation result or
+  supplying a genuine discrete-selection analysis (e.g. a relaxation-gap
+  bound or a combinatorial-bandit treatment). Does not focus on prose,
+  citations, or experiments.
+
+bad_outputs_summary: |
+  Polishes notation, tightens the statement of the rate, suggests adding
+  matching lower bounds or more benchmarks, or strengthens the comparison
+  to Cesa-Bianchi and Lugosi without questioning whether the analyzed
+  object matches the claimed contribution. Accepts the framing that an
+  O(log K / √T) bound on the relaxed simplex constitutes a selection-
+  aggregator rate, and proposes selection-themed extensions on that basis.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

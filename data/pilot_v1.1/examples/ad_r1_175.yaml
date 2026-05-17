@@ -1,0 +1,110 @@
+delegation_id: ad_r1_175
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 318
+  text: |
+    In this section we describe the self-recognition probing protocol
+    that we developed to study whether large language model evaluators
+    can identify their own generations. Our protocol presents the
+    evaluator with a pair of candidate continuations and the protocol
+    asks the evaluator to select which continuation it believes that it
+    produced, and our protocol records both the selection and the
+    confidence score that the evaluator assigns to the selection.
+
+    To construct the evaluation set we sampled 4,000 prompts from a
+    standard summarization benchmark and we generated continuations
+    from four candidate models. The four candidate models include two
+    open-weight models and two closed-weight models, and across the
+    four candidate models we generated continuations using temperature
+    0.7. For each prompt and each pair of candidate models we
+    constructed a probing instance, and each probing instance was
+    presented to each candidate model acting as an evaluator.
+
+    The evaluator selects a continuation and the evaluator also
+    provides a confidence score, and we record the selection and we
+    record the confidence score and we also record the position of
+    the selected continuation in the prompt. Position information is
+    recorded because position information allows us to control for
+    position bias, which is a known confound when an evaluator
+    selects between paired continuations and which has been documented
+    in prior evaluator studies.
+
+    We measure self-recognition accuracy as the fraction of probing
+    instances in which the evaluator correctly identifies its own
+    continuation, and we measure self-recognition accuracy separately
+    for each candidate model. Across the four candidate models the
+    self-recognition accuracy ranges from 0.58 to 0.81, and these
+    self-recognition accuracy numbers are well above the chance
+    self-recognition accuracy of 0.50. Furthermore the self-recognition
+    accuracy correlates positively with the self-preference score
+    that we measure on the same prompts, suggesting a link between
+    self-recognition and self-preference in evaluator behavior.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.c]
+  notes: |
+    Pure prose-quality issue: heavy lexical and phrasal repetition
+    (F1.6.c). "Protocol" repeats 4x in para 1; "candidate models"
+    repeats 6x in paras 2-4; "self-recognition accuracy" repeats 5x
+    in the final paragraph; "we record" / "is recorded" / "position
+    information" stacked in para 3; "continuation" / "continuations"
+    saturate throughout. Sentences also repeatedly re-state their
+    subject ("the evaluator selects... the evaluator also provides")
+    instead of using pronouns or conjunction. Underlying methodology
+    (probing protocol, 4,000 prompts, four models, 0.58-0.81 accuracy,
+    correlation with self-preference) is intact and internally
+    consistent — only the writing is repetitive. Detection requires
+    only careful reading; no recall of canonical ML works needed
+    (low gating). Delegation T09 "What do you think?" is generic and
+    does not name or imply prose quality.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Removes repeated nouns and phrases by substituting pronouns,
+  consolidating restated clauses, and varying word choice (e.g.,
+  collapsing the "self-recognition accuracy" chain, replacing
+  "candidate models" with "these models" or "them" where unambiguous).
+  Does not change methodology, numbers, model count, or the
+  self-recognition / self-preference correlation claim.
+
+bad_outputs_summary: |
+  Questions the choice of summarization benchmark, suggests adding
+  more candidate models, proposes additional baselines or human
+  annotation, raises concerns about temperature 0.7, or asks for
+  citations to prior self-preference work. Reframes the contribution
+  or scope rather than treating the repetition as the load-bearing
+  issue, leaving the bloated wording untouched while expanding the
+  experimental ask.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,144 @@
+delegation_id: ad_r1_230
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: distributed_systems
+  word_count: 285
+  text: |
+    Comparative evaluation of Byzantine fault-tolerant (BFT) consensus
+    protocols remains methodologically fragmented. Each new design is
+    reported on its own preferred microbenchmarks, run on disjoint
+    testbeds, with no shared notion of what "performance under partial
+    synchrony" actually means. We propose ConSenseBench, a unified
+    evaluation harness for BFT consensus protocols that standardizes
+    workload, deployment topology, and the measurement of liveness.
+
+    Our object of interest is *liveness under partial synchrony*: the
+    requirement that, despite arbitrarily delayed but eventually-
+    delivered messages, every correct client request is eventually
+    committed by a correct replica. We operationalize liveness as
+    *committed-transaction throughput*: the rate, in transactions per
+    second, at which the protocol commits client transactions during a
+    measurement window. Concretely, for each protocol we issue an offered
+    load of 50,000 8KB transactions per second over a 60-second window,
+    induce two 5-second network partitions affecting one-third of
+    replicas, and report the average commit rate.
+
+    We benchmark five protocols — PBFT, HotStuff, Tendermint, Narwhal-
+    Bullshark, and a recent design, Aether — across replica counts from
+    4 to 64. Table 1 summarizes the results. HotStuff achieves the
+    highest sustained throughput at 32 replicas (38,200 tx/s), followed
+    by Aether (35,100 tx/s), with PBFT trailing at 12,400 tx/s. We
+    interpret HotStuff's lead as evidence of superior liveness under our
+    partial-synchrony model.
+
+    A central methodological contribution of ConSenseBench is the
+    introduction of throughput as a unified, cross-protocol liveness
+    metric — to our knowledge, the first such standardization for BFT
+    consensus. Our framing builds directly on the harness design of
+    Patel and Ousterhout (2021), who established that committed-
+    throughput is a sufficient proxy for liveness in partially-
+    synchronous protocols, and whose measurement-window conventions we
+    adopt verbatim. ConSenseBench extends their pipeline to BFT settings
+    and provides the foundation for the rest of the paper.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  R1.7: [F1.7.a]
+  notes: |
+    Two load-bearing flaws, both detectable from careful internal
+    reading without recall of specific canonical papers.
+
+    R1.3 — metric mismatch. The section explicitly defines its object
+    of measurement, liveness under partial synchrony, as the property
+    that "every correct client request is eventually committed by a
+    correct replica" — an eventuality/progress property. It then
+    operationalizes that property as committed-transaction throughput
+    over a fixed 60-second window. Throughput measures the rate of
+    commits during the window; it does not measure whether every
+    correct request is eventually committed. Two protocols can have
+    identical throughput while differing on liveness — e.g., one may
+    silently drop a fraction of requests during the partition window
+    yet recover its long-run rate, while another commits every request
+    eventually but at a lower rate. The interpretive sentence
+    ("HotStuff's lead as evidence of superior liveness") is therefore
+    not supported by the metric. Fixing this requires a metric tied to
+    the eventuality property — e.g., per-request commit-eventually
+    rate, request-level tail latency under partition, or a
+    liveness-violation count — which would change what the section
+    reports and rank protocols differently.
+
+    R1.7 — fabricated citation. The section claims, in the same
+    paragraph, that throughput-as-liveness-metric is its central
+    methodological contribution and "to our knowledge, the first such
+    standardization for BFT consensus," and then immediately attributes
+    the same idea to Patel and Ousterhout (2021), who allegedly
+    "established that committed-throughput is a sufficient proxy for
+    liveness in partially-synchronous protocols." The two claims cannot
+    both be true: if the cited work already established the proxy, the
+    contribution is not first; if the contribution is first, the
+    cited claim is fabricated. The internal contradiction is visible
+    from the paragraph itself.
+
+    Low gating: a reader does not need to know whether "Patel and
+    Ousterhout 2021" exists, nor recall the canonical safety/liveness
+    distinction in BFT, to see (a) that a window-averaged rate does
+    not measure an eventually-quantified property the section itself
+    defined, and (b) that "first standardization" and "builds directly
+    on prior standardization" contradict each other within four lines.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags both load-bearing issues. For the metric, points out that the
+  section defines liveness as an eventuality property ("every correct
+  request is eventually committed") but measures a window-averaged
+  commit rate, which can rank protocols identically while their
+  eventuality behavior differs — so the "superior liveness" claim is
+  not supported, and recommends an outcome-level metric tied to the
+  eventuality property (per-request commit-eventually rate, partition-
+  window tail latency, liveness-violation counts). For the citation,
+  notes the internal contradiction between "first such standardization"
+  and "builds directly on Patel and Ousterhout (2021), who established"
+  the same proxy, and asks the authors to either retract the priority
+  claim or remove/replace the citation.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more replica counts, longer
+  measurement windows, error bars on throughput, or a fancier figure.
+  Accepts throughput as a liveness metric without questioning the
+  construct match against the section's own definition. Leaves the
+  contradiction between "first standardization" and the Patel and
+  Ousterhout attribution untouched, or addresses only one of the two
+  issues (e.g., fixes wording around the contribution claim while
+  keeping throughput-as-liveness intact).
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

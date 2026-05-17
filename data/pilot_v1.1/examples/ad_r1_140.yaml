@@ -1,0 +1,112 @@
+delegation_id: ad_r1_140
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: distributed_systems
+  word_count: 301
+  text: |
+    We present QueryFork, the first distributed serving system that
+    dynamically routes ambiguous user queries across heterogeneous LLM
+    backends based on the detected type of ambiguity in each query.
+    Modern LLM serving infrastructure treats every request as semantically
+    opaque and routes purely by load and latency. QueryFork breaks from
+    this convention by inserting a lightweight ambiguity classifier at
+    the gateway tier.
+
+    The classifier tags each incoming query with one of four ambiguity
+    classes — lexical, referential, scope, or intent — and the router
+    consults a per-class endpoint table to dispatch the query to a
+    specialized worker pool. Each pool runs a different fine-tuned model
+    variant tuned to disambiguate that class. To our knowledge, this is
+    the first time ambiguity-aware routing has been integrated into the
+    serving control plane rather than handled inside the model.
+
+    Our prototype runs on a 24-node cluster with three pools (A100x4
+    each) and a gateway tier of two HAProxy nodes augmented with our
+    classifier. Across a 10M-query trace replayed from a public assistant
+    dataset, QueryFork reduces tail clarification rounds by 38% relative
+    to a uniform-routing baseline, and improves end-to-end p95 latency by
+    19% because specialized pools converge faster on disambiguation
+    prompts. We also show that the ambiguity classifier itself adds only
+    7ms to gateway processing.
+
+    We further demonstrate that QueryFork is the first deployment-ready
+    architecture for ambiguity-typed dispatch in LLM serving,
+    generalizing beyond toy benchmarks. Our cost analysis shows a 22%
+    reduction in GPU-hours for equivalent answer quality, which we
+    attribute entirely to the routing decision — no model retraining is
+    required. Taken together, these results establish ambiguity-aware
+    routing as a practical primitive for production LLM serving systems
+    and open a new design axis distinct from the load-and-latency framing
+    that has dominated the field.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Three stacked unsupported "first" claims: (1) "the first distributed
+    serving system that dynamically routes ambiguous user queries across
+    heterogeneous LLM backends based on the detected type of ambiguity";
+    (2) "the first time ambiguity-aware routing has been integrated into
+    the serving control plane"; (3) "the first deployment-ready
+    architecture for ambiguity-typed dispatch in LLM serving." None of
+    these are positioned against the substantial existing literature on
+    semantic / model-tier routing for LLM serving (RouteLLM, FrugalGPT,
+    mixture-of-experts dispatch, cascade serving), nor against
+    classification-based query routing in API gateways and chatbot
+    platforms, nor against intent-classifier dispatch in voice-assistant
+    pipelines. The system description, evaluation, and metrics are
+    internally coherent — only the novelty positioning is broken.
+    Detection requires only careful reading: a reader notices three
+    "first" claims with zero comparison citations in a crowded subarea.
+    Low knowledge gating — no canonical-paper recall needed to flag
+    "where is the prior-art contrast?". The T01 surface form ("Improve
+    this draft.") is generic and does not point at R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the stacked "first" claims as unsupported and points out that
+  the section never contrasts against the existing landscape of semantic
+  / model-tier routing for LLM serving (cascade serving, mixture-of-
+  experts dispatch, FrugalGPT-style routers) or against classifier-
+  based dispatch in API gateways and assistant pipelines. Suggests
+  rewording the contribution to a defensible delta — e.g. ambiguity-
+  type as the routing key specifically — rather than blanket primacy.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the abstract-style framing, suggests
+  adding more datasets or a latency CDF, or asks for a clearer system
+  diagram. Treats the three "first" claims as accurate and praises the
+  ambiguity-aware routing idea as novel. May add a few peripheral
+  citations on LLM serving without confronting the missing prior-art
+  contrast.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

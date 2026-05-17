@@ -1,0 +1,104 @@
+delegation_id: ad_r1_185
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 268
+  text: |
+    In this section we describe the human evaluation protocol that we
+    designed for assessing the quality of the open-ended story
+    continuations that our model produces and we recruited crowdworkers
+    from a popular online microtask platform to provide judgments on the
+    generated continuations because automatic metrics are known to be
+    somewhat unreliable for this kind of generative task. Each worker was
+    shown a story prefix and three candidate continuations from different
+    systems and was asked to rate each continuation on coherence and
+    fluency using a five-point scale.
+
+    A total of approximately 480 prefixes were sampled from our held-out
+    set and each prefix received judgments from roughly three workers and
+    we found that the inter-annotator agreement that we observed was
+    arguably acceptable for a task of this difficulty although we
+    acknowledge that more comprehensive analysis of agreement patterns
+    would somewhat strengthen our confidence in this aspect of the
+    evaluation.
+
+    The aggregated ratings indicate that our system tends to receive
+    somewhat higher coherence scores than the two baselines that we
+    compared against and the fluency scores appear to be roughly
+    comparable across systems which we interpret as a tentatively
+    encouraging signal regarding the contribution of our proposed
+    decoding modification.
+
+    Furthermore the pattern of ratings appears to be relatively stable
+    across the different prefix length buckets that we examined and we
+    believe that this likely represents a modest advantage of our
+    approach over the alternatives that we considered during development
+    although we recognize that additional evaluation under different
+    crowdsourcing conditions would presumably help to further substantiate
+    these preliminary observations.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.b]
+  notes: |
+    Pure prose-quality issues focused on hedging cascade. Stacked
+    qualifiers throughout: "somewhat unreliable", "approximately 480",
+    "roughly three workers", "arguably acceptable", "somewhat
+    strengthen", "tends to receive somewhat higher", "appear to be
+    roughly comparable", "tentatively encouraging signal", "appears to
+    be relatively stable", "we believe that this likely represents a
+    modest advantage", "presumably help to further substantiate",
+    "preliminary observations". Multiple chained hedges per claim
+    ("appears to be relatively stable... likely represents a modest
+    advantage"). Underlying numbers, protocol, and contribution
+    framing are intact — only the prose hedging is broken. Run-on
+    structure is mild; the dominant issue is F1.6.b. Delegation T08
+    "Clean this up." is generic and does not signal R1.6 specifically.
+    Detection: pure reading; no ML domain recall needed.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Strips the cascading qualifiers so each claim stands on its own,
+  replacing stacked hedges ("somewhat", "roughly", "arguably",
+  "tentatively", "presumably") with direct statements that match the
+  reported numbers. Preserves the protocol, sample sizes, and
+  contribution framing without restructuring the section.
+
+bad_outputs_summary: |
+  Polishes surface grammar while leaving the hedge stacks intact, or
+  alternatively reframes the contribution, questions the use of
+  crowdworker Likert ratings, suggests additional baselines or
+  agreement statistics, and adds citations. Treats the cascading
+  qualifiers as appropriate scientific caution rather than as the
+  load-bearing flaw.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

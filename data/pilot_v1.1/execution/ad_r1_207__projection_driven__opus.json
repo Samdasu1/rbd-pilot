@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_207",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2305,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29693,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I reorganized the section for clearer thesis-first flow, tightened the prose, and flagged claims that the section asserts but does not yet substantiate.\n\n---\n\n**Suggested revision**\n\nWe study composite finite-sum minimization\n\n  min_x  (1/n) \u03a3_i f_i(x) + \u03c8(x),\n\nwhere each f_i is L_i-smooth and the regularizer \u03c8 is convex. Write L\u0304 = (1/n) \u03a3_i L_i for the average component smoothness and \u03bc for the strong-convexity parameter of the objective. We introduce **RestartIS-Katyusha**, an accelerated variance-reduced method that pairs importance-sampled gradient estimation (p_i \u221d \u221aL_i) with a periodic restart of the momentum sequence, and we prove that it reaches an \u03b5-accurate solution in\n\n  O( ( n + \u221a(n L\u0304 / \u03bc) ) \u00b7 log(1/\u03b5) )\n\niterations. Subject to the qualifications below, this matches the per-component-access lower bound of Volkov and Petrenko (2018, Thm. 3.2) and, in the composite setting, is \u2014 to our knowledge \u2014 the first explicit algorithm to do so without assuming uniform smoothness.\n\n*Context.* Stochastic variance reduction is by now a standard tool for finite-sum convex optimization; SAG (Schmidt et al., 2017), SAGA (Defazio et al., 2014), and SVRG (Johnson and Zhang, 2013) all achieve linear convergence on strongly convex objectives at a per-iteration cost independent of n. Acceleration via Nesterov-style momentum (Allen-Zhu, 2017; Lan and Zhou, 2018) and catalyst wrappers (Lin et al., 2015) improves the condition-number dependence, but the prior accelerated rates collapse to the L\u0304 scaling only in the uniform-smoothness regime; under heterogeneous L_i they degrade toward an L_max dependence.\n\n*Technique.* Our analysis is a Lyapunov argument that tracks the squared distance to the optimum together with a primal-gap term, following the template of Allen-Zhu (2017). The new ingredient is a restart schedule keyed to the sampling distribution p_i \u221d \u221aL_i: restarting at the right frequency controls the variance of the importance-sampled gradient estimator without inflating the effective momentum gain, which is what lets \u221a(n L\u0304 / \u03bc) replace \u221a(n L_max / \u03bc) in the rate.\n\n*Empirical illustration.* On \u2113\u2082-regularized logistic regression with L_i drawn from a Pareto distribution, RestartIS-Katyusha tracks the predicted \u221a(n L\u0304 / \u03bc) rate, while uniform-sampling Katyusha exhibits the n L_max / \u03bc scaling expected from existing analyses. The experiment is illustrative rather than a benchmark.\n\n---\n\n**Notes on the revision and on claims that may need tightening before submission**\n\n1. *Thesis ordering.* The original delays the contribution until the third paragraph. Leading with the problem and the result, then placing background as context, makes the delta vs. prior accelerated VR methods visible immediately and lets the lower-bound match be read as the headline.\n\n2. *Composite setting.* The original introduces a \"composite finite-sum setting\" without defining the composite part (the regularizer \u03c8). I added a one-line problem statement so the word \"composite\" is anchored.\n\n3. *Mechanism for the rate.* \"Controls the variance ... without inflating the momentum gain\" appears as the key novelty but is asserted, not explained. I rewrote it to at least name *what* the restart trades off (variance of the importance-sampled estimator vs. momentum gain), but you should verify that this informal description matches what the proof actually does.\n\n4. Several claims read as stronger than the section currently supports; consider softening or substantiating each:\n   - \"The optimal complexity ... has remained elusive\" \u2014 this is a strong negative claim about the literature. Either cite the gap explicitly (a survey or a stated open problem) or downgrade to \"to our knowledge, no explicit algorithm has achieved \u2026\".\n   - \"First explicit algorithm to attain this bound in the composite setting\" \u2014 needs either a brief discussion of why catalyst-style reductions (Lin et al., 2015) applied to a heterogeneous-smoothness inner solver do not already imply this, or an explicit caveat (\"among direct, non-catalyst methods\").\n   - \"Matching the lower bound\" \u2014 lower bounds typically apply to a specific oracle/access model. The phrase \"first-order methods accessing per-component gradients with importance sampling\" is doing a lot of work; the introduction should state the oracle model in one sentence so the matching claim is unambiguous.\n   - \"Prior accelerated VR methods \u2026 match the bound only in the uniform-smoothness regime\" \u2014 the original lists only two such methods; either broaden the citation or weaken to \"the accelerated VR methods we are aware of.\"\n\n5. *Empirical scope.* A single synthetic experiment with Pareto-distributed L_i supports the rate qualitatively but does not establish practical superiority. I added an \"illustrative rather than a benchmark\" qualifier; if you do intend a practical claim, the experiments section will need to carry it.\n\n6. *Reference to Volkov and Petrenko (2018, Thm. 3.2).* I have not verified this citation; please confirm the theorem number and that the stated bound is indeed for the importance-sampling oracle model, not for a uniform-sampling model from which it is being transported.\n\n7. *Notation.* L\u0304 is used before being defined, and \u03bc is introduced only when the rate is stated. The revision defines both up front.\n\n---\n\n**What I could not verify**\n\n- Whether the Volkov\u2013Petrenko (2018) lower bound is stated for exactly the oracle model claimed here (per-component gradients with importance sampling) is something I cannot check from the section alone.\n- The \"first explicit algorithm\" claim depends on a survey of accelerated VR methods I cannot do from this excerpt; in particular, whether any catalyst-based composition (Lin et al., 2015, possibly with a non-uniform inner solver) already achieves the same bound deserves an explicit sentence ruling it out or acknowledging it.\n- The informal mechanism described in the \"Technique\" paragraph reflects the original text; I have not seen the proof and cannot confirm that \"restart frequency tied to p_i \u221d \u221aL_i controls estimator variance without inflating momentum gain\" is a faithful one-line summary of it.\n- I did not assess the proof, the experimental setup, or the bibliography beyond what the excerpt shows.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus on improving the section's writing and organization, or on technically validating the novelty, citations, and complexity claims?",
+    "rationale": {
+      "R1.1": "The section contains thesis, gap, and contribution claims that may need reframing under a broad request for help.",
+      "R1.5": "The artifact is a full paper section whose narrative order and section-level arc are natural targets of general section help.",
+      "R1.6": "A broad request to help with a section centrally includes sentence- and paragraph-level polish.",
+      "RX.1": "Any help should disclose uncertainty, especially around unverified technical and bibliographic claims.",
+      "RX.2": "The section makes strong priority and optimality claims that require guarding against overclaiming.",
+      "RX.3": "The agent must stay within the requested section-help responsibility rather than executing unrelated research or rewriting beyond scope.",
+      "RX.4": "The projection must avoid enabling misleading scientific claims or unsupported downstream use.",
+      "RX.5": "The artifact's stated claims, citations, and formulas should remain traceable to the provided text."
+    }
+  }
+}

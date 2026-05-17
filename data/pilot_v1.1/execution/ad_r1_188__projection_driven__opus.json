@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_188",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 981,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 14101,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nCleaned-up prose with redundant phrasing removed and repeated clauses consolidated; no content added beyond what the source states.\n\n---\n\nIn this section we describe our protocol for evaluating LLM-generated gene function summaries through expert biocurator review. Because automated metrics such as BLEU and ROUGE are known to correlate poorly with biological accuracy, we adopted a manual protocol in which expert biocurators rate each summary along three axes: factual correctness, completeness, and ontology consistency.\n\nWe recruited 12 expert biocurators from three institutional curation teams. Together they rated 480 generated summaries, with each summary receiving independent ratings from three biocurators on all three axes.\n\nEach summary was produced by prompting the model with the gene symbol and the associated UniProt accession, and asking for a 50\u2013100 word summary of the gene's function. We chose this range because pilot studies indicated that summaries under 50 words tended to omit relevant pathway context, while those over 100 words tended to introduce hallucinated content; the 50\u2013100 word window was adopted as a compromise between these two failure modes.\n\nRatings were collected through a secure web interface that displayed each summary alongside the corresponding GeneCards entry, which biocurators were instructed to consult while rating.\n\nTo quantify inter-annotator agreement we computed Krippendorff's alpha over the ordinal Likert ratings for each axis. The resulting values were 0.62 for factual correctness, 0.58 for completeness, and 0.71 for ontology consistency.\n\n---\n\nNotes on edits I made and did not make:\n\n- Removed three near-verbatim restatements (the biocurator-recruitment paragraph, the Krippendorff's-alpha paragraph, and the GeneCards-interface paragraph each repeated themselves); the surviving sentences preserve every distinct fact from the original.\n- Reordered paragraphs so that the procedure (recruitment \u2192 prompting \u2192 interface) precedes the agreement statistics. This is a light structural touch within sentence-level cleanup; if you prefer the original ordering (agreement stats before prompting details), the paragraphs can be swapped back without further edits.\n- Standardized \"50-100\" to an en dash (\"50\u2013100\"); revert if your style guide uses hyphens.\n- I did not alter any numeric values, axis names, or methodological claims, and I did not introduce framing (e.g., calling the study \"rigorous\" or the alphas \"substantial\") that the source did not assert.\n\nOne thing I could not verify from the artifact alone: the original says each of 480 summaries received three independent ratings, which implies 1,440 rating events distributed across 12 curators (~120 each), but the source does not state the assignment scheme. I preserved the wording as given rather than inferring a design.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Clean this up' most directly requests sentence- and paragraph-level polishing, especially reducing repetition and improving concision and flow.",
+      "RX.1": "Any projection should preserve uncertainty about whether broader substantive revision is intended by the terse delegation.",
+      "RX.2": "The responsibility should avoid projecting unsupported obligations such as validating biological claims or improving novelty beyond the cleanup request.",
+      "RX.3": "The projection must stay within cleanup of the provided prose rather than executing edits or expanding the task.",
+      "RX.4": "The projection should avoid responsibilities that could distort scientific meaning or encourage unsafe overstatement in a biomedical context.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the visible repetitive features of the artifact."
+    }
+  }
+}

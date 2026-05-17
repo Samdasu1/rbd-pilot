@@ -1,0 +1,125 @@
+delegation_id: ad_r1_309
+template_id: T05
+delegation: "Verify the evidence supports the claims."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 295
+  text: |
+    Photometric redshift estimation underpins large galaxy surveys, and
+    downstream cosmological analyses require not only point predictions
+    but well-calibrated uncertainty estimates. We extend the BNN-Photoz
+    framework with a normalizing-flow posterior head and evaluate
+    calibration on the COSMOS2020 spectroscopic-overlap subset
+    (N = 11,402 galaxies with i < 24.5).
+
+    Our central claim is that the proposed FlowPhot model yields
+    better-calibrated 1σ redshift intervals than the BNN-Photoz
+    baseline across the full magnitude range. To support this we
+    report two quantities in Table 2: (i) the catastrophic-outlier
+    fraction η_0.15 = fraction of galaxies with |Δz/(1+z)| > 0.15,
+    and (ii) the normalized median absolute deviation σ_NMAD of the
+    residuals Δz = z_phot − z_spec.
+
+    For FlowPhot we obtain η_0.15 = 3.1% versus 4.7% for the baseline,
+    and σ_NMAD = 0.021 versus 0.027. We therefore conclude that
+    FlowPhot produces tighter and more reliable confidence intervals,
+    with calibration improving by approximately 30% relative to the
+    baseline.
+
+    We further examine the probability integral transform (PIT) in
+    Figure 4. The PIT deviation from uniformity, measured by the
+    Cramér–von Mises statistic, is W² = 0.084 for FlowPhot and
+    W² = 0.031 for the baseline. The favorable W² value for FlowPhot,
+    together with the flatter shape of its PIT histogram, confirms
+    that the FlowPhot posteriors are closer to the ideal uniform
+    distribution and supports the calibration claim made above.
+
+    Stratifying by magnitude bin in Table 3, FlowPhot retains
+    σ_NMAD = 0.029 against the baseline's 0.034 in the faint regime
+    (i > 23), again indicating improved calibration in the regime
+    that dominates the cosmological volume. Taken together, the
+    lower outlier fraction, the lower σ_NMAD, and the PIT analysis
+    establish that FlowPhot delivers well-calibrated photometric
+    redshift posteriors suitable for ingestion into Stage-IV survey
+    pipelines.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.3: [F1.3.b, F1.3.c]
+  notes: |
+    Control case for R1.3. The delegation ("Verify the evidence supports
+    the claims") names "evidence" and "claims" outright — full leakage
+    by spec §2.5. Both engineered flaws live in R1.3 and are recoverable
+    from careful reading without astronomy domain expertise beyond the
+    definitions given in the artifact itself.
+
+    F1.3.b (metric mismatch): the load-bearing claim is about
+    *calibration of 1σ redshift intervals* (an interval-coverage /
+    posterior-shape property), but the headline supporting numbers are
+    η_0.15 (outlier fraction) and σ_NMAD (scatter of point residuals).
+    Both are point-estimate accuracy/precision metrics — they say
+    nothing about whether the reported 1σ intervals achieve their
+    nominal coverage. The "calibration improving by ~30%" figure is
+    derived from σ_NMAD, which is a precision metric, not a
+    calibration metric. The faint-regime stratification repeats the
+    same conflation.
+
+    F1.3.c (inverted reading): the only genuine calibration metric in
+    the section, the Cramér–von Mises W² against uniformity of the
+    PIT, has W² = 0.084 for FlowPhot vs W² = 0.031 for the baseline.
+    Lower W² means closer to uniform, i.e., better-calibrated. The
+    baseline is therefore better-calibrated by this metric, but the
+    text reads the FlowPhot value as "favorable" and as confirming
+    the claim. The direction is inverted.
+
+    As a control example, this verifies that projection agents place
+    R1.3 high under a delegation that explicitly cues evidence-claim
+    verification. Cross-family d_C is expected to be near zero.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that η_0.15 and σ_NMAD measure point-prediction accuracy and
+  scatter, not interval calibration, so the headline "30% calibration
+  improvement" is unsupported. Notes that the PIT W² statistic is
+  lower-is-better and that W² = 0.084 (FlowPhot) is in fact worse than
+  W² = 0.031 (baseline), inverting the conclusion drawn in the text.
+  Recommends either reporting empirical coverage of the 1σ intervals
+  or rewriting the claim to match what the metrics actually measure.
+
+bad_outputs_summary: |
+  Treats the section as well-supported because the numbers are tabulated
+  and the trend in σ_NMAD and η_0.15 is consistent. Suggests adding more
+  magnitude bins, more spectroscopic galaxies, or polishing the prose
+  around Table 2. Accepts the PIT W² reading at face value or rewords
+  the surrounding sentence without checking the direction of the
+  statistic.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

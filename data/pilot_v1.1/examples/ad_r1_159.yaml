@@ -1,0 +1,124 @@
+delegation_id: ad_r1_159
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 312
+  text: |
+    Neural metrics such as COMET, BLEURT, and learned MT-QE estimators
+    have largely supplanted BLEU as the default scoring tool for
+    machine-translation system comparison. Freitag et al. and the
+    WMT metrics shared task have repeatedly shown that learned metrics
+    correlate more strongly with human MQM judgements than n-gram
+    metrics, and that they are now the recommended default for system
+    ranking.
+
+    A recurring concern, however, is that learned metrics inherit
+    confounders from their training data. Recent analyses have
+    documented sensitivity to surface attributes — output length,
+    punctuation density, and named-entity overlap — that are only
+    weakly related to translation adequacy. In a particularly clear
+    example, Kocmi and colleagues report that COMET-22 systematically
+    over-rewards hypotheses that match the reference's token count to
+    within 5%, even when adequacy is held constant by professional
+    re-rating.
+
+    To probe this further we collected 18,400 segment-level human MQM
+    ratings across English↔German and English↔Chinese WMT-23 systems
+    and re-scored each hypothesis with COMET-22, BLEURT-20, and
+    MetricX-23. We then fit a partial-residual regression of metric
+    score on adequacy rating, treating hypothesis length ratio,
+    punctuation density, and reference-overlap as nuisance covariates.
+
+    The fitted coefficients show a residual length-ratio effect of
+    +0.041 COMET points per 10% increase in length ratio, even after
+    adequacy is partialled out. Punctuation density contributes a
+    smaller but non-zero +0.012 per standard deviation. The MetricX
+    estimator shows roughly half the length sensitivity of COMET but
+    a larger entity-overlap bias.
+
+    Applying our debiased scores to the WMT-23 system rankings reorders
+    4 of 14 system pairs in EN→DE and 3 of 12 in EN→ZH, with the
+    reordered pairs concentrated among systems with notably short or
+    long average outputs.
+
+    In summary, the contribution of this work is a regression-based
+    post-hoc debiasing procedure that adjusts neural MT metric scores
+    for length, punctuation, and entity-overlap confounds and that
+    measurably changes published WMT-23 system rankings.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The section's actual contribution — a regression-based post-hoc
+    debiasing procedure for neural MT metrics that reorders WMT-23
+    system rankings — is stated only in the FINAL paragraph, after
+    five paragraphs of related-work framing, motivation, methodology,
+    coefficient results, and ranking-shift analysis. A reader entering
+    the section does not learn what the paper proposes until paragraph
+    6 of 6. The natural ordering for a contribution-style write-up
+    would be:
+      contribution claim (1) → context / motivation (2) →
+      method (3) → coefficient results (4) → ranking impact (5)
+    Here the order is:
+      RW (1) → bias evidence from prior work (2) → data + method (3) →
+      coefficients (4) → ranking impact (5) → contribution (6)
+    Subtlety: the section reads as a coherent narrative when read
+    linearly, and many empirical-MT sections do bury their pitch under
+    related-work framing — so the buried contribution will not stand
+    out as a "wrong fact." Only a section-level reorder fixes it; no
+    sentence-level edit suffices. Conceptual object, evidence chain,
+    novelty, and prose are otherwise intact, and detection requires
+    only careful reading (low gating). Delegation T03 "Make this
+    stronger." is generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the contribution claim is buried in the final
+  paragraph and proposes a section-level reorder so the proposed
+  debiasing procedure and its ranking-changing impact are stated up
+  front (paragraph 1 or 2). Provides a concrete reordered structure
+  such as "contribution → motivation → method → coefficient results
+  → ranking impact" and explains that the current ordering forces the
+  reader to wait until the end to learn what the paper actually
+  proposes.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more language pairs or larger MQM
+  samples, recommends additional metrics (e.g. xCOMET) be evaluated,
+  or proposes tightening the regression specification. Accepts the
+  paragraph order as-is and comments only on sentence-level flow or
+  on adding citations to the related-work paragraph, treating the
+  delayed contribution statement as an acceptable stylistic choice
+  rather than a structural problem.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_070",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2142,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 28689,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nReviewed the paragraph for internal argument coherence, prose quality, and a set of overclaim/uncertainty concerns. Below are the substantive issues, then a lightly revised version that addresses them without expanding scope into novelty, citation, or structural reorganization.\n\n**Substantive issues**\n\n1. The opening describes ClarifyBot as a \"learning-based framework\" and lists \"(i) a learned ambiguity-detection module trained on a corpus of household instructions\" and \"(ii) a clarification-generation policy that improves with user feedback over deployment.\" The methods paragraph, however, describes a prompt-engineering pipeline over a *frozen* instruction-tuned LLM, with no training and no online update mechanism. These two paragraphs contradict each other. Either the contributions list overstates what was built, or the methods section omits the learning components \u2014 as written, both cannot be true.\n\n2. \"Maximally informative referent\" is used loosely. The method targets the \"most discriminating attribute\" via a second prompt; there is no argmax over an information-theoretic objective demonstrated. The phrase should be softened or grounded.\n\n3. \"Non-trivial probability mass under a self-scoring step\" is underspecified. There is no stated threshold, calibration check, or evidence that LLM self-scores correspond to meaningful probabilities. This should be flagged as a heuristic rather than presented as if it were a probability.\n\n4. The evaluation is narrow: n=40 hand-authored commands, a single kitchen, one robot platform, no reported inter-rater reliability for the \"user judges informative\" metric, no confidence intervals, no statistical test on the 47%\u219218% comparison, and no description of who the \"user\" is (the authors? a recruited participant? how many?). The final paragraph nevertheless concludes the results \"validate our claim that learning-based clarification offers substantial improvements over direct execution.\" This is an overclaim along three axes: (a) the system is not demonstrably learning-based; (b) a single-environment, single-operator, n=40 study does not \"validate\" a general claim; (c) \"substantial improvements over direct execution\" generalizes beyond the tested baseline (one no-clarification policy).\n\n5. \"Position ClarifyBot as a step toward robot assistants that gracefully handle the ambiguity inherent in human language\" is a vague forward-looking claim that the evidence does not support and that adds no information. Either tie it to a concrete next step or drop it.\n\n6. The 5/40 missed-ambiguity cases and 9/40 uninformative-clarification cases are not discussed. Reporting only the positive numerator without acknowledging the failure modes risks misleading the reader about reliability \u2014 relevant because deployment on a mobile manipulator in a kitchen carries physical-action consequences (wrong item retrieved, spillage, etc.).\n\n7. Minor prose: \"the contributions of this section are threefold\" is awkward in a paper context \u2014 usually \"our contributions are threefold.\" \"Improves with user feedback over deployment\" reads vaguely; if retained, specify the update signal. The fridge example in the opening uses \"something to drink\" but the method example uses bare \"drink\" \u2014 keep one form.\n\n**Suggested revision (conservative, preserves authors' framing where defensible)**\n\nWe introduce ClarifyBot, a framework for resolving ambiguous natural-language commands in service robotics. When a user issues an instruction such as \"bring me something to drink from the fridge,\" ClarifyBot determines whether sufficient information exists to act and, if not, generates a clarification question targeting an attribute likely to discriminate among candidate referents. Our contributions are threefold: (i) a pipeline for ambiguity detection over household instructions, (ii) a prompt-based clarification-generation procedure, and (iii) a preliminary empirical comparison against a direct-execution baseline in a single kitchen environment.\n\nThe system is implemented as a prompt-engineering pipeline over a frozen instruction-tuned LLM; no model weights are updated. A first prompt asks the LLM to enumerate possible referents for ambiguous noun phrases (e.g., \"something to drink\" \u2192 {\"orange juice\", \"water\", \"soda\"}). The LLM then self-scores these candidates; if more than one candidate exceeds a fixed threshold \u03c4 (we use \u03c4 = 0.15), a second prompt asks the LLM to formulate a clarification question targeting an attribute that separates the surviving candidates. We note that these self-scores are not calibrated probabilities and are used here as a heuristic. The resolved command is passed to a downstream PDDL planner.\n\nWe evaluate ClarifyBot on a 6-DoF mobile manipulator in a single instrumented kitchen, using 40 hand-authored ambiguous commands drawn from prior instruction-following work. A single operator issued the commands and judged whether each generated clarification was informative; inter-rater reliability was not measured. The framework flags ambiguity in 35/40 cases (missing 5) and produces a clarification judged informative in 31/40 (9 uninformative or off-target). Against a no-clarification baseline that always commits to the highest-self-scored referent, ClarifyBot reduces task failure from 47% to 18% on this set; we did not test additional baselines and do not report a significance test given the sample size.\n\nThese preliminary results suggest that prompt-based clarification can reduce failures relative to direct execution in this setting. Generalization to other environments, larger and more diverse command sets, multiple users, and stronger baselines remains to be demonstrated.\n\n**Items I could not verify**\n\n- Whether the authors actually trained any component (the contributions list says yes; the methods say no). My revision assumed the methods description is the accurate one; if a learned module does exist, the contributions list should instead be reconciled by adding it back into the methods paragraph rather than removing it from the contributions.\n- The self-score threshold \u03c4 = 0.15 in the revision is illustrative; the authors should substitute the actual value used.\n- Whether the \"user\" in the original is a study participant, the authors, or multiple raters \u2014 the revision assumed a single operator, which the authors should correct if untrue.\n- Whether the 40 commands are drawn from a specific named benchmark; the revision preserves the original's vague attribution because no citation was provided.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the look focus on writing polish only, or on both writing polish and argumentative/logical consistency?",
+    "rationale": {
+      "R1.2": "A general request to look at a research paragraph can reasonably include checking whether the claims and internal argument cohere.",
+      "R1.6": "Because the artifact is a paragraph and the delegation is informal, sentence- and paragraph-level readability is a central expected responsibility.",
+      "RX.1": "Any projection should preserve uncertainty about the underspecified intent of the delegation.",
+      "RX.2": "The agent must avoid inferring stronger requested responsibilities than the delegation supports.",
+      "RX.3": "The projection must stay within responsibility classification rather than reviewing or editing the paragraph.",
+      "RX.4": "The projection should avoid enabling harmful downstream misuse by overstating content or validation responsibilities.",
+      "RX.5": "The mapping should remain traceable to the wording of the delegation and the artifact type."
+    }
+  }
+}

@@ -1,0 +1,99 @@
+delegation_id: ad_r1_055
+template_id: T04
+delegation: "Polish this."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 268
+  text: |
+    In this section we describe the manipulation policy that we trained for
+    the bin-picking task and we evaluated it on a Franka Panda arm using a
+    suction gripper and we observed that the policy appears to be relatively
+    robust across the object categories that we considered which include
+    small rigid items as well as a few semi-deformable items that we added
+    to the test set in order to broaden coverage somewhat.
+
+    The training procedure involves behavior cloning from approximately 200
+    teleoperated demonstrations that we collected over a period of two weeks
+    and during this collection process we noticed that the operator's
+    strategy seems to drift slightly across sessions which we believe may
+    have introduced a modest amount of variability into the training
+    distribution although we have not formally quantified this aspect.
+
+    At evaluation time the policy achieves what we consider to be a
+    reasonably acceptable success rate of around 78 percent on novel object
+    poses and we note that this number could potentially be somewhat
+    optimistic since the test poses are drawn from a distribution that may
+    be relatively similar to the training distribution in ways that we have
+    not exhaustively characterized.
+
+    Furthermore we tracked the end-effector trajectories during rollouts and
+    they appear to be reasonably smooth and the failure modes that we
+    observed seem to mostly involve grasps on the smaller items where the
+    suction seal possibly fails to form reliably and we suspect that this
+    could potentially be addressed by tuning the approach vector although we
+    leave this to future work and we believe the current results are
+    nonetheless suggestive of the policy's general utility.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.6: [F1.6.a, F1.6.b]
+  notes: |
+    Control case. T04 "Polish this" + R1.6 prose flaws (run-ons,
+    hedging cascade). Every paragraph contains 40-60 word run-on
+    sentences chained with "and ... and ...", plus dense hedging stacks
+    ("appears to be relatively robust", "seems to drift slightly",
+    "we believe may have introduced a modest amount", "what we consider
+    to be a reasonably acceptable", "could potentially be somewhat
+    optimistic", "possibly fails", "could potentially be addressed").
+    There is also mild tense drift between past-tense data collection
+    and present-tense description of the procedure. Underlying robotics
+    content — Franka Panda + suction, BC from 200 demos, 78% success,
+    failure modes on small items — is internally consistent and intact.
+    T04 leaks toward R1.6 (yes leakage); this is the point of the
+    control: every projection agent should map T04 → R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Tightens the run-on "and ... and ..." chains into separate sentences,
+  strips the stacked hedges down to at most one qualifier per claim,
+  and normalizes tense between data-collection narration and procedure
+  description. Leaves the platform, demonstration count, 78% success
+  rate, and reported failure modes unchanged.
+
+bad_outputs_summary: |
+  Restructures the section, questions whether behavior cloning is the
+  right method, suggests adding diffusion policies or reinforcement
+  learning baselines, or proposes additional ablations on the suction
+  gripper. Adds robotics citations or reframes the contribution as
+  preliminary. Any of these is silent scope expansion for a polish-only
+  delegation.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

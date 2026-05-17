@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_209",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2699,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 38052,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.4\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.7, \"R1.7\": 0.85, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Reviewed the abstract/intro artifact for CalibCard; the framing is coherent and the contribution is clearly stated, but several quantitative and citational claims need verification and a few are likely overstated. Below are the issues I found, organized by what is at stake.\n\n## Strongest concerns\n\n**The \"first\" claim is too strong as written.**\n\"The first learned cardinality estimator with calibrated uncertainty\" is a priority claim against an area where uncertainty-aware estimation has been explored. Prior work I'd expect a reviewer to point to includes:\n- Bayesian / dropout-based uncertainty in learned estimators (e.g., work building on MSCN and on Naru with MC-dropout heads).\n- Hasan et al., \"Deep Learning Models for Selectivity Estimation\" lines of work that report confidence proxies.\n- Quantile-regression and mixture-density approaches that yield predictive distributions natively (e.g., Naru itself produces a distribution; the question is whether it is *calibrated*, not whether it is uncertain).\n- The DBMS literature on robust query optimization (Babcock & Chaudhuri; Markl et al., \"Robust Query Processing through Progressive Optimization\") explicitly addressed uncertainty-aware planning, just not with learned estimators.\n\nRecommended weaker phrasing: \"to our knowledge, the first learned multi-table cardinality estimator to provide *distribution-free, conformal* coverage guarantees on q-error intervals.\" That claim is much more defensible and is the actual technical novelty.\n\n**Two prior-work attributions need to be checked.**\n- Naru (Yang et al.) is from 2019 (VLDB 2020 proceedings; arXiv 2019). Year is fine.\n- DeepDB (Hilprecht et al.) is VLDB 2020 \u2014 fine.\n- NeuroCard (Yang et al.) is VLDB 2021, not 2020. The arXiv preprint is late 2020, which may be the source of the year, but the canonical citation year should be reconciled and stated consistently. Please verify against the venue you intend to cite.\n- \"NeuroCard extended Naru to the multi-table setting via join sampling\" \u2014 NeuroCard uses *unbiased join sampling for training data construction* on top of an autoregressive model; the phrasing is roughly right but worth tightening so it doesn't read as if NeuroCard samples at inference time.\n\n**Quantitative claims that need a source citation in the paper body.**\n- \"Median q-errors below 2 on JOB-light\" for Naru: Naru's headline JOB-light number in the literature is typically reported by NeuroCard's evaluation, not Naru's original paper (Naru is single-table; JOB-light is multi-table). This sentence as written conflates the two and may be inaccurate. Please re-check whether Naru was evaluated on JOB-light directly or only via NeuroCard's later comparison.\n- \"Reducing 99th-percentile q-error from 89 to 14\": the \"89\" baseline needs to be tied to a specific competitor (NeuroCard? DeepDB?) and a specific evaluation protocol; right now it floats.\n- \"91% empirical coverage at the nominal 90% level\": with conformal prediction this is expected by construction (marginal coverage guarantee), so reporting it as a positive result understates what would actually be informative \u2014 namely *conditional* coverage (per-template, per-cardinality-bin) and interval *width*. A reviewer will flag that 91% marginal coverage is mechanical, not evidence the method works well.\n\n## Logical / argumentative gaps\n\n**The motivation-to-method link has a missing step.**\nThe two stated open problems are (a) lack of calibrated uncertainty and (b) silent degradation under training-data drift. The proposed method addresses (a) via conformal prediction. The artifact never says what CalibCard does about (b). Either drop drift from the motivation or add a sentence on how the conformal wrapper (or a separate mechanism) detects drift \u2014 e.g., monitoring coverage on a sliding calibration set. As written, drift is set up and abandoned.\n\n**\"Fall back to conservative plans when uncertainty is high\" is asserted, not demonstrated.**\nThe abstract claims the optimizer benefits, but the evaluation summary only reports q-error and coverage. End-to-end query latency, or at least a plan-regression rate, is what would substantiate the optimizer-level claim. If the paper does include such results, surface one number here; if not, soften \"allowing the optimizer to fall back\" to \"intended to allow the optimizer to fall back.\"\n\n**Conformal prediction \"trained\" is imprecise.**\nConformal predictors are *calibrated* on a held-out split, not trained. The phrasing \"a conformal prediction wrapper trained on a held-out workload\" will read as a category error to ML reviewers. Suggest: \"calibrated on a held-out workload using split conformal prediction.\"\n\n## Smaller issues\n\n- \"Errors in cardinality propagate multiplicatively through join planning\" \u2014 true in spirit, but the canonical citation here is Ioannidis & Christodoulakis (1991) and/or Leis et al. \"How Good Are Query Optimizers, Really?\" (VLDB 2015). Cite at least one.\n- \"Decades of work on histograms, sketches, and sampling\" \u2014 fine framing, but consider naming one canonical reference per category (e.g., Poosala & Ioannidis for histograms) so the literature review section can pick up from the abstract.\n- \"TPC-DS-derived multi-table benchmark\" is vague. Name it (is it the STATS-CEB-style construction? a custom one?) or call it \"a custom TPC-DS-derived benchmark (Section X).\"\n- \"Achieves 91% empirical coverage\" \u2014 specify whether this is over the full test set or per-template averaged; the difference matters.\n- Tense: the artifact mixes present (\"We introduce\") and past (\"We evaluated\") tense across sentences; standardize.\n- \"JOB-light\" should be cited to Kipf et al. (MSCN) on first mention.\n\n## Structural suggestion\n\nThe current order is: motivation \u2192 prior work \u2192 open problems \u2192 contribution \u2192 results \u2192 positioning. That order is fine. One small change worth considering: move the two open problems *before* the prior-work paragraph, so the prior-work summary can be framed as \"here is what each line of work does *and what it does not address*.\" Right now the open-problems paragraph reads as freestanding criticism rather than a gap analysis grounded in the cited methods.\n\n## Items I could not verify from the artifact alone\n\n- Whether Naru was directly evaluated on JOB-light in its original paper, or only via NeuroCard's later evaluation. This affects the accuracy of one sentence.\n- The correct canonical publication year for NeuroCard (preprint vs. VLDB proceedings).\n- Whether the \"89 \u2192 14\" 99th-percentile q-error reduction is against NeuroCard specifically or against a different baseline.\n- Whether the paper's full results include end-to-end optimizer experiments (plan regressions, runtime) \u2014 the abstract implies operational benefit but reports only estimation-level metrics.\n- Whether prior learned-CE work (e.g., MC-dropout variants, quantile-regression heads) has already reported calibrated intervals; this is the key check for the \"first\" claim. A targeted search of recent SIGMOD/VLDB proceedings (2022\u20132025) is advisable before finalizing the priority claim.\n\nI did not run web searches or fetch citations to confirm these \u2014 the above is based on what is internally inconsistent or commonly known to be contested in the literature. Recommend the authors verify each numbered citation and the priority claim against the current proceedings before submission.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the check focus on writing/structure only, or include research-substance checks such as novelty, citation coverage, and evidence-claim alignment?",
+    "rationale": {
+      "R1.1": "The broad request to check the passage can include assessing whether the thesis, gap, and contribution framing are appropriate.",
+      "R1.2": "A general check of a research passage centrally includes whether the motivation, open problems, method, results, and conclusion form a coherent argument chain.",
+      "R1.3": "The passage makes quantitative performance and coverage claims, so checking whether those claims align with the reported results is in scope.",
+      "R1.4": "The artifact includes a firstness claim and positioning against prior systems, making novelty assessment a plausible central responsibility.",
+      "R1.5": "The artifact is an introduction-style research passage, so section-level narrative ordering and arc are plausibly part of a general check.",
+      "R1.6": "Because the delegation is unspecific, sentence-level clarity, grammar, flow, and register are central expected responsibilities.",
+      "R1.7": "The passage names prior work and uses citations, making reference accuracy, coverage, and attribution a plausible part of checking it.",
+      "RX.1": "Any check should disclose uncertainty, especially where external facts or paper context are not provided.",
+      "RX.2": "The projection must preserve responsibility for avoiding unsupported or inflated claims in the passage.",
+      "RX.3": "The agent must stay within checking responsibilities rather than rewriting or executing changes to the artifact.",
+      "RX.4": "The check should avoid encouraging misleading scientific claims or downstream misuse in production optimizer contexts.",
+      "RX.5": "The projection should preserve traceability to the delegation and the specific claims present in the artifact."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_305",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 4,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 1902,
+  "latency_ms": 35694,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.0,\n    \"R1.2\": 1.0,\n    \"R1.3\": 0.3,\n    \"R1.4\": 0.0,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.0,\n    \"R1.7\": 0.0,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.2\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.2\": \"Delegation is explicitly and solely a logical consistency check, making this load-bearing. The artifact contains at least two critical logical failures: (1) The Portability section claims ROUTELM 'requires no labeled difficulty information' and can be deployed 'without any ground-truth curation,' yet Training requires running both S and L on 480k prompts, scoring outputs with task-specific judges, and emitting binary labels \u2014 which is precisely ground-truth curation. The portability claim holds only at serving time, not at training time, making the stated rationale internally contradictory. (2) The Cost Analysis concludes 'From this AUC we therefore conclude that ROUTELM preserves end-task accuracy to within 0.5 points of the pure-L baseline.' AUC 0.89 measures the router's binary ranking fidelity; it does not bound end-task accuracy delta, which also depends on the chosen threshold tau, the marginal accuracy gap between S and L on routed queries, and task-specific weighting. The inferential chain from AUC to a 0.5-point accuracy guarantee is invalid without additional argument.\",\n    \"R1.3\": \"Peripherally implicated by the AUC\u2192accuracy conclusion: the metric presented as evidence (AUC) is a routing-quality measure, not an end-task accuracy measure, so the evidence-to-claim mapping is also strained. However, the primary failure is logical (invalid inference) rather than evidentiary (missing or misread data), so this dimension is peripheral.\"\n  },\n  \"clarification_needed\": false,\n  \"clarification_question\": \"\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.2": "Delegation is explicitly and solely a logical consistency check, making this load-bearing. The artifact contains at least two critical logical failures: (1) The Portability section claims ROUTELM 'requires no labeled difficulty information' and can be deployed 'without any ground-truth curation,' yet Training requires running both S and L on 480k prompts, scoring outputs with task-specific judges, and emitting binary labels \u2014 which is precisely ground-truth curation. The portability claim holds only at serving time, not at training time, making the stated rationale internally contradictory. (2) The Cost Analysis concludes 'From this AUC we therefore conclude that ROUTELM preserves end-task accuracy to within 0.5 points of the pure-L baseline.' AUC 0.89 measures the router's binary ranking fidelity; it does not bound end-task accuracy delta, which also depends on the chosen threshold tau, the marginal accuracy gap between S and L on routed queries, and task-specific weighting. The inferential chain from AUC to a 0.5-point accuracy guarantee is invalid without additional argument.",
+      "R1.3": "Peripherally implicated by the AUC\u2192accuracy conclusion: the metric presented as evidence (AUC) is a routing-quality measure, not an end-task accuracy measure, so the evidence-to-claim mapping is also strained. However, the primary failure is logical (invalid inference) rather than evidentiary (missing or misread data), so this dimension is peripheral."
+    },
+    "clarification_needed": false,
+    "clarification_question": ""
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

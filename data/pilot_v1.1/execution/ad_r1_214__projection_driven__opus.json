@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_214",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3009,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 39551,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.4\": 0.8, \"R1.6\": 0.75, \"R1.7\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: A targeted review of the introduction/related-work section, flagging overclaims, an internal logical tension between the conformal-style framing and the heterogeneous-effects setting, missing prior work, citation issues, and prose-level revisions.\n\n## Overclaims and hedging\n\n1. **\"the first procedure that produces calibrated confidence intervals for CATE estimates obtained from arbitrary machine-learning nuisance learners.\"** This is a strong priority claim and is likely incorrect as stated. Conformal and split-conformal approaches to CATE inference already exist in the literature (e.g., Lei & Cand\u00e8s, 2021, \"Conformal inference of counterfactuals and individual treatment effects\"; Alaa & Van der Schaar's work on conformal CATE; Jin, Ren & Cand\u00e8s on sensitivity-aware conformal CATE). Recommend softening to something like: \"a procedure that combines doubly-robust CATE estimation with a split-conformal-style calibration step to deliver coverage guarantees that do not depend on nuisance convergence rates,\" and then explicitly contrasting with the existing conformal-CATE line of work.\n\n2. **\"regardless of the convergence rate of the underlying nuisance models.\"** As written this is too strong. Split-conformal calibration delivers *marginal* coverage over the calibration distribution under exchangeability; it does not guarantee *conditional* CATE coverage at a given covariate value, which is what readers will assume \"calibrated CATE intervals\" means. Either (a) clarify that the guarantee is marginal (and discuss what this means for heterogeneous effects, since CATE is by definition a conditional quantity), or (b) state precisely what conditional coverage statement, if any, is achieved and under what assumptions.\n\n3. **\"a meaningful step beyond the existing toolbox\"** \u2014 vague self-assessment; either replace with a concrete differentiator (e.g., \"unlike Lei & Cand\u00e8s (2021), CalDML retains the doubly-robust score and therefore \u2026\") or drop.\n\n4. **\"a practical default for CATE uncertainty quantification\"** \u2014 this is a positioning claim the evidence presented (three semi-synthetic benchmarks) cannot fully support. Soften to \"a practical option\" or defer the framing to the discussion.\n\n## Logical / argument-chain issues\n\n5. There is an unresolved tension in the contribution as stated. The motivating problem is \"nominal 95% intervals can cover the true CATE far less than 95% of the time when the nuisance estimators are slow-converging or biased on subpopulations.\" But split-conformal calibration on a held-out fold corrects *marginal* miscoverage, not subpopulation-level miscoverage. The introduction conflates these. Either narrow the motivating problem to marginal miscoverage, or describe how CalDML addresses subpopulation calibration (e.g., Mondrian/local conformal, group-conditional calibration), and cite the relevant work.\n\n6. The exchangeability condition is asserted but not examined. In observational causal inference, the *deployment distribution* may differ from the calibration distribution in a way that matters (covariate shift between training and deployment populations, or treatment-assignment shift). State the exchangeability assumption precisely and flag when it can fail.\n\n7. \"Robins and Rotnitzky (1995) \u2026 and the cross-fitted DML framework of Chernozhukov et al. (2018), which established root-n asymptotic normality for *average* treatment effect estimates\" \u2014 the paragraph then pivots to heterogeneous effects without noting that DML for CATE specifically (e.g., R-learner, DR-learner) is the immediate ancestor of \"CalDML.\" Tighten the chain so the reader sees why DML for ATE \u2192 DML for CATE \u2192 CalDML.\n\n8. The coverage numbers (\"within 1.5 percentage points of the nominal 95% level\" vs. \"8 to 15 points\" under-coverage) are stated without indicating whether these are averages over simulation replications, worst-case across DGPs, or single runs. Specify, or the comparison is not interpretable.\n\n## Prior work and citations\n\n9. Missing citations that readers will expect:\n   - Lei & Cand\u00e8s (2021), *JRSS-B*, for conformal counterfactual/ITE inference.\n   - Vovk, Gammerman & Shafer (2005) or Vovk (2012) for the foundational split-conformal framework \u2014 currently the paper invokes \"split-conformal-style\" without citing it.\n   - Chernozhukov, Newey & Singh, and the R-learner (Nie & Wager, 2021) for DML-style CATE estimation.\n   - Possibly Foster & Syrgkanis on orthogonal statistical learning for CATE.\n   - For Lalonde-style observational evaluation, the original Lalonde (1986) and Dehejia & Wahba (1999) deserve mention alongside Smith & Todd (2005).\n\n10. \"Robins and Rotnitzky (1995)\" \u2014 verify the year and venue; the canonical doubly-robust references are Robins, Rotnitzky & Zhao (1994, JASA) and Robins & Rotnitzky (1995, JASA). Confirm which one is intended.\n\n11. \"Kennedy (2023) developed a doubly-robust learner with explicit rate conditions on the CATE function class.\" Kennedy's DR-learner paper is widely cited as Kennedy (2023, *Electronic Journal of Statistics*, \"Towards optimal doubly robust estimation of heterogeneous causal effects\"). Verify exact year/venue; an earlier arXiv version is from 2020.\n\n12. \"K\u00fcnzel et al. (2019)\" \u2014 verify; the X-learner paper is K\u00fcnzel, Sekhon, Bickel & Yu, *PNAS*, 2019. OK if matches.\n\n13. \"ACIC-2018\" \u2014 the ACIC data-analysis challenges run yearly; specify which (the 2018 challenge is Shimoni et al. / Dorie et al.'s work; confirm the citation you use).\n\n## Prose / writing\n\n14. \"Practitioners increasingly rely on flexible machine-learning nuisance learners \u2014 gradient boosting, random forests, and neural networks \u2014\" the em-dash list reads naturally; consider replacing \"learners\" (used twice in close succession) with \"models\" on second use.\n\n15. \"is often poorly calibrated: nominal 95% intervals can cover the true CATE far less than 95% of the time\" \u2014 \"far less than 95%\" is loose; replace with a specific reference or example (e.g., \"as low as 70% in simulation studies, see X\").\n\n16. \"the first procedure\" \u2192 suggest deleting if priority cannot be defended.\n\n17. \"leans on\" \u2014 informal; replace with \"relies on\" or \"uses.\"\n\n18. \"We frame this as a meaningful step beyond the existing toolbox for CATE inference.\" Remove or replace with a concrete claim.\n\n19. The \"Related work\" subsection is short; either keep it short and label it \"Related work in one paragraph,\" or expand to cover the conformal-CATE thread.\n\n20. Use of \"doubly-robust\" hyphenation is inconsistent with later \"doubly robust\"; pick one.\n\n21. \"inflating average interval width by less than 30%\" \u2014 relative to what baseline (the under-covering DML interval)? Specify.\n\n## Structural notes (kept minimal per scope)\n\n22. Contribution bullets near the end of the section would help; currently the contribution is buried in prose between motivation and related work.\n\n23. Consider moving the empirical preview (\"Across all three, CalDML achieves \u2026\") so it follows the contribution statement rather than appearing after related work; the current order reads as: motivation \u2192 contribution \u2192 related work \u2192 distinction \u2192 empirical preview \u2192 positioning. Tightening to motivation \u2192 contribution \u2192 distinction-from-related-work \u2192 empirical preview \u2192 positioning would read more cleanly.\n\n## Items I could not verify\n\n- Whether Robins & Rotnitzky (1995) is the precise reference intended, or whether Robins, Rotnitzky & Zhao (1994) is meant.\n- The exact year/venue for Kennedy's DR-learner paper.\n- Whether the priority claim (\"first procedure\") is defensible against the conformal-CATE literature; I have flagged plausible counter-citations (Lei & Cand\u00e8s, Alaa & Van der Schaar, Jin\u2013Ren\u2013Cand\u00e8s) but have not pulled them up to confirm methodological overlap. I recommend the authors do a head-to-head comparison.\n- The exact empirical-coverage numbers reported are not auditable from the section alone; my comments assume the numbers are stated as in the manuscript and only flag interpretive ambiguity.\n- I have not run a web search or external lookup to validate citations; recommendations on missing/incorrect references should be checked against the bibliography.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general request to review a research section centrally includes checking whether the argument from problem statement to method claim to evaluation conclusion is coherent.",
+      "R1.3": "The section reports empirical coverage and interval-width results, so review responsibility includes checking whether the stated claims are aligned with the reported evidence.",
+      "R1.4": "The artifact makes novelty claims such as being the first procedure and a step beyond prior CATE inference tools, making novelty assessment central.",
+      "R1.6": "Reviewing a section normally includes sentence- and paragraph-level clarity, register, concision, and readability.",
+      "R1.7": "The section contains an explicit related-work paragraph and attribution claims, so citation coverage and scholarship are central to the review.",
+      "RX.1": "The projection should preserve uncertainty about what can be judged from the excerpt alone.",
+      "RX.2": "The review scope must avoid endorsing broad firstness or default-method claims beyond the available artifact.",
+      "RX.3": "The agent must project responsibilities only and not perform the requested review.",
+      "RX.4": "The projection should account for risks from unsupported causal-inference claims influencing downstream scientific conclusions.",
+      "RX.5": "The projection should remain traceable to specific features of the delegation and artifact, such as the related-work and evaluation claims."
+    }
+  }
+}

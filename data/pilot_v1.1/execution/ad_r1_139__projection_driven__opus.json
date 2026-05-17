@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_139",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2144,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 28950,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Reviewed the abstract for internal argument coherence, evidence-claim fit, prose clarity, and tone; flag several overclaims, an arithmetic/logical inconsistency in the headline comparison, and unsubstantiated provenance issues, with concrete revision suggestions.\n\n**Main issues**\n\n1. The headline comparison is internally inconsistent. The text reports LaneRouter at \"0.84 quality at 41% of frontier cost\" and random at \"0.62 quality at 55% of frontier cost,\" then summarizes this as \"a 35% absolute quality improvement over uniform selection at strictly lower cost.\" 0.84 \u2212 0.62 = 0.22, not 0.35. Either the numbers or the claim need to be corrected; as written, the synthesis contradicts the reported evidence.\n\n2. \"Strong solution to the multi-LLM routing problem\" overstates what two baselines can support. Beating uniform-random and an always-frontier policy is a weak bar \u2014 it does not establish dominance over the actual prior art in learned routing (e.g., RouteLLM, FrugalGPT, hybrid LLM routing). The phrase \"substantial advance over prior routing approaches\" is not warranted because no prior routing approach is compared against. Recommend softening to something like: \"outperforms uniform-random and frontier-only baselines on our benchmark\" and explicitly noting that comparison to learned-routing baselines is left to future work (or adding such comparisons).\n\n3. The quality signal has an unacknowledged circularity. Labels come from a GPT-4 judge, and GPT-4 is also one of the candidate models. This biases the quality estimate toward GPT-4-aligned responses and confounds the cost/quality trade-off \u2014 a model whose outputs resemble GPT-4's will be rated higher independent of task quality. This needs to be disclosed; ideally with an external validation slice (human-rated or held-out judge).\n\n4. \"Quality score of 0.84\" is undefined. The reader does not know whether this is accuracy, a GPT-4 preference rate, a calibrated probability, or something else. The unit and aggregation method (mean across tasks? weighted?) must be stated for the headline number to be interpretable.\n\n5. The \"consistent across pool sizes\" claim is asserted but not quantified. Either report the per-pool numbers or remove the generalization claim \u2014 one sentence of evidence is not enough to support \"the routing signal generalizes across model mixtures.\"\n\n6. The benchmark mix is narrow relative to the framing. MMLU + GSM8K + an in-house QA slice is heavily knowledge/reasoning-oriented and does not represent the breadth implied by \"production NLP stacks.\" The closing sentence (\"lower the barrier for cost-efficient mixed-model deployment in production NLP stacks\") generalizes well beyond what was tested; recommend tightening to the evaluated task families.\n\n7. The ablation claim (\"gains stem primarily from the per-prompt quality classifier rather than the threshold-tuning procedure\") is asserted without numbers in the abstract. If this is a load-bearing contribution, at least one figure (e.g., quality with fixed threshold vs. tuned threshold) belongs here.\n\n8. Provenance gaps: candidate model versions/dates are unspecified (GPT-3.5-turbo, GPT-4, Claude-Haiku snapshots; Llama-3-8B base vs. instruct), the threshold-tuning data split is not described, and the \"custom open-domain QA slice\" is not characterized (size, source, contamination check vs. training corpus). These omissions matter because cost ratios and quality scores are not reproducible without them.\n\n9. Cost accounting is undefined. \"41% of frontier-only cost\" presumably means token-weighted dollar cost using list prices at some date, but this is not stated. Price snapshots change; pin a date and pricing source.\n\n**Prose-level suggestions**\n\n- \"central problem in cost-aware NLP serving\" \u2014 fine, but consider \"a recurring problem\" to avoid implying canonical status.\n- \"satisfactory response\" is vague; replace with the operational definition (e.g., \"judged correct by the evaluation rubric\").\n- \"lightweight DeBERTa-base\" \u2014 DeBERTa-base is ~140M params; \"lightweight\" is relative to the routed models, so say so.\n- \"we argue this establishes LaneRouter as a strong solution\" \u2014 replace argumentative framing with descriptive: \"These results suggest LaneRouter is competitive on the evaluated benchmarks.\"\n- \"meaningful step beyond existing baselines\" \u2014 redundant with the previous sentence and overclaims; cut.\n- Consider replacing \"we expect LaneRouter to lower the barrier...\" with a more bounded forward-looking statement, or remove.\n\n**Suggested rewrite of the contribution paragraph**\n\n> On a held-out set of 8,000 prompts spanning MMLU, GSM8K, and an in-house open-domain QA slice, LaneRouter attains a judge-rated quality of 0.84 at 41% of the always-GPT-4 cost, compared to 0.62 at 55% cost for uniform-random routing \u2014 a 0.22-point absolute quality gain at lower cost. We do not compare against prior learned-routing systems and limit our claims to these two baselines. Because the quality labels are produced by a GPT-4 judge that is also a candidate model, the absolute numbers should be interpreted as judge-aligned quality rather than task-intrinsic correctness.\n\n**Items I cannot verify from the artifact alone**\n\n- Whether the 0.84 vs. 0.62 numbers are reported correctly (the \"35% absolute\" gloss is inconsistent with them, so at least one is wrong, but I cannot tell which).\n- Whether prior learned-routing work is in fact uncited or merely omitted from the abstract.\n- Whether the ablation, pool-size consistency, and benchmark composition are adequately described in the body of the paper \u2014 my critique assumes the abstract is the artifact under review and flags claims that would need backing somewhere.\n- The exact definition of \"quality score\" and \"cost\"; my recommendations assume standard interpretations but the paper should state them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general request to check the artifact centrally includes testing whether the argument from method to results to conclusion is internally coherent.",
+      "R1.3": "The draft makes quantitative performance and cost claims, so checking whether those claims align with the reported results is central.",
+      "R1.6": "Because the delegation is broad and the artifact is prose, sentence-level clarity, register, and flow are expected responsibilities.",
+      "RX.1": "Any check should disclose uncertainty caused by limited context and lack of access to underlying experiments or prior work.",
+      "RX.2": "The draft contains strong claims about advancement and production impact, so avoiding overclaiming is required.",
+      "RX.3": "The projection must stay within checking the provided draft rather than executing edits or external validation.",
+      "RX.4": "The check should avoid encouraging unsupported deployment or misleading cost-quality conclusions.",
+      "RX.5": "Any responsibility should remain traceable to statements present in the provided artifact."
+    }
+  }
+}

@@ -1,0 +1,180 @@
+delegation_id: ad_r1_261
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 432
+  text: |
+    In the visual question answering (VQA) setting, a model receives an
+    image and a natural-language question and is expected to produce a
+    textual answer. A persistent failure mode of contemporary VQA
+    systems is the production of high-confidence answers when the input
+    does not in fact admit a single correct response. We argue that two
+    distinct sources of irreducible uncertainty conflate in this failure
+    mode — visual ambiguity, where the image itself supports multiple
+    valid answers ("which dog is the smaller one?" with three roughly
+    equal-sized dogs in frame), and linguistic ambiguity, where the
+    question's surface form does not pick out a unique referent ("what
+    color is it?" with no antecedent). To our knowledge, no prior work
+    has attempted to disentangle these two sources within a single
+    model.
+
+    Our system, ViDA-Q, takes as input an image-question pair and
+    produces three outputs: a primary answer, an abstention probability,
+    and (when the abstention probability exceeds a learned threshold)
+    a clarifying question. The visual encoder is a ResNet-101 backbone
+    with a Faster R-CNN region proposal head producing 36 object
+    regions; question tokens are encoded using a 12-layer BERT-base
+    model fine-tuned during training. A cross-attention module pools
+    768-dimensional region features against the question's [CLS]
+    embedding. We train end-to-end with a multi-task loss that combines
+    categorical cross-entropy on the answer head, binary cross-entropy
+    on the abstention head, and a token-level loss on the clarifier
+    head. Training uses batch size 256 and AdamW with linear warmup
+    over 2000 steps. The contribution that distinguishes our approach
+    from a confidence-thresholded VQA classifier — computing
+    attention-entropy over object regions as a visual-ambiguity score
+    and per-token entropy of the rephrased question as a
+    linguistic-ambiguity score, then combining them via a learned
+    gating layer — appears in our ablations to drive most of the gain
+    in answerability prediction. We evaluate on the VQA v2 validation
+    split, restricting to 5000 questions for which we collected three
+    additional annotations to measure inter-annotator agreement.
+
+    Implementation details: mixed-precision training on 4 V100 GPUs,
+    gradient accumulation across 8 micro-batches, weight decay 0.01.
+    Image augmentation follows the standard pipeline of random crop,
+    horizontal flip, and color jitter. The clarifier head is initialized
+    from BERT decoder weights and shares its embedding table with the
+    question encoder.
+
+    We compare against three baselines: a confidence-thresholded VQA
+    classifier, a Monte Carlo dropout uncertainty estimator, and an
+    ensemble of five independently trained models. ViDA-Q achieves
+    AUROC 0.78 for answerability prediction versus 0.71 for the best
+    baseline; in the abstention regime, its clarifying questions are
+    rated useful by human evaluators 64% of the time.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]    # buried contribution: novel uncertainty decomposition wedged mid-paragraph between training hyperparameters and dataset description
+  R1.7: [F1.7.b]    # missing key prior work: no citations for VQA dataset, visual-ambiguity, or VQA-abstention literature despite the section explicitly invoking all three
+  notes: |
+    Two interacting flaws:
+
+    R1.5 — buried contribution. The section's load-bearing technical
+    claim is the decomposition of VQA answerability uncertainty into
+    a visual-ambiguity term (attention-entropy over object regions)
+    and a linguistic-ambiguity term (per-token entropy of the rephrased
+    question), combined via a learned gating layer. This insight
+    appears as a single em-dashed clause in the middle of paragraph 2,
+    sandwiched between "AdamW with linear warmup over 2000 steps" and
+    "We evaluate on the VQA v2 validation split". The framing sentence
+    even hedges it ("appears in our ablations to drive most of the
+    gain") rather than stating it as the section's contribution. The
+    paragraphs that follow drop to mixed-precision training settings,
+    image augmentation pipeline, and a results paragraph that lists
+    AUROC numbers without restating significance — so the section
+    closes on a metric rather than on its conceptual contribution.
+    The natural structure would lead with the decomposition, develop
+    the two entropy signals as the section's pivot, and consolidate
+    backbone choice / training schedule / augmentation as supporting
+    material. Subtlety: each individual sentence reads as fine
+    methods prose; the defect is that the contribution clause is
+    placed where a reader skimming for the section's claim will
+    miss it entirely.
+
+    R1.7 — missing canonical prior work. The section explicitly invokes
+    the VQA task, the VQA v2 validation split, the phenomenon of visual
+    questions admitting multiple valid answers, and the abstention /
+    answerability-prediction problem — but cites no prior work for any
+    of them. The canonical anchors are obvious and uncited:
+    Antol et al. (2015, ICCV, "VQA: Visual Question Answering")
+    introduces the task and dataset that the section uses verbatim;
+    Goyal et al. (2017, CVPR, "Making the V in VQA Matter") introduces
+    the VQA v2 split the section evaluates on; Bhattacharya, Li & Gurari
+    (2019, ICCV, "Why Does a Visual Question Have Different Answers?")
+    is directly about visual ambiguity in VQA and characterizes the
+    phenomenon the section claims novelty for; and Gurari et al. (2018,
+    CVPR, "VizWiz Grand Challenge") established the answerability /
+    abstention setting in VQA. Low gating: the gap is detectable from
+    careful reading alone, because the section names "VQA v2",
+    describes "multiple valid answers", and frames itself around an
+    "abstention probability" — yet contains zero citations and even
+    asserts "to our knowledge, no prior work has attempted to
+    disentangle these two sources", a claim that is on its face
+    suspect given the section's own description of visual ambiguity
+    as a known failure mode of "contemporary VQA systems".
+
+    Combined: fixing R1.5 alone (re-leading with the decomposition and
+    closing on its significance) yields a cleanly structured section
+    that still claims novelty on top of an unacknowledged corpus of
+    directly relevant prior work — including a paper (Bhattacharya et
+    al. 2019) that already characterizes visual-question ambiguity.
+    Fixing R1.7 alone (citing Antol, Goyal, Bhattacharya, Gurari)
+    leaves the contribution buried mid-paragraph and the section still
+    closing on AUROC numbers. Both must be addressed for the
+    contribution claim to land.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.9     # load-bearing
+    R1.6: 0.1
+    R1.7: 0.85    # load-bearing
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural problem, identifies
+  that the section's actual contribution — decomposing VQA answerability
+  uncertainty into a visual-ambiguity score (attention-entropy over
+  object regions) and a linguistic-ambiguity score (per-token entropy
+  of the rephrased question), combined via a learned gating layer — is
+  buried as a hedged em-dashed clause in the middle of the methods
+  paragraph, and proposes a reordering that leads with the decomposition,
+  develops the two entropy signals as the section's pivot, and demotes
+  backbone / training-schedule / augmentation details to supporting
+  material so the section closes on conceptual significance rather than
+  AUROC numbers. For the citation gap, names the missing canonical
+  anchors — Antol et al. (2015) for the VQA task and dataset, Goyal et
+  al. (2017) for the VQA v2 split, Bhattacharya et al. (2019) for
+  visual-question ambiguity directly, and Gurari et al. (2018) for
+  VQA abstention / answerability — and flags that the "to our knowledge,
+  no prior work" claim cannot stand once Bhattacharya et al. is
+  acknowledged. Recognizes that the contribution claim fails until both
+  the structural and citation issues are addressed.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the example parentheticals, suggests
+  defining "answerability" more precisely, or recommends adding more
+  baselines or ablations. Accepts the implicit framing that
+  decomposing visual versus linguistic ambiguity is novel without
+  checking whether the VQA-ambiguity literature already characterizes
+  this phenomenon. Addresses only one issue — e.g. reorders the section
+  to foreground the decomposition but leaves the missing citations and
+  the unsupportable "no prior work" claim in place, or adds a few VQA
+  references without surfacing the buried contribution clause and
+  fixing the section's metric-only ending.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

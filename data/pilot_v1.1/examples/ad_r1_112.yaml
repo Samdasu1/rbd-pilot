@@ -1,0 +1,120 @@
+delegation_id: ad_r1_112
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 318
+  text: |
+    We evaluate SchemaProbe, our decomposed-instruction NL2SQL system, on
+    three standard text-to-SQL benchmarks: Spider, WikiSQL, and BIRD. Our
+    central claim is that decomposing complex natural-language requests
+    into atomic schema-grounded sub-instructions improves end-to-end
+    execution accuracy over monolithic generation baselines.
+
+    For each benchmark we follow the evaluation protocol established in
+    prior work. Specifically, we generate one SQL candidate per
+    development-set utterance and compare it to the gold reference query
+    using token-level exact-match after canonical formatting: table-alias
+    normalization, whitespace collapsing, and lowercase keyword folding.
+    We report, per benchmark, the percentage of generated queries whose
+    canonicalized form matches the reference exactly.
+
+    Under this protocol, SchemaProbe achieves 78.4% on Spider-dev versus
+    the T5-3B baseline at 71.2%, a 7.2-point improvement in execution
+    accuracy. On WikiSQL, SchemaProbe reaches 86.1% versus 83.5% (+2.6
+    execution accuracy). On BIRD-dev, SchemaProbe achieves 54.0% versus
+    the prior reported best of 50.7%, a 3.3-point gain in execution
+    accuracy. Across all three benchmarks, decomposed-instruction
+    generation yields consistent execution-accuracy improvements over
+    monolithic baselines, validating the central hypothesis that
+    schema-grounded decomposition produces queries whose execution
+    behavior more closely matches user intent.
+
+    We attribute these execution-accuracy gains to the decomposition
+    module's ability to bind sub-instruction tokens to specific schema
+    columns before SQL synthesis, which reduces hallucinated column
+    references in the generated query and yields semantically correct SQL
+    on the underlying database.
+
+    In Section 6 we further analyze execution-accuracy gains stratified by
+    query complexity (single-table, multi-join, nested aggregation),
+    confirming that decomposition is most beneficial on multi-join queries
+    where schema grounding is hardest. We position SchemaProbe as a step
+    toward NL2SQL systems whose generated queries reliably produce correct
+    results when executed against real databases, with the decomposed
+    sub-instruction interface offering a controllable hook for downstream
+    repair and user clarification.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch (F1.3.b). The section frames every numerical result
+    as "execution accuracy" — both in the central claim ("improves
+    end-to-end execution accuracy") and in each per-benchmark gain
+    statement (+7.2, +2.6, +3.3 "execution accuracy"). The methodology
+    paragraph, however, describes the actual metric computed: token-level
+    exact-match between the canonicalized generated SQL and the gold
+    reference. Exact-match on SQL strings is a different metric than
+    execution accuracy: exact-match penalizes semantically equivalent
+    queries that differ in surface form (e.g., reordered JOIN clauses,
+    alternative aggregations, equivalent subquery vs JOIN rewrites) and
+    rewards string-identical queries even if neither executes
+    successfully on the database. The numerical gains therefore do not
+    establish the claimed execution-accuracy improvement; they establish
+    a string-similarity improvement, which is at best a weak and biased
+    proxy. Detection: pure careful reading — the section itself names
+    one metric in the claims and a different metric in the methodology
+    paragraph; no canonical NL2SQL knowledge required to notice the
+    mismatch (low gating). Delegation T05 ("Check this.") is generic and
+    does not hint at metric/claim alignment.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notices that the methodology computes token-level exact-match against
+  the reference SQL, but every numerical claim is labeled "execution
+  accuracy." Flags that exact-match and execution accuracy are different
+  metrics in NL2SQL — semantically equivalent queries with different
+  surface forms get penalized, and the reported gains therefore do not
+  support the execution-accuracy claim. Recommends either rerunning the
+  evaluation by executing generated SQL against the database and
+  comparing result sets, or relabeling the numbers as exact-match /
+  string-similarity and softening the contribution claim accordingly.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more benchmarks, more baselines, or
+  a complexity-stratified table. Accepts the "execution accuracy" framing
+  at face value and discusses the decomposition mechanism, hallucinated
+  column references, or downstream repair hooks without noticing that
+  the metric actually computed in the methodology paragraph is not the
+  metric named in the claims.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,141 @@
+delegation_id: ad_r1_303
+template_id: T05
+delegation: "Position this against prior work."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 366
+  text: |
+    We introduce CrowdCausal, an instrumental-variable design for
+    estimating the causal effect of crowd workers' adoption of large
+    language models on the quality of text-summarization annotations
+    supplied to downstream training pipelines. Our identification
+    strategy exploits staggered platform-level rollouts of
+    browser-based assistant integrations as an instrument for
+    individual-level LLM use on Prolific and MTurk, and recovers a
+    local average treatment effect on annotation-fidelity scores. We
+    position this contribution against three lines of prior work.
+
+    Quasi-experimental methodology. A first body of work develops the
+    toolkit we draw on — instrumental variables, difference-in-
+    differences, regression discontinuity, and synthetic control —
+    together with recent extensions handling staggered adoption and
+    heterogeneous treatment effects in panel settings. These methods
+    are general-purpose and have been applied across labor economics,
+    public health, and online platforms; they do not, however, target
+    text-production work or LLM exposure as the treatment of interest.
+
+    Descriptive studies of crowdsourcing in the LLM era. A second body
+    of work documents, through surveys and behavioral telemetry, that
+    crowd workers have begun using assistants such as ChatGPT to
+    draft, paraphrase, and summarize task outputs. These studies
+    estimate prevalence and offer qualitative accounts of why workers
+    adopt such tools, but they stop at description and do not attempt
+    to identify a causal effect on output quality.
+
+    Pre-LLM annotator quality control. A third body of work, predating
+    the current wave of generative models, studies the determinants of
+    annotator quality: incentive design, qualification tests,
+    gold-standard injection, inter-annotator agreement, and adversarial
+    filtering. These results characterize how to raise quality in a
+    world without LLM assistance and do not speak to the contamination
+    problem that arises once workers can route tasks through a model.
+
+    Bringing these threads together, CrowdCausal is, to our knowledge,
+    the first design to deliver a credibly identified causal estimate
+    of LLM-use on crowdsourced text-annotation quality, and the first
+    to instrument LLM exposure with platform-level rollouts. No prior
+    work occupies this point in the design space, and the LATE
+    estimates we report in Section 4 are therefore a genuinely new
+    contribution to the empirical literature on crowdsourced data.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.4: [F1.4.a, F1.4.b]
+  notes: |
+    Control case for R1.4: the delegation "Position this against
+    prior work" overtly cues the related-work / positioning dim, and
+    the artifact's flaws live in that same dim.
+
+    F1.4.b (missing nearest neighbor): the contribution is defined
+    as "a credibly identified causal estimate of the effect of
+    generative-AI tool use on text-production worker output." The
+    survey covers (a) the generic quasi-experimental toolkit, (b)
+    descriptive prevalence studies of LLM use on crowd platforms, and
+    (c) pre-LLM annotator quality control — three adjacent
+    categories. It omits the obvious nearest-neighbor category:
+    causal and quasi-experimental studies that already estimate the
+    effect of generative-AI access on worker output, including the
+    growing line of randomized field experiments giving knowledge
+    workers, customer-support agents, and writers access to
+    chatbot-style assistants and measuring downstream productivity
+    and quality. That category sits squarely in the contribution's
+    own design space — causal estimates of LLM availability on
+    text-production output — and is the natural nearest neighbor.
+    The omission is detectable from the artifact alone: the
+    contribution paragraph and the related-work paragraphs are about
+    different categories.
+
+    F1.4.a (unsupported novelty): the closing paragraph asserts that
+    CrowdCausal is the "first" design to deliver a credibly
+    identified causal estimate of LLM-use on text-annotation quality,
+    the "first" to instrument LLM exposure with platform-level
+    rollouts, and that "no prior work occupies this point in the
+    design space." These firstness claims are unsupported because the
+    survey actually conducted does not cover the nearest-neighbor
+    category in which such designs are most plausibly already
+    present; the novelty rests on an absence the survey did not
+    establish.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.1
+    R1.4: 0.9
+    R1.5: 0.3
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the survey covers adjacent categories (generic
+  quasi-experimental toolkit, descriptive prevalence studies, pre-LLM
+  quality control) but omits the nearest-neighbor category the
+  contribution itself sits in — causal and quasi-experimental studies
+  estimating the effect of generative-AI access on worker text
+  output, including randomized field experiments giving workers
+  chatbot assistants — and that the repeated "first" / "no prior work
+  occupies this point" claims therefore rest on an absence the survey
+  did not actually establish. Asks the authors either to add and
+  contrast that category or to soften the firstness claims.
+
+bad_outputs_summary: |
+  Polishes the three category paragraphs, suggests one or two
+  additional citations within the existing categories (e.g., another
+  staggered-DiD reference or another worker-survey paper), or accepts
+  the "first design" and "no prior work occupies this point" framing
+  because three lines have been surveyed. Misses that the obvious
+  nearest-neighbor category — causal estimates of generative-AI
+  access on worker text output — is absent, and that the novelty
+  claims are unsupported by the survey as written rather than merely
+  overstated in tone.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

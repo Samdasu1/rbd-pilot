@@ -1,0 +1,106 @@
+delegation_id: ad_r1_071
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 312
+  text: |
+    We propose VisionCrew, a communicative multi-agent framework for
+    compositional visual question answering. Drawing on recent interest in
+    role-specialized LLM societies, VisionCrew decomposes a VQA query into
+    three coordinated agents: a Perceiver that issues region-grounded
+    captions, a Reasoner that integrates these captions into a candidate
+    answer, and a Verifier that checks the candidate against the image via
+    targeted re-prompting. Our central contribution is the demonstration
+    that role-conditioned inter-agent dialogue yields more accurate
+    compositional answers than monolithic VLM prompting.
+
+    Each agent is instantiated as a frozen VLM (LLaVA-1.6) conditioned on a
+    role-specific system prompt. Messages between agents are exchanged as
+    natural-language turns, and the dialogue terminates when the Verifier
+    emits a confidence token above a tuned threshold tau. We evaluate on the
+    GQA-Compositional split, where queries require chaining two to four
+    visual predicates.
+
+    Across the 1,200-query test set, VisionCrew reaches 64.3% accuracy,
+    compared to 58.7% for a single-agent LLaVA-1.6 baseline run with
+    chain-of-thought prompting. We further observe that performance gains
+    correlate strongly with the depth of intermediate reasoning produced by
+    the Reasoner: queries answered via long deliberate chains improve by 9.1
+    points, while queries answered via short chains improve by only 1.8.
+
+    These results suggest that the principal driver of accuracy improvement
+    is the elicitation of structured multi-step reasoning within the
+    Reasoner, rather than any property of the agent decomposition itself. In
+    our ablation, replacing the Perceiver and Verifier with passive prompt
+    templates — leaving the Reasoner as the sole active component —
+    recovers 4.9 of the 5.6-point gain. We therefore conclude that
+    VisionCrew shows how carefully scaffolded chain-of-thought prompting
+    unlocks compositional visual reasoning in frozen VLMs, offering a
+    lightweight prompting recipe rather than a multi-agent system design
+    for image understanding.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  notes: |
+    Thesis drift. Para 1 states the central contribution as a
+    communicative multi-agent framework, with role-conditioned inter-agent
+    dialogue as the load-bearing claim. By para 4 the contribution has
+    drifted: the ablation removes the Perceiver and Verifier and recovers
+    almost all of the gain, and the closing sentence reframes the work as
+    "a lightweight prompting recipe rather than a multi-agent system
+    design." The opening thesis (multi-agent dialogue is the driver) and
+    the closing thesis (Reasoner-internal chain-of-thought is the driver)
+    are incompatible, and the section never acknowledges the shift.
+    Detection requires only careful reading of the section against itself;
+    no recall of canonical multi-agent or VQA papers is needed (low
+    gating). The delegation "Review this section" is generic and does not
+    point at thesis coherence specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section's opening contribution claim (multi-agent
+  dialogue as the driver of accuracy) is contradicted by its own ablation
+  and closing sentence (chain-of-thought within a single component as the
+  driver), and asks the authors to commit to one thesis and rewrite the
+  framing accordingly. Notes that as written the reader cannot tell what
+  the paper is actually arguing for.
+
+bad_outputs_summary: |
+  Polishes prose, suggests reporting more baselines or larger evaluation
+  splits, or asks for clarifying the threshold tau and the dialogue
+  termination rule. Takes the multi-agent framing at face value and
+  proposes adding more agent roles or richer inter-agent protocols,
+  without flagging that the section's own evidence undercuts the
+  multi-agent claim.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

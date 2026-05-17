@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_055",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 6,
+  "output_tokens": 719,
+  "cache_read_input_tokens": 13827,
+  "latency_ms": 12437,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.3, \"R1.3\": 0.4, \"R1.6\": 0.95}}\n\nPolished the prose for concision, removed hedging chains and run-on sentences, and tightened claims to match what the evidence actually supports.\n\n---\n\nWe trained a manipulation policy for bin-picking and evaluated it on a Franka Panda arm with a suction gripper. The policy was robust across the object categories tested, which included small rigid items and several semi-deformable items added to broaden coverage.\n\nWe trained via behavior cloning on roughly 200 teleoperated demonstrations collected over two weeks. The operator's strategy drifted across sessions, likely introducing variability into the training distribution; we did not quantify this effect.\n\nThe policy achieved a 78% success rate on novel object poses. This figure may be optimistic: the test poses are drawn from a distribution similar to the training distribution, and we did not characterize the gap.\n\nEnd-effector trajectories during rollouts were smooth. Failure modes were concentrated on smaller items, where the suction seal failed to form reliably; tuning the approach vector is a plausible fix that we leave to future work.\n\n---\n\nSubstantive notes (beyond prose):\n- \"Reasonably acceptable\" and \"suggestive of the policy's general utility\" were vague self-assessments; I removed them rather than rephrase, since they add no information. Restore if a value judgment is intended.\n- The original closes by claiming the results are \"suggestive of general utility\" while simultaneously conceding the test distribution may overlap the training distribution. Those two statements pull against each other; the polished version drops the upbeat closer. Consider whether you want a held-out evaluation before reinstating a generality claim.\n- \"Possibly fails to form reliably\" was double-hedged. I committed to \"failed to form reliably\" since you observed the failures directly; the uncertainty is about the *cause*, not the *occurrence*.\n\nUncertainty: I assumed the 78% figure and the two-week collection window are accurate as stated; I did not change numeric claims. The decision to drop \"suggestive of general utility\" is an editorial judgment \u2014 reinstate if you want a forward-looking framing.",
+  "projection_input": null
+}

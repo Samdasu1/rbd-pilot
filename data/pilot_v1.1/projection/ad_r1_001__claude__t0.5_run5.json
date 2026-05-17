@@ -1,0 +1,56 @@
+{
+  "example_id": "ad_r1_001",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 5,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 2440,
+  "latency_ms": 46739,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.7,\n    \"R1.2\": 0.7,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.3,\n    \"R1.5\": 0.3,\n    \"R1.6\": 0.7,\n    \"R1.7\": 0.3,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.1\", \"R1.2\", \"R1.3\", \"R1.6\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.1\": \"The contribution claim is internally conflicted: the method is named 'Adaptive Temporal Attention' and framed around attention-budget gating, but the core formulation (h_t = A\u00b7h_{t-1} + B\u00b7x_t) is a standard SSM recurrence indistinguishable from S4/Mamba. Improving the draft requires resolving or at least clarifying this conceptual framing.\",\n    \"R1.2\": \"The logical arc breaks at the pivot between paragraphs 1 and 2: the paper promises an attention mechanism with learnable gating, then delivers an SSM without explaining the relationship. 'Improve' plausibly requires fixing this inferential gap and ensuring the ablation conclusions (selectivity = principal driver; dense A = no gain) are internally consistent with the model description.\",\n    \"R1.3\": \"The empirical paragraph makes several claims\u2014ETTh1 MSE 0.412 vs. 0.439, 6% ablation degradation, improved cross-horizon generalization\u2014without specifying horizon baselines, variance, or where Section 5 evidence appears. Improving the draft plausibly includes tightening claim-to-evidence traceability.\",\n    \"R1.6\": \"A generic 'improve this draft' delegation always activates writing polish as at least a central expected responsibility; sentence-level clarity, paragraph cohesion, and precision of technical language are all improvable in the current text.\"\n  },\n  \"clarification_needed\": true,\n  \"clarification_question\": \"Should improvement focus primarily on prose and writing clarity, or on resolving the technical/logical issues\u2014specifically the framing inconsistency between the 'attention mechanism' framing in the name and introduction and the SSM recurrence that constitutes the actual model?\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.1": "The contribution claim is internally conflicted: the method is named 'Adaptive Temporal Attention' and framed around attention-budget gating, but the core formulation (h_t = A\u00b7h_{t-1} + B\u00b7x_t) is a standard SSM recurrence indistinguishable from S4/Mamba. Improving the draft requires resolving or at least clarifying this conceptual framing.",
+      "R1.2": "The logical arc breaks at the pivot between paragraphs 1 and 2: the paper promises an attention mechanism with learnable gating, then delivers an SSM without explaining the relationship. 'Improve' plausibly requires fixing this inferential gap and ensuring the ablation conclusions (selectivity = principal driver; dense A = no gain) are internally consistent with the model description.",
+      "R1.3": "The empirical paragraph makes several claims\u2014ETTh1 MSE 0.412 vs. 0.439, 6% ablation degradation, improved cross-horizon generalization\u2014without specifying horizon baselines, variance, or where Section 5 evidence appears. Improving the draft plausibly includes tightening claim-to-evidence traceability.",
+      "R1.6": "A generic 'improve this draft' delegation always activates writing polish as at least a central expected responsibility; sentence-level clarity, paragraph cohesion, and precision of technical language are all improvable in the current text."
+    },
+    "clarification_needed": true,
+    "clarification_question": "Should improvement focus primarily on prose and writing clarity, or on resolving the technical/logical issues\u2014specifically the framing inconsistency between the 'attention mechanism' framing in the name and introduction and the SSM recurrence that constitutes the actual model?"
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

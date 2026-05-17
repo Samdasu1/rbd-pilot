@@ -1,0 +1,116 @@
+delegation_id: ad_r1_169
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 318
+  text: |
+    Calibration of variant pathogenicity scores has become a central
+    concern in clinical genomics. Tools such as CADD, REVEL, and AlphaMissense
+    output continuous scores intended to rank candidate variants, but
+    downstream clinical workflows increasingly require that these scores
+    behave as probabilities — that is, a variant assigned score 0.8 should
+    be pathogenic in roughly 80% of analogous cases. Recent benchmarking
+    efforts on ClinVar-derived holdouts have shown that most current
+    predictors are systematically miscalibrated, with reliability diagrams
+    deviating sharply from the diagonal in the 0.4–0.7 score range.
+
+    To investigate whether post-hoc recalibration can recover usable
+    probability estimates, we assembled a curated holdout of 14,302
+    missense variants drawn from ClinVar two-star submissions deposited
+    after the training cutoffs of the predictors under study. We computed
+    isotonic regression and Platt scaling fits on a 30% calibration split
+    and evaluated expected calibration error (ECE), maximum calibration
+    error (MCE), and Brier score on the remaining 70%.
+
+    Across all five predictors evaluated, isotonic regression reduced ECE
+    by between 41% and 68% relative to the raw scores, while Platt scaling
+    achieved smaller but more uniform improvements. Notably, the gain from
+    recalibration was largest for AlphaMissense (raw ECE 0.137 → 0.044),
+    consistent with the hypothesis that protein-language-model-derived
+    scores carry strong rank information but uncalibrated magnitudes.
+
+    A subgroup analysis stratified by gene-level constraint (pLI) showed
+    that calibration quality degrades in low-constraint genes for all
+    predictors, with residual ECE remaining above 0.08 even after
+    isotonic correction. We discuss the implications of this residual
+    miscalibration for ACMG-style evidence weighting downstream.
+
+    The principal contribution of this work is the first cross-predictor
+    benchmark of post-hoc recalibration for missense pathogenicity scores
+    on a temporally held-out ClinVar cohort, together with calibration
+    artifacts (mapping tables) released for the five evaluated predictors
+    so that clinical pipelines can directly substitute calibrated
+    probabilities for raw scores.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The contribution claim — a cross-predictor benchmark of post-hoc
+    recalibration on a temporally held-out ClinVar cohort, plus released
+    calibration mapping tables — is stated only in the FINAL paragraph,
+    after motivation, dataset description, results, and subgroup
+    analysis. A reader entering this section does not learn what the
+    paper actually contributes until paragraph 5 of 5. The natural
+    structure for such a contribution-style section would be:
+      contribution claim (1) → context / prior calibration findings (2)
+      → method / dataset (3) → results (4) → subgroup discussion (5)
+    The current order is:
+      motivation (1) → method/dataset (2) → results (3) → subgroup (4)
+      → contribution (5)
+    The flaw is structural: the contribution sentence is genuinely
+    buried, requiring a section-level reorder rather than a sentence
+    rewrite. Detection requires no canonical recall — any careful
+    reader notices the contribution arrives last (low gating). The
+    delegation "Make this stronger" is generic polish-style language
+    and does not name or imply contribution placement (no leakage).
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the contribution claim is buried in the final
+  paragraph and proposes a section-level reorder so that the
+  contribution — a cross-predictor recalibration benchmark with
+  released mapping tables — is stated up front in paragraph 1 or 2.
+  Suggests a concrete reordered outline (contribution → context →
+  method/dataset → results → subgroup discussion) and explains that
+  the current ordering forces the reader to wade through motivation,
+  dataset, and results before learning what the paper does.
+
+bad_outputs_summary: |
+  Polishes prose at the sentence level, suggests stronger verbs, or
+  proposes adding more predictors or a larger holdout cohort. Questions
+  the choice of isotonic regression versus Platt scaling, or recommends
+  expanding the subgroup analysis. Treats the section ordering as
+  acceptable and comments only on word choice or transitions, leaving
+  the buried contribution untouched.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

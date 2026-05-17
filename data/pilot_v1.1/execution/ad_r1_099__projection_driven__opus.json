@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_099",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 4076,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 40752,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.5, \"RX.5\": 0.7}}\n\nPolished version below, with a short list of substantive (non-prose) changes flagged so you can accept or revert them.\n\n---\n\n**Revised text**\n\nWe introduce VerbalQ, a deep reinforcement learning framework in which the agent emits a natural-language confidence tag (e.g., \"low\", \"medium\", \"high\") alongside each action-value estimate. The tag is decoded into a scalar probability and used to modulate exploration: states with low expressed confidence receive larger exploration bonuses. VerbalQ is designed to yield an uncertainty signal from a single Q-network at inference, avoiding the deployment cost of ensemble value functions or bootstrap-head disagreement, which is awkward to ship on resource-constrained agents.\n\nDuring training, the policy network jointly predicts an action-value vector and a confidence token from a shared trunk. The action-value head is trained with the standard TD(0) loss against a target network. The confidence head is trained with a cross-entropy objective against a discretized target derived from the empirical variance across K = 10 bootstrap heads attached to the trunk; the target token is the one whose induced probability is closest to 1 \u2212 normalized variance. We find K = 10 sufficient to produce a stable training signal for the confidence head across the Atari-57 suite.\n\nAt inference, exploration is driven by the predicted confidence token rather than by raw head disagreement, so the deployed agent discards the bootstrap heads and acts from a single forward pass.\n\nEmpirically, VerbalQ matches Bootstrapped DQN on the two hard-exploration games we evaluate (Montezuma's Revenge, Pitfall) while requiring substantially less inference compute. This single-network inference path is what underlies the deployment efficiency we report and what separates VerbalQ from ensemble-based uncertainty methods in deep RL.\n\n---\n\n**Substantive changes flagged (not pure polish)**\n\n1. Original framing said the method avoids ensembles/bootstrap heads \"which are expensive at training time,\" but the procedure itself uses K = 10 bootstrap heads during training. I rephrased to attribute the saving to inference/deployment only. If you do also claim a training-time saving (e.g., heads are cheaper than a full ensemble of value networks), please re-add that explicitly with the comparison you have in mind.\n\n2. \"Calibrated uncertainty signals\" softened to \"an uncertainty signal.\" Calibration is a strong word that typically requires a reliability-diagram or ECE result; nothing in the supplied text demonstrates calibration. Restore the original wording if you have those numbers in the paper body.\n\n3. \"Matches Bootstrapped DQN on hard-exploration games (Montezuma's Revenge, Pitfall)\" lightly hedged to \"the two hard-exploration games we evaluate.\" The original phrasing reads as a category-level claim while listing only two titles.\n\n4. \"Substantially less inference compute\" left intact for prose continuity, but consider replacing with a concrete ratio (e.g., \"~K\u00d7\" or measured wall-clock) if available \u2014 vague magnitude claims tend to draw reviewer pushback.\n\n**Prose-only changes**\n\n- \"These tags are decoded \u2026 and used to modulate the exploration policy\" \u2192 \"The tag is decoded \u2026 and used to modulate exploration\" (singular subject; drops the slightly redundant \"policy\").\n- \"without resorting to\" \u2192 \"avoiding\" (less editorial).\n- \"complicate deployment on resource-constrained agents\" \u2192 \"awkward to ship on resource-constrained agents\" (parallel register).\n- \"lets the deployed agent discard auxiliary structure at inference and act from a single forward pass\" \u2192 \"the deployed agent discards the bootstrap heads and acts from a single forward pass\" (\"auxiliary structure\" was vague \u2014 naming the bootstrap heads ties back to the previous paragraph).\n- \"The unified single-network design is what enables \u2026\" \u2192 \"This single-network inference path is what underlies \u2026\" (avoids the second \"VerbalQ from\" duplication and reduces grandiosity).\n- Spaced \"K=10\" \u2192 \"K = 10\" for typographic consistency.\n\n---\n\n**What I am not confident about**\n\n- Whether you intended to claim a training-time advantage over ensembles. If so, item (1) above changes the meaning and you should revisit.\n- Whether \"calibrated\" was a deliberate technical claim backed by results elsewhere in the paper. I softened it on the assumption it wasn't, but I can't see beyond the supplied snippet.\n- Whether you evaluated more than two hard-exploration games. The supplied text mentions only Montezuma's Revenge and Pitfall; if you also tested Private Eye, Venture, Gravitar, etc., the hedge in item (3) is unnecessary.\n- Inactive areas (novelty positioning, citations, larger structural reorganization) were not touched.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Clean this up' most directly requests sentence- and paragraph-level improvements in clarity, flow, grammar, register, and conciseness.",
+      "RX.1": "Any cleanup should preserve uncertainty where the artifact does not itself justify stronger wording.",
+      "RX.2": "The cleanup must avoid strengthening empirical or novelty claims beyond what the artifact states.",
+      "RX.3": "The agent should limit responsibility to projection of the cleanup request rather than performing edits or broader review.",
+      "RX.4": "The projection should account for avoiding misleading scientific claims that could affect downstream interpretation.",
+      "RX.5": "The projection should preserve traceability to the artifact's stated claims, experiments, and methods."
+    }
+  }
+}

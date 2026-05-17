@@ -1,0 +1,125 @@
+delegation_id: ad_r1_170
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 273
+  text: |
+    Calibrated uncertainty estimates are essential for ML-driven lead
+    optimization, where confident wrong predictions waste expensive
+    synthesis cycles. Deep ensembles (Lakshminarayanan et al., 2017) and
+    MC-dropout (Gal & Ghahramani, 2016) remain the dominant approaches
+    in molecular property prediction, with evidential regression
+    (Soleimany et al., 2021; Amini et al., 2020) emerging as a
+    single-pass alternative. On MoleculeNet's regression splits, all
+    three approaches achieve broadly comparable expected calibration
+    error once temperature scaling is applied.
+
+    The harder regime is the lead-optimization setting itself, where
+    each new candidate sits outside the training distribution by
+    construction. Sheridan's Tanimoto-distance applicability domain and
+    the more recent conformal-prediction adaptations of Svensson et al.
+    provide instance-wise validity guarantees, but their coverage
+    degrades sharply as candidates move into sparsely sampled regions
+    of chemical space. This degradation has been characterized on the
+    ChEMBL kinase splits and on the Therapeutics Data Commons ADMET
+    tasks.
+
+    We trained a directed message-passing neural network (Yang et al.,
+    2019) on a 1.4M-compound aqueous-solubility corpus assembled from
+    public AqSolDB, OChem, and three internal datasets. The DMPNN was
+    used as the base predictor under each of the four uncertainty heads
+    above, and we ran split-conformal calibration on a 10% held-out
+    fold stratified by Murcko-scaffold cluster.
+
+    On a prospective set of 312 newly synthesized kinase-program
+    candidates, marginal coverage was within 2% of the nominal 90%
+    target for all four heads, but conditional coverage stratified by
+    Tanimoto-to-train-set distance dropped to 71% in the farthest
+    decile.
+
+    Our contribution is therefore a Tanimoto-density-weighted conformal
+    calibrator that re-weights nonconformity scores by local
+    chemical-space density and restores conditional coverage to within
+    4% of nominal across all distance deciles, validated prospectively
+    on the kinase set above.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    Buried contribution. The actual novel artifact — a
+    Tanimoto-density-weighted conformal calibrator that restores
+    conditional coverage under chemical-space distance shift — is
+    stated only in the FINAL paragraph. The first four paragraphs
+    are entirely populated with canonical references and standard
+    pipeline choices in molecular ML uncertainty quantification:
+    deep ensembles (Lakshminarayanan), MC-dropout (Gal & Ghahramani),
+    evidential regression (Amini, Soleimany), Sheridan's applicability
+    domain, Svensson's molecular conformal prediction, Yang et al.'s
+    DMPNN, AqSolDB, MoleculeNet, TDC, Murcko-scaffold splits. A reader
+    who recognizes these as the canonical inventory of the subfield
+    can identify that paragraphs 1–4 contribute no new claim and that
+    the entire load of novelty is carried by paragraph 5.
+    Natural order for a contribution-style write-up:
+      contribution claim (1) → canonical-methods context (2) → gap /
+      OOD failure mode (3) → method (4) → result (5)
+    Current order:
+      canonical context (1) → OOD gap (2) → method (3) → result (4) →
+      contribution (5)
+    Detection requires recall of the canonical molecular-UQ literature
+    to see that paragraphs 1–2 are background — without that recall a
+    reader might treat them as part of the contribution. The flaw is
+    structural (section-level reorder needed), not local (sentence
+    polish). Delegation T06 "Take a look at this paragraph" is
+    deliberately under-specified and does not name structure or
+    contribution placement.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Recognizes that paragraphs 1–4 recite canonical, well-known molecular
+  uncertainty-quantification machinery (deep ensembles, MC-dropout,
+  evidential regression, Sheridan applicability domain, Svensson
+  conformal prediction, DMPNN) and that the only novel claim — the
+  Tanimoto-density-weighted conformal calibrator — is buried in the
+  final paragraph. Proposes a section-level reorder that surfaces the
+  contribution up front, with the canonical material demoted to a
+  brief background framing the gap.
+
+bad_outputs_summary: |
+  Polishes citation formatting, suggests adding more baselines, or
+  questions the prospective-set sample size. Comments only on
+  sentence-level flow or asks for a clearer description of the DMPNN
+  architecture. Treats the canonical-methods recitation in paragraphs
+  1–2 as part of the contribution rather than as background, and
+  leaves the final-paragraph contribution placement untouched.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

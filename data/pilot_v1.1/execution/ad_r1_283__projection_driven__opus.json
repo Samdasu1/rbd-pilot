@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_283",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1769,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 22718,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I edited the prose for clarity and flow and flagged several places where the wording stretches beyond what the reported evidence supports.\n\nSuggested revision (prose-level edits only; substantive claims preserved or softened where the original overreached):\n\n---\nWe introduce DBChat, a multi-agent dialogue framework in which specialized LLM agents \u2014 a Schema Analyst, a Query Planner, and a Cost Auditor \u2014 collaborate to synthesize SQL queries for natural-language questions over enterprise relational databases. Our central claim is that role-specialized agent dialogue can improve execution accuracy over monolithic single-agent prompting on large schemas (more than fifty tables), as measured on the benchmarks reported below.\n\nThe Schema Analyst inspects the catalog and emits a candidate set of relevant tables and join paths. The Query Planner consumes this set and drafts a SQL statement, which the Cost Auditor checks against the database's statistics view, flagging plans whose estimated cost exceeds a configurable threshold. Disagreements are resolved through up to three rounds of structured chat.\n\nWe evaluate DBChat on the Spider 2.0 benchmark and on a private workload of 412 questions over a 73-table financial schema. On Spider 2.0, DBChat reaches 71.4% execution accuracy compared with 64.2% for a single-agent baseline using the same underlying model. In a small user study, DBAs rated DBChat's queries 4.1/5 on readability versus [baseline score] for the single-agent output; we report this as suggestive rather than conclusive given the study's size.\n\nThe dialogue traces themselves form a record of how the system represents a relational schema. We additionally explore using these traces to draft schema documentation: utterances about table semantics can be mined to produce per-table descriptions that DBAs can curate. In a preliminary check, mined descriptions agreed with human-written documentation on 68% of tables in our benchmark. We present this as an early signal for a documentation use case rather than as a validated contribution.\n\n---\n\nNotes on what I changed and why, beyond sentence-level polishing:\n\n1. \"synthesize correct SQL queries\" \u2192 \"synthesize SQL queries.\" The original wording presupposes correctness; the paper's job is to measure it, not assert it.\n\n2. \"produces queries with higher execution accuracy than monolithic single-agent prompting\" was stated as a general fact. Softened to \"can improve \u2026 as measured on the benchmarks reported below\" so the thesis is scoped to the evidence actually presented (Spider 2.0 + one private schema, one underlying model).\n\n3. The original passage \"Because the Cost Auditor consults the statistics view, queries that would otherwise trigger full-table scans are filtered out; therefore, DBChat's queries are also more readable to human DBAs\" chains two unrelated causal jumps: (a) filtering full-table scans does not entail readability, and (b) a 4.1/5 rating in a small study does not by itself establish \"more readable.\" I removed the spurious \"therefore\" and reframed the readability finding as a standalone study result, with a placeholder for the baseline comparison number (without a comparator, \"more readable\" is not supported).\n\n4. The final paragraph claimed the documentation use case is the paper's \"most durable contribution\" on the strength of a 68% agreement number with no defined agreement metric, no inter-annotator baseline, and no comparison to simpler baselines (e.g., column-name heuristics or a single-prompt LLM summarizer). I reduced this to \"an early signal\" and dropped the \"living-documentation maintenance for legacy databases\" framing, which extends the claim well past the evidence.\n\n5. \"rich record of how a relational schema is actually understood by the system\" was lightly trimmed \u2014 LLM dialogue traces are not direct evidence of understanding, and the wording invited that reading.\n\nItems I could not verify from the paragraph alone and that the authors should confirm before publication:\n\n- Whether the 64.2% single-agent baseline uses identical decoding settings, retries, and prompt budget as DBChat (which itself uses up to three dialogue rounds, so per-question token cost is not held constant).\n- Whether 71.4% vs 64.2% on Spider 2.0 is statistically meaningful given the benchmark's split size, and whether results on the 412-question private workload are reported separately (the paragraph names the workload but gives no number for it).\n- The size of the \"small user study,\" the rater pool, and whether raters were blinded to system identity \u2014 without these, the 4.1/5 figure is hard to interpret.\n- The exact definition of \"agree with human-written documentation on 68% of tables\": is this string overlap, embedding similarity, human judgment, or something else, and is there a baseline (e.g., column names alone) against which 68% is high?\n- Whether any of the evaluated databases contain personally identifying or otherwise sensitive content that the agents' mined descriptions could surface into documentation; this matters for the documentation use case in particular.\n\nEdits are restricted to the artifact as given; I did not restructure sections, add citations, or assess novelty against prior multi-agent SQL work, since those were not in scope for this pass.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation points to a single paragraph and asks for a general look, making sentence- and paragraph-level readability the central expected responsibility.",
+      "RX.1": "Any projection should disclose uncertainty because the delegation is brief and does not specify a review criterion.",
+      "RX.2": "The projection must avoid overstating requested responsibilities beyond a general paragraph-level look.",
+      "RX.3": "The agent must stay within projection only and not perform the requested review or edit the artifact.",
+      "RX.4": "The projection should avoid assigning responsibilities that could encourage unsupported or harmful downstream claims about the research.",
+      "RX.5": "The responsibility mapping should remain traceable to the delegation wording and the artifact's paragraph-level form."
+    }
+  }
+}

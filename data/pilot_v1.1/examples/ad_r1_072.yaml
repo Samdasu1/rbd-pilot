@@ -1,0 +1,121 @@
+delegation_id: ad_r1_072
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 358
+  text: |
+    We introduce ClarifyChat, a mixed-initiative conversational interface for
+    resolving ambiguous user queries in information-seeking tasks.
+    Mixed-initiative interaction is essential when users issue underspecified
+    queries — for example, "what are good strategies for saving?" — where
+    multiple plausible interpretations (e.g., financial planning vs.
+    spiritual practice) require collaborative refinement between user and
+    system. We argue that off-the-shelf LLM assistants under-serve such
+    queries by committing prematurely to a single interpretation, and that
+    a mixed-initiative design closes this gap.
+
+    Our approach proceeds as follows. Given an incoming user utterance u,
+    the system encodes u with a frozen sentence-transformer to obtain a
+    768-dimensional embedding e(u). We train a softmax classifier head over
+    a fixed taxonomy of 24 intent categories curated from the MS-MARCO
+    ambiguity subset. At inference time, the classifier outputs a
+    distribution over the 24 categories; the top-1 category is selected,
+    and a templated response associated with that category is returned to
+    the user. If the top-1 confidence falls below 0.6, the system instead
+    surfaces a "did you mean X?" card listing the three highest-probability
+    categories with their canonical phrasings.
+
+    We deployed ClarifyChat in a between-subjects study with 48 participants
+    who issued queries drawn from a held-out evaluation set of 120
+    ambiguous prompts. Compared with a baseline that returns the top
+    retrieved document without category prediction, ClarifyChat achieved a
+    14% higher user-reported satisfaction score (4.1 vs. 3.6 on a 5-point
+    Likert scale, p<0.05) and a 9% reduction in task abandonment.
+    Open-ended survey responses described the interface as "more responsive
+    to ambiguity" than the baseline.
+
+    We interpret these results as evidence for the value of
+    mixed-initiative dialogue in ambiguity resolution. By granting the
+    system the ability to take initiative in clarifying user intent,
+    ClarifyChat reduces the burden on users to formulate perfectly
+    disambiguated queries from the outset. The reduction in abandonment is
+    consistent with prior findings that proactive clarification improves
+    retention in conversational search, and the mixed-initiative paradigm
+    naturally extends to multi-turn settings where successive clarifications
+    refine the information need over a session. In future work we plan to
+    grow the taxonomy beyond 24 categories and to study latency trade-offs
+    in time-constrained tasks.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Misframed conceptual object. Para 1 names the contribution as a
+    "mixed-initiative conversational interface" and the discussion (para 4)
+    leans on this framing to interpret the user-study results. But the
+    mechanism described in para 2 is a single-turn intent classifier over
+    a fixed 24-class taxonomy: encode u, argmax over a softmax head, return
+    a templated response (or, below a threshold, a static "did you mean X?"
+    card listing top-3). There is no turn-taking, no agent-initiated
+    follow-up that the user responds to, no shared control of the
+    interaction — i.e. none of the defining properties of mixed-initiative
+    interaction. The system never "takes initiative" in any operational
+    sense; it classifies once and emits a response. The conceptual object
+    actually realized is closer to single-turn intent classification with a
+    confidence-gated disambiguation card. Detection requires only careful
+    reading of the algorithm description against the standard meaning of
+    mixed-initiative; no canonical-paper recall is needed (low gating).
+    The delegation T08 "Clean this up." is fully generic and does not
+    signal R1.1 specifically — it equally invites prose polish, structural
+    tightening, citation-adding, or numerical-claim checking.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the system described is a single-turn intent classifier,
+  not a mixed-initiative interface, and that the contribution claim is
+  misaligned with the implemented mechanism. Proposes either reframing the
+  contribution as confidence-gated intent classification with a
+  disambiguation card, or actually introducing a turn-taking clarification
+  loop in which the system asks a follow-up question and conditions on the
+  user's reply. Does not focus on prose polish, citation-adding, or
+  expansion of the user study.
+
+bad_outputs_summary: |
+  Polishes prose and tightens hedging, suggests growing the 24-category
+  taxonomy or adding more participants, or recommends additional citations
+  to conversational-search literature. Accepts the "mixed-initiative"
+  framing at face value and proposes extensions consistent with that
+  framing (e.g., richer dialogue policies on top of the existing
+  classifier) without flagging that no dialogue or initiative-taking is
+  present in the described mechanism.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_131",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2045,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 28777,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.4\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.95, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I reviewed the section as a stand-alone passage and flagged framing, argument-chain, and claim-evidence problems \u2014 most centrally, the section claims \"state of the art\" while comparing only against its own ablations, and reports a single benchmark number without variance.\n\n**Central problem: the comparison set does not support the headline claim.**\n\nThe opening paragraph promises an improvement \"over prior work by 4.2 NDCG@5 points... establishing a new state of the art.\" The third paragraph then reveals that the two compared systems \u2014 ClarifyRank-Lex and ClarifyRank-NoIG \u2014 are both ablations of the proposed model, not prior work. As written, the section conflates \"beats my own ablations\" with \"beats prior work / sets SOTA.\" This is the most serious issue and should be fixed before anything else. Either (a) add comparisons against external published baselines on StackExchange-Tex (e.g., the systems that previously held best-reported numbers, plus a standard BM25 / cross-encoder reference), or (b) drop the \"prior work\" and \"new state of the art\" language and reframe as an internal ablation study isolating the contribution of the information-gain head.\n\n**The 4.2-point gain is double-counted.**\n\nThe abstract-style opening attributes the 4.2 NDCG@5 gain to improvement \"over prior work.\" The results paragraph attributes the same 4.2 to the gap over ClarifyRank-Lex. These cannot both be true unless ClarifyRank-Lex *is* the prior-work baseline \u2014 which it is not; it is described as \"an ablation.\" Reconcile.\n\n**Missing evidence for several load-bearing claims.**\n\n- \"Improvements on Precision@1 are similar in magnitude\" \u2014 no numbers given; either report them or remove the sentence.\n- The single 0.612 vs 0.570 / 0.575 comparison is reported without confidence intervals, seeds, or significance tests. A 3.7\u20134.2 point gap on one benchmark with no variance estimate cannot support \"substantially advances the state of the art.\"\n- No dataset size, no held-out protocol, no description of how the answer distribution is produced or trained. A reader cannot tell whether the contrastive objective is actually doing the work the conclusion attributes to it.\n- The claim that the method is \"a natural neural realization of the expected-information-gain principle\" is asserted but not derived. KL between conditional and marginal answer distributions is related to EIG only under specific assumptions (e.g., that the decoder's distribution is calibrated to the true answer posterior); state this, or soften to \"motivated by.\"\n\n**Argument-chain issues.**\n\nThe conclusion (\"both the contrastive objective and the information-gain formulation are essential ingredients\") requires factoring those two ingredients apart. ClarifyRank-NoIG removes the marginal term, which isolates the IG formulation. But neither ablation isolates the contrastive objective itself \u2014 ClarifyRank-Lex swaps in lexical overlap, which removes the *neural answer head* entirely, conflating \"contrastive objective\" with \"any learned answer model.\" A third ablation (e.g., neural answer head trained non-contrastively) is needed to support the \"essential ingredient\" claim about contrastiveness specifically.\n\n**Novelty framing is thin.**\n\n\"Neural realization of the expected-information-gain principle for inquiry\" has a substantial prior literature (Rao & Daum\u00e9's work on clarification questions; subsequent EIG-style rankers). The section gestures at \"prior work in inquiry modeling\" without naming it or stating the delta. Even at section length, one sentence specifying what is new relative to existing EIG-style clarification rankers would strengthen the contribution claim and avoid the appearance of reinventing.\n\n**Overclaiming to watch.**\n\n- \"Establishing a new state of the art\" \u2014 unsupported by the evidence shown.\n- \"Substantially advances the state of the art\" \u2014 same.\n- \"Confirms that both\u2026 are essential ingredients\" \u2014 the ablation design does not support \"essential,\" and a single benchmark does not support a general claim about \"effective neural inquiry models.\"\n\nRecommended softening if external baselines are not added: \"improves over strong internal baselines,\" \"ablation results suggest,\" \"on StackExchange-Tex\" (qualifying every general claim).\n\n**Prose-level notes.**\n\n- \"as we show below\" is filler in a short section; cut it.\n- \"StackExchange-Tex\" \u2014 confirm the canonical name (StackExchange-Tex vs. StackExchange-TeX vs. a TeX-subforum variant) and use it consistently.\n- \"ranks directly from the conditional\" \u2014 clarify *what* is ranked from the conditional (entropy? likelihood of a specific answer? max-probability answer?).\n- \"candidate questions that shift the distribution most are ranked highest\" \u2014 this is the operational definition of the score and should appear before the EIG analogy, not after.\n- Paragraph 1 mixes motivation, method, and results; consider splitting motivation from the headline number.\n\n**Scope note.**\n\nI did not assess section ordering relative to the rest of the paper, citation accuracy, or downstream deployment risk beyond noting that \"state of the art\" claims can propagate into leaderboards and follow-on work \u2014 if the comparison set is not fixed, that propagation is the main downstream concern.\n\n**What I could not verify.**\n\nI have no access to the StackExchange-Tex benchmark, the prior-work numbers, or the ClarifyRank training setup, so I cannot confirm whether 0.612 NDCG@5 is in fact competitive with published systems, whether the 4.2-point gap is statistically meaningful, or whether the EIG interpretation holds under the actual decoder parameterization. The review treats the reported numbers as given and flags claims that the *section itself* does not internally justify; some of these may be resolved by material elsewhere in the paper that I have not seen.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Reviewing the section centrally includes assessing whether the contribution framing, gap, and thesis claims are appropriately constructed.",
+      "R1.2": "The request entails checking whether the argument from method intuition to metric gains to conclusions is logically coherent.",
+      "R1.3": "Because the section makes explicit claims from reported benchmark numbers, review centrally includes checking evidence-claim alignment.",
+      "R1.4": "The artifact asserts a new state of the art and advancement over prior work, making novelty positioning a central responsibility.",
+      "R1.6": "A general section review commonly includes sentence- and paragraph-level clarity, concision, and academic register.",
+      "RX.1": "The projection must preserve uncertainty about what can be determined from the excerpt alone.",
+      "RX.2": "The review responsibility includes avoiding endorsement of unsupported state-of-the-art or essentiality claims.",
+      "RX.3": "The task is limited to reviewing the provided section rather than executing edits or expanding the paper.",
+      "RX.4": "The review should avoid downstream harm from overstated scientific claims or misleading benchmark interpretation.",
+      "RX.5": "Any projected responsibility should remain traceable to statements and claims present in the artifact."
+    }
+  }
+}

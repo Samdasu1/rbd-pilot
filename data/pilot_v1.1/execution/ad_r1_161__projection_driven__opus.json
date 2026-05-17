@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_161",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2310,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31902,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.4\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 1.0}}\n\nSummary: Reviewed the passage for argument coherence, claim-evidence fit, contribution framing, and potential overreach; flagged several issues and proposed targeted rewrites.\n\nMain issues\n\n1. The framing claim \u2014 \"lifts expert ability to detect LLM-generated SQL from chance to 71% on production schemas\" \u2014 overgeneralizes from the reported study. The evidence supports a narrower claim: on one held-out subset of one production OLTP schema, with one generator (GPT-4) and one set of pairs, a specific 20-minute training raised mean accuracy from 52.8% to 71.4%. Plural \"production schemas\" is not supported. Recommend singular phrasing and naming the generator.\n\n2. \"The first calibration of expert detection accuracy on a real-world OLTP workload\" is a strong priority claim and is not substantiated by the cited prior work. Patel et al. and Ramirez & Choi are described as doing naturalness/maintainability ratings, not detection. That gap does not by itself establish a \"first\" \u2014 there may be other detection studies the passage does not survey. Soften to \"to our knowledge, the first\" and, ideally, add a sentence specifying what prior detection work (if any) was reviewed and ruled out as comparable.\n\n3. The design is described as \"mixed-design\" but the analysis section only reports a single logistic regression on the pooled outcome. A mixed design typically implies a within-subject factor (e.g., pre/post training on the same DBAs) crossed with a between-subject factor. The text does not state whether the 52.8% and 71.4% figures come from the same raters before and after training, from independent groups, or from a counterbalanced sequence. This ambiguity directly affects whether the p < 0.001 contrast is a within-rater or between-group test, and whether the random intercepts absorb the relevant variance. Clarify the design explicitly.\n\n4. The reported model \u2014 \"rater-level random intercepts and query-complexity fixed effects\" \u2014 does not appear to include a fixed effect for the training condition itself, which is the contrast the conclusion rests on. Presumably training is in the model; state it. Also note whether query was modeled as a second random effect (crossed random effects for rater and item are standard for this kind of pair-judgment data); omitting item-level random effects can inflate Type I error.\n\n5. The \"95% CI: 49.1\u201356.5\" for the pre-training accuracy includes 50%, which is consistent with \"statistically indistinguishable from chance\" \u2014 good. But the inference \"p < 0.001 improvement\" should specify what is being tested: the training main effect in the logistic model, a likelihood-ratio test, or a contrast on predicted probabilities. As written, a reader cannot reconstruct the test.\n\n6. Pair construction may bias detection upward or downward in ways not disclosed. Each pair has one human and one GPT-4 query for the same prompt; if the human DBA wrote their query knowing it would be compared, or if prompts were curated for difficulty, accuracy estimates do not generalize to \"in the wild\" detection. Disclose how prompts were sampled and whether human authors were blind to the comparison.\n\n7. \"Conditioned on the same natural-language prompt\" leaves out decoding settings (temperature, top-p), system prompt, schema-conditioning method, and whether outputs were filtered for executability. These are first-order determinants of detection difficulty. Add at least temperature, whether outputs were required to execute, and whether any post-processing was applied.\n\n8. The Patel et al. and Ramirez & Choi citations are presented as background but the connection to the present contribution is loose \u2014 they measure naturalness, the present study measures detection. Either tighten the link (e.g., motivate that naturalness ratings were the closest prior signal because no detection benchmark existed) or move them to a related-work paragraph rather than the lede.\n\n9. The \u03ba \u2248 0.41 figure is cited as evidence that untrained raters disagree on naturalness, then leveraged implicitly to motivate training. The logical bridge \u2014 \"agreement is low without training, therefore training helps\" \u2014 is plausible for naturalness but does not transfer mechanically to detection. State the motivation more directly.\n\n10. Sentence-level polish: \"treating correctly-identified-machine as the binary outcome\" is awkward; \"with correct identification of the machine-generated query as the binary outcome\" reads better. \"Brief DBA-targeted training protocol that lifts expert ability\u2026 from chance to 71%\" is punchy but technically wrong \u2014 chance is 50%, the pre-training mean is 52.8%, and \"from chance to 71%\" elides the pre-training measurement. Recommend \"from 52.8% (at chance) to 71.4%.\"\n\n11. Potential downstream framing concern: a detection-training protocol that works on one model, one schema, and one prompt distribution risks being read as a general \"tell\" for LLM SQL. Worth one sentence noting that the cues taught (JOIN-ordering idioms, predicate-pushdown patterns) are GPT-4-specific and likely to shift across model versions and prompting strategies.\n\n12. Recruiting \"48 professional DBAs from three enterprise organizations\" is a reasonable sample, but the held-out subset is from \"a production OLTP schema\" (singular). The conclusion's plural \"production schemas\" appears to be a slip; correct it, or report results across multiple schemas if the data supports it.\n\nProposed revision of the final paragraph\n\n\"The contribution of this section is a 20-minute, DBA-targeted training protocol that, on a held-out subset of one production OLTP schema and against GPT-4 outputs, raised expert detection accuracy from 52.8% (at chance) to 71.4%. To our knowledge, this is the first reported calibration of expert detection accuracy on a real-world OLTP workload; we discuss limits to generalization across schemas, generators, and prompting strategies in Section [X].\"\n\nItems I could not verify from the artifact alone\n- Whether the 52.8%/71.4% comparison is within-rater (pre/post on the same 48 DBAs) or between-rater, and therefore which contrast yields p < 0.001.\n- Whether \"training\" is included as a fixed effect in the logistic model, and whether item-level random effects were used.\n- The actual existence and content of Patel et al. and Ramirez & Choi \u2014 these citations are taken at face value; if they are placeholders or paraphrases, the framing of the \"first detection calibration\" claim needs to be rechecked against the real prior literature.\n- Whether prompts and human-authored queries were collected blind to the comparison.\n- Whether GPT-4 decoding settings and any output filtering are reported elsewhere in the paper.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'Check this' mean argument/evidence validity, writing polish, or novelty/citation fact-checking?",
+    "rationale": {
+      "R1.1": "The artifact states a contribution and gap-like positioning that a general check would be expected to assess above the sentence level.",
+      "R1.2": "A general check centrally includes whether the methodological setup, results, and conclusions follow coherently.",
+      "R1.3": "The delegation plausibly asks whether the reported percentages, confidence intervals, and training result support the claims made.",
+      "R1.4": "The text makes a 'first calibration' contribution claim, so checking may centrally involve novelty relative to prior work.",
+      "R1.6": "A broad 'Check this' request commonly includes sentence- and paragraph-level clarity, register, and concision.",
+      "RX.1": "Any projection must preserve uncertainty because the delegation is underspecified.",
+      "RX.2": "The artifact contains potentially strong claims, so avoiding overclaiming is always active.",
+      "RX.3": "The agent must not execute edits or perform tasks beyond projecting the delegation.",
+      "RX.4": "The projection should avoid enabling misleading research claims or unsupported downstream use.",
+      "RX.5": "The projection must remain traceable to the given delegation and artifact only."
+    }
+  }
+}

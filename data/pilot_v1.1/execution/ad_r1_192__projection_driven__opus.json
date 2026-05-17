@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_192",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1705,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 23417,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nBelow is a revision of the passage followed by targeted comments. I tightened the prose into shorter declarative sentences, fixed the run-on conjunction chains, and flagged places where the original wording overstates what the reported evidence actually shows.\n\n---\n\n**Revised passage (prose-level pass; substantive claims left intact):**\n\nWe describe a multi-agent retrieval system for ligand prioritization in early-stage hit identification. The system takes as input a target protein sequence and a candidate library of small molecules, and routes each candidate through a panel of specialized scoring agents developed during preliminary work. Their outputs are collected into a unified ranking that downstream chemists then inspect.\n\nThe agent panel has three components: a docking-score agent, a ligand-similarity agent, and a pharmacophore-matching agent. Each agent produces a scalar score together with a short natural-language rationale, which we found useful during debugging. Both the scores and the rationales are passed to the aggregator, so that it can weigh agreement and disagreement before emitting a final ordering over the candidate set.\n\nFor aggregation, we use a learned selection head. It takes the per-agent scores and the per-agent rationale embeddings as input and predicts which single agent's ranking should be trusted for a given target. We adopted this design after observing that blended aggregation tended to dilute strong signals from individual agents in cases where one agent is correct and the others are confidently wrong.\n\nWe evaluate the system on a panel of 12 kinase targets drawn from a publicly released benchmark. The selection-based aggregator recovers more known actives in the top-50 cut than the synthesis-based baseline we implemented for comparison, and we observe this pattern on most targets in the panel.\n\n---\n\n**Issues worth the authors' attention:**\n\n1. **\"Synthesis-based baseline\" is undefined.** The final paragraph compares against a baseline that has not been introduced anywhere in the section. Either define it on first mention or move the comparison into a clearly demarcated results subsection where the baseline can be specified.\n\n2. **The motivating observation for the selection head is asserted, not evidenced.** The claim that \"blended aggregation tends to dilute strong signals \u2026 where one agent is correct and the others are confidently wrong\" is presented as a finding but no measurement is reported. Consider softening to \"we hypothesized\" / \"in informal preliminary runs we observed,\" or cite the ablation that demonstrates it.\n\n3. **\"Recovers more \u2026 on most targets\" needs a number.** \"More\" and \"most\" do quantitative work without numeric support. Recommend stating the aggregate metric (e.g., mean top-50 recall), the per-target win count (e.g., \"on 9 of 12 targets\"), and whether the gap is within the noise of repeated runs.\n\n4. **Generalization scope is wider than the evidence.** 12 kinase targets from a single public benchmark is a narrow slice. The current wording invites the reader to generalize to \"ligand prioritization\" broadly. Recommend an explicit scope sentence, e.g., \"Results are limited to kinase targets from [benchmark name]; transfer to other target classes is not evaluated.\"\n\n5. **Rationale-driven aggregation may be doing less work than implied.** The aggregator is said to take rationale embeddings as input, but there is no evidence reported that the rationales (vs. the scores alone) contribute to the selection decision. If an ablation exists, cite it; if not, either soften the framing or flag it as future work.\n\n6. **Benchmark identity and license are missing.** \"A publicly released benchmark\" is not traceable. Name the benchmark, give a version or release date, and cite it so a reader can reproduce the split.\n\n7. **Argument-chain gap between paragraphs 3 and 4.** Paragraph 3 motivates selection over blending, but paragraph 4 only compares the selection aggregator to an external baseline \u2014 not to a blending aggregator on the same data. The natural ablation (selection vs. blended, same agents, same targets) is the one that would actually support the design choice. Recommend adding it, or, if it exists elsewhere, signposting it here.\n\n8. **Minor wording.** \"Panel\" is used for both the agents and the targets in adjacent paragraphs; consider \"agent ensemble\" / \"target set\" to avoid collision. \"Emitting a final ordering\" reads stiffly; \"producing\" is fine.\n\n---\n\n**Caveats on the above:**\n\n- I have not seen the surrounding manuscript, so some of the items above (baseline definition, ablations, benchmark citation) may be addressed in sections not shown. Treat them as flags to verify rather than confirmed omissions.\n- I have not attempted to assess whether the technical design is appropriate or whether the empirical claim is plausible given the field \u2014 only whether the passage's internal argument and language support the claims it makes.\n- I have not checked the literature for prior work on rationale-conditioned selection aggregators; the projection marked that out of scope.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check a research draft centrally includes identifying whether the described system design, aggregation logic, and evaluation claims cohere internally.",
+      "R1.6": "The artifact is draft prose with conspicuous sentence-level and paragraph-level issues, making writing polish a central expected responsibility.",
+      "RX.1": "Any check should disclose uncertainty where the artifact lacks details needed to verify claims fully.",
+      "RX.2": "The projection should preserve responsibility for avoiding inflated claims about performance, generality, or validity.",
+      "RX.3": "The agent must stay within checking the provided draft rather than executing edits or performing external validation.",
+      "RX.4": "The check should avoid recommendations or judgments that could mislead downstream scientific or chemoinformatics decisions.",
+      "RX.5": "Any projected checking responsibility should remain traceable to the provided artifact text and its stated claims."
+    }
+  }
+}

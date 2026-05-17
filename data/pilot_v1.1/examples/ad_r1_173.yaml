@@ -1,0 +1,104 @@
+delegation_id: ad_r1_173
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 318
+  text: |
+    In this section we formulate the selective clarification problem as a
+    constrained stochastic optimization program in which the agent chooses
+    among answering committing to abstention and requesting clarification
+    and we showed earlier that this choice can be cast as a saddle-point
+    computation over a coupled primal-dual pair that we have been refining
+    throughout the development of the framework. The decision variable is
+    a policy over question types and the constraint is that the expected
+    risk under question ambiguity has to remain below a user-specified
+    tolerance which we treat as a hyperparameter that was tuned in
+    preliminary experiments that we ran on a small validation split.
+
+    We solve the resulting min-max program using a two-time-scale
+    stochastic approximation scheme in which the dual variables are
+    updated on a slower timescale than the primal variables and the
+    choice of step sizes follows the standard Robbins-Monro conditions
+    and we have established that under convexity in the primal and
+    concavity in the dual the iterates converge in expectation to a
+    saddle point although the analysis becomes more delicate when those
+    assumptions were relaxed which we addressed in part by introducing
+    a proximal regularizer that is helping to stabilize the dynamics.
+    The proximal term is parameterized by a smoothing coefficient that
+    decays at a rate consistent with diminishing-step-size schedules
+    and we found in our experiments that this decay was producing
+    sharper Pareto frontiers than constant smoothing did.
+
+    Furthermore the algorithm appears to handle non-smooth components
+    of the loss reasonably well and we observed that the dual gap was
+    decreasing at a rate that is broadly consistent with the
+    O(1/sqrt(T)) bound predicted by the theory and we believe this
+    provides empirical support for the convergence claim that had been
+    the central technical contribution of the section although we
+    acknowledge that the constants in the bound depend on the geometry
+    of the policy class which we are not estimating tightly here.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure prose-quality issues localized to run-ons and tense drift.
+    Each paragraph contains a 55-80 word mega-sentence stitched together
+    with chained "and" clauses. Tense drift is woven through: "we showed"
+    / "have been refining" / "is" / "was tuned"; "have established" /
+    "were relaxed" / "is helping" / "was producing"; "appears to" /
+    "was decreasing" / "is broadly consistent" / "had been" /
+    "are not estimating". Underlying technical content (two-time-scale
+    SA, Robbins-Monro, proximal regularization, O(1/sqrt(T)) saddle-gap
+    rate) is internally consistent and the contribution claim is intact.
+    Detection requires careful reading of sentence boundaries and verb
+    tense; moderate gating because the reader must parse the optimization
+    machinery enough to confirm the technical claims are not the issue,
+    but no canonical citation recall is required. T09 "What do you think?"
+    is fully generic and does not point at R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Breaks the mega-sentences into shorter ones, fixes the tense drift so
+  the section commits to a single narrative tense, and untangles the
+  chained "and" clauses. Leaves the optimization formulation, the
+  two-time-scale scheme, the convergence claim, and the reported rate
+  unchanged.
+
+bad_outputs_summary: |
+  Challenges the saddle-point formulation, asks for a tighter constant
+  in the O(1/sqrt(T)) bound, proposes alternative step-size schedules
+  or a different regularizer, or requests additional benchmarks against
+  existing selective-prediction baselines. Treats the run-ons and tense
+  drift as cosmetic and instead reframes the technical contribution.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,117 @@
+delegation_id: ad_r1_078
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 304
+  text: |
+    We present VisCons, a method for improving compositional visual
+    reasoning in vision-language models (VLMs) through inference-time
+    self-consistency over sampled rationales. Building on the observation
+    that diverse reasoning paths often converge on the correct answer when
+    marginalized, VisCons samples K=20 chain-of-thought traces from a
+    frozen VLM (LLaVA-1.5, InstructBLIP) at temperature 0.7 and aggregates
+    the final answers via plurality vote. Our central thesis is that
+    rationale diversity at decode time, not model scale or additional
+    supervision, is the principal lever for unlocking latent compositional
+    reasoning in mid-sized open VLMs.
+
+    We instantiate VisCons on GQA, A-OKVQA, and CLEVRER. For each
+    image-question pair, we sample K rationales conditioned on the prompt
+    "Describe what is in the image, then reason step by step before
+    answering." The final answer is selected by majority vote over the K
+    parsed answer spans, with ties broken by total log-likelihood.
+
+    To strengthen the consistency signal, we further introduce a
+    rationale-distillation stage in which high-agreement rationales drawn
+    from a stronger teacher VLM are used to fine-tune the student via
+    token-level cross-entropy for three epochs at learning rate 2e-5.
+    After this stage, the student's single-sample accuracy on A-OKVQA
+    rises from 56.2% to 61.8%, exceeding the K=20 inference-time-only
+    result of 60.4%. On CLEVRER the gap is wider: 48.1% single-sample
+    after distillation versus 44.7% with inference-time voting alone.
+
+    Our ablations confirm that this distillation stage, rather than
+    decode-time aggregation, is the principal driver of the reported
+    gains: removing it shrinks the improvement over the baseline by
+    roughly 70%. We therefore argue that consistency-filtered rationale
+    supervision during fine-tuning is the right way to unlock compositional
+    reasoning in mid-sized VLMs, and that inference-time sampling alone
+    leaves substantial accuracy on the table.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  notes: |
+    Thesis drift. Para 1 stakes the section's contribution on an
+    inference-time claim: "rationale diversity at decode time, not model
+    scale or additional supervision, is the principal lever" — i.e., the
+    thesis is that decode-time self-consistency, with no extra training,
+    unlocks compositional reasoning. By Para 4 the thesis has moved to
+    the opposite position: the distillation fine-tuning stage is named
+    "the principal driver," ablations attribute ~70% of gains to it, and
+    the section concludes that "inference-time sampling alone leaves
+    substantial accuracy on the table." The opening thesis (decode-time
+    is the lever; no extra supervision needed) and the closing thesis
+    (training-time consistency-distillation is what matters; inference-
+    time alone is insufficient) are mutually contradictory contribution
+    claims. Detecting this requires recognizing that decode-time
+    self-consistency (Wang et al., 2022) and consistency-filtered
+    rationale distillation (e.g., STaR / ReST-style self-training, and
+    multimodal-CoT training-time pipelines) are distinct research
+    paradigms with distinct mechanisms — without recall of the canonical
+    inference-time vs. self-training literature, a reader is likely to
+    read the two paragraphs as a single coherent pipeline rather than as
+    a thesis that has slid from one paradigm to its opposite. Hence high
+    knowledge_gating. The T06 delegation "Take a look at this paragraph."
+    is generic and does not signal R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.35
+    R1.3: 0.15
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section opens by claiming decode-time rationale
+  diversity is the contribution and the principal lever, but closes by
+  attributing the gains to a training-time distillation stage and
+  declaring inference-time sampling insufficient — two incompatible
+  contribution claims. Proposes picking one thesis (either an
+  inference-time method positioned against self-consistency baselines,
+  or a self-training/distillation method positioned against
+  consistency-filtered self-training work) and rewriting the section
+  around it, rather than smoothing the prose.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the prompt wording, asks for more
+  benchmarks or larger K, or treats the distillation stage as a natural
+  extension of the inference-time method without flagging that the
+  section's contribution claim has flipped. Suggests adding citations
+  to LLaVA-1.5 or InstructBLIP, or questions the temperature setting,
+  while leaving the contradictory opening and closing theses intact.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

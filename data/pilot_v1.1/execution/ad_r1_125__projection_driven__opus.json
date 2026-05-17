@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_125",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2351,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31868,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 1.0}}\n\nSummary: The section's narrative contradicts its own reported numbers \u2014 the prose claims the full critique loop is best and that removing the reviewer hurts, but the table values show the opposite ordering. This is the dominant problem; secondary issues involve unsupported causal attributions and missing experimental detail.\n\n## Critical issue: the conclusion inverts the data\n\nThe reported pass@1 numbers are:\n\n| Variant | HumanEval+ | MBPP-Plus |\n|---|---|---|\n| DevSwarm-Full (3-round) | 71.4 | 64.8 |\n| DevSwarm-Single | 74.2 | 67.1 |\n| DevSwarm-NoCritique | 76.8 | 69.5 |\n\nOn both benchmarks, performance is *monotonically decreasing* in the amount of critique: NoCritique > Single > Full. Yet the text states:\n\n- \"removing the reviewer agent lowers pass@1 substantially\" \u2014 the numbers show the opposite: removing the reviewer *raises* pass@1 by 5.4 points on HumanEval+ and 4.7 points on MBPP-Plus.\n- \"the full 3-round loop delivers the strongest results on both benchmarks\" \u2014 Full is in fact the *weakest* configuration on both.\n- \"These findings support the central claim that disciplined multi-agent communication ... drives gains\" \u2014 the data, as reported, actively undermine that claim with respect to the critique loop.\n\nThis is not a minor wording slip; the section's headline conclusion is unsupported (and arguably refuted) by the table it cites. One of the following must be wrong, and it needs to be resolved before the section can stand:\n\n1. The table values are mislabeled (rows or column headers swapped).\n2. The variant names are mislabeled (e.g., \"NoCritique\" actually denotes the full loop).\n3. The numbers are correct and the prose interpretation needs to be rewritten \u2014 in which case the contribution story for the critique loop has to be reframed (the loop *hurts* performance here).\n\nUntil the authors confirm which, the rest of the discussion is not load-bearing.\n\n## Unsupported causal attribution\n\nThe sentence \"We attribute the gain to the reviewer's ability to catch off-by-one errors and edge-case bugs that the coder consistently misses on a first pass\" is offered without any supporting evidence \u2014 no error-category breakdown, no qualitative trace analysis, no count of bugs caught per round. Even if the directionality issue above is resolved, this mechanism claim needs either a small error-typology study or softer language (\"we hypothesize,\" with the caveat that it is not directly measured here).\n\n## Second ablation is under-specified\n\n\"Adding the tester role on top of architect+coder+reviewer yields a 2.1-point improvement on HumanEval+\":\n\n- MBPP-Plus is silent here, even though both benchmarks were used for the first ablation. If MBPP-Plus was run, report it; if it was not, say so and justify.\n- No absolute numbers are given for either the three-role or four-role variants, only a delta. A reader cannot tell whether 2.1 points is large relative to noise.\n- No information on variance, seeds, or significance. With greedy decoding on a single model, there is no obvious source of run-to-run noise, but the magnitude of a 2.1-point gap on HumanEval+ (164 problems) is roughly 3\u20134 problems \u2014 a confidence interval or at least a problem-count framing would help.\n- \"Broader role coverage catches failure modes that any single role would miss\" is again a mechanism claim with no supporting analysis.\n\n## Overreach in the closing claim\n\n\"Disciplined multi-agent communication, rather than additional inference compute alone, drives gains\" is a strong claim that this ablation cannot adjudicate, because there is no inference-compute-matched baseline. A single-agent baseline given the same total token budget (or the same number of self-revision rounds) is the natural control and is not reported. As written, the section conflates \"more agents\" with \"more disciplined communication\" \u2014 these are not the same thing, and the experiment does not separate them.\n\n## Missing methodological detail\n\nFor the section to be self-contained, please specify:\n\n- Temperature/sampling settings beyond \"greedy\" (e.g., top-p, max tokens, stop conditions).\n- Prompt templates or at least their length/structure for each role.\n- How \"3-round\" critique terminates \u2014 fixed three rounds regardless of reviewer state, or up to three rounds with early exit?\n- Whether the tester executes hidden tests or model-generated tests, and whether failures feed back into the coder.\n- HumanEval+ / MBPP-Plus versions (the \"+\" suites have had revisions).\n- Number of runs and aggregation (single greedy run, or averaged).\n\n## Prose-level suggestions\n\n- \"cooperate over a shared chat log\" is informal; \"communicate via a shared message history\" is more precise.\n- \"the strongest results on both benchmarks\" \u2014 once the data issue is resolved, prefer concrete deltas (\"X.X points higher than the next-best variant\") over qualitative superlatives.\n- \"meaningfully degrades\" is vague; quote the deltas.\n- \"essential\" is too strong for an ablation showing a few-point gap; \"contributes\" or \"is responsible for an X-point gain\" is more defensible.\n- Consider naming the table consistently (the text says \"Table 2\"; verify this matches surrounding sections).\n\n## Recommended path forward\n\n1. Resolve which of the three possibilities above (mislabeled rows, mislabeled variants, or wrong prose) is the actual state of affairs. This is blocking.\n2. If the prose was wrong, rewrite the critique-loop discussion honestly: the loop, as currently designed, hurts pass@1, and the paper should explain why (e.g., reviewer over-correction, regressions introduced during revision) rather than claim a benefit that isn't there.\n3. Add the MBPP-Plus number and absolute scores for the role-count ablation.\n4. Either provide evidence for the bug-category attribution or soften it to a hypothesis.\n5. Either add a compute-matched single-agent baseline or remove the \"rather than additional inference compute\" framing.\n\n## Caveats on this review\n\nI have not seen Table 2 itself, the surrounding sections, or the DevSwarm system description, so I cannot rule out that \"DevSwarm-Full,\" \"Single,\" and \"NoCritique\" are defined inversely to what their names suggest \u2014 but if so, the naming is itself a serious clarity problem. I also have not verified the HumanEval+ / MBPP-Plus problem counts against the cited benchmark releases, so the \"3\u20134 problems\" estimate for the 2.1-point delta should be checked against whichever release the authors used. The methodological-detail list is based on what is conventional to report for this class of experiment; some items may already be specified elsewhere in the paper.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A review of this section centrally requires checking whether the stated conclusions follow coherently from the ablation descriptions and reported results.",
+      "R1.3": "The section makes explicit claims about benchmark outcomes, so assessing whether those claims align with the reported table values is load-bearing.",
+      "R1.6": "A generic section review reasonably includes sentence- and paragraph-level clarity, wording, and concision as a central expected responsibility.",
+      "RX.1": "The reviewer should disclose uncertainty where the artifact lacks missing table details, experimental context, or methodological specifics.",
+      "RX.2": "The section contains causal and necessity claims, so avoiding overclaiming is a required cross-cutting responsibility.",
+      "RX.3": "The delegation is only to review the section, so the response must stay within the artifact and not perform unrelated rewriting or external evaluation.",
+      "RX.4": "Because the artifact discusses empirical performance claims, the review should avoid endorsing misleading conclusions that could distort downstream research decisions.",
+      "RX.5": "Any projected responsibility should remain traceable to specific statements and numbers in the provided section."
+    }
+  }
+}

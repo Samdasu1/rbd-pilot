@@ -1,0 +1,168 @@
+delegation_id: ad_r1_264
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 384
+  text: |
+    Molecular property prediction over multi-source bioactivity data
+    suffers from a subtle form of label ambiguity: a single "IC50"
+    entry may correspond to enzymatic inhibition, cell-based potency,
+    or a biophysical binding readout, each with distinct underlying
+    physics and substantially different dynamic ranges. Aggregating
+    naively across these sources — as is common practice with public
+    bioactivity warehouses — collapses physically distinct quantities
+    into a single regression target, with predictable degradation in
+    downstream model fidelity. We introduce AssayAware, a transformer
+    encoder over SMILES that augments standard tokenization with a
+    learned assay-context vector, enabling the model to disambiguate
+    label semantics during multi-task fine-tuning across heterogeneous
+    bioactivity records.
+
+    The principal technical contribution is the assay-conditioning
+    mechanism. We show that, under a mild observability condition on
+    the assay-context distribution (each assay class is paired with
+    at least three pharmacophorically distinct ligand families), the
+    model recovers per-assay calibration shifts as a byproduct of
+    multi-task training. This provides a principled basis for
+    transferring across assay families that earlier multi-task
+    chemical models addressed only through hand-curated unit
+    conversions or by silently discarding inconsistent records.
+
+    The AssayAware encoder is a 12-layer transformer with 768-dimensional
+    hidden states and 12 attention heads, and tokenizes SMILES with a
+    BPE vocabulary of 8,192 merges. We pretrain on 5M canonicalized
+    SMILES drawn from ChEMBL release 33 using a masked-token objective
+    at a 15% mask rate, optimized with AdamW (peak learning rate 2e-4,
+    linear warmup over 6,000 steps, batch size 256). Fine-tuning runs
+    on a 12-task subset spanning kinase, GPCR, and ion-channel targets,
+    using a held-out scaffold split with Bemis–Murcko grouping at
+    80/10/10.
+
+    Empirically, the assay-conditioning head reduces per-task RMSE by
+    0.18–0.31 log-units relative to an identical encoder trained without
+    conditioning, and — more strikingly — recovers a meaningful
+    calibration manifold in the learned assay-embedding space, with
+    cell-based and biochemical assays separating along a single dominant
+    axis. This separation supports the theoretical prediction that
+    conditioning is performing identifiable disambiguation rather than
+    merely adding a per-task bias, and suggests the assay embeddings
+    themselves may serve as a diagnostic tool for auditing the
+    aggregation pipelines used to build public bioactivity benchmarks.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]    # misplaced section: architecture / hyperparameter paragraph wedged between the contribution and its empirical demonstration
+  R1.7: [F1.7.b]    # missing canonical chemical-transformer and multi-task-molecular prior work
+  notes: |
+    Two interacting flaws:
+
+    R1.5 — structural ordering. The third paragraph ("The AssayAware
+    encoder is a 12-layer transformer ... Bemis–Murcko grouping at
+    80/10/10") is experimental-setup material — layer count, hidden
+    width, BPE vocabulary size, optimizer schedule, dataset version,
+    split protocol. It sits between the contribution paragraph
+    (paragraph 2, which states the assay-conditioning mechanism and the
+    identifiability argument) and the empirical paragraph (paragraph 4,
+    which is supposed to convert the conditioning insight into evidence
+    that the recovered assay manifold is meaningful). The empirical
+    payoff therefore lands cold, with the reader having just been pulled
+    out of the conceptual argument to absorb hyperparameter choices.
+    The natural placement is a dedicated experimental-setup subsection
+    or a brief earlier mention alongside the model definition, with
+    paragraph 2 flowing directly into the empirical demonstration so
+    the section closes on the calibration-manifold result and its
+    benchmark-auditing implication. Subtlety: paragraph 3 is well-formed
+    on its own; the defect is only visible at the section level.
+
+    R1.7 — missing canonical prior work. The section proposes a SMILES
+    transformer pretrained with masked-token objectives and fine-tuned
+    on multi-task bioactivity prediction, which is squarely the lineage
+    of Schwaller et al. (2019, "Molecular Transformer") and Chithrananda
+    et al. (2020, "ChemBERTa: Large-Scale Self-Supervised Pretraining
+    for Molecular Property Prediction"); neither is cited. The
+    multi-task framing across kinase, GPCR, and ion-channel targets is
+    the direct intellectual descendant of Ramsundar et al. (2015,
+    "Massively Multitask Networks for Drug Discovery") and the
+    benchmark protocol implicitly invokes Wu et al. (2018, "MoleculeNet")
+    for scaffold splits — both absent. The motivating phenomenon —
+    incommensurable IC50 readouts across assay sources — was formalized
+    in Mervin et al. (2018) and Bosc et al. (2019); these direct
+    antecedents to the "assay disambiguation" framing are uncited.
+    Moderate gating: a reader literate in chemical language models or
+    in ChEMBL-derived multi-task benchmarks will recognize the absent
+    anchors immediately, since the entire architectural template and
+    benchmark protocol were established by those works.
+
+    Combined: fixing R1.5 alone (relocating the architecture/training
+    paragraph) yields a clean conceptual-to-empirical arc that still
+    claims novelty for a SMILES-transformer multi-task pretraining
+    recipe whose nearest ancestors go uncited. Fixing R1.7 alone
+    (adding Schwaller, Chithrananda, Ramsundar, Wu, and Mervin/Bosc)
+    leaves the structural deflation in place — and the added prior-work
+    discussion may even worsen it by lengthening paragraph 3 further
+    between the contribution and its evidence. Both must be addressed
+    for the section's contribution claim to hold.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.85    # load-bearing
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural problem, identifies
+  that the encoder-architecture / hyperparameter / dataset-split paragraph
+  is experimental setup that interrupts the arc from the assay-conditioning
+  contribution to the empirical demonstration that the learned assay
+  manifold is meaningful, and proposes moving it to a dedicated
+  experimental-setup subsection (or consolidating it earlier with the
+  model definition) so the section pivots cleanly from the contribution
+  into the calibration-manifold result and its benchmark-auditing
+  implication. For the citation gap, names the missing canonical anchors —
+  Schwaller et al. (2019) and Chithrananda et al. (2020) for the
+  SMILES-transformer pretraining lineage, Ramsundar et al. (2015) for
+  multi-task molecular prediction, Wu et al. (2018) MoleculeNet for the
+  scaffold-split protocol, and Mervin et al. (2018) and/or Bosc et al.
+  (2019) for the IC50-incommensurability framing the section explicitly
+  invokes — and indicates where each should be inserted. Recognizes that
+  the architectural-novelty and the assay-ambiguity-novelty claims both
+  fail until those anchors are acknowledged.
+
+bad_outputs_summary: |
+  Polishes prose, tightens transitions, suggests defining "observability
+  condition" more carefully, or proposes additional ablations on the
+  assay-embedding dimensionality. Accepts the implicit framing that the
+  SMILES-transformer multi-task pretraining recipe and the assay-ambiguity
+  motivation are novel without checking whether canonical chemical
+  language modeling and bioactivity-aggregation prior work exists.
+  Addresses only one issue — e.g. relocates the architecture paragraph
+  but leaves the citation gap, or adds a few transformer references
+  without identifying Ramsundar et al. as the direct ancestor of the
+  multi-task framing or Mervin/Bosc as the direct antecedents of the
+  assay-disambiguation motivation.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

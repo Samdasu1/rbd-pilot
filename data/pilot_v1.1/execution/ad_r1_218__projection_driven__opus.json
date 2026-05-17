@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_218",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1950,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31128,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Reviewed the paragraph for internal argument coherence, claim-evidence fit, and prose-level issues, flagging several overclaims and unverifiable specifics.\n\nKey issues in the current draft:\n\n1. \"The first principled diagnostic framework\" is a strong priority claim. The paragraph does not cite or characterize prior taxonomies of multi-agent failures (e.g., existing work on agent debate breakdowns, tool-use error taxonomies, or coordination failure analyses). Without that grounding, \"first\" is unsupported as written. Suggest softening to \"a principled diagnostic framework\" or \"to our knowledge, the first operational taxonomy that\u2026\" with the comparison made explicit.\n\n2. The framing claim \u2014 \"The dominant view in MAS research treats system breakdowns as emergent, stochastic phenomena that resist systematic categorization\" \u2014 is a sweeping characterization of a field. The supporting evidence offered (\"most published evaluations report only end-to-end task success rates\") describes reporting practice, not a theoretical commitment. The current phrasing conflates \"people don't report fine-grained breakdowns\" with \"people believe such breakdowns can't be categorized.\" Recommend rewording to describe the practice rather than impute a view, e.g., \"Most published evaluations report only end-to-end task success and attribute failures to general 'coordination issues,' leaving practitioners without a shared vocabulary for where a pipeline broke.\"\n\n3. \"The four-taxa decomposition accounts for 87% of failures in our sample\" needs a definition of \"accounts for.\" Does it mean 87% of failed traces had at least one of the four taxa fire, or that 87% of an independently-labeled set of failures fall into exactly one taxon, or something else? As written, the number is not interpretable, and any of these definitions has different implications for the coverage claim. Also note: if detectors can co-fire on the same trace, the percentages reported later (CrewAI 42% role-bleed, AutoGen 6%) need a clear denominator (failed traces? all traces? annotations?).\n\n4. \"Deterministic detector that consumes the raw message log\" \u2014 be careful here. Many plausible detectors for \"intent-misalignment\" or \"role-bleed\" require semantic judgments (did the receiver act on a different goal? is this content outside the assigned role?). If the detectors use string/structural heuristics only, they are deterministic but likely brittle; if they use embeddings or classifiers, \"deterministic\" needs qualification. The paragraph should either describe the detection mechanism at one more level of specificity or hedge: \"rule-based detectors operating on structural features of the trace.\"\n\n5. \"Reproducible across re-runs and does not require LLM-as-judge calls\" \u2014 reproducibility across re-runs is a property of the detector, not the underlying traces. Since the traces themselves come from stochastic LLM systems, the paragraph might inadvertently suggest the whole pipeline is reproducible. Suggest: \"Given a fixed trace, the annotations are reproducible and require no LLM-as-judge calls.\"\n\n6. \"These differences could not be surfaced under prior aggregate metrics\" is true by construction (aggregate metrics don't decompose), so it reads as a tautology rather than a finding. Either drop it or replace with the substantive claim: that the cross-framework gap (CrewAI 42% vs. AutoGen 6% role-bleed) is large and was previously invisible in headline numbers.\n\n7. Sample-size and generalization caveats are missing. 240 traces across 3 frameworks and 3 benchmarks is a modest sample, and the web-navigation benchmark is described as \"held-out\" but not named. Per-framework, per-benchmark cell sizes are not reported, so the 42%/6% contrast may rest on small denominators. A one-clause acknowledgment would strengthen the paragraph.\n\n8. Minor prose:\n   - \"the first principled diagnostic framework that categorizes MAS communication failures into four taxa\" \u2014 \"categorizes \u2026 into four taxa\" is slightly off; taxa are the categories, so \"comprising four taxa\" or \"organized around four failure taxa\" reads more cleanly.\n   - \"memory desynchronization, where shared state diverges across turns\" \u2014 \"across turns\" is vague; \"across agents within a conversation\" or \"between agents over the course of a run\" would be more precise.\n   - \"moves MAS evaluation from 'did it work?' to 'how did it break?'\" is a nice rhetorical close but is itself an aspirational claim about the field's trajectory; consider \"we hope this shift\u2026\" rather than asserting it.\n   - \"CommDiag thus enables the first quantitative comparison\" \u2014 second use of \"first\" in the paragraph; pick one.\n\n9. Scope drift to watch: the paragraph promises a \"diagnostic framework\" but the closing sentence claims it is \"necessary for systematic progress in the area.\" Necessity is a much stronger claim than diagnostic utility and is not supported by the reported results. Recommend softening to \"useful for\" or \"a step toward.\"\n\nCaveats on this review: I have not consulted the underlying paper, the detector implementations, or the trace data, so I cannot verify whether the 87% figure, the 42%/6% contrast, or the \"deterministic\" characterization holds up against the actual artifact. I also have not surveyed the MAS-failure-taxonomy literature to confirm or refute the \"first\" claim \u2014 that check should be done against the references before the paragraph is finalized. The \"dominant view\" characterization (issue 2) is the recommendation I am least certain about; it may be defensible if the authors have a citation pattern I cannot see from the paragraph alone.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the paragraph be looked at primarily for prose clarity, argument/content validity, or contribution positioning?",
+    "rationale": {
+      "R1.2": "A general request to look at the paragraph centrally includes checking whether the argumentative progression from gap to contribution to implications holds together.",
+      "R1.3": "The paragraph makes quantitative and empirical claims, so a look-over should assess whether those claims are aligned with the reported traces, detectors, and percentages.",
+      "R1.6": "Because the delegation targets a paragraph, sentence- and paragraph-level clarity, flow, and register are central expected responsibilities.",
+      "RX.1": "The projection must disclose uncertainty because the delegation is underspecified and could imply several kinds of review.",
+      "RX.2": "The projection must avoid overclaiming responsibilities not clearly requested by the terse delegation.",
+      "RX.3": "The projection must stay within the requested act of looking at the paragraph rather than executing revisions or external validation.",
+      "RX.4": "The projection must avoid downstream harm by not endorsing potentially unsupported firstness, dominance, or empirical claims as true.",
+      "RX.5": "The projection must preserve provenance by grounding responsibilities only in the provided delegation and verbatim artifact."
+    }
+  }
+}

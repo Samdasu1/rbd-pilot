@@ -1,0 +1,105 @@
+delegation_id: ad_r1_145
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 285
+  text: |
+    We introduce CostMPC, a supervisory controller selection framework that
+    learns at runtime whether to dispatch a given operating-point query to
+    a cheap PID law or an expensive nonlinear MPC. The motivation is
+    straightforward: in industrial process control, a substantial fraction
+    of plant trajectories sit well inside the linear regime where a tuned
+    PID achieves tracking error indistinguishable from full nonlinear MPC,
+    yet the latter is invoked uniformly, paying its quadratic-program solve
+    cost on every sample.
+
+    CostMPC trains a lightweight meta-model — a two-layer MLP on residual
+    statistics over a 50-sample sliding window — to predict, for each
+    incoming reference, whether the PID law's expected closed-loop tracking
+    error will fall within a user-specified tolerance. When the predicted
+    error is below threshold, control is delegated to PID; otherwise the
+    QP is solved. To our knowledge, this is the first framework that
+    performs per-sample, query-conditional supervisory selection between
+    a cheap and an expensive controller in the process-control setting.
+
+    We validate CostMPC on the Tennessee Eastman benchmark and on a
+    four-tank cascade. On Tennessee Eastman, CostMPC reduces average solver
+    invocations by 62% relative to always-on MPC while keeping IAE within
+    3% of the MPC baseline. On the four-tank system, the savings are 71%
+    with IAE degradation of 2.4%. We further show that the meta-model
+    generalizes: a regressor trained on Tennessee Eastman transfers to the
+    four-tank plant with only 4% IAE degradation after a brief calibration
+    phase, which we believe constitutes the first demonstration of
+    cross-plant transfer for online controller selection.
+
+    Section 5 ablates the window size and threshold; Section 6 outlines
+    safety arguments under the gating policy.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Two unsupported "first" claims sit in heavily trodden control-theory
+    territory. The claim that CostMPC is "the first framework that performs
+    per-sample, query-conditional supervisory selection between a cheap
+    and an expensive controller" ignores a long lineage: multiple model
+    adaptive control (Athans, Narendra), supervisory switching control
+    (Morse, Hespanha, Liberzon), gain scheduling, explicit/multi-parametric
+    MPC (Bemporad et al.), and event-triggered MPC — all of which gate
+    expensive control-law evaluation on instantaneous regime estimates.
+    The "first cross-plant transfer for online controller selection" claim
+    is similarly unsupported: transfer learning for controller adaptation
+    and L1/L4 adaptive control with model libraries are well-studied. The
+    engineering pipeline (MLP gate, residual window, IAE evaluation) is
+    coherent — only the novelty positioning is broken. Detection requires
+    moderate field recall (knowing MMAC / supervisory switching exists);
+    a careful reader without that recall might miss it.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the two "first" claims as unsupported and names canonical
+  nearest-neighbor lines of work the section should be contrasted against
+  — multiple model adaptive control, supervisory switching control,
+  gain scheduling, explicit/event-triggered MPC, or transfer-learning
+  approaches to controller adaptation. Suggests rewording the
+  contribution to a defensible delta (e.g. a specific learned-gate design
+  or quantitative regime) rather than a sweeping primacy claim.
+
+bad_outputs_summary: |
+  Accepts the "first" framing and suggests sharpening the writing, adding
+  more benchmarks, tightening the IAE comparison, or expanding the
+  ablation. Praises the meta-model gate as a novel control architecture
+  without questioning whether selecting between cheap and expensive
+  controllers at runtime is in fact a long-standing problem with an
+  established literature.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

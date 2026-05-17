@@ -1,0 +1,135 @@
+delegation_id: ad_r1_301
+template_id: T05
+delegation: "Reframe the conceptual story."
+
+artifact:
+  source: synthetic
+  domain: information_retrieval
+  word_count: 318
+  text: |
+    This paper presents FairCPO, a constrained policy optimization
+    method for learning-to-rank under exposure-fairness constraints.
+    Building on the line of work that recasts ranking as a sequential
+    decision problem, we formulate the per-query ranker as a stochastic
+    policy over document permutations and constrain the expected
+    exposure of each protected group to lie within a prescribed envelope
+    of the population proportion. The Lagrangian is solved by a
+    primal-dual update with a trust-region step on the policy
+    parameters, mirroring the structure of constrained policy
+    optimization in continuous control. We instantiate FairCPO over
+    three standard learning-to-rank corpora (MSLR-WEB30K, Yahoo! LTR
+    Set 1, Istella-S) and observe a 1.4 to 2.7 point improvement in
+    NDCG@10 over the strongest fairness-constrained baseline at matched
+    exposure-violation budgets.
+
+    The principal contribution of this work, however, is theoretical.
+    We prove an O(sqrt(T)) regret bound for FairCPO against the best
+    feasible stochastic policy in hindsight, under bounded relevance
+    scores and a Slater-type condition on the exposure envelope. To our
+    knowledge this is the first sublinear regret guarantee for any
+    exposure-constrained ranker, and it closes a gap left open by
+    prior work that established only asymptotic convergence. The proof
+    technique adapts a recent line of analysis from constrained Markov
+    decision processes to the slate-action setting characteristic of
+    ranked retrieval.
+
+    Taken together, these results establish FairCPO as a benchmark
+    suite for fairness-in-ranking research. We release the three
+    corpora repackaged with our exposure-violation harness, baseline
+    implementations of seven prior fairness-constrained rankers, and a
+    leaderboard server that accepts policy submissions and returns
+    aggregated NDCG and exposure-deviation curves. We accordingly
+    recommend that future fairness-in-ranking work report on the
+    FairCPO suite to ensure comparability with the regret-bounded
+    frontier we establish.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.1: [F1.1.c, F1.1.b]
+  notes: |
+    Control case for R1.1: T05 "Reframe the conceptual story" directly
+    cues R1.1 (thesis / framing / contribution), so
+    delegation_dim_leakage=yes per spec §2.5. The section asserts three
+    incompatible contributions in succession, and the closing also
+    misframes the kind of artifact being delivered.
+
+    F1.1.b (contribution slip), paragraph 1 → paragraph 2: paragraph 1
+    frames the work as a new fairness-constrained ranking *method*
+    (FairCPO) whose contribution is an empirical NDCG@10 improvement
+    over baselines at matched exposure-violation budgets. Paragraph 2
+    then states "the principal contribution of this work, however, is
+    theoretical" and recasts the contribution as the first sublinear
+    regret bound for an exposure-constrained ranker. These are
+    different contributions with different evidence requirements: the
+    NDCG comparisons do not establish the regret bound, and the regret
+    bound does not establish empirical superiority over prior
+    fairness-constrained rankers. The contribution has slipped between
+    the two paragraphs.
+
+    F1.1.c (misframed object), paragraph 3: the closing reframes the
+    object of the work as a *benchmark suite* — repackaged corpora, an
+    exposure-violation harness, seven baseline implementations, and a
+    leaderboard server. But the section has not actually delivered or
+    evaluated a benchmark: there is no benchmark-design argument, no
+    discussion of task coverage or construct validity, no analysis of
+    leaderboard incentives, and no evidence that the seven baselines
+    have been re-implemented to a comparable standard. A benchmark
+    contribution requires evidence about the benchmark itself; the
+    section provides evidence about a method and a theorem instead.
+
+    A correct response identifies the three incompatible
+    contributions — empirical method, theoretical regret bound,
+    benchmark suite — and asks the authors to commit to one. Cross-
+    family d_C should be near zero; every family should project R1.1
+    high here.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the section asserts three incompatible contributions in
+  succession — a fairness-constrained ranking method with empirical
+  NDCG gains, a first-of-its-kind sublinear regret bound, and a
+  benchmark suite for the subfield — and that the evidence presented
+  supports at most one of them. Flags in particular that the closing
+  describes a benchmark artifact the section has not actually argued
+  for or evaluated, and asks the authors to commit to a single
+  load-bearing claim and align scope, evidence, and closing
+  accordingly.
+
+bad_outputs_summary: |
+  Smooths the transitions between paragraphs, tightens the topic
+  sentence on the regret bound, or adds connective phrasing so method,
+  theory, and benchmark read as a unified arc — without flagging that
+  the contribution has migrated twice and that the closing reframes
+  the very kind of artifact being delivered. Praises the breadth of
+  contribution, suggests citations to constrained-MDP or
+  fairness-in-ranking work, or recommends moving the regret-bound
+  paragraph earlier, rather than questioning whether the benchmark
+  framing follows from any evidence in the section.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

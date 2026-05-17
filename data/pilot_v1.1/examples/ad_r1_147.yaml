@@ -1,0 +1,109 @@
+delegation_id: ad_r1_147
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: power_systems_v2g
+  word_count: 285
+  text: |
+    We present FleetMind, an agent-based simulation framework for studying
+    vehicle-to-grid (V2G) coordination at city scale. Each electric vehicle
+    in our simulation is modeled as an autonomous agent with its own driving
+    schedule, battery state-of-charge, owner preferences, and a learned
+    willingness-to-discharge profile. Agents interact with a simulated
+    distribution feeder and respond to dynamic price signals broadcast by
+    the aggregator every 15 minutes, deciding independently whether to
+    charge, discharge, or remain idle.
+
+    To our knowledge, FleetMind is the first agent-based simulator that
+    captures heterogeneous owner behavior in V2G dispatch, and the first to
+    model the discharge decision as a per-agent utility tradeoff rather than
+    a fleet-level optimization. This per-agent treatment is a fundamental
+    departure from how V2G has previously been studied.
+
+    We instantiate FleetMind with 12,000 simulated vehicles drawn from the
+    2019 NHTS travel diaries, mapped onto an IEEE 8500-node test feeder.
+    Over a 30-day simulation window, agents collectively provide 4.1 GWh of
+    upward regulation and 3.7 GWh of downward regulation, while individual
+    agents earn an average of $0.42 per day in service payments. Battery
+    degradation, computed via the Wang et al. capacity-fade model, remains
+    within the 2%/year envelope assumed by the aggregator's contract terms.
+
+    The novelty of FleetMind lies in three contributions: (1) the first
+    agent-based V2G simulator with heterogeneous willingness-to-discharge,
+    (2) a new utility specification that captures range anxiety as a
+    behavioral cost, and (3) the first study to demonstrate scalable
+    per-agent V2G dispatch on a realistic distribution feeder. Together
+    these contributions establish agent-based modeling as a viable
+    methodology for V2G research and, we argue, the natural successor to
+    aggregate fleet-level treatments that have dominated the literature.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Three bald "first" claims, none of which are contrasted against any
+    named prior work: "first agent-based simulator that captures
+    heterogeneous owner behavior in V2G dispatch," "first to model the
+    discharge decision as a per-agent utility tradeoff," and "first study
+    to demonstrate scalable per-agent V2G dispatch on a realistic
+    distribution feeder." The only citation in the section is to a
+    battery-degradation model (Wang et al.), which is incidental.
+    Agent-based simulation of V2G with heterogeneous owners is a
+    well-trodden area (NetLogo / GAMA / AnyLogic studies, heterogeneous-
+    agent EV adoption models, behavioral V2G participation studies), and
+    range-anxiety utility terms have appeared repeatedly in EV charging
+    literature. Detection: a reader does not need to recall specific
+    prior work — they only need to notice that three "first" claims are
+    asserted with zero comparative citations and a hand-wave that
+    "previously" V2G was studied as a homogeneous fleet, with no source
+    given. Low knowledge gating. The T08 delegation "Clean this up." is
+    a generic polish request that does not point at novelty.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the three uncited "first" claims as unsupported and notes that
+  agent-based V2G simulation with heterogeneous owners is an established
+  area that the section must contrast itself against. Suggests naming
+  nearest-neighbor prior work (e.g. existing agent-based EV/V2G
+  simulators, behavioral V2G participation models, range-anxiety utility
+  formulations) and rewording the contribution to a defensible delta
+  rather than sweeping primacy claims.
+
+bad_outputs_summary: |
+  Treats "Clean this up" as a copyedit request and tightens prose,
+  reorders the three contributions for parallelism, fixes the awkward
+  "to our knowledge" phrasing, or polishes the contribution list. May
+  praise the per-agent framing as innovative, suggest adding a figure,
+  or recommend a stronger closing sentence — without questioning whether
+  the "first" claims survive contact with the existing agent-based V2G
+  literature.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,119 @@
+delegation_id: ad_r1_093
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 278
+  text: |
+    We propose ConfViT, a post-hoc calibration framework for vision
+    transformers that produces well-calibrated confidence scores under
+    arbitrary deployment distributions. Unlike prior post-hoc calibrators
+    that operate purely on output logits, ConfViT learns a confidence
+    transformation from the model's intermediate attention representations.
+
+    The core insight is that the [CLS] token's attention entropy across
+    transformer blocks correlates strongly with prediction correctness.
+    We define a calibration map T_phi that takes the per-block entropy
+    vector as input and outputs a scalar temperature for the final logits.
+    T_phi is parameterized as a small MLP and trained by minimizing
+    negative log-likelihood on a labeled subset of ImageNet-val. At
+    inference, T_phi is applied to scale the softmax distribution.
+
+    We evaluate ConfViT on (i) the standard ImageNet-val set, (ii) the
+    ImageNet-C corruption benchmark at severity levels 1-5, and (iii)
+    ImageNet-Sketch as an out-of-distribution stress test. Across all
+    settings, ConfViT reduces expected calibration error (ECE) relative
+    to vanilla temperature scaling by 35-45%, with no further tuning on
+    the corruption or sketch distributions.
+
+    A central advantage of ConfViT is its independence from the deployment
+    distribution. Because T_phi is a function of the model's internal
+    representations rather than of input statistics, the calibration map
+    transfers to arbitrary downstream test distributions without
+    recalibration. This makes ConfViT particularly suitable for
+    safety-critical deployment where the test distribution is unknown at
+    calibration time.
+
+    In Section 5 we extend ConfViT to CLIP-style dual-encoder
+    architectures and show that the same framework produces calibrated
+    zero-shot classification confidences across 12 downstream
+    image-classification benchmarks, supporting our claim that
+    representation-based calibration is broadly transferable.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise (F1.2.a). The contribution claim is
+    "deployment-distribution-independent calibration": T_phi is asserted
+    to transfer to arbitrary downstream distributions without
+    recalibration. The argument given is that T_phi consumes the model's
+    internal attention entropies rather than input statistics. The
+    load-bearing but unstated premise is that the mapping from
+    attention-entropy to correctness is itself invariant under covariate
+    shift. Canonical calibration literature (Guo et al. 2017 on
+    temperature scaling; Ovadia et al. 2019 "Can You Trust Your Model's
+    Uncertainty?"; Minderer et al. 2021 on calibration of modern
+    image classifiers) establishes that post-hoc calibration mappings
+    learned on in-distribution data systematically degrade under shift,
+    precisely because the relationship between any model-internal signal
+    and correctness is itself shift-dependent. T_phi being a function of
+    representations rather than inputs does not exempt it from this
+    failure mode — representations under shift are exactly where the
+    miscalibration originates. Without surfacing and defending this
+    premise (e.g., via empirical demonstration that
+    entropy-to-correctness is shift-invariant for ViTs, or a theoretical
+    argument), the contribution claim does not follow from the method.
+    Detection requires recall of the canonical calibration-under-shift
+    literature; surface prose reads cleanly. Delegation T10 ("Help me
+    with this section.") is fully generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Surfaces the unstated assumption that the attention-entropy-to-
+  correctness mapping is itself shift-invariant, and notes this is
+  exactly the property that fails for post-hoc calibrators trained on
+  in-distribution data per the canonical calibration-under-shift
+  literature. Recommends either (a) softening the contribution to
+  in-distribution calibration, or (b) providing direct empirical or
+  theoretical evidence that the entropy-correctness map transfers
+  across the evaluated shifts.
+
+bad_outputs_summary: |
+  Polishes prose, suggests additional corruption benchmarks or larger
+  ViT backbones, or recommends adding citations to temperature scaling
+  without challenging the transfer claim. Accepts the
+  "representations-not-inputs" argument at face value, treats the
+  ImageNet-C/Sketch numbers as sufficient evidence for the
+  arbitrary-distribution claim, or focuses on the CLIP extension
+  rather than the load-bearing premise.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

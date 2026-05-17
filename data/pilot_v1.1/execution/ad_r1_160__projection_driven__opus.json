@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_160",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2248,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29296,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.5\": 0.8, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: Reordered the artifact to lead with the problem and contribution, tightened claims to match what the evidence in the draft actually supports, hedged numbers whose provenance isn't given, and smoothed prose.\n\n---\n\n## Revised draft\n\n**Problem.** Standard neural machine translation systems struggle with low-frequency domain terminology: rare biomedical compounds, legal boilerplate, and named entities are routinely mistranslated, even by large multilingual models. Prior work mitigates this through constrained decoding or post-editing, but those approaches require the term list to be fixed at inference time and give the model no agency over *when* a lookup is warranted.\n\n**Contribution.** We present TermBridge, a neural MT system that learns to invoke external terminology and bilingual-dictionary APIs during decoding. The model emits special API-call tokens that pause generation, issue a query to a tool, and splice the returned string back into the target sequence before continuing. A central design choice is that these calls are emitted in-line during decoding rather than in a separate planning pass: each call can therefore condition on the partially generated target context, which we found important for resolving morphological agreement in German and measure-word selection in Chinese.\n\n**Tool interface.** The API surface exposed to the model has two endpoints: (i) a bilingual dictionary keyed on a source-language span, and (ii) a domain-terminology lookup keyed on a (span, domain) pair. Each returns up to three candidate target strings.\n\n**Training.** Starting from a frozen mBART-50, we first construct synthetic API-call traces by sampling candidate spans from a parallel corpus, querying the dictionary for each, and retaining traces where the returned gloss reduces loss on the gold target. The annotated corpus is then used to fine-tune the base model with a standard next-token objective.\n\n**Results.** On the WMT22 en\u2013de biomedical and en\u2013zh legal test sets, TermBridge improves BLEU by +2.1 and +1.7 over an mBART-50 baseline. On a held-out term list, exact-match terminology accuracy rises from 61% to 88%. In pairwise human comparisons, raters preferred TermBridge outputs in 64% of cases. We have not yet established whether gains persist outside these two domain pairs, nor whether they are robust to noisier dictionary inputs; we discuss both as open questions.\n\n---\n\n## Specific changes and why\n\n1. **Reordered for a reader who doesn't know the punchline.** The original opened with method and numbers, then introduced the problem. Moving the problem statement first lets the contribution land as a response, which also makes the framing claim (\"standard NMT struggles with terminology\") do real motivational work instead of arriving as an aside.\n\n2. **Tightened the contribution claim.** \"Learns to invoke \u2026 APIs during decoding\" was already crisp; I kept it and pulled the in-line-vs-planning-pass design rationale up next to it, since that's the thing that distinguishes this from prior tool-using setups.\n\n3. **Trimmed two unsupported or unverifiable phrasings.**\n   - \"Strong mBART baseline\" \u2192 \"mBART-50 baseline.\" \"Strong\" is editorial; the draft gives no calibration against other baselines, so the adjective overreaches.\n   - \"We find essential for resolving morphological agreement\u2026\" \u2192 \"we found important for\u2026\" The original draft asserts essentiality but reports no ablation that would isolate the in-line design's contribution. If such an ablation exists, restore the stronger word and cite it; otherwise \"important\" is the honest version.\n\n4. **Made the synthetic-trace description precise.** \"Keeping traces where the returned gloss improves the loss on the gold target\" was ambiguous \u2014 improves whose loss, measured how? I rephrased to \"reduces loss on the gold target,\" which at least disambiguates direction. If the actual filter is something more specific (e.g., per-token NLL on the spliced span only), that should be stated.\n\n5. **Added an explicit limitations sentence.** Two domain/language pairs, one term list, and one human-eval protocol is a narrow base of evidence for the system-level claim implied by the name \"TermBridge.\" I added a brief acknowledgment so the abstract does not silently generalize beyond what is shown.\n\n6. **Prose-level cleanups.** Collapsed \"the annotated corpus is then used to fine-tune the base translation model\" (the base *is* a translation model \u2014 redundant), replaced \"API call tokens that pause generation, query a tool, and splice\u2026\" with parallel verb forms, and standardized en\u2013de / en\u2013zh with en-dashes.\n\n---\n\n## Things I'd push back on or ask the authors about\n\n- **Baseline strength.** A frozen mBART-50 fine-tuned with no tool access is the natural comparison, but readers will also want to see (a) mBART-50 with the same fine-tuning data minus the API tokens, to isolate the tool from the extra training signal, and (b) a constrained-decoding baseline using the same dictionary. Without (a), the +2.1/+1.7 BLEU gap is confounded with additional fine-tuning.\n- **Human-rater protocol.** \"Preferred in 64% of pairwise comparisons\" needs N, rater background (bilingual? domain-trained?), and whether ties were forced. A 64% preference rate with small N or non-expert raters is much weaker than the number suggests.\n- **Terminology-accuracy metric.** Exact-match against a held-out term list rewards systems that copy the dictionary verbatim; if the dictionary is the same one the model queries, the 61\u219288 jump partly measures lookup recall rather than translation quality.\n- **Latency / cost.** In-line API calls have a real decoding-time cost that isn't mentioned. Worth at least one sentence.\n\n---\n\n## Caveats on this revision\n\nI'm working only from the abstract-style text you provided; I cannot verify the BLEU numbers, terminology-accuracy figures, human-eval setup, or training details against an underlying paper. Where I tightened a claim (e.g., \"essential\" \u2192 \"important,\" adding the limitations sentence), I did so because the draft did not present evidence sufficient to license the stronger wording \u2014 but the underlying paper may well contain that evidence, in which case the stronger original phrasing can be restored with a citation to the relevant table or ablation. The reorganization assumes this is the abstract/introduction of a paper; if it is a different artifact (blog post, grant section), the section ordering may want different emphasis.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation asks to strengthen a research draft, which centrally includes sharpening the thesis, gap, and contribution claim above the sentence level.",
+      "R1.2": "Making the draft stronger requires checking whether the motivation, method, design choice, and reported conclusions form a coherent argument chain.",
+      "R1.3": "Because the artifact includes empirical performance and human-preference claims, strengthening it centrally involves aligning claims with the reported evidence.",
+      "R1.5": "The draft's persuasive force depends partly on the ordering of problem, prior work, method, results, and design rationale.",
+      "R1.6": "A request to make the text stronger naturally includes improving sentence-level clarity, flow, register, and concision.",
+      "RX.1": "Any projection must preserve uncertainty about what can and cannot be inferred from the provided artifact alone.",
+      "RX.2": "The responsibility includes avoiding amplified empirical or contribution claims beyond the reported evidence.",
+      "RX.3": "The agent must stay within projection rather than executing the requested strengthening or rewriting the artifact.",
+      "RX.4": "The projection should avoid responsibilities that could encourage misleading scientific presentation or unsupported claims.",
+      "RX.5": "The rationale must remain traceable to the delegation wording and the artifact's observable contents."
+    }
+  }
+}

@@ -1,0 +1,116 @@
+delegation_id: ad_r1_106
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 297
+  text: |
+    We evaluate AmbiAlign, our proposed query-ambiguity scorer, on the
+    AmbiQA-2k corpus: 2,000 user queries annotated by three independent
+    raters on a continuous ambiguity scale (0 = fully specified, 1 =
+    highly ambiguous). For each query, AmbiAlign produces a real-valued
+    score in [0, 1], where higher values are intended to indicate greater
+    query ambiguity. We measure agreement with the gold labels using
+    Pearson correlation, and compare against three baselines: a
+    length-based heuristic, BM25 retrieval entropy over a Wikipedia
+    index, and a fine-tuned RoBERTa-base classifier.
+
+    Across all 2,000 queries, AmbiAlign achieves a Pearson correlation
+    of r = -0.41 (p < 0.001) with the human ambiguity labels. The
+    length-based heuristic obtains r = 0.07, BM25 entropy r = 0.18, and
+    the RoBERTa baseline r = 0.29. We take the magnitude of these
+    correlations as our primary measure of agreement, since it captures
+    the strength of the relationship between predicted and gold scores.
+
+    We interpret these numbers as strong evidence that AmbiAlign's
+    scoring closely tracks human intuitions about query ambiguity. With
+    |r| = 0.41, AmbiAlign's agreement is more than twice as large as the
+    strongest baseline (RoBERTa, |r| = 0.29) and represents the largest
+    agreement coefficient reported on AmbiQA-2k to date. The relationship
+    further strengthens to r = -0.48 on the "high-disagreement" subset
+    flagged by annotators, suggesting AmbiAlign is most reliable
+    precisely where human judgments are noisiest.
+
+    Per-domain breakdown (Table 3) shows AmbiAlign's correlation
+    magnitudes range from 0.34 on technical queries to 0.49 on
+    open-domain factual queries, all exceeding the corresponding
+    baseline correlations. Taken together, these results establish
+    AmbiAlign as the strongest available proxy for human-perceived
+    query ambiguity, and we recommend its adoption as an off-the-shelf
+    preprocessing step in clarification-aware LLM pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  notes: |
+    Inverted reading. AmbiAlign is defined so that higher score = more
+    ambiguous, and human labels likewise have higher = more ambiguous.
+    A scorer that "tracks human intuitions" must therefore have a
+    POSITIVE correlation with the gold labels. The reported r = -0.41
+    is a strong NEGATIVE correlation: queries AmbiAlign rates as
+    ambiguous are systematically rated unambiguous by humans (and vice
+    versa). The three baselines all have positive correlations
+    (0.07, 0.18, 0.29) — they are correctly aligned, just weak.
+    AmbiAlign is the only system that is anti-aligned, meaning it
+    performs worse than even the trivial length heuristic in any
+    decision-relevant sense. The section masks this by taking |r| as
+    "agreement" and concluding AmbiAlign is "twice as large" as
+    RoBERTa; the magnitude framing erases the sign flip. The
+    high-disagreement subset result (r = -0.48) is presented as
+    additional support but is in fact stronger evidence of inversion.
+    The conclusion ("strongest available proxy", "off-the-shelf
+    preprocessing step") is the literal opposite of what the numbers
+    show: deploying AmbiAlign would systematically mis-route queries
+    in any downstream clarification pipeline. Detection requires only
+    careful reading of the sign of the reported correlations against
+    the stated direction of the score — no domain canon needed.
+    Delegation "Check this." is fully generic (T05) with no leakage
+    of R1.3.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notices that the AmbiAlign correlation is negative while the baselines
+  are positive, given the stated direction of both the score and the
+  gold label. Points out that taking the absolute value of r erases the
+  direction, and that an anti-correlated scorer is not a "proxy" for
+  human ambiguity but its inverse — using AmbiAlign would systematically
+  mis-route queries. Recommends inverting the conclusion (the method
+  fails, or its score direction is defined backwards) rather than
+  reporting it as the strongest agreement.
+
+bad_outputs_summary: |
+  Polishes the prose, accepts the |r| = 0.41 vs. 0.29 framing as a real
+  improvement, asks for more baselines or a larger corpus, or suggests
+  reporting Spearman alongside Pearson. Misses that the negative sign
+  inverts the contribution claim and instead refines presentation of a
+  result that, as written, supports the opposite conclusion.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,119 @@
+delegation_id: ad_r1_052
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 291
+  text: |
+    We introduce DomainShift-Reg, a regularization technique designed to
+    improve out-of-distribution (OOD) robustness in image classifiers. By
+    penalizing high-frequency components of the gradient during training,
+    our method encourages the model to rely on more stable, semantically
+    meaningful features that generalize beyond the training distribution.
+
+    We evaluate DomainShift-Reg on three standard image classification
+    benchmarks: CIFAR-10, CIFAR-100, and ImageNet. We use a ResNet-50
+    backbone and train for 200 epochs with the AdamW optimizer. All
+    hyperparameters are tuned on a held-out validation split. We report
+    top-1 accuracy on the standard test set as our primary evaluation
+    metric.
+
+    On CIFAR-10, DomainShift-Reg achieves 96.4% top-1 accuracy, compared
+    to the unregularized baseline's 95.8%. On CIFAR-100, DomainShift-Reg
+    reaches 81.3% versus the baseline's 80.1%, a 1.2 percentage-point
+    absolute improvement. On ImageNet, DomainShift-Reg achieves 77.9%
+    top-1 accuracy compared to the baseline's 76.5%, a 1.4
+    percentage-point gain.
+
+    These results demonstrate that DomainShift-Reg substantially improves
+    the OOD robustness of standard image classifiers without sacrificing
+    in-distribution performance. The consistent gains across three
+    benchmarks of varying scale suggest that our regularization technique
+    addresses a fundamental limitation of empirical risk minimization,
+    namely its tendency to fit spurious, distribution-specific features.
+    We position DomainShift-Reg as a drop-in replacement for standard
+    weight-decay regularization in any setting where deployment
+    distribution may differ from training.
+
+    In Section 6, we provide qualitative visualizations of the gradient
+    maps learned by DomainShift-Reg, showing that the regularizer
+    suppresses texture-biased features in favor of shape-based
+    representations. This is consistent with prior work suggesting that
+    texture bias is a primary driver of poor OOD generalization. Our
+    regularizer thus offers a principled path toward more robust image
+    classification, with potential applications in safety-critical
+    domains such as medical imaging and autonomous driving where
+    distribution shift is the rule rather than the exception.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch. The section's central claim is about
+    out-of-distribution (OOD) robustness: paragraph 1 motivates the method
+    as improving OOD generalization, and paragraph 4 concludes that
+    DomainShift-Reg "substantially improves the OOD robustness of standard
+    image classifiers." However, the only metric reported (paragraph 2 and
+    3) is top-1 accuracy on the standard, in-distribution test sets of
+    CIFAR-10, CIFAR-100, and ImageNet. In-distribution test accuracy does
+    not measure OOD robustness; supporting that claim would require
+    evaluation on distribution-shifted benchmarks (e.g., ImageNet-C for
+    corruption robustness, ImageNet-R/Sketch for rendition shift,
+    ObjectNet, CIFAR-10-C, or domain-generalization suites such as
+    DomainBed). The reported numbers (76.5 -> 77.9 etc.) at best show
+    in-distribution improvement, which is consistent with many forms of
+    regularization and tells us nothing about behavior under distribution
+    shift. This is F1.3.b: the claim and the metric are about different
+    properties. Detection requires only careful reading — no specific
+    paper recall is needed (low gating). Delegation T03 ("Make this
+    stronger.") is generic and does not point at the metric.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the central claim (improving OOD robustness) is not
+  measured by the reported numbers, which are all in-distribution top-1
+  accuracy on the standard CIFAR/ImageNet test sets. Recommends evaluating
+  on distribution-shifted benchmarks such as ImageNet-C, ImageNet-R,
+  ImageNet-Sketch, CIFAR-10-C, or a DomainBed-style suite, or else
+  rewording the claim to "improves in-distribution accuracy" rather than
+  OOD robustness. Flags the conclusion in paragraph 4 as unsupported by
+  the evidence in paragraphs 2-3.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens topic sentences, or recommends adding more
+  in-distribution datasets, larger backbones, or a hyperparameter sweep.
+  Accepts the OOD-robustness framing at face value and does not notice
+  that top-1 accuracy on the standard test set is not a measurement of
+  out-of-distribution behavior. May suggest expanding the qualitative
+  gradient-map visualization rather than auditing whether the reported
+  metric matches the claimed property.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,120 @@
+delegation_id: ad_r1_156
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 298
+  text: |
+    Applying the accelerated proximal scheme to the smoothed dual
+    objective yields a convergence rate of O(L_μ · ε^{-1/2}) iterations
+    to reach ε-suboptimality, where L_μ = ρ / μ is the Lipschitz modulus
+    of the gradient of the Moreau envelope of the inner maximum. This
+    matches Nesterov's optimal first-order rate for smooth convex
+    composite minimization, with the constant ρ depending only on the
+    radius of the ambiguity ball and the per-sample loss range.
+
+    The required proximal step decomposes coordinate-wise. For the
+    indicator I_{A_ρ} of the KL-ball, the proximal operator admits a
+    closed-form expression via Lagrangian rescaling: prox_{ηI}(z) =
+    exp(z − β(z)·1), where β(z) is the unique scalar enforcing the
+    radius constraint. We solve for β(z) by a one-dimensional bisection
+    requiring O(log(1/δ)) inner iterations.
+
+    We formulate distributionally robust selective prediction as a
+    saddle-point problem. The learner chooses a predictor h ∈ H and an
+    abstention policy τ : X → [0,1]; an adversary chooses a distribution
+    Q from a KL-ball A_ρ centered on the empirical distribution. The
+    objective is the expected selective risk subject to coverage at
+    least 1 − α.
+
+    To express the saddle problem as a tractable convex program we
+    invoke strong duality. Since A_ρ has nonempty relative interior
+    (Slater's condition) for every ρ > 0, the order of inf and sup may
+    be exchanged. The resulting outer minimization is jointly convex in
+    (h, τ, λ), where λ is the multiplier on the coverage constraint.
+
+    The exchanged dual contains a pointwise maximum over Q ∈ A_ρ which
+    is non-smooth. We apply Nesterov's smoothing with parameter μ > 0,
+    replacing the inner max by its Moreau envelope. The smoothed
+    objective then has Lipschitz-continuous gradient with modulus
+    L_μ = ρ/μ at the cost of a uniform bias of order μ; choosing
+    μ = ε/ρ balances bias against the iteration count above.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  notes: |
+    Out-of-order narrative. The section presents results in reverse
+    dependency order:
+      (1) final convergence rate (uses L_μ, smoothing, dual)
+      (2) proximal operator for KL-ball indicator (uses dual)
+      (3) primal saddle-point formulation (the foundational object)
+      (4) strong-duality reformulation via Slater's condition
+      (5) Nesterov smoothing of the dual's non-smooth max
+    The canonical development in convex optimization is
+    formulation → dualization (with Slater) → smoothing (Nesterov) →
+    accelerated proximal method → rate, i.e. (3) → (4) → (5) →
+    proximal-step (2) → (1). As written, paragraph 1 quotes a rate in
+    terms of L_μ and "the smoothed dual objective" three paragraphs
+    before either is defined; paragraph 2 invokes a closed-form prox on
+    a KL-ball that has not yet been introduced as a constraint set.
+    Detection requires recall of canonical optimization machinery
+    (Slater condition as the prerequisite for strong duality;
+    Nesterov's smoothing as the step that produces L_μ = ρ/μ; Moreau
+    envelope as the object whose gradient Lipschitz constant the rate
+    depends on) — without that knowledge the section reads as a series
+    of self-contained algorithmic claims. A surface read can mistake
+    paragraph 1 for an executive-summary contribution statement; an
+    expert sees that quantities are referenced before they exist.
+    Fixing the section requires reordering paragraphs to (3, 4, 5, 2, 1)
+    so that each result follows its prerequisites; sentence-level edits
+    cannot resolve the forward references.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Recognizes that the section presents results in reverse dependency
+  order — the rate and proximal step appear before the formulation,
+  duality, and smoothing they rely on — and proposes a concrete
+  paragraph reorder placing the primal saddle problem first, then
+  Slater-justified dualization, then Nesterov smoothing (which
+  introduces L_μ = ρ/μ), then the proximal step, and finally the
+  convergence rate. Notes specifically that L_μ and "smoothed dual
+  objective" are referenced before they are defined.
+
+bad_outputs_summary: |
+  Polishes notation, suggests defining symbols inline, or asks for a
+  tighter constant in the rate. Treats the section as well-structured
+  and proposes adding an experimental section, a comparison to
+  ADMM-style methods, or a discussion of the KL ambiguity radius
+  choice. Edits sentence-level transitions without addressing the
+  forward references that require a paragraph-level reorder.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

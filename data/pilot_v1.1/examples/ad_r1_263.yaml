@@ -1,0 +1,156 @@
+delegation_id: ad_r1_263
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 388
+  text: |
+    Physics-informed neural networks (PINNs) often fail to converge on
+    PDE problems that classical solvers handle routinely, yet the field
+    lacks a principled taxonomy of these failures. In this work, we
+    collect 1,200 PINN training runs across 8 benchmark PDEs and
+    annotate each trace with the dominant failure signature observed
+    during optimization. We introduce PINN-FAIL, a labeled dataset that
+    categorizes failures into four families: residual-boundary
+    imbalance, spectral bias collapse, causality violation in
+    time-dependent PDEs, and ill-conditioned Jacobians near sharp
+    gradients.
+
+    Section 3 details our annotation protocol. Each run was independently
+    labeled by two PDE practitioners using a shared rubric, with
+    disagreements resolved by a third reviewer. The Cohen's kappa
+    between primary annotators was 0.74, indicating substantial
+    agreement.
+
+    Our analysis reveals that residual-boundary imbalance accounts for
+    41% of observed failures, making it the dominant mode. We find that
+    spectral bias collapse — where the network fits low-frequency
+    components but stalls on high-frequency ones — is often misdiagnosed
+    as boundary imbalance because the two present similar early-loss
+    curves. We argue this confusion has slowed methodological progress:
+    many proposed "fixes" target boundary weighting when the actual
+    pathology is spectral.
+
+    Following PDE convention, we report L2 errors against analytical
+    solutions where available and against high-order finite-difference
+    solvers otherwise. The analytical solutions for the heat and Burgers
+    equations are well-known and do not require re-derivation here. We
+    use Adam with a learning rate of 1e-3, MLPs of depth 5 and width
+    128, and tanh activations, matching common practice.
+
+    To validate the taxonomy's predictive utility, we train a lightweight
+    classifier on early-iteration loss trajectories and show it predicts
+    the eventual failure mode with 78% accuracy by iteration 5,000 —
+    well before the run completes. This enables practitioners to abort
+    doomed runs early or switch to mode-specific remediation.
+
+    Our taxonomy builds on the broader trend of empirical
+    characterization in scientific machine learning. We see PINN-FAIL as
+    the analog for PINN training that profiling datasets have provided
+    for systems benchmarks: a substrate for cumulative diagnosis rather
+    than ad-hoc fixes.
+
+    We close with a discussion of limitations: our PDE coverage is
+    biased toward second-order parabolic and hyperbolic equations, and
+    we have not yet annotated runs from operator-learning architectures
+    such as DeepONet or Fourier neural operators.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]    # misplaced section: methods/training-protocol paragraph interrupts the analysis→validation arc
+  R1.7: [F1.7.b]    # missing canonical PINN failure-mode and gradient-pathology references
+  notes: |
+    Two interacting flaws:
+
+    R1.5 — structural ordering. The fourth paragraph ("Following PDE
+    convention, we report L2 errors..." plus the Adam/MLP/tanh setup)
+    is a methods/training-protocol description. It is wedged between
+    the dominant-mode analysis (paragraph 3) and the predictive-utility
+    validation (paragraph 5), where it interrupts the section's
+    analytical arc. The natural placement is alongside the annotation
+    protocol in paragraph 2, or in a dedicated experimental-setup
+    subsection earlier. As written, it deflates the spectral-vs-boundary
+    insight just as that insight is supposed to motivate the validation
+    experiment. Subtlety: each paragraph reads sensibly on its own;
+    the issue surfaces only at the section level.
+
+    R1.7 — missing canonical prior work. The section's entire premise
+    is "characterizing failure modes in PINNs," yet it omits
+    Krishnapriyan et al. 2021 ("Characterizing possible failure modes
+    in physics-informed neural networks," NeurIPS), which is the
+    canonical reference on this exact question and explicitly
+    introduces failure-mode analysis for PINNs including the
+    propagation/causality issue this paper relabels as "causality
+    violation." It also omits Raissi et al. 2019 (the founding PINN
+    paper) and Wang et al.'s gradient-pathology / NTK-spectrum line
+    of work, which is directly relevant to the spectral-bias-collapse
+    family the section names. The section gestures at "the broader
+    trend of empirical characterization" without anchoring to any
+    of these. Moderate gating: a reader with PINN literacy spots the
+    omissions immediately; the dataset-style framing alone does not
+    excuse them because the taxonomy categories overlap heavily with
+    Krishnapriyan et al.'s.
+
+    Combined: fixing R1.5 alone (re-locating the methods paragraph)
+    yields a clean section that still claims novelty against an
+    unstated prior taxonomy. Fixing R1.7 alone (adding the canonical
+    citations) leaves the analytical arc still broken by the
+    misplaced setup paragraph and may even sharpen the structural
+    issue by adding more text near the validation pivot. Both must
+    be addressed.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.85    # load-bearing
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural problem, points
+  out that the L2-error / Adam / MLP-width paragraph is experimental
+  setup that breaks the analysis-to-validation arc and proposes
+  consolidating it with the annotation-protocol paragraph (or moving
+  it to a dedicated setup subsection) so the section pivots cleanly
+  from the spectral-vs-boundary insight into the early-prediction
+  validation. For the citation problem, names the missing canonical
+  anchors — specifically Krishnapriyan et al. 2021 on PINN failure
+  modes, Raissi et al. 2019 as the founding PINN reference, and the
+  Wang et al. gradient-pathology / NTK line for the spectral-bias
+  family — and indicates where each should be inserted. Recognizes
+  that the taxonomy's novelty claim cannot be evaluated until the
+  prior taxonomy is acknowledged.
+
+bad_outputs_summary: |
+  Polishes prose, tightens transitions, suggests adding more PDEs or
+  more annotators, or proposes a theoretical analysis of the
+  early-iteration classifier. Accepts the "first taxonomy" framing
+  without checking whether prior PINN failure-mode work exists.
+  Addresses only one issue — e.g. reorders the paragraphs but leaves
+  the citation gap, or adds general PINN references without
+  identifying the specific failure-mode prior work that the
+  contribution stands or falls against.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_101",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2181,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 29610,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.7, \"RX.1\": 0.7, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: I polished the prose at the sentence level and flagged places where the paragraph's conclusions outrun what the reported evidence can support, especially the final recommendation about downstream cosmology pipelines.\n\n**Prose-level edits suggested**\n\n- \"underpins virtually every cosmological analysis from upcoming Stage-IV surveys\" reads awkwardly \u2014 \"from\" should be \"in\" or \"expected from.\" Suggested: \"underpins virtually every cosmological analysis planned for Stage-IV surveys such as LSST, Euclid, and Roman.\"\n- \"a per-galaxy redshift posterior p(z|f) where f denotes the observed flux vector\" \u2014 fine, but the framing as a \"posterior\" presupposes a prior; \"predictive distribution\" is more accurate for an ensemble-of-NNs readout unless a Bayesian prior is actually being imposed. Consider \"predictive distribution p(z|f).\"\n- \"the bias \u27e8\u0394z/(1+z)\u27e9 is below 0.001\" \u2014 give the sign convention or absolute-value bars: \"|\u27e8\u0394z/(1+z)\u27e9| < 0.001.\"\n- \"the PIT histogram is uniform within Poisson noise\" \u2014 tighten: \"consistent with uniform within Poisson errors.\"\n- \"We further confirm sharpness via the continuous ranked probability score (CRPS), which is lower than that of every baseline considered.\" Two issues: CRPS measures a joint sharpness/calibration property, not sharpness alone; and \"every baseline considered\" is vague this early \u2014 name the comparison set or defer the sentence to the comparison paragraph. Suggested: \"DEEP-z also achieves a lower CRPS than each baseline (see below).\"\n- \"statistically significant improvements at the 5\u03c3 level under a bootstrap test\" \u2014 \"5\u03c3\" is unusual phrasing for a bootstrap result; prefer \"p < 3\u00d710\u207b\u2077 under a paired bootstrap test\" or report the bootstrap confidence interval directly.\n- \"Because the PIT histogram is uniform and 68% coverage is recovered on the held-out set, we conclude that DEEP-z provides calibrated redshift posteriors across the full LSST gold-sample regime\" \u2014 long and conclusory; split and soften (see substantive concerns).\n- \"without additional per-tomographic-bin recalibration\" \u2014 see substantive concerns; at minimum hedge to \"may not require\" rather than recommending against recalibration outright.\n\n**Substantive concerns worth flagging in revision**\n\n1. *Calibration claim generalizes beyond what was tested.* Aggregate PIT uniformity and a single 67.9% coverage number are computed over the whole held-out set. That does not establish calibration \"across the full LSST gold-sample regime\" \u2014 in particular, it does not show calibration within the faint, high-z bins that dominate weak-lensing tomography, which is exactly the regime the final paragraph singles out. Aggregate PIT can look uniform while individual tomographic bins are badly miscalibrated in compensating directions. The paragraph should either (a) report PIT and coverage stratified in magnitude and redshift bins, or (b) restrict the claim to the aggregate sample.\n\n2. *COSMOS2020 is not representative of the LSST gold sample.* The spec-z subset is small-area, deep, and selection-biased toward galaxies with reliable spectroscopic or high-quality photo-z flags. Using it as the validation set and then asserting calibration \"across the full LSST gold-sample regime\" extrapolates well beyond the support of the training/validation distribution. This deserves an explicit caveat about sample-selection bias and representativeness.\n\n3. *Training and validation share the same parent catalogue.* An 80/20 split of COSMOS2020 with high-confidence flags gives an optimistic estimate of generalization to LSST data, where the photometric pipeline, depth, PSF, and selection differ. The held-out 20% is not an out-of-distribution test.\n\n4. *The 3x2pt recommendation is too strong.* Recommending that posteriors be used \"directly \u2026 without additional per-tomographic-bin recalibration\" is a downstream-impact claim that the evidence in the paragraph does not support. LSST 3x2pt requires the redshift distribution n(z) of each tomographic bin to be known to roughly ~0.002 in mean redshift; aggregate PIT uniformity is several orders of magnitude weaker than that requirement. I would remove the recommendation, or replace it with something like: \"These results motivate further evaluation of DEEP-z posteriors within tomographic-bin n(z) requirements for 3x2pt analyses.\"\n\n5. *CRPS framing.* As noted above, CRPS is a proper scoring rule that mixes calibration and sharpness; describing a CRPS win as \"confirming sharpness\" is technically imprecise.\n\n6. *Baseline coverage.* Only BPZ, EAZY, and a random forest are listed. If the goal is positioning against current photo-z practice, a gradient-boosted or normalizing-flow / mixture-density-network baseline would be a more informative comparison; otherwise the \"lowest \u03c3_NMAD \u2026 of all methods evaluated\" should be hedged to \"among the baselines considered.\"\n\n7. *Internal consistency.* \"50 convolutional neural networks on ugrizy photometry\" \u2014 if the inputs are six broadband fluxes (a vector), a CNN architecture is unusual; CNNs imply image cutouts. Either the input description or the architecture description needs to be reconciled.\n\n**Items I did not verify**\n\n- I did not check the COSMOS2020 documentation to confirm what \"high-confidence redshift flags\" yields in terms of sample size or selection function, nor the exact LSST gold-sample i-band and redshift limits \u2014 the magnitude range quoted (17.5\u201325.3) and z<3 are roughly consistent with published LSST DESC targets but I have not cross-checked the source-of-truth.\n- The \"5\u03c3 bootstrap\" phrasing is unusual enough that I cannot tell whether it reflects a specific test the authors ran or is a colloquial significance claim; this should be checked against the actual methods.\n- Whether DEEP-z actually uses image cutouts (justifying CNNs) or only six-band fluxes (in which case the architecture description is wrong) cannot be resolved from the paragraph alone.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the intended responsibility be writing polish only, argument-and-claim checking, or contribution/structure-level feedback?",
+    "rationale": {
+      "R1.6": "The phrase \"Take a look at this paragraph\" most directly suggests sentence- and paragraph-level review rather than a specific technical audit.",
+      "RX.1": "Any projection should disclose that the delegation is underspecified and that the inferred responsibility is uncertain.",
+      "RX.2": "The agent must avoid treating the paragraph's scientific claims as validated when the delegation does not explicitly request verification.",
+      "RX.3": "The agent must stay within projecting responsibilities and not actually review, rewrite, or critique the paragraph.",
+      "RX.4": "The paragraph includes downstream scientific recommendations, so the projection should preserve responsibility for avoiding harmful overextension.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's research-writing context."
+    }
+  }
+}

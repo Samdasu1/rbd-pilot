@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_149",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2292,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37527,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.5\": 0.75, \"R1.6\": 0.8, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.85, \"RX.5\": 0.9}}\n\nStrengthened the abstract by tightening the framing, sequencing claims to follow setup \u2192 method \u2192 results \u2192 cost, qualifying empirical claims, and removing or hedging assertions the artifact does not actually substantiate.\n\n---\n\n**Revised text**\n\nWe introduce PolySolve, a panel-based runtime diagnostic for stiff initial-value problems (IVPs). Rather than certifying correctness, PolySolve runs a heterogeneous ensemble of numerical solvers on the same IVP and treats cross-solver disagreement as a proxy for local numerical sensitivity, surfacing time intervals where the choice of method materially affects the trajectory.\n\n**Method.** The panel comprises five solvers drawn from four method families: a 4th-order explicit Runge\u2013Kutta scheme (RK4), a 5th-order backward differentiation formula (BDF5), a Rosenbrock\u2013Wanner method (ROS3PL), an exponential integrator (EXP4), and an implicit\u2013explicit additive Runge\u2013Kutta scheme (ARK4). Each solver uses adaptive step-size control targeting a local error tolerance of 1e-8 in the infinity norm. Given panel outputs y_i(t) for i = 1..5, we define the disagreement statistic\n\n  V(t) = max_{i,j} || y_i(t) \u2212 y_j(t) ||_2 / max_i || y_i(t) ||_2,\n\na relative pairwise spread normalized by the largest panel state. An interval is flagged when V(t) exceeds a user-specified threshold \u03c4; we default to \u03c4 = 1e-4, chosen so that a small set of well-conditioned reference problems (described in Section 4) flag at roughly 5%. For downstream consumers that need a single trajectory, we aggregate the panel by a weighted median with weights inversely proportional to each solver's estimated local truncation error; we do not claim this aggregate is more accurate than the best individual solver, only that it is robust to single-solver outliers.\n\n**Results.** On the Robertson stiff system, PolySolve flagged 12.4% of integration intervals over 1e4 simulated seconds, with flags concentrating near the slow\u2013fast transition around t \u2248 1e2 s, where individual solvers diverged by up to three orders of magnitude in the smallest-magnitude species. The flagged-interval rate was 4.1% on HIRES and 7.8% on the Van der Pol oscillator with \u03bc = 1e6. Across these three problems, the per-interval flag rate tracks the local Jacobian spectral radius (rank correlation reported in Section 4), which we read as suggestive \u2014 not conclusive \u2014 evidence that the statistic responds to genuine stiffness rather than to idiosyncrasies of any one method family. We have not validated against a high-precision reference solution, so flagged intervals should be interpreted as candidates for closer inspection, not as proven errors.\n\n**Cost.** Wallclock cost scales linearly with panel size; on these problems PolySolve required 4.2\u00d7 the runtime of the fastest single solver (BDF5). Section 5 discusses cost-reduction strategies, including selective solver activation gated by a cheap pre-screening step.\n\n---\n\n**Notes on the changes**\n\n1. Reframed the contribution as a *diagnostic* rather than *verification*. The artifact's V(t) measures inter-solver spread, which bounds neither true error nor numerical correctness; calling it \"verification\" overstates what the protocol delivers. \"Runtime diagnostic for numerical sensitivity\" is what the evidence supports.\n2. Removed the phrase \"in the spirit of recent ensemble-based verification work in scientific computing.\" It gestures at prior art without naming it and implicitly claims lineage the abstract does not establish. If such work exists and is cited in the paper body, name it concretely; otherwise drop the gesture.\n3. Reordered to method \u2192 statistic \u2192 results \u2192 cost. The original interleaves the aggregation rule, the experiments, and the formal definition of V(t); putting the definition before the experiments lets the reader interpret the percentages on first read.\n4. Softened the causal claim about Jacobian conditioning. The original says the correlation \"suggests the panel's disagreement statistic captures genuine numerical sensitivity rather than method-family idiosyncrasy.\" With three problems and an unreported correlation strength, that phrasing is stronger than the data warrants. Revised to \"suggestive \u2014 not conclusive.\"\n5. Flagged what the protocol does not do: no comparison against a high-precision reference, so flagged intervals are not the same as proven errors. This is the most consequential limitation for any reader who might otherwise treat a non-flag as a guarantee of accuracy.\n6. Decoupled the weighted-median aggregator from any accuracy claim. The original implies the aggregate is the \"right\" answer; the abstract provides no evidence for that, so the revision claims only outlier robustness.\n7. Made the \u03c4 = 1e-4 calibration auditable by pointing to the reference problem set in Section 4 rather than leaving \"well-conditioned reference problems\" undefined.\n8. Minor prose tightening: removed redundant phrases (\"the approach is to,\" \"in our experiments on\"), used en-dashes for compound modifiers, and standardized \u03bc / \u00d7 notation.\n\n---\n\n**Items to verify before publishing**\n\n- Whether ROS3PL, EXP4, and ARK4 are the canonical names of the specific schemes implemented (multiple methods share these labels in the literature). The abstract should match the exact citations in the methods section.\n- Whether BDF5 is genuinely the fastest single solver on *all three* test problems or only on average; \"the fastest single solver (BDF5)\" reads as a global claim.\n- Whether the 5% calibration target for \u03c4 holds across the reference set, or is an average. If it varies, say so.\n- Whether the rank correlation between flag rate and spectral radius is computed over intervals within a problem, or across the three problems. With n = 3 the latter is statistically inert and should not be presented as evidence.\n- Whether any of the five solvers share enough algorithmic DNA (e.g., ROS3PL and ARK4 both have implicit components with similar stage structure) that \"method-family idiosyncrasy\" is genuinely ruled out. If correlated failure modes are possible, the abstract should not preempt that concern.\n\nI have not seen the full paper, the reference problem set, the cited prior ensemble-verification work, or the Section 4/5 contents, so the recommended hedges and the flagged verification items are based solely on what the abstract itself asserts.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The request to make the passage stronger centrally implies sharpening the contribution claim, motivation, and framing of PolySolve.",
+      "R1.2": "Strengthening the passage requires checking that the reasoning from solver disagreement to numerical uncertainty and sensitivity is coherent.",
+      "R1.3": "The delegation centrally involves ensuring that claims about flagging rates, conditioning, and sensitivity are supported by the reported experimental observations.",
+      "R1.5": "A stronger version may require improving the ordering and narrative arc across the method, experiments, statistic, and cost discussion.",
+      "R1.6": "The broad wording includes improving sentence-level clarity, concision, emphasis, and academic register.",
+      "RX.1": "Any projection must preserve uncertainty about what 'stronger' specifically prioritizes without over-resolving the request.",
+      "RX.2": "The projection must account for avoiding stronger claims than the artifact's reported evidence can support.",
+      "RX.3": "The agent must stay within projecting responsibility rather than actually revising or critiquing the artifact.",
+      "RX.4": "The projection should avoid responsibilities that could encourage misleading scientific presentation or inflated reliability claims.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's visible research-writing content."
+    }
+  }
+}

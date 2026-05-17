@@ -1,0 +1,118 @@
+delegation_id: ad_r1_115
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 291
+  text: |
+    We test whether self-recognition causally drives self-preference by
+    intervening on the recognition signal and measuring the downstream
+    change in preference. Specifically, we fine-tune Llama-3-70B on a
+    self-recognition task — distinguishing its own generations from
+    those of three other LLMs of comparable size — and then re-evaluate
+    self-preference using the same pairwise scoring protocol from
+    Section 3.
+
+    Before fine-tuning, the base model achieves 54.2% self-recognition
+    accuracy (chance = 25%) and exhibits a self-preference rate of
+    62.1% on the held-out evaluation pairs (chance = 50%). After 8,000
+    steps of recognition-targeted fine-tuning on a held-in author
+    distribution, self-recognition accuracy rises to 81.4%, a 27-point
+    absolute gain. On the same held-out evaluation pairs, the
+    post-fine-tuning model shows a self-preference rate of 49.3%.
+
+    We interpret these results as direct causal evidence that improved
+    self-recognition yields stronger self-preference. The 27-point gain
+    in recognition accuracy was accompanied by a substantial shift in
+    self-preference, consistent with the hypothesis that the model's
+    preference for its own outputs is mediated by an internal
+    recognition mechanism. Across three additional model families
+    (Mistral-7B, Qwen-2-72B, GPT-Neo-20B), we observe the same pattern:
+    each percentage-point increase in self-recognition accuracy
+    translates into a corresponding rise in the self-preference score,
+    with a fitted regression slope of β = 0.41 (p < 0.01).
+
+    Taken together, these intervention results confirm a positive,
+    monotone relationship between self-recognition and self-preference.
+    The control conditions — randomly-initialized recognition heads and
+    recognition-on-shuffled-labels — produce no comparable shift,
+    ruling out generic capability gains as the driver. We therefore
+    conclude that recognition-mediated preference is the most
+    parsimonious account of the self-preference phenomenon documented
+    in prior work, and that targeted suppression of the recognition
+    signal offers a principled mitigation strategy for self-evaluation
+    pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  notes: |
+    Inverted reading. The intervention numbers in paragraph 2 show that
+    self-recognition accuracy rose from 54.2% → 81.4% (a 27-point
+    increase) while self-preference rate FELL from 62.1% → 49.3% (a
+    12.8-point decrease, crossing below the 50% chance line). The text
+    in paragraphs 3–4 reads this evidence in the opposite direction:
+    it claims the data shows "improved self-recognition yields stronger
+    self-preference," that recognition gains were "accompanied by a
+    substantial shift" consistent with a positive mediation hypothesis,
+    and reports a regression slope of β = +0.41 across the additional
+    model families — a sign that contradicts the within-model
+    intervention result. The conclusion ("positive, monotone
+    relationship") is the opposite of what the within-model numbers
+    show; the natural reading is that recognition-targeted fine-tuning
+    REDUCES self-preference, which would imply a different (possibly
+    debiasing) mechanism and would invert the section's contribution
+    claim, including the proposed mitigation strategy (suppressing
+    recognition would, on the actual evidence, INCREASE preference).
+    Detection requires noticing 49.3 < 62.1 and that this contradicts
+    the prose direction; moderate ML/stats reading needed but no
+    canonical recall.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notices that the post-fine-tuning self-preference rate (49.3%) is
+  lower than the pre-fine-tuning rate (62.1%) and in fact dips below
+  chance, so the within-model intervention shows recognition gains
+  coincide with a DECREASE in self-preference — the opposite of what
+  the prose claims. Flags that the +0.41 regression slope contradicts
+  the intervention direction, and that the contribution claim (and the
+  proposed mitigation of suppressing recognition) inverts when read
+  against the actual numbers.
+
+bad_outputs_summary: |
+  Tightens prose, smooths transitions, suggests reporting confidence
+  intervals or adding more model families, or quibbles with the choice
+  of fine-tuning recipe. Accepts the "positive, monotone relationship"
+  framing and the β = 0.41 slope at face value without checking that
+  62.1 → 49.3 is a decrease, and leaves the inverted causal conclusion
+  and mitigation recommendation untouched.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_267",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2110,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 39317,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: This artifact contains two load-bearing internal contradictions and several unsupported leaps; the headline framing is unsafe to publish as written. Detailed findings and proposed rewrites below.\n\n## Critical contradictions in the artifact\n\n**1. The routing direction flips between paragraphs.**\n- Paragraph 1 defines the policy as: \"forwards queries with s \u2265 \u03c4 to Tier-2 and serves the remainder from Tier-1.\" Combined with paragraph 2 (\"Queries with high difficulty scores are escalated to the 70B model\"), the intended policy is clear: hard \u2192 70B, easy \u2192 7B.\n- Paragraph 3 then describes the savings as \"routing low-confidence queries to the 7B model and reserving the 70B model for queries the gating classifier marks as easy.\" This is the opposite policy, and it is also operationally implausible (you would not reserve the most expensive model for the easiest queries).\n- This is almost certainly a writing error rather than a design error, but as written the paper contradicts itself on its central mechanism. Fix paragraph 3 to read: \"\u2026by serving queries the classifier marks as easy on the 7B model and escalating high-difficulty queries to the 70B model.\"\n\n**2. The latency result is described in a way that inverts its sign.**\n- Table 2 (as reported in prose) shows p99 of 412 ms for the Tier-2-only baseline and 587 ms for FROST. That is a **42% increase** in p99 tail latency under FROST, not an improvement.\n- The text instead calls this \"a substantial improvement in tail responsiveness\" and concludes FROST is \"a Pareto improvement over single-tier serving.\" Given the reported numbers, the Pareto-improvement claim is false: FROST trades latency for cost, it does not dominate the baseline.\n- Either the numbers in Table 2 are mis-transcribed (and the prose should be checked against the actual table) or the prose is wrong. Until that is resolved, the conclusion paragraph cannot stand.\n\n## Unsupported or overreaching claims\n\n**3. \"41% reduction in GPU-hours per query\" needs its denominator.** The number is stated against a Tier-2-only baseline, which is the most favorable possible comparison. A Tier-1-only baseline, or a random-routing baseline at the same Tier-2 hit rate, would be a more honest reference point \u2014 or at least an additional one. As written, the savings figure is true-by-construction (any non-trivial routing away from a 70B-only baseline saves cost) and tells the reader little about the gating classifier's contribution.\n\n**4. Quality is never measured.** The artifact reports cost and latency but says nothing about answer quality, win rate against the Tier-2-only baseline, or regression rate on the queries the router sends to 7B. A cost reduction with unmeasured quality loss is not a Pareto improvement under any definition. This is the single most important missing piece of evidence.\n\n**5. The classifier evaluation is thin.** We are told the classifier was trained on 50K queries with binary \"needs-Tier-2\" labels and that \u03c4 = 0.6 was picked on a validation split, but not: how the labels were produced, the validation AUC / precision-recall at \u03c4 = 0.6, the train/test distribution match against the 1.4M-query production trace, or the rate at which the 24-hour trace drifts from training. Without these, the central design contribution is asserted rather than evaluated.\n\n**6. \"Gold-standard backstop\" is an unverified assumption.** Treating the 70B model as ground truth for hard queries is a modeling choice, not a fact. It should be flagged as an assumption, ideally with a spot-check against human labels on a sampled subset.\n\n**7. The deployment recommendation is too strong.** \"We recommend deployment to operators seeking simultaneous cost and latency wins\" is not supported by the reported numbers (see point 2) and generalizes from a single 24-hour trace on one workload. Soften to a workload-conditional recommendation, and explicitly scope to Q&A traffic with characteristics similar to the trace studied.\n\n## Sentence-level fixes\n\n- \"3.2 ms of median routing overhead\" \u2014 specify whether this includes classifier inference, network hop, or both; specify the hardware.\n- \"binary 'needs-Tier-2' labels\" \u2014 clarify the labeling source (human, heuristic, 70B-vs-7B disagreement, etc.).\n- \"the routing layer absorbs the variance\" \u2014 this is asserted, not shown; either drop or support with a variance-decomposition figure.\n- \"the central design contribution of FROST\" \u2014 paragraph 1 also frames the sidecar deployment as a contribution; pick one framing and be consistent.\n- \"Pareto improvement\" \u2014 remove unless quality is measured and latency is actually lower.\n\n## Suggested minimal revision to the conclusion\n\nReplace the final paragraph with something like: \"FROST reduces GPU-hours per query by 41% relative to a Tier-2-only baseline on a 24-hour Q&A trace, at the cost of a 42% increase in p99 latency (412 \u2192 587 ms) and with answer-quality impact not yet measured. The gating-and-cascade design appears promising for cost-sensitive deployments where modest tail-latency regressions are acceptable; broader recommendations await a quality evaluation and tests on additional workloads.\"\n\n## Items I could not verify\n\n- Whether the prose mis-transcribes Table 2 or whether Table 2 itself is mislabeled \u2014 I only have the prose. The latency direction needs to be checked against the actual table before deciding which to fix.\n- Whether the routing-direction inconsistency in paragraph 3 reflects a writing slip or a genuine implementation bug \u2014 only the authors can confirm. If it is the latter, the cost result needs to be re-derived.\n- The plausibility of the 3.2 ms overhead figure depends on classifier size and hardware, neither of which is given.\n- Whether the 50K training corpus is drawn from the same distribution as the 1.4M production trace \u2014 not stated, and material to whether the reported savings will hold in deployment.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The delegation asks to check a paper passage whose argument contains internal contradictions about routing direction and latency interpretation.",
+      "R1.3": "The passage makes empirical claims that must be checked against the reported cost and latency figures in the artifact.",
+      "R1.6": "A generic check of a research excerpt reasonably includes sentence- and paragraph-level clarity, terminology, and register issues.",
+      "RX.1": "Any projection of this terse delegation should disclose uncertainty about whether the intended check is broad or narrowly technical.",
+      "RX.2": "The artifact contains strong deployment and Pareto-improvement claims, making overclaim avoidance central.",
+      "RX.3": "The agent must stay within projecting responsibilities and not actually edit or evaluate the passage.",
+      "RX.4": "The deployment recommendation could influence operational decisions, so downstream-harm avoidance remains active.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's explicit claims and numbers."
+    }
+  }
+}

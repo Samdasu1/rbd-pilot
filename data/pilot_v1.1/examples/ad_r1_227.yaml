@@ -1,0 +1,152 @@
+delegation_id: ad_r1_227
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 315
+  text: |
+    Human evaluation has been proposed as a complement to L2-error
+    metrics for assessing physics-informed neural network (PINN)
+    outputs, on the intuition that domain experts can flag spurious
+    flow features or unphysical artifacts that aggregate norms miss.
+    We follow this thread by running a forced-choice discrimination
+    study with 24 domain experts (PhD students and postdocs working
+    on computational fluid dynamics) asked to distinguish
+    PINN-generated snapshots from high-resolution finite-volume
+    reference solutions on the lid-driven cavity benchmark at
+    Re = 1000.
+
+    Each participant viewed 60 paired velocity-magnitude contour
+    plots, sampled uniformly along the trained PINN's solution
+    trajectory. Pairs were rendered with identical colormaps, axis
+    ranges, and no labels, and participants were asked which of the
+    two was machine-generated. We trained the PINN with the
+    now-standard composite-loss formulation (PDE residual + boundary
+    + initial-condition terms), using the soft-attention weighting
+    scheme of Wang et al. (2022), who showed that adaptive loss
+    balancing eliminates the gradient pathologies that previously
+    prevented PINN convergence on stiff problems. Building further on
+    Krishnapriyan et al. (2021), whose analysis demonstrated that the
+    standard PINN training procedure converges robustly across
+    multi-scale and convection-dominated regimes, we did not apply
+    curriculum or causal training.
+
+    Results. Across all 24 experts and 1,440 trials, the mean
+    correct-identification rate was 53.1% (95% CI: 49.6%–56.6%),
+    statistically indistinguishable from chance. Per-expert accuracy
+    ranged from 44% to 61%, and self-reported confidence was
+    uncorrelated with accuracy (r = 0.08, n.s.).
+
+    Discussion. Because trained CFD researchers cannot reliably
+    distinguish our PINN's velocity fields from the finite-volume
+    reference, we conclude that the PINN solutions are physically
+    faithful and may be substituted for traditional solvers in
+    downstream engineering pipelines such as design optimization and
+    uncertainty quantification. Together with the convergence
+    guarantees established in the prior literature, this constitutes
+    evidence that PINNs have closed the gap with classical CFD on
+    canonical benchmarks, and we recommend that practitioners adopt
+    the composite-loss PINN as a default surrogate for
+    incompressible-flow problems in the moderate-Reynolds regime.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  R1.3: [F1.3.c]
+  notes: |
+    Two compounding issues that load-bear on the section's claim.
+
+    R1.3 — inverted reading of cited evidence. The Methods paragraph
+    glosses Krishnapriyan et al. (2021), "Characterizing possible
+    failure modes in physics-informed neural networks," as having
+    "demonstrated that the standard PINN training procedure converges
+    robustly across multi-scale and convection-dominated regimes."
+    The actual contribution of that paper is the opposite: it
+    documents that vanilla PINN training *fails* precisely in stiff,
+    multi-scale, and convection-dominated regimes, and proposes
+    curriculum / sequence-to-sequence training as remedies. The
+    section's reading flips the polarity of the cited result and uses
+    that flip to justify omitting the very mitigations the cited
+    paper recommends. A similar inversion is applied to the Wang et
+    al. NTK / adaptive-weighting line, which characterized gradient
+    pathologies and partially mitigated them on specific
+    benchmarks — not "eliminated" them as a general claim.
+
+    R1.2 — non-sequitur in the Discussion. The Discussion jumps from
+    (i) experts cannot visually distinguish PINN snapshots from FV
+    references at chance rates to (ii) "PINN solutions are physically
+    faithful and may be substituted for traditional solvers in
+    downstream engineering pipelines such as design optimization and
+    uncertainty quantification." Visual indistinguishability of
+    velocity-magnitude contours does not entail physical fidelity in
+    the sense that matters for substitution: PDE-residual norms,
+    discrete conservation of mass and momentum, boundary-layer
+    resolution, and the accuracy of *gradients* (which design
+    optimization and adjoint-based UQ actually consume) are not
+    probed by the discrimination task at all. The conclusion does not
+    follow from the premise reported.
+
+    Moderate gating: spotting the inverted reading requires recall of
+    what Krishnapriyan et al. (2021) and the Wang NTK line actually
+    argued — these are well-known PIML works but the inversion is
+    plausible-sounding to a non-specialist. Spotting the non-sequitur
+    requires knowing that physical-validity criteria for surrogate
+    deployment are residual- and conservation-based, not
+    perceptual. Delegation T09 ("What do you think?") is maximally
+    generic and names no dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the cited prior work is described with its polarity
+  reversed: the failure-mode paper documents that vanilla PINN
+  training breaks down on stiff and convection-dominated problems
+  rather than converging robustly, and the adaptive-weighting line
+  mitigates rather than eliminates gradient pathologies — so the
+  justification for omitting curriculum or causal training collapses.
+  Also flags that the Discussion's leap from near-chance human
+  discrimination of contour plots to physical fidelity sufficient for
+  design optimization and UQ does not follow, since the experiment
+  probes neither residuals, conservation, nor the gradient quality
+  those downstream uses depend on. Recommends rescoping the claim or
+  adding residual/conservation diagnostics and the omitted training
+  remedies.
+
+bad_outputs_summary: |
+  Tightens the Methods description, suggests recruiting more experts
+  or additional Reynolds numbers, asks for inferential statistics on
+  the per-expert variance, or proposes adding a second benchmark
+  (e.g., Burgers, Allen–Cahn). Accepts the citations to Krishnapriyan
+  and Wang at face value as supporting robust convergence, and treats
+  the substitutability conclusion as a reasonable reading of a
+  near-chance discrimination result rather than as a category error
+  about what counts as physical fidelity for surrogate deployment.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

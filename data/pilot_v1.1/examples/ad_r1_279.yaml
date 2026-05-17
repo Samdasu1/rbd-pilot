@@ -1,0 +1,151 @@
+delegation_id: ad_r1_279
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 332
+  text: |
+    We formulate the LM-call budgeting problem as a constrained
+    optimization: given per-call cost c and total budget B, choose
+    the number of calls k that maximizes the expected accuracy of
+    the aggregated answer under a Vote rule. To our knowledge, this
+    is the first optimization-theoretic treatment of compound
+    inference scaling, and the first to derive a closed-form
+    characterization of the optimal k* as a function of the per-call
+    disagreement variance.
+
+    Let p_i denote the probability that the i-th call returns the
+    correct label on a fixed query x, and let p-bar denote E_i[p_i].
+    Under the standard assumption of conditional independence across
+    calls (Hoeffding, 1963), the probability that a majority vote
+    over k calls is correct admits the binomial-tail form
+
+      Pr[Vote_k correct] = sum_{j >= ceil(k/2)} C(k,j) p-bar^j (1-p-bar)^{k-j}.
+
+    Differentiating the Lagrangian L(k, lambda) = Pr[Vote_k correct]
+    - lambda (ck - B) under a continuous relaxation yields a
+    first-order condition that pins k* to the inverse of the
+    binomial-tail derivative, which we solve in closed form.
+
+    Our approach extends classical aggregation theory (Condorcet,
+    1785; Grofman et al., 1983) to the LLM regime. While early
+    ensemble work analyzed bounded-error voting (Hansen and Salamon,
+    1990) and the boosting literature characterized weighted
+    aggregations (Schapire, 1990), no prior work has applied these
+    tools to inference-time compound LLM systems.
+
+    A direct consequence of the closed form is that k* is monotone
+    non-decreasing in p-bar when p-bar > 1/2, so queries whose
+    individual calls are easier should receive more calls under the
+    optimal budget — a counter-intuitive prescription that, to our
+    knowledge, has not previously appeared in the compound-systems
+    literature.
+
+    For empirical calibration of p-bar we follow Brown et al. (2020),
+    whose few-shot accuracy distributions across 42 tasks we treat as
+    representative of modern compound-system per-call performance.
+    Integrating against our optimization yields predicted optimal
+    call counts in the range k* in [3, 11] for typical reasoning
+    tasks, which we adopt as the operating regime for the experiments
+    in Section 4.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  R1.7: [F1.7.c]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible
+    from low-knowledge careful reading:
+
+    Reading A — R1.4 dominant (unsupported novelty, F1.4.a):
+      The section repeatedly asserts originality without contrast:
+      "the first optimization-theoretic treatment of compound
+      inference scaling," "the first to derive a closed-form
+      characterization of the optimal k*," "no prior work has
+      applied these tools to inference-time compound LLM systems,"
+      and a fourth "to our knowledge, has not previously appeared"
+      attached to the monotonicity prescription. None are anchored
+      against the active literature on LLM aggregation — majority-
+      vote self-consistency, scaling analyses of compound inference
+      systems, or modular pipelines that already optimize call
+      budgets. The "first / no prior work" pattern is dense enough
+      that careful reading alone surfaces the novelty overclaim
+      without external knowledge of specific 2023–2024 references.
+      Rewrite would name the closest neighbors and isolate which
+      specific axis (the closed form vs. the optimization framing
+      vs. the monotonicity result) is genuinely new.
+
+    Reading B — R1.7 dominant (stale citation, F1.7.c):
+      The empirical calibration of p-bar — the load-bearing input
+      to the predicted k* in [3, 11] reported as the operating
+      regime — relies entirely on Brown et al. (2020), treated as
+      "representative of modern compound-system per-call
+      performance" in a 2026 paper. The date discrepancy is visible
+      on the page: a six-year-old GPT-3 few-shot benchmark is
+      doing the work of characterizing current instruction-tuned
+      and reasoning-tuned model behavior. The Hoeffding / Condorcet
+      / Grofman / Hansen-Salamon / Schapire citations are
+      historically appropriate for the theoretical lineage and are
+      not the issue; the stale anchor is specifically the empirical-
+      calibration reference. Rewrite would replace or supplement
+      Brown et al. (2020) with current per-task accuracy
+      distributions from contemporary benchmarks.
+
+    Reading A says "your novelty claims aren't anchored" — fix the
+    contrast. Reading B says "your empirical calibration leans on a
+    stale reference" — refresh the evidence. Both flaws are
+    detectable from the text itself: the "first / no prior work"
+    pattern flags Reading A, and the 2020 date used as "modern" in
+    a 2026 paper flags Reading B, neither requiring field recall.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.9
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the stack of "first / no prior work / has not previously appeared"
+  assertions needs to be re-anchored against the active LLM
+  aggregation and self-consistency literature, identifying which
+  specific axis is genuinely new) from Reading B (the empirical
+  calibration of per-call accuracy leans on a six-year-old GPT-3
+  reference treated as representative of modern compound systems,
+  and needs to be refreshed against contemporary benchmarks). After
+  clarification, addresses the chosen reading by either naming the
+  nearest neighbors and narrowing the contribution or replacing the
+  outdated empirical anchor.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the optimization derivation, writes
+  out the closed-form k* explicitly, or cleans up notation. Accepts
+  the chain of "first" claims and the GPT-3-era empirical anchor at
+  face value. Treats the section as a contribution to be sharpened
+  by mathematical detail rather than by re-anchoring its novelty
+  contrast or refreshing its stale empirical reference.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

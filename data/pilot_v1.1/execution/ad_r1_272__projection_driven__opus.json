@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_272",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1739,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 23593,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.85}}\n\nSummary: Light prose polish plus flagging of unsupported/overreaching claims; no structural rework or technical reframing.\n\nThe paragraph reads cleanly at the sentence level, but several phrases assert more than the described evidence can carry. Below are targeted edits and flags. I have not tried to rewrite the contribution, reorder sections, or verify any of the factual claims about prior work, the dataset, or the emulators.\n\nPhrasing flags (assertion strength)\n\n1. \"To our knowledge, CLIMATE-RUBRIC is the first benchmark to decompose regional climate emulator skill into separable physical-process requirements\u2026\"\n   This is a strong priority claim. Unless a prior-work survey is included elsewhere in the paper, consider softening to \"we are not aware of a prior benchmark that\u2026\" and explicitly noting the scope of the search (e.g., \"within the regional emulator literature through [date]\").\n\n2. \"DPSR is the binding evaluation construct for regional emulators\"\n   \"Binding\" overreaches \u2014 it asserts normative primacy. Suggest: \"DPSR is a more informative evaluation construct than aggregate RMSE for regional emulators when downstream use depends on process fidelity.\"\n\n3. \"Prior approaches to regional emulator evaluation have relied on aggregate scoring, which our framework supersedes\u2026\"\n   \"Supersedes\" is overclaim territory and \"have relied on aggregate scoring\" is a sweeping characterization. Suggest: \"Prior regional emulator evaluations have typically emphasized aggregate scoring; our framework complements these by exposing per-process structure that aggregate scores collapse.\"\n\n4. \"We position CLIMATE-RUBRIC as the foundation on which future regional climate emulator development can be benchmarked\u2026\"\n   \"The foundation\" presumes adoption. Suggest: \"We offer CLIMATE-RUBRIC as one foundation for benchmarking future regional climate emulator development.\"\n\n5. \"four state-of-the-art neural emulators\"\n   \"State-of-the-art\" is a load-bearing adjective that ages quickly and is rarely defensible without citation. Suggest naming them or saying \"four recently published neural emulators.\"\n\n6. \"rankings diverge substantially from RMSE rankings\"\n   \"Substantially\" is doing work that should be quantified (\"the lowest-RMSE emulator ranks third on DPSR\" is concrete; \"substantially\" is not). Either drop \"substantially\" or replace with the rank-correlation statistic.\n\nSentence-level polish\n\n- \"scores model outputs against a structured rubric of per-process physical requirements rather than a single aggregate skill score\" \u2014 tighten to \"\u2026rather than a single aggregate score.\"\n- \"typically a regional 2 m temperature or precipitation hindcast\" \u2014 fine, but the em-dash construction makes the sentence long; consider splitting.\n- \"the candidate emulator produces outputs against each case\" \u2014 \"produces outputs for each case\" reads more naturally; \"against\" suggests adversarial framing.\n- \"a deterministic checker suite scores each requirement as satisfied or violated, and DPSR is computed as the fraction of satisfied requirements per case, averaged across the test set\" \u2014 clear; consider naming whether the average is uniform or weighted, since the next paragraph mentions bootstrap CIs but not weighting.\n- \"plus or minus one month\" \u2014 for consistency with \"1.5 K\", consider \"\u00b11 month\".\n- \"the orographic-gradient and diurnal-amplitude requirements\" \u2014 earlier the paragraph used \"diurnal temperature range\" and \"orographic precipitation gradient sign\"; align the terminology so a reader can map the two passages.\n- \"Prior approaches\u2026 have relied on aggregate scoring, which our framework supersedes by exposing the per-process structure that aggregate scores collapse.\" \u2014 \"aggregate\" appears three times in one sentence; vary or compress.\n- The \"three methodological pillars\" paragraph lists three items but does not label them as pillar 1/2/3; either number them or drop the \"three pillars\" framing \u2014 currently the reader has to count.\n\nScope notes\n\nI did not assess whether DPSR is well-defined statistically, whether the checker suite operators are appropriate, whether the four emulators or three regions are representative, or how this relates to existing process-based evaluation literature (e.g., ESMValTool, PCMDI metrics, CLIVAR process-oriented diagnostics). Those are substantive questions outside what was asked here.\n\nItems I cannot verify from the paragraph alone\n\n- Whether the priority claim (\"first benchmark to\u2026\") holds; depends on a literature search not shown.\n- Whether \"state-of-the-art\" is defensible for the four emulators evaluated.\n- Whether the example requirement thresholds (1.5 K, \u00b11 month) are standard or chosen ad hoc \u2014 the paragraph does not say.\n- Whether the bootstrap CIs account for spatial/temporal autocorrelation in gridded climate fields, which would matter for the validity of the intervals; the paragraph asserts CIs but not the resampling unit.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation targets a paragraph-level look, making sentence flow, register, concision, and local readability the central expected responsibility.",
+      "RX.1": "Any projection should preserve uncertainty because the delegation is underspecified and does not state whether the desired look is editorial, argumentative, or scholarly.",
+      "RX.2": "The artifact contains strong claims such as first benchmark, supersedes, and foundation, so avoiding projected responsibility for unsupported strengthening remains active.",
+      "RX.3": "The agent must stay within projection only and not actually edit, critique, summarize, or improve the paragraph.",
+      "RX.4": "Because the paragraph concerns climate-emulator evaluation and downstream impact assessments, projected responsibilities should avoid enabling misleading scientific claims.",
+      "RX.5": "The projection must remain traceable to the delegation wording and the specific claims present in the provided artifact."
+    }
+  }
+}

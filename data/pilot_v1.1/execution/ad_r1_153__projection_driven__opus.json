@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_153",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1986,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 24923,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.95, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Light prose polish on the paragraph plus flagged claims that warrant hedging or sourcing before publication; no structural or argumentative rewrite attempted.\n\nPolished version (sentence-level edits only):\n\n---\nRecent work on language-conditioned manipulation has explored using large language models (LLMs) as high-level planners that emit sequences of parameterized skills. Ahn et al. [citation needed] showed that grounding LLM proposals against learned affordance scores improves plan feasibility on long-horizon kitchen tasks. Follow-up systems have extended this paradigm with code-as-policy outputs, scene-graph conditioning, and verifier modules that score candidate plans before execution. A persistent limitation is that a single forward pass through the planner often yields plans that violate kinematic reachability or collision constraints in cluttered scenes.\n\nTo study this, we instrumented a 7-DoF Franka Panda with a wrist-mounted RGB-D camera and ran 240 trials across six tabletop rearrangement tasks, each requiring 4\u20139 pick-and-place actions. The planner emitted candidate skill sequences, which were then executed open-loop after a single feasibility check against the current scene graph.\n\nFor each failed trial, we logged the failure mode (unreachable grasp, collision during transit, object slip, or wrong target bin) and the step index at which the failure occurred. Failures were dominated by geometric infeasibility detected only at execution time: 41% involved unreachable grasps and 27% involved transit collisions with objects introduced earlier in the sequence.\n\nEquipping the planner with an iterative critique-and-revise loop \u2014 in which a vision-language critic re-scored the partial plan after each simulated step, allowing the planner to rewrite remaining steps \u2014 raised end-to-end success from 38% to 71% across the six tasks, with the largest gains on the two most cluttered scenes.\n\nThe contribution of this work is therefore a closed-loop replanning architecture for LLM-based manipulation planners that couples a per-step vision-language critic with a constrained rewrite operator. We demonstrate on real hardware that this architecture roughly doubles the success rate on cluttered tabletop rearrangement relative to single-shot LLM planning.\n---\n\nKey prose changes:\n- \"wrist RGB-D camera\" \u2192 \"wrist-mounted RGB-D camera\" (reads more naturally; the original is ambiguous between mount location and a brand/type).\n- \"4-9\" \u2192 \"4\u20139\" (en-dash for numeric ranges).\n- \"27% were transit collisions against objects\" \u2192 \"27% involved transit collisions with objects\" (the original conflates failure-mode counts with the collisions themselves; \"involved\" preserves accuracy).\n- Broke the long final sentence in the contribution paragraph at the natural seam, and changed \"integrates \u2026 with\" to \"couples \u2026 with\" to avoid an awkward repetition with \"integrated\" sense earlier.\n- Minor connective tightening (\"which were then\" comma; \"allowing the planner to\" instead of dashed parenthetical with \"and\").\n\nItems I would flag to the authors before submission:\n\n1. The \"roughly doubles\" framing in the closing sentence is a slight overstatement of a 38% \u2192 71% jump (1.87\u00d7). Consider \"nearly doubles\" or simply quoting the absolute numbers, to avoid drift between the abstract claim and the reported figures.\n\n2. \"Failures were dominated by geometric infeasibility\" is supported only by the two cited categories (41% + 27% = 68%). That is a majority but not overwhelming dominance, and the remaining 32% is not characterized. Either report the full breakdown or soften to \"the majority of failures stemmed from geometric infeasibility.\"\n\n3. The Ahn et al. reference is named but not cited; please confirm the intended citation (presumably SayCan, 2022) and add it to the bibliography. The \"code-as-policy outputs, scene-graph conditioning, and verifier modules\" sentence likewise alludes to specific lines of work without attribution \u2014 at least one citation per clause would be expected.\n\n4. The 38% \u2192 71% improvement is reported as an aggregate across six tasks and 240 trials, but it is not stated whether the baseline and the critique-and-revise condition were run on the same trial seeds, the same object configurations, or with matched random initializations. Without that, the comparison is ambiguous; a clarifying clause (\"on matched scene initializations\") would help.\n\n5. \"Real hardware\" in the closing sentence implicitly contrasts with simulation, but the methods paragraph mentions \"simulated step\" inside the critique loop. Readers may wonder whether the critic operates on a simulator rollout while the executed trial is on hardware \u2014 worth one sentence of clarification.\n\n6. The scope of the contribution (\"closed-loop replanning architecture\") is broader than what the experiments demonstrate (six tabletop rearrangement tasks on one robot). Consider narrowing the claim, e.g., \"for cluttered tabletop rearrangement,\" to keep the contribution statement aligned with the evidence.\n\nCaveats on what I cannot verify from the paragraph alone:\n- Whether the 41%/27% figures are of total trials or of failed trials (the text says \"for each failed trial \u2026 41% of failures,\" which is consistent, but worth double-checking against the underlying table).\n- The exact identity of the \"Ahn et al.\" citation and the prior systems alluded to in sentence three.\n- Whether \"open-loop after a single feasibility check\" is a fair characterization of the baseline used in the 38% number, or whether the baseline already includes some lightweight replanning. The comparison's fairness hinges on this.\n- Whether the critic and planner share a backbone, which affects whether the 71% number reflects added compute or an architectural change \u2014 not addressed in the paragraph.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation asks only to look at a paragraph, which most directly implies sentence- and paragraph-level prose review rather than higher-level research evaluation.",
+      "RX.1": "Any assessment should disclose uncertainty because the request gives no specific review criterion.",
+      "RX.2": "The projection should avoid inflating a vague paragraph-level request into full novelty, experimental, or literature validation.",
+      "RX.3": "The responsibility remains limited to inspecting the provided paragraph rather than acting on or rewriting the artifact.",
+      "RX.4": "A review of research claims should avoid encouraging misleading, unsafe, or unsupported downstream interpretations.",
+      "RX.5": "Any projected responsibility should remain traceable to the provided paragraph text and the exact delegation."
+    }
+  }
+}

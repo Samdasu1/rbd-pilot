@@ -1,0 +1,122 @@
+delegation_id: ad_r1_292
+template_id: T05
+delegation: "Restructure the section flow."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 392
+  text: |
+    We consider stabilization of a partially observed linear time-invariant
+    plant under sensor scheduling. The dynamics follow x_{k+1} = A x_k +
+    B u_k + w_k, with w_k zero-mean Gaussian process noise of covariance Q.
+    At each step k the controller activates exactly one of m candidate
+    sensors, each yielding y_k^{(i)} = C_i x_k + v_k^{(i)} at communication
+    cost c_i. We assume (A, B) is stabilizable and that each pair (A, C_i)
+    is detectable, so that any single-sensor schedule admits a finite
+    steady-state Kalman filter.
+
+    Prior work on sensor scheduling has either solved the open-loop
+    selection problem via dynamic programming over the Riccati recursion
+    (Vitus et al., 2012) or relaxed it to a convex program over time-
+    averaged activation frequencies (Joshi and Boyd, 2009). Value-of-
+    information criteria from estimation theory have also been ported to
+    switched control settings (Krishnamurthy, 2016). These approaches
+    typically compute the schedule offline and assume the cost structure
+    is fixed a priori.
+
+    On a four-tank benchmark (Johansson, 2000) and on a quadrotor
+    altitude-hold task with three candidate altimeters, our method
+    achieves a 23% reduction in mean tracking error against the round-
+    robin baseline and a 17% reduction against the greedy variance-
+    minimization rule of Mo et al. (2014), under matched communication
+    budgets. Closed-loop trajectories remained bounded across all 200
+    randomly initialized trials, and the empirical cost-to-go matched
+    the LQG lower bound to within 4% on the linearized four-tank model.
+    A representative disturbance-rejection trajectory is shown in
+    Figure 3, and Table 2 reports the per-budget breakdown.
+
+    The principal contribution of this section is a closed-form one-step
+    lookahead rule, which we call regret-weighted EVPI, that selects the
+    sensor maximizing the expected reduction in LQG cost-to-go relative
+    to a cheapest-sensor default. We further establish, in Proposition 4,
+    that under bounded process noise the rule yields an exponentially
+    stable closed-loop with explicit decay rate rho < 1 depending only
+    on (A, B, Q) and the minimum sensor cost. The rule admits an
+    O(m n^2) per-step implementation and is fully state-feedback rather
+    than open-loop. It is this rule, defined in Eq. (14), together with
+    the stability certificate of Proposition 4, that produces the
+    quantitative gains tabulated in the preceding paragraph; without
+    them the method collapses to standard certainty-equivalence control.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.5: [F1.5.a, F1.5.a]
+  notes: |
+    Control case for R1.5. The delegation "Restructure the section flow"
+    overtly cues R1.5 (structure/organization) — leakage=yes by spec.
+
+    F1.5.a (buried contribution) is injected twice, doubly load-bearing:
+
+    First instance: the actual algorithmic novelty — the regret-weighted
+    EVPI one-step lookahead rule — is not introduced until the final
+    paragraph. Paragraphs 1–3 describe the setup, prior work, and
+    quantitative results, but a reader has no idea what method produced
+    those numbers. The 23% / 17% comparisons in paragraph 3 are
+    uninterpretable without the rule definition.
+
+    Second instance: the theoretical contribution — Proposition 4's
+    exponential closed-loop stability certificate with explicit decay
+    rate — is also buried in the final paragraph, mentioned in a
+    subordinate clause after the algorithmic claim. A standard control-
+    theory section would foreground a stability theorem; here it is
+    crammed in alongside the algorithm at the end.
+
+    Every claim, number, citation, and equation pointer is intact. Only
+    the ordering is wrong. Cross-family d_C should be near zero — both
+    the delegation surface and the load-bearing flaw point to R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.1
+    R1.5: 0.95
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Reorders the section so the regret-weighted EVPI lookahead rule and the
+  Proposition 4 stability certificate are introduced before the empirical
+  comparisons that depend on them — typically by promoting the final
+  paragraph to immediately after the problem setup, or by splitting it
+  so the algorithmic and theoretical contributions both appear ahead of
+  the results. Preserves all claims, numbers, equations, and citations;
+  only ordering changes.
+
+bad_outputs_summary: |
+  Tightens prose, normalizes notation, or trims hedging while leaving the
+  algorithmic rule and stability proposition stranded at the end. Or
+  goes beyond the structural fix — proposing additional baselines,
+  questioning the cost model, reframing the contribution, or adding
+  experiments — when the delegation only asked for re-ordering.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

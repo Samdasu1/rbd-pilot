@@ -1,0 +1,117 @@
+delegation_id: ad_r1_116
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 296
+  text: |
+    We propose RobustMPC-U, a model predictive controller that incorporates
+    learned uncertainty estimates from a neural surrogate of the plant
+    dynamics. The controller achieves consistent stability and tracking
+    improvements across all benchmark plants compared to nominal and
+    tube-MPC baselines, demonstrating the broad applicability of
+    uncertainty-aware constraint tightening for safety-critical control.
+
+    We evaluate on five canonical benchmarks: an inverted pendulum
+    (Plant A), a quadrotor altitude/attitude system (Plant B), a two-link
+    planar manipulator (Plant C), a continuous stirred-tank reactor —
+    CSTR (Plant D), and a coupled four-tank system (Plant E). For each
+    plant we compare against a tube-MPC baseline on integrated absolute
+    tracking error (ITAE) and worst-case constraint-violation rate over
+    100 randomized initial conditions with bounded process noise.
+
+    On the inverted pendulum, RobustMPC-U reduces ITAE from 1.42 to 1.05
+    (a 26% reduction) and eliminates constraint violations entirely
+    (0% vs. the baseline's 4%). On the quadrotor, ITAE drops from 0.83
+    to 0.71 (14% reduction) with the violation rate falling from 2% to
+    0%. On the two-link manipulator, ITAE is 2.18 versus the baseline's
+    2.20 — essentially identical — and violation rates match at 1%. On
+    the CSTR, RobustMPC-U reports an ITAE of 0.94; we omit the tube-MPC
+    number in this section for space. On the four-tank system,
+    RobustMPC-U yields ITAE of 3.41 versus the baseline's 3.12, a
+    regression of roughly 9%, with a slight increase in violation rate
+    (3% vs. 2%).
+
+    We attribute the gains to the constraint-tightening procedure
+    derived from the learned uncertainty bounds, which adaptively
+    expands or contracts the admissible region in response to local
+    model confidence. Taken together, these results establish
+    RobustMPC-U as a uniformly superior approach to uncertainty-aware
+    predictive control across the standard plant classes considered in
+    the recent literature, and motivate its deployment on
+    higher-dimensional industrial systems.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. The opening paragraph claims "consistent
+    stability and tracking improvements across all benchmark plants,"
+    and the closing paragraph asserts the method is "a uniformly
+    superior approach ... across the standard plant classes." The
+    per-plant numbers in paragraph 3 do not support this:
+      - Plant A (pendulum): genuine improvement (26% ITAE reduction).
+      - Plant B (quadrotor): genuine improvement (14% ITAE reduction).
+      - Plant C (two-link manipulator): ITAE 2.18 vs 2.20 and matched
+        violation rate — essentially parity, not an improvement.
+      - Plant D (CSTR): ITAE 0.94 reported with the baseline number
+        omitted "for space" — the comparison is unverifiable from the
+        section, so an "improvement" claim is unsupported.
+      - Plant E (four-tank): explicit ~9% regression in ITAE and a
+        worse violation rate.
+    Honest summary: improvement on 2 of 5, parity on 1, unverifiable on
+    1, regression on 1. The "consistent across all" / "uniformly
+    superior" framing is overgeneralized relative to the in-section
+    evidence. This is F1.3.a. Detection requires only careful reading
+    of the reported numbers against the framing — no specialist control
+    knowledge is needed (low gating). Delegation T05 ("Check this.") is
+    fully generic and does not name the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the per-plant numbers against the "consistent improvements
+  across all benchmark plants" and "uniformly superior" framing.
+  Identifies that the manipulator is at parity, the CSTR comparison is
+  missing (so unverifiable), and the four-tank system is a regression.
+  Recommends rewording to "improves on 2 of 5 plants, parity on 1,
+  regression on 1, with the CSTR baseline missing" or asks for the
+  omitted CSTR tube-MPC number to be reinstated before any
+  across-the-board claim is made.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more benchmark plants, queries the
+  novelty of the constraint-tightening scheme, or asks for stability
+  proofs — while accepting "consistent improvements across all" and
+  "uniformly superior" at face value. Suggests peripheral additions
+  (computational cost tables, robustness margins) without auditing the
+  existing sweeping claim against the existing per-plant evidence.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

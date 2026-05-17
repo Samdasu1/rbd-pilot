@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_251",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2596,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33516,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: The paragraph's central argument contains a load-bearing logical error that inverts the meaning of the curvature bound, and the reported empirical results contradict rather than support the theoretical claim. Below I lay out the issues and suggested revisions.\n\n**1. The curvature bound is being read backwards.**\n\nThe Conforti\u2013Cornu\u00e9jols (1984) ratio (1/\u03ba)(1 \u2212 e^(\u2212\u03ba)) is *decreasing* in \u03ba on (0, 1]. At \u03ba \u2192 0 it tends to 1 (greedy is near-optimal); at \u03ba = 1 it equals 1 \u2212 1/e \u2248 0.632 (the Nemhauser\u2013Wolsey\u2013Fisher worst case). Higher curvature gives a *weaker* guarantee, not a tighter one. The claim that \"as the curvature \u03ba increases, the bound \u2026 tightens\" is the opposite of what the theorem says, and the derived \"central design principle\" of *maximizing* curvature is therefore not motivated \u2014 if anything the bound suggests the opposite design target (low curvature, i.e., closer to modular).\n\nRecommended fix: re-derive the design principle from the correct monotonicity, or drop the curvature-maximization framing entirely. If there is a genuine reason to prefer higher-curvature pools (e.g., expressivity, calibration, downstream task fit), state that reason directly rather than routing it through a misread approximation bound.\n\n**2. The empirical numbers contradict, rather than support, the stated narrative.**\n\nBaseline (\u03ba \u2248 0.31) achieves an empirical optimality ratio of 0.83; CurvMax (\u03ba \u2248 0.79) achieves 0.66. Under the correct reading of the Conforti\u2013Cornu\u00e9jols bound the worst-case guarantees are roughly 0.86 (\u03ba=0.31) and 0.71 (\u03ba=0.79) \u2014 i.e., the empirical ratios drop in the same direction the bound predicts, but this is bad news for a method whose stated goal is to *raise* the achieved ratio by raising curvature. The text frames the 0.66 result as \"broadly consistent with our theoretical narrative \u2026 in the high-curvature regime our bound predicts tighter behavior.\" That sentence is doing double duty in an unsupportable way: the bound does not predict tighter behavior at high \u03ba, and the observed ratio went *down*, not up.\n\nRecommended fix: report the result honestly as a negative finding for the curvature-elevation hypothesis. The current \"tentatively \u2026 broadly consistent\" hedging, combined with the appeal to \"finite-sample effects\" and \"larger evaluation budgets,\" reads as motivated rescue of a falsified prediction rather than calibrated uncertainty. If the authors want to keep the finite-sample-estimator explanation, it should be supported (e.g., bootstrap CIs on \u03ba, sensitivity analysis, a held-out split), not asserted.\n\n**3. Specific claims that are over-stated relative to the evidence on hand.**\n\n- \"which we believe may be of independent interest\" \u2014 applied to a misreading of a 1984 theorem; remove.\n- \"motivates our central design principle\" \u2014 the motivation does not survive correction of the bound; either re-motivate or soften to a hypothesis being tested.\n- \"broadly consistent with our theoretical narrative\" \u2014 the single comparison (0.83 vs 0.66, n=50 intent draws, one dataset split, one perturbation procedure) is too thin to support a \"consistent with theory\" claim even if the theory were correctly stated. No confidence intervals, no significance test, no ablation on the perturbation, no comparison to a non-curvature-targeted perturbation control.\n- \"might in principle be remediated by larger evaluation budgets\" \u2014 speculative and not actionable as written.\n\n**4. Scope and methodology gaps that should be acknowledged rather than papered over.**\n\n- \u03ba is an *empirical* estimate on a development split; its sampling variability is not characterized, yet the gap from 0.31 to 0.79 is treated as a clean experimental manipulation.\n- The 1 \u2212 1/e and (1/\u03ba)(1 \u2212 e^(\u2212\u03ba)) bounds are *worst-case over instances*; using them to make predictions about a single empirical average is a category mismatch that the text glosses over.\n- \"Adaptive submodular literature\" is invoked to justify monotonicity and submodularity assumptions, but the setup described is non-adaptive (a fixed S \u2286 Q chosen up front). The citation gesture should match the framework actually used.\n- No comparison to a curvature-agnostic baseline perturbation (e.g., random pool replacement matched on size) that would isolate whether the \u03ba manipulation, rather than the perturbation itself, drives the change.\n\n**5. Prose-level revisions.**\n\n- \"It seems natural to ask \u2026 and we believe the answer is affirmative\" \u2014 vague and self-congratulatory; replace with a concrete question and a concrete claim.\n- \"highly suggestive\" \u2192 state what is suggested and to whom.\n- \"as one can reasonably engineer\" \u2192 underspecified; replace with the actual objective being optimized in CurvMax.\n- \"we tentatively interpret these numbers as broadly consistent\" \u2192 either commit to a claim with evidence, or report the result and let it stand.\n- The two \"we believe\" hedges in the second paragraph carry no epistemic content; remove.\n\n**Suggested rewrite of the load-bearing sentences (paragraph 2):**\n\n> The Conforti\u2013Cornu\u00e9jols (1984) refinement states that for a monotone submodular f with total curvature \u03ba \u2208 (0, 1], greedy achieves a ratio of (1/\u03ba)(1 \u2212 e^(\u2212\u03ba)) of the optimum, which is *decreasing* in \u03ba. The worst-case guarantee is therefore strongest when curvature is low (\u03ba \u2192 0 recovers a 1-approximation) and weakest at \u03ba = 1, where it reduces to 1 \u2212 1/e.\n\nAnd of paragraph 3:\n\n> On ClariQ-2020 (dev split, 50 intent draws, no confidence intervals reported), the low-curvature baseline pool (\u03ba\u0302 \u2248 0.31) attained an empirical optimality ratio of 0.83, while the CurvMax-perturbed pool (\u03ba\u0302 \u2248 0.79) attained 0.66. This is a negative result for the curvature-elevation hypothesis: greedy performed worse, not better, on the higher-curvature pool, and the direction of the gap is also what the corrected Conforti\u2013Cornu\u00e9jols bound would lead one to expect on adversarial instances.\n\n---\n\nCaveats on the above that I cannot fully verify from the paragraph alone: (a) I have not consulted the Conforti\u2013Cornu\u00e9jols (1984) paper directly in this session \u2014 the (1/\u03ba)(1 \u2212 e^(\u2212\u03ba)) form and its monotonicity in \u03ba are standard and widely cited, but the reader should re-check the original statement and any sign conventions before publication; (b) I do not know how \u03ba\u0302 is estimated in CurvMax, so my comment on sampling variability is general rather than specific; (c) \"ClariQ-2020\" is referenced without a citation in the excerpt \u2014 confirm the dataset name and split conventions match the source; (d) my reading that the setup is non-adaptive is based on the description \"after asking S \u2286 Q\" with no interleaving of answers, but if the full paper specifies an adaptive protocol the framework critique should be adjusted; (e) the suggested rewrites are illustrative, not drop-in \u2014 they need to be reconciled with terminology and notation used elsewhere in the paper.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the paragraph be examined primarily for writing polish, technical argument/evidence, or citation/novelty positioning?",
+    "rationale": {
+      "R1.2": "The paragraph presents a theoretical argument linking curvature-aware bounds to a design principle, so checking the internal argument chain is centrally implicated.",
+      "R1.3": "The paragraph interprets reported empirical ratios and curvature measurements as support for the theoretical narrative, making claim-evidence alignment central.",
+      "R1.6": "The delegation targets a paragraph, so sentence- and paragraph-level clarity, register, and flow are a plausible central responsibility.",
+      "RX.1": "Any projection should preserve uncertainty because the short delegation does not specify the intended kind of review.",
+      "RX.2": "The projection should avoid overstating requested responsibilities beyond what the delegation supports.",
+      "RX.3": "The agent must stay within responsibility projection and not perform the requested paragraph review.",
+      "RX.4": "The projection should avoid enabling misleading technical or scholarly conclusions from an underspecified request.",
+      "RX.5": "The rationale should trace each active responsibility to the delegation and artifact features."
+    }
+  }
+}

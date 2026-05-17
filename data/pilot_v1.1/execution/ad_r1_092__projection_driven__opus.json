@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_092",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2001,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 27918,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.7}}\n\nSummary: Reviewed the abstract for framing coherence, argument structure, and \u2014 most prominently \u2014 alignment between the empirical claims made and the evidence actually reported, flagging several overclaims and a sizeable claim-evidence gap around the \"confirmed bioactivity\" pipeline.\n\n**Core framing tension**\n\nThe abstract pitches two distinct contributions but conflates them. The first is a methodological proposal (a heterogeneous panel-of-models with median Z-score aggregation). The second is an empirical claim about hit-rate enrichment on three targets. As written, the framing assumes the second validates the first, but the abstract never establishes that the panel formulation, as opposed to any reasonable ensemble, is what drives the enrichment. The ablation is offered as evidence for \"diversity,\" but ablating one member of a 3-member ensemble is also consistent with a generic ensemble effect; nothing distinguishes \"panel\" from \"ensemble\" as currently argued. Either soften the methodological framing to \"a particular heterogeneous-ensemble recipe\" or add a comparison against a same-size homogeneous ensemble to substantiate the panel-specific claim.\n\n**Claim-evidence misalignments**\n\n1. *\"Calibrated estimate of expected bioactivity.\"* Median Z-score across three heterogeneous predictors is not, on its face, calibrated in any standard sense (it has no probabilistic interpretation, no reliability diagram, no isotonic/Platt step described). This phrase should be removed or replaced with something like \"a rank-based consensus score\" unless a calibration procedure and evaluation are actually present in the paper.\n\n2. *\"Confirmed actives in the corresponding ChEMBL records.\"* The retrospective-virtual-screen setup needs much more care here. If the generative models were trained on ChEMBL (REINVENT, JT-VAE, and MolGAN typically are), then \"appearing as a confirmed active in ChEMBL\" risks measuring memorization rather than generative hit-finding. The abstract should either state the train/test split explicitly (held-out targets? held-out compounds? time-split?) or acknowledge the leakage risk. As written, the 2.9\u20133.4\u00d7 enrichment number is not interpretable.\n\n3. *\"2.9\u20133.4\u00d7 enrichment.\"* Enrichment is reported without a baseline rate, a denominator, or any confidence interval. A 3\u00d7 enrichment over a 0.1% baseline is very different from a 3\u00d7 enrichment over 30%. At least the baseline hit rate should appear in the abstract.\n\n4. *\"Reduces enrichment by roughly 30%.\"* Same issue \u2014 30% of what absolute number, and across how many seeds? If this is from a single run on three targets, the claim should be qualified accordingly.\n\n5. *Kinase case study.* \"Substantially higher predicted binding affinities\" is a predicted-vs-predicted comparison (docking on the filtered subset vs docking on the full library). This is not evidence that panel filtering finds binders; it is evidence that the panel score and the docking score are correlated. The current phrasing \u2014 \"supporting our claim that panel filtering is a useful component\" \u2014 is too strong for what the experiment shows. Suggest reframing as \"the panel-approved subset retained the high-docking-score region of the library,\" which is what was actually demonstrated.\n\n**Overclaims to soften**\n\n- \"Plug-and-play\" and \"no architectural constraints on the generator\" are reasonable but should be paired with the precondition that members must produce comparably-scaled scores (the Z-score aggregation assumes this).\n- \"Useful component in modern drug discovery pipelines\" is a deployment claim made on the basis of retrospective benchmarks plus one in-silico case study. No wet-lab validation is reported, and the abstract should not imply otherwise.\n\n**Logical-flow issues**\n\n- The \"diversity is essential\" paragraph cites \"intuitions from ensemble learning\" as supporting evidence. Intuitions are not evidence; the ablation is. Reverse the emphasis: lead with the ablation result, note that it is consistent with standard ensemble theory.\n- The empirical claim is introduced as \"central,\" but the kinase case study is then offered as the closing payoff. The abstract should decide whether the retrospective ChEMBL screen or the prospective case study is the headline result, and order accordingly.\n\n**Scope and downstream-risk notes**\n\nThe work touches on drug candidate prioritization, which has downstream consequences if readers take the enrichment numbers as predictive of real-world hit rates. The abstract would be stronger \u2014 and safer \u2014 with one explicit sentence that the validation is retrospective and in-silico, and that prospective/wet-lab confirmation is left to future work. As currently written, a reader skimming only the abstract could reasonably conclude that MolPanel has been shown to improve real hit rates, which the evidence reported does not support.\n\n**Items I cannot verify from the abstract alone**\n\n- Whether the ChEMBL records used for \"ground truth\" were excluded from the generative models' training sets. This is the single biggest determinant of whether the headline number is meaningful, and the abstract does not say.\n- Whether the median Z-score aggregation was selected a priori or chosen after seeing results across other aggregators (mean, min, learned stacker). If post-hoc, the enrichment numbers need a multiple-comparison caveat.\n- Whether the \"roughly 30%\" ablation number is mean across targets, worst-case, or best-case.\n- Whether the kinase case-study target is genuinely novel (i.e., has no ChEMBL bioactivity data the panel members could have seen during their own training).\n\nThese four uncertainties would change how strongly the empirical claims can be stated, and they should be resolved in the main text before the abstract's current phrasing is defensible.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the response focus on scientific validity and contribution claims, or on writing and structural polish?",
+    "rationale": {
+      "R1.1": "The open-ended request plausibly asks for judgment on the paper's core framing, contribution claim, and positioning of MolPanel.",
+      "R1.2": "Assessing whether the argument from ensemble prediction to improved drug-candidate filtering coheres is a central responsibility for a general reaction.",
+      "R1.3": "The artifact makes several empirical claims, so checking whether the reported experiments support those claims is centrally implicated.",
+      "RX.1": "Any response should disclose uncertainty because the artifact is an excerpt and lacks full methods, data, and results.",
+      "RX.2": "The response must avoid endorsing broad claims such as calibrated bioactivity or deployability beyond what the excerpt supports.",
+      "RX.3": "The delegation is only to give an opinion on the artifact, so the response must stay within the paper-review scope.",
+      "RX.4": "Because the domain is drug discovery, the response should avoid downstream harm from overstating biomedical reliability or practical readiness.",
+      "RX.5": "Judgments should be traceable to specific statements in the provided artifact rather than unsupported external assumptions."
+    }
+  }
+}

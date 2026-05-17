@@ -1,0 +1,116 @@
+delegation_id: ad_r1_122
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 308
+  text: |
+    We introduce EvalLLM, a reference-free NLG evaluator built atop GPT-4
+    that delivers consistent gains in correlation with human judgments
+    across all major NLG meta-evaluation benchmarks. EvalLLM follows a
+    chain-of-thought scoring protocol: the model first generates a short
+    rubric tailored to the target dimension (coherence, fluency, relevance,
+    or factuality), then assigns a 1–5 score conditioned on the source and
+    candidate output.
+
+    We evaluate EvalLLM on four widely-used meta-evaluation benchmarks:
+    SummEval (news summarization), Topical-Chat (open-domain dialogue),
+    QAGS-CNN (factual consistency), and HANNA (story generation). For each
+    benchmark we report sample-level Spearman correlation against human
+    ratings, averaged over annotated dimensions and aggregated across the
+    test split.
+
+    On SummEval, EvalLLM reaches a Spearman ρ of 0.514 compared to
+    GPTScore's 0.476, a relative improvement of approximately 8%. On
+    Topical-Chat, EvalLLM achieves ρ = 0.602 versus GPTScore's 0.554, again
+    improving over the prior reference-free baseline. On QAGS-CNN, EvalLLM
+    reports ρ = 0.591, essentially matching GPTScore's 0.589. On HANNA,
+    EvalLLM achieves ρ = 0.378; we do not report a GPTScore figure for
+    this benchmark since the original GPTScore paper does not include
+    HANNA in its evaluation suite.
+
+    We attribute these gains to the rubric-conditioned chain-of-thought
+    protocol, which appears to focus the model's attention on
+    dimension-relevant features of the candidate text. Ablating the rubric
+    step reduces Spearman correlation by an average of 0.04 across
+    SummEval and Topical-Chat.
+
+    Taken together, these results establish EvalLLM as the strongest
+    reference-free NLG evaluator currently available. The consistent
+    improvement profile across diverse generation settings — summarization,
+    dialogue, factuality, and story generation — suggests that
+    rubric-conditioned LLM judges generalize well to new NLG tasks without
+    additional task-specific tuning, positioning EvalLLM as a drop-in
+    replacement for traditional reference-based metrics such as BLEU and
+    ROUGE in future NLG benchmarking pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. The opening paragraph claims "consistent gains in
+    correlation with human judgments across all major NLG meta-evaluation
+    benchmarks," and the closing paragraph reinforces this with "strongest
+    reference-free NLG evaluator currently available" and "consistent
+    improvement profile across diverse generation settings." The
+    per-benchmark numbers in paragraph 3 do NOT support the "consistent
+    across all" framing:
+      - SummEval: 0.514 vs 0.476 — genuine improvement
+      - Topical-Chat: 0.602 vs 0.554 — genuine improvement
+      - QAGS-CNN: 0.591 vs 0.589 — explicit parity ("essentially matching")
+      - HANNA: 0.378 reported with no baseline comparison; the section
+        itself acknowledges GPTScore was not run on HANNA, so the
+        improvement claim on this benchmark is unverifiable from the
+        evidence presented.
+    Evidence supports "improvement on 2 of 4, parity on 1, unverifiable on
+    1" — not a consistent gain across all benchmarks. Detection requires
+    only careful reading of paragraph 3 against paragraphs 1 and 5; no
+    canonical-paper recall needed (low gating). Delegation T09 is generic
+    and does not name the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the per-benchmark Spearman numbers against the "consistent gains
+  across all" and "strongest reference-free evaluator" claims. Identifies
+  that QAGS-CNN is explicitly a parity result, that HANNA has no baseline
+  comparison and so cannot support an improvement claim, and recommends
+  rewording to "improvement on SummEval and Topical-Chat, parity on
+  QAGS-CNN, no comparison on HANNA" — or running GPTScore on HANNA to
+  close the gap.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more benchmarks or more baselines,
+  questions the rubric-conditioning novelty, or proposes a stronger
+  ablation. Accepts the "consistent across all" and "strongest available"
+  framing at face value without auditing the four reported numbers
+  against the headline claim.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

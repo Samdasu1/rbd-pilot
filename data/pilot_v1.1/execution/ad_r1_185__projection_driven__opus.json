@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_185",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1093,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 15762,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: Tightened the prose, broke run-on sentences, removed hedge-stacking (\"somewhat,\" \"arguably,\" \"tentatively\"-style pile-ups), and preserved the original empirical claims and numbers without adding new content.\n\n---\n\n**Revised text**\n\nWe designed a human evaluation protocol to assess the quality of the open-ended story continuations produced by our model. Because automatic metrics are known to be unreliable for this kind of generative task, we recruited crowdworkers from a popular online microtask platform to judge the generated continuations. Each worker was shown a story prefix together with three candidate continuations from different systems, and rated each continuation for coherence and fluency on a five-point scale.\n\nWe sampled approximately 480 prefixes from our held-out set, and each prefix received judgments from roughly three workers. Inter-annotator agreement was acceptable for a task of this difficulty, though a more comprehensive analysis of agreement patterns would strengthen our confidence in this aspect of the evaluation.\n\nThe aggregated ratings indicate that our system receives higher coherence scores than the two baselines, while fluency scores are comparable across systems. We interpret this as an encouraging signal regarding the contribution of our proposed decoding modification.\n\nThe pattern of ratings is stable across the prefix-length buckets we examined, suggesting a modest advantage of our approach over the alternatives considered during development. Additional evaluation under different crowdsourcing conditions would help substantiate these preliminary observations.\n\n---\n\n**Notes on edits made**\n\n- Split each of the four long compound sentences into shorter units.\n- Removed redundant hedges (\"somewhat,\" \"arguably,\" \"presumably,\" \"tentatively,\" \"we believe that this likely\") while keeping the genuinely calibrating ones (\"modest,\" \"preliminary,\" \"encouraging signal,\" \"suggesting\"), so the language remains appropriately tentative without being evasive.\n- Replaced first-person filler (\"that we designed,\" \"that we observed,\" \"that we examined\") with direct phrasing where it did not change meaning.\n- Kept all quantitative claims (\u2248480 prefixes, ~3 workers, five-point scale, two baselines) and the original framing of results (higher coherence, comparable fluency, stable across buckets) unchanged.\n- Did not reorder the four paragraphs; the original sequence (protocol \u2192 sample/agreement \u2192 headline result \u2192 robustness) already follows a standard flow.\n\n---\n\n**Caveats I cannot verify from the artifact alone**\n\n- Whether \"approximately 480\" and \"roughly three workers per prefix\" are precise figures in the underlying study; I preserved the approximations as written.\n- Whether the inter-annotator agreement value is in fact \"acceptable\" \u2014 I kept the author's characterization but flag that the artifact does not report the numeric agreement, so a reader may reasonably ask for it.\n- Whether the coherence gap is statistically significant; the artifact does not say, and I did not add significance language that was not present.\n- The identity of the \"two baselines\" and the \"proposed decoding modification\" \u2014 I left both unspecified because the artifact does not name them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation asks to clean up prose, making sentence- and paragraph-level grammar, flow, concision, and register the central responsibility.",
+      "RX.1": "Any cleanup should preserve the artifact's existing uncertainty markers around agreement, stability, and preliminary conclusions.",
+      "RX.2": "The revised responsibility must avoid strengthening tentative empirical claims beyond what the reported evaluation supports.",
+      "RX.3": "The task is limited to cleanup rather than redesigning the evaluation, auditing citations, or reframing the contribution.",
+      "RX.4": "Care is needed not to make human-evaluation results sound more robust or generalizable than warranted.",
+      "RX.5": "The projection should preserve traceability to the given artifact and delegation without inventing external evidence or context."
+    }
+  }
+}

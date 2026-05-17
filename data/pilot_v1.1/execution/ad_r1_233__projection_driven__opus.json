@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_233",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2755,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37732,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 1.0, \"R1.4\": 0.7, \"R1.5\": 0.6, \"R1.6\": 0.6, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.7}}\n\nSummary: I flag a central mismatch between what the section claims to measure (per-user intent alignment) and what the benchmark actually measures (majority-vote labels), along with several overclaims, an unsupported novelty assertion, and downstream-harm concerns; then I propose targeted revisions.\n\n## The core problem: the stated goal and the operationalization are not the same thing\n\nThe section sets up \"interpretation alignment\" as alignment with the *individual user's* intent \u2014 and explicitly contrasts that with \"a corpus-average prior.\" It then operationalizes the construct as agreement with a *majority vote over five annotators*, which **is** a corpus-average prior of exactly the kind the paragraph just rejected. The two paragraphs contradict each other.\n\nConcretely:\n- A majority-vote label collapses the very ambiguity the system claims to model. If two users issuing the same surface query have opposing information needs (the example the paper gives), no single gold label per query can reward serving both correctly.\n- Top-1 accuracy against a single majority label cannot distinguish \"aligned with the modal user\" from \"aligned with this user.\"\n- Therefore the sentence \"We interpret this gap as direct evidence that AmbiGNN is better aligned with user intent on ambiguous queries\" is not licensed by the reported evidence. The evidence supports a weaker claim: AmbiGNN better predicts the *majority* interpretation than the baselines do.\n\nThis is the dominant issue in the section and should be fixed before the rest of the paper is read on its terms. Two acceptable repairs:\n\n1. **Weaken the construct.** Rename the property to something like \"majority-interpretation accuracy\" and drop the per-user framing. Honest, but reduces the apparent contribution.\n2. **Strengthen the evaluation.** Keep the per-user framing but evaluate against per-user intent signals (e.g., the issuing user's subsequent click, dwell, follow-up query, or an elicited intent label). Then top-1 accuracy is computed per-user, not against a pooled label.\n\nPick one. The current text tries to have both and the argument chain breaks.\n\n## Other claims that outrun the evidence\n\n- **\"first GNN approach to model query ambiguity as a distribution over candidate interpretations\"** \u2014 this is hard to defend given the immediately following description of Chen et al. (2022), who \"use a graph attention network to compute posterior distributions over candidate entities for ambiguous mentions,\" and Liu and Park (2023), who \"score competing interpretations of underspecified queries\" with a GNN encoder. As written, the related-work paragraph undercuts the novelty claim in the preceding sentence. Either narrow the novelty claim (e.g., \"first to additionally condition on the user's KG interaction history\" \u2014 which is what the next sentence actually says) or explain precisely what distinguishes AmbiGNN's distribution from Chen et al.'s posterior.\n- **\"conditioning on the user's recent KG interaction history\"** is introduced in the last sentence but plays no role in the evaluation described earlier. If history is the actual delta over prior work, the benchmark needs per-user history to test it; the current AmbigKG-Eval description does not mention any such per-user signal. This is the same gap as the core problem above, viewed from the model side.\n- **\"4,200 ambiguous queries drawn from Wikidata-anchored question logs\"** \u2014 the source of the logs, the licensing, the anchoring procedure, and the inter-annotator agreement on the five-annotator labels are all unstated. Without IAA in particular, the majority-vote label's reliability is unknown, which matters because the headline number is computed against it.\n- **Baseline framing.** BM25 is a lexical retriever and a fine-tuned BERT classifier without graph structure is one non-graph neural baseline. Two baselines, one of which is a non-neural IR system, is thin support for a claim about graph structure being the cause of the improvement. At minimum, a non-graph baseline that *also* uses entity embeddings would isolate the graph contribution; ideally, an ablation that removes the graph from AmbiGNN itself.\n\n## Argument-chain and ordering issues\n\n- The flow is: claim a per-user goal \u2192 describe a non-per-user metric \u2192 report numbers \u2192 interpret numbers as evidence for the per-user goal. Re-ordering will not fix this; the metric has to change or the goal has to change.\n- The novelty paragraph arrives after the results, which is fine, but it currently does double duty as related work and as the contribution statement. Splitting \"what's new\" (one or two sentences, up front or just after the thesis) from the related-work walk-through would let each do its job.\n- The last clause (\"and the remainder of the paper develops the loss and training procedure\") is a roadmap fragment dangling off a related-work sentence. Move it to its own sentence at the end of the section.\n\n## Sentence-level\n\n- \"underlie a growing fraction of question answering systems\" \u2014 vague quantifier; either cite or drop.\n- \"real-world user queries frequently admit multiple valid interpretations\" \u2014 \"real-world\" adds nothing; \"frequently\" is unquantified. Consider: \"a non-trivial share of user queries admit multiple valid interpretations\" with a citation, or give a measured rate.\n- \"the property that, for each ambiguous query, the system's top-ranked interpretation matches the interpretation the *individual user* actually intended\" \u2014 long; the appositive \"for each ambiguous query\" can go.\n- \"We interpret this gap as direct evidence \u2026\" \u2014 \"direct evidence\" is too strong even after the construct issue is resolved; \"consistent with\" or \"evidence that\" suffices.\n- \"to the best of our knowledge, this is the first \u2026\" \u2014 hedged correctly, but the substance of the claim still needs to be narrowed (see above).\n- \"AmbigKG-Eval\" appears once with a hyphen; check consistent capitalization elsewhere.\n\n## Downstream-harm note worth surfacing in the paper\n\nA system that claims to serve \"individual user intent\" but is in fact trained and evaluated to return the *majority* interpretation will systematically underserve minority-interpretation users \u2014 and will do so silently, because the metric rewards it. For ambiguous queries with sensitive minority readings (medical, legal, identity-related), this is a real failure mode and should be named in a limitations section even if the operationalization is not changed. The current section does not acknowledge this.\n\n## Suggested minimal rewrite of the contested passage\n\nIf you keep the majority-vote operationalization:\n\n> \"We define *majority-interpretation accuracy*: the fraction of ambiguous queries for which the system's top-ranked interpretation matches the interpretation chosen by a majority of five crowd annotators. We treat this as a proxy for alignment with the modal user's intent, and discuss its limitations as a per-user measure in \u00a7[Limitations].\"\n\nThen the results sentence becomes: \"AmbiGNN achieves 71.8% majority-interpretation accuracy \u2026, evidence that it predicts the modal interpretation of ambiguous queries more accurately than non-graph baselines under this benchmark.\"\n\n## What I could not verify\n\n- Whether Chen et al. (2022) and Liu and Park (2023) exist as described, and whether the AmbiGNN distribution is in fact methodologically distinct from Chen et al.'s posterior \u2014 I have only the section's own paraphrase to go on, and the novelty claim turns on this distinction.\n- Whether the 4,200-query benchmark, the five-annotator protocol, and the reported accuracy numbers are reproducible, since no inter-annotator agreement, no data-collection details, and no statistical significance / confidence intervals are reported in the excerpt.\n- Whether \"user's recent KG interaction history\" is operationally available in the benchmark; the excerpt is silent on this, so my read that it is *not* could be wrong if it is described elsewhere in the paper.\n- Whether the BM25 and BERT baseline implementations are standard or custom; the headline gap depends on this.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The section\u2019s definitions and contribution framing may need reframing, especially around interpretation alignment and user intent.",
+      "R1.2": "The delegation implies checking whether the argument coherently connects ambiguous queries, benchmark labels, accuracy, and alignment claims.",
+      "R1.3": "Evidence-claim alignment is load-bearing because the section claims user-intent alignment from majority-vote accuracy results.",
+      "R1.4": "The explicit first-GNN and extension claims require assessing novelty relative to the named nearby works.",
+      "R1.5": "Because the request targets an entire section, section-level narrative order and placement of motivation, evaluation, results, and contribution are central.",
+      "R1.6": "General help with a section centrally includes sentence- and paragraph-level clarity, flow, and concision.",
+      "RX.1": "Any projection must preserve uncertainty about what kind of help is intended and about facts not verifiable from the artifact alone.",
+      "RX.2": "The section contains potentially strong alignment and novelty claims, so avoiding overclaiming is always active.",
+      "RX.3": "The agent must remain within projection rather than editing, critiquing, or rewriting the artifact.",
+      "RX.4": "The projection should flag responsibilities that reduce misleading research claims or downstream misuse of unsupported alignment language.",
+      "RX.5": "The responsibility assignment should be traceable to specific features of the delegation and artifact."
+    }
+  }
+}

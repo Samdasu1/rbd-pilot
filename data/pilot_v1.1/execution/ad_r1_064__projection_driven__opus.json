@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_064",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2148,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 29791,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: This section advertises a result the described system does not deliver \u2014 the prose promises formal Lyapunov stability guarantees, but the actual method is a confidence-threshold switch over candidate references with no Lyapunov analysis present. Below are the substantive issues, in roughly descending severity, followed by suggested rewrites.\n\n**1. The headline claim is unsupported by the described system.**\nThe opening paragraph promises \"formal Lyapunov stability guarantees\" and a \"certifiable region of attraction,\" but nothing later in the section computes a Lyapunov function, defines an attraction region, characterizes the plant model, or analyzes the switched-system dynamics. A PD+feedforward inner loop and a threshold-based outer switch do not, by themselves, constitute a Lyapunov argument \u2014 and switching among references can in fact destabilize a system that is stable under each individual reference (a well-known issue for switched systems). The name \"Lyapunov-Mediated Command Resolution\" and the abstract-style framing should be either (a) backed by an actual stability theorem with assumptions, candidate function V, and a dwell-time or common-Lyapunov condition on the switching, or (b) dropped. As written, this is an overclaim.\n\n**2. The contribution as actually executed is much narrower than the framing.**\nWhat the experiments demonstrate is: thresholding language-model confidence at \u03c4=0.4 and holding the previous setpoint when confidence is low reduces failures on an ambiguous-command benchmark. That is a reasonable engineering result, but it is a heuristic gating policy, not a control-theoretic contribution. The current framing conflates the two. Recommend reframing the contribution as \"a confidence-gated reference-switching policy\" and separately stating any stability property only if it is actually proved.\n\n**3. Evidence-to-claim gaps in the evaluation.**\nSeveral claims outrun what 80 trials on one platform can support:\n- \"practical recipe for deploying ... in unstructured settings\" \u2014 the experiments are tabletop, single-arm, 80 tasks; unstructured deployment is not evidenced.\n- \"We expect the same threshold-tuning methodology to transfer to other manipulation platforms\" \u2014 no cross-platform data is presented; this is speculation and should be marked as such or removed.\n- The naturalness improvement (3.1 \u2192 4.2 Likert) is reported without n, variance, statistical test, rater count, or whether raters were blinded. Either add these or soften to a descriptive observation.\n- \u03c4=0.4 was chosen on a held-out validation set, but it is unclear whether the reported 12% failure rate is on that same set or on a separate test split. If the same, the result is optimistic.\n\n**4. Internal logical tension around the \"hold previous setpoint\" fallback.**\nHolding the previous setpoint is presented as the safety behavior when confidence < \u03c4, but the section does not address: what happens on the first command (no previous setpoint); whether holding indefinitely is desirable (it can strand the user); and whether the user is informed that the command was rejected. These are first-order interaction-design questions that bear directly on the \"naturalness\" claim.\n\n**5. Safety framing is missing for an embodied system.**\nA 7-DoF manipulator acting on disambiguated human commands has real failure modes (wrong-object grasps, collisions, handover errors). The section reports a 12% task-failure rate but does not characterize the *kind* of failures \u2014 whether the residual 12% includes any unsafe outcomes, near-collisions, or grasps of unintended objects. For a system pitched as deployable, a failure-mode breakdown is needed, and the abstract should not imply safety from a stability label that was not actually proved.\n\n**6. Specific phrasing fixes.**\n- \"ensuring that whichever interpretation is ultimately selected, the resulting reference signal lies within a certifiable region of attraction\" \u2014 delete unless proved.\n- \"formal Lyapunov stability guarantees\" \u2014 delete unless proved.\n- \"tuned to the manipulator's nominal inertia\" \u2014 say which manipulator, and whether the inertia model was identified or taken from the manufacturer.\n- \"user-rated naturalness rose from 3.1 to 4.2\" \u2014 add n_raters, n_trials_per_rater, blinding, and a test statistic.\n- \"practical recipe for deploying language-driven robots in unstructured settings\" \u2014 narrow to the tested setting.\n- \"We expect the same threshold-tuning methodology to transfer\" \u2014 either remove or label as a conjecture.\n\n**Suggested minimal rewrite of the opening paragraph** (assuming no Lyapunov proof exists and you do not intend to add one):\n\n> We propose Confidence-Gated Reference Switching (CGRS), an outer-loop policy for language-driven robot teleoperation that handles ambiguous natural-language commands by gating reference updates on the language module's confidence score. When confidence exceeds a threshold \u03c4, the highest-scoring candidate reference is forwarded to a standard PD+feedforward inner loop; otherwise the previous setpoint is held. The contribution is empirical: we show on a 7-DoF tabletop manipulator that this gating reduces task-failure rate on ambiguous commands relative to a single-best-interpretation baseline.\n\nIf you do intend to keep a stability claim, the section needs (i) a plant model, (ii) a Lyapunov candidate, (iii) a condition on the switching signal (dwell time, common Lyapunov function, or multiple Lyapunov functions with appropriate decrease), and (iv) an explicit statement of what \"region of attraction\" refers to in joint or task space.\n\nCaveats on this review: I have not seen the rest of the paper, so it is possible that a Lyapunov analysis appears in a later section that this excerpt summarizes; if so, the abstract-style claim is defensible but should at least point to the theorem. I also cannot verify the numerical results (31%\u219212%, 3.1\u21924.2, \u03c4=0.4) against the underlying data; my comments treat them as reported and focus on the inferential gap between the reported numbers and the claims made about them. The cross-platform generalization comment assumes no additional experiments exist beyond what is described here.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general section review centrally includes assessing whether the stated thesis, contribution, and gap framing cohere at a conceptual level.",
+      "R1.2": "The section makes a technical argument from architecture to stability and evaluation outcomes, so checking the internal argument chain is central.",
+      "R1.3": "The empirical claims about reduced failures, naturalness, and transfer need to be checked against the reported experimental evidence.",
+      "R1.6": "A request to review a paper section normally includes sentence- and paragraph-level clarity, flow, register, and concision.",
+      "RX.1": "The reviewer should disclose uncertainty where the section lacks enough detail to verify stability, transfer, or experimental interpretation.",
+      "RX.2": "The section contains broad claims about formal guarantees, robustness, practicality, and transfer, making overclaim avoidance load-bearing.",
+      "RX.3": "The projection must stay within reviewing the section rather than executing edits, rewriting, or performing an external literature audit.",
+      "RX.4": "Because the artifact concerns robot teleoperation and stability guarantees, the review should avoid endorsing unsafe deployment claims beyond the evidence.",
+      "RX.5": "Feedback should remain traceable to specific statements and reported results in the provided section."
+    }
+  }
+}

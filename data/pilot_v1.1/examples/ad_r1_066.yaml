@@ -1,0 +1,115 @@
+delegation_id: ad_r1_066
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 372
+  text: |
+    We introduce PhysiCollab, a multi-agent collaborative framework for solving
+    parameterized partial differential equations (PDEs) with physics-informed
+    neural networks (PINNs). Existing PINN approaches struggle with stiff
+    multi-physics problems because a single network must simultaneously satisfy
+    boundary conditions, PDE residuals, and observational data — gradients from
+    these objectives often conflict during training. PhysiCollab addresses this
+    by assigning specialized agents to different physical constraints, allowing
+    collaborative resolution of competing objectives.
+
+    The architecture consists of a single feedforward neural network u_θ(x, t)
+    parameterized by θ, which maps spatial-temporal coordinates to the solution
+    field. Training proceeds by minimizing a composite loss:
+
+        L(θ) = λ_pde · L_pde(θ) + λ_bc · L_bc(θ) + λ_data · L_data(θ),
+
+    where L_pde is the mean squared PDE residual evaluated at collocation
+    points, L_bc is the boundary-condition mismatch, and L_data is the
+    supervised loss on observed measurements. The weights λ are tuned via a
+    learning-rate-annealing scheme adapted from Wang et al. (2021). At each
+    training iteration, gradients from each loss term are computed, summed,
+    and applied to update θ via Adam.
+
+    We evaluated PhysiCollab on the 2D Burgers' equation and the Allen–Cahn
+    equation. On Burgers (ν = 0.01), our method achieves an L2 relative error
+    of 1.4e-3, compared to 3.2e-3 for the standard PINN baseline. On
+    Allen–Cahn, we observe a 2.1× reduction in the boundary-condition
+    residual at convergence. Ablating the PDE-residual term yields a 4×
+    degradation, confirming that all three constraints are essential to the
+    final accuracy.
+
+    A key advantage of PhysiCollab is that it exploits the collaborative
+    structure of the problem decomposition: by treating each physical
+    constraint as a distinct agent contributing to the joint objective, we
+    avoid the gradient pathologies that plague monolithic PINNs. We argue
+    that this multi-agent perspective generalizes naturally to other
+    coupled-physics settings, including fluid–structure interaction and
+    reactive flow, where multiple governing equations must be jointly
+    satisfied. In Section 5, we discuss extensions where additional agents
+    handle uncertainty quantification and domain decomposition over
+    overlapping subregions of the spatial domain.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Conceptual object slip. Para 1 names the contribution "PhysiCollab, a
+    multi-agent collaborative framework" with "specialized agents" handling
+    different physical constraints. Para 2 then describes the actual
+    algorithm: a single feedforward network u_θ trained by minimizing a
+    weighted sum L = λ_pde·L_pde + λ_bc·L_bc + λ_data·L_data with Adam.
+    There are no agents, no inter-agent communication, no role
+    specialization, no collaborative protocol — only a standard
+    multi-task PINN loss. The conceptual object claimed (multi-agent
+    system) does not match the technical content (monolithic network with
+    weighted loss). Para 4 doubles down on the framing ("each physical
+    constraint as a distinct agent") even though nothing in the
+    architecture realizes that abstraction. Detection requires only
+    careful reading of the algorithm — no recall of canonical multi-agent
+    or PINN literature is needed (low gating). The delegation T01
+    "Improve this draft." is generic and does not signal R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section claims a multi-agent collaborative framework
+  but describes a single monolithic network trained with a weighted
+  multi-task PINN loss, with no agents, no communication, and no
+  role-specialized modules. Proposes either renaming the contribution
+  (e.g., as an adaptive multi-task PINN) or actually instantiating
+  per-constraint agents with distinct parameters and a coordination
+  mechanism. Does not focus on prose polish or extra benchmarks.
+
+bad_outputs_summary: |
+  Polishes hedging language, tightens the abstract sentences, or suggests
+  additional PDE benchmarks and baselines. Takes the multi-agent framing
+  at face value and proposes more agents (e.g., for adaptive sampling)
+  without flagging that no agents exist in the described architecture.
+  Adds citations to multi-agent literature without identifying the
+  object–content mismatch.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

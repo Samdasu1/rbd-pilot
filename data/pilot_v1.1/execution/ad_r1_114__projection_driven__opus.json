@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_114",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2477,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32275,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 0.9}}\n\nSummary: The section's framing contradicts its own evidence table \u2014 the prose claims universal gains, but the reported numbers show improvements on only 2 of 6 conditions, ties or regressions on the other 4, and a 12-person pilot that cannot support the generalization being drawn. Below are the substantive problems and concrete revisions.\n\n## Core problem: the headline contradicts the data\n\nThe abstract and conclusion both claim that ClarifyASR delivers \"substantial gains\" \"[a]cross every evaluation setting\" and is \"broadly effective\" / \"universally applicable.\" The reported numbers do not support this:\n\n| Condition | ClarifyASR | Baseline | Direction |\n|---|---|---|---|\n| LibriSpeech test-clean | 2.1 | 2.3 | Better (\u22120.2) |\n| TED-LIUM-3 | 5.4 | 5.9 | Better (\u22120.5) |\n| LibriSpeech test-other | 5.8 | 5.7 | Worse (+0.1) |\n| Switchboard | 11.2 | 11.2 | Tie |\n| CHiME-6 dev | 36.4 | 35.9 | Worse (+0.5) |\n| VA-Log | 9.1 | 8.8 | Worse (+0.3) |\n\nSo the system improves WER on 2 conditions (both relatively clean read speech), is flat or worse on 4, and the conditions where it regresses are precisely the conversational and far-field settings the conclusion explicitly claims it helps. The phrase \"consistent WER reductions across read, conversational, and far-field conditions\" is directly false against the table the section itself reports.\n\nThe text also handles the unfavorable results inconsistently: test-other's regression is explained away (\"clarification-trigger noise\"), CHiME-6 and VA-Log regressions are dismissed as \"within the noise band of a single training run,\" and Switchboard's tie is reported flatly. None of these dismissals is quantitatively justified \u2014 no confidence intervals, seed variance, or significance tests are reported, so \"within the noise band\" is an assertion, not a finding. If the noise band is large enough to absorb +0.5 WER on CHiME-6, it is almost certainly large enough to absorb the \u22120.2 WER on test-clean as well, which would eliminate the headline result.\n\n## Logical chain problems\n\n1. **\"Headline result\" rests on two points.** \"These two settings drive the headline result\" is an honest admission, but it is incompatible with the framing in the preceding and following paragraphs that the method works everywhere. Pick one.\n\n2. **WER protocol may be advantaging the method.** \"Rejected clarifications count as substitutions\" but accepted clarifications are merged back in. This protocol bakes the clarifications' benefit into the metric while still allowing the system to selectively decline to commit on hard tokens. The reader needs to see (a) the baseline measured under the same protocol with no clarification option, and (b) what happens if a non-response is counted as a deletion rather than absorbed silently. Without that, the WER comparison is not apples-to-apples.\n\n3. **Pilot study cannot bear the weight placed on it.** n=12 with a 9/12 preference is not statistically distinguishable from 50/50 at conventional thresholds (binomial two-sided p \u2248 0.15). Concluding that \"perceived-quality gains generalize beyond the WER metric\" \u2014 particularly when the WER gains themselves are limited to 2 of 6 conditions \u2014 is unsupported. Also missing: was the pilot blinded? counterbalanced? what was the task? recruited how?\n\n4. **Dialogue overhead is reported without a cost framing.** A median of 1.3 extra turns per session is potentially a large UX cost, especially in a voice-assistant setting (VA-Log) where the system did not even improve WER. The section does not weigh this cost against the (absent) benefit on that condition.\n\n5. **\"We recommend it as a default component for production deployments\"** does not follow from the evidence. The only production-like condition tested (VA-Log) showed a regression, and the dialogue-overhead cost is highest exactly where users are most sensitive to latency.\n\n## Specific prose fixes\n\n- \"Across every evaluation setting we considered, ClarifyASR delivers substantial gains\" \u2192 factually wrong given the table; replace with something like \"ClarifyASR improves WER on read-speech conditions (LibriSpeech test-clean, TED-LIUM-3); on noisier, conversational, and far-field conditions, results are flat or slightly worse than the baseline.\"\n- \"establishing selective clarification as a universally applicable strategy\" \u2192 remove \"universally\"; the evidence supports at most a conditional claim scoped to clean read speech.\n- \"we attribute the 0.1-point gap to clarification-trigger noise\" \u2192 either support this attribution with an analysis (e.g., trigger-rate breakdown on test-other vs. test-clean) or remove it; right now it reads as motivated dismissal.\n- \"within the noise band of a single training run\" \u2192 quantify the noise band (multiple seeds, bootstrap CIs over the test set), otherwise drop the phrase. Better: report all numbers with CIs and let the reader judge.\n- \"suggesting that the perceived-quality gains generalize\" \u2192 \"a small (n=12) pilot showed a 9/12 preference for the clarifying system; this is suggestive but not statistically significant and should not be generalized.\"\n- \"we recommend it as a default component for production deployments\" \u2192 narrow to the conditions where it actually helped, or remove.\n\n## What the section should look like instead\n\nA faithful version of this section would: (i) state up front that the method's benefit is condition-dependent and concentrated on clean read speech; (ii) report all six results with seed variance or bootstrap CIs so \"noise band\" claims are checkable; (iii) clarify the WER accounting under accept/reject/no-response and report baseline WER under the same protocol; (iv) treat the pilot as a small qualitative signal, not as evidence of generalization; (v) frame the dialogue-turn overhead as a cost to be traded off, especially for the assistant setting.\n\n## Items I cannot verify from the section alone\n\n- Whether the +0.5 / +0.3 / +0.1 regressions are in fact within seed/bootstrap noise \u2014 no variance estimates are given, so this is the authors' assertion rather than a finding I can confirm or refute.\n- Whether the test-clean and TED-LIUM-3 *improvements* are themselves within that same noise band; if \"noise band\" absorbs +0.5 on CHiME-6, it plausibly absorbs \u22120.5 on TED-LIUM-3 as well.\n- Whether the baseline was tuned/trained under identical conditions (data, steps, decoder) as ClarifyASR; the section does not say.\n- The exact WER protocol when a clarification is *issued but not answered* (timeout). \"Rejected\" is defined; \"unanswered\" is not.\n- Pilot study design details (blinding, task, counterbalancing, recruitment) needed to interpret the 9/12 number.\n\nThese gaps should be filled by the authors before any of the above critique is treated as final; the critique is based on the text as presented.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The review centrally involves whether the section's thesis and contribution framing match the reported results.",
+      "R1.2": "The delegation requires checking internal argument consistency, especially between mixed WER outcomes and claims of universal gains.",
+      "R1.3": "The artifact makes empirical claims that must be tested against the listed datasets, pilot results, and reported metrics.",
+      "R1.6": "A general section review normally includes sentence- and paragraph-level clarity, register, and concision.",
+      "RX.1": "The review must preserve uncertainty around single-run noise bands, pilot size, and proprietary data.",
+      "RX.2": "The section contains broad deployment and generalization claims that require overclaim control.",
+      "RX.3": "The projection must stay within reviewing the section rather than executing edits or broader experiments.",
+      "RX.4": "Recommendations about production ASR deployment could affect downstream user experience and reliability.",
+      "RX.5": "Any review responsibility should trace judgments to the specific reported datasets, WER values, and pilot evidence."
+    }
+  }
+}

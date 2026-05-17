@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_298",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1887,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 26733,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 0.3, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: I focused on internal contradictions in the argument chain and flagged claims that overreach what the described methodology actually supports.\n\n**Major contradictions in the argument chain**\n\n1. **\"Fully unsupervised\" vs. the labeled training pipeline.** The Data-collection section describes 12,400 human-annotated query\u2013response pairs, two annotators plus an adjudicator, a 70/15/15 split, and labels y(x) used \"for both training and evaluation.\" The Detector section then says the head is trained with class-balanced binary cross-entropy \u2014 which requires those labels. The Deployment-scope section nevertheless asserts the system is \"fully unsupervised,\" \"requires no annotated examples of anomalous routing decisions and no ground-truth labels of any kind.\" These statements are mutually incompatible. The method as described is supervised binary classification; at most one could argue inference is label-free (which is trivially true of any trained classifier). The \"no labeling effort\" claim for new operators also conflicts with the fact that the trained model embeds the rubric and label distribution of the original three-week corpus and has not been shown to transfer.\n\n2. **AUC \u2192 prevalence is a non sequitur.** The Results section concludes \"From this AUC, we therefore conclude that the rate of anomalous routing decisions in production multi-LLM systems is approximately 18 percent.\" AUC 0.91 is a ranking/discrimination metric; it carries no information about base rate. The 18% figure is simply the annotated prevalence in the training corpus reported earlier (18.2%), not a quantity estimated from AUC. The inference \"from this AUC \u2026 we conclude [prevalence]\" does not follow from any step shown.\n\n3. **\"Calibrated prevalence estimator\" is unsupported and inconsistent with the reported metrics.** Only AUC and F1 at a validation-tuned threshold are reported. Neither is a calibration metric (no Brier score, reliability diagram, ECE, or held-out prevalence comparison is given). Calling the detector \"calibrated\" contradicts the evidence actually presented.\n\n4. **\"Consistent with prior router-quality audits\" is asserted without any cited prior audit.** Within the artifact itself there is no reference, number, or range from prior work to be consistent *with*; the consistency claim is therefore unsupported by the surrounding text.\n\n5. **Split definition vs. unit of anomaly.** Splits are described as 70/15/15 over *queries* (\"queries (not responses)\"), but each row is a query\u2013response pair and the label is on the response. If a single query can be routed to multiple models or retried (the feature list includes \"retry count\"), a query-level split may still place correlated responses across train/test, which weakens the implicit independence assumed when reporting test AUC/F1. This is at minimum an underspecified step in the chain from data to reported metric.\n\n6. **Feature-attribution wording.** \"Routing-log features contribute roughly 0.05 AUC over a text-only ablation\" is internally fine as a delta, but the artifact does not state whether the ablation was retrained or merely had features zeroed; without that, the causal reading (\"contribute\") is stronger than the reported procedure supports.\n\n**Overreach to tighten or remove**\n\n- Drop \"fully unsupervised\" and \"no ground-truth labels of any kind.\" Replace with an accurate description: a supervised classifier trained once on labeled data, then applied to new logs without per-deployment relabeling \u2014 and explicitly flag this as an assumption pending transfer evaluation.\n- Remove the AUC \u2192 18% prevalence inference, and the \"calibrated prevalence estimator\" framing, unless calibration metrics and a prevalence-estimation procedure (e.g., quantification methods such as classify-and-count with prior adjustment) are introduced and evaluated.\n- Either cite the \"prior router-quality audits\" or strike the consistency claim.\n- Note explicitly that generalization to other routers, model mixes, or time periods is not evaluated; the rubric and label distribution are specific to the three-week, four-model corpus.\n\n**Suggested minimal rewrite of the two offending passages**\n\n- Deployment scope \u2192 \"ROUTERSCAN requires labeled data only at training time; at inference it consumes router logs directly and produces an anomaly score per query. Transfer to routers with different model mixes or traffic distributions is not evaluated here.\"\n- Results (final sentence) \u2192 \"On the held-out test split, ROUTERSCAN achieves AUC 0.91 and F1 0.74 at the validation-tuned threshold; routing-log features add ~0.05 AUC over a text-only ablation. We do not claim a prevalence estimate from these metrics; the 18.2% anomaly rate reported above is the annotated rate in our corpus, not an output of the detector.\"\n\n**Caveats on what I could not verify**\n\nI evaluated only the internal coherence of the passage as written; I did not check the cited (or implied) numbers against any external source, confirm that MPNet + logistic regression with the listed features actually attains AUC 0.91 on a corpus of this size, or assess whether the annotation rubric is reasonable. The split-leakage concern (point 5) is a possibility raised by the text's own wording, not a confirmed defect \u2014 resolving it requires details the artifact does not contain. The \"consistent with prior audits\" critique assumes the artifact is self-contained; if a bibliography exists elsewhere, that specific point may be moot, but the in-text claim still needs a pointer.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The delegation explicitly asks to check whether the argument is internally consistent across premises, method descriptions, deployment claims, and conclusions.",
+      "RX.1": "Any projection of consistency checking should preserve uncertainty about what can be inferred from the artifact alone.",
+      "RX.2": "The task centrally requires avoiding acceptance of conclusions that exceed or contradict the stated premises.",
+      "RX.3": "The delegation is narrowly limited to logical consistency and should not expand into rewriting, novelty review, or citation audit.",
+      "RX.4": "Logical inconsistencies in deployment or evaluation claims could mislead downstream users about system reliability or applicability.",
+      "RX.5": "Consistency judgments should remain traceable to specific statements in the provided artifact."
+    }
+  }
+}

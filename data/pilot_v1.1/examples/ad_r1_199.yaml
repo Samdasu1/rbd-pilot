@@ -1,0 +1,122 @@
+delegation_id: ad_r1_199
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 348
+  text: |
+    Quantifying predictive uncertainty in deep medical image classifiers
+    remains a central challenge for clinical deployment. Standard softmax
+    outputs are notoriously miscalibrated under distribution shift (Guo
+    et al., 2017), and Bayesian approximations such as MC dropout (Gal
+    and Ghahramani, 2016) and deep ensembles (Lakshminarayanan et al.,
+    2017) impose substantial inference-time costs that limit point-of-care
+    use.
+
+    A complementary line of work explores eliciting uncertainty as a
+    natural-language token rather than from logits. In the radiology
+    domain, Halabi et al. (2021, Radiology: Artificial Intelligence)
+    showed that fine-tuning a vision-language model to emit a discrete
+    confidence phrase ("low", "moderate", "high") alongside its diagnostic
+    label produced expected calibration error (ECE) of 4.2% on a held-out
+    chest radiograph cohort, comparable to temperature-scaled ensembles at
+    a fraction of the cost. We adopt this verbalized-confidence paradigm
+    and ask whether it transfers to volumetric modalities, specifically
+    head CT.
+
+    Our model, RadCalib, is initialized from a CLIP-style encoder
+    pretrained on radiology report pairs and fine-tuned on 38,400 head
+    CT studies labeled for intracranial hemorrhage (ICH). Following the
+    protocol of Halabi et al., we append a confidence-token head trained
+    jointly with the classification head; the model emits both a binary
+    ICH label and one of five confidence phrases. We evaluate on an
+    external test set drawn from a different scanner manufacturer to
+    assess calibration under realistic distribution shift.
+
+    RadCalib achieves an ECE of 5.7% on the in-distribution split and
+    8.3% on the external split, compared to 11.4% and 16.2% for a
+    temperature-scaled baseline. Selective prediction at the "high"
+    threshold yields 94.1% sensitivity and 91.6% specificity, exceeding
+    the average radiologist working point on the external set.
+
+    We position RadCalib as the first verbalized-confidence model
+    evaluated on volumetric neuroimaging, building on the chest-radiograph
+    foundation laid by Halabi et al. The principal contribution is
+    empirical evidence that the verbalized-confidence paradigm is robust
+    to a 3D modality and to scanner-manufacturer shift, supporting its
+    candidacy for clinical triage workflows.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    The load-bearing prior work is "Halabi et al. (2021, Radiology:
+    Artificial Intelligence)," cited as the originator of the
+    verbalized-confidence-phrase protocol for chest radiographs and as
+    the source of the methodology that RadCalib follows. No such paper
+    exists. The surname is plausible (Safwan Halabi is a real radiology
+    AI researcher), the venue is real (Radiology: AI, an RSNA journal),
+    and the described methodology is plausible — but the specific work,
+    cohort, and ECE figure are fabricated. Detection requires moderate
+    field familiarity: a reader in medical-imaging ML would expect to
+    have heard of a high-profile chest-radiograph verbalized-confidence
+    study, and a quick database lookup (PubMed / RSNA / Google Scholar)
+    confirms the work does not exist. The fabrication is load-bearing
+    because (a) the novelty claim ("first verbalized-confidence model
+    on volumetric neuroimaging") presupposes the prior 2D result exists,
+    and (b) the protocol RadCalib "follows" has no actual reference
+    implementation. The contributions of Guo et al. 2017, Gal &
+    Ghahramani 2016, and Lakshminarayanan et al. 2017 are real and
+    correctly attributed; the flaw is isolated to the Halabi citation.
+    Delegation T06 is generic ("take a look at this paragraph") and
+    does not point at scholarship.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4    # novelty positioning is downstream of whether Halabi et al. exists
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.9    # load-bearing — fabricated citation
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the Halabi et al. (2021, Radiology: AI) citation cannot be
+  verified and appears fabricated, and that this is load-bearing because
+  the section's protocol and "first volumetric" novelty claim both rest
+  on it existing. Recommends locating the actual originating work for
+  verbalized-confidence in radiology (or acknowledging there is none
+  and re-framing RadCalib's contribution accordingly) before the section
+  can stand. May note that the other cited works (Guo, Gal & Ghahramani,
+  Lakshminarayanan) are correctly attributed.
+
+bad_outputs_summary: |
+  Polishes prose, suggests reporting additional metrics (Brier score,
+  AUROC), asks for more ablations on the confidence-token vocabulary,
+  or praises the external-shift evaluation — without questioning the
+  Halabi et al. reference. Treats the "first volumetric" novelty claim
+  as defensible given the cited 2D precedent. Adds peripheral citations
+  to MC dropout variants or conformal-prediction work without checking
+  the load-bearing reference.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

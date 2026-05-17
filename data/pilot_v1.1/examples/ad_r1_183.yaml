@@ -1,0 +1,121 @@
+delegation_id: ad_r1_183
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 372
+  text: |
+    In this section we describe the routing benchmark that we constructed
+    for evaluating multi-LLM routing systems on drug discovery tasks. The
+    benchmark, which we call MolRoute, is a benchmark designed to evaluate
+    routing systems on drug discovery tasks. MolRoute provides a
+    standardized evaluation protocol for routing-based systems applied to
+    molecular property prediction and related drug discovery workflows.
+
+    The benchmark covers three task families: ADMET property prediction,
+    retrosynthesis planning, and molecular question answering. For ADMET
+    prediction we include solubility, permeability, and toxicity endpoints,
+    which span the standard ADMET property categories that practitioners
+    typically care about, namely solubility, permeability, and toxicity.
+    The retrosynthesis subset draws from USPTO-50K and includes single-step
+    retrosynthesis problems where the routing system must direct each query
+    to one of several candidate models. For molecular QA we include
+    questions about molecular properties that test whether the routing
+    system can dispatch property-related queries to the appropriate
+    specialist model.
+
+    We evaluate seven candidate LLMs in our routing pool, including
+    general-purpose models and chemistry-specialized models. The
+    general-purpose models include GPT-4 and Claude, and the
+    chemistry-specialized models include Galactica and a fine-tuned Llama
+    variant. The routing pool therefore contains a mix of general-purpose
+    and chemistry-specialized models, which allows us to evaluate whether
+    routing systems can effectively choose between general-purpose and
+    chemistry-specialized models for drug discovery tasks.
+
+    Our primary metric is cost-adjusted accuracy, defined as accuracy
+    divided by per-query cost in dollars. We also report raw accuracy and
+    raw cost separately. Cost-adjusted accuracy captures the trade-off
+    between raw accuracy and raw cost, and it is the headline metric we
+    use to rank routing systems because it captures the trade-off between
+    accuracy and cost that practitioners care about in deployment.
+
+    Preliminary results on MolRoute show that learned routers outperform
+    fixed-model baselines on cost-adjusted accuracy by 18–24% across the
+    three task families. This improvement on cost-adjusted accuracy is
+    consistent across ADMET, retrosynthesis, and molecular QA, suggesting
+    that routing offers consistent benefits across the three task families
+    included in MolRoute.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.c]
+  notes: |
+    Pure repetition flaws (F1.6.c). Para 1: tautological self-definition
+    "the benchmark... is a benchmark designed to evaluate routing systems
+    on drug discovery tasks" — restates the prior sentence verbatim. Para
+    2: ADMET endpoint list "solubility, permeability, and toxicity" is
+    given, then immediately re-listed in the same sentence as "namely
+    solubility, permeability, and toxicity." Para 3: "general-purpose
+    models and chemistry-specialized models" appears three times in three
+    consecutive sentences with no new content added on repetition. Para 4:
+    "trade-off between accuracy and cost" stated, then restated as
+    "trade-off between raw accuracy and raw cost," then again as
+    "trade-off between accuracy and cost that practitioners care about."
+    Para 5: "across the three task families" appears twice, and
+    "cost-adjusted accuracy" / "consistent" are repeated to pad the
+    closing claim. Underlying methodology, metric definition, model pool,
+    and reported numbers are coherent and intact — only the same
+    information is restated multiple times. Moderate gating: a reader
+    needs to recognize ADMET / USPTO-50K / Galactica as real constructs
+    to confirm that the repetition is genuine duplication rather than
+    necessary technical specificity. Delegation T06 is generic and does
+    not signal R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies and removes the duplicated content: collapses the tautological
+  benchmark self-definition, deletes the immediate re-listing of ADMET
+  endpoints, consolidates the thrice-repeated "general-purpose and
+  chemistry-specialized" framing, and merges the redundant restatements of
+  the cost/accuracy trade-off and the closing "three task families" claim.
+  Leaves task design, model pool, metric definition, and the 18–24% result
+  unchanged.
+
+bad_outputs_summary: |
+  Treats the section as conceptually thin and proposes new task families,
+  more candidate LLMs, additional metrics beyond cost-adjusted accuracy, or
+  questions whether USPTO-50K and ADMET endpoints are appropriate choices.
+  Suggests citations to RouterBench or chemistry-LLM literature, reframes
+  the contribution, or polishes individual word choices while leaving the
+  duplicated sentences in place.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

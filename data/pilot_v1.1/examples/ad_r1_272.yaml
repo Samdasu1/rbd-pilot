@@ -1,0 +1,155 @@
+delegation_id: ad_r1_272
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: climate
+  word_count: 360
+  text: |
+    We introduce CLIMATE-RUBRIC, a decomposed evaluation framework for
+    regional climate emulators that scores model outputs against a
+    structured rubric of per-process physical requirements rather than
+    a single aggregate skill score. To our knowledge, CLIMATE-RUBRIC
+    is the first benchmark to decompose regional climate emulator
+    skill into separable physical-process requirements that can be
+    checked independently and aggregated into a single Decomposed
+    Process Skill Ratio (DPSR).
+
+    The framework operates in three stages. First, a panel of climate
+    scientists annotates each evaluation case — typically a regional
+    2 m temperature or precipitation hindcast — with an explicit list
+    of process-level requirements: for example, "captures the diurnal
+    temperature range within 1.5 K", "preserves the orographic
+    precipitation gradient sign across the leeward boundary", and
+    "maintains ENSO teleconnection phase within plus or minus one
+    month". Second, the candidate emulator produces outputs against
+    each case. Third, a deterministic checker suite scores each
+    requirement as satisfied or violated, and DPSR is computed as the
+    fraction of satisfied requirements per case, averaged across the
+    test set.
+
+    We argue that DPSR is the binding evaluation construct for
+    regional emulators because aggregate root-mean-square error masks
+    systematic process-level failures: a model can achieve competitive
+    RMSE while violating physical constraints that downstream impact
+    assessments depend on. Prior approaches to regional emulator
+    evaluation have relied on aggregate scoring, which our framework
+    supersedes by exposing the per-process structure that aggregate
+    scores collapse.
+
+    The framework rests on three methodological pillars. The rubric
+    construction protocol adapts process-based evaluation principles
+    long established in numerical weather prediction. The checker
+    suite is built from standard atmospheric diagnostic operators
+    applied to gridded output. The aggregation step uses bootstrap
+    resampling to produce per-process and overall confidence intervals.
+
+    We evaluate four state-of-the-art neural emulators on a
+    CMIP6-derived test set spanning three reference regions and find
+    that DPSR rankings diverge substantially from RMSE rankings: the
+    lowest-RMSE emulator ranks third on DPSR, primarily because it
+    fails the orographic-gradient and diurnal-amplitude requirements.
+    We position CLIMATE-RUBRIC as the foundation on which future
+    regional climate emulator development can be benchmarked, and we
+    release the rubric, checker suite, and reference annotations as a
+    community resource.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible
+    and both detectable from careful reading alone:
+
+    Reading A — R1.4 dominant (missing nearest neighbor):
+      The "first benchmark to decompose regional climate emulator
+      skill into separable physical-process requirements" claim sits
+      in a crowded design space that the section never names. The
+      surrounding literature on regional and global ML emulator
+      evaluation includes obvious nearest neighbors (community
+      benchmarks for ML weather/climate emulators, CMIP-style
+      diagnostic intercomparison protocols, and process-based
+      evaluation suites long used in NWP — which the section itself
+      gestures at one paragraph later). The bare phrase "Prior
+      approaches to regional emulator evaluation have relied on
+      aggregate scoring", with no system named, is the
+      missing-nearest-neighbor signature: the contribution is
+      positioned against an unnamed straw man rather than against
+      the closest existing benchmarks. Rewrite would re-anchor the
+      "first" claim against the named comparators and isolate the
+      axis on which DPSR is genuinely new (per-process rubric
+      structure? checker automation? annotation protocol?).
+
+    Reading B — R1.7 dominant (missing key prior work):
+      The "three methodological pillars" paragraph hangs the
+      framework's credibility on three load-bearing references that
+      are never cited: "process-based evaluation principles long
+      established in numerical weather prediction", "standard
+      atmospheric diagnostic operators", and a "CMIP6-derived test
+      set". Each of these has canonical anchors that any reader
+      would expect (the seminal Taylor-diagram and process-based
+      diagnostic literature, the WGNE/CMIP intercomparison protocol
+      papers, and the CMIP6 design paper for the test set). Their
+      absence is visible from the bare assertions alone — the reader
+      does not need to recall the specific citations to notice that
+      methodological grounding is being asserted without anchors.
+      Rewrite would insert the canonical references for each of the
+      three pillars and the test-set source.
+
+    Reading A says "you haven't said who you're closest to" — fix the
+    novelty contrast. Reading B says "you haven't anchored the
+    methodological scaffolding you depend on" — fix the scholarship
+    gap. Detection is low-gated for both: the unnamed comparator set
+    is visible from the bare "first" claim and the unnamed "prior
+    approaches", and the missing citations are visible from the bare
+    assertions in the methodological-pillars paragraph.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.85
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (re-anchor the "first benchmark" claim against the closest existing
+  ML emulator benchmarks and process-based NWP evaluation suites, and
+  identify which axis of CLIMATE-RUBRIC is genuinely new) from
+  Reading B (the three methodological pillars and the CMIP6-derived
+  test set are load-bearing assertions without citations, and each
+  needs its canonical anchor inserted). After clarification,
+  addresses the chosen reading concretely.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the three-stage description, or suggests
+  expanding the evaluation to more regions or more emulators. Accepts
+  the "first benchmark" claim and the uncited methodological pillars
+  at face value, treating the section as a contribution to be
+  strengthened by methodological elaboration rather than by situating
+  it against named neighbors or by anchoring its methodological
+  grounding in cited prior work.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

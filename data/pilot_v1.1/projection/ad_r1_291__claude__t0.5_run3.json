@@ -1,0 +1,50 @@
+{
+  "example_id": "ad_r1_291",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 3,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 1528,
+  "latency_ms": 26974,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.0,\n    \"R1.2\": 1.0,\n    \"R1.3\": 0.3,\n    \"R1.4\": 0.0,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.0,\n    \"R1.7\": 0.0,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.2\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.2\": \"The delegation is exclusively 'check the logical consistency,' making R1.2 the sole load-bearing R1 dimension. The artifact contains several structurally suspicious inferences that must be traced: (1) self-reports are used as ground-truth training labels, yet the Deployment scope section claims the system 'requires no self-report labels'\u2014this is a direct internal contradiction; (2) the Results section commits an inferential category error by deriving a prevalence estimate (~41%) from a discrimination metric (AUC 0.93)\u2014AUC measures rank-ordering ability, not calibration or prevalence, so the conclusion does not follow from the stated evidence; (3) the '41% contamination' figure is circular\u2014it equals the self-report positive rate used to construct the training labels, so the paper is effectively validating the self-reports against themselves rather than against an independent ground truth; (4) the claim of being 'within 1 percentage point of prior studies' is presented as evidence of calibration, but agreement with a prior self-report rate does not establish that the classifier is a calibrated estimator\u2014it could simply reflect the same self-report base rate. Each of these breaks a distinct premise\u2013conclusion link and must be flagged.\"\n  },\n  \"clarification_needed\": false,\n  \"clarification_question\": \"\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.2": "The delegation is exclusively 'check the logical consistency,' making R1.2 the sole load-bearing R1 dimension. The artifact contains several structurally suspicious inferences that must be traced: (1) self-reports are used as ground-truth training labels, yet the Deployment scope section claims the system 'requires no self-report labels'\u2014this is a direct internal contradiction; (2) the Results section commits an inferential category error by deriving a prevalence estimate (~41%) from a discrimination metric (AUC 0.93)\u2014AUC measures rank-ordering ability, not calibration or prevalence, so the conclusion does not follow from the stated evidence; (3) the '41% contamination' figure is circular\u2014it equals the self-report positive rate used to construct the training labels, so the paper is effectively validating the self-reports against themselves rather than against an independent ground truth; (4) the claim of being 'within 1 percentage point of prior studies' is presented as evidence of calibration, but agreement with a prior self-report rate does not establish that the classifier is a calibrated estimator\u2014it could simply reflect the same self-report base rate. Each of these breaks a distinct premise\u2013conclusion link and must be flagged."
+    },
+    "clarification_needed": false,
+    "clarification_question": ""
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

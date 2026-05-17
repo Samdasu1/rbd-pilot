@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_083",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2812,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 37179,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nSummary: I reviewed the artifact and found a core internal contradiction plus several unsupported and missing-evidence claims that need to be resolved before the abstract stands.\n\n**Core contradiction: per-node embeddings vs. \"fully inductive\"**\n\nThe abstract simultaneously claims that SelectGNN (a) \"is fully inductive,\" (b) \"generalizes to nodes and entire graphs unseen at training time, with no fine-tuning or re-optimization required,\" and (c) \"learns a dedicated embedding vector e_v for each node v in the input graph, jointly with the GNN parameters,\" concatenated into the final node representation used by both heads.\n\nThese cannot all hold. A per-node parameter e_v is by construction defined only for nodes present at training time. At inference on an unseen node v', there is no e_{v'} \u2014 and obtaining one requires either re-optimization (contradicting (b)) or an imputation/default rule that the abstract does not describe. If the authors do have such a rule (e.g., zero vector, mean embedding, an amortized encoder that predicts e_v from features), it must be stated, and \"fully inductive\" should be softened accordingly (e.g., \"inductive over the graph structure; node-identity embeddings are imputed for unseen nodes\"). As written, the architecture description falsifies the inductivity claim.\n\nThis also undermines the closing causal attribution, which credits the gain partly to \"the inductive design.\"\n\n**Evidence gaps relative to the claims**\n\n- Two benchmarks are named (OGB-Arxiv and OGB-Products), but only one number is reported (6.3% on OGB-Arxiv at 80% coverage). The reader cannot tell whether OGB-Products was run, run-and-omitted, or run with a negative result. Either report it or remove it from the evaluation sentence.\n- The headline number is a single point on the coverage\u2013risk curve against a single baseline. No selective-accuracy curve, no AUC over coverage, no other coverage levels, no confidence intervals or seed counts. The qualitative claim (\"improves selective accuracy\") is therefore weakly supported even on the one benchmark.\n- The final sentence attributes the gain to two specific mechanisms (abstention head + inductive design). Nothing in the described experiments isolates either mechanism \u2014 there is no ablation removing the abstention head, no comparison to a non-inductive variant, and no analysis of which nodes are abstained. The attribution should be presented as a hypothesis, not a finding, or backed by ablations that are not currently described.\n- \"OGB-Arxiv ... standard inductive evaluation protocol, where test nodes are unseen at training time\" should be checked: the canonical OGB-Arxiv split is a time-based transductive split where test nodes' features exist in the graph at training time. If the authors are using a non-standard inductive variant, calling it \"standard\" is misleading and the protocol should be defined.\n\n**Overclaiming language to soften**\n\n- \"fully inductive\" \u2014 see above; at minimum drop \"fully\" and qualify.\n- \"generalizes to ... entire graphs unseen at training time\" \u2014 not demonstrated by the experiments described (both benchmarks are single-graph; cross-graph transfer is not reported).\n- \"We attribute this gain to ...\" \u2014 replace with \"We hypothesize\" pending ablations, or report the ablations.\n- \"the same trained model to be applied to any new graph without modification\" \u2014 not shown, and tensions with per-node embeddings.\n\n**Missing scaffolding the abstract relies on**\n\n- \"GraphSAGE-Abstain\" is named as the comparator but not cited or defined. If it is the authors' own abstention-augmented GraphSAGE baseline rather than a published method, say so \u2014 otherwise the comparison reads as against a prior published system that does not (to my knowledge) exist under that name.\n- The \"coverage-risk objective\" for tuning tau is referenced without form or citation; selective classification has a standard literature (Geifman & El-Yaniv and successors) that should be acknowledged so the contribution is locatable.\n- No mention of variance over seeds, of how the held-out portion of the training graph is constructed for tau-tuning, or of whether tau is tuned per dataset.\n\n**Scope and downstream considerations worth flagging in the paper (not necessarily the abstract)**\n\nSelective classifiers that abstain on \"structurally ambiguous\" nodes can systematically abstain on under-connected subpopulations \u2014 e.g., newer authors, smaller venues, or peripheral product categories. In a citation-network deployment this can translate into uneven coverage across demographic or institutional groups. The artifact does not need to solve this, but a deployment-facing paper should at least acknowledge that abstention rates are not uniformly distributed and report coverage broken down by a relevant stratifier.\n\n**Minimal revision suggestion for the abstract's most load-bearing sentences**\n\n- Replace \"fully inductive ... no fine-tuning or re-optimization required when new nodes are introduced\" with a description that is consistent with the per-node embedding (or remove the per-node embedding from the design).\n- Either report OGB-Products or remove it from the evaluation sentence.\n- Recast the closing attribution as a hypothesis, or cite the supporting ablation.\n\n**Caveats on this review**\n\nI assessed only the text supplied; I did not see the full paper, so it is possible that (i) an imputation rule for e_v on unseen nodes exists, (ii) OGB-Products results and ablations are reported in the body, and (iii) \"GraphSAGE-Abstain\" is defined elsewhere. If so, the abstract still needs to be made self-consistent on the inductivity point, since a reader of the abstract alone is currently led to a contradiction. I have not verified the OGB-Arxiv split conventions against the current OGB documentation in this session; the protocol concern should be confirmed against the dataset card before edits are finalized.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The delegation asks to check the artifact, and the passage contains argument-chain dependencies about inductive design, learned node embeddings, abstention, and generalization that centrally require consistency checking.",
+      "R1.3": "The artifact makes empirical and design-based claims tied to reported benchmarks and mechanisms, so checking whether those claims are supported by the described evidence is central.",
+      "RX.1": "Any projection of a terse request like \"Check this\" must disclose uncertainty about the intended checking depth.",
+      "RX.2": "The artifact includes strong claims about full inductiveness and applicability to new graphs, so avoiding unsupported amplification is always active.",
+      "RX.3": "The agent must remain within projection rather than performing the requested check or revising the artifact.",
+      "RX.4": "Because the text concerns research claims and model evaluation, downstream misuse from overstated validation or hidden flaws must be avoided.",
+      "RX.5": "Responsibility assignments should remain traceable to the delegation wording and the artifact's specific research-writing claims."
+    }
+  }
+}

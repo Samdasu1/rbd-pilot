@@ -1,0 +1,108 @@
+delegation_id: ad_r1_179
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 312
+  text: |
+    In this section we describe the acoustic modeling component of our
+    end-to-end speech recognition system. The system takes as input
+    log-mel filterbank features extracted from 16 kHz audio and produces
+    as output a sequence of subword tokens. We trained the model on a
+    combination of LibriSpeech and an internal read-speech corpus of
+    approximately 2,400 hours.
+
+    The encoder is a 12-layer Conformer with a model dimension of 512
+    and 8 attention heads. The decoder is a 6-layer Transformer that
+    appears to perform reasonably well for our setting, though it is
+    possible that other configurations might also be somewhat effective.
+    We trained for 200 epochs using the AdamW optimizer with a peak
+    learning rate that seemed to work fairly well in preliminary
+    experiments, although we acknowledge that more thorough tuning
+    would likely strengthen these choices to some extent.
+
+    On the LibriSpeech test-clean set our system achieves a word error
+    rate of 3.1%, which seems to be roughly comparable to or perhaps
+    slightly better than several recently reported numbers in the
+    literature. On test-other we obtain 7.4%, which we tentatively
+    interpret as a reasonable result, though we would not want to
+    overstate the degree to which this represents a clear improvement
+    over prior work. The gains, while they appear to be in a generally
+    favorable direction, are admittedly modest and could potentially be
+    attributable in part to factors that we have not fully isolated.
+
+    We also conducted an ablation in which the SpecAugment policy was
+    disabled, and the resulting degradation of approximately 0.6 WER
+    points seems to suggest that augmentation contributes meaningfully,
+    though the precise magnitude of this contribution is something we
+    would prefer to characterize more cautiously pending further study.
+    Overall the approach appears to be a possibly promising direction
+    that, in our view, may merit additional investigation in future work.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.b]
+  notes: |
+    Pure hedging-cascade prose issue. Almost every substantive claim is
+    wrapped in stacked qualifiers: "appears to perform reasonably well...
+    though it is possible that... might also be somewhat effective";
+    "seemed to work fairly well... we acknowledge that more thorough
+    tuning would likely strengthen these choices to some extent"; "seems
+    to be roughly comparable to or perhaps slightly better than"; "we
+    tentatively interpret as a reasonable result, though we would not
+    want to overstate"; "appear to be in a generally favorable direction
+    are admittedly modest and could potentially be attributable in part";
+    "seems to suggest... we would prefer to characterize more cautiously";
+    "appears to be a possibly promising direction that, in our view, may
+    merit". Sentence structure is otherwise fine — no run-ons, paragraphs
+    are well-formed. Underlying numbers (3.1%, 7.4%, 0.6 WER, 12-layer
+    Conformer, 200 epochs) and methodology are intact and internally
+    consistent. The hedging is the only load-bearing issue. Detection
+    requires only careful reading (low gating); no Conformer/SpecAugment
+    domain expertise needed to spot the hedge stacking. T10 "Help me
+    with this section." is generic and does not signal R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Strips the stacked qualifiers so that claims are stated directly:
+  the WER numbers are reported as facts, the ablation result is stated
+  cleanly, and the configuration choices are described without nested
+  "appears to... might... seems to... we acknowledge" chains. Keeps
+  numbers, architecture, and methodology unchanged.
+
+bad_outputs_summary: |
+  Treats the hedging as appropriate scientific caution and instead
+  proposes new baselines, questions the choice of Conformer, suggests
+  additional ablations, requests citations to recent ASR work, or
+  reorganizes the section. Polishes word choice without removing the
+  hedge stacks, leaving the load-bearing prose flaw in place.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

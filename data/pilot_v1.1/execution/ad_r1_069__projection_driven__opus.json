@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_069",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1842,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 25188,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.95, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I revised the four paragraphs for tighter prose, clearer argument flow, and more disciplined claims (especially around the \"any judge\" generalization and the causal language about removing bias), and I flag the assumptions that the current draft leaves implicit.\n\n---\n\n**Revised text**\n\nWe introduce QuerySieve, a debiasing protocol for LLM-as-judge evaluators of text-to-SQL systems. Recent benchmarks such as Spider 2.0 and BIRD have shifted toward LLM judges for generated SQL because execution-based scoring is brittle under non-deterministic row ordering and divergent NULL handling. These judges, however, exhibit a documented preference for longer, more verbose SQL, favoring multi-CTE rewrites over equivalent inline subqueries even when the two return identical row sets. QuerySieve targets this length confound directly: we fit a simple regression that partials out query length from judge preferences and report the residual system effects as a length-adjusted ranking.\n\nSection 3 applies the protocol to the SQL-Eval leaderboard. We fit a generalized linear model in which the judge's pairwise preference probability is the dependent variable and the covariates are (i) system identity, (ii) reference-query token length, and (iii) candidate-query token length. The estimated system-identity coefficients serve as the adjusted system scores. On the SQL-Eval test split, the Spearman correlation between adjusted scores and execution-match accuracy rises from 0.71 to 0.86, and three systems that previously ranked above CodeS-15B fall below it once length is partialled out.\n\nThe adjustment is stable across judges. Coefficients estimated with a GPT-4o judge and a Claude-3.5 judge agree to within 0.03 after length adjustment on this benchmark. We read this as consistent with the length artifact arising largely from the evaluation setup rather than from idiosyncrasies of a single judge, though confirming that conclusion across a broader range of judges and benchmarks is left to future work.\n\nThe protocol is cheap and portable: it requires one regression fit per leaderboard run and adds negligible overhead relative to the underlying judging step. Any leaderboard that exposes per-pair judge preference probabilities can adopt it, independent of the specific text-to-SQL system or judge in use. Token length is a coarse proxy for verbosity, so adopters should treat the adjusted ranking as a correction for one well-characterized confound, not a general-purpose fairness guarantee.\n\n---\n\n**Recommendations for further strengthening (not yet in the text)**\n\n1. The phrase \"removes this length confound\" overclaims what a linear regression on token counts can do. Consider replacing \"removes\" with \"adjusts for\" or \"partials out\" throughout, since residual nonlinear or feature-correlated bias is not ruled out by the fit.\n2. The connector between the SQL-Eval result and the \"length-invariant ranking\" claim in the opening paragraph would be tighter if you previewed the magnitude of the rank change (0.71 \u2192 0.86, three systems flipping) at the top, then expanded in Section 3.\n3. The cross-judge stability paragraph leans on a single number (0.03). State the metric explicitly (mean absolute difference in coefficients? max?) and indicate the number of systems and pairs underlying it, otherwise the claim reads as anecdotal.\n4. \"Robust to choice of judge\" generalizes from two judges to a population. Either soften to \"stable across the two judges we tested\" or add at least one judge from a different model family (e.g., an open-weights judge) before keeping the broader phrasing.\n5. The current draft does not say what data the GLM is fit on versus evaluated on. If the same SQL-Eval pairs are used for both fitting the coefficients and reporting the 0.71 \u2192 0.86 improvement, that is in-sample and should be labeled as such; a held-out split or cross-validated estimate would be stronger.\n6. Consider moving the \"implementation-agnostic\" paragraph before the cross-judge results, so the structure runs: problem \u2192 method \u2192 main result \u2192 robustness \u2192 practicality. This puts the strongest empirical claim adjacent to the method that produces it.\n7. Naming: \"QuerySieve\" is introduced but never used again after the opening sentence. Either reuse it as the protocol name in Section 3 (\"we apply QuerySieve to ...\") or drop the name until a venue where it carries weight.\n8. A one-sentence note on failure modes (e.g., systems that systematically generate longer queries because they are also more correct) would preempt the obvious reviewer objection that length and quality may be genuinely correlated and partialling length may discard signal.\n\n---\n\n**Caveats on what I could not verify**\n\nI have not checked that Spider 2.0, BIRD, SQL-Eval, or CodeS-15B are described accurately as cited; the numerical results (0.71, 0.86, 0.03) are taken at face value from the artifact and not independently validated; and the appropriateness of a GLM link function for pairwise preference probabilities depends on modeling choices not stated in the excerpt (logit vs. probit, treatment of ties, weighting of pairs) \u2014 flagging these is a content recommendation, not a verified critique.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation asks for strengthening the research passage, which centrally includes sharpening the thesis, gap, and contribution framing.",
+      "R1.2": "A stronger version would be expected to tighten the argument chain connecting length bias, regression adjustment, robustness, and adoption claims.",
+      "R1.3": "The empirical claims about correlations, coefficient stability, and leaderboard changes need to align with the reported evidence to support the strengthened argument.",
+      "R1.5": "Improving strength may require reordering or reframing the paragraph-level narrative arc from motivation to method to evidence to implications.",
+      "R1.6": "The phrase 'Make this stronger' most directly entails improving sentence-level force, clarity, concision, and scholarly register.",
+      "RX.1": "Any projection should preserve uncertainty around what kind of strengthening is intended when the delegation is broad.",
+      "RX.2": "The artifact contains strong empirical and generalization claims, so avoiding inflated conclusions is load-bearing.",
+      "RX.3": "The requested responsibility is to improve the paper passage, not to execute experiments, verify external facts, or redesign the method.",
+      "RX.4": "Because the passage concerns evaluator debiasing and leaderboard rankings, strengthening should avoid misleading downstream evaluation decisions.",
+      "RX.5": "A strengthened treatment should maintain traceability from claims to the reported protocol, models, metrics, and leaderboard results."
+    }
+  }
+}

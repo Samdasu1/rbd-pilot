@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_223",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2079,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29043,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.4\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 1.0}}\n\nSummary: I read the abstract carefully and surfaced several internal contradictions and overclaims that I think need to be addressed before this is presentable; I have not run external literature checks.\n\nThe piece has a serious self-contradiction at its center. The opening describes the method as \"unsupervised\" and gives a \"formal detection guarantee\" framed around that property. The Method paragraph then doubles down: \"the entire pipeline is fully unsupervised \u2026 no labeled instances of biased or unbiased judging are required at any stage.\" But the Experiments paragraph says the detection threshold tau is set by sweeping for maximum F1 on a held-out set of 1,200 human-annotated pairs. That is supervised threshold selection on labeled bias annotations. Either:\n\n- the method is semi-supervised (unsupervised representation, supervised calibration), and the framing/abstract needs to be rewritten to say so, or\n- tau must be chosen by an unsupervised criterion (e.g., a chi-squared quantile on the Mahalanobis distribution under the Gaussian fit, an extreme-value threshold, or a held-out unlabeled stability criterion), in which case the experimental protocol needs to change.\n\nAs written, the central claim and the experimental procedure are inconsistent, and the \"no labeled instances \u2026 at any stage\" sentence is false relative to the reported protocol.\n\nA second tension sits in the framing-vs-deliverable mismatch. The abstract opens by positioning the contribution as (a) a novel problem formulation and (b) a detector with formal guarantees, but the closing paragraph states the \"principal deliverable\" is the annotated benchmark. These are three different contribution types, and the reader cannot tell which is primary. Pick one primary contribution and demote the others to secondary; otherwise reviewers will (correctly) read this as contribution inflation.\n\nOn the formal guarantee: the abstract asserts a high-probability detection result and a controlled false-alarm rate \"under mild assumptions on the underlying score distribution,\" but the only modeling commitment described is fitting a multivariate Gaussian to residuals and thresholding Mahalanobis distance. For that to yield a meaningful guarantee you typically need (i) a stated null distribution, (ii) an independence or exchangeability condition across pairs, and (iii) some separation assumption on the biased alternative. None of these is named. I would either state the assumptions explicitly in the abstract (\"assuming residuals are sub-Gaussian and panel scores are exchangeable across items, \u2026\") or soften \"formal detection guarantees\" to \"a calibrated detection criterion.\" As stated, the guarantee language reads stronger than the method warrants.\n\nOn evidence\u2013claim alignment in the experiments: the headline number \"0.81 F1 on a disjoint test split\" needs at least one baseline to be interpretable, and the claim \"strongest gains on judges from the GPT and Claude families\" implies a comparison (\"gains over what?\") that has no referent in the text. Either name the baseline (random, residual-magnitude threshold, prior bias-detection method) or drop the \"gains\" phrasing.\n\nOn the novelty claim: \"To our knowledge no prior work has cast self-preference bias as a distributional anomaly-detection problem\" is a defensible but narrow framing. Adjacent prior work on LLM-as-judge bias measurement, on residual-based detection in evaluation pipelines, and on Mahalanobis-distance OOD detection is dense enough that this sentence will draw fire unless the abstract briefly distinguishes the formulation from the nearest neighbors. I cannot verify the novelty claim from the artifact alone.\n\nA few smaller issues worth flagging:\n\n- \"Nine open- and closed-weight judges\" plus \"GPT and Claude families\" implies the closed-weight portion is small; the per-family breakdown should be reported so the headline F1 is not driven by a couple of models.\n- The benchmark is described as \"carefully curated\" and \"annotated,\" but the only annotation procedure mentioned is the 1,200-pair development set. If the full 8,400 are annotated, say so and describe the annotation protocol; if only 1,200 are annotated, \"8,400 annotated judge-comparison pairs\" is an overstatement.\n- \"MT-Bench-style\" is doing a lot of work \u2014 either cite MT-Bench and state what \"style\" means concretely (multi-turn, two-candidate, judge-scored), or describe the sampling procedure directly.\n\nRelease-related caution: a benchmark whose labels encode \"which judge exhibited self-preference on which pair\" is, in effect, a per-model behavioral fingerprint dataset. Before release it would be worth stating the licensing of the source prompts, whether judge identities are disclosed, and whether the annotations could be used to fine-tune against the detector. A one-line note in the abstract or a release section addressing this would preempt obvious objections.\n\nConcrete recommended revisions, in priority order:\n\n1. Reconcile the supervision story. Decide whether the method is unsupervised or semi-supervised and rewrite the abstract, Method paragraph, and Experiments paragraph consistently.\n2. Pick one primary contribution (problem formulation, detector, or benchmark) and reorder the abstract so the others are clearly secondary.\n3. Either state the assumptions behind the \"formal detection guarantee\" or soften the language.\n4. Add a baseline to the 0.81 F1 number and define what \"gains\" means.\n5. Clarify how much of the 8,400 is annotated and how.\n6. Add a brief note on novelty positioning relative to nearest prior work.\n\nWhat I could not verify from the artifact alone: whether the novelty claim holds against the current literature; whether the Gaussian-on-residuals assumption is empirically reasonable for the score matrices in question; whether 1,200 annotated pairs is enough to set tau without overfitting given nine judges; and whether the benchmark's release raises issues I have not anticipated. These would need either the full paper or external checks to assess.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The open-ended request invites assessment of the thesis, contribution framing, and whether the stated deliverable coheres with the claimed method contribution.",
+      "R1.2": "A general opinion on the draft centrally includes checking whether the argument chain is internally coherent.",
+      "R1.3": "The delegation calls for judging whether the reported experiments and setup support the claims made in the artifact.",
+      "R1.4": "Because the artifact makes explicit first-work and no-prior-work claims, assessing novelty is a central expected responsibility.",
+      "RX.1": "Any projection of an open-ended judgment must disclose uncertainty about unstated expectations and unavailable external context.",
+      "RX.2": "The response must avoid validating strong claims such as guarantees, firstness, or benchmark centrality beyond what the artifact supports.",
+      "RX.3": "The agent must remain within projection rather than performing the requested judgment or editing the artifact.",
+      "RX.4": "The projection should avoid enabling misleading research claims or unsupported scholarly positioning downstream.",
+      "RX.5": "The responsibility assignment should be traceable to the delegation wording and specific features of the artifact."
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_292",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1376,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 15346,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.5\": 1.0, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.5, \"RX.5\": 0.7}}\n\nReordered the four paragraphs so the section moves problem setup \u2192 prior work \u2192 contribution \u2192 empirical results, without altering wording.\n\n---\n\nWe consider stabilization of a partially observed linear time-invariant\nplant under sensor scheduling. The dynamics follow x_{k+1} = A x_k +\nB u_k + w_k, with w_k zero-mean Gaussian process noise of covariance Q.\nAt each step k the controller activates exactly one of m candidate\nsensors, each yielding y_k^{(i)} = C_i x_k + v_k^{(i)} at communication\ncost c_i. We assume (A, B) is stabilizable and that each pair (A, C_i)\nis detectable, so that any single-sensor schedule admits a finite\nsteady-state Kalman filter.\n\nPrior work on sensor scheduling has either solved the open-loop\nselection problem via dynamic programming over the Riccati recursion\n(Vitus et al., 2012) or relaxed it to a convex program over time-\naveraged activation frequencies (Joshi and Boyd, 2009). Value-of-\ninformation criteria from estimation theory have also been ported to\nswitched control settings (Krishnamurthy, 2016). These approaches\ntypically compute the schedule offline and assume the cost structure\nis fixed a priori.\n\nThe principal contribution of this section is a closed-form one-step\nlookahead rule, which we call regret-weighted EVPI, that selects the\nsensor maximizing the expected reduction in LQG cost-to-go relative\nto a cheapest-sensor default. We further establish, in Proposition 4,\nthat under bounded process noise the rule yields an exponentially\nstable closed-loop with explicit decay rate rho < 1 depending only\non (A, B, Q) and the minimum sensor cost. The rule admits an\nO(m n^2) per-step implementation and is fully state-feedback rather\nthan open-loop. It is this rule, defined in Eq. (14), together with\nthe stability certificate of Proposition 4, that produces the\nquantitative gains tabulated below; without them the method collapses\nto standard certainty-equivalence control.\n\nOn a four-tank benchmark (Johansson, 2000) and on a quadrotor\naltitude-hold task with three candidate altimeters, our method\nachieves a 23% reduction in mean tracking error against the round-\nrobin baseline and a 17% reduction against the greedy variance-\nminimization rule of Mo et al. (2014), under matched communication\nbudgets. Closed-loop trajectories remained bounded across all 200\nrandomly initialized trials, and the empirical cost-to-go matched\nthe LQG lower bound to within 4% on the linearized four-tank model.\nA representative disturbance-rejection trajectory is shown in\nFigure 3, and Table 2 reports the per-budget breakdown.\n\n---\n\nNotes on the change:\n\n- The original order was setup \u2192 prior work \u2192 results \u2192 contribution. Readers hit the empirical numbers before being told what method produced them, and the contribution paragraph then back-references those numbers (\"the preceding paragraph\"). Swapping the last two paragraphs puts the method statement adjacent to prior work (so the delta is visible in context) and immediately before the results that depend on it.\n- One small phrase had to change to preserve referential coherence: \"tabulated in the preceding paragraph\" became \"tabulated below\", since the results paragraph now follows rather than precedes. No other wording was altered.\n- Within-paragraph sentence order and all technical content are unchanged.\n\nCaveats: I assumed the four paragraphs constitute a self-contained section and that no earlier section already states the contribution \u2014 if Section 1 or an abstract front-loads the contribution, you may prefer to keep the original ordering so the results land first and the rule is restated as a reminder. I also assumed \"Figure 3\" and \"Table 2\" are numbered globally rather than by section, so their references survive the reorder; worth a quick check against the surrounding manuscript.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 1.0,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.5",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.5": "The delegation explicitly asks to restructure the section flow, making section-level ordering and narrative arc the load-bearing responsibility.",
+      "RX.1": "Any projection should preserve uncertainty about unstated authorial intent or target venue conventions.",
+      "RX.2": "The restructuring responsibility should avoid implying authority to strengthen claims beyond what the artifact supports.",
+      "RX.3": "The request is limited to section flow and does not authorize rewriting, critique, or substantive research evaluation.",
+      "RX.4": "Changes to flow could affect how readers interpret evidence and contributions, so downstream misrepresentation risks must be avoided.",
+      "RX.5": "The projection should remain traceable to the delegation phrase and the artifact's section-level organization."
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_119",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2316,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30971,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: The section reports headline accuracy/F1/AUC gains but never directly measures the bias quantity it claims to reduce, creating a mismatch between the central claim and the reported evidence; several other internal-consistency and tone issues compound this.\n\nMajor issues\n\n1. The headline claim and the reported numbers measure different things.\nThe opening and closing paragraphs state that the method \"reduces the magnitude-dependent classification bias \u2026 by approximately 35% on average\" and \"restor[es] near-uniform per-class performance across the apparent magnitude range.\" But the results paragraph reports only aggregate, magnitude-agnostic metrics (top-1 accuracy, macro-F1, ROC-AUC over the entire test split). None of those metrics quantifies a magnitude-dependent bias. As written, the evidence shown cannot support the central claim. Either (a) add the actual bias metric \u2014 e.g., the slope of class-conditioned error vs. apparent magnitude, the gap between bright-bin and faint-bin per-class recall, or a calibration-vs-magnitude curve \u2014 and report the ~35% reduction on that quantity for each dataset, or (b) rewrite the claim to match what is actually measured (small aggregate gains in accuracy/F1/AUC).\n\n2. The \"approximately 35% on average\" figure is not traceable.\nThe 35% number is not decomposable from the three reported deltas \u2014 small absolute gains in accuracy (+0.8, +0.5, +0.9 pts) and F1 (+1.1, +0.7, +1.2 pts) do not arithmetically produce a 35% bias reduction. The reader cannot reconstruct where 35% comes from. Either state explicitly which underlying metric is being reduced by 35% (with per-dataset values that average to ~35%), or remove the figure.\n\n3. \"Substantially reduces \u2026 bias\" is not supported by the evidence shown.\nGiven the modest absolute gains in aggregate metrics (sub-point to ~1-point F1 improvements), the word \"substantially\" in the closing paragraph reads as stronger than the reported numbers warrant. Soften to \"consistently improves\" \u2014 or, if a genuine bias measurement does show ~35% reduction, present that result and let it carry the \"substantial\" framing rather than the aggregate metrics.\n\n4. \"Across all three benchmarks\" generalization is overreached.\nThe three datasets are all photometric time-domain surveys with overlapping transient taxonomies (ZTF-BTS, ALeRCE-DR1, PLAsTiCC-2018). Phrases like \"survey-agnostic strategy\" extrapolate beyond the evidence. Either restrict to \"across the three photometric surveys evaluated\" or flag explicitly that generalization to spectroscopic classifiers, radio transients, or non-XGBoost backbones is untested.\n\n5. Single-backbone evidence vs. classifier-general claim.\nAll three experiments use the same XGBoost backbone. The opening framing (\"off-the-shelf classifiers exhibit strong magnitude-dependent biases\") and the conclusion about \"debiasing automatic evaluators\" both imply backbone-independence that has not been demonstrated. Either narrow the claim to XGBoost-style gradient-boosted classifiers, or note that backbone-independence is conjectured and not tested here.\n\n6. No statistical uncertainty.\nEach metric is reported as a single point estimate. With absolute differences this small (e.g., AUC 0.954 vs 0.949 on ZTF-BTS), readers cannot tell whether the gap exceeds run-to-run variance. Add cross-validation folds, bootstrap CIs, or seed-variance ranges; otherwise add an explicit note that error bars are deferred to a later section.\n\n7. Missing baseline characterization.\nThe motivation paragraph asserts that classifiers \"over-predict Type Ia among bright sources and under-predict them among faint sources\" but no figure or number anchors this. Either cite the section/figure where this is shown, or qualify with \"as we show in \u00a7X.\"\n\nMinor wording / consistency\n\n- \"automatic evaluators\" in the final paragraph is jargon-shifted from \"classifiers\" used everywhere else. Pick one term and use it consistently.\n- F1 values are reported sometimes as 88.9 vs. 87.8 (presumably percentages) and AUC as 0.954 (a fraction). Harmonize \u2014 either all percentages or all fractions \u2014 and state units explicitly the first time.\n- \"evaluated over the entire test split\" reads redundantly given the next paragraph reports test-split numbers; consider trimming.\n- \"The cost is negligible\" sentence belongs earlier (in the contribution paragraph) or as part of a separate efficiency note; it currently dangles after the central scientific claim.\n- \"ZTF Bright Transient Survey (ZTF-BTS)\" \u2014 confirm this expansion; ZTF-BTS is more commonly the Bright Transient Survey (a ZTF subprogram), so the full form is typically \"ZTF Bright Transient Survey.\" Verify against the dataset's canonical name in your reference list.\n- Em-dashes in the opening sentence are stylistically heavy; consider a colon or comma.\n\nSuggested rewrite of the opening sentence to align with evidence\n\n\"We introduce RegMagD, a lightweight regression-based post-processing layer for transient classifiers that targets the magnitude-dependent error patterns of off-the-shelf models \u2014 over-prediction of Type Ia supernovae at bright magnitudes and under-prediction near the detection limit. On three photometric-survey benchmarks with an XGBoost backbone, RegMagD reduces [specific bias metric] by an average of ~35% while leaving aggregate accuracy, macro-F1, and ROC-AUC essentially unchanged or slightly improved.\"\n\nItems I cannot verify from the section alone\n\n- Whether the \"35% average\" figure is derivable from any per-dataset bias measurement actually computed elsewhere in the paper. If it is reported in a later section, this review's first issue may resolve to a presentation problem (numbers reported in wrong place) rather than a missing-evidence problem.\n- Whether the XGBoost baseline numbers (e.g., 90.6% on ZTF-BTS, 83.7% on PLAsTiCC-2018) align with published baselines on those splits; I have not cross-checked against the cited dataset papers.\n- Whether the canonical name for ZTF-BTS in your references matches the expansion used here.\n- Whether per-class recall by magnitude bin appears in a figure not included in this excerpt; if it does, the central claim may already be supported elsewhere and only needs to be cross-referenced from this section.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A section review centrally includes checking whether the claims about benchmarks, bias reduction, and survey-agnostic effectiveness follow logically from the presented premises.",
+      "R1.3": "The artifact reports quantitative results and then draws performance and debiasing conclusions, making claim-evidence alignment load-bearing.",
+      "R1.6": "A generic request to review a draft section normally includes attention to sentence-level clarity, register, and concision.",
+      "RX.1": "The reviewer must disclose uncertainty where the artifact lacks methodological details or supporting tables needed to verify claims fully.",
+      "RX.2": "The reviewer must watch for broad claims such as substantial bias reduction and survey-agnostic effectiveness that may exceed the reported evidence.",
+      "RX.3": "The task is only to review the provided section, so staying within that section and not executing broader manuscript work is required.",
+      "RX.4": "The review should avoid enabling misleading scientific communication or unsupported performance claims.",
+      "RX.5": "Any projected responsibility should remain traceable to the specific statements and numbers in the provided artifact."
+    }
+  }
+}

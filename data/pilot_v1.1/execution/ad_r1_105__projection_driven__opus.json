@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_105",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2738,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 35933,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.8, \"R1.3\": 1.0, \"R1.5\": 0.7, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: The draft's biggest problem is a circularity: it concludes \"human users prefer RLHF-Align\" from scores assigned by the reward model that was itself the PPO optimization target. The revision below rewrites the framing and conclusion to match what the reported evidence actually supports, tightens prose, and flags what the experiment cannot establish without human ratings or a held-out evaluator.\n\n---\n\n**Revised text**\n\nWe evaluate RLHF-Align, a 7B-parameter dialogue model fine-tuned with proximal policy optimization (PPO) against a learned reward model on the Anthropic HH-RLHF preference corpus. This section asks a narrower question than human preference: *does PPO succeed at optimizing the reward model used as its training target, and does that optimization generalize across held-out prompts and across the helpful, harmless, and honest sub-splits?* We do not measure human preference directly; the limitations of using the training reward model as evaluator are discussed at the end of the section.\n\n**Evaluation protocol.** We hold out 2,000 prompts from the HH-RLHF test split, with no overlap with the 50k preference pairs used for reward modeling or PPO rollouts. For each prompt we sample one response (temperature 0.7, top-p 0.95) from each policy \u2014 the SFT baseline and the final RLHF-Align checkpoint \u2014 and score each (prompt, response) pair with RM-13B, the reward model that served as the PPO optimization target. RM-13B was trained on the same 50k HH-RLHF preference pairs and reaches 71.4% preference-prediction accuracy on an internal validation split; this accuracy bounds how reliably its scores track the labelers' judgments. We report (i) mean RM-13B score per policy and (ii) the head-to-head win rate \u2014 the fraction of prompts on which RM-13B scores the RLHF-Align response above the SFT response.\n\n**Results.** RLHF-Align reaches a mean RM-13B score of +0.84 nats versus +0.31 for the SFT baseline. Head-to-head, RLHF-Align wins on 68.2% of the 2,000 prompts, ties on 4.1%, and loses on 27.7%. The direction is consistent across sub-splits: win rates of 67.9% (helpful), 69.1% (harmless), and 67.4% (honest). We do not report confidence intervals or per-prompt variance; with n = 2,000 the standard error on a 68% win rate is roughly 1 percentage point, but the cross-sub-split spread is not tested for significance.\n\n**Interpretation.** The results show that PPO successfully increased the score assigned by its own reward model, and that this increase holds on prompts disjoint from the reward-model and PPO training data. They do *not*, on their own, establish that human users prefer RLHF-Align outputs. Three caveats constrain the conclusion:\n\n1. *Evaluator-target circularity.* RM-13B was the optimization target during PPO. Higher RM-13B scores on the trained policy are the expected outcome of successful optimization and are also the signature of reward hacking; the two are not distinguishable from these numbers alone. A held-out reward model (different architecture, different preference data, or both) or direct human ratings would be needed to separate them.\n2. *Reward-model fidelity.* Even setting circularity aside, RM-13B agrees with held-out labelers only 71.4% of the time. A 68% RM-13B win rate is consistent with a range of true human win rates, and the gap is not quantified here.\n3. *Construct validity for \"helpful, truthful, harmless.\"* The HH-RLHF sub-splits are defined by prompt source, not by independent measurement of helpfulness, truthfulness, or harmlessness in the responses. Consistent RM-13B win rates across sub-splits show that the optimization generalizes across prompt distributions; they do not show that truthfulness or harmlessness, as humans would judge them, improved.\n\nWe therefore restrict the claim to what the data support: PPO against RM-13B produces a policy that RM-13B scores meaningfully higher than the SFT initialization on held-out HH-RLHF prompts, with consistent direction across sub-splits. Human-preference claims are deferred to the human evaluation reported in \u00a7[X].\n\n---\n\n**Key changes and why**\n\n- The original's central claim (\"human users find \u2026 more helpful, more truthful, and less harmful\") is not supported by the reported evidence, which is entirely reward-model scoring. The thesis is rewritten to match the actual measurement.\n- The original concludes \"the alignment objective generalizes beyond the training preferences and reflects genuine improvements in human-perceived response quality.\" The second clause is unsupported and is removed; the first is preserved but scoped to the prompt distribution.\n- The evaluator-target circularity is named explicitly. As written, the original invites the reader to read \"RM-13B win rate\" as a proxy for human preference without flagging that the evaluator was the training signal.\n- The 71.4% reward-model accuracy is now used as a bound on how strongly any RM-13B-based comparison can speak to human judgments, rather than presented as standalone validation.\n- Sub-split consistency is reframed: it shows distributional robustness of the optimization, not that the three target attributes (helpful/honest/harmless) individually improved in a human-perceptible way.\n- Added a note on missing uncertainty quantification (CIs, sub-split significance). The original presents point estimates as if they were settled.\n- \"Truthful\" was used interchangeably with \"honest\" in the original; the HH-RLHF sub-split is \"honest,\" so the revision uses that term consistently and drops \"truthful\" from the thesis.\n- Prose tightened: removed \"The central claim of this section is that\u2026\" (replaced with a direct question), \"successfully shifted the policy\" (vague), and the redundant final sentence of the original.\n\n---\n\n**Optional structural suggestion (not applied)**\n\nIf \u00a7[X] contains a human evaluation, consider moving a one-sentence forward reference to the top of this section so the reader knows up front that human-preference evidence lives elsewhere. If \u00a7[X] does *not* exist, the appropriate fix is not further rewording but adding such an evaluation; reward-model-only results cannot carry the original draft's conclusion regardless of framing.\n\n---\n\n**Caveats on this review**\n\nI do not have access to the surrounding paper, so I cannot verify whether a human evaluation appears in another section, whether RM-13B's 71.4% accuracy figure refers to the same labeler pool that produced the PPO preference data, or whether the 50k/2k disjointness claim is enforced at the prompt level or only at the pair level \u2014 each of these affects how much hedging is actually warranted. The standard-error figure I cite (\u22481 pp at n = 2,000, p \u2248 0.68) is a back-of-envelope binomial approximation that ignores per-prompt correlation between the two policies' responses; a paired test would likely give a tighter interval. I did not assess citation coverage or novelty relative to prior RLHF evaluation work.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally involves reframing the interpretation and contribution-level claim about what the evaluation shows.",
+      "R1.2": "The draft's argument from reward-model scores to human preference conclusions requires checking for logical consistency.",
+      "R1.3": "Evidence-claim alignment is load-bearing because the artifact makes strong claims about human preference from reported reward-model evaluations.",
+      "R1.5": "Section-level organization and narrative arc are central to improving an evaluation draft with protocol, results, and interpretation components.",
+      "R1.6": "Writing polish is load-bearing because a generic request to improve a draft normally includes clarity, flow, concision, and register.",
+      "RX.1": "The projection must preserve uncertainty around what the evaluation can and cannot establish.",
+      "RX.2": "The draft includes possible overclaims about human users and genuine quality improvements, making overclaim avoidance essential.",
+      "RX.3": "The responsibility must remain limited to draft improvement rather than executing new experiments or auditing unrelated issues.",
+      "RX.4": "Claims about helpfulness, truthfulness, harmlessness, and alignment have potential downstream impact if overstated.",
+      "RX.5": "Any projected responsibility should preserve traceability to the reported protocol, metrics, and artifact text."
+    }
+  }
+}

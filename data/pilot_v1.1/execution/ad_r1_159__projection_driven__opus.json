@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_159",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2094,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 26621,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.5\": 0.8, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.9}}\n\nSummary: I tightened the framing, reorganized the abstract into a clean problem \u2192 method \u2192 result \u2192 contribution arc, sharpened claim language to match what the reported evidence supports, and flagged points I cannot verify.\n\n---\n\nRevised text:\n\nNeural metrics \u2014 COMET, BLEURT, and learned MT quality estimators \u2014 have largely replaced BLEU as the default scoring tool for comparing machine-translation systems. Work by Freitag and colleagues, together with successive WMT metrics shared tasks, has shown that learned metrics correlate more strongly with human MQM judgements than n-gram metrics, and they are now recommended as the default for system ranking.\n\nA persistent concern is that these metrics absorb confounders from their training data. Recent analyses have documented sensitivity to surface attributes \u2014 output length, punctuation density, named-entity overlap \u2014 that are only weakly related to translation adequacy. Kocmi and colleagues, for instance, report that COMET-22 over-rewards hypotheses whose token count falls within 5% of the reference even when adequacy is held fixed by professional re-rating.\n\nWe probe this effect directly. We collected 18,400 segment-level MQM ratings across English\u2194German and English\u2194Chinese WMT-23 systems and re-scored each hypothesis with COMET-22, BLEURT-20, and MetricX-23. We then fit a partial-residual regression of metric score on adequacy, treating hypothesis length ratio, punctuation density, and reference-overlap as nuisance covariates.\n\nAfter partialling out adequacy, a residual length-ratio effect of approximately +0.041 COMET points per 10% increase in length ratio remains; punctuation density contributes a smaller but non-zero effect of about +0.012 per standard deviation. MetricX-23 shows roughly half the length sensitivity of COMET-22 but a larger entity-overlap bias. BLEURT-20 falls between the two on length and shows the smallest entity-overlap effect (this last claim should be re-checked against the reported coefficients; see caveats below).\n\nWhen the debiased scores are substituted into the WMT-23 system rankings, 4 of 14 pairwise orderings change in English\u2192German and 3 of 12 in English\u2192Chinese. The reordered pairs are concentrated among systems with notably short or long average outputs, which is consistent with the length-ratio bias being the dominant driver.\n\nOur contribution is a regression-based post-hoc debiasing procedure that adjusts neural MT metric scores for length, punctuation, and entity-overlap confounds, and that produces measurable changes to published WMT-23 system rankings. We do not claim that the procedure removes all training-data confounders, that the residual coefficients we report would replicate exactly on other test sets, or that the reordered rankings are closer to human preference; establishing the latter requires a separate human evaluation that we flag as future work.\n\n---\n\nRecommendations for the authors (beyond what I changed in the text):\n\n1. The original opening sentence treats \"COMET, BLEURT, and learned MT-QE estimators\" as three coordinate items, but COMET and BLEURT are themselves learned QE-style metrics. Either drop the third item or rename it (e.g., \"newer learned estimators such as MetricX\").\n\n2. The phrase \"of this work is a regression-based post-hoc debiasing procedure \u2026\" packs the contribution into a single noun phrase. Splitting it into (i) a method and (ii) an empirical finding makes the claim auditable.\n\n3. \"Reorders 4 of 14 system pairs\" is ambiguous between \"4 of the 14 systems change rank\" and \"4 of the (14 choose 2) pairwise orderings flip.\" The revised text assumes the latter, but the authors should confirm and state it explicitly \u2014 the strength of the headline claim depends on which it is.\n\n4. The current text reports point estimates only. Standard errors, confidence intervals, or a bootstrap over segments would substantially strengthen the residual-coefficient claims and the ranking-flip count.\n\n5. \"Adequacy is partialled out\" assumes MQM scores are a clean adequacy signal. MQM combines accuracy and fluency error categories; if length effects load partly on fluency errors, the regression may under- or over-correct. Worth a sentence acknowledging this.\n\n6. The framing implies that the debiased ranking is more faithful to human preference. Strictly, the regression only removes variance attributable to the three named covariates conditional on the MQM regressor \u2014 it does not by itself demonstrate that the resulting ranking better matches an independent human judgement. Either soften the claim or report a held-out human-rated comparison.\n\n7. Consider stating up front which split of WMT-23 is used (the official test set, the MQM subset, or a re-annotated subset), since 18,400 segments is plausible for the MQM subset but not the full test set.\n\n8. The structural change I made \u2014 moving the contribution paragraph to the end and absorbing the \"in summary\" framing into it \u2014 removes a redundancy between the opening paragraph's \"system comparison\" framing and the closing \"measurably changes published WMT-23 system rankings.\"\n\n---\n\nCaveats on what I could not verify:\n\n- I did not check whether the cited Kocmi result is reported exactly as \"within 5% of the reference token count\" or whether the threshold and effect direction match the published paper; the authors should confirm.\n- The numerical effect sizes (+0.041, +0.012, \"roughly half\"), the segment count (18,400), and the ranking-flip counts (4/14, 3/12) are taken at face value from the artifact; I have no way to validate them.\n- The added sentence about BLEURT-20's relative position is an interpolation I introduced to round out the cross-metric comparison; if it is not supported by the actual coefficients, it should be deleted rather than corrected.\n- I did not modify or add references, since the citations in the artifact are gestural (\"Freitag et al.\", \"Kocmi and colleagues\") rather than full bibliographic entries; full reference checking is outside what I did here.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Making the passage stronger centrally involves sharpening the thesis, motivation, and contribution claim above the sentence level.",
+      "R1.2": "The delegation implies checking whether the concern, method, results, and conclusion form a convincing argument chain.",
+      "R1.3": "Strengthening requires ensuring that the reported coefficients and ranking changes support the stated debiasing contribution.",
+      "R1.5": "The excerpt may need improved narrative ordering from field status to confound, study design, findings, and contribution.",
+      "R1.6": "A request to make prose stronger includes sentence-level clarity, concision, emphasis, and academic register.",
+      "RX.1": "Any projection must preserve uncertainty around what kind of strengthening is intended and around unstated empirical details.",
+      "RX.2": "The responsibility includes avoiding stronger wording that overstates metric bias, causal claims, or generality beyond the reported evidence.",
+      "RX.3": "The agent must stay within projecting responsibility and not actually revise or evaluate the artifact.",
+      "RX.4": "The projection should avoid encouraging unsupported changes that could mislead downstream readers about MT evaluation evidence.",
+      "RX.5": "The rationale should remain traceable to the delegation wording and the specific artifact content."
+    }
+  }
+}

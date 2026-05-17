@@ -1,0 +1,129 @@
+delegation_id: ad_r1_240
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 322
+  text: |
+    Section 4. Stability of Iterative Sense-Probability Refinement
+
+    The iterative sense-probability refinement used in recent
+    LLM-pipeline disambiguation modules takes the form
+    x_{k+1} = M x_k / ||M x_k||_1, where M is a row-stochastic matrix
+    encoding co-occurrence-derived sense-transition probabilities.
+    The standard treatment is as a power iteration on the simplex,
+    and existing analyses report convergence rates of the form
+    ||x_k - x*|| <= C (lambda_2 / lambda_1)^k. Our concern in this
+    section is the rate of convergence of this iteration under
+    finite-precision arithmetic, which has not, to our knowledge,
+    been treated rigorously in the disambiguation literature.
+
+    We adopt the standard Wilkinson backward-error model: each
+    matrix-vector product is computed with relative error bounded by
+    n*eta, where eta is unit roundoff. A direct calculation (Lemma 1)
+    shows that the computed iterate x_tilde_k satisfies
+    ||x_tilde_k - x*|| <= ||(I - M)^+||_{1^perp} * n*eta + O(eta^2)
+    once the spectral component has decayed. The leading term depends
+    on kappa((I-M)|_{1^perp}), the condition number of the
+    off-stochastic block, and is independent of k for large k.
+    Theorem 2 replaces the worst-case bound
+    kappa((I-M)|_{1^perp}) <= 1/(1 - lambda_2) with the sharper
+    estimate (1 - tau(M))^{-1} / sqrt(n), where tau(M) is the
+    Dobrushin ergodicity coefficient. The improvement is a sqrt(n)
+    factor in the dimension; for the disambiguation matrices of
+    Park et al., n ranges from 50 to 400, giving an order-of-magnitude
+    tightening on representative instances.
+
+    Numerical experiments on the WiC-Amb benchmark confirm the
+    predicted scaling. We close by noting that the iteration's
+    behavior in exact arithmetic is well understood; the regime in
+    which our analysis is informative is precisely the regime in
+    which finite-precision effects dominate the spectral residual,
+    and so the present results complement rather than replace the
+    standard spectral-gap convergence picture.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  R1.5: [F1.5.a]
+  notes: |
+    Two compound issues, both detectable from careful reading of the
+    section itself (no specialized recall required).
+
+    R1.1 misframed object (F1.1.c): The opening explicitly frames the
+    section's object as "the rate of convergence of this iteration
+    under finite-precision arithmetic." But the actual bound stated
+    (Lemma 1) is ||x_tilde_k - x*|| <= kappa * n*eta + O(eta^2),
+    which is independent of k for large k -- that is a forward-error /
+    conditioning bound on the steady-state floor, not a convergence
+    rate. A careful reader sees there is no exponential decay term in
+    k, no spectral-gap factor (lambda_2/lambda_1)^k in the bound, so
+    the section cannot be about a convergence rate. The load-bearing
+    object is conditioning of (I-M)|_{1^perp} in the presence of
+    roundoff -- a different mathematical object than what is claimed.
+
+    R1.5 buried contribution (F1.5.a): The novel result is Theorem 2:
+    the sqrt(n) improvement on the standard 1/(1-lambda_2) condition
+    bound via the Dobrushin ergodicity coefficient. It is mentioned
+    only mid-paragraph in para 2, framed as a sub-step ("Theorem 2
+    replaces..."), with no signposting in the section opening or topic
+    sentence. The opening sentence and the closing paragraph both
+    foreground "convergence rate" / "spectral residual," not the
+    sharper conditioning estimate.
+
+    Compound: fixing R1.1 (admitting the object is conditioning, not
+    convergence rate) forces the genuine contribution -- the tighter
+    Dobrushin-based conditioning bound -- to surface, which is a
+    rewrite of R1.5. Conversely, foregrounding the Dobrushin tightening
+    (R1.5) forces a reframe of the section's stated object (R1.1), since
+    that result is not a convergence-rate result.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.85
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Points out that the stated object ("rate of convergence under
+  finite-precision arithmetic") does not match the bound actually
+  proved, which is a k-independent forward-error / conditioning
+  estimate on the iteration's steady-state floor. Identifies that
+  the genuine contribution -- the sqrt(n) tightening of the
+  conditioning bound via the Dobrushin coefficient -- is buried
+  mid-paragraph and recommends reframing the section around
+  conditioning of the off-stochastic block and leading with that
+  improvement.
+
+bad_outputs_summary: |
+  Polishes notation, suggests adding more numerical experiments, or
+  cleans up the Wilkinson-model setup while accepting the
+  "convergence rate" framing. Treats Theorem 2 as an incidental
+  corollary rather than the load-bearing result, and does not notice
+  that the Lemma 1 bound is independent of k and therefore cannot be
+  a convergence-rate statement.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

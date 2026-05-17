@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_305",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1959,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 26895,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: I audited the artifact's argument chain and flag one hard logical break plus several softer chain-of-reasoning gaps; recommendations are confined to the consistency of the stated claims.\n\n**Primary logical break \u2014 the AUC-to-accuracy inference**\n\nThe strongest defect is in the final two sentences of the Cost-analysis paragraph:\n\n> \"The router phi achieves AUC 0.89 on the binary routing task. From this AUC we therefore conclude that ROUTELM preserves end-task accuracy to within 0.5 points of the pure-L baseline.\"\n\nAUC on a binary \"is S acceptable?\" classifier does not, on its own, license a quantitative statement about end-task accuracy degradation. AUC is a threshold-free ranking measure over the router's own surrogate label y(x); end-task accuracy depends on (a) the operating threshold tau actually chosen, (b) the class prior (here ~71% acceptable), (c) the cost asymmetry between false-route-to-S and false-route-to-L errors on the true task metric, and (d) how the task-specific judges that produced y(x) correlate with the end-task metric used for the \"0.5 points\" comparison. None of these are pinned down in the text. The word \"therefore\" overstates the entailment: AUC 0.89 is consistent with a wide band of end-task gaps, not specifically with \"within 0.5 points.\" This sentence should either be removed or restated as an empirical measurement (e.g., \"we measure an end-task accuracy gap of 0.5 points on the held-out split\"), with the AUC reported alongside rather than as the basis for the gap.\n\n**Secondary inconsistency \u2014 threshold selection vs. the AUC framing**\n\nThe Routing paragraph states that tau is \"selected on a held-out split to enforce a target accuracy floor,\" which implies the accuracy claim should be reported at that operating point, not inferred from AUC. The AUC-based justification in Cost analysis is therefore not just unsupported but also inconsistent with the procedure described earlier: the paper has already committed to a threshold-based, accuracy-floor-driven evaluation, which makes the AUC\u2192accuracy bridge redundant at best and contradictory at worst.\n\n**Tension between the portability claim and the training procedure**\n\nTraining requires running both S and L offline and scoring with task-specific judges to produce y(x). The Portability paragraph then asserts that ROUTELM \"requires no labeled difficulty information, so [it] can be deployed in new domains without any ground-truth curation.\" These are not quite contradictory \u2014 \"labeled difficulty\" and \"ground-truth labels\" are not the same as \"judge-scored S/L outputs\" \u2014 but the current wording elides the fact that porting to a new domain still requires either (i) a task-specific judge for that domain or (ii) reusing phi zero-shot and assuming its calibration transfers. The chain of reasoning that gets from \"no difficulty labels needed\" to \"deployable on a raw-prompt customer-support corpus\" is missing a step. Either clarify that a judge is still required in the new domain, or state explicitly that phi is used zero-shot and flag that as an assumption.\n\n**Cost-arithmetic chain**\n\n\"S costs 1/20 as much as L per token \u2026 total inference cost falls by 60 percent.\" The arithmetic chain is reasonable in direction but the stated number depends on assumptions not given: equal token counts per query for S and L, no router-inference cost, and cost measured per query rather than per output token. With 64% routed to S at 1/20 cost and 36% to L at full cost, the implied ratio is 0.64\u00b7(1/20) + 0.36 \u2248 0.392, i.e. a ~61% reduction, which matches the claim \u2014 but only under those silent assumptions. The chain would be tighter if the assumptions were stated, or if the figure were given as \"\u224860% under uniform token-length and zero router-cost assumptions.\"\n\n**Minor \u2014 class balancing rationale**\n\n\"Class balancing is applied because S is judged acceptable on 71 percent of prompts on average.\" 71/29 is a mild imbalance and the inference \"therefore balance\" is a design choice rather than a logical necessity; the \"because\" overstates the entailment. Reword as a methodological note rather than a derived consequence.\n\n**Recommended edits, in priority order**\n\n1. Replace the AUC-to-accuracy sentence with a direct empirical statement of the measured end-task gap at the chosen tau, and report AUC separately as a router-quality diagnostic.\n2. Reconcile the Routing and Cost-analysis paragraphs so that the accuracy claim is anchored to the threshold-selection procedure already described, not re-derived from AUC.\n3. In Portability, state explicitly what is and is not required in a new domain (raw prompts only? plus a judge? phi zero-shot vs. retrained?), so the \"no ground-truth curation\" claim is bounded.\n4. Either state the cost-model assumptions (equal token lengths, negligible router cost) or soften \"falls by 60 percent\" to an approximate figure tied to those assumptions.\n5. Soften \"because\" \u2192 \"given\" in the class-balancing sentence.\n\n**Caveats on what I cannot verify**\n\nI have not seen Section 5, the judges, the held-out splits, or the actual end-task numbers, so I cannot confirm whether the 0.5-point accuracy claim is empirically true \u2014 only that the AUC-based justification offered for it does not hold. The cost-reduction arithmetic checks out under the stated ratios but rests on assumptions I cannot test from the excerpt. The portability tension is a wording issue under one reading and a substantive gap under another; resolving which depends on details of Section 5 that are not in the artifact.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The delegation explicitly asks to check whether the artifact's premises, intermediate claims, numeric reasoning, and conclusions cohere logically.",
+      "RX.1": "Any projection of logical consistency must preserve uncertainty where the artifact lacks enough information to decide a consistency issue definitively.",
+      "RX.2": "The task requires guarding against treating weak inferential links, such as AUC implying end-task accuracy preservation, as stronger than warranted.",
+      "RX.3": "The projection must stay limited to logical consistency rather than editing, rewriting, novelty review, or broader methodological critique.",
+      "RX.4": "Identifying logical gaps matters because unsupported deployment or accuracy claims could mislead downstream decisions about model routing.",
+      "RX.5": "Consistency judgments should be traceable to specific claims and inferential steps in the artifact."
+    }
+  }
+}

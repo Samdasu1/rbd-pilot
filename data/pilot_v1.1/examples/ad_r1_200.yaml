@@ -1,0 +1,118 @@
+delegation_id: ad_r1_200
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: information_retrieval
+  word_count: 312
+  text: |
+    Multi-step information retrieval, in which a system must satisfy a
+    user's underlying need through a sequence of queries against a
+    corpus, has emerged as a central challenge for retrieval-augmented
+    systems. Real users rarely issue a fully specified request; instead,
+    they provide a vague seed and refine through interaction. Modeling
+    this gap — between what the user typed and what they actually want
+    — is the core problem of underspecification in IR.
+
+    We introduce LongQuest, the first retrieval framework that exposes
+    a controllable underspecification dial for long-horizon tasks.
+    LongQuest takes a coarse user goal and produces a sequence of
+    sub-queries whose specificity is governed by a single scalar
+    parameter alpha, allowing operators to trade exploration breadth
+    against precision at the corpus level. To our knowledge, no prior
+    IR system has offered this form of explicit, tunable
+    underspecification across a multi-step retrieval trajectory.
+
+    Related work falls into three categories. First, conversational
+    retrieval systems (e.g., Yu et al., 2021) handle clarification
+    through dialogue but do not expose an external knob. Second, query
+    reformulation methods rewrite a single query rather than plan a
+    trajectory. Third, and most directly relevant, Park et al. (2023)
+    introduced a tunable specificity parameter for sub-query generation
+    in multi-hop retrieval and showed that operators could dial query
+    breadth on the HotpotQA-Multistep benchmark; their alpha-controller
+    is the closest predecessor to ours.
+
+    LongQuest differs from these works architecturally: it integrates
+    the controller into a learned planner rather than a retrieval-time
+    post-processor, and it operates over five-step rather than two-hop
+    trajectories. We evaluate on TREC-LongTask and on a derived
+    MS-MARCO-Horizon split, reporting nDCG@10 across alpha settings and
+    showing a 6.8-point gain over the strongest fixed-specificity
+    baseline at matched recall.
+
+    These results establish LongQuest as the first practical
+    controllable-underspecification framework for long-horizon IR.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    Internal-citation contradiction (visible without external
+    knowledge). Paragraph 2 claims LongQuest is "the first retrieval
+    framework that exposes a controllable underspecification dial for
+    long-horizon tasks" and reinforces this with "no prior IR system
+    has offered this form of explicit, tunable underspecification."
+    Paragraph 3 then directly cites Park et al. (2023) as having
+    "introduced a tunable specificity parameter for sub-query
+    generation in multi-hop retrieval" with an "alpha-controller" that
+    is "the closest predecessor to ours." The novelty/priority claim
+    is contradicted by the section's own related-work citation: the
+    architectural deltas listed in paragraph 4 (planner-integrated
+    controller, five-step vs. two-hop) describe an extension of Park
+    et al., not a first. The closing sentence then repeats the
+    untenable "first" claim. Detection requires only careful reading
+    of the section; no recall of external IR literature is needed
+    (low gating). The delegation T06 is generic and does not direct
+    attention to scholarship.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.4     # novelty positioning is downstream of fixing the priority claim
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing — internal contradiction with cited prior work
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section's "first controllable-underspecification
+  framework for long-horizon IR" claim is contradicted by its own
+  citation to Park et al. (2023), whose alpha-controller for tunable
+  sub-query specificity is described in the section as the closest
+  predecessor. Suggests rewording the novelty claim to a defensible
+  delta (e.g., "first to integrate the underspecification controller
+  into a learned planner over five-step trajectories") and removing
+  or softening the closing "first practical" sentence. May note that
+  the architectural-novelty framing in paragraph 4 is downstream of
+  this fix.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the abstract-style opening, suggests adding
+  more benchmarks or per-alpha ablations, or accepts the "first"
+  framing while complimenting the related-work coverage. Adds
+  peripheral citations (e.g., more conversational-search work) without
+  flagging that Park et al. already establishes priority for the
+  tunable-specificity idea, leaving the contradicted novelty claim in
+  place.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

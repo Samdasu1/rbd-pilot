@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_163",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2341,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30565,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.9}}\n\nSummary: I revised the passage for tighter prose, reordered so framing precedes results, sharpened claim\u2013evidence linkage, hedged two overreaches, and flagged items the draft cannot self-verify.\n\n---\n\n**Revised draft**\n\nCalibration of deep vision models has received sustained attention since Guo et al. (2017) showed that modern CNNs are systematically overconfident relative to their ResNet-era predecessors. Standard post-hoc remedies include temperature scaling (Guo et al., 2017), vector and matrix scaling (Kull et al., 2019), and Dirichlet calibration (Kull et al., 2019). Training-time alternatives include focal-loss objectives (Mukhoti et al., 2020), label smoothing, and deep ensembling. A more recent line of work asks whether linguistic confidence expressions in vision\u2013language models correlate with answer correctness; we build on that line by evaluating verbal-confidence elicitation as a calibration mechanism under both clean and shifted conditions.\n\nWe evaluate on three benchmarks: ImageNet-1k, ImageNet-C (severities 1\u20135), and ObjectNet. The base model is BLIP-2 (ViT-G + FlanT5-XL), fine-tuned for three epochs on a 50k-image VQA-style calibration corpus in which each example pairs an image, a class-prediction question, and a verbal confidence label drawn from {very low, low, medium, high, very high}. We report top-1 accuracy and expected calibration error (ECE; 15 equal-width bins) as primary metrics, with reliability diagrams in the appendix. Unless noted, results are from a single training run; we have not yet quantified seed variance.\n\nTable 2 reports the main calibration results. On ImageNet-1k, verbal-confidence elicitation reaches an ECE of 4.7%, compared with 12.1% for raw logit confidence and 5.3% for temperature scaling. The verbal confidences also degrade gracefully under distribution shift: on ObjectNet, ECE rises to 7.9%, while logit-based confidence rises to 21.4%. Under ImageNet-C, ECE averaged over severities 1\u20135 is 9.2%, a 4.5-point degradation relative to clean ImageNet. As corruption severity increases, the model shifts probability mass toward the \"medium\" verbal label rather than collapsing onto a single bin, which is consistent with \u2014 though not proof of \u2014 the verbal scale tracking epistemic difficulty.\n\nA small ablation (Table 3) removes the explanatory rationale prefix from the prompt and finds ECE rises to 6.8%, suggesting the rationale step accounts for roughly 2 points of the calibration improvement on ImageNet-1k. We have not tested whether this effect transfers to ObjectNet or ImageNet-C.\n\n---\n\n**Editorial notes and recommendations**\n\n1. *Ordering.* The original interleaves results, related work, and more results. I moved related work to the front so the contribution can be read against a stated baseline, then grouped all empirical findings (clean, shifted, corrupted, ablation) together. If your venue prefers results-first, the related-work block can move back, but it should still be contiguous.\n\n2. *Framing / contribution.* The draft never states what is being claimed as new. I added one clause (\"we build on that line by evaluating verbal-confidence elicitation as a calibration mechanism under both clean and shifted conditions\"). If the contribution is stronger than that \u2014 e.g., a new prompt format, a new training recipe, or the rationale-prefix idea \u2014 the framing sentence should say so explicitly. I did not assert novelty I cannot verify from the text.\n\n3. *Claim hedging.* Two phrasings were softened:\n   - \"Crucially, the verbal confidences remain meaningful under distribution shift\" \u2192 \"degrade gracefully,\" because a 7.9% ECE is better than the logit baseline but is not self-evidently \"meaningful\" in absolute terms.\n   - \"preferentially shifts \u2026 rather than collapsing\" \u2192 kept the observation but added that it is *consistent with*, not evidence *of*, the verbal scale tracking difficulty. The original wording risked reading as a causal/mechanistic claim that the data shown do not establish.\n\n4. *Evidence\u2013claim gaps to address before submission.*\n   - The ImageNet-C number is an average over severities 1\u20135; per-severity ECE should appear in the appendix, or the average risks hiding a monotone degradation that would weaken the \"graceful\" framing.\n   - The ablation result (6.8% vs. 4.7%) comes from a single setting on ImageNet-1k. The \"2 points of calibration improvement\" generalization should either be restricted to that setting (as I did) or supported with the shifted-data ablations.\n   - Top-1 accuracy is named as a primary metric but no accuracy numbers appear in the excerpt. Either remove it from the metrics sentence or add the numbers.\n   - Temperature scaling at 5.3% is close to the proposed method at 4.7%. Whether that gap is statistically meaningful depends on seed/sample variance, which is not reported.\n\n5. *Prose-level fixes applied.* \"balloons to\" \u2192 \"rises to\" (register); en-dashes for numeric ranges; \"ECE, 15 bins\" \u2192 \"ECE; 15 equal-width bins\" (binning scheme matters for ECE and should be specified); consistent comma usage in citations; removed the editorial \"Crucially.\"\n\n6. *Citations.* Kull et al. (2019) is cited for both vector/matrix scaling and Dirichlet calibration \u2014 please confirm both attributions point to the same paper or split into two references if they are separate works. I did not modify the citation list itself.\n\n---\n\n**Items I cannot verify from the excerpt**\n\n- Whether the 4.7% / 5.3% / 12.1% gap on ImageNet-1k is statistically significant, since seed count and confidence intervals are not reported.\n- Whether the \"rationale prefix contributes ~2 points\" claim holds outside ImageNet-1k.\n- Whether Kull et al. (2019) is correctly cited for both calibration methods listed.\n- Whether the contribution framing I inserted matches the paper's actual stated novelty; the excerpt does not say.\n- Whether ECE with 15 equal-width bins is the binning choice actually used (the original said only \"15 bins\"); please confirm before adopting my phrasing.\n- I did not assess any deployment or downstream-use implications of presenting verbal confidences to end users, since the excerpt does not describe a deployment context; if one exists in the surrounding paper, a brief caution about users over-trusting \"high\"/\"very high\" labels would be worth adding.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes strengthening the contribution framing and clarifying how verbal-confidence elicitation is positioned.",
+      "R1.2": "Improvement requires checking whether the argument from setup to reported results to conclusion is coherent.",
+      "R1.3": "The draft makes empirical claims tied to tables, benchmarks, and ablations, so improvement entails aligning claims with the reported evidence.",
+      "R1.5": "The current passage mixes methods, results, related work, and ablation material, making section-level ordering a central responsibility.",
+      "R1.6": "The delegation directly asks to improve a draft, making sentence- and paragraph-level polish load-bearing.",
+      "RX.1": "Any improvement should disclose uncertainty where claims rely on incomplete tables, appendices, or unspecified experimental details.",
+      "RX.2": "The draft contains strong claims such as distribution-shift robustness, so avoiding overclaiming is required.",
+      "RX.3": "The agent must stay within draft improvement rather than executing experiments or inventing unsupported results.",
+      "RX.4": "The revision responsibility includes avoiding misleading scientific claims that could affect downstream interpretation or use.",
+      "RX.5": "Changes should preserve traceability to the artifact\u2019s stated benchmarks, metrics, tables, and cited works."
+    }
+  }
+}

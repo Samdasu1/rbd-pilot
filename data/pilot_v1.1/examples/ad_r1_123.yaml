@@ -1,0 +1,118 @@
+delegation_id: ad_r1_123
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 332
+  text: |
+    We evaluate MoleAgent-VS, our multi-agent LLM-guided virtual
+    screening pipeline, on the hit identification task across three
+    target classes (kinases, GPCRs, and proteases) drawn from the DUD-E
+    benchmark suite. The central claim of this section is that
+    coordinating heterogeneous chemistry-tuned agents produces
+    materially better early enrichment of true actives in virtual
+    screening than the single-agent baseline (Galactica-30B) and the
+    docking-only baseline (AutoDock Vina), where "early enrichment" is
+    the property of greatest practical interest because downstream
+    wet-lab triage can typically only follow up on the top 0.5–1% of
+    ranked compounds.
+
+    For each target, we score the full DUD-E decoy library with each
+    method, then evaluate the resulting ranked list. We report ROC-AUC
+    as our primary metric, computed against the standard active/decoy
+    labels distributed with DUD-E. ROC-AUC is computed by integrating
+    the true-positive rate across all decision thresholds, producing a
+    single scalar per target that summarizes ranking quality over the
+    full library. We then average ROC-AUC across the three target
+    classes to produce the headline number reported in Table 2.
+
+    Across the three target classes, MoleAgent-VS achieves a mean
+    ROC-AUC of 0.84, compared to 0.79 for Galactica-30B and 0.71 for
+    the AutoDock Vina baseline. The gain over the strongest LLM
+    baseline is +0.05 mean ROC-AUC, with target-level gains of +0.04,
+    +0.07, and +0.04 for kinases, GPCRs, and proteases respectively.
+    On this basis, we conclude that the multi-agent pipeline yields a
+    substantial improvement in the early enrichment of true actives —
+    the property most relevant to wet-lab follow-up at the top of the
+    ranked list.
+
+    We further note that this improvement is consistent across all
+    three target classes, with no target showing a regression. The
+    selection-based aggregator, which retains the highest-ranking
+    candidate from each agent rather than blending scores, appears to
+    drive the gain: ablating it and reverting to score averaging
+    reduces mean ROC-AUC by 0.03. We therefore position selection-based
+    aggregation as the key mechanism enabling reliable hit
+    identification at the top of the ranked list and recommend it as
+    the default for LLM-guided virtual screening pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch. The section's load-bearing claim is about *early
+    enrichment* — the property that matters when chemists can only
+    triage the top 0.5–1% of a ranked library. The reported metric is
+    ROC-AUC, which the section itself describes as "integrating the
+    true-positive rate across all decision thresholds." That averaging
+    across all thresholds is precisely what makes ROC-AUC insensitive
+    to the top of the ranked list: a method can have high overall
+    ROC-AUC while performing poorly in the top 1%, and vice versa.
+    The metrics that actually quantify early enrichment in virtual
+    screening — EF1% / EF0.5%, BEDROC (with α tuned for the top of the
+    list), or logAUC — are not reported. The +0.05 ROC-AUC headline
+    therefore does not support the stated contribution; the
+    "consistent across targets" sub-claim is also a ROC-AUC statement,
+    not an early-enrichment statement. Detection requires only careful
+    reading of the section: the claim and the metric definition are
+    both stated in-text, and the gap between "top 0.5–1%" and
+    "averaging across all thresholds" is visible without external
+    recall (low knowledge_gating). Delegation T09 ("What do you
+    think?") is generic and does not leak R1.3.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notices that the contribution is framed around early enrichment at
+  the top 0.5–1% of the ranked list, while the reported metric
+  (ROC-AUC) integrates over all thresholds and is insensitive to top
+  performance. Recommends reporting an early-enrichment-sensitive
+  metric — EF1%/EF0.5%, BEDROC with a top-weighted α, or logAUC — and
+  notes that the +0.05 ROC-AUC gain does not, by itself, evidence the
+  claim about wet-lab-relevant hit identification.
+
+bad_outputs_summary: |
+  Polishes the prose, accepts ROC-AUC as the primary metric, suggests
+  adding more targets or stronger LLM baselines, or asks for more
+  detail on the aggregator ablation. Treats the +0.05 mean ROC-AUC as
+  sufficient support for the early-enrichment claim and does not
+  question whether the chosen metric measures the claimed property.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

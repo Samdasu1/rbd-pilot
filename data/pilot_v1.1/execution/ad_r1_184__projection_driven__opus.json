@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_184",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1938,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 25290,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: tightened the prose to remove heavy repetition, flagged claims that go beyond what the reported setup actually demonstrates, and listed items the artifact does not let me verify.\n\n**Main issues in the current draft**\n\n1. *Pervasive duplication.* Almost every paragraph states a fact and then restates it as a near-verbatim \"we do X because X\" sentence. This inflates length without adding content, and in several places the second sentence is logically circular (e.g., \"the standard pressure-mass-matrix approximation \u2026 is the standard pressure-mass-matrix approximation used in the literature\").\n\n2. *Claim/evidence gaps.* Several statements assert more than the description supports:\n   - \"Grid-independent convergence under uniform refinement\" requires a sequence of refined meshes with roughly constant iteration counts; the paragraph above only mentions \"up to 12M DoF\" on \"unstructured tetrahedral meshes,\" with no refinement hierarchy described. Either the setup paragraph needs to name the refinement sequence, or the conclusion should be softened to \"approximately mesh-independent on the meshes tested.\"\n   - \"Robust under mesh refinement\" repeats the same claim and inherits the same gap.\n   - \"Fewer outer iterations *and* lower cumulative inner work than the baseline\" is the load-bearing comparative claim, but the baseline is described only as \"block-diagonal preconditioned MINRES.\" Two things are missing: (a) whether the baseline uses the same Schur preconditioner, and (b) whether \"cumulative inner work\" means inner MINRES iterations, matrix-vector products, or wall-clock \u2014 these are not interchangeable.\n   - The inner tolerance is stated as 10\u207b\u2078 on the *preconditioned residual*, identical to the outer tolerance. That is unusually tight for an inner solve inside FGMRES and is worth double-checking; if it is correct, the cost comparison should explicitly note it, since a looser inner tolerance is the more typical configuration.\n\n3. *Logical ordering.* The current order is: setup \u2192 solver choices \u2192 measurement protocol \u2192 results. The \"we use FGMRES because \u2026 we use MINRES because \u2026\" sentences belong with the solver-choice paragraph, but they currently sit between two statements of the same setup, which makes the chain harder to follow.\n\n4. *Minor prose issues.* \"Indefinite saddle-point systems\" appears twice in the opening; \"outer iteration counts and inner iteration counts\" appears twice in one sentence; \"preconditioned residual norm below 10\u207b\u2078\" appears in two consecutive sentences with the same wording.\n\n**Suggested revision**\n\n> We evaluate the proposed flexible inner-outer Krylov scheme on indefinite saddle-point systems arising from mixed finite element discretizations of the Stokes problem on unstructured tetrahedral meshes, with problem sizes up to 12 million degrees of freedom.\n>\n> The outer iteration is FGMRES restarted every 50 cycles; FGMRES is chosen because it tolerates a variable preconditioner, which the inner solve provides. The inner iteration is preconditioned MINRES applied to the Schur-complement block, exploiting its symmetry. The Schur-complement preconditioner is the standard pressure-mass-matrix approximation.\n>\n> For each test problem we report (i) the number of outer FGMRES iterations needed to reduce the preconditioned residual norm by a factor of 10\u207b\u2078 relative to the initial residual, and (ii) the cumulative number of inner MINRES iterations summed over all outer steps, with the inner solves run to a relative preconditioned residual of [STATE TOLERANCE]. Counts are given in Table 1.\n>\n> On every test problem the proposed scheme requires fewer outer iterations and lower cumulative inner work than the baseline (block-diagonal preconditioned MINRES using the same Schur preconditioner [VERIFY]). On the refinement sequence reported in Table 1, iteration counts remain approximately constant, consistent with mesh-independent convergence on this class of problems.\n\nNotes embedded above:\n- \"[STATE TOLERANCE]\" \u2014 the original text gives the inner tolerance as 10\u207b\u2078, the same as the outer; if that is intentional, restore it explicitly and consider a sentence justifying it. If it is a typo for, e.g., 10\u207b\u00b2 or 10\u207b\u00b3, fix it before the comparative-cost claim is published.\n- \"[VERIFY]\" \u2014 confirm the baseline uses the same Schur preconditioner; if not, the comparison is conflating two changes.\n- \"approximately constant \u2026 on this class of problems\" replaces the unconditional \"grid-independent / robust under mesh refinement,\" which the artifact does not yet substantiate.\n\n**Things I cannot verify from the artifact alone**\n- Whether Table 1 actually contains a refinement sequence (it is referenced but not shown), so I cannot confirm the mesh-independence claim is warranted.\n- Whether \"cumulative inner work\" is measured in iterations, mat-vecs, or time \u2014 the choice changes how defensible the comparative claim is.\n- Whether the baseline's preconditioner matches the proposed scheme's preconditioner; if it does not, the headline comparison needs a caveat.\n- The 10\u207b\u2078 inner tolerance: stated literally in the source, but I flag it as worth a sanity check rather than asserting it is wrong.\n- \"Up to 12M DoF\" \u2014 I have not checked that this is consistent with what Table 1 actually reports.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The broad evaluative delegation reasonably includes checking whether the stated methodological reasons and conclusions follow coherently from the described setup.",
+      "R1.3": "The artifact makes explicit convergence and superiority claims based on reported table results, so alignment between those claims and the reported evidence is centrally implicated.",
+      "R1.6": "The wording contains repeated phrases and sentence-level redundancy, making prose quality an expected part of responding to a general opinion request.",
+      "RX.1": "Any projection of a vague opinion request should acknowledge uncertainty about whether the desired response is scientific, rhetorical, or editorial.",
+      "RX.2": "The artifact contains strong preference and robustness claims, so avoiding unsupported amplification is load-bearing.",
+      "RX.3": "The response must remain within evaluation of the provided section rather than performing edits or external validation.",
+      "RX.4": "Solver-performance claims can influence research conclusions, so the projection should avoid responsibilities that encourage misleading downstream use.",
+      "RX.5": "The assessment should remain traceable to statements present in the artifact, especially references to Table 1 and reported iteration counts."
+    }
+  }
+}

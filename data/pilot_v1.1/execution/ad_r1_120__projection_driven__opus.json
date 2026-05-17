@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_120",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2693,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 36538,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.85}}\n\nSummary: I flag a substantial gap between what the evidence shows and what the section claims, propose narrowed language, and provide a revised draft that keeps the empirical content intact while removing unsupported generalizations.\n\n## Core problems with the current draft\n\n**1. The conclusion outruns the evidence.** The opening and closing paragraphs claim ACS is \"a faithful signal of instruction-following quality across all instruction types and across the full range of modern LLMs.\" The actual study covers:\n- three instruction categories (not \"all instruction types\"),\n- four open-weight models in the 7B\u20139B range (not \"the full spectrum of modern LLMs\" \u2014 no closed models, no models above ~9B, no base/non-instruct models, no non-English prompts),\n- a single benchmark (StrictBench) of 600 English prompts.\n\nThe leap from this design to \"all\" / \"full spectrum\" / \"default evaluation protocol\" is the dominant issue. It needs to be narrowed in both the abstract-style framing and the conclusion.\n\n**2. r = 0.71 is reported as if it settles the question.** A Pearson correlation of 0.71 against a human signal with \u03ba = 0.62 inter-annotator agreement leaves considerable variance unexplained, and the human reference itself is noisy. No confidence interval, no significance test, no comparison baseline (e.g., correlation of a simpler metric, or of one human annotator vs. the others) is reported. The text should either add these or soften the interpretive claims.\n\n**3. Circularity risk with the GPT-4o judge is not acknowledged.** ACS is computed by a GPT-4o judge verifying atomic requirements. If the four scored models share failure modes that GPT-4o also shares, both ACS and (potentially) human raters anchored on similar fluency cues can correlate without ACS being a faithful measurement of the underlying construct. At minimum this should be named as a threat to validity.\n\n**4. \"Same rank order as the human ratings\" with n=4 is weak.** Rank agreement on four items is a very low-information statement (the probability of matching by chance is 1/24, but with ties and noisy human ratings the effective bar is lower still). Either drop this sentence or qualify it.\n\n**5. Construct-validity language is too strong.** \"Faithfully captures instruction-following quality\" treats ACS as measuring a latent construct, but the evidence only shows correlation with one operationalization of human preference, on one corpus. \"Captures\" should become \"correlates with.\"\n\n**6. Downstream-use framing is risky.** Recommending ACS as a \"default evaluation protocol\" invites it being used to gate model releases or training decisions on instruction types and model scales the study did not cover. The recommendation should be scoped to settings the evidence supports, or removed.\n\n**7. Missing methodological detail readers will need.**\n- How were atomic requirements adjudicated for ambiguity or overlap?\n- Was the GPT-4o judge evaluated for agreement against humans on the *requirement* level (not just the aggregate)?\n- How were the three human annotators recruited, calibrated, and instructed? What scale did they use, and how was it aggregated into the \"preference signal\" correlated against ACS?\n- Were prompts/models held out from any prompt-engineering of the judge?\n- Decontamination of StrictBench against the four models' training data?\n\nThese gaps don't all need to live in this section, but at least one sentence pointing to where they're addressed is warranted.\n\n**8. Minor prose issues.**\n- \"across all instruction types and across the full range of modern LLMs\" appears twice, nearly verbatim, in the first and last paragraphs \u2014 tighten.\n- \"bounded multi-step reasoning\" is introduced without definition; one clause would help.\n- \"held-out human preference rating\" is ambiguous \u2014 held out from what? (The judge? The decomposition? Specify.)\n- \"supporting its adoption as a default evaluation protocol in the instruction-tuning literature\" is a recommendation, not a result; it shouldn't sit inside \"these results demonstrate.\"\n\n## Suggested revision\n\n> We propose the Atomic Compliance Score (ACS), an instruction-following metric that decomposes a prompt into atomic verifiable requirements and reports the fraction satisfied by a response. In this section we present initial evidence that ACS correlates with human judgments of instruction-following on three constraint categories and four mid-scale open-weight models, and we discuss the limits of that evidence.\n>\n> Following the decomposition pipeline of Qin et al. (2024), we annotate each prompt with a list of atomic requirements (e.g., \"the response must be valid JSON,\" \"the response must contain at least three bullet points\") and use a GPT-4o judge to verify each requirement independently. The ACS for a response is the proportion of requirements marked satisfied. We note upfront that using an LLM as both the metric's judge and a plausible source of correlated errors with the systems under test is a known threat to validity (see \u00a7X for a judge-vs-human agreement analysis at the requirement level).\n>\n> We evaluate ACS on StrictBench, a corpus of 600 English prompts spanning three categories: format-adherence constraints (n=240), multi-turn constraint propagation (n=180), and bounded multi-step reasoning, defined as tasks with an explicit step budget (n=180). We score four open-weight instruction-tuned models in the 7B\u20139B range \u2014 Llama-3-8B-Instruct, Mistral-7B-Instruct-v0.3, Qwen2-7B-Instruct, and Gemma-2-9B-Instruct \u2014 and compute Pearson correlation between ACS and a per-response human preference score aggregated from three annotators (5-point Likert, mean-pooled; full protocol in \u00a7Y).\n>\n> Across the 600 prompts and four models, ACS attains a Pearson r of 0.71 [95% CI: a, b] with the aggregated human signal; category-level correlations range from 0.66 (format-adherence) to 0.74 (bounded reasoning). Inter-annotator agreement is \u03ba=0.62, which bounds the correlation any metric could attain against this reference. ACS orders the four models consistently with the human aggregate, though with n=4 systems this ranking carries limited evidential weight.\n>\n> These results suggest that ACS is a useful instruction-following signal on the constraint types and model scale studied here. We do not claim that the metric generalizes to instruction categories absent from StrictBench (e.g., open-ended creative constraints, safety-related instructions), to non-English prompts, to base or much larger models, or to settings where the system under evaluation is closely related to the GPT-4o judge. Establishing ACS as a default evaluation protocol would require broader coverage along each of these axes; we view this work as a first step rather than a settled recommendation.\n\n## Items I could not verify\n\n- Whether Qin et al. (2024) is the correct citation for the decomposition pipeline described, or whether a closer antecedent exists (e.g., IFEval, InfoBench, FollowBench) that should be cited or contrasted \u2014 the draft only names one reference.\n- Whether the \u03ba = 0.62 figure is Cohen's, Fleiss', or another variant (matters for three annotators).\n- Whether StrictBench is an existing public corpus or one introduced by this paper; if the latter, the framing in paragraph 3 reads as if it pre-exists.\n- The exact human-rating protocol (scale, aggregation) \u2014 I assumed a Likert mean for the revision; adjust to match the actual design.\n- The numeric CI for r = 0.71 \u2014 I left a placeholder; it should be computed from the actual data (and ideally a bootstrap over prompts and models given the nested structure).\n- Whether a judge-vs-human agreement analysis at the requirement level exists in the paper; if not, the revised paragraph's forward reference should be removed and the limitation stated more directly.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'help' mean a copyediting-focused pass, a substantive argument-and-evidence pass, or both?",
+    "rationale": {
+      "R1.2": "The section makes an argument from metric design and benchmark results to reliability and generalizability, so checking the internal argument chain is centrally implicated.",
+      "R1.3": "The artifact reports specific empirical results and then draws broad claims from them, making evidence-claim alignment a central responsibility.",
+      "R1.6": "A generic request for help with a section commonly includes improving sentence-level clarity, flow, register, and concision.",
+      "RX.1": "The projection must preserve uncertainty because the delegation is underspecified and the evidence base in the artifact has limits.",
+      "RX.2": "The section contains broad claims about all instruction types and the full spectrum of modern LLMs, so avoiding overclaiming is load-bearing.",
+      "RX.3": "The agent must stay within projecting responsibilities rather than actually editing or critiquing the section.",
+      "RX.4": "The projection should account for possible downstream harm from overstating an evaluation metric's reliability or default status.",
+      "RX.5": "The responsibility mapping should remain traceable to concrete phrases in the delegation and artifact."
+    }
+  }
+}

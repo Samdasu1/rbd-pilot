@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_123",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2760,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 39069,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: The section contains a serious internal contradiction between the metric actually reported (ROC-AUC) and the property the authors claim to be measuring (early enrichment). Below are the substantive issues, in roughly descending order of severity.\n\n**1. The headline metric does not measure the headline claim.**\nThe opening paragraph defines \"early enrichment\" as the quality of the top 0.5\u20131% of the ranked list, and explicitly justifies this as the property of practical interest. The text then reports ROC-AUC, which it itself describes (correctly) as integrating TPR \"across all decision thresholds\" \u2014 i.e., a global ranking summary, not a top-k summary. ROC-AUC is well known to be insensitive to performance at the very top of the list; two methods can have identical AUC but very different behavior in the top 1%. The concluding sentence \u2014 \"a substantial improvement in the early enrichment of true actives\" \u2014 therefore is not supported by the evidence presented. This is the single most important issue and should be fixed before circulating the section further.\n\nRecommended fix (one of):\n- (a) Report a metric that actually targets the top of the list (BEDROC with \u03b1\u224820 or 80.5, enrichment factor at 1%, or logAUC), and re-derive the comparative claims from that metric. DUD-E papers conventionally report EF1% and BEDROC for precisely this reason.\n- (b) Keep ROC-AUC but rewrite the claim as \"improved overall ranking quality,\" and drop the early-enrichment framing \u2014 though this weakens the practical-relevance argument made in the first paragraph.\n\nOption (a) is strongly preferable given how the contribution is framed.\n\n**2. \"Substantial improvement\" is not justified by the numbers shown.**\nThe reported delta is +0.05 mean ROC-AUC over the stronger baseline (per-target +0.04 / +0.07 / +0.04). With only three targets, no variance estimate, no per-target seed replicates, and no significance test, \"substantial\" is an overclaim. Suggest replacing with neutral phrasing (\"a consistent improvement of 0.04\u20130.07 ROC-AUC across the three classes\") and adding either (i) confidence intervals via bootstrap over compounds within each target, or (ii) replicate runs if the pipeline has any stochasticity. Also note the comparison to AutoDock Vina is on a benchmark (DUD-E) where Vina is a known weak baseline due to property-matched decoys leaking signal to ligand-based methods; this caveat belongs in the text.\n\n**3. \"Consistent across all three target classes, with no target showing a regression\" is a weak generalization claim.**\nThree target classes is a small sample, and DUD-E is known to have analog bias that inflates ligand-based methods relative to true prospective performance. The current wording invites readers to infer broader reliability than three classes can support. Recommend tempering to: \"On these three DUD-E target classes we did not observe a regression; generalization to other targets and to prospective screens is not established.\"\n\n**4. The ablation claim load-bearing for the mechanism story is under-evidenced.**\nThe selection-based aggregator is positioned as \"the key mechanism,\" based on a single ablation number (\u22120.03 mean ROC-AUC when reverted to score averaging). One ablation, on three targets, with no variance, is insufficient to license \"key mechanism\" or the recommendation that it be adopted as the default for LLM-guided VS pipelines generally. Two options:\n- Soften: \"In our setting, replacing selection-based aggregation with score averaging reduces mean ROC-AUC by 0.03, consistent with \u2014 but not proof of \u2014 selection-based aggregation contributing meaningfully to the gain.\"\n- Or: add per-target ablation numbers and at least one alternative aggregator (e.g., rank fusion / Borda) so the comparison is not binary.\n\nThe recommendation that it \"be the default for LLM-guided virtual screening pipelines\" extrapolates well beyond three targets and one alternative; suggest removing or qualifying heavily.\n\n**5. Missing methodological details that the claims depend on.**\nFor the reader to assess evidence\u2013claim alignment, the section should state \u2014 even briefly \u2014 :\n- Whether DUD-E actives/decoys were used as released, or with any filtering/clustering (analog bias handling).\n- How ties in scores are broken (matters for top-k metrics in particular).\n- Whether any DUD-E targets, ligands, or decoys could have appeared in Galactica-30B's pretraining corpus (a real risk for a 30B chemistry LM evaluated on a public benchmark; this is a contamination concern that should be acknowledged even if not fully resolvable).\n- The decoy library size per target (the phrase \"full DUD-E decoy library\" is ambiguous \u2014 DUD-E ships ~50 decoys per active per target).\n- How the three target classes were selected from DUD-E's 102 targets, and whether that selection was pre-registered or post-hoc.\n\nSeveral of these bear directly on whether the reported numbers mean what the text says they mean.\n\n**6. Minor prose / precision issues.**\n- \"score the full DUD-E decoy library with each method\": decoys are scored alongside actives; as written this could read as decoys-only. Clarify: \"we score all actives and decoys for each target.\"\n- \"ROC-AUC is computed by integrating the true-positive rate across all decision thresholds\" \u2014 strictly, ROC-AUC is the area under TPR vs FPR; the current phrasing omits FPR. Either give the standard definition or drop the explanation (it's standard enough that a citation suffices).\n- \"materially better early enrichment\" in paragraph 1 and \"substantial improvement in the early enrichment\" in paragraph 3 are doing a lot of work for words that have not been operationalized. Pick a single metric, define it once, and use the same wording.\n- \"the strongest LLM baseline\" \u2014 only one LLM baseline is reported (Galactica-30B), so \"strongest\" is misleading; just say \"Galactica-30B.\"\n- \"Table 2\" is referenced but no other tables/figures are mentioned; check that table numbering is consistent with the rest of the manuscript.\n- The phrase \"drive the gain\" in paragraph 4 attributes causation from a single ablation; \"is associated with the gain\" is more defensible.\n\n**7. Suggested rewrite of the conclusion sentence.**\nCurrent: \"We therefore position selection-based aggregation as the key mechanism enabling reliable hit identification at the top of the ranked list and recommend it as the default for LLM-guided virtual screening pipelines.\"\n\nSuggested: \"Within this benchmark, selection-based aggregation accounts for most of the observed gain over score averaging; whether it generalizes to other pipelines and targets remains to be tested.\"\n\n---\n\nItems I could not fully verify and where I am flagging uncertainty:\n- I cannot independently confirm the reported ROC-AUC numbers (0.84 / 0.79 / 0.71) or the per-target gains \u2014 my comments treat them as given and address only whether the claims are licensed by numbers of that shape.\n- I do not know which three DUD-E target classes were used or how they were selected, so my comment on selection bias is a flag, not a finding.\n- I do not know whether Galactica-30B was fine-tuned, prompted zero-shot, or used as a feature extractor here; my contamination-risk comment is a generic concern about public-benchmark + large pretrained LM, not specific to your setup.\n- The \"+0.05\" vs \"+0.04 / +0.07 / +0.04\" arithmetic averages to ~0.05, which is consistent; I did not check whether the per-target numbers are rounded or whether there are unreported decimals that would change the conclusion.\n- \"BEDROC with \u03b1\u224820 or 80.5\" and \"EF1%\" are standard recommendations in the DUD-E literature, but the appropriate metric depends on what fraction of the library you actually plan to triage; if it is truly 0.5\u20131%, EF1% (or EF0.5%) is the most directly interpretable choice.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The broad prompt invites judgment on whether the section's central claim and contribution framing are appropriate.",
+      "R1.2": "Assessing the argument from setup to reported results to conclusion is central to responding to the delegation.",
+      "R1.3": "The artifact makes strong empirical claims, so checking whether the reported ROC-AUC results support those claims is load-bearing.",
+      "R1.6": "A general reaction to a draft section naturally includes sentence- and paragraph-level clarity, register, and concision.",
+      "RX.1": "Any projected assessment should disclose uncertainty caused by limited context and absence of underlying tables or methods.",
+      "RX.2": "The projection must account for risks of inflated language such as early enrichment claims based primarily on ROC-AUC.",
+      "RX.3": "The response must remain within the requested judgment on the excerpt rather than performing edits or broader review.",
+      "RX.4": "Because the artifact concerns wet-lab prioritization, the projection must include caution against recommendations that could mislead downstream screening decisions.",
+      "RX.5": "The projected responsibility should preserve traceability to the claims and numbers explicitly present in the artifact."
+    }
+  }
+}

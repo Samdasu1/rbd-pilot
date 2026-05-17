@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_118",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2101,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 28963,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: The artifact's central claim \u2014 that VisionPoLL \"better reflects human preferences\" \u2014 is not actually supported by any of the reported measurements. The evidence shown is about internal consistency, not human alignment, and several numbers are mislabeled or used in ways that don't follow from how they were computed.\n\n**The core gap between claim and evidence**\n\nThe thesis is that the panel \"tracks human preferences\" and is \"more human-aligned\" than single judges. But no human ratings, human preference data, or human-vs-judge correlations are reported anywhere in the artifact. Every metric reported is intra-system:\n\n- Inter-judge agreement (Fleiss' kappa) measures whether the three judges agree with each other, not whether they agree with humans. Three models can converge on the same wrong answer.\n- Score variance across temperature samples measures stochastic stability of a single judge, not accuracy.\n- Spearman correlation across shuffled re-runs measures order-invariance/reliability, not validity.\n\nReliability is necessary but not sufficient for human alignment. The concluding sentence (\"more human-aligned evaluator than single-judge baselines\") is not entailed by any reported number. To support that claim you need a held-out set of human preference judgments (pairwise or Likert) and a correlation/agreement statistic between panel scores and those human judgments \u2014 ideally compared head-to-head against each single-judge baseline.\n\n**Specific consistency and evidence problems**\n\n1. Fleiss' kappa is defined for \u22653 raters over a common item set and yields one value per dataset, not per generator. Reporting three separate kappas (0.71/0.68/0.74) for SDXL/DALL-E 3/Imagen 2 is fine if computed within each subset, but the text should make explicit that these are stratified kappas, not a single panel-level kappa. Also, kappa on a 5-point ordinal scale should typically be reported as weighted kappa (linear or quadratic); unweighted Fleiss' kappa on ordinal data understates agreement and is not the standard choice. Specify which variant was used.\n\n2. \"Inter-judge agreement \u2026 indicating strong consensus\" is then juxtaposed with a 38% variance reduction from aggregation. If consensus is already strong (kappa ~0.7), the variance-reduction story and the consensus story are doing different work \u2014 one is about agreement on rank, the other about smoothing stochastic noise within a single judge. The current text conflates them.\n\n3. \"Single-judge baselines yield internal score variance of 0.42, 0.39, 0.48 (standard deviation across temperature samples at T=0.7)\" \u2014 those are standard deviations, not variances. Either relabel as SD or square them. Also, \"internal score variance\" of a single judge is not directly comparable to \"score variance\" of the aggregated panel unless the panel variance was computed the same way (resampling each judge at T=0.7 and then aggregating). The 38% reduction figure needs its denominator and aggregation procedure spelled out.\n\n4. The aggregation rule \u2014 \"majority vote with ties broken by mean score\" \u2014 is under-specified on a 5-point scale where exact-match majorities will be rare. With three judges and five categories, the most common outcome is no majority, so in practice the panel almost always falls through to mean. State the actual decision distribution, or describe the aggregator as \"mean with majority-vote override,\" which is closer to what will happen empirically.\n\n5. \"Pairwise Spearman correlation across runs is 0.89\" \u2014 across three runs there are three pairs; report the three values or state explicitly that 0.89 is the mean. Also clarify what was shuffled: prompt order alone should not change per-(prompt, image) scores unless judges have cross-prompt context, in which case that should be disclosed as a methodological detail.\n\n6. The final sentence claims the results \"directly address the reproducibility concerns raised in prior work on LLM-as-judge protocols.\" Reproducibility concerns in that literature are broader than score-stability under reseeding \u2014 they include judge bias (position, verbosity, self-preference), prompt-template sensitivity, and calibration drift across model versions. None of those are addressed here. The claim should be narrowed to stability under temperature sampling and prompt-order permutation.\n\n**Recommended revisions to bring claims in line with evidence**\n\n- Reframe the contribution as: \"VisionPoLL improves the *reliability and stability* of automated T2I alignment scoring relative to single-judge baselines.\" Drop or sharply qualify the human-alignment claim until human-correlation data is added.\n- If a human-alignment claim is retained, add: number of human raters, rater qualifications, item sample size, inter-rater agreement among humans, and the correlation (Spearman/Kendall) or agreement (Cohen/Krippendorff) between panel scores and human aggregate. Compare against each single-judge baseline with a significance test or bootstrap CI.\n- Replace \"variance\" with \"standard deviation\" where appropriate, or square the reported numbers.\n- Specify weighted vs. unweighted Fleiss' kappa, and report a single panel-level kappa alongside the per-generator stratified values.\n- Specify the empirical frequency with which the majority-vote rule fires vs. falls through to mean.\n- Report the three pairwise Spearman values or label 0.89 as a mean; state what \"shuffled prompt orderings\" affects in the judging pipeline.\n- Narrow the closing claim about \"reproducibility concerns\" to the specific axes actually measured (temperature stability, order invariance).\n\n**What I could not verify**\n\nI have no access to the underlying PartiPrompts run logs, the judge prompt templates, or the aggregation code, so I cannot confirm whether the reported numbers are computed as described (e.g., whether the 38% variance reduction is computed on the same resampling protocol across single-judge and panel conditions, or whether Fleiss' kappa was weighted). The critique above assumes the artifact text is a faithful summary; if the underlying methodology differs, several specific points may not apply. The recommendation to add human-preference correlations is the load-bearing one and stands regardless of those details.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check this paper-like passage centrally includes checking whether the reasoning from reported metrics to conclusions is internally coherent.",
+      "R1.3": "The delegation centrally implicates whether the stated results actually support the claims about human preference alignment and evaluator reliability.",
+      "RX.1": "The projection must preserve uncertainty because the terse delegation does not specify a particular kind of check.",
+      "RX.2": "The projection must guard against treating reported stability or agreement metrics as stronger evidence than they are stated to provide.",
+      "RX.3": "The projection must stay within responsibility projection rather than performing the requested check on the artifact.",
+      "RX.4": "The projection should avoid enabling unsupported downstream adoption claims without flagging the relevant responsibility dimensions.",
+      "RX.5": "The projection must remain traceable to the delegation phrase and the artifact's research-writing content."
+    }
+  }
+}

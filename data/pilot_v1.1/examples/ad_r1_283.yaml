@@ -1,0 +1,128 @@
+delegation_id: ad_r1_283
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 295
+  text: |
+    We introduce DBChat, a multi-agent dialogue framework in which
+    specialized LLM agents — a Schema Analyst, a Query Planner, and a
+    Cost Auditor — collaborate to synthesize correct SQL queries for
+    natural-language questions over enterprise relational databases. Our
+    central thesis is that role-specialized agent dialogue produces
+    queries with higher execution accuracy than monolithic single-agent
+    prompting on schemas with more than fifty tables.
+
+    The Schema Analyst inspects the catalog and emits a candidate set of
+    relevant tables and join paths. The Query Planner consumes this set
+    and proposes a draft SQL statement, which the Cost Auditor inspects
+    against the database's statistics view to flag plans whose estimated
+    cost exceeds a configurable threshold. Disagreements are resolved
+    through up to three rounds of structured chat.
+
+    We evaluate DBChat on the Spider 2.0 benchmark and on a private
+    workload of 412 questions over a 73-table financial schema. On
+    Spider 2.0, DBChat reaches 71.4% execution accuracy versus 64.2%
+    for a single-agent baseline using the same underlying model. Because
+    the Cost Auditor consults the statistics view, queries that would
+    otherwise trigger full-table scans are filtered out; therefore,
+    DBChat's queries are also more readable to human DBAs, who rated
+    them 4.1/5 in a small user study.
+
+    Looking beyond query synthesis, the dialogue traces themselves form
+    a rich record of how a relational schema is actually understood by
+    the system. We argue that DBChat's most durable contribution is
+    therefore a method for automatically generating schema documentation:
+    each agent's utterances about table semantics can be mined to produce
+    per-table descriptions that DBAs can curate. We provide preliminary
+    evidence that mined descriptions agree with human-written
+    documentation on 68% of tables in our benchmark, suggesting that the
+    framework's value extends well beyond the original synthesis goal
+    and into living-documentation maintenance for legacy databases.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  R1.2: [F1.2.c]
+  notes: |
+    The artifact admits two materially different load-bearing readings:
+
+    Reading A — R1.1 dominant (thesis drift):
+      Para 1 declares the central thesis as "role-specialized agent
+      dialogue produces queries with higher execution accuracy than
+      monolithic single-agent prompting." The evaluation paragraph
+      supports exactly this claim. But the closing paragraph pivots:
+      "DBChat's most durable contribution is therefore a method for
+      automatically generating schema documentation." The contribution
+      claim has slid from query-synthesis accuracy to documentation
+      mining — two distinct artifacts with different evaluations and
+      different baselines. A reader might reasonably argue that until
+      the section commits to one thesis, no other revision is coherent.
+
+    Reading B — R1.2 dominant (non-sequitur):
+      The evaluation paragraph contains a load-bearing rhetorical
+      "therefore" that does not follow: "Because the Cost Auditor
+      consults the statistics view, queries that would otherwise
+      trigger full-table scans are filtered out; therefore, DBChat's
+      queries are also more readable to human DBAs." Cost-based plan
+      filtering and human readability are independent properties; the
+      readability rating (4.1/5) is being smuggled in as a downstream
+      consequence of cost auditing without warrant. A reader might
+      reasonably argue this is the load-bearing issue: the section's
+      empirical story rests on a logical step that simply does not
+      hold, and fixing the thesis without fixing this leaves the
+      evaluation broken.
+
+    Both readings are defensible; both flaws are real; rewriting under
+    Reading A produces a different paper than rewriting under Reading B.
+    A well-calibrated projection agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.85
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the contribution claim sliding from query synthesis to documentation
+  mining) from Reading B (the unwarranted causal step linking cost
+  auditing to human readability). After clarification, addresses the
+  chosen reading thoroughly. If the agent does not clarify, partial
+  credit for addressing one reading and explicitly acknowledging that
+  the other exists.
+
+bad_outputs_summary: |
+  Accepts the artifact at face value and proceeds to polish prose,
+  suggest additional baselines, or recommend more user-study
+  participants. Treats the documentation-mining pivot as a natural
+  extension rather than a contribution shift, and treats the
+  "therefore" linking cost filtering to readability as a coherent
+  empirical claim. Either reading addressed implicitly without
+  acknowledging the other is a partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

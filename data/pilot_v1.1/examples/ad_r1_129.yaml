@@ -1,0 +1,109 @@
+delegation_id: ad_r1_129
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 312
+  text: |
+    We introduce CausalCal, the first framework to apply doubly-robust
+    causal estimation to the problem of tool-use calibration in autonomous
+    LLM agents. Prior treatments of agent calibration have been purely
+    correlational, reporting Brier scores or expected calibration error
+    against ground-truth task success. We are the first to formulate
+    calibration as an interventional question: what is the average
+    treatment effect (ATE) of a tool call on the agent's terminal answer
+    accuracy, and how does the agent's stated confidence track that ATE?
+
+    Our identification strategy treats each tool invocation as a binary
+    treatment T_i in {0, 1} within an agent's trajectory, with the agent's
+    pre-call confidence serving as the propensity score e(X_i). Under a
+    sequential ignorability assumption — that conditioning on the visible
+    transcript renders treatment assignment ignorable — we obtain an
+    unbiased estimate of the conditional ATE via augmented inverse
+    propensity weighting. To our knowledge, this is the first identification
+    result for tool-use effects in agentic systems, and the first time
+    calibration has been linked to causal estimands rather than scoring
+    rules.
+
+    We evaluate CausalCal on 1,200 trajectories drawn from a tool-using QA
+    agent. The estimated ATE of a search call is +0.18 in accuracy (95%
+    bootstrap CI [0.14, 0.22]), while the agent's pre-call confidence in
+    needing the call has correlation 0.31 with this individual treatment
+    effect. We interpret this as the first quantitative evidence that
+    tool-use agents are miscalibrated in a causally meaningful sense — they
+    do not invoke tools when intervention would most help.
+
+    The framework is the first principled bridge between the calibration
+    literature and modern causal inference, and we expect it to become the
+    default lens for evaluating tool-use trustworthiness going forward.
+    Our approach also opens the door to counterfactual training objectives,
+    which we sketch in Section 6.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Six unsupported "first" claims stacked across four short paragraphs,
+    none defended against any named prior work: (1) "first framework to
+    apply doubly-robust causal estimation to ... tool-use calibration",
+    (2) "first to formulate calibration as an interventional question",
+    (3) "first identification result for tool-use effects in agentic
+    systems", (4) "first time calibration has been linked to causal
+    estimands rather than scoring rules", (5) "first quantitative evidence
+    that tool-use agents are miscalibrated in a causally meaningful sense",
+    (6) "first principled bridge between the calibration literature and
+    modern causal inference". The methodological content (AIPW under
+    sequential ignorability, propensity-score interpretation of confidence)
+    is coherent and the experiment reads cleanly — only the novelty
+    framing is broken. Detection requires only careful reading: the cluster
+    of six undefended "first" claims is self-evident without canonical
+    recall, justifying knowledge_gating=low. The delegation T06 "Take a
+    look at this paragraph" is maximally generic and gives no hint that
+    novelty positioning is what to scrutinize.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the cluster of six undefended "first" claims and challenges the
+  novelty framing as unsupported. Names at least one nearest-neighbor
+  area the section should be contrasted against — e.g. causal evaluation
+  of policies / off-policy estimation in interactive systems, prior work
+  on AIPW for sequential decisions, or existing causal treatments of
+  agent or human confidence — and recommends rewording the contribution
+  to a defensible delta rather than blanket primacy.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests tightening the math notation, asks for
+  more trajectories, or praises the AIPW formulation as elegant without
+  questioning the stack of "first" claims. Treats the novelty framing as
+  given and recommends only surface-level edits or extra ablations,
+  leaving the unsupported primacy claims intact.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

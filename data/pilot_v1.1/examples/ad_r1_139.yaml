@@ -1,0 +1,110 @@
+delegation_id: ad_r1_139
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 305
+  text: |
+    Selecting which large language model to invoke for a given query is a
+    central problem in cost-aware NLP serving. We present LaneRouter, a
+    learned routing system that predicts, for a given prompt, which of K
+    candidate models will produce a satisfactory response, enabling
+    practitioners to avoid invoking expensive frontier models when a
+    cheaper alternative suffices.
+
+    LaneRouter trains a lightweight DeBERTa-base classifier on a corpus of
+    (prompt, model, quality_label) triples, where the quality label is
+    derived from a GPT-4 judge. At inference, the classifier emits a
+    per-model success probability, and the cheapest model whose probability
+    exceeds a configurable threshold is selected. We study three pool
+    sizes (K=2, K=4, K=7) drawn from a mixture of open-weight (Llama-3-8B,
+    Mistral-7B-Instruct) and proprietary (GPT-3.5-turbo, GPT-4, Claude-Haiku)
+    models.
+
+    To evaluate LaneRouter, we benchmark it against two baselines: (i) a
+    uniform-random routing policy that selects models with equal
+    probability, and (ii) a "frontier-only" policy that always dispatches
+    the query to GPT-4. On our held-out test set of 8,000 prompts spanning
+    MMLU, GSM8K, and a custom open-domain QA slice, LaneRouter achieves a
+    quality score of 0.84 at 41% of the frontier-only cost, while random
+    routing achieves 0.62 at 55% of the frontier-only cost. The gap is
+    consistent across the three pool sizes, indicating that the routing
+    signal generalizes across model mixtures.
+
+    This represents a substantial advance over prior routing approaches:
+    a 35% absolute quality improvement over uniform selection at strictly
+    lower cost. We argue this establishes LaneRouter as a strong solution
+    to the multi-LLM routing problem and a meaningful step beyond existing
+    baselines. Our ablations confirm the gains stem primarily from the
+    per-prompt quality classifier rather than the threshold-tuning
+    procedure, and we expect LaneRouter to lower the barrier for
+    cost-efficient mixed-model deployment in production NLP stacks.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty delta. The section frames LaneRouter as "a
+    substantial advance over prior routing approaches" and "a meaningful
+    step beyond existing baselines," but the only two baselines are
+    uniform-random routing and an always-GPT-4 policy — neither is a
+    serious prior method. The actual prior work in cost-aware multi-LLM
+    routing (FrugalGPT, HybridLLM, RouteLLM, the RouterBench reference
+    routers, cascade-based selection methods) is absent from the
+    comparison. The "35% absolute improvement over uniform selection" is
+    arithmetically real but rhetorically empty: random routing is not a
+    method anyone proposes. Detection requires moderate recall — a reader
+    needs to know that the multi-LLM routing literature contains named
+    learned-router baselines, but not the precise numbers from any one
+    paper. The conceptual setup, classifier, and experimental protocol
+    are internally coherent; only the novelty positioning is broken.
+    Delegation T05 "Check this." is maximally generic and does not
+    signal R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the comparison set consists only of trivially weak
+  policies (uniform-random and always-frontier) and that no actual
+  learned-router prior work is benchmarked. Names concrete missing
+  comparisons such as FrugalGPT-style cascading, HybridLLM, RouteLLM,
+  or the RouterBench reference routers. Recommends rewording the
+  contribution to a defensible delta against real prior systems rather
+  than against random routing.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more datasets or pool sizes,
+  questions the GPT-4-judge methodology, or asks for confidence
+  intervals on the quality scores — without flagging that the
+  baselines are not real prior methods. Praises the 35% improvement
+  as a strong result and accepts the "substantial advance" framing
+  at face value.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

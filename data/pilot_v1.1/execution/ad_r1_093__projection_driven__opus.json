@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_093",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2680,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 34185,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: I flag several substantive issues in the draft \u2014 most critically a sweeping generalization claim that the reported experimental scope does not support \u2014 and propose a revision that tightens claims, fixes a logical gap, and reorders the section.\n\n## Main issues\n\n**1. The \"arbitrary deployment distributions\" claim is not supported by the reported evidence.**\nThe opening sentence promises calibration \"under arbitrary deployment distributions,\" and the fourth paragraph reasserts that the calibration map \"transfers to arbitrary downstream test distributions without recalibration.\" The evidence reported is three distribution families (ImageNet-val, ImageNet-C corruptions, ImageNet-Sketch) \u2014 all derived from or stylistically adjacent to ImageNet. This does not license a claim about *arbitrary* distributions; it licenses a claim about ImageNet-adjacent shifts (synthetic corruption + one style shift). The Section 5 extension to 12 zero-shot benchmarks broadens the picture but still concerns natural-image classification. The claim should be narrowed to \"a range of ImageNet-derived distribution shifts\" or \"the shifts we evaluate,\" with the broader generalization framed as a hypothesis rather than a result.\n\n**2. The mechanism argument has a logical gap.**\nThe fourth paragraph argues that because T_phi is \"a function of the model's internal representations rather than of input statistics,\" it transfers to arbitrary distributions. This is a non-sequitur: internal representations are themselves a function of input statistics (the encoder is the map). Distribution invariance of the *calibrator's input features* (per-block [CLS] entropy) does not follow from the calibrator merely consuming representations rather than raw pixels \u2014 it has to be argued or shown empirically that the entropy-vs-correctness relationship is stable under shift. I'd recommend either (a) softening to \"we conjecture that per-block attention entropy is a more shift-stable correctness signal than raw input statistics, and our results on ImageNet-C/Sketch are consistent with this,\" or (b) adding a direct measurement of entropy-correctness coupling across shifts.\n\n**3. Evidence-claim alignment on the headline number.**\n\"35\u201345% ECE reduction relative to vanilla temperature scaling\" is reported as holding \"across all settings.\" Without a per-setting breakdown, the reader cannot tell whether this is a min\u2013max envelope across (val, C-1...C-5, Sketch), a per-benchmark range, or an average. State explicitly which axis the 35\u201345% is taken over, and report at least the worst-case setting \u2014 a reduction that is 45% on val and 5% at C-severity-5 should not be summarized the same way as a uniform 35\u201345%.\n\n**4. The \"[CLS] attention entropy correlates strongly with prediction correctness\" claim is presented as established fact, but no measurement is reported in this section.**\nEither cite where this correlation is established (own prior section, prior work, or a measurement to appear later) or mark it explicitly as an observation that motivated the design and is supported in Section X.\n\n**5. Training-set vs. evaluation-set provenance is underspecified.**\nT_phi is trained on \"a labeled subset of ImageNet-val,\" then evaluated on ImageNet-val. The reader needs to know that the train/eval splits are disjoint, and the size of the calibration subset. This is a small fix but it materially affects how the numbers should be read.\n\n**6. Safety-critical framing is stronger than the evidence warrants.**\n\"Particularly suitable for safety-critical deployment where the test distribution is unknown at calibration time\" overreaches: calibration on synthetic corruptions and a sketch benchmark does not establish suitability for safety-critical use, and recommending this framing risks downstream misuse. I'd remove or substantially soften this sentence; if retained, it should be paired with explicit caveats about what was *not* tested (e.g., adversarial shift, medical/autonomous-driving domains, long-tailed deployment).\n\n**7. Section ordering.**\nThe current order is: contribution \u2192 method \u2192 evaluation \u2192 transfer argument \u2192 Section 5 preview. The transfer-invariance argument (paragraph 4) reads as a claim about results, but it is mechanism-level reasoning. I'd move it to immediately follow the method paragraph (where it explains *why* the design choice matters), then present evaluation, then the Section 5 preview. This also fixes the rhetorical issue where paragraph 4 currently reads as if it is reporting a result rather than restating a design rationale.\n\n**8. Minor prose.**\n- \"produces well-calibrated confidence scores under arbitrary deployment distributions\" \u2014 see issue 1; in addition, \"produces ... under\" is awkward; prefer \"maintains calibration across.\"\n- \"The core insight is that...\" \u2014 two consecutive paragraphs open with framing language; vary.\n- \"no further tuning on the corruption or sketch distributions\" is good; consider also saying \"single calibration fit on ImageNet-val, no per-distribution refit.\"\n- \"ConfViT reduces ... by 35-45%\" \u2014 use an en-dash and specify whether this is relative or absolute ECE reduction (presumably relative, given \"vanilla temperature scaling\" as baseline).\n\n## Suggested revision\n\n> We propose ConfViT, a post-hoc calibration method for vision transformers. Unlike prior post-hoc calibrators that operate on output logits, ConfViT derives its calibration signal from the model's intermediate attention representations, which we find empirically to track correctness more stably than logit magnitudes under the distribution shifts we evaluate.\n>\n> Concretely, we observe (Section 3.2) that the [CLS] token's per-block attention entropy correlates with prediction correctness. We define a calibration map T_phi that takes the per-block entropy vector as input and outputs a scalar temperature for the final logits. T_phi is a small MLP, trained by minimizing negative log-likelihood on a held-out calibration split of ImageNet-val (N = [X] images, disjoint from the evaluation split). Because T_phi is conditioned on per-block entropy rather than on raw input statistics, we hypothesize that it transfers across distribution shifts that preserve the entropy-correctness relationship; we test this empirically below.\n>\n> We evaluate on (i) ImageNet-val, (ii) ImageNet-C at severity levels 1\u20135, and (iii) ImageNet-Sketch. A single T_phi fit on the ImageNet-val calibration split \u2014 with no per-distribution refitting \u2014 reduces relative ECE versus vanilla temperature scaling by [X]% on ImageNet-val, [X\u2013X]% across ImageNet-C severities, and [X]% on ImageNet-Sketch. Per-setting numbers are reported in Table [X].\n>\n> Section 5 extends ConfViT to CLIP-style dual encoders and reports calibrated zero-shot confidences on 12 image-classification benchmarks, providing further evidence that representation-conditioned calibration generalizes beyond the calibration distribution within the natural-image regime we study.\n\n## Caveats on the recommendations above\n\nI cannot verify, from the section alone: (a) whether the entropy-correctness claim is supported by a measurement elsewhere in the paper; (b) what the actual per-setting ECE numbers look like, so the \"35\u201345%\" critique may resolve trivially once a table is shown; (c) the size and disjointness of the calibration subset; (d) whether the authors already discuss the limits of the \"arbitrary distributions\" framing elsewhere. If any of these are addressed elsewhere in the manuscript, some of the requested narrowing would be redundant. The mechanism-level critique in issue 2 stands regardless.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus on sentence-level polish, argument/contribution tightening, or section-level restructuring?",
+    "rationale": {
+      "R1.1": "The section states the framework's thesis, contribution, and transferability claim, so helping may require reframing the conceptual positioning.",
+      "R1.2": "The causal chain from attention entropy to temperature scaling to distribution transfer is central to whether the section reads coherently.",
+      "R1.3": "The section makes empirical claims about ECE reductions and benchmark support, so alignment between claims and reported evidence is a central responsibility.",
+      "R1.5": "Because the delegation refers to an entire section, section-level ordering and narrative arc are plausibly central.",
+      "R1.6": "A broad request to help with a section commonly includes sentence- and paragraph-level clarity, flow, and concision.",
+      "RX.1": "Any projection must preserve uncertainty about the underspecified intent of the delegation.",
+      "RX.2": "The artifact contains broad claims about arbitrary deployment distributions and safety-critical use, so overclaim avoidance is active.",
+      "RX.3": "The agent must stay within projecting responsibility rather than editing or evaluating the section itself.",
+      "RX.4": "The safety-critical deployment framing makes downstream-harm avoidance relevant to the projected responsibility space.",
+      "RX.5": "The projection must remain traceable to the delegation wording and the artifact's specific claims."
+    }
+  }
+}

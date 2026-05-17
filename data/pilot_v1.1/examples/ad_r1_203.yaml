@@ -1,0 +1,129 @@
+delegation_id: ad_r1_203
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 323
+  text: |
+    Adaptive finite element methods for convection-dominated PDEs
+    require error estimators that capture both the magnitude and the
+    directional structure of solution features. We present GoalAniso,
+    the first algorithm to combine goal-oriented dual-weighted residual
+    estimation with anisotropic mesh refinement for steady-state
+    convection-diffusion problems with sharp internal layers.
+
+    Classical isotropic mesh adaptation, driven by residual-based
+    estimators in the energy norm, performs poorly on
+    convection-dominated problems because layers are inherently
+    anisotropic. Resolving layer structure requires refinement that
+    follows the solution's directional features, not just its
+    magnitude. Our contribution is a unified framework in which the
+    dual-weighted residual (DWR) estimate provides both the refinement
+    criterion and the metric tensor for anisotropic element shaping.
+
+    The DWR framework was introduced by Becker and Rannacher (2001).
+    DWR-based anisotropic mesh refinement for advection-diffusion
+    problems was previously developed by Formaggia and Perotto (2003),
+    who derived element-wise anisotropic DWR estimators and
+    demonstrated mesh adaptation on internal-layer benchmarks.
+    Anisotropic adaptation more broadly has been studied through
+    metric-based formulations (Frey and Alauzet, 2005), which align
+    elements with Hessian-derived metrics from the primal solution
+    rather than from a goal functional.
+
+    GoalAniso couples these threads: at each adaptive iteration, we
+    solve the primal and dual problems on the current mesh, then
+    construct an anisotropic metric whose principal directions are
+    aligned with the dual solution and scaled by the local DWR
+    contribution. Refinement targets the elements with largest
+    goal-error contribution while shaping new elements along
+    dual-solution gradients.
+
+    We evaluate on three convection-dominated benchmarks: a
+    rotating-pulse problem, a 2D boundary-layer problem with Peclet
+    number 10^4, and the Hemker test problem. On Hemker, GoalAniso
+    achieves the target functional accuracy with 41% fewer degrees of
+    freedom than goal-oriented isotropic refinement and 28% fewer than
+    Hessian-driven anisotropic refinement. The reductions are
+    consistent across the suite.
+
+    These results position GoalAniso as a practical option for
+    goal-oriented adaptivity in problems where layer structure
+    dominates the error.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    Internal-citation contradiction (visible without external
+    knowledge). Para 1 claims GoalAniso is "the first algorithm to
+    combine goal-oriented dual-weighted residual estimation with
+    anisotropic mesh refinement for steady-state convection-diffusion
+    problems with sharp internal layers." Para 3 then states that
+    "DWR-based anisotropic mesh refinement for advection-diffusion
+    problems was previously developed by Formaggia and Perotto (2003),
+    who derived element-wise anisotropic DWR estimators and
+    demonstrated mesh adaptation on internal-layer benchmarks" —
+    advection-diffusion is the same problem class as
+    convection-diffusion, and internal-layer benchmarks are the same
+    setting. The "first" novelty claim contradicts the section's own
+    related-work citation. Detection requires only careful reading of
+    the section; no recall of canonical prior work is necessary
+    because the contradiction is internal to the text. Delegation T03
+    ("Make this stronger.") is a generic improvement request that
+    does not hint at the load-bearing dim. The contribution claim
+    ("28% fewer DoF than Hessian-driven anisotropic refinement")
+    is also potentially compromised because the comparison set does
+    not appear to include a Formaggia-Perotto-style anisotropic DWR
+    baseline — the most relevant prior method.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the "first algorithm" claim in paragraph 1 is
+  directly contradicted by the section's own citation to Formaggia
+  and Perotto (2003), who already developed DWR-based anisotropic
+  mesh refinement for advection-diffusion problems with internal
+  layers. Suggests rewording the novelty claim to a defensible
+  delta (e.g. a specific architectural or metric-construction
+  difference relative to Formaggia-Perotto) and adding their method
+  as a baseline in the empirical comparison, since the "28% fewer
+  DoF" claim is otherwise compromised.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more benchmarks or more decimal
+  places in the result table, accepts the "first algorithm" framing
+  despite the Formaggia-Perotto citation, or proposes restructuring
+  paragraphs without flagging the internal contradiction. Adds
+  peripheral citations (alternative residual estimators, additional
+  metric-recovery techniques) without addressing the priority
+  conflict.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

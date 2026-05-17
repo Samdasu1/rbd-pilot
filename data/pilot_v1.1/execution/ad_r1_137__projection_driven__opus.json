@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_137",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2048,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 24699,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.7, \"R1.2\": 0.3, \"R1.3\": 0.3}}\n\nSummary: Tightened the prose, flagged several overclaims, and added qualifying language around generalization, clinical adoption, and benchmark coverage; below is a revised version followed by notes on what changed and what I could not verify.\n\n---\n\n**Revised paragraph (suggested)**\n\nWe present VariScore-2, a deep-learning model for predicting the pathogenicity of missense variants in clinically relevant genes. VariScore-2 extends our prior approach by adding a transformer-based encoder over multiple sequence alignments (MSAs). In our experiments, it outperforms the comparison methods we evaluated on three benchmark sets.\n\nWe evaluated VariScore-2 on (i) the ClinVar-2023 hold-out partition, (ii) the BRCA1 saturation-mutagenesis assay of Findlay et al., and (iii) an in-house panel of 4,812 curated variants drawn from our clinical reporting pipeline. On ClinVar-2023, VariScore-2 reaches an AUROC of 0.912, compared with 0.887 for VariScore-1 (Smith et al., 2021) and 0.864 for a BLOSUM62-substitution baseline. On the BRCA1 assay, Spearman \u03c1 improves from 0.61 (VariScore-1) to 0.68. On the in-house panel, balanced accuracy rises from 0.79 to 0.83. Across the three benchmarks, VariScore-2 shows a consistent improvement over VariScore-1; the magnitude of the gain varies by benchmark and we have not characterized its statistical significance here.\n\nThe MSA-conditioned transformer is described in Section 3. The encoder consumes a column-wise representation of the alignment and emits a 256-dimensional residue embedding, which is concatenated with the structural-feature vector before being passed to the pathogenicity head. The Section 4 ablation shows that removing the MSA encoder drops AUROC by 0.027 on ClinVar-2023, which is consistent with a contribution from the transformer module on this benchmark.\n\nVariScore-2 retains the structural-feature pipeline of VariScore-1 and replaces the sequence-encoding stage. Because the model has fewer than 12M parameters, it can in principle be retrained on local cohorts without specialized hardware; whether this translates into practical adoption by clinical laboratories will depend on factors we do not evaluate here (data availability, regulatory workflow, calibration on local populations). Within the scope of the benchmarks reported above, VariScore-2 represents an incremental improvement over VariScore-1.\n\n---\n\n**Notes on what I changed and why**\n\n1. \"Advances the state of the art\" \u2192 softened. The paragraph only compares against VariScore-1 and a BLOSUM62 baseline; \"state of the art\" implies a broader competitive field that is not actually documented here. I replaced it with a more modest framing.\n\n2. \"A feature absent from earlier scoring schemes\" \u2192 removed. This is a strong negative claim about prior work and is easy to falsify (MSA-based encoders, including transformer variants, have appeared in this literature). I kept the description of what the model does without asserting prior-art absence.\n\n3. \"Outperforms competing approaches\" \u2192 \"outperforms the comparison methods we evaluated.\" The original wording suggests a broad sweep; only two comparators (VariScore-1 and a BLOSUM62 baseline) are actually listed.\n\n4. \"Dominates the competition by a wide margin\" \u2192 removed. The reported gaps (AUROC +0.025, \u03c1 +0.07, balanced accuracy +0.04) are not \"wide margins\" by the conventions of this field, and no confidence intervals or significance tests are reported. I substituted a description that matches what the numbers actually show and explicitly flagged the absence of statistical testing.\n\n5. \"Confirming the contribution of the transformer module\" \u2192 \"consistent with a contribution \u2026 on this benchmark.\" A single ablation on one dataset is suggestive, not confirmatory; the softer wording matches what the evidence supports.\n\n6. \"Strong general-purpose pathogenicity scorer\" \u2192 removed. Three benchmarks, one of which is an in-house panel from the authors' own pipeline (which raises selection-bias and label-leakage concerns), do not support a \"general-purpose\" claim.\n\n7. Clinical-adoption claim \u2192 qualified. \"Small footprint enables retraining\" is plausible, but \"well suited to clinical-laboratory adoption\" jumps over calibration, validation, regulatory, and workflow questions that the paragraph does not address. I noted these as out-of-scope rather than asserting suitability.\n\n8. Minor prose: removed the doubled \"the earlier model \u2026 VariScore-1,\" tightened the benchmark list into an enumerated form, and removed the redundant \"Taken together\" closing.\n\n---\n\n**Things I cannot verify from the artifact alone**\n\n- Whether the in-house 4,812-variant panel overlaps with VariScore-1's or VariScore-2's training data \u2014 if so, the balanced-accuracy comparison is not a fair held-out evaluation.\n- Whether ClinVar-2023 contains variants seen during training (a recurring issue in this benchmark family).\n- Whether the BLOSUM62 baseline is a meaningful comparator; many readers will expect comparisons to current MSA-based predictors (e.g., established deep mutational-effect models) rather than only a substitution-matrix baseline.\n- Whether the Findlay et al. BRCA1 \u03c1 values are computed on the same variant subset used by prior reports.\n- Whether the 0.027 AUROC ablation drop is statistically distinguishable from run-to-run variance.\n\nIf any of these are addressed elsewhere in the manuscript, several of the qualifications above can be relaxed. If they are not addressed, the qualifications should stay \u2014 and the manuscript itself likely needs to add them before the claims in the original paragraph are defensible.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation asks only to look at a paragraph, making sentence- and paragraph-level readability, tone, and phrasing the central expected responsibility.",
+      "RX.1": "Any projection should preserve uncertainty because the request is underspecified and does not ask for external validation.",
+      "RX.2": "The paragraph contains strong performance and adoption claims, so overclaim avoidance remains relevant even if substantive review is not centrally requested.",
+      "RX.3": "The agent must stay within projecting the delegation rather than editing or evaluating the artifact itself.",
+      "RX.4": "The clinical genetics context creates potential downstream implications, so harm-aware handling is active.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's paragraph-level research-writing context."
+    }
+  }
+}

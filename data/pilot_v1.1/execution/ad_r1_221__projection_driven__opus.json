@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_221",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2482,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 35198,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: I read the section closely and found multiple internal contradictions that materially undermine the framing; below I list the issues, propose corrected wording, and flag what cannot be resolved without input from the authors.\n\n**1. Hard contradictions between paragraphs.** The section asserts mutually exclusive architectural facts in successive paragraphs:\n\n- Paragraph 2 states there is a \"central orchestrator agent\" that \"maintains the blackboard, arbitrates conflicting proposals \u2026 and issues the final action token.\"\n- Paragraph 3 states the deployed system uses a \"fully decentralized peer-to-peer channel with no central coordinator\" and reaches consensus by proposal stabilization across two rounds.\n\nThese cannot both describe the same system. As written, a reader cannot tell whether the framework is centrally arbitrated or peer-to-peer, nor which variant produced the reported numbers. This needs to be resolved before any other revision is meaningful. The most likely intended reading is either (a) the framework supports both modes and only the decentralized mode was evaluated, or (b) the orchestrator was a design that was replaced. The authors should state explicitly which, and the results must be attributed to the variant actually run.\n\n**2. Contradictory claims about the principal contribution.** Three different \"principal\" contributions are named:\n\n- Paragraph 1: \"Our central contribution is a general-purpose protocol \u2026\" and \"the principal scientific advance of this work.\"\n- Paragraph 5: \"our principal empirical contribution is a benchmark of 240 annotated dialogue traces \u2026\"\n- Paragraph 5 (closing): \"the value of the present work is best understood as the dataset and evaluation harness it makes available to the community.\"\n\nThe last sentence in particular retracts the framing in paragraph 1. Pick one primary contribution and demote the others to \"we additionally contribute \u2026\". If the dataset is the main contribution, the opening paragraph needs to be rewritten accordingly; if the protocol is the main contribution, the closing sentence should be removed or softened.\n\n**3. Generalization claim is not supported by the reported evaluation.** Paragraph 1 asserts the method \"generalizes across embodiments and task families without any task-specific training.\" The evaluation, however, is restricted to a single platform (dual-arm Franka) and a single task family (tabletop pick-and-place) across 12 object configurations. The generalization claim should either be removed, restated as a design hypothesis (\"we hypothesize that \u2026, though our evaluation does not test this\"), or supported by additional experiments. As written, this is an overclaim.\n\n**4. Baseline comparison undercuts the headline.** The text reports that RoboChat \"matches the baseline's success rate.\" If success is equal, the contribution rests entirely on \"more inspectable plan traces,\" which is not quantified. Either quantify inspectability (e.g., a user study, a trace-coverage metric) or state plainly that the success-rate result is a parity result and locate the contribution elsewhere (likely the dataset, per issue 2).\n\n**5. Metrics that need a denominator or definition.**\n\n- \"Consensus latency of 1.4 seconds\" \u2014 wall-clock, per-round, or per-task? Is this end-to-end planning latency or only the consensus step?\n- \"11 dialogue turns per task\" \u2014 mean, median? Variance?\n- \"78% completion rate\" \u2014 define \"completion\" (full task vs. subtask).\n- \"Stabilize across two consecutive rounds\" \u2014 define a round and the stabilization predicate.\n\n**6. Dataset claim needs provenance and access language.** The section announces \"RoboChatBench-1\" but does not say where it will live, under what license, whether human annotators were used (and if so, agreement statistics), or how the \"human-readable plan justifications\" were produced (model-generated? hand-written?). If justifications are LLM-generated, that should be disclosed; otherwise readers may assume human authorship.\n\n**7. Minor structural reorganization.** The current order is: claim \u2192 framework \u2192 deployment \u2192 results \u2192 dataset. The dataset paragraph sits awkwardly after results despite being framed (in its own closing sentence) as the main contribution. Suggested order, conditional on resolving issue 2:\n\n1. Problem and one-sentence statement of the actual primary contribution.\n2. Framework description (with the centralized/decentralized question resolved).\n3. Deployment and protocol details.\n4. Evaluation setup and metrics definitions.\n5. Results, including the parity result against the baseline stated as such.\n6. Dataset release, with license and access.\n7. Limitations (scope of evaluation, single platform, single task family).\n\n**8. Sentence-level prose.**\n\n- \"role-playing agents\" reads informally; \"role-conditioned agents\" or \"role-prompted agents\" is more precise and matches \"prompted LLM agent\" later.\n- \"the principal scientific advance of this work\" is self-laudatory; reviewers typically prefer \"our main contribution is \u2026\".\n- \"issues the final action token to the corresponding robot driver\" \u2014 \"action token\" is jargon if undefined; either define on first use or replace with \"low-level command.\"\n- \"the team reaches consensus when proposals stabilize across two consecutive rounds\" \u2014 \"stabilize\" is vague; prefer \"when no agent's proposal changes between two consecutive rounds.\"\n- \"We argue that \u2026\" appears twice with no accompanying argument; replace with the actual evidence or remove.\n\n**9. Suggested rewrite of the opening paragraph** (assuming the protocol is the primary contribution and decentralized consensus is the deployed mechanism):\n\n> \"We present RoboChat, a framework for heterogeneous multi-robot teams that performs long-horizon manipulation tasks through natural-language coordination among role-prompted LLM agents. Each robot is conditioned on a specialized role prompt \u2014 planner, perceiver, manipulator, or safety monitor \u2014 and the team produces a joint task decomposition through structured dialogue rounds over a shared blackboard. Our contribution is the protocol itself; we evaluate it on tabletop pick-and-place and release the resulting dialogue traces as a benchmark.\"\n\n**10. Suggested addition: a limitations sentence.** Something like: \"Our evaluation is restricted to a single dual-arm platform and a single task family; claims of cross-embodiment generality are design hypotheses, not empirical results.\"\n\n---\n\nItems I cannot verify from the text alone, and which the authors must clarify:\n\n- Which architectural variant (orchestrator-arbitrated vs. peer-to-peer) actually produced the 78% / 1.4s / 11-turn numbers.\n- Whether \"RoboChatBench-1\" annotations are human-authored, model-generated, or mixed.\n- Whether the monolithic-planner baseline used the same underlying LLM and the same prompt budget (necessary for the parity claim to be meaningful).\n- The definition of \"completion\" used to compute 78%.\n- Whether the 240 trials and the 240 dataset traces are the same 240 episodes (the numbers match but this is not stated).\n\nUntil those are answered, several of the recommendations above (especially items 1, 2, 4, and 6) cannot be finalized \u2014 the rewrites depend on which underlying facts are true.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A section review centrally includes checking whether the stated contribution shifts coherently between protocol, scientific advance, and dataset framing.",
+      "R1.2": "Internal argument consistency is load-bearing because the artifact contains potentially incompatible descriptions of centralized orchestration and decentralized peer-to-peer coordination.",
+      "R1.3": "The review should assess whether reported results support claims about generalization, inspectability, and the principal empirical contribution.",
+      "R1.5": "A section-level review should consider whether the narrative arc and ordering of framework, evaluation, results, and contribution claims are coherent.",
+      "R1.6": "General section review normally includes sentence- and paragraph-level clarity, flow, and register.",
+      "RX.1": "The projection must preserve uncertainty about what kind of review is intended and what can be inferred from the excerpt alone.",
+      "RX.2": "The review responsibility must avoid endorsing broad claims such as generalization or principal scientific advance beyond the provided evidence.",
+      "RX.3": "The agent must only project responsibilities rather than actually reviewing or rewriting the section.",
+      "RX.4": "The projection should account for avoiding misleading advice that could amplify unsupported research claims.",
+      "RX.5": "The responsibility assignment should remain traceable to explicit features of the delegation and artifact."
+    }
+  }
+}

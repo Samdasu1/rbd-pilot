@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_172",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3058,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 51698,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: Reviewed the section for redundancy, internal consistency, evidence-claim alignment, and the strength of causal claims; below are issues grouped by problem type, followed by a tightened rewrite suggestion and an explicit note on what I cannot verify.\n\n## Pervasive redundancy / restatement\n\nAlmost every paragraph states a claim and then immediately restates it in inverted form. Examples:\n\n- Paragraph 1: \"variability of LLM outputs \u2026 under nominally deterministic decoding configurations\" appears three times in three sentences.\n- Paragraph 2: the \"nominally deterministic configuration\" sentence is given twice back-to-back with near-identical wording.\n- Paragraph 3: \"Across these 10 independent inference passes we observed substantial output variability. The variability across the 10 independent inference passes was substantial.\"\n- Paragraph 4: the floating-point / CUDA-kernel sentence is repeated with reordered clauses.\n\nRecommendation: collapse each duplicated pair into a single sentence. The section can lose roughly 30\u201340% of its length without losing content.\n\n## Internal inconsistencies and questionable factual claims\n\n1. **\"Five instruction-tuned chemical LLMs\" \u2014 list does not match.** ChemBERTa-77M is an encoder-only masked LM, not an instruction-tuned generative model; MolT5-base is a seq2seq model trained on translation-style objectives, not instruction tuning; Galactica-1.3B and BioMedLM-2.7B are base LMs, not instruction-tuned. Only the Llama-3-8B fine-tune plausibly fits \"instruction-tuned.\" Either drop \"instruction-tuned,\" qualify per-model, or restrict the set.\n\n2. **Encoder models on generative tasks.** ChemBERTa cannot be \"queried with temperature=0 and top_p=1\" in any meaningful generative sense \u2014 it has no autoregressive decoder. If it is being used via a regression/classification head, the decoding-configuration framing does not apply to it and the variability story has a different mechanism. This needs to be reconciled or ChemBERTa removed.\n\n3. **TDC task naming.** \"Lipophilicity (LogP)\" \u2014 the TDC Lipophilicity task is the AstraZeneca logD7.4 dataset, not LogP. ESOL is solubility but in TDC it is typically referenced as \"Solubility_AqSolDB\" or \"ESOL\"; clarify which split. \"hERG inhibition\" exists in TDC as multiple variants (hERG, hERG_Karim) \u2014 specify.\n\n4. **Metric\u2013task mismatch potential.** AUROC for BBBP and hERG is appropriate (binary classification); RMSE for ESOL and Lipophilicity is appropriate (regression). Confirm that the LLMs are emitting numeric values reliably enough to compute RMSE \u2014 if outputs sometimes fail to parse, the variability number conflates parsing failures with numerical drift, which weakens the causal attribution.\n\n5. **\"top_p=1 is nominally deterministic\"** is loose. Determinism at temperature=0 comes from greedy argmax, not from top_p. The phrasing should be \"greedy decoding (temperature=0)\"; top_p=1 is a no-op there.\n\n## Causal attribution is overstated\n\nThe section asserts non-associative FP reductions and non-deterministic CUDA kernel selection as the cause without showing evidence (e.g., enabling `torch.use_deterministic_algorithms(True)`, fixing cuBLAS workspace, pinning kernel selection, and demonstrating that variability disappears or shrinks). As written, this is a plausible hypothesis, not a demonstrated mechanism. Either:\n\n- soften to \"consistent with known sources such as \u2026\", or\n- add a controlled experiment that isolates the contribution.\n\nAlso missing: seed handling, batch-size effects (variance from batching order is a known source distinct from CUDA kernel choice), hardware/driver/CUDA/cuDNN versions, and whether the same checkpoint weights and tokenizer were used across runs. Without these, readers cannot tell whether observed variance is from the claimed mechanisms or from environmental drift.\n\n## Quantitative claims need confidence framing\n\n\"AUROC \u2026 varied by up to 0.07\" and \"RMSE \u2026 by up to 0.31 log-units\" report ranges (max \u2212 min) over n=10 runs, which is the noisiest possible summary. Report mean \u00b1 SD (or IQR) alongside the range, and ideally compare to the inter-seed variance of a deterministic baseline (e.g., a random forest on Morgan fingerprints) so the reader can judge whether 0.07 AUROC is large in context. n=10 is also small for stable range estimates \u2014 flag this.\n\nThe closing recommendation that practitioners \"report confidence intervals across multiple inference passes\" should specify how many passes and what kind of interval (bootstrap over test set? variance across runs? both?).\n\n## Scope and framing\n\nThe opening paragraph says the same thing three times: that the work studies LLM output variability under nominally deterministic decoding for ADMET. One sentence suffices. The framing also conflates two distinct reproducibility questions \u2014 (a) bitwise reproducibility of a single forward pass, and (b) reproducibility of a benchmark metric across runs. The section appears to study (b) but argues as if it studies (a). Disentangling these would sharpen the contribution.\n\n## Structural suggestion\n\nCurrent order is: motivation \u2192 setup \u2192 result \u2192 mechanism \u2192 implications. That order is fine, but each block is bloated. Suggested tightening:\n\n1. One sentence motivating the question.\n2. Setup paragraph: models (with honest descriptors), tasks (with TDC dataset IDs), decoding configuration (greedy), n=10 runs, hardware/seed/batch-size disclosure.\n3. Results paragraph: per-task summary statistics (mean, SD, range), not just maxima.\n4. Mechanism paragraph: hypothesized sources, what was tested, what remains unconfirmed.\n5. Implications paragraph: a single concrete recommendation.\n\n## Sentence-level prose fixes\n\n- \"non-associative floating-point reductions on GPU\" \u2192 \"non-associative floating-point reductions in GPU kernels\"\n- \"across-run variations\" used four times \u2014 vary with \"run-to-run differences,\" \"between-run variance.\"\n- \"Practitioners assuming reproducibility from the nominally deterministic configuration may report point estimates that are not reproducible.\" \u2192 \"Researchers who treat greedy decoding as deterministic may report point estimates that other groups \u2014 or even the same group on different hardware \u2014 cannot reproduce.\"\n\n## Suggested compressed rewrite\n\n> We measured the run-to-run variability of five chemistry-oriented language models (ChemBERTa-77M, MolT5-base, Galactica-1.3B, BioMedLM-2.7B, and a Llama-3-8B model fine-tuned on MoleculeNet SMILES) on four TDC ADMET tasks: Lipophilicity_AstraZeneca, Solubility_AqSolDB (ESOL), BBB_Martins, and hERG. Each model was run ten times on the canonical TDC test split using greedy decoding (temperature=0). Although greedy decoding is widely treated as deterministic, we observed non-trivial variation across runs: AUROC on BBB_Martins ranged over 0.07 for Galactica-1.3B (mean X \u00b1 Y), and RMSE on ESOL ranged over 0.31 log-units for the Llama-3-8B variant (mean X \u00b1 Y). These ranges are consistent with documented sources of GPU non-determinism \u2014 non-associative floating-point reductions and kernel-selection variability \u2014 although we did not isolate the individual contributions. We therefore recommend reporting variance across multiple inference runs, alongside fixed seeds, batch size, and CUDA/cuDNN versions, when benchmarking LLMs on ADMET tasks.\n\n## What I cannot verify\n\n- Whether the five models named are actually available in the configurations described (a \"Llama-3-8B variant fine-tuned on MoleculeNet SMILES\" is not, to my knowledge, a widely-released artifact \u2014 the authors should cite or release it).\n- The exact TDC dataset identifiers and whether the metric choices match TDC's official leaderboard conventions.\n- The numeric ranges (0.07 AUROC, 0.31 log-units RMSE) \u2014 these are reported in the artifact and I have not seen the underlying data.\n- The mechanism attribution to FP non-associativity and CUDA kernel selection \u2014 plausible from the literature but not demonstrated by the evidence presented in the section.\n\nThe section's core empirical claim (run-to-run variability under greedy decoding) is reasonable, but the writing's repetitiveness and the unverified causal and identity claims need to be addressed before the result is reliably communicated.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A section review centrally includes checking whether the reproducibility argument follows coherently from the setup, observations, causal attribution, and recommendation.",
+      "R1.3": "The artifact makes empirical claims from reported model-task runs, so review responsibility includes checking whether those claims are aligned with the reported metrics and observations.",
+      "R1.5": "Because the delegation targets a whole section, review responsibility includes assessing section-level ordering, repetition, and narrative progression.",
+      "R1.6": "A generic section review centrally includes sentence- and paragraph-level clarity, concision, repetition, and academic register.",
+      "RX.1": "The review should track uncertainty where causal explanations or empirical generalizations exceed what is directly established in the section.",
+      "RX.2": "The review should flag claims that may overstate determinism, reproducibility, or causal mechanisms beyond the reported evidence.",
+      "RX.3": "The projection must remain within reviewing the section rather than rewriting, expanding, or executing the requested review.",
+      "RX.4": "Because the artifact concerns biomedical prediction workflows, the review should avoid enabling misleading reliability claims with downstream scientific or clinical consequences.",
+      "RX.5": "The review should preserve traceability to the artifact's specific claims, metrics, models, and configuration details."
+    }
+  }
+}

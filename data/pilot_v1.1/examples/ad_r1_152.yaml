@@ -1,0 +1,123 @@
+delegation_id: ad_r1_152
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 348
+  text: |
+    Adaptive-inference systems for visual recognition aim to allocate
+    computation in proportion to per-image difficulty. Cascade detectors
+    date back to Viola-Jones, where successive stages reject easy
+    negatives. More recent work — BranchyNet, SkipNet, and the
+    Multi-Scale Dense Network — adds learned early-exit heads to deep
+    convolutional backbones, while dynamic routing networks select
+    sub-paths conditioned on input statistics. In the detection regime,
+    image-level routers have begun to select between a lightweight
+    detector (e.g., YOLOv8-N) and a heavier detector (e.g., DINO-Swin-L)
+    using a learned difficulty proxy.
+
+    We train a router R(x) that maps an input image x to a soft
+    distribution over K candidate detectors {D_1, …, D_K} of increasing
+    FLOP cost. The router is a small MobileNet-V3 backbone followed by a
+    linear head and is supervised with a paired-preference loss derived
+    from per-image agreement scores between the candidate detectors on a
+    held-out split. Crucially, the preference signal is constructed
+    without ground-truth bounding boxes, by treating disagreement between
+    a heavy and a light detector as a proxy for image difficulty.
+
+    We evaluate on COCO val2017, LVIS v1, and a streaming traffic-camera
+    benchmark we curated. Candidate detectors are YOLOv8-N, YOLOv8-M,
+    RT-DETR-L, and DINO-Swin-L. The router is trained on 60k images.
+    Evaluation reports mAP versus average per-image FLOPs at operating
+    points selected by sweeping the router's confidence threshold
+    τ ∈ [0.1, 0.9].
+
+    At τ=0.5 the router achieves 53.4 mAP on COCO val2017 at 38% of the
+    FLOPs of always-DINO; at τ=0.7 it reaches 51.9 mAP at 22% of the
+    FLOPs. On LVIS, the cost-quality frontier matches the heavy detector
+    within 0.4 mAP at 30% cost. On the traffic-camera stream, end-to-end
+    latency falls from 184ms (always-DINO) to 71ms with negligible
+    accuracy loss.
+
+    Our contribution, in summary, is the first preference-trained
+    image-level router for object detection that obviates ground-truth
+    supervision by using inter-detector disagreement as the training
+    signal, attaining heavy-detector quality at fractional FLOP cost
+    across three benchmarks of different scale and distribution.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The contribution claim — a label-free, preference-trained
+    image-level router for detection that uses inter-detector
+    disagreement as the supervision signal — appears only in the FINAL
+    paragraph (5 of 5). Paragraphs 1–4 walk the reader through related
+    work, method, experimental setup, and results without ever stating
+    what the paper claims as new. A reader entering the section does
+    not learn what is being contributed until the very last paragraph.
+    The natural ordering for a contribution-style write-up would be:
+      contribution claim (1) → context / RW (2) → method (3) →
+      experiments (4) → results (5)
+    Here the order is:
+      RW (1) → method (2) → experiments (3) → results (4) →
+      contribution (5)
+    The fix is a section-level reorder, not a sentence-level move.
+    Knowledge gating is moderate because identifying the specific
+    novelty claim (no-GT preference supervision via inter-detector
+    disagreement) requires familiarity with adaptive-inference and
+    preference-learning literature to recognize that the buried final
+    sentence is in fact the load-bearing contribution rather than a
+    summary flourish. The conceptual object, evidence, and prose are
+    otherwise intact. Delegation T02 "Review this section" is generic
+    and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section's actual contribution claim — a
+  label-free, preference-trained image-level router supervised by
+  inter-detector disagreement — is buried in the final paragraph and
+  proposes a section-level reorder that surfaces it up front (e.g.,
+  paragraph 1 or 2). Suggests a concrete revised ordering such as
+  "contribution → related work → method → experiments → results" with
+  rationale that the current structure forces the reader to wait until
+  paragraph 5 to learn what is new. Does not focus on prose polish or
+  on questioning the empirical numbers.
+
+bad_outputs_summary: |
+  Polishes prose, asks for additional baselines or ablations, or
+  questions the choice of MobileNet-V3 as the router backbone.
+  Suggests adding more cited works to the related-work paragraph or
+  re-running on additional datasets. Treats the late contribution
+  statement as a stylistic conclusion rather than a structural
+  burying of the load-bearing claim.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

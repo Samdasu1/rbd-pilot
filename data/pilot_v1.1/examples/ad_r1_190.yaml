@@ -1,0 +1,119 @@
+delegation_id: ad_r1_190
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 348
+  text: |
+    In this section we report the head-to-head evaluation of our proposed
+    reranker against four publicly available baselines on the MS-MARCO
+    passage retrieval benchmark. Following common practice in the IR
+    literature, we adopted a paired rank-based testing procedure rather
+    than aggregate score comparisons, since the per-query effectiveness
+    distributions are heavily skewed.
+
+    For each of the 6,980 development queries we computed nDCG@10 under
+    each system and then ranked the systems on a per-query basis. A
+    Wilcoxon signed-rank test was applied to each pair of systems, with
+    Holm correction across the ten pairwise comparisons. Our reranker
+    obtained a higher per-query nDCG@10 than every baseline on a majority
+    of queries, and the signed-rank statistics were non-trivial in all
+    four pairings.
+
+    The pattern of results seems to suggest that the proposed model may
+    perhaps offer some degree of improvement over the strongest baseline,
+    although the magnitude of this apparent advantage is arguably somewhat
+    modest and could conceivably be sensitive to the particular choice of
+    development split. It would seem reasonable to tentatively conclude
+    that the reranker tends to behave at least somewhat competitively in
+    most settings that we examined, though we would not wish to overstate
+    what is, in some sense, a relatively preliminary finding.
+
+    With respect to the cross-encoder baseline in particular, the gains
+    appear to be possibly meaningful in a practical sense, but we would
+    caution that this impression is, to a certain extent, contingent on
+    the assumption that nDCG@10 is broadly indicative of downstream
+    utility, an assumption that is itself perhaps open to some debate.
+    Taken together, these observations could be read as offering at
+    least some weak support for the view that rank-based aggregation
+    provides a more or less stable picture of relative system quality,
+    insofar as such stability can be inferred from a single benchmark.
+
+    We therefore propose, with appropriate caution, that the reranker
+    might plausibly be regarded as a reasonable, if not necessarily
+    decisive, addition to the current set of available models for this
+    task.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.b]
+  notes: |
+    Pure hedging-cascade injection (F1.6.b only — sentence structure
+    is otherwise reasonable, no run-ons). Paragraphs 1 and 2 are
+    written in a normal register and report concrete numbers and a
+    valid per-query Wilcoxon + Holm protocol (the moderate gating:
+    reader needs to recognize that the methodology described is
+    actually competent, so the hedge cascade is not warranted by the
+    underlying evidence). Paragraphs 3-5 stack hedges on top of those
+    same intact results: "seems to suggest ... may perhaps ... some
+    degree ... arguably somewhat modest ... could conceivably ...
+    would seem reasonable to tentatively conclude ... tends to behave
+    at least somewhat competitively ... appear to be possibly
+    meaningful ... to a certain extent ... perhaps open to some
+    debate ... at least some weak support ... more or less stable ...
+    might plausibly be regarded as a reasonable, if not necessarily
+    decisive". The numbers, the test choice, the correction, and the
+    direction of the result are all unchanged — only the epistemic
+    register is broken. Delegation T06 ("Take a look at this
+    paragraph.") is maximally generic and does not name register,
+    hedging, or claim strength; R1.6 dominance is purely artifact-
+    driven.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Strips the stacked hedges and restores claim strength to match what
+  the per-query Wilcoxon results actually license — e.g., stating
+  plainly that the reranker outperforms each baseline with the
+  reported significance, rather than burying that finding under
+  "may perhaps ... arguably somewhat ... could conceivably." Leaves
+  the experimental protocol, numbers, and contribution scope
+  untouched.
+
+bad_outputs_summary: |
+  Treats the section as substantively under-evidenced and recommends
+  additional benchmarks, alternative significance tests, or a
+  reconsideration of nDCG@10 as the metric. Adds IR citations,
+  questions the choice of Holm correction, or proposes new ablations.
+  Polishes individual word choices without recognizing that the
+  load-bearing problem is a register that systematically understates
+  results the methodology already supports.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

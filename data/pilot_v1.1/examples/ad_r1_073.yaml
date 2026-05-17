@@ -1,0 +1,108 @@
+delegation_id: ad_r1_073
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 310
+  text: |
+    We present ProtoCAMEL, a type system for verifying safe communication
+    protocols between cooperating LLM agents. As multi-agent systems based
+    on role-playing prompts scale to longer conversations, undetected
+    protocol violations — an agent stepping outside its assigned role, or
+    producing a message of an unexpected shape — accumulate and degrade
+    task completion. ProtoCAMEL prevents such violations by ensuring at
+    the language level that only well-typed messages flow between roles.
+
+    The system operates as follows. Each agent is wrapped by a dispatcher
+    that intercepts outgoing messages before they are forwarded to a peer.
+    Upon dispatch, the message string is parsed into a JSON-like
+    structure, and a sequence of runtime predicates is evaluated against
+    this structure: that the role field matches the sender's declared
+    role, that the body is non-empty, and that any tool-call payload
+    references one of a permitted set of tool names. If any predicate
+    fails, the dispatcher rolls the message back, re-prompts the
+    originating agent with a corrective instruction, and logs the
+    violation for offline analysis.
+
+    We instantiate ProtoCAMEL on a two-agent task-solver pair (a 'user'
+    role and an 'assistant' role) over a 500-task adaptation of
+    single-agent instruction following to a cooperative two-agent setting.
+    Across these trials, ProtoCAMEL caught 412 protocol violations that
+    would otherwise have propagated downstream; end-to-end task success
+    rose from 61.4% (no checking) to 78.2%.
+
+    These results show that giving designers a type system for inter-agent
+    messages is a practical route to making role-playing systems robust
+    at scale. The framework's chief advantage is that protocol violations
+    are caught at the language level, rather than being diagnosed post-hoc
+    from conversation logs, eliminating an entire class of failures from
+    multi-agent deployments before they can corrupt downstream reasoning.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Conceptual object slip. Para 1 frames the contribution as "a type
+    system" that operates "at the language level" so that "only well-typed
+    messages flow between roles," and para 4 doubles down on "type system
+    for inter-agent messages" with violations caught "at the language
+    level." But para 2 describes the actual mechanism: a dispatcher that
+    intercepts a message at runtime, parses the string, evaluates a
+    sequence of runtime predicates over the parsed structure, and on
+    failure rolls back and re-prompts. There is no static checking, no
+    type judgment, no syntactic discipline on programs, and no soundness
+    notion — it is a runtime monitor / dynamic contract checker. The
+    conceptual object claimed (type system) does not match the technical
+    content (runtime enforcement). Detection requires only careful reading
+    of the algorithm description against the contribution claim; no
+    recall of canonical PL works is needed (low gating). The delegation
+    T06 "Take a look at this paragraph" is maximally generic and does not
+    point at conceptual framing.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section claims a "type system" with "language-level"
+  guarantees but actually describes a runtime monitor (dispatcher +
+  predicate evaluation + re-prompting), and proposes either renaming the
+  contribution to runtime contract enforcement / dynamic protocol
+  monitoring, or actually introducing a static type discipline with
+  judgments and a soundness statement. Does not focus on prose polish or
+  on adding more benchmarks.
+
+bad_outputs_summary: |
+  Takes the "type system" framing at face value and proposes type-system
+  extensions (subtyping, polymorphism, richer message schemas) without
+  flagging that no static system exists. Polishes the prose, requests
+  more benchmarks, or pushes on the 78.2% number. Strengthens the
+  motivation in para 1 without noticing that para 2 describes a runtime
+  mechanism.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

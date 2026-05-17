@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_294",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2208,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30594,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.9, \"R1.5\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.95, \"RX.4\": 0.8, \"RX.5\": 0.85}}\n\nSummary: I reframed the conceptual arc so the paper's claims match what the design can actually support, demoted the sweeping \"era has ended\" framing, and reordered the contributions so the causal estimate and the detection tool are presented as complementary rather than as warrants for a discipline-wide overhaul.\n\n---\n\n**Reframed abstract (suggested rewrite)**\n\nWe study how the public availability of large language models (LLMs) is associated with changes in the quality of crowdsourced text annotations. Using a panel of 18,400 tasks completed on Amazon Mechanical Turk and Prolific between January 2022 and December 2023, we exploit the November 2022 release of ChatGPT as a shock to worker access to generative text tools. A difference-in-differences design compares tasks with text-production requirements against multiple-choice tasks before and after the release, with task and worker fixed effects and standard errors clustered at the requester level.\n\nWe report two findings. First, text-production tasks exhibit a post-release decline of approximately 0.14 standard deviations on a composite quality index (significant at the 1% level), with pre-trends that do not reject parallelism at conventional levels. We interpret this as evidence consistent with \u2014 though not uniquely identified as \u2014 LLM-assisted submissions on text-production work; we discuss alternative explanations in Section [X].\n\nSecond, we develop CrowdAudit, a screening classifier that uses burstiness and perplexity features to flag submissions whose surface statistics resemble LLM output. CrowdAudit attains an AUC of 0.87 on a held-out sample drawn from the same platforms and time window. Because the labels used for training are themselves proxies rather than ground-truth authorship, we present CrowdAudit as a candidate triage tool for further validation, not as a deployable adjudication system.\n\nWe close by discussing what these results do and do not imply for the design of crowdsourced annotation pipelines, and we flag the open question of whether the \"worker\" remains the right unit of analysis when generative tools are within reach. We do not claim to resolve that question here.\n\n---\n\n**Suggested reorganization of the front matter**\n\nA cleaner ordering than the current paragraph sequence:\n\n1. *Setting and question.* What changed in late 2022 for crowdworkers, and why annotation quality is the natural outcome to track.\n2. *Data and design.* Panel construction, the DiD comparison, the identifying assumption stated plainly, and the threats to it (composition shifts in the worker pool, requester selection into task type, concurrent platform policy changes).\n3. *Empirical finding.* The \u22120.14 SD estimate, pre-trend diagnostics, robustness, and \u2014 critically \u2014 a candid section on what the estimate is and is not. The current draft treats the coefficient as if it directly measures \"LLM-induced drift\"; the design measures the differential change in a composite quality index between two task types around a salient date.\n4. *Detection tool.* CrowdAudit as a practical artifact built on the same corpus, with explicit discussion of its training label, its generalization envelope, and its failure modes (false positives on idiosyncratic but human prose; degradation as models evolve).\n5. *Discussion.* Implications for pipeline design and a measured statement of open questions, rather than a programmatic call.\n\n---\n\n**Concrete framing changes and why**\n\n- The phrase \"credible causal estimate of LLM-induced annotation drift\" presupposes the mechanism. A DiD with task-type as treatment identifies a differential change around the release date; attributing that change specifically to LLM use is an interpretive step that depends on auxiliary assumptions. I'd recommend separating the estimand (differential change on text-production tasks) from the interpretation (LLM-assisted submissions are the most plausible mechanism, among others).\n\n- \"The central contribution of this paper is methodological\" sits uneasily with a paper whose first half is a causal claim. Either lead with the empirical finding and present the tool as a constructive response, or lead with the tool and use the DiD as motivation. Trying to do both as \"central\" weakens both. The rewrite above takes the first route.\n\n- \"Recommend its adoption by platform operators and academic IRBs as a screening tool\" goes beyond what an AUC of 0.87 on one held-out sample supports. Recommending operational adoption \u2014 particularly by IRBs, who would be making decisions about human subjects \u2014 requires external validation, calibration analysis, false-positive cost accounting, and at minimum a discussion of how the tool degrades as generative models change. I would replace the recommendation with a description of the conditions under which such a tool *could* be responsibly deployed, and leave the adoption decision to the relevant stakeholders.\n\n- \"The era of human-only text annotation has ended\" and the \"wholesale revision of the platform-labor literature\" sentence are not supported by anything in the artifact. A two-platform, two-year panel with one composite outcome cannot license a re-foundation of an entire literature. I removed these and replaced them with a narrower question about the unit of analysis.\n\n- \"Reconceptualize the crowdworker as a human-machine hybrid agent rather than as the unit of analysis\" is a substantive theoretical claim that the empirical work does not test. If the authors want to keep it, it belongs in a clearly marked speculative coda, not in the contribution statement.\n\n---\n\n**Items I could not verify and that should be checked before circulation**\n\n- Whether the pre-trend test is genuinely well-powered or merely \"fails to reject\" because the pre-period is short. The artifact does not specify the number of pre-period waves, and a non-rejection with few pre-periods is weak evidence for parallel trends.\n- Whether the composite quality index is pre-registered or constructed post hoc; the framing implications differ.\n- Whether requester-level clustering is the right level, or whether worker-level or two-way clustering is needed given that workers move across requesters.\n- Whether the CrowdAudit held-out sample is drawn i.i.d. from the same distribution as training, or represents a genuine out-of-distribution test (e.g., later time period, different requester). The AUC's interpretive weight depends heavily on this.\n- The label-generation process for CrowdAudit training: if labels are themselves derived from perplexity-like signals, the AUC partially reflects circularity rather than discrimination of true LLM use.\n\nThese are not necessarily flaws \u2014 they are simply not resolvable from the abstract alone, and the reframed version is written to leave room for whichever way they resolve.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 1.0,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.5",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation directly asks to reframe the conceptual story, which centers on thesis, contribution framing, and conceptual reconstruction above the sentence level.",
+      "R1.5": "Reframing the conceptual story likely requires adjusting the section-level narrative arc and ordering of contributions, though not necessarily full structural editing.",
+      "RX.1": "The projection must preserve uncertainty about what can be inferred from the short delegation and the artifact alone.",
+      "RX.2": "Any projected responsibility should avoid treating the paper's broad claims as automatically warranted by the delegation.",
+      "RX.3": "The agent must stay within projection only and not perform the requested reframing.",
+      "RX.4": "The projection should account for potential downstream harm from overbroad methodological or policy implications in the artifact.",
+      "RX.5": "The projection must remain traceable to the delegation phrase and the artifact's conceptual claims."
+    }
+  }
+}

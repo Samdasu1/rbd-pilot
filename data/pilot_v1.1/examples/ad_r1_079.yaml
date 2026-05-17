@@ -1,0 +1,112 @@
+delegation_id: ad_r1_079
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 248
+  text: |
+    We introduce MedRoute, a quality-aware routing framework for chest
+    X-ray interpretation that dynamically allocates studies between an
+    on-device EfficientNet classifier and a cloud-deployed radiology
+    vision-language model. Our framework provides three contributions:
+    (1) a learned router that predicts when on-device inference suffices,
+    (2) a novel uncertainty calibration procedure based on pathology
+    co-occurrence priors, and (3) an end-to-end deployment system
+    validated under realistic clinic bandwidth constraints.
+
+    Concretely, given a chest radiograph x, the on-device model produces
+    a 14-dimensional pathology probability vector p = f_small(x). We then
+    compute the maximum class probability max(p) and compare it against
+    a fixed threshold τ. If max(p) > τ, the study is finalized on-device;
+    otherwise it is escalated to the cloud model. We selected τ = 0.78
+    by sweeping the validation ROC and choosing the value that minimized
+    escalation rate at fixed sensitivity.
+
+    On the CheXpert validation split, MedRoute escalates 31% of studies
+    to the cloud while matching the cloud-only AUROC of 0.889 to within
+    0.004. Per-study inference cost (averaged over CPU + cloud GPU time)
+    drops from 4.2 to 1.6 seconds. We report results on five pathologies:
+    cardiomegaly, pleural effusion, atelectasis, consolidation, and
+    edema.
+
+    These results demonstrate that a confidence-thresholded routing
+    policy, applied on top of standard chest X-ray classifiers, can
+    recover most of the benefit of always-cloud inference at substantially
+    reduced cost. Future work will investigate whether the pathology
+    co-occurrence priors mentioned in Section 1 can further reduce
+    escalation rates; preliminary experiments suggest modest gains.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  notes: |
+    Contribution slip. Para 1 enumerates three contributions: (1) a
+    "learned router," (2) a "novel uncertainty calibration procedure
+    based on pathology co-occurrence priors," and (3) an "end-to-end
+    deployment system." Para 2 then reveals that the "router" is a
+    fixed threshold τ on max-class softmax probability, tuned by a
+    validation sweep — not a learned router. Contribution (2), the
+    novel calibration procedure, is never described in the methods or
+    evaluated in the experiments; it reappears in para 4 only as future
+    work ("preliminary experiments suggest modest gains"). Contribution
+    (3), the deployment system, is reduced to a single latency number
+    (4.2 → 1.6s) with no system description. Para 4 silently restates
+    the contribution as "a confidence-thresholded routing policy," a
+    much narrower and well-known recipe. The actual contribution that
+    the evidence supports is "a tuned softmax threshold on top of an
+    off-the-shelf chest X-ray classifier," but that gap is never
+    acknowledged. Detection requires only careful reading of the
+    section against itself — no canonical-paper recall is needed
+    (low gating). The delegation "Review this section" is generic and
+    does not telegraph R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the three contributions promised in the opening
+  paragraph shrink dramatically by the methods and results: the "learned
+  router" is a fixed softmax threshold, the "novel uncertainty
+  calibration" is never implemented or evaluated, and the "deployment
+  system" reduces to a latency measurement. Proposes either narrowing
+  the stated contribution to match what is actually delivered (a tuned
+  confidence threshold) or expanding the methods/experiments to
+  substantiate the originally claimed contributions. Does not focus on
+  prose polish, adding citations, or expanding the pathology list.
+
+bad_outputs_summary: |
+  Polishes prose, suggests reporting more pathologies or additional
+  baselines, or recommends adding standard deviations and significance
+  tests. Treats the three-contribution framing at face value and
+  proposes extensions to the "learned router" or the "calibration
+  procedure" without noticing that neither is actually present in the
+  methods. Strengthens the cost analysis or recommends ablations on τ
+  without flagging that τ-tuning is the entire contribution.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,140 @@
+delegation_id: ad_r1_268
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 333
+  text: |
+    We introduce CALIBR-RL, an online reinforcement learning framework
+    that uses an LLM judge as a self-correcting reward signal during
+    policy improvement. To our knowledge, CALIBR-RL is the first
+    method to combine on-policy preference collection with judge-side
+    calibration in a single training loop, removing the need for a
+    frozen reward model or an offline preference corpus.
+
+    The framework operates in two interleaved phases. In the rollout
+    phase, the current policy generates response pairs against a
+    buffer of prompts; an LLM judge scores each pair and emits a
+    calibrated preference probability. In the update phase, the
+    policy is updated via PPO against a reward model fit to the
+    calibrated preferences, while the judge's calibration head is
+    simultaneously updated to reduce self-preference bias measured
+    against a small held-out anchor set of human-rated pairs.
+
+    A key component is the self-preference correction module, which
+    adapts the logit-space recalibration framework of Marquez and Tan
+    (2021). Marquez and Tan established that affine recalibration of
+    pairwise scoring heads is provably insufficient for removing
+    rater-specific bias when the rater and the rated share
+    parameters; this motivates their two-parameter affine bias head,
+    which we adopt directly. Building on their analysis, we tie the
+    affine parameters to the anchor set and update them via gradient
+    descent during training. In our experiments, the calibration head
+    reduces the measured self-preference rate from 0.71 to 0.54 on
+    the anchor set, while overall PPO returns improve over an
+    uncalibrated baseline by 8.4 points on average.
+
+    CALIBR-RL is the first deployment-ready online RLAIF system that
+    maintains a continuously updated judge, and we demonstrate
+    state-of-the-art performance on a suite of summarization and
+    instruction-following tasks. We argue that judge-side calibration,
+    rather than larger preference corpora, is the binding constraint
+    on online preference-based RL, and that the CALIBR-RL recipe
+    constitutes a foundation on which future calibration heads,
+    anchor-set construction protocols, and judge architectures can be
+    built without changing the underlying training loop.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.7: [F1.7.a]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible
+    and both detectable from careful reading alone:
+
+    Reading A — R1.4 dominant (missing nearest neighbor):
+      The section makes two "first" claims — "first method to combine
+      on-policy preference collection with judge-side calibration"
+      and "first deployment-ready online RLAIF system that maintains
+      a continuously updated judge" — without naming or contrasting
+      against the obvious nearest neighbors in the surrounding
+      literature on LLM-judge / preference-based RL. Self-rewarding
+      language models, RLAIF with on-policy judging, constitutional-AI
+      style critique-and-refine pipelines, and judge-distillation
+      methods all occupy the same design space and routinely couple
+      preference collection with judge updates inside a training loop.
+      The section does not say which axis CALIBR-RL differs on.
+      Rewrite would re-anchor the contribution against named systems
+      and isolate the genuinely new combination, if any.
+
+    Reading B — R1.7 dominant (fabricated citation):
+      The section attributes load-bearing methodological grounding to
+      "Marquez and Tan (2021)" with an internally contradictory
+      description: it says Marquez and Tan "established that affine
+      recalibration of pairwise scoring heads is provably insufficient
+      for removing rater-specific bias when the rater and the rated
+      share parameters" and then in the same sentence says this
+      result "motivates their two-parameter affine bias head, which
+      we adopt directly." Adopting a method that the cited work
+      proves insufficient is internally inconsistent — a careful
+      reader does not need field knowledge to flag the citation as
+      suspect. The reference is fabricated; the claimed result
+      cannot exist as described. Rewrite would either remove the
+      citation, replace it with a real anchor, or fix the
+      contradictory characterization.
+
+    Reading A says "you haven't said who you're closest to" — fix
+    the novelty contrast. Reading B says "this citation cannot
+    mean what you say it means" — fix the scholarship integrity.
+    Detection is low-gated for both: the absence of comparators is
+    visible from the bare "first" claims, and the citation
+    contradiction is visible from the sentence-internal logic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.85
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (re-anchor the two "first" claims against the closest existing
+  online preference-based RL / self-rewarding / on-policy LLM-judge
+  systems and identify which axis is genuinely new) from Reading B
+  (the Marquez-and-Tan reference is internally contradictory — a
+  method proved insufficient cannot also be the method adopted —
+  and either the citation or its characterization must be fixed).
+  After clarification, addresses the chosen reading concretely.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the two-phase description, or suggests
+  expanding the evaluation suite. Accepts both "first" claims and
+  the contradictory citation at face value, treating the section as
+  a contribution to be strengthened by adding methodological detail
+  rather than by situating it against neighbors or by repairing the
+  citation's internal inconsistency.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

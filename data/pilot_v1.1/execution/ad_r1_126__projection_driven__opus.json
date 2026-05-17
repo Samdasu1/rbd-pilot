@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_126",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1864,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 22076,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: Light prose cleanup of the abstract with no structural or substantive changes; flagged claims I cannot verify and trimmed language that overreaches what the reported evidence supports.\n\nRevised text\n---\nWe introduce CandidatePicker, a selection-based aggregator for multi-agent LLM program synthesis that, unlike prior synthesis-based aggregation, retains the strongest individual candidate rather than blending proposals into a single output. In our evaluation, CandidatePicker produces type-correct programs across the task categories we test, matching or exceeding monolithic-synthesis baselines on each category.\n\nOur experimental setup follows a standard multi-agent pipeline. Five base agents (GPT-4o, Claude-3.5, Llama-3.1-405B, DeepSeek-V2, and Mixtral-8x22B) each produce one candidate, and CandidatePicker then ranks candidates with a learned reward that combines a type-checker pass rate and a hidden-test pass rate. We evaluate on a curated benchmark of 1,500 tasks drawn from HumanEval, MBPP, and a hand-authored OCaml suite. Each task specifies an input/output type signature and a small reference test set. Tasks are first-order; argument and return types are drawn from the fixed set {Int, Bool, String, List<Int>, List<String>}. Recursion is permitted, and helper functions may be introduced provided they also inhabit this type fragment.\n\nAcross the 1,500 tasks, CandidatePicker reaches a type-correctness rate of 94.7% and a functional-correctness rate of 81.3%, compared with 88.1% / 71.0% for the best single agent and 83.4% / 64.2% for the synthesis-based aggregator. Gains are largest on tasks involving list manipulation, where selection appears to avoid the averaged-out recursion patterns that synthesis aggregation tends to produce. Per-agent ablations indicate that no single base agent dominates: each of the five contributes the winning candidate on at least 14% of tasks.\n\nThese results suggest that selection-based aggregation is a useful strategy for typed functional program synthesis within the fragment we evaluated. Our central contribution is empirical evidence that, on this benchmark, multi-agent pipelines can produce type-correct programs across the evaluated task categories without the candidate-diversity / aggregation-fidelity tradeoff reported in prior synthesis-based work. We release CandidatePicker, the benchmark, and the trained reward model.\n---\n\nNotes on the edits\n\n- \"in contrast to prior\" \u2192 \"unlike prior\": tighter phrasing, same meaning.\n- \"across the full breadth of statically-typed functional programming\" appeared twice and is a sweeping claim given the restricted type fragment ({Int, Bool, String, List<Int>, List<String>}, first-order only). Replaced both with language grounded in what is actually evaluated.\n- \"we expect the approach to transfer directly to production functional codebases such as those maintained in the Haskell and OCaml ecosystems\" \u2014 removed. The evaluation does not include Haskell, does not include higher-order functions, algebraic data types, type classes, modules, or production-scale code; this sentence asserts external validity that the reported setup does not support. Removing it keeps the abstract within the scope the experiments cover.\n- \"establish \u2026 as a robust strategy\" softened to \"suggest \u2026 is a useful strategy,\" because a single benchmark at this scale supports an empirical claim, not an establishment claim.\n- \"eliminating the previously reported tradeoff\" softened to \"without the \u2026 tradeoff \u2026 in prior synthesis-based work,\" since the original phrasing implies a general elimination rather than an observation on one benchmark.\n- \"confirm\" \u2192 \"indicate\" in the ablation sentence, for the same reason.\n- Minor flow fixes: semicolons \u2192 periods where the second clause stands alone; \"provided they too\" \u2192 \"provided they also\"; \"compared to\" \u2192 \"compared with\" for parallel statistics.\n- Kept all numbers, model names, dataset names, type fragment, and the release statement exactly as given.\n\nItems I could not verify and that you should confirm before publication\n\n- The five model names and version tags (e.g., \"Claude-3.5\", \"Llama-3.1-405B\", \"DeepSeek-V2\", \"Mixtral-8x22B\") are taken at face value; I did not check that these specific checkpoints were the ones run.\n- The benchmark counts (1,500 tasks; the HumanEval / MBPP / OCaml-suite split) and the headline numbers (94.7 / 81.3, 88.1 / 71.0, 83.4 / 64.2, the \u226514% per-agent figure) are reproduced verbatim and not audited.\n- \"Prior synthesis-based aggregation\" and \"the previously reported tradeoff\" are referenced without citation in the source text; I left this as-is because adjusting reference coverage was out of scope, but the camera-ready version should attach citations.\n- The claim that list-manipulation gains stem from avoiding \"averaged-out recursion patterns\" is a mechanism hypothesis. I softened it to \"appears to avoid,\" but if the paper has direct evidence (e.g., qualitative analysis or a controlled comparison) the hedge can be removed.\n- Whether the released artifacts (picker, benchmark, reward model) are actually license-clean and ready to ship is something only the authors can confirm.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Clean this up' most directly asks for sentence- and paragraph-level improvement in grammar, flow, register, and concision.",
+      "RX.1": "Any cleanup should preserve visible uncertainty rather than converting tentative or qualified claims into stronger assertions.",
+      "RX.2": "The artifact contains broad claims about full breadth, direct transfer, and eliminating tradeoffs, so cleanup must avoid amplifying overclaims.",
+      "RX.3": "The request is only to clean up the artifact, not to redesign experiments, rewrite the paper thesis, or audit the literature.",
+      "RX.4": "Because the artifact describes research results and release claims, cleanup should avoid wording that could mislead downstream readers about capability or applicability.",
+      "RX.5": "Edits implied by cleanup should remain traceable to the artifact's stated claims, numbers, methods, and terminology."
+    }
+  }
+}

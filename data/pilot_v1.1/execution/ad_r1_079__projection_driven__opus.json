@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_079",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2579,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 37234,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 0.85}}\n\nSummary: Reviewed the section for internal argument coherence, alignment between claims and reported evidence, prose clarity, and the safety-relevant framing around a clinical-decision-support system. Below are the substantive issues, grouped by problem rather than by review category.\n\n**1. Internal contradictions in the contribution list versus the method.**\n\nThe intro promises three contributions: (a) a \"learned router,\" (b) \"uncertainty calibration based on pathology co-occurrence priors,\" and (c) an \"end-to-end deployment system.\" The method paragraph then describes a *fixed threshold on max-class probability* \u2014 that is not a learned router, and it does not use pathology co-occurrence at all. The co-occurrence-prior calibration only resurfaces in the final paragraph as *future work* with \"preliminary experiments.\" Either the contribution list overstates what the paper delivers, or the method/results paragraphs are missing the components that justify contributions (a) and (b). As written, only contribution (c) is substantiated, and even that is asserted rather than evidenced in the excerpt.\n\nRecommendation: rewrite the contribution list to match what is actually evaluated \u2014 e.g., \"a confidence-thresholded routing policy\" \u2014 and move co-occurrence priors out of the contributions entirely until they are validated.\n\n**2. Evidence does not support the headline framing.**\n\n- The abstract-style framing claims validation \"under realistic clinic bandwidth constraints,\" but the results paragraph reports only CheXpert validation-split numbers and CPU+GPU wall-clock time. Bandwidth is never measured. Either add the bandwidth experiments or drop this claim.\n- \"Matching the cloud-only AUROC \u2026 to within 0.004\" is reported without a confidence interval, without the number of studies in the validation split, and without indicating whether 0.004 is within noise. On CheXpert's standard validation set (n=234), a 0.004 AUROC delta is well within sampling variability; presenting it as a near-match is fine, but it should be stated as \"not statistically distinguishable\" rather than as a precision claim.\n- The 14-dimensional probability vector is described, but results are reported on only 5 pathologies. Justify the restriction (these are the CheXpert \"competition\" five, presumably) and clarify whether routing decisions were made on max over 14 classes or max over 5.\n- The threshold \u03c4=0.78 is said to have been chosen on the *validation* split, and then results are also reported on the *validation* split. This is a methodological leak: held-out test numbers are needed for the headline claims, or the split being used must be relabeled.\n\n**3. Threshold-selection description is logically inconsistent.**\n\nThe text says \u03c4 was chosen by \"sweeping the validation ROC and choosing the value that minimized escalation rate at fixed sensitivity.\" That objective is well-defined only if a target sensitivity is specified \u2014 which it is not. Also, an ROC is per-class; \"the validation ROC\" is ambiguous across 14 (or 5) pathologies. Specify (i) which pathology or aggregation, (ii) the fixed-sensitivity target, and (iii) whether \u03c4 generalizes across pathologies or is class-specific.\n\n**4. Safety-relevant claims need to be softened or scoped.**\n\nThis is a triage system that decides when to *finalize a chest X-ray read on-device* \u2014 i.e., when not to consult the larger model. \"Finalized on-device\" reads as autonomous interpretation. In the deployment language used here, that risks being read as a clinical-decision claim. Recommended changes:\n\n- Replace \"the study is finalized on-device\" with \"the on-device prediction is returned without cloud escalation,\" which describes the system behavior without implying clinical finality.\n- State explicitly that all outputs are intended for radiologist review and that the routing decision does not change which studies are reported to a clinician.\n- The phrasing \"recover most of the benefit of always-cloud inference\" should be quantified by what is *not* recovered, and acknowledge that the 31% escalation rate plus 0.004 AUROC delta is averaged \u2014 per-pathology and per-subgroup (e.g., by patient demographics, scanner type, prevalence) performance is unreported and could hide systematic harms to a minority class. A line acknowledging this gap is warranted.\n- Cost figures (4.2 \u2192 1.6 s) should not be framed as the principal benefit without also reporting any change in *miss rate* on rare findings, which is the metric that matters for downstream patient harm.\n\n**5. Forward-references and scope drift.**\n\n- \"The pathology co-occurrence priors mentioned in Section 1\" \u2014 these are *not* mentioned in the section provided beyond the contribution bullet, which itself promises a calibration procedure rather than a prior. Either Section 1 contains this material (in which case the excerpt is misleading on its own terms) or the reference is dangling. Verify against the full draft.\n- \"Preliminary experiments suggest modest gains\" with no numbers, no n, and no description of the experiment is not a publishable claim. Either remove it, or report the result with sample size and effect size and label it clearly as preliminary.\n\n**6. Prose-level cleanups.**\n\n- \"dynamically allocates studies between\" \u2192 \"routes studies between\" (the existing word \"routing\" later in the sentence already covers this; \"dynamically allocates\" adds nothing).\n- \"a novel uncertainty calibration procedure\" \u2014 drop \"novel\"; let the contribution stand on its own, and in any case the procedure is not described in this section.\n- \"averaged over CPU + cloud GPU time\" is ambiguous: is this the sum (wall-clock for one study) or a weighted average across the 69%/31% split? State explicitly. From context it appears to be the expected per-study latency under the routing policy, which should be said in words.\n- \"Per-study inference cost\" \u2014 \"cost\" reads as monetary; if the unit is seconds, call it \"latency.\"\n- \"to within 0.004\" \u2192 \"within 0.004 AUROC\" so the unit is clear at first read.\n- Tense consistency: the intro uses \"we introduce,\" the method \"we then compute,\" and the results \"drops\" / \"escalates.\" Pick one (typically present tense throughout for method, past for results) and apply uniformly.\n\n**7. Reproducibility / traceability gaps to address before submission.**\n\n- CheXpert version (original vs. CheXpert-v1.0-small vs. CheXpert Plus) is not stated, and AUROC numbers are not comparable across versions.\n- The cloud \"radiology vision-language model\" is unnamed. Without identifying it (or stating it is a contribution of this work), the comparison numbers cannot be interpreted.\n- The on-device EfficientNet variant (B0? B3?) and training recipe should be referenced.\n- \"Cloud GPU time\" depends on which GPU; cite it.\n\n---\n\nItems I cannot verify from the excerpt alone and that would change the review if clarified: (i) whether Section 1 actually defines the co-occurrence prior calibration procedure (the contribution-list claim hinges on this); (ii) whether the reported split is in fact the held-out test set and the wording is just imprecise; (iii) whether subgroup / per-pathology breakdowns exist elsewhere in the paper; (iv) the identity of the cloud VLM, which determines whether the AUROC comparison is meaningful. The threshold-leak concern (point 2, last bullet) is the most consequential of these \u2014 if the same split was used for tuning \u03c4 and reporting headline numbers, the central result needs to be re-run on a separate test set before the section's claims can stand.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general section review centrally includes checking whether the contribution claims, method description, results, and future-work statement form a coherent argument chain.",
+      "R1.3": "The delegation calls for assessing whether reported performance and cost results support the claims made in the section.",
+      "R1.6": "Reviewing a paper section centrally includes sentence- and paragraph-level clarity, flow, and register.",
+      "RX.1": "The projection should preserve uncertainty where the artifact does not provide enough information to verify a responsibility fully.",
+      "RX.2": "The review responsibility includes avoiding inflated claims beyond what the described method and results justify.",
+      "RX.3": "The agent must remain within reviewing the section rather than executing edits or expanding the research.",
+      "RX.4": "Because the artifact concerns medical imaging deployment, review responsibilities include avoiding recommendations or claims that could create downstream clinical harm.",
+      "RX.5": "Any projected review responsibility should be traceable to specific statements and evidence present in the provided section."
+    }
+  }
+}

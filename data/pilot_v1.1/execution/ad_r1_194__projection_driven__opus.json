@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_194",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2469,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33002,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.4\": 0.9, \"R1.6\": 0.7, \"R1.7\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: The section's framing is internally inconsistent \u2014 it cites a 100\u2013150ms Spanner-era figure as \"the strongest published baseline\" while simultaneously listing several more recent systems that report substantially lower cross-region commit latencies, then claims parity with the older figure as a \"meaningful step forward.\" Below are the concrete problems and recommended revisions.\n\n## Core problems\n\n**1. The \"strongest baseline\" claim contradicts the paragraph that precedes the contribution.**\nThe text itself enumerates CockroachDB at 30\u201340ms, SLOG at single-digit ms, and YugabyteDB/TiDB as further compressing the floor. Calling the 100\u2013150ms Spanner figure \"the strongest published baseline on cross-region two-phase commit cost\" is not defensible given the immediately preceding paragraph. The Spanner number is a historically important reference point, not the current state of the art. The section needs to either (a) redefine \"baseline\" with an explicit, narrow scope (e.g., \"the canonical analytical model for unoptimized 2PC-over-Paxos\"), or (b) drop the \"strongest baseline\" framing entirely.\n\n**2. The contribution claim is inverted.**\nMatching a 100\u2013150ms figure when peer systems report 30\u201340ms and lower is not \"a meaningful step forward against the strongest published cross-region commit baseline.\" On the latency axis as currently presented, ChronoCommit is behind, not ahead. The genuine contribution appears to be the **18% abort-rate reduction under high contention** and the **latency-vs-abort tradeoff curve**. The framing should lead with that, not with latency parity against an older figure.\n\n**3. The abort-rate result is reported without a comparator.**\n\"Reducing the abort rate under high contention by 18%\" \u2014 relative to what? Spanner-style 2PC? SLOG? CockroachDB? An internal ablation? Without naming the comparator, this number cannot be evaluated and risks reading as cherry-picked.\n\n**4. Evidence for cited systems is asserted, not sourced.**\nCockroachDB's \"30\u201340ms in standard cloud configurations\" and the YugabyteDB/TiDB claims about \"optimistic ordering and leaderless commit paths\" are stated without citation, configuration details, or workload context. CockroachDB's published commit latencies depend heavily on locality settings (REGIONAL BY ROW vs. GLOBAL tables), workload, and replica placement. Either cite specific sources (blog posts, papers, docs with versions) or soften to \"reported figures in the tens of milliseconds in some configurations.\"\n\n**5. SLOG characterization is incomplete and risks overclaim-by-omission.**\nSLOG's low-latency regime applies specifically to single-region or non-conflicting / single-home transactions; multi-home transactions incur additional cost. Saying SLOG \"demonstrates single-digit millisecond commit latency for non-conflicting transactions through deterministic execution\" is roughly correct but the deterministic-execution mechanism and single-home assumption deserve a clause, particularly because ChronoCommit is itself described as deterministic and the reader will want to know how it differs.\n\n**6. The novelty delta is not articulated.**\nChronoCommit is described as \"a deterministic commit protocol layered over Paxos\" with \"a hybrid logical clock for cross-shard ordering.\" Deterministic commit over consensus (Calvin, SLOG) and HLC-based ordering (CockroachDB, YugabyteDB) are both prior art. The section needs one or two sentences saying what is actually new \u2014 presumably the contention-aware abort prediction module and the way it's coupled to the commit path \u2014 rather than listing components that already exist in the literature.\n\n**7. Benchmark reporting is thin.**\n\"YCSB-T with three regions\" omits: contention level / zipfian skew, cluster size, replication factor, read/write ratio, transaction size, whether the 100\u2013150ms is median or tail, and what hardware/network. A single sentence with the key parameters would substantially raise the credibility of both the latency and abort-rate numbers.\n\n**8. Minor prose issues.**\n- \"100-150ms\" / \"30-40ms\" should use en-dashes or \"to\" for ranges.\n- \"These results indicate active progress in the area\" is filler; it can be cut or replaced with a sentence that actually previews the gap ChronoCommit addresses.\n- \"Layered over Paxos consensus\" is used twice in close proximity.\n- \"Contention-aware abort prediction module\" appears once and is never expanded; if it is a core contribution it should be named more carefully.\n\n## Recommended revision (sketch)\n\nReframe the section around the abort-rate / tradeoff-curve contribution and demote latency parity to a secondary property:\n\n> *\"Cross-region commit latency in two-phase-commit-over-consensus systems was first characterized by the Spanner analysis (Corbett et al., 2012) at roughly 100\u2013150ms, and subsequent systems \u2014 SLOG (Ren et al., 2019), CockroachDB, YugabyteDB, TiDB \u2014 have reduced this floor in specific regimes through deterministic execution, leaderless commit paths, and locality-aware placement. However, these reductions are typically reported on non-conflicting or single-home workloads; under high contention, abort rates remain a primary contributor to effective transaction latency, and the tradeoff between commit latency and abort rate is not systematically characterized in prior work.*\n>\n> *We present ChronoCommit, which couples HLC-based cross-shard ordering with a contention-aware abort-prediction module to expose this tradeoff explicitly. On YCSB-T across three regions, ChronoCommit operates within the 100\u2013150ms commit-latency envelope of Spanner-style 2PC while reducing aborts under high contention by 18% relative to [explicit comparator]. We do not claim latency improvements over recent optimized systems such as SLOG or CockroachDB; our contribution is the abort-vs-latency tradeoff curve and the abort-prediction mechanism that produces it.\"*\n\nThis reframing keeps the work honest about where it does and does not advance the state of the art.\n\n## Items I cannot fully verify\n\n- The exact CockroachDB latency figure (\"30\u201340ms in standard cloud configurations\") is plausible but configuration-dependent; I cannot confirm it without a specific source and I recommend the authors cite one rather than relying on the recollection above.\n- The SLOG single-home / multi-home distinction is reported from memory of the 2019 paper; the authors should re-check the precise scope of SLOG's single-digit-ms claim before citing it.\n- Whether YugabyteDB/TiDB use specifically \"leaderless commit paths\" is a characterization I would want the authors to verify against current docs; both systems have evolved and the phrase may not match their current architecture.\n- The 18% abort-rate improvement cannot be evaluated without knowing the comparator, contention level, and workload mix; my critique assumes the number stands but flags the missing context rather than disputing the result itself.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A generic review of this research section centrally includes assessing whether the thesis, contribution framing, and baseline positioning are coherent above the sentence level.",
+      "R1.2": "The section advances an argument from prior latency baselines to ChronoCommit's claimed contribution, so checking premise-to-conclusion consistency is central.",
+      "R1.3": "The delegation implies checking whether the reported benchmark and abort-rate results support the claims made about latency and tradeoffs.",
+      "R1.4": "Because the section explicitly positions ChronoCommit against Spanner-style protocols and newer systems, novelty relative to prior work is a central review responsibility.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, register, and concision as central expected responsibilities.",
+      "R1.7": "The artifact relies on named prior systems and citations, making reference accuracy, coverage, and attribution central to the review.",
+      "RX.1": "The projection must preserve uncertainty about what a short review request entails without inventing unrequested duties.",
+      "RX.2": "The reviewer responsibility includes avoiding inflated judgments about ChronoCommit's contribution or the strength of cited baselines.",
+      "RX.3": "The task is only to project the delegation, so scope control is load-bearing.",
+      "RX.4": "Review responsibilities should avoid enabling misleading research claims or unsupported comparisons that could harm downstream readers.",
+      "RX.5": "The projection should remain traceable to specific language in the delegation and artifact."
+    }
+  }
+}

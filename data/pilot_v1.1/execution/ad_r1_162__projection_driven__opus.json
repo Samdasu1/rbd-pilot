@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_162",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1769,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 24288,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nLight prose polish and a flag on a few claims that read as stronger than the evidence in the paragraph supports.\n\n**Prose-level edits suggested**\n\n- \"produce alert streams of order 10^6 transient candidates per night\" \u2014 tighten to \"produce on the order of 10^6 alerts per night\" (the candidates are not yet classified as transients at the alert stage).\n- \"Recent work by M\u00f6ller et al. and S\u00e1nchez-S\u00e1ez et al. has argued for ensembles...\" \u2014 smoother as \"M\u00f6ller et al. and S\u00e1nchez-S\u00e1ez et al. have argued for...\" (drop \"Recent work by\" to avoid the nested subject).\n- \"A notable finding in our validation set\" \u2192 \"One finding from our validation set\" reads less self-promotional and avoids \"notable.\"\n- \"objects on which our three member classifiers maximally disagreed\" \u2014 \"objects where the three member classifiers maximally disagreed\" reads more naturally; also clarify what \"maximally disagreed\" means operationally (e.g., highest pairwise KL, top-decile entropy of the stacked posterior).\n- \"broker logic should treat disagreement as a positive signal rather than discarding ambiguous alerts to a low-priority queue\" \u2014 consider \"broker logic should treat disagreement as an informative signal rather than routing ambiguous alerts to a low-priority queue\" (\"positive\" is ambiguous next to \"signal\").\n- \"The three classifiers' posterior distributions are aggregated using a stacked logistic meta-learner\" \u2014 fine, but specify whether the meta-learner sees raw posteriors, logits, or calibrated probabilities; one extra clause would help the reader.\n- \"outperforming each individual classifier by 4-7 F1 points\" \u2014 use an en dash: \"4\u20137 F1 points.\"\n- \"matching the published Alerce broker on the four classes Alerce reports\" \u2014 \"matching the published ALeRCE broker on the four classes it reports\" (ALeRCE is the conventional capitalization, and the repeated name is awkward).\n- \"where individual classifiers collapse to 0.3 F1, the ensemble reaches 0.55\" \u2014 \"collapse to\" suggests a dynamic; \"where individual classifiers score ~0.3 F1, the ensemble reaches 0.55\" is cleaner.\n- Final sentence is long; consider splitting after \"contextual features\" and starting a new sentence: \"This suggests ensemble design for transient triage should explicitly target representational diversity, not only voting accuracy.\"\n\n**Substantive concerns worth flagging to the author (within remit)**\n\n- The 63% novelty-from-disagreement figure is the strongest empirical claim in the paragraph but no denominator, selection rule, or confidence interval is given. Without those, the reader cannot tell whether this is a stable signal or a small-N observation; the phrasing currently invites overinterpretation. Adding the denominator and how \"maximally disagreed\" was operationalized would let the claim stand on its own.\n- \"matching the published Alerce broker on the four classes Alerce reports\" \u2014 be explicit that the comparison is restricted to a four-class subset and used the same evaluation protocol (same alerts, same metric definition). Otherwise the parity claim is hard to audit.\n- The rare-class result (kilonovae candidates, TDEs) is reported as a single point estimate per class. With test sets of 5,300 alerts spread over 14 classes, per-class F1 on the rarest classes will have wide uncertainty; either report intervals or soften the framing.\n- \"should explicitly maximize representational diversity rather than only voting accuracy\" generalizes from one pipeline on one survey's archival data; consider hedging to \"our results are consistent with the view that...\" rather than a prescriptive recommendation to the field.\n- \"RubinTriage\" is named for Rubin but evaluated only on ZTF; a single sentence acknowledging that Rubin's cadence, depth, and filter set differ from ZTF \u2014 and that transfer is not demonstrated \u2014 would prevent readers from assuming the reported numbers carry over.\n- Naming surviving objects (\"AT2018cow analogues,\" \"calcium-rich gap transients\") as confirmed peculiar transients is fine if those confirmations come from TNS or spectroscopic follow-up cited elsewhere; if the \"confirmation\" is the model's own downstream label, that should be made explicit to avoid a circularity.\n\n**Items I could not verify from the paragraph alone**\n\n- Whether M\u00f6ller et al. and S\u00e1nchez-S\u00e1ez et al. are the right (and sufficient) prior-work anchors, and which specific publications are intended \u2014 I did not check the citations.\n- The 63%, macro-F1 0.81, 4\u20137 point delta, and 0.3\u21920.55 rare-class figures are taken at face value; I have not seen the underlying tables, so the prose comments assume the numbers are correct as written.\n- ALeRCE's exact reported metric definition and the four-class overlap \u2014 flagged as something to make explicit, not something I confirmed.\n- Whether \"maximally disagreed\" corresponds to a pre-registered operational definition or was chosen post hoc; this affects how strongly the 63% claim can be stated.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation asks only to look at a paragraph, which most centrally implies attention to local writing quality, flow, register, and clarity.",
+      "RX.1": "Any projection should disclose uncertainty because the delegation is brief and does not specify a particular review axis.",
+      "RX.2": "The projection must avoid inflating a vague request into strong responsibilities such as novelty assessment or citation audit.",
+      "RX.3": "The agent must stay within responsibility projection and not actually review, edit, or critique the paragraph.",
+      "RX.4": "The projection should avoid assigning responsibilities that could encourage unsupported scientific or evaluative judgments beyond the request.",
+      "RX.5": "The assigned responsibilities should remain traceable to the delegation wording and the paragraph-level artifact."
+    }
+  }
+}

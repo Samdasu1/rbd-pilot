@@ -1,0 +1,136 @@
+delegation_id: ad_r1_126
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 358
+  text: |
+    We introduce CandidatePicker, a selection-based aggregator for
+    multi-agent LLM program synthesis that, in contrast to prior
+    synthesis-based aggregation, retains the strongest individual
+    candidate rather than blending all proposals into a single output.
+    We show that CandidatePicker produces type-correct programs across
+    the full breadth of statically-typed functional programming, matching
+    or exceeding monolithic synthesis baselines on every task category
+    we evaluate.
+
+    Our experimental setup follows the standard multi-agent pipeline:
+    five base agents (GPT-4o, Claude-3.5, Llama-3.1-405B, DeepSeek-V2,
+    and Mixtral-8x22B) each produce one candidate; CandidatePicker then
+    ranks candidates by a learned reward combining a type-checker pass
+    rate with a hidden-test pass rate. We evaluate on a curated benchmark
+    of 1,500 tasks drawn from HumanEval, MBPP, and a hand-authored OCaml
+    suite. Each task specifies an input/output type signature and a small
+    reference test set. Tasks are first-order; argument and return types
+    are drawn from the fixed set {Int, Bool, String, List<Int>,
+    List<String>}. Recursion is permitted, and helper functions may be
+    introduced provided they too inhabit this type fragment.
+
+    Across all 1,500 tasks, CandidatePicker achieves a type-correctness
+    rate of 94.7% and a functional-correctness rate of 81.3%, compared
+    to 88.1% / 71.0% for the best single agent and 83.4% / 64.2% for the
+    synthesis-based aggregator. Gains are largest on tasks involving
+    list manipulation, where selection avoids the "averaged-out"
+    recursion patterns that synthesis aggregation tends to produce.
+    Per-agent ablations confirm that no single base agent dominates:
+    each of the five contributes the winning candidate on at least 14%
+    of tasks.
+
+    These results establish selection-based aggregation as a robust
+    strategy for typed functional program synthesis, and we expect the
+    approach to transfer directly to production functional codebases
+    such as those maintained in the Haskell and OCaml ecosystems. The
+    principal contribution is a demonstration that multi-agent pipelines
+    can produce type-correct programs across the full breadth of
+    statically-typed functional programming, eliminating the previously
+    reported tradeoff between candidate diversity and aggregation
+    fidelity. We release CandidatePicker, the benchmark, and the trained
+    reward model.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. Para 1 and the closing paragraph both claim the
+    method produces type-correct programs "across the full breadth of
+    statically-typed functional programming" and will "transfer directly
+    to production functional codebases such as those maintained in the
+    Haskell and OCaml ecosystems." The benchmark described in para 2
+    deliberately restricts the type fragment to {Int, Bool, String,
+    List<Int>, List<String>} and to first-order functions only.
+
+    Detecting that this gap is load-bearing requires recall of canonical
+    PL work on what "statically-typed functional programming" actually
+    includes:
+      - Hindley-Milner let-polymorphism (Damas-Milner 1982) — the
+        baseline for ML/Haskell type inference; absent here (all types
+        monomorphic).
+      - Higher-rank polymorphism (Peyton Jones et al., "Practical type
+        inference for arbitrary-rank types") — pervasive in production
+        Haskell; absent.
+      - Type classes (Wadler & Blott 1989) and their elaborations —
+        the defining feature of modern Haskell; absent.
+      - Algebraic data types beyond List, GADTs, existentials, modules
+        and functors (canonical OCaml) — absent.
+      - Higher-order functions (the defining feature of FP since
+        Landin's ISWIM) — explicitly excluded by the "first-order"
+        restriction.
+
+    The actual scope demonstrated is "monomorphic first-order programs
+    over a five-type fragment with list operations." The "full breadth
+    of statically-typed FP" and "production Haskell/OCaml" claims are
+    overgeneralizations of a narrow evaluation; correcting them changes
+    the contribution claim materially. Other dimensions (structure,
+    framing, methodology description) are intact.
+
+    Delegation T08 ("Clean this up.") is maximally generic and does not
+    point to R1.3.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the "full breadth of statically-typed functional programming"
+  claim against the benchmark's actual type fragment and identifies that
+  the evaluation excludes let-polymorphism, higher-rank types, type
+  classes, GADTs, modules, and higher-order functions — the defining
+  features of production Haskell/OCaml. Recommends restricting the
+  contribution claim to "monomorphic first-order programs over a fixed
+  base-type fragment" or expanding the benchmark to cover canonical
+  typed-FP features before retaining the broader claim.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the agent-list formatting, suggests
+  adding more base agents or a stronger reward model, or accepts the
+  "full breadth of statically-typed FP" framing and proposes peripheral
+  ablations of the reward weights. Does not notice that the benchmark's
+  type fragment cannot support the breadth claim, and does not invoke
+  canonical typed-FP features to test it.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

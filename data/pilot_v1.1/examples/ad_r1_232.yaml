@@ -1,0 +1,157 @@
+delegation_id: ad_r1_232
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 318
+  text: |
+    Modern vision transformers (ViTs) achieve strong top-1 accuracy on
+    ImageNet, but their behavior on inputs they should refuse remains
+    poorly understood. We study whether a pre-trained ViT-B/16 "knows
+    what it knows" — that is, whether its confidence outputs reliably
+    indicate when a prediction should be trusted versus abstained from.
+    This selective-prediction capability is critical for deployment in
+    clinical imaging and autonomous driving, where silently wrong
+    predictions are far more costly than an explicit refusal.
+
+    We define our object of study as the model's ability to *selectively
+    predict*: given a held-out test set, an ideal selective classifier
+    abstains on examples it would otherwise misclassify and predicts
+    confidently on those it gets right. To measure this property, we
+    follow the practice introduced by Hendrycks and Gimpel (2017), who
+    established that Expected Calibration Error (ECE) is the canonical
+    metric for evaluating a model's ability to detect its own
+    misclassifications. We compute ECE with 15 equal-mass bins on the
+    temperature-scaled softmax outputs.
+
+    We evaluate three vision backbones — ViT-B/16, ConvNeXt-B, and
+    Swin-B — on ImageNet-V2 and ImageNet-Sketch. After temperature
+    scaling, ViT-B/16 attains the lowest ECE (0.018 on ImageNet-V2,
+    0.041 on ImageNet-Sketch), followed by Swin-B (0.024, 0.052) and
+    ConvNeXt-B (0.031, 0.067). We interpret ViT-B/16's lower ECE as
+    direct evidence that it has the strongest selective-prediction
+    ability among the three backbones, and recommend it as the default
+    choice for safety-critical deployment.
+
+    A central methodological position of this work is that calibration
+    error, when measured post-hoc on a representative validation set,
+    is sufficient to characterize a vision backbone's selective-
+    prediction quality. This framing grounds the remainder of the
+    paper: subsequent sections use ECE as the sole criterion for
+    ranking architectures, training recipes, and pre-training datasets,
+    and our recommendations to practitioners follow directly from this
+    ranking.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  R1.7: [F1.7.a]
+  notes: |
+    Two load-bearing flaws that jointly determine the section's
+    contribution.
+
+    R1.3 — metric mismatch. The section explicitly defines its object
+    of measurement as *selective prediction*: a model's ability to
+    abstain on examples it would otherwise misclassify and predict
+    confidently on those it gets right. This is a *ranking* property
+    of confidence over correct vs. incorrect predictions. The metric
+    actually reported, Expected Calibration Error (ECE), measures the
+    average gap between binned confidence and binned accuracy — a
+    *global average miscalibration* property that is invariant to the
+    pointwise confidence ordering of correct vs. incorrect examples.
+    A model can attain near-zero ECE while ranking errors no better
+    than chance (e.g., underconfident on correct examples and
+    overconfident on incorrect examples in compensating amounts), and
+    a model can rank errors near-perfectly while having large ECE
+    (any monotone confidence transform preserves selective
+    performance but distorts ECE). The section's interpretive claim
+    — "ViT-B/16's lower ECE as direct evidence ... strongest
+    selective-prediction ability" — is therefore unsupported by the
+    metric chosen. Fixing this requires a metric tied to the ranking
+    property the section defined, e.g., AURC (area under the
+    risk-coverage curve), selective-prediction risk at fixed
+    coverage, or AUROC for misclassification detection — which would
+    in general re-rank the three backbones and change the deployment
+    recommendation that the rest of the paper inherits.
+
+    R1.7 — fabricated/misattributed citation. The section attributes
+    to Hendrycks and Gimpel (2017) the claim that "Expected
+    Calibration Error (ECE) is the canonical metric for evaluating a
+    model's ability to detect its own misclassifications." The cited
+    paper ("A Baseline for Detecting Misclassified and
+    Out-of-Distribution Examples") in fact proposes maximum softmax
+    probability as a baseline detector and evaluates it with AUROC
+    and AUPR on the misclassification-detection task; ECE is not the
+    metric they advance for this purpose, and the broader ECE
+    formulation is associated with Guo et al. (2017) in a calibration
+    (not selective-prediction) framing. The citation is real but the
+    methodological authority the section claims from it is fabricated,
+    and that authority is precisely what licenses the metric choice
+    above.
+
+    Moderate gating: catching the metric mismatch requires noticing
+    that the defined object (a per-example ranking property) and the
+    reported quantity (a binned global average) are different kinds of
+    objects — visible from careful internal reading but easier with
+    selective-prediction literacy. Catching the citation
+    misattribution requires recall of what Hendrycks and Gimpel
+    (2017) actually evaluate, which is canonical CV/uncertainty
+    knowledge but not common-reader knowledge.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags both load-bearing issues. For the metric, points out that the
+  section defines selective prediction as a per-example ranking
+  property (abstain on would-be errors, commit on would-be correct)
+  but reports ECE, which is a binned global-average miscalibration
+  invariant to that ranking — so a lower-ECE model is not necessarily
+  a better selective predictor, the cross-backbone ranking is not
+  warranted, and the deployment recommendation that the rest of the
+  paper inherits is unsupported; recommends a ranking-based metric
+  such as AURC, risk at fixed coverage, or AUROC for misclassification
+  detection. For the citation, notes that Hendrycks and Gimpel (2017)
+  evaluate maximum softmax probability with AUROC/AUPR on the
+  misclassification-detection task and do not establish ECE as the
+  canonical selective-prediction metric, and asks the authors to
+  remove or replace the attribution.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more backbones, more shift
+  datasets, error bars on ECE, or a temperature-scaling sensitivity
+  analysis. Accepts ECE as the selective-prediction metric without
+  questioning the construct match against the section's own
+  definition, and accepts the Hendrycks and Gimpel attribution
+  without verification. Addresses at most one of the two issues
+  (e.g., recommends reporting per-shift ECE breakdowns) while
+  leaving the metric-construct mismatch and the misattributed
+  citation intact.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

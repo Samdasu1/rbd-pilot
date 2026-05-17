@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_255",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2186,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 35349,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 0.9, \"R1.4\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 1.0}}\n\nThe abstract has a serious internal contradiction that needs to be resolved before anything else, plus several claims that are stated more strongly than the described setup can support. Detailed comments below.\n\n**1. The \"zero-shot\" framing contradicts the few-shot retrieval module.**\nThe second paragraph asserts a \"strictly zero-shot regime\" with \"no labeled normal/anomalous examples at any stage.\" The third paragraph then describes a retrieval module that fetches \"the five nearest historical windows from a curated incident database\" and \"includes their labels as in-context examples for the generator.\" Retrieving labeled neighbors at inference time is the textbook definition of retrieval-augmented few-shot prompting, not zero-shot. Worse, the same paragraph attributes \"roughly two-thirds of the headline false-alarm reduction\" to that module \u2014 so the headline result is largely driven by the very component that breaks the zero-shot claim. Pick one framing and be honest about it: either drop \"zero-shot\" and describe the method as retrieval-augmented few-shot, or remove the retrieval module from the headline pipeline and report its contribution as an ablation.\n\n**2. The novelty claim is overstated.**\n\"First application of self-critique abstention to log-based anomaly detection\" is a narrow framing, and the supporting comparison (\"prior work, which has focused exclusively on supervised classifiers trained on labeled trace corpora\") ignores a substantial existing literature on unsupervised, semi-supervised, and LLM-based log anomaly detection (e.g., DeepLog, LogBERT, LogGPT, and several 2023\u20132025 LLM-prompting papers). The claim should be softened to something verifiable, e.g., \"we are not aware of prior work applying generator\u2013critic self-abstention to this setting,\" and the survey of prior work should be made accurate rather than dismissive.\n\n**3. The evaluation as reported does not support the headline number.**\n- The headline is \"38% false-alarm reduction at fixed recall on BGL,\" yet the paragraph immediately above promises evaluation on \"two baselines\" and the next paragraph references \"all three benchmarks.\" Three benchmarks are alluded to but never named, and per-dataset numbers are not given.\n- \"Fixed recall\" is reported without specifying the recall level. A 38% FAR reduction at recall=0.5 is a very different result from the same number at recall=0.95.\n- The two baselines (PCA on frequencies, log-template classifier) are weak by current standards. Comparisons to at least one modern neural or LLM-prompting baseline are needed before a \"clear departure from prior work\" claim is credible.\n- No mention of variance across seeds/prompts, confidence intervals, or statistical testing, which matters because LLM outputs are stochastic and prompt-sensitive.\n\n**4. The abstention-rate interpretation is a leap.**\n\"Stabilizes near 11% \u2026 we interpret as the model's calibrated estimate of windows where the available evidence is genuinely insufficient\" treats a behavioral observation as evidence of calibration. A constant abstention rate across datasets is at least as consistent with the critic having a stable disagreement rate with the generator (a property of the prompt pair, not of the data) as with genuine epistemic calibration. To support the calibration claim you would need: (a) selective-prediction metrics (e.g., risk-coverage curves, accuracy on non-abstained subset vs. coverage), (b) a check that abstained windows are in fact harder than non-abstained ones (e.g., higher annotator disagreement, more ambiguous templates), and (c) comparison against a trivial abstention baseline (random, or threshold on generator log-prob). Without these, \"calibrated\" should be removed.\n\n**5. Logical gaps in the mechanism description.**\n- The pipeline says the critic flags \"hallucinated event types, unsupported temporal claims, and inconsistencies with the window's actual content.\" How the critic detects hallucinated event types without an external schema or template database is not specified; if it relies on the same LLM's parametric knowledge of the deployment, the critic and generator share failure modes and the abstention signal is weaker than implied.\n- \"The model abstains when the critic disagrees with the generator on the final label\" \u2014 this is binary disagreement, which is a much coarser signal than the richer critique described one sentence earlier. Clarify whether the critic produces a label, a free-text critique, or both, and which is actually used for the abstain decision.\n- The forward pointer \"\u00a75\" is fine, but the abstract promises \"prompt-template ablations and critic-temperature sweeps\" without indicating whether the headline result is robust to those ablations. If it is not, that needs to be foregrounded.\n\n**6. Suggested concrete revisions to make the abstract defensible.**\n- Replace \"strictly zero-shot regime \u2026 no labeled examples at any stage\" with an accurate description: retrieval-augmented few-shot, with labels drawn from a curated incident database.\n- Replace \"first application\" with \"to our knowledge, the first application,\" and acknowledge the broader LLM-for-log-anomaly literature in the intro.\n- Report per-dataset FAR reduction with the recall operating point specified, name all three benchmarks, and either include or commit to including a modern baseline.\n- Drop \"calibrated\" from the abstention discussion unless selective-prediction evidence is provided; describe the 11% rate as an empirical observation and defer interpretation to the analysis section.\n- State explicitly what the critic has access to (raw window? parsed templates? external schema?), because the strength of the self-critique claim depends entirely on this.\n\n**Things I could not verify and you should double-check.**\nI have no access to the underlying experiments, the BGL numbers, the actual baselines run, or the prior-work survey you intend to cite, so the criticisms above are about what the abstract claims versus what it describes, not about whether the experiments themselves are sound. The point about overlap with prior LLM-for-log-anomaly work is based on general knowledge of the area as of my training data; you should do a fresh literature pass before locking in the novelty framing. The mechanism-level critiques (#5) assume the abstract describes the system faithfully \u2014 if the critic actually has access to a parsed template store or external schema, several of those concerns dissolve, but then that fact needs to be in the abstract.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The broad delegation invites assessment of the paper excerpt's thesis framing, contribution claim, and conceptual setup.",
+      "R1.2": "A general judgment on the excerpt centrally depends on checking whether the stated method description and argument chain are internally coherent.",
+      "R1.3": "The excerpt includes empirical and design-effect claims, so assessing whether those claims match the reported evidence is a central responsibility.",
+      "R1.4": "The artifact makes an explicit first-application and departure-from-prior-work claim, making novelty assessment central to the requested reaction.",
+      "RX.1": "Any projection of a vague request must preserve uncertainty about the intended depth and type of feedback.",
+      "RX.2": "The response must avoid inflating the delegation into responsibilities not supported by the wording or artifact.",
+      "RX.3": "The agent must stay within projection only and not perform the requested evaluation of the artifact.",
+      "RX.4": "The projection should avoid enabling misleading research feedback by marking risks such as overclaiming and scope limits.",
+      "RX.5": "The rationale should remain traceable to the delegation wording and visible features of the artifact."
+    }
+  }
+}

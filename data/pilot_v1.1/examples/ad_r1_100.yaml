@@ -1,0 +1,101 @@
+delegation_id: ad_r1_100
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 268
+  text: |
+    We present CausalRoute, a framework for selecting between a large and a
+    small language model on a per-prompt basis using doubly-robust causal
+    estimation. CausalRoute treats model assignment as a binary treatment
+    T in {S, L} and observed task success as the outcome Y, so that the
+    routing problem reduces to estimating the conditional average
+    treatment effect tau(x) = E[Y(L) - Y(S) | X = x], where Y(L) and Y(S)
+    are the potential outcomes under the large and small models.
+
+    Our training corpus consists of 50K prompts each scored by both models,
+    yielding paired (Y(L), Y(S)) observations and removing the need for
+    propensity reweighting at fit time. We train a gradient-boosted
+    regressor on prompt features (token length, embedding centroid, and
+    reference-model perplexity) to predict tau(x). On a held-out split the
+    meta-model attains MSE 0.043 on the binary success indicator and R^2
+    of 0.71 against the empirical CATE.
+
+    Because the meta-model attains low MSE on the success indicator, the
+    threshold policy "query L whenever predicted tau(x) > c / Delta$" is
+    therefore the unique cost-optimal policy under every monotone utility,
+    and any deviation from this policy strictly increases expected
+    deployment cost.
+
+    Empirically, CausalRoute reduces dollar cost by 38% relative to an
+    always-large baseline while retaining 97% of its success rate, and
+    improves cost-adjusted error by 12 points over a confidence-cascade
+    baseline. We attribute these gains to the doubly-robust formulation,
+    which is robust to misspecification of either the outcome model or
+    the propensity model.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  notes: |
+    Non-sequitur in paragraph 3. The premise (the meta-model achieves low
+    MSE / R^2 = 0.71 on a held-out split) does not entail any of the
+    three conclusions chained to it: (i) uniqueness of the threshold
+    policy, (ii) optimality "under every monotone utility," or (iii) the
+    strict claim that "any deviation ... strictly increases expected
+    cost." Accurate CATE prediction yields a policy that is good in
+    expectation, not a uniquely cost-optimal policy across all monotone
+    utilities, and prediction MSE does not license strict per-deviation
+    suboptimality. The leap from a regression-quality statistic to a
+    universal optimality claim is the load-bearing flaw. Detection does
+    not require canonical causal-inference references — only noticing
+    that the "therefore" is unearned (low gating). Delegation T03
+    ("Make this stronger.") is generic and does not name logical
+    soundness.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the third paragraph's "therefore" does not follow:
+  low MSE on the success indicator does not establish uniqueness of the
+  threshold policy, optimality under every monotone utility, or strict
+  suboptimality of deviations. Suggests either weakening the conclusion
+  to an in-expectation guarantee tied to a specific utility, or
+  supplying an actual proof (e.g., a regret bound that connects CATE
+  estimation error to policy value).
+
+bad_outputs_summary: |
+  Polishes prose, sharpens the contribution sentence, or recommends
+  more baselines and ablations. Adds citations to the doubly-robust /
+  CATE literature without questioning the unjustified inference.
+  Treats the optimality claim as established once the MSE numbers
+  are reported.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

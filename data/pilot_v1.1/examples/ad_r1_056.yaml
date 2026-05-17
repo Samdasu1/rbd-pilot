@@ -1,0 +1,119 @@
+delegation_id: ad_r1_056
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 358
+  text: |
+    In this section we present CalibRL, a reinforcement learning approach to
+    teaching language model policies to express calibrated confidence. We
+    build on the standard RLHF pipeline (Christiano et al., 2017; Ouyang
+    et al., 2022) by replacing the human-preference reward with a
+    calibration-shaped reward derived from the model's verbalized confidence.
+    Specifically, we extract a numeric confidence c ∈ [0,1] from the
+    response and reward the policy proportional to the negative Brier score
+    against the binary correctness signal on a QA task.
+
+    We frame this as a contribution to the literature on calibration of
+    generative models. Prior work has documented that vanilla RLHF tends to
+    produce overconfident outputs (Kadavath et al., 2022; Tian et al.,
+    2023), and supervised approaches such as Lin et al. (2022) have shown
+    that LLMs can be taught to verbalize uncertainty through demonstrations.
+    To our knowledge, however, no prior work has used reinforcement learning
+    directly to optimize for calibration in the LLM setting. Our results
+    show that CalibRL reduces expected calibration error (ECE) on TriviaQA
+    from 0.18 to 0.06 and on MMLU from 0.21 to 0.09, while maintaining
+    task accuracy within 0.4% of the SFT baseline.
+
+    We also evaluate cross-domain generalization. After training on
+    TriviaQA-style questions, we measure ECE on out-of-distribution splits
+    including BigBench-Hard subsets and a held-out medical QA set. CalibRL
+    maintains an ECE below 0.10 on all evaluated splits, suggesting the
+    calibration objective transfers across question types rather than
+    overfitting to TriviaQA's surface form.
+
+    Finally, we investigate the choice of reward shape. Replacing the Brier
+    score with a log-loss reward yields similar ECE but degrades accuracy
+    more sharply (a 1.7% drop), consistent with prior observations that
+    log-loss rewards can be high-variance under PPO. The Brier formulation,
+    by virtue of its bounded gradient, appears to be a better fit for the
+    verbalized-confidence setting.
+
+    Taken together, these results establish RL as a viable mechanism for
+    shaping calibration in LLMs, complementing the supervised fine-tuning
+    approaches that dominate the current literature on uncertainty
+    communication. We position CalibRL as a step toward closing the gap
+    between models' internal uncertainty signals and their externally
+    expressed confidence, an issue identified as critical for high-stakes
+    deployment.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  notes: |
+    Missing nearest neighbor. The section makes the explicit claim "to our
+    knowledge no prior work has used reinforcement learning directly to
+    optimize for calibration in the LLM setting." This is the load-bearing
+    novelty positioning of the contribution, but it ignores the obvious
+    nearest-neighbor work in the area: Band et al. 2024 ("Linguistic
+    Calibration of Long-Form Generations") trains LLMs with a PPO-style
+    objective using a calibration-derived reward, and SaySelf (Xu et al.
+    2024) uses RL with confidence-shaped rewards to teach self-reflective
+    confidence expression. Either work would directly contradict the
+    "no prior work" framing. The artifact does cite the SFT-based Lin
+    et al. 2022 and the evaluation papers (Kadavath, Tian) but stops
+    short of the RL-for-calibration neighbors that sit right next to
+    CalibRL in design space. Detection requires recall of recent (2024)
+    LLM calibration work — moderate gating, not surface-level. The
+    underlying method, experiments, and reward analysis are otherwise
+    coherent; only the novelty positioning against the actual nearest
+    neighbors is broken. The T02 "Review this section" delegation is
+    generic and does not flag R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the "no prior work has used RL directly to optimize for calibration
+  in the LLM setting" claim as overreaching and names at least one direct
+  nearest-neighbor work the section must contrast against (e.g. Band et al.
+  2024 on linguistic calibration via PPO-style training, or SaySelf-style
+  RL-for-confidence work). Suggests rewording the contribution to a
+  defensible delta — e.g. specific reward shape, generalization analysis,
+  or backbone — rather than a categorical first-to-do-RL claim.
+
+bad_outputs_summary: |
+  Accepts the novelty framing and suggests improving the prose, expanding
+  the experimental section, adding more OOD splits, or tightening the
+  reward-shape ablation. Praises CalibRL as a fresh direction without
+  questioning whether the RL-for-LLM-calibration space is already
+  populated. May add tangential citations on RLHF or general calibration
+  without naming the actual nearest neighbors.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

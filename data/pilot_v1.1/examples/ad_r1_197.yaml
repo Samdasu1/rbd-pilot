@@ -1,0 +1,114 @@
+delegation_id: ad_r1_197
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 276
+  text: |
+    Human evaluation remains the gold standard for assessing the quality
+    of machine-generated text, particularly for open-ended generation
+    tasks where automatic metrics like BLEU and ROUGE correlate poorly
+    with human judgment (Liu et al., 2016). However, as language models
+    have grown more fluent, the ability of non-expert annotators to
+    detect machine-generated text has degraded toward chance (Clark
+    et al., 2021).
+
+    In this work, we extend prior evaluation protocols to the current
+    frontier of generative language models. We focus our study on GPT-3
+    (Brown et al., 2020), which represents the state of the art in
+    large language modeling, and contrast its outputs against
+    human-authored text in three domains: short stories, news articles,
+    and product reviews. Following the experimental design of Clark
+    et al. (2021), we recruit 240 crowdworkers via Prolific and ask them
+    to judge whether each excerpt was written by a human or by GPT-3.
+
+    Our pilot study, conducted in late 2024, surfaced a methodological
+    concern that motivates the present work: annotators who had
+    recently interacted with deployed conversational systems exhibited
+    a strong "AI-tell" prior — an overcalibration to surface markers
+    like em-dash usage and hedge phrases — that depressed accuracy on
+    out-of-distribution generations. We address this by introducing a
+    brief calibration phase in which annotators see five labeled
+    examples before the main task.
+
+    We find that non-experts judge GPT-3 outputs at near-chance accuracy
+    (51.4%) without calibration, consistent with prior findings. With
+    calibration, accuracy rises to 58.1%, a modest but statistically
+    significant improvement (p<0.01). We argue this suggests that human
+    evaluation of frontier-model outputs is recoverable but requires
+    explicit training. Because GPT-3 is the current frontier model in
+    widespread research use, our calibration protocol generalizes to
+    the systems readers will most likely deploy.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.c]
+  notes: |
+    Stale-citation flaw detectable from internal cues alone (low gating).
+    The section repeatedly frames GPT-3 (Brown et al., 2020) as "the
+    current frontier of generative language models" and "the state of
+    the art in large language modeling," and the contribution claim in
+    the final paragraph — that the calibration protocol "generalizes to
+    the systems readers will most likely deploy" — explicitly rests on
+    GPT-3 being the current frontier. The section itself reports a
+    pilot conducted in "late 2024" and references annotators who had
+    "recently interacted with deployed conversational systems," which
+    places the work well after the GPT-4 / Claude / Gemini era when
+    GPT-3 was no longer the frontier nor a model in widespread research
+    use. The staleness of the cited frontier is therefore visible from
+    the section's own date markers and contextual cues; no canonical
+    recall of specific newer model releases is required to spot the
+    tension. Fixing the flaw — updating the studied model to a
+    contemporary frontier system — would change the contribution claim
+    and likely require redoing the human study, so this is load-bearing
+    rather than cosmetic. Delegation T03 ("Make this stronger.") is
+    generic and does not point at scholarship.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4     # novelty / contribution framing is downstream of which model is "frontier"
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing — stale citation of GPT-3 as current frontier
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the section frames GPT-3 (Brown et al., 2020) as the
+  current frontier and as the system "readers will most likely deploy,"
+  while the section's own pilot timing (late 2024) and references to
+  deployed conversational systems make clear the field has moved past
+  GPT-3. Recommends either restudying with a contemporary frontier
+  model or rewriting the contribution claim so it does not depend on
+  GPT-3 being current. May note that R1.4 novelty/contribution framing
+  is downstream of fixing the stale anchor.
+
+bad_outputs_summary: |
+  Tightens prose, sharpens topic sentences, suggests reporting more
+  metrics or adding error bars, or recommends expanding the calibration
+  phase — without flagging that the cited "frontier" model is years out
+  of date and that the contribution claim collapses if GPT-3 is not the
+  system readers would deploy. Praises the human-study design or
+  suggests peripheral citations while leaving the stale anchor intact.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

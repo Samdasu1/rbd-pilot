@@ -1,0 +1,122 @@
+delegation_id: ad_r1_209
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 305
+  text: |
+    Cardinality estimation underpins every cost-based query optimizer:
+    errors in cardinality propagate multiplicatively through join
+    planning and routinely cause orders-of-magnitude slowdowns in
+    production workloads. Despite decades of work on histograms,
+    sketches, and sampling, traditional estimators continue to
+    underperform on correlated and high-dimensional predicates,
+    motivating a recent wave of learned cardinality estimators.
+
+    Three lines of work have shaped this area. Naru (Yang et al., 2019)
+    introduced autoregressive density models for single-table
+    cardinality, achieving median q-errors below 2 on the JOB-light
+    benchmark. DeepDB (Hilprecht et al., 2020) instead used relational
+    sum-product networks to support multi-attribute and multi-table
+    queries while remaining trainable on raw tables without query
+    workloads. NeuroCard (Yang et al., 2020) extended Naru to the
+    multi-table setting via join sampling, closing much of the gap
+    between autoregressive single-table accuracy and join-aware
+    estimation.
+
+    Two open problems remain. First, learned estimators are typically
+    point predictors and do not expose calibrated uncertainty, leaving
+    the optimizer unable to distinguish a confident estimate from a
+    guess. Second, training-data drift — common in production catalogs
+    — degrades these estimators silently.
+
+    We introduce CalibCard, a learned cardinality estimator that
+    produces calibrated predictive intervals alongside point estimates,
+    allowing the optimizer to fall back to conservative plans when
+    uncertainty is high. CalibCard combines a NeuroCard-style
+    autoregressive backbone with a conformal prediction wrapper trained
+    on a held-out workload. We evaluate on JOB-light and a
+    TPC-DS-derived multi-table benchmark, comparing against Naru,
+    DeepDB, and NeuroCard. CalibCard matches NeuroCard on median
+    q-error (1.7 vs 1.8) while reducing 99th-percentile q-error from
+    89 to 14 on JOB-light, and its predictive intervals achieve 91%
+    empirical coverage at the nominal 90% level.
+
+    These results position CalibCard as the first learned cardinality
+    estimator with calibrated uncertainty, and we argue that
+    uncertainty-aware estimation is a prerequisite for safely deploying
+    learned components inside production query optimizers.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    The related-work survey of learned cardinality estimation names
+    Naru (Yang et al., 2019), DeepDB (Hilprecht et al., 2020), and
+    NeuroCard (Yang et al., 2020), and uses Naru/DeepDB/NeuroCard as
+    its sole baselines. It omits MSCN (Kipf et al., "Learned
+    Cardinalities: Estimating Correlated Joins with Deep Learning,"
+    2019), which is the canonical first deep-learning cardinality
+    estimator and a standard baseline in essentially every subsequent
+    paper in this line — including Naru, DeepDB, and NeuroCard
+    themselves. The omission is load-bearing on two counts: (i) the
+    "three lines of work have shaped this area" framing is materially
+    incomplete without the query-driven MSCN line, and (ii) the
+    head-to-head comparison ("matches NeuroCard ... reduces 99th-pctile
+    q-error") is missing the most-cited learned baseline, weakening the
+    contribution claim. Detection requires recognising MSCN as
+    canonical in learned cardinality estimation (moderate gating —
+    standard for anyone working in learned DB systems, not pure logic
+    from the section text alone). Delegation T05 ("Check this.") is
+    generic and gives no hint that scholarship is the load-bearing
+    issue.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the survey of learned cardinality estimation is missing
+  MSCN (Kipf et al., 2019), the canonical first deep-learning approach
+  and a standard baseline in this line of work, and notes that it
+  should appear both in the "three lines of work" paragraph and as a
+  baseline in the evaluation. May also note that the contribution
+  claim and the q-error comparison are downstream of including MSCN.
+  Does not focus on prose, structure, or notation.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more benchmarks beyond JOB-light and
+  TPC-DS, or recommends restructuring the open-problems paragraph
+  without flagging the missing MSCN citation. Praises the breadth of
+  the related-work coverage or accepts the "first learned cardinality
+  estimator with calibrated uncertainty" framing without questioning
+  whether the baseline set is complete. Adds peripheral references
+  (classical histograms, generic conformal prediction) instead of
+  inserting MSCN.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

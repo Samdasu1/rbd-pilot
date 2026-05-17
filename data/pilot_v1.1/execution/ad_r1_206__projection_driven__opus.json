@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_206",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3293,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 41850,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.9, \"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.4\": 0.8, \"R1.5\": 0.85, \"R1.6\": 0.9, \"R1.7\": 0.9, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.95, \"RX.4\": 0.85, \"RX.5\": 0.85}}\n\nBelow is a revised version of the introduction followed by targeted notes on the issues I flagged. The single most consequential issue is a likely citation/evidence error that I cannot resolve from the text alone \u2014 see note 1.\n\n---\n\n**Revised draft**\n\nCrowdsourcing platforms now host a growing population of large language model (LLM) agents that respond to surveys and tasks as if they were human workers. For behavioral researchers who use these platforms for downstream inference, undetected agents threaten the validity of effect estimates and replication efforts alike. Three families of detection approach have been explored: behavioral signatures (mouse trajectories, keystroke timing), stylometric analysis of open-ended responses, and embedded probes that target known LLM failure modes such as token-level repetition artifacts or refusal patterns on adversarial prompts. The first two have been adopted most widely; the third remains underexplored on naturalistic survey items.\n\nThe closest precedent to our work is Henderson and Park (2021) [citation needs verification \u2014 see note below], who introduced the first systematic benchmark for separating human and LLM-generated open-ended survey responses. Their stylometric classifier reported 84.2% balanced accuracy on held-out items and has become the standard reference point for this literature. Subsequent work (Liu et al., 2024; Ortega-Williams, 2024) has reported incremental gains on the same benchmark using transformer-based stylometric features, with reported balanced accuracies in the 86\u201388% range [verify exact numbers against sources].\n\nWe introduce AgentSift, a detection pipeline that augments standard stylometric features with a *consistency probe*: a pair of semantically equivalent items presented in different syntactic frames and separated by intervening questions. We hypothesize that current LLM agents will exhibit *higher* cross-frame agreement than human respondents on such pairs, because the model maps both surface forms to closely related internal states, while humans introduce genuine variability driven by mood, fatigue, retrieval noise, and reinterpretation of the item. We do not claim that LLMs produce identical internal representations across paraphrases \u2014 only that their cross-frame agreement distribution sits measurably above the human distribution under the conditions we tested.\n\nWe evaluate AgentSift in two settings. On the Henderson\u2013Park benchmark, AgentSift reaches 91.7% balanced accuracy, a 7.5-point absolute improvement over the original classifier. On a new dataset of 4,200 paired responses we collected on Prolific in early 2025, AgentSift maintains 88.4% balanced accuracy against a mixed pool of human respondents and agents driven by GPT-4o, Claude 3.7 Sonnet, and Llama 3.3. An ablation indicates that the consistency probe contributes roughly half of the gain over a stylometry-only baseline on the new data [exact split: X.X / Y.Y points \u2014 fill in].\n\nThree caveats bound the contribution. First, our evaluation covers a specific cohort of models available in early 2025; generalization to future models, fine-tuned variants, or agents instructed to mimic human inconsistency is not established. Second, the consistency probe is itself a target: once its mechanism is public, adversaries can train against it, and the gain reported here should be read as a snapshot rather than a durable advantage. Third, any deployed detector that gates participation risks false-positive exclusion of legitimate human respondents \u2014 particularly those whose response styles diverge from the training distribution \u2014 and we discuss mitigation in Section 6. With these caveats stated, we position AgentSift as a current best-effort tool for behavioral researchers who depend on platform-recruited samples, not as a settled solution to LLM contamination.\n\n---\n\n**Notes on what was changed and why**\n\n1. **Probable factual error in the citation chain.** The original draft attributes the seminal benchmark to \"Henderson and Park (2021)\" but says their classifier was trained on responses from GPT-4 and Claude 3.5 Sonnet. GPT-4 was released in March 2023; Claude 3.5 Sonnet in June 2024. A 2021 paper cannot have used either model. Either the year is wrong, the models are wrong, or the reference itself is fabricated. This must be resolved before submission \u2014 readers and reviewers will catch it. I removed the specific model list and corpus size from the revision pending verification. I have no way to confirm the underlying paper exists; please check.\n\n2. **Overclaim trimmed on the mechanism.** The original asserts that LLM responses \"are generated from the same underlying representation regardless of surface form.\" That is too strong: paraphrases do produce different hidden states, and the empirical claim you actually need is distributional (cross-frame agreement is higher for agents than humans on average). I rewrote the hypothesis to match what your evidence can support.\n\n3. **Overclaim trimmed on the headline.** \"Strongest published detection method on the standard benchmark\" is defensible only if you have actually compared against Liu et al. (2024) and Ortega-Williams (2024) at matched evaluation settings. Either include those numbers in the introduction or soften the claim. I softened it and inserted a placeholder for the prior numbers.\n\n4. **Sharpened opening.** The original lead sentence reports the existence of methodological work, which is a weak hook. The revision opens with the stakes for behavioral inference \u2014 why a reader should care \u2014 before turning to taxonomy.\n\n5. **Vague quantification fixed.** \"Roughly half of the gain in our ablation\" is imprecise for an introduction; either supply the decomposition (e.g., \"4.1 of 7.5 points\") or move the claim to the results section. I left a placeholder.\n\n6. **Limitations surfaced into the introduction.** The original presents only positive results. Honest framing requires acknowledging (a) model-cohort specificity, (b) adversarial decay once the probe is described publicly, and (c) false-positive harm to legitimate human respondents. I added a short caveat paragraph; these can also live in a dedicated limitations section, but at least one of them \u2014 the adversarial decay \u2014 should be visible from the introduction because it conditions how the headline number should be read.\n\n7. **Structural adjustment.** I split \"evaluation\" and \"contribution framing\" so the numbers and the positioning are not mixed in the same paragraph. The closing paragraph in the original conflated empirical claim, mechanism claim, and product claim; I separated them.\n\n8. **Prose tightening.** Trimmed \"We position\" / \"We propose\" duplication, removed \"the de facto reference point\" (jargon-heavy for a one-paragraph framing), and balanced sentence length in the lead paragraph.\n\n**Smaller items worth considering**\n\n- \"Consistency probe\" is a clean name but is structurally similar to *attention check pairs* in survey methodology. A one-sentence positioning against the survey-methods literature on test\u2013retest items would head off the \"isn't this just X?\" reviewer comment.\n- The Prolific 2025 dataset: report demographic composition and incentive structure in the introduction's footnote or in Section 3; it affects how the 88.4% number generalizes.\n- Reporting only balanced accuracy hides asymmetric error costs. In a deployment that excludes suspected agents, false-positive rate on humans is the operationally relevant number; consider adding it to the abstract/intro.\n\n**What I cannot verify**\n\nI cannot confirm that Henderson and Park (2021), Liu et al. (2024), or Ortega-Williams (2024) exist as cited, nor that the 84.2% / 91.7% / 88.4% numbers reproduce. The arithmetic of the 7.5-point claim checks out against the stated baseline. The temporal inconsistency around the cited corpus is the most pressing item; resolve it before relying on this draft externally.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 1.0,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The broad request to make the paper passage stronger centrally involves sharpening the thesis, gap, and contribution claim.",
+      "R1.2": "Strengthening the passage requires checking whether the reasoning from prior work to hypothesis, method, results, and practical implication holds together.",
+      "R1.3": "The claims about benchmark superiority, ablation contribution, and practical utility must align with the reported datasets and results.",
+      "R1.4": "Because the artifact makes explicit strongest-published and improvement-over-prior-work claims, novelty positioning is a central responsibility.",
+      "R1.5": "Improving strength may require section- or paragraph-level reordering of background, gap, method, evidence, and contribution arc.",
+      "R1.6": "The delegation naturally includes improving sentence-level clarity, force, concision, and academic register.",
+      "R1.7": "The passage relies heavily on named prior work and benchmark positioning, so citation coverage and attribution are central to making it stronger.",
+      "RX.1": "Any projection must preserve uncertainty around unsupported factual claims and unverified benchmark history.",
+      "RX.2": "The artifact contains strong claims such as strongest published method, so avoiding overclaim is load-bearing.",
+      "RX.3": "The responsibility is limited to projecting the delegation rather than editing or evaluating the artifact itself.",
+      "RX.4": "Because the topic concerns detecting human versus synthetic respondents, the projection must account for possible misuse or harmful downstream effects.",
+      "RX.5": "The projection should track which responsibilities arise from specific features of the delegation and artifact."
+    }
+  }
+}

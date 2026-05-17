@@ -1,0 +1,127 @@
+delegation_id: ad_r1_154
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 384
+  text: |
+    Recent work on automated evaluation of generative models for de novo
+    molecule design has emphasized the gap between standard cheminformatics
+    metrics — validity, uniqueness, and novelty — and downstream
+    medicinal-chemistry judgments of synthesizability and lead-likeness.
+    Brown et al.'s GuacaMol and the MOSES benchmark introduced multi-property
+    optimization tasks but rely on physicochemical filters that are known to
+    correlate weakly with expert assessments. Subsequent work by Gao and
+    Coley showed that retrosynthetic feasibility further dissociates from
+    filter-based scores, and several recent reports propose to bridge the
+    gap with learned scoring models trained on chemist-annotated triplets.
+
+    Building on this line of work, we constructed a paired evaluation set of
+    4,820 generated molecules drawn from three families of generators
+    (REINVENT, GraphAF, and a transformer-decoder baseline), each annotated
+    by two of seven medicinal chemists for synthetic accessibility,
+    lead-likeness, and overall preference between matched pairs.
+    Inter-annotator agreement, measured as Krippendorff's alpha on the
+    pairwise-preference task, was 0.61.
+
+    Our scoring pipeline prompts a large pretrained chemistry-language model
+    to act as a judge, supplying the SMILES of two candidate molecules and a
+    target property profile and asking it to return a preferred molecule
+    together with a one-paragraph rationale. We employ a position-swap
+    protocol to control for ordering bias and an aggregation step over three
+    judge calls per pair.
+
+    On the held-out test split (964 pairs), the LLM-judge achieves 78.4%
+    agreement with the majority chemist preference, compared with 61.2% for
+    the QED+SAscore composite and 67.5% for a RandomForest model trained on
+    Morgan fingerprints with the same chemist labels. Stratified by
+    generator family, agreement remains within 3.5 points across the three
+    sources, suggesting the judge is not biased toward any particular
+    generator's stylistic conventions.
+
+    A bias analysis indicates that swapping candidate order changes the
+    verdict on 7.1% of pairs, well below the 19% reported for
+    general-purpose judges in prior open-domain studies. We also observe a
+    mild verbosity preference: molecules with longer SMILES strings are
+    favored about 4 points above chance even when chemist labels disagree.
+
+    In summary, this work contributes the first publicly released
+    chemist-paired preference benchmark for de novo molecule generation
+    together with an LLM-judge protocol that closes roughly half of the gap
+    between filter-based scoring and expert preference, providing a
+    deployable surrogate for the panel reviews that currently gate
+    medicinal-chemistry program decisions.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The two-part contribution claim — (i) a publicly released
+    chemist-paired preference benchmark for molecule generation, and
+    (ii) an LLM-judge protocol that closes roughly half the
+    filter-vs-expert gap — appears only in the FINAL paragraph (six of
+    six). A reader entering the section is taken through related work
+    (1), dataset construction (2), pipeline description (3), headline
+    accuracy results (4), and bias diagnostics (5) before learning what
+    is actually being offered as a contribution. The natural ordering
+    for a contribution-style section in this area would be:
+      contribution (1) → context / RW (2) → benchmark construction (3)
+      → judge protocol (4) → results (5) → bias analysis (6).
+    The current ordering is RW → benchmark → method → results → bias →
+    contribution. Subtlety: the section reads coherently end-to-end and
+    each paragraph is locally well-formed; the dataset, pipeline, and
+    numbers are internally consistent. The flaw is structural — a
+    section-level reorder is required, not a sentence-level edit.
+    Detection requires only careful reading of paragraph order, hence
+    low knowledge gating. Delegation "Check this." (T05) is maximally
+    generic and gives no signal toward R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the two-part contribution (the chemist-paired
+  preference benchmark and the LLM-judge protocol) is buried in the
+  final paragraph and proposes a section-level reorder so the
+  contribution is stated up front. Provides a concrete reordered
+  structure such as contribution → related work → benchmark → protocol
+  → results → bias analysis, and explains that the current order forces
+  the reader through five paragraphs before learning what the paper
+  delivers.
+
+bad_outputs_summary: |
+  Polishes the prose, questions the 0.61 inter-annotator agreement,
+  asks for more chemist annotators, or suggests additional baselines
+  beyond QED+SAscore and the Morgan-fingerprint RandomForest. Treats
+  the closing summary paragraph as adequate framing and recommends
+  only local edits, or pivots to debating whether SMILES length
+  preference invalidates the headline 78.4% number, without addressing
+  the structural placement of the contribution.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

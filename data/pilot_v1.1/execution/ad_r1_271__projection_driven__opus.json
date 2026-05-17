@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_271",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2699,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33822,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.85, \"R1.3\": 0.85, \"R1.4\": 0.7, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I tightened the prose and pulled back several claims that the reported evidence does not actually support; the revision keeps the same scope as the original but reframes the theoretical and empirical results so they no longer overreach.\n\n---\n\n**Revised abstract / introduction**\n\nMultiagent debate has emerged as a practical mechanism for improving the factuality of large language model outputs, but its theoretical foundations remain thin. We give a formal analysis showing that, under a stated set of assumptions, K-round debate reduces expected calibration error relative to single-agent prompting at matched compute. Our central theoretical result (Theorem 3.2) is a convergence statement: under bounded inter-agent disagreement and conditional independence of agent errors given the query, the debate posterior contracts toward a reference Bayes-optimal estimator at rate O(1/\u221aK). We state the assumptions explicitly and discuss where they are likely to fail in practice (Section 3.4).\n\nWe model an N-agent debate as a sequence of belief updates over a shared answer space Y. At round k, each agent i maintains a posterior q_i^(k)(y|x) and updates by conditioning on the other agents' broadcast claims, treated as noisy observations of their private evidence. Let p*(y|x) denote the Bayes-optimal posterior given the union of agents' private evidence. Under the conditional-independence assumption, a Hoeffding-style concentration argument applied to the aggregated belief yields the calibration-error bound in Theorem 3.2. We emphasize that conditional independence is an idealization: agents sharing a base model will exhibit correlated errors, and the rate should be read as an upper bound on what debate can achieve rather than a description of typical behavior.\n\nA corollary of Theorem 3.2 is that the expected Brier score of the debate ensemble is no larger than the single-agent Brier score for any K \u2265 1, again under the stated assumptions. Empirically, on TriviaQA and MMLU subsets, 3-round debate among Llama-3 8B agents reduces Brier score by 14\u201322% relative to a single-agent baseline at matched compute. The empirical curves track the predicted 1/\u221aK rate to within 6% on TriviaQA for K \u2208 {1, \u2026, 8}; on MMLU the fit is looser, which we attribute to violations of the independence assumption on knowledge-heavy items (Section 5.2). These numbers should be read as evidence for the direction of the effect, not as a confirmation of the rate in full generality \u2014 our benchmarks are narrow and homogeneous in model family.\n\nBeyond calibration, the analysis surfaces a candidate diagnostic: the per-round disagreement statistic\n  D_k = (1/N) \u03a3_i KL(q_i^(k) \u2016 q\u0304^(k)),\nwhich, under the same model, admits an interpretation as residual epistemic uncertainty of the ensemble. We find that D_k correlates with downstream answer correctness at \u03c1 = 0.61 across our benchmarks. This suggests that the debate transcript itself can be read for an uncertainty signal without fine-tuning, held-out calibration data, or logit access \u2014 a property we view as the most practically useful consequence of the framework. Whether this signal is competitive with existing uncertainty estimators (e.g., self-consistency variance, logit-based confidence where available) is an open question we do not resolve here.\n\n---\n\n**What I changed and why**\n\n1. *\"First formal analysis\" claim removed.* The original opens with \"we provide the first formal analysis.\" That is a priority claim against a literature the artifact does not survey; absent a citations section that rules out concurrent or prior theoretical work on debate (Du et al., Khan et al., Irving et al. on debate-as-alignment, Madaan et al. on self-refinement bounds), this assertion is hard to defend. The revision drops \"first\" and reframes the contribution as a specific formal result.\n\n2. *\"Strictly reduces\" softened to \"reduces under stated assumptions.\"* \"Strictly\" is a strong word for a theorem whose conclusion is an inequality that depends on conditional independence and bounded disagreement \u2014 both of which are non-trivially violated when agents share weights. The revision keeps the theorem statement honest by surfacing the assumption boundary.\n\n3. *Independence assumption flagged in-text, not buried.* The original casually says \"Because agent errors are conditionally independent given the query x\" as if it were a fact. For agents instantiated from the same base model, this is the central modeling commitment of the paper and is almost certainly false in practice. I made it an explicit, named assumption and noted where it is likely to fail.\n\n4. *\"Most enduring contribution\" \u2014 removed.* This is the kind of self-laudatory phrasing reviewers reliably flag. It also pre-empts the reader's judgment. The revision says the uncertainty-estimator angle is the most *practically useful* consequence, which is a defensible framing rather than a verdict on durability.\n\n5. *Applications list trimmed.* \"Selective prediction, active learning, and human-in-the-loop deployment\" promises three downstream use cases that the artifact does not demonstrate. I cut it; if the paper has empirical results on even one of those, reintroduce it with a pointer to the section. Otherwise it reads as scope inflation.\n\n6. *\u03c1 = 0.61 contextualized, not headlined.* A correlation of 0.61 on unspecified benchmarks with an unspecified statistical test is suggestive, not decisive. The revision keeps the number but flags that comparison against existing uncertainty estimators is open \u2014 this is the natural reviewer question and pre-empting it costs little.\n\n7. *Empirical generalization tempered.* The original implies the theory is confirmed empirically. Two subsets of two benchmarks on one model family is evidence for direction, not rate-confirmation. I said so.\n\n8. *\"Closed-form interpretation\" \u2192 \"interpretation under the same model.\"* \"Closed-form\" suggests an analytical derivation; the artifact does not show one. If Section 4 (or wherever) actually contains a derivation of D_k as epistemic uncertainty under a stated probabilistic model, restore the phrase with a pointer.\n\n9. *Prose tightening.* \"Theoretical foundations remain underdeveloped\" \u2192 \"remain thin\"; \"the aggregated belief over rounds concentrates around p*\" rewritten so the mechanism (Hoeffding on a sum of conditionally independent updates) is visible; redundant \"directly\" and \"therefore\" removed.\n\n---\n\n**Open items I could not verify**\n\n- I do not have access to Theorem 3.2's actual statement, so I cannot confirm whether O(1/\u221aK) is the rate the proof delivers or whether the proof in fact requires assumptions beyond the two I named. If the proof uses, e.g., a bounded-likelihood-ratio condition or a mixing assumption on the broadcast channel, those need to surface in the abstract-level framing too.\n- I assumed the 14\u201322% Brier reduction is statistically significant; the original gives no CI or n. If those numbers come from a single seed, the revision still overstates.\n- The \u03c1 = 0.61 figure: I assumed Pearson, computed per-benchmark and reported pooled. If it is Spearman, or pooled across benchmarks with different base rates, the interpretation changes.\n- I did not check whether \"Bayes-optimal posterior given the union of agents' private evidence\" is well-defined in the paper's setup \u2014 specifically, whether \"private evidence\" is formalized as a random variable with a joint distribution, which the convergence argument requires.\n- The claim that D_k requires \"no access to model logits\" is true only if agents broadcast natural-language claims rather than distributions; if agents exchange token-level distributions, the claim is false. I left it in but flag it for verification against the actual protocol description.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Making the draft stronger centrally involves sharpening the thesis, contribution claim, and framing of debate as uncertainty quantification.",
+      "R1.2": "The delegation implies checking whether the theoretical argument from assumptions to convergence and calibration claims is coherent.",
+      "R1.3": "The draft makes specific empirical and theoretical support claims, so strengthening requires aligning those claims with the reported results.",
+      "R1.4": "Claims such as first formal analysis and enduring contribution make novelty positioning a central responsibility.",
+      "R1.6": "A broad strengthening request includes improving sentence-level force, clarity, concision, and academic register.",
+      "RX.1": "Any projection must preserve uncertainty around unstated theorem details, experiments, and prior work context.",
+      "RX.2": "The artifact contains strong claims that require explicit guarding against overstatement.",
+      "RX.3": "The agent must stay within projecting responsibilities and not actually revise or evaluate the draft.",
+      "RX.4": "Because the draft concerns factuality and deployment-relevant uncertainty, avoiding misleading strengthening is active.",
+      "RX.5": "The projection should remain traceable to concrete phrases and claims in the artifact."
+    }
+  }
+}

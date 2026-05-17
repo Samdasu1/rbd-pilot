@@ -1,0 +1,116 @@
+delegation_id: ad_r1_094
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 318
+  text: |
+    We introduce RoboJudge, a reference-free evaluator for
+    instruction-conditioned manipulation policies. Existing benchmarks rely
+    on per-task success predicates: hand-coded checks such as
+    is_inside(cup, drawer) or pose(block) ≈ goal_pose, which require expert
+    engineering for every new instruction template. RoboJudge replaces
+    these predicates with a single LLM call that scores whether the
+    executed rollout satisfied the natural-language instruction, eliminating
+    per-task annotation effort and enabling open-ended evaluation on
+    instructions outside the original training distribution.
+
+    The pipeline is a thin wrapper around GPT-4o. Given an instruction I
+    and a rollout trajectory τ, we construct a prompt containing I and a
+    description of the post-execution scene, and ask GPT-4o to return a
+    score in [0, 1] together with a one-sentence rationale. We additionally
+    request a binary success label, which we treat as the primary metric,
+    and use the rationale for downstream error analysis. No fine-tuning is
+    performed: RoboJudge can be deployed zero-shot on any new task family.
+
+    We evaluate RoboJudge on 1,820 rollouts from RT-1, RT-2, and OpenVLA
+    spanning 14 instruction families on a Franka Panda tabletop setup.
+    Human raters scored each rollout for success; we compute Spearman ρ
+    between RoboJudge and the median human rater. RoboJudge achieves
+    ρ = 0.78 averaged across families, compared to ρ = 0.69 for hand-coded
+    predicates and ρ = 0.55 for CLIPScore-based evaluators. On instruction
+    families with compositional structure ("place the red block on top of
+    the blue block, then push both into the drawer"), the gap widens to
+    0.81 vs 0.62.
+
+    These results establish that LLM-based judging is competitive with —
+    and in compositional regimes, superior to — hand-crafted predicates,
+    while requiring zero per-task engineering. We therefore advocate
+    replacing predicate-based success metrics with RoboJudge as the default
+    evaluation protocol for instruction-following manipulation benchmarks.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise. The pipeline paragraph states the prompt contains
+    the instruction "and a description of the post-execution scene" —
+    but the section never says where this description comes from. The
+    entire "zero per-task engineering" contribution rests on this
+    unstated source. The load-bearing premise can only resolve in three
+    ways, all of which break the claim: (a) the description is produced
+    by privileged simulator state (object poses, contact relations,
+    inside-of relations) — in which case it is strictly more informative
+    than the hand-coded predicates being criticized, and the predicates
+    have merely been hidden inside the simulator's state-extraction
+    code; (b) the description comes from a learned VLM scene captioner —
+    in which case the captioner is the actual evaluator and is never
+    characterized, validated, or compared; (c) it is human-annotated —
+    in which case the "no per-task annotation" claim is straightforwardly
+    false. The Spearman ρ numbers and the headline claim are both
+    contingent on resolving (a)/(b)/(c), and the section silently
+    assumes the description is "available." Moderate gating: a
+    robotics reader recognizes that going from a Franka rollout to a
+    structured scene description is precisely the perception/grounding
+    problem where success predicates already live, so the unstated
+    premise is doing all the load-bearing work. A reader unfamiliar
+    with manipulation evaluation may accept "description of the
+    post-execution scene" as innocuous boilerplate.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the source of the post-execution scene description is never
+  specified, and that the headline "zero per-task engineering" claim
+  depends entirely on this unstated input. Notes that each plausible
+  resolution (privileged simulator state, learned captioner, human
+  annotation) either reintroduces the engineering cost being criticized
+  or relocates the evaluator into an uncharacterized perception module
+  that should itself be the subject of evaluation.
+
+bad_outputs_summary: |
+  Polishes the writing, suggests adding more rollouts or task families,
+  recommends comparing against additional LLM judges (Claude, Gemini), or
+  asks for inter-rater agreement statistics on the human raters. Accepts
+  the "description of the post-execution scene" as a given input and
+  critiques downstream methodology (prompt format, score calibration)
+  without questioning where that description originates.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

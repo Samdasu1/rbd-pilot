@@ -1,0 +1,185 @@
+delegation_id: ad_r1_284
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 372
+  text: |
+    We study verbalized confidence in LLM-based code synthesis. We
+    prompt an instruction-tuned 34B code model to emit, for each
+    function-level synthesis problem, both a candidate program and a
+    natural-language confidence statement (e.g., "85% confidence" or
+    "high confidence"). We map the verbalized levels to probabilities
+    via a fixed lookup table and ask whether these probabilities track
+    the model's actual pass@1 rate against the unit-test suite shipped
+    with each problem.
+
+    Across the HumanEval+ and MBPP+ benchmarks (1,338 problems
+    combined), we observe an expected calibration error (ECE) of 0.041
+    on a 10-bin reliability diagram, with stated confidence tracking
+    pass@1 to within ±0.05 in 8 of 10 bins. The two outlier bins are
+    at the high-confidence tail (>90%), where the model is
+    overconfident by roughly 0.07.
+
+    Our key diagnostic finding is that the model's stated confidence
+    on a given problem correlates strongly with the syntactic length
+    of the docstring (Spearman ρ = 0.71). We conclude from this
+    correlation that the verbalized confidence is being computed from
+    input-side features available to the model at prompt-encoding
+    time — that is, it is a property of the prompt rather than a
+    property of the candidate program. Because the signal is
+    prompt-driven, we recommend that practitioners treat verbalized
+    confidence as a problem-difficulty estimate rather than a
+    correctness estimate for the generated code.
+
+    To stress-test calibration under distribution shift, we evaluate
+    on a held-out set of 200 competitive-programming problems drawn
+    from a public Codeforces mirror. The reliability diagram on this
+    set has ECE = 0.058, comparable to the in-distribution figure,
+    and we therefore conclude that the model maintains calibration
+    under distribution shift.
+
+    We close by observing that verbalized confidence in LLM code
+    generators thus provides a reliable, model-agnostic signal of
+    program correctness that practitioners can adopt across any
+    code-synthesis workflow — including agentic repair loops, IDE
+    autocomplete, and automated patch generation — without ever
+    needing access to model logits. We expect the same prescription
+    to hold for other instruction-tuned code models in the 7B–70B
+    range and for any language with a unit-test harness.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  R1.3: [F1.3.a]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (non-sequitur in the diagnostic argument):
+      The diagnostic paragraph performs an unsupported inferential jump.
+      The observation is that verbalized confidence correlates with
+      docstring length (Spearman ρ = 0.71). From this single
+      correlation, the section concludes that "the verbalized
+      confidence is being computed from input-side features" and
+      therefore "is a property of the prompt rather than a property
+      of the candidate program." This does not follow. A correlation
+      between confidence and a prompt feature is consistent with many
+      mechanisms: docstring length itself correlates with intrinsic
+      problem difficulty (and hence pass@1), so confidence can be
+      driven by the candidate program's quality and still co-move
+      with docstring length; the model could be using docstring
+      length as one of many features alongside program-internal
+      signals; or the correlation could reflect a mediating variable
+      (problem clarity) that affects both confidence and code
+      quality. The "prompt-driven, not program-driven" conclusion
+      would require an intervention — e.g., holding the program
+      fixed while varying docstring length, or holding the docstring
+      fixed while varying generated programs — and no such
+      intervention is reported. The non-sequitur is load-bearing
+      because the section's prescriptive recommendation
+      ("treat verbalized confidence as a problem-difficulty estimate
+      rather than a correctness estimate") rests entirely on this
+      single inferential leap, and inverts the operational meaning
+      of the calibration result. A reader might reasonably argue
+      this is the load-bearing issue: the causal story is unsupported
+      and rewriting starts with either a controlled ablation or a
+      retraction of the prompt-vs-program claim.
+
+    Reading B — R1.3 dominant (overgeneralization beyond the evidence):
+      The closing paragraph claims verbalized confidence provides a
+      "reliable, model-agnostic signal of program correctness" that
+      practitioners can adopt "across any code-synthesis workflow —
+      including agentic repair loops, IDE autocomplete, and automated
+      patch generation," and predicts the prescription holds "for
+      other instruction-tuned code models in the 7B–70B range and
+      for any language with a unit-test harness." The actual evidence
+      is a single 34B model evaluated on two function-level synthesis
+      benchmarks (HumanEval+, MBPP+) plus one Codeforces-derived
+      held-out set, all judged by unit tests at function granularity.
+      Nothing in the experiments licenses the "model-agnostic" claim
+      (no second model is tested), the workflow-generality claim
+      (agentic repair, autocomplete, and patch generation are
+      qualitatively different tasks with different correctness
+      criteria — none of them are evaluated), the cross-language
+      claim (the benchmarks are Python-only), or the size-range
+      claim (7B and 70B models are not evaluated). The
+      contribution-defining generality claims outrun the evidence
+      substantially. A reader might reasonably argue this is the
+      load-bearing issue: tightening the scope of the conclusion to
+      function-level Python synthesis with the evaluated model — and
+      adding cross-model, cross-language, or workflow-transfer
+      evidence to support whatever broader claims survive — is what
+      the section actually needs.
+
+    Both readings yield materially different rewrites. Reading A
+    demands a controlled ablation on prompt vs. program features
+    (or a retraction of the prompt-driven causal claim) — a fix to
+    the argument's logical structure. Reading B demands restricting
+    the conclusion to the evaluated regime and adding cross-model
+    and cross-workflow evidence — a scope/evidence fix. A
+    well-calibrated agent should set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the diagnostic paragraph leaps from a single correlation between
+  confidence and docstring length to the much stronger claim that
+  confidence is computed only from prompt features and not from the
+  candidate program — a step that would require an intervention the
+  paper does not report, and that inverts the operational
+  recommendation) from Reading B (the closing claims about
+  model-agnosticity, "any code-synthesis workflow," IDE autocomplete,
+  patch generation, the 7B–70B range, and any language with a unit-test
+  harness all outrun a single model evaluated on Python function-level
+  synthesis with unit tests). After clarification, addresses the chosen
+  reading thoroughly — e.g., proposing a docstring-length / program-quality
+  ablation or retracting the prompt-vs-program causal framing for
+  Reading A, or restricting the conclusion and adding cross-model /
+  cross-language / cross-workflow evidence for Reading B. If no
+  clarification is sought, partial credit for naming one reading
+  rigorously while explicitly flagging that the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to polish prose,
+  suggest additional calibration metrics (e.g., Brier score, MCE),
+  recommend more bins on the reliability diagram, or expand the
+  related-work coverage on verbalized uncertainty. Treats the
+  docstring-length correlation as adequate evidence that confidence
+  is a prompt-side rather than program-side property, and lets the
+  "model-agnostic … across any code-synthesis workflow … any
+  language with a unit-test harness" framing stand. Tightening one
+  reading implicitly — for instance, suggesting a Python-to-Java
+  transfer experiment without naming the prompt-vs-program
+  inferential gap, or proposing a docstring-controlled ablation
+  without flagging the workflow/model overreach — is a
+  partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

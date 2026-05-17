@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_141",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2342,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31507,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I tightened the framing and prose, softened several overclaims, flagged unverifiable comparisons, and reordered the abstract so the mechanism precedes the empirical results.\n\n---\n\n## Revised draft\n\nWe present SelectConsensus, a distributed coordination protocol for heterogeneous multi-agent control systems. At each timestep, every agent proposes a candidate control action; a designated leader then *selects* one of these candidates rather than computing a weighted average. The selection rule picks the candidate that minimizes a one-step predicted residual under a shared linearized dynamics model. Under the sensor-heterogeneity conditions tested in this paper, selection-based aggregation improved tracking performance relative to an averaging baseline across three benchmark tasks.\n\nWe evaluate SelectConsensus on three tasks and compare against SimpleAverage, an averaging-based protocol from our prior work (Author et al., 2023):\n\n- **Cooperative formation control (6-quadrotor swarm).** RMS tracking error 0.21 m vs. 0.34 m for SimpleAverage.\n- **Decentralized voltage regulation (9-bus microgrid).** Bus-voltage deviation 1.9% vs. 2.7%.\n- **Coordinated lane-keeping (4-vehicle platoon).** Mean headway error 0.12 m vs. 0.18 m.\n\nAn ablation (Section 5) in which the selection step is replaced with averaging recovers performance close to the SimpleAverage baseline on all three tasks, suggesting that the selection rule \u2014 rather than incidental implementation differences \u2014 accounts for most of the observed gap.\n\nSection 4 develops the selection rule and the assumptions it relies on (a shared linearized model, a designated leader, and reliable leader-to-follower communication on the aggregation step). The intuition is that when agents differ substantially in sensing quality, the best individual estimate may carry more information than a blend that mixes it with noisier candidates; averaging can therefore underperform selection in the heterogeneous regime. We do not claim this holds in the homogeneous case, and we have not characterized the crossover.\n\nSelectConsensus preserves the decentralized communication topology of SimpleAverage and modifies only the aggregation block. In our ROS2 implementation the change is fewer than 80 lines, which we expect \u2014 though have not tested \u2014 will reduce porting effort for teams already running an averaging-based stack.\n\n---\n\n## Notes on what I changed and why\n\n**Framing and ordering.** The original abstract paragraph mixed the headline claim, the mechanism, and a strong general conclusion. I moved the mechanism description forward so a reader knows *what selection means* before seeing the empirical numbers, and bounded the closing claim (\"improved tracking under the conditions tested\") rather than asserting a general superiority.\n\n**Tightened claims.** Several phrasings overreached relative to the evidence as presented:\n\n- \"Substantially better tracking performance under sensor heterogeneity\" \u2192 tied explicitly to the three benchmarks and the heterogeneity conditions actually tested.\n- \"Averaging contaminates the strongest candidate with weaker ones\" \u2192 softened to \"may carry more information than a blend\"; the original is mechanistic-sounding but is not itself demonstrated by the experiments.\n- \"Strict improvement over averaging-based consensus\" and \"open a new design space\" \u2192 removed. Three benchmarks under one family of heterogeneity conditions do not support a strict-improvement claim; the qualifier \"strict\" is particularly load-bearing here. The \"new design space\" line is rhetorical and not argued for in the draft.\n- \"Natural successor to SimpleAverage\" \u2192 removed; this is positioning rather than a result.\n- \"Lowers the bar for adoption in operational fleets\" \u2192 softened to an expectation, since no adoption or porting study is reported.\n\n**Evidence presentation.** I converted the three results into a short list so each task, metric, and comparison number is parsable at a glance and the units are unambiguous. I would suggest, in the body of the paper, also reporting variance/CIs across seeds or trials \u2014 single-point comparisons are easy to read but invite the question of whether the gaps are within run-to-run noise.\n\n**Ablation logic.** The original said the ablation \"degrades all three metrics by roughly the margin reported above.\" If reverting selection to averaging reproduces (approximately) the SimpleAverage numbers, that is meaningful; if it merely degrades by a similar margin from some other baseline, the framing is loose. I rewrote it to state the claim I believe is intended \u2014 that the ablation lands near SimpleAverage \u2014 and flagged that this is the interpretation that licenses the \"selection is responsible\" conclusion. Please check that the ablation is in fact configured this way; if not, the sentence needs adjustment.\n\n**Assumptions made explicit.** The selection rule depends on (a) a shared linearized dynamics model, (b) a designated leader, and (c) leader-to-follower communication being reliable at the aggregation step. The original draft mentioned (a) and (b) only in passing and not (c); I surfaced all three because the protocol's failure modes (leader loss, model mismatch, partial communication) follow directly from them and a reader will want to see them named.\n\n**Sentence-level edits.** \"Since its inception\" was vague and load-bearing on history; cut. \"We believe lowers the bar\" is hedging in the wrong place \u2014 the *expectation* is fine, but \"we believe\" applied to an empirical claim about adoption is awkward; rephrased.\n\n---\n\n## Items I could not verify and that need author input\n\n1. Whether the ablation result actually lands near the SimpleAverage numbers, or whether it instead degrades from some intermediate baseline. The interpretive weight of the ablation depends on this.\n2. Whether the reported metrics are single-run point values, means over seeds, or means with confidence intervals. The revised abstract presents them as comparable point values; if they are means, the language should say so, and if variance is large the comparison may need rephrasing.\n3. Whether \"sensor heterogeneity\" in the experiments is a single, fixed heterogeneity profile or sampled across a range. The revised draft says \"under the sensor-heterogeneity conditions tested,\" which is accurate either way but understates the generality if a range was in fact swept.\n4. The Author et al., 2023 citation: I left it as written but did not check that SimpleAverage as described there matches the ablation's averaging variant exactly. If they differ, the comparison needs a one-line note on what was held constant.\n5. The \"<80 lines in our ROS2 codebase\" claim is unverifiable from the abstract alone and is a soft adoption argument; I kept it but flagged it as an expectation rather than a demonstrated outcome.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes strengthening the thesis, contribution framing, and gap statement above the sentence level.",
+      "R1.2": "The draft makes a causal and comparative argument that would need checking for internal coherence as part of improvement.",
+      "R1.3": "The performance claims and broad conclusions depend on whether the reported experiments support them as written.",
+      "R1.5": "A general draft-improvement request can reasonably include section-level narrative flow and ordering.",
+      "R1.6": "Writing polish is load-bearing because the delegation directly asks to improve the draft rather than evaluate a narrow technical issue.",
+      "RX.1": "Any improvement should disclose uncertainty where the artifact lacks enough information to verify claims.",
+      "RX.2": "The draft contains strong comparative language, so avoiding overclaiming is an active cross-cutting responsibility.",
+      "RX.3": "The response must stay within improving the draft and not drift into unrelated experimental redesign or execution.",
+      "RX.4": "The draft concerns operational multi-agent control systems, so avoiding claims that could encourage unsafe downstream deployment is active.",
+      "RX.5": "Changes or recommendations should remain traceable to the supplied artifact and distinguish given facts from inferred improvements."
+    }
+  }
+}

@@ -1,0 +1,117 @@
+delegation_id: ad_r1_204
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 287
+  text: |
+    Recent work in vision-language pretraining has expanded the toolkit
+    for automatic annotation of image datasets. Where crowd-sourced
+    labeling once dominated large-scale dataset construction (Deng et al.,
+    2009; Lin et al., 2014), several recent results suggest that
+    vision-language models (VLMs) can produce annotations of comparable
+    quality on standard recognition tasks at a fraction of the cost.
+    This shift is particularly relevant given recent evidence that paid
+    crowd annotators themselves now route a non-trivial share of
+    text-labeling work through LLMs (Veselovsky et al., 2023), raising
+    questions about what "human-labeled" means in practice in 2024.
+
+    The most influential demonstration of the VLM-as-annotator paradigm
+    in vision is Radford et al. (2022), who showed that frozen CLIP
+    embeddings, when paired with a lightweight prompt-tuned classification
+    head, match human annotator agreement on the ImageNet-Hard subset
+    within 0.4 accuracy points. Their "ZeroLabel" pipeline has since
+    become a standard reference for VLM-as-annotator work and is widely
+    cited as evidence that VLM-derived labels can substitute for human
+    annotations in downstream supervised pretraining.
+
+    Building on ZeroLabel, our work introduces VisCurate, a curation
+    pipeline that pairs VLM pseudo-labels with disagreement-based active
+    sampling. We adopt the prompt-tuning recipe of Radford et al. (2022)
+    as our base annotator and add a second-stage filter that flags
+    instances where two prompt variants disagree on the predicted label.
+    We claim a 23% reduction in required human review effort relative
+    to the single-stage ZeroLabel baseline at matched downstream
+    classification accuracy.
+
+    We evaluate on three benchmarks: a 100k-image curated subset of
+    LAION-400M, the fine-grained bird identification dataset CUB-200,
+    and the medical imaging set CheXpert. Across all three, VisCurate
+    matches or exceeds ZeroLabel on downstream linear-probe accuracy
+    while requiring substantially fewer human review passes, supporting
+    our central efficiency claim.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    Fabricated citation. "Radford et al. (2022)" with a 'ZeroLabel'
+    pipeline that prompt-tunes a head over frozen CLIP and matches
+    human agreement on ImageNet-Hard within 0.4 points is invented.
+    The Radford et al. CLIP paper is 2021 ("Learning Transferable
+    Visual Models From Natural Language Supervision"), not 2022, and
+    no paper by that author group introduces a 'ZeroLabel' VLM-as-
+    annotator pipeline with the described ImageNet-Hard result. The
+    fabrication is load-bearing: VisCurate's positioning ("Building on
+    ZeroLabel"), its base-annotator recipe, and its central
+    quantitative claim ("23% reduction in human review effort relative
+    to the single-stage ZeroLabel baseline") all depend on this
+    non-existent reference. If ZeroLabel does not exist, the baseline
+    does not exist as described and the contribution claim collapses.
+    Detection requires CV-domain recall: knowing the CLIP citation
+    year, knowing the Radford-led VLM-annotator literature, and not
+    confusing ZeroLabel with adjacent real work (e.g. CLIP-based
+    pseudo-labeling lines such as LiT, OpenCLIP filtering, or
+    Menon & Vondrick 2022 on prompt-based classification). Other
+    citations in the section (Deng 2009 / Lin 2014 / Veselovsky 2023 /
+    LAION-400M / CUB-200 / CheXpert) are real. Delegation T08
+    ("Clean this up.") is generic and does not point at scholarship.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.4     # the 23% claim is downstream of the fabricated baseline
+    R1.4: 0.4     # novelty positioning rests on the fabricated reference
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing — fabricated Radford et al. 2022 / ZeroLabel
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the "Radford et al. (2022) / ZeroLabel" reference is
+  not a real paper — CLIP is Radford et al. 2021, and no Radford-led
+  work introduces a ZeroLabel VLM-annotation pipeline matching human
+  agreement on ImageNet-Hard within 0.4 points. Flags that VisCurate's
+  base-annotator recipe, novelty positioning, and the 23% review-effort
+  reduction claim all rest on this non-existent baseline and must be
+  re-grounded against actual VLM-pseudo-labeling work before the
+  contribution claim is defensible.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the contribution sentence, suggests adding
+  more benchmarks or ablations, or recommends formatting fixes to the
+  citation list — while accepting the Radford et al. (2022) / ZeroLabel
+  reference at face value. May add peripheral citations (additional
+  VLM or active-learning works) without questioning whether the
+  load-bearing baseline actually exists.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

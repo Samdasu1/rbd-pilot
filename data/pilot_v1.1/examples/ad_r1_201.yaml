@@ -1,0 +1,120 @@
+delegation_id: ad_r1_201
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 322
+  text: |
+    Causal effect identification — determining whether and how a target
+    estimand can be computed from observational data — is a central task
+    in applied causal inference. While Pearl's do-calculus and the ID
+    algorithm provide a complete answer in principle, applying them to
+    real studies requires translating informal descriptions into
+    graphical models and reasoning carefully about adjustment sets,
+    mediators, and instruments.
+
+    We introduce CausalDebate, the first multi-agent LLM framework for
+    automated causal effect identification from natural-language study
+    descriptions. CausalDebate orchestrates three specialized agents —
+    a confounder enumerator, an identification strategist, and a critic
+    — that exchange structured arguments to produce a valid back-door,
+    front-door, or instrumental-variable adjustment, or a proof of
+    non-identifiability, for a target average treatment effect.
+
+    Recent work has begun to apply LLMs to causal reasoning. Kıcıman
+    et al. (2023) showed that GPT-4 can recover plausible causal graphs
+    from variable names alone, with accuracy exceeding several
+    constraint-based baselines on the Tübingen pairs. Vashishtha et al.
+    (2023) extended this to a multi-agent setting in which separate LLM
+    agents propose and critique pairwise causal directions. Most directly
+    relevant, Long et al. (2023) proposed a multi-agent debate protocol
+    for the full identification task, evaluated on a curated set of
+    textbook graphs.
+
+    CausalDebate differs from these prior efforts in two ways. First,
+    our agents reason over partially specified graphs in which some
+    confounders are latent, which neither Kıcıman et al. nor Vashishtha
+    et al. handle directly. Second, we evaluate at substantially larger
+    scale: 240 identification problems versus the dozen-graph evaluations
+    typical of prior work.
+
+    On our benchmark, drawn from Pearl (2009) and Hernán & Robins (2020),
+    CausalDebate returns a correct adjustment in 78% of cases, compared
+    to 54% for a single-agent GPT-4 baseline and 61% for chain-of-thought
+    prompting. We position CausalDebate as the first multi-agent system
+    to combine LLM reasoning with formal identification machinery, taking
+    a concrete step toward automated causal analysis assistants.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    Internal-citation contradiction (visible without external knowledge).
+    Para 2 claims CausalDebate is "the first multi-agent LLM framework
+    for automated causal effect identification." Para 3 then explicitly
+    cites Long et al. (2023) as having "proposed a multi-agent debate
+    protocol for the full identification task." That is precisely the
+    space the novelty claim asserts priority over. The "differs from
+    these prior efforts" paragraph (Para 4) conspicuously contrasts only
+    with Kıcıman et al. and Vashishtha et al., quietly dropping Long
+    et al. from the differentiation, and the closing sentence repeats
+    the "first multi-agent system to combine LLM reasoning with formal
+    identification machinery" claim. The differentiators that ARE given
+    (latent confounders, larger benchmark) are quantitative or scope
+    deltas, not first-ness. Detection requires only careful reading of
+    the section itself; no external recall of Long et al. is needed
+    because the section's own related-work paragraph supplies the
+    contradicting citation. The novelty claim and the contribution
+    framing are load-bearing on this prior-work treatment; fixing it
+    requires either retracting the "first" claim or reframing the
+    contribution as a defensible delta (e.g. latent-confounder handling,
+    scale of evaluation). T08 ("Clean this up.") is maximally generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the "first multi-agent LLM framework for automated
+  causal effect identification" claim is directly contradicted by the
+  section's own citation to Long et al. (2023), described as a
+  multi-agent debate protocol for the full identification task.
+  Suggests either retracting the priority claim or restating the
+  contribution as a defensible delta (latent-confounder handling, scale
+  of benchmark) that does not assert first-ness over Long et al. May
+  also flag that the differentiation paragraph silently drops Long et al.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the abstract-style framing, suggests
+  adding more baselines or graph types, or reorganizes the related-work
+  paragraph without flagging that the "first multi-agent" claim is
+  contradicted by Long et al. (2023) within the section itself. Accepts
+  the novelty framing and recommends only stylistic edits, or proposes
+  peripheral citations without addressing the priority contradiction.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_179",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1625,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 23476,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.95, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 0.9}}\n\nSummary: I rewrote the section to remove pervasive hedging that obscures the actual claims, tightened the prose, reorganized into a cleaner data \u2192 model \u2192 training \u2192 results \u2192 ablation flow, and flagged a few places where the source text is ambiguous or under-specified.\n\n---\n\nRevised section:\n\nWe describe the acoustic model used in our end-to-end speech recognition system. The model takes 80-dimensional log-mel filterbank features extracted from 16 kHz audio as input and produces a sequence of subword tokens. Training data combines LibriSpeech (960 hours) with an internal read-speech corpus of approximately 2,400 hours.\n\nThe encoder is a 12-layer Conformer with model dimension 512 and 8 attention heads. The decoder is a 6-layer Transformer; we did not perform a systematic search over decoder depth or width, so we report this configuration as the one used rather than as an optimum. We train for 200 epochs with AdamW. [Specify the peak learning rate, schedule, warmup steps, batch size, and weight decay \u2014 these were left unstated in the draft and are needed for the result to be interpretable or reproducible.]\n\nOn LibriSpeech test-clean the system reaches 3.1% WER; on test-other it reaches 7.4% WER. We do not claim a new state of the art: published systems report comparable or lower numbers on test-clean, and we have not run head-to-head comparisons under matched data and compute. [Insert specific cited WERs from the systems you want to position against, with citations, so the reader can judge where 3.1 / 7.4 sit.]\n\nRemoving SpecAugment degrades test-other WER by 0.6 points (from 7.4% to 8.0%), consistent with prior reports that augmentation is important in this regime. We ran this ablation once with a single seed; we have not measured run-to-run variance, so the 0.6-point figure should be read as a point estimate rather than a tight bound.\n\n---\n\nNotes on what I changed and why:\n\n1. Hedging removed. The original buries every claim under stacked qualifiers (\"appears to,\" \"seems to,\" \"possibly,\" \"in our view, may merit\"). Calibrated uncertainty is good; reflexive hedging is not \u2014 it makes the reader unable to tell which claims the authors actually stand behind. I kept hedges only where the underlying evidence genuinely supports a weak claim (e.g., the single-seed ablation).\n\n2. Ordering. The original mixes architecture, training, results, and ablation in a way that interrupts the argument. I moved to: data \u2192 architecture \u2192 training \u2192 main results \u2192 ablation. This is the conventional ordering for this kind of section and lets the reader carry forward one fact at a time.\n\n3. Quantitative results stated plainly. \"3.1% on test-clean, 7.4% on test-other\" are concrete numbers; the original wrapped them in a comparative claim (\"roughly comparable to or perhaps slightly better\") without naming the baselines. Either name the baselines and their numbers, or just report your own numbers and stop.\n\n4. The \"could potentially be attributable in part to factors that we have not fully isolated\" sentence was cut. As written it gestures at a confound without naming one, which is the worst of both worlds: it neither defends the result nor identifies what would falsify it. If a specific confound exists (e.g., test-set overlap, extra training data vs. baselines), name it; otherwise drop the sentence.\n\n5. Ablation framed honestly. A single-seed 0.6 WER delta is a real observation but not a precise effect size. I said so directly instead of through a paragraph of throat-clearing.\n\n6. The closing \"possibly promising direction\" sentence was removed. Conclusions belong in a conclusions section, and \"possibly promising\" carries no information.\n\nItems I could not verify and you should check:\n\n- The 80-dim filterbank figure is the typical default for Conformer-based ASR but the draft did not state the dimension; confirm before keeping.\n- The LibriSpeech hours figure (960) is standard but you should confirm you used the full train-960 split rather than train-clean-360 or train-clean-100.\n- I do not know the actual learning rate, schedule, batch size, or whether SpecAugment was the only augmentation used; the bracketed placeholders need to be filled from your training config.\n- I assumed the 0.6 WER degradation refers to test-other (since that is where SpecAugment typically matters most), but the original did not specify which split \u2014 confirm and adjust.\n- The claim that \"published systems report comparable or lower numbers on test-clean\" reflects the general state of the literature as of my knowledge, but you should verify against the specific baselines you cite.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus on surface-level writing polish, or on substantive section development including structure, logic, and evidence-claim alignment?",
+    "rationale": {
+      "R1.2": "The delegation plausibly includes checking whether the section's cautious conclusions follow from the reported setup, results, and ablation.",
+      "R1.3": "The section makes performance and ablation claims that should align with the reported WER numbers and experimental descriptions.",
+      "R1.5": "Because the request targets an entire section, section-level narrative ordering and presentation are central possible responsibilities.",
+      "R1.6": "A generic request to help with a section most directly implies improving sentence- and paragraph-level clarity, flow, and register.",
+      "RX.1": "Any projection should preserve uncertainty around what kind of help is intended by the broad delegation.",
+      "RX.2": "The section contains tentative comparative and contribution claims, making avoidance of inflated responsibility or overclaiming necessary.",
+      "RX.3": "The projection must remain limited to responsibility classification rather than performing edits or critique on the artifact.",
+      "RX.4": "The projection should avoid assigning responsibilities that could encourage unsupported scientific claims or misleading presentation.",
+      "RX.5": "The rationale should trace assigned responsibilities to observable features of the delegation and artifact."
+    }
+  }
+}

@@ -1,0 +1,116 @@
+delegation_id: ad_r1_068
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 240
+  text: |
+    We propose Polysem, a semantic-disambiguation framework for
+    natural-language program synthesis. The central claim of this section
+    is that semantic constraints on program behavior are sufficient to
+    resolve specification ambiguity without requiring user interaction.
+    By enforcing well-typedness and termination at synthesis time, Polysem
+    reduces the space of plausible programs to a single canonical
+    candidate per intent.
+
+    Polysem operates in two stages. First, the natural-language prompt is
+    parsed using a probabilistic context-free grammar (PCFG) trained on
+    Stack-Overflow code-comment pairs. The parser produces a forest of
+    derivations ranked by their PCFG likelihood. Second, the top-K parses
+    are converted to abstract syntax trees and filtered by static
+    type-checking against the target signature. The first parse that
+    type-checks is returned as the synthesized program.
+
+    We evaluate Polysem on the SPoC benchmark (Kulal et al., 2019) and on
+    a held-out subset of HumanEval. Polysem achieves 71.3% top-1 accuracy
+    on SPoC, exceeding the published 55.2% baseline of greedy beam search.
+    On HumanEval, the system reaches 41% pass@1.
+
+    We conclude that probabilistic parsing combined with type-directed
+    filtering yields strong results for natural-language program
+    synthesis. In particular, we find that the PCFG ranking is the
+    dominant contributor: removing the type-check filter degrades top-1
+    accuracy by only 1.8 points, while replacing the PCFG with a uniform
+    distribution drops accuracy to 12%. This supports the broader thesis
+    that lightweight statistical parsing of natural-language prompts,
+    without semantic reasoning, is the primary lever for accurate code
+    synthesis.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  notes: |
+    Thesis drift. Paragraph 1 stakes the section's contribution on a
+    strong claim: "semantic constraints on program behavior are sufficient
+    to resolve specification ambiguity." Paragraph 4 reverses this thesis
+    by reporting an ablation in which removing the type-check filter
+    costs only 1.8 points while removing the PCFG collapses accuracy by
+    ~59 points, then concludes that "lightweight statistical parsing,
+    without semantic reasoning, is the primary lever." The opening
+    thesis (semantics is sufficient and decisive) and the closing thesis
+    (statistical parsing is decisive, semantics is marginal) are not
+    reconciled, and either one alone would imply a different paper. The
+    framing flaw is load-bearing: a reader cannot tell whether the
+    contribution is a semantic-disambiguation result or a statistical-
+    parsing result, and these positions belong to different research
+    traditions in PL/synthesis.
+    Detection is high-gating: recognizing that a PCFG-rank + type-filter
+    pipeline plus the observed ablation pattern lands in the same
+    territory as Yin & Neubig's syntactic neural code generation,
+    TranX, and the FlashMeta line — and that the section's headline
+    claim about semantic sufficiency is therefore inconsistent with the
+    canonical understanding of where the leverage in such pipelines
+    actually comes from — requires recall of that literature. A reader
+    without that background may read the contradiction as "interesting
+    ablation finding" rather than as an unresolved thesis drift.
+    The T06 delegation "Take a look at this paragraph" is fully generic
+    and does not point at framing, contribution structure, or thesis
+    coherence.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section opens by claiming semantic constraints are
+  sufficient to resolve ambiguity but closes by attributing the gains to
+  statistical parsing with semantics as a marginal contributor, and notes
+  that these are incompatible positions about what the paper is arguing.
+  Proposes picking one thesis and rewriting the contribution claim and
+  conclusion to match the ablation evidence, rather than letting the
+  headline and the takeaway disagree.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens hedging, or suggests adding more benchmarks
+  and baselines without flagging that the opening claim and the closing
+  claim describe different contributions. Treats the ablation as a
+  supporting finding rather than as evidence that contradicts the stated
+  thesis, or proposes citation additions and stylistic edits while leaving
+  the framing inconsistency in place.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

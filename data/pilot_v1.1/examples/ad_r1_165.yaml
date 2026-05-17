@@ -1,0 +1,123 @@
+delegation_id: ad_r1_165
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: theory_ann
+  word_count: 348
+  text: |
+    Multi-agent dialogue systems built on large language models have
+    attracted growing interest as a route to autonomous task completion.
+    Park et al. demonstrated that role-conditioned agents can sustain
+    extended task-oriented conversations, and Zhang and Bose analyzed
+    the equilibria of two-agent inception-prompted exchanges under
+    fixed temperature decoding. Subsequent work has extended these
+    analyses to mixed-role populations and to settings with a
+    moderating critic agent.
+
+    A central object of study in this literature is the
+    instruction-following channel: the mapping from one agent's
+    utterance to the next agent's induced task posterior. Existing
+    results characterize this channel under the assumption that both
+    agents share a common prompt prefix and that decoding noise is
+    bounded. Under these assumptions, prior work shows that the joint
+    trajectory of N rounds converges in total variation to a stationary
+    role-consistent distribution at rate O(1/sqrt(N)).
+
+    We study a relaxation in which the two agents are instantiated from
+    different base models and therefore do not share a common prefix.
+    Concretely, the user-agent is drawn from model M_U and the
+    assistant-agent from model M_A, with KL divergence delta between
+    their next-token distributions on the shared role prompt. We
+    instrument the dialogue with a per-round drift estimator d_t and
+    track its evolution across 10,000 simulated task episodes drawn
+    from the AgentBench-Lite suite.
+
+    Our empirical drift curves show that d_t grows sublinearly when
+    delta < 0.15 and superlinearly otherwise, with a sharp transition
+    near delta = 0.18. The transition is robust across three task
+    families and persists when the moderator agent of Chen and Iyer
+    is inserted.
+
+    To explain this transition, we adapt the contraction-mapping
+    argument of Zhang and Bose, replacing their single-prefix
+    assumption with a two-prefix coupling. The adapted bound predicts
+    a critical delta* whose closed form matches the observed
+    transition within 8%.
+
+    Taken together, these results establish the first convergence
+    guarantee for heterogeneous-model multi-agent dialogue and
+    identify a sharp phase transition in cross-model drift, giving
+    practitioners a principled criterion for when role-played
+    cooperation between distinct base models will remain stable.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The actual contribution — the FIRST convergence guarantee for
+    heterogeneous-model multi-agent dialogue and the identification of
+    a sharp phase transition in cross-model drift — is stated only in
+    the final paragraph (paragraph 6 of 6). A reader who enters the
+    section does not learn what is being claimed as new until the
+    closing sentence. The section's order is:
+      RW (1) → background channel framing (2) → setup (3) →
+      empirical curves (4) → adapted theorem (5) → contribution (6)
+    A natural contribution-led order would be:
+      contribution (1) → context / RW (2) → setup (3) →
+      theorem (4) → empirical confirmation (5)
+    The conceptual object, evidence, and theoretical argument are
+    individually intact; the issue is purely structural — a section-
+    level reorder is required to surface the contribution, not just
+    sentence-level polish. Detection requires no recall of canonical
+    works (low gating); a careful reader notices the contribution
+    sentence only appears at the very end. Delegation T03
+    "Make this stronger" is generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the load-bearing claim — first convergence guarantee
+  for heterogeneous-model multi-agent dialogue plus the phase transition
+  finding — is buried in the final paragraph and proposes a section-
+  level reorder so that the contribution is stated up front. Provides a
+  concrete reordered structure such as "contribution → context → setup
+  → theorem → empirical confirmation" and explains why the current
+  order makes the reader wait until the last sentence to learn what is
+  new.
+
+bad_outputs_summary: |
+  Polishes prose, tightens equations, or proposes additional task
+  families and ablations to make the empirical curves more convincing.
+  Suggests adding more cited prior work or rewriting the related-work
+  paragraph. Treats the closing contribution sentence as an adequate
+  summary and accepts the existing section ordering, commenting only
+  on local sentence flow or terminology.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

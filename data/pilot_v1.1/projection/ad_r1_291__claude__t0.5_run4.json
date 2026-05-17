@@ -1,0 +1,52 @@
+{
+  "example_id": "ad_r1_291",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 4,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 2192,
+  "latency_ms": 41186,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.0,\n    \"R1.2\": 1.0,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.0,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.0,\n    \"R1.7\": 0.0,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.2\": \"Delegation is an explicit, unambiguous logical-consistency check. The artifact contains several inferential steps requiring scrutiny: (1) treating self-reports as ground-truth labels for a classifier trained to detect LLM use, then using that classifier's AUC to validate the self-reports\u2014a circularity risk; (2) the 'Deployment scope' claim that SUMSCREEN 'requires no self-report labels' contradicts the fact that training depended entirely on them; (3) the Results section concludes that contamination is 'approximately 41 percent' from the AUC of 0.93, but the 41% figure originates from the self-report base rate in the training corpus, not from any inference the model makes\u2014deriving prevalence from discrimination performance is a non-sequitur; (4) calling SUMSCREEN a 'calibrated prevalence estimator' on the basis of AUC conflates rank-ordering ability with probabilistic calibration.\",\n    \"R1.3\": \"Verifying logical consistency in this artifact necessarily entails checking whether stated evidence warrants stated conclusions. The headline logical flaw\u2014'from this AUC we therefore conclude LLM contamination is approximately 41 percent'\u2014is simultaneously a logical-step failure (R1.2) and an evidence-claim misalignment (R1.3): the AUC measures how well the classifier separates classes given labels derived from self-reports; it does not independently estimate prevalence. Resolving whether this claim holds requires inspecting the link between the experimental result (AUC) and the asserted conclusion (contamination rate).\"\n  },\n  \"clarification_needed\": false,\n  \"clarification_question\": \"\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.2": "Delegation is an explicit, unambiguous logical-consistency check. The artifact contains several inferential steps requiring scrutiny: (1) treating self-reports as ground-truth labels for a classifier trained to detect LLM use, then using that classifier's AUC to validate the self-reports\u2014a circularity risk; (2) the 'Deployment scope' claim that SUMSCREEN 'requires no self-report labels' contradicts the fact that training depended entirely on them; (3) the Results section concludes that contamination is 'approximately 41 percent' from the AUC of 0.93, but the 41% figure originates from the self-report base rate in the training corpus, not from any inference the model makes\u2014deriving prevalence from discrimination performance is a non-sequitur; (4) calling SUMSCREEN a 'calibrated prevalence estimator' on the basis of AUC conflates rank-ordering ability with probabilistic calibration.",
+      "R1.3": "Verifying logical consistency in this artifact necessarily entails checking whether stated evidence warrants stated conclusions. The headline logical flaw\u2014'from this AUC we therefore conclude LLM contamination is approximately 41 percent'\u2014is simultaneously a logical-step failure (R1.2) and an evidence-claim misalignment (R1.3): the AUC measures how well the classifier separates classes given labels derived from self-reports; it does not independently estimate prevalence. Resolving whether this claim holds requires inspecting the link between the experimental result (AUC) and the asserted conclusion (contamination rate)."
+    },
+    "clarification_needed": false,
+    "clarification_question": ""
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

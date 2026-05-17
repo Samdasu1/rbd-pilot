@@ -1,0 +1,124 @@
+delegation_id: ad_r1_087
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 388
+  text: |
+    We present TransCollab, a multi-agent collaborative framework for
+    machine translation in which role-specialized LLM agents — a
+    terminology agent, a fluency agent, and a discourse-coherence agent —
+    iteratively refine a candidate translation through structured debate.
+    Unlike monolithic encoder-decoder systems, TransCollab decomposes the
+    translation task across specialists and aggregates their proposals
+    through a learned arbitration policy that operates at the span level.
+
+    The pipeline runs in three rounds. In round one, each agent
+    independently produces a candidate translation conditioned on its
+    role prompt and the source sentence. In round two, agents critique
+    each other's candidates along their respective dimensions, producing
+    structured feedback. In round three, an arbiter agent consumes the
+    critiques and selects, for each sentence span, the highest-scoring
+    proposal under a span-level quality score q(s). The final hypothesis
+    is assembled by concatenating the winning spans.
+
+    The arbitration policy is the central mechanism. For each candidate
+    span, the arbiter computes q(s) as a weighted combination of three
+    signals: terminological consistency, fluency, and adequacy. The
+    adequacy signal is computed by comparing each candidate span against
+    a span-level adequacy reference, allowing the arbiter to identify
+    and discard candidates that drift in meaning. Spans that fail to
+    clear the adequacy threshold are returned to the originating agent
+    for a single revision pass; spans that clear it are committed to
+    the output buffer.
+
+    We evaluate TransCollab on WMT22 en→de, en→zh, and en→ru. Against
+    a strong NLLB-3.3B baseline, TransCollab improves BLEU by 2.1, 1.8,
+    and 2.4 points respectively, and improves COMET by 1.4, 1.1, and
+    1.7. Ablating the arbitration policy reduces gains by roughly 70%,
+    confirming that arbitration — not the multi-agent decomposition
+    alone — drives most of the improvement. Ablating the
+    discourse-coherence agent reduces gains by ≈25%; removing the
+    terminology agent reduces gains by ≈40%. The terminology and
+    arbitration components are therefore the load-bearing elements of
+    the framework.
+
+    Our results indicate that role specialization combined with
+    span-level arbitration substantially closes the gap between
+    LLM-based translation and dedicated NMT systems. Because the
+    framework is model-agnostic, TransCollab can be instantiated with
+    any sufficiently capable instruction-tuned backbone, and the
+    arbitration policy generalizes across language pairs without
+    retraining or pair-specific tuning.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise (F1.2.a). The arbitration policy — explicitly
+    identified as the load-bearing mechanism (≈70% of the reported
+    gains) — computes its adequacy signal "by comparing each candidate
+    span against a span-level adequacy reference." The section never
+    discloses where this reference comes from. At inference time on
+    a held-out WMT22 test set, no reference translation is available;
+    that is precisely what the system is supposed to produce. If the
+    "adequacy reference" is in fact the gold reference (or any signal
+    derived from it), the evaluation is contaminated and the BLEU and
+    COMET gains are not legitimately attributable to the framework.
+    If it is some learned reference-free quality estimator, that
+    component is itself the contribution and is not described.
+    Surfacing the premise — "what is the adequacy reference at test
+    time?" — collapses or fundamentally reframes the contribution
+    claim. The flaw is detectable from careful reading alone (low
+    gating); no canonical-MT recall is required. The delegation T09
+    "What do you think?" is generic and does not name R1.2.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Presses on what the "span-level adequacy reference" actually is at
+  inference time, observing that on a held-out test set no gold
+  reference is available. Notes that the arbitration policy carries
+  most of the reported gains, so if the reference is the test-set
+  gold (or anything derived from it) the evaluation is contaminated,
+  and if it is a separate quality estimator that estimator is the
+  real contribution and must be specified. Asks the authors to make
+  the premise explicit and either re-run the evaluation without
+  reference access or reframe the claim.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more language pairs, more ablations,
+  or stronger baselines, or asks for human evaluation, without
+  questioning where the adequacy reference comes from. Treats the
+  arbitration mechanism as well-specified and praises the gains over
+  NLLB-3.3B. Suggests citing more multi-agent or LLM-MT work without
+  surfacing the unstated reference-access assumption.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

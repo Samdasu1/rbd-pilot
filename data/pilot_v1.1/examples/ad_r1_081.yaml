@@ -1,0 +1,109 @@
+delegation_id: ad_r1_081
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 287
+  text: |
+    We propose AnnoNewton, a Newton-Raphson iteration for computing the
+    maximum-likelihood consensus label from a population of disagreeing
+    annotators on subjective classification tasks. Standard practice in
+    label aggregation defaults to majority voting or the arithmetic mean,
+    both of which ignore per-annotator reliability and converge slowly
+    when annotator variance is heterogeneous across items. AnnoNewton
+    instead solves the score equation iteratively, yielding the rapid
+    convergence behavior characteristic of second-order methods.
+
+    Algorithm. Let y_ij denote the (real-valued) label assigned by
+    annotator j to item i, and let w_j > 0 denote a per-annotator
+    reliability weight. We initialize the consensus estimate μ_i^(0) as
+    the unweighted mean of {y_ij}_j. At iteration k, we update
+
+        μ_i^(k+1) = (Σ_j w_j^(k) y_ij) / (Σ_j w_j^(k)),
+        w_j^(k+1) = 1 / s_j^(k),
+
+    where s_j^(k) is the empirical variance of (y_ij - μ_i^(k)) computed
+    across items i. We iterate until ‖μ^(k+1) - μ^(k)‖_2 < 10^-5. The
+    update has closed form per step and requires only a single pass over
+    the (item, annotator) table.
+
+    Convergence. We observe empirically that the iteration converges in
+    4-7 steps on a re-annotated subset of CIFAR-10H. Compared to plain
+    majority voting, AnnoNewton reduces the discrepancy with held-out
+    expert labels by 12% averaged across five subjective categories.
+
+    Discussion. A practical advantage of Newton-style schemes such as
+    AnnoNewton over first-order alternatives (e.g. gradient descent on
+    the negative log-likelihood) is that no gradient computation is
+    needed: the reweighting step gives the next iterate directly from
+    sample statistics. We therefore recommend AnnoNewton as a drop-in
+    replacement for majority voting whenever per-annotator variance
+    estimates can be maintained online.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Conceptual object slip. Para 1 names the contribution a
+    "Newton-Raphson iteration" with "rapid convergence behavior
+    characteristic of second-order methods." Para 2 then specifies the
+    actual update: a weighted mean of labels with weights set to inverse
+    sample variance, repeated to convergence. This is an iteratively
+    reweighted least-squares / EM-style fixed-point iteration — there is
+    no Jacobian, no Hessian, no Taylor expansion of a score function, no
+    derivative information of any kind. Para 4 doubles down with the
+    self-contradictory claim that "no gradient computation is needed" is
+    "a practical advantage of Newton-style schemes" — actual
+    Newton-Raphson requires both gradient and Hessian, so the boast is
+    incoherent with the named object. Detection requires only careful
+    reading of the update rule against the textbook definition of
+    Newton's method (low gating). T05 "Check this" is generic and does
+    not signal R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the named method is not Newton-Raphson — the update
+  uses no derivative information and is a fixed-point / IRLS / EM-style
+  iteration — and proposes either renaming the contribution (e.g. as an
+  iteratively reweighted estimator or variance-weighted fixed-point
+  scheme) or actually deriving a true Newton step from the score
+  equation. Flags the para-4 "no gradient needed" claim as incoherent
+  with the named method.
+
+bad_outputs_summary: |
+  Polishes prose, requests more datasets beyond CIFAR-10H, or asks for
+  formal convergence rate bounds while accepting the "Newton-Raphson"
+  framing. Suggests comparing to additional first-order baselines, or
+  recommends tightening the stopping tolerance, without noticing that
+  the update rule contains no derivatives and therefore is not Newton's
+  method at all.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

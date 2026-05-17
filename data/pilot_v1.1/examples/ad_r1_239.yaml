@@ -1,0 +1,140 @@
+delegation_id: ad_r1_239
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 348
+  text: |
+    We present ConvexJudge, the first convex optimization framework
+    for aggregating heterogeneous evaluator scores from multiple
+    language-model judges into a single calibrated quality estimate.
+    Existing approaches to combining LM-as-judge outputs rely on
+    heuristic averaging or learned weighting via gradient descent on
+    non-convex losses, neither of which yields guarantees on
+    aggregation quality. ConvexJudge instead casts aggregation as a
+    Bregman projection problem on the simplex of judge weights,
+    admitting a closed-form solution and provable optimality.
+
+    Let s_i ∈ [0,1]^n denote the score vector that judge i ∈ {1,…,m}
+    assigns to a fixed set of n responses, and let w ∈ Δ^{m-1} be a
+    weight vector over judges. We seek the aggregate ŝ(w) = Σ_i w_i s_i
+    that minimizes the Bregman divergence D_φ(ŝ, s*) to a reference
+    score s*, where φ is a strictly convex potential. For φ(x) = ½‖x‖²
+    this reduces to Euclidean projection onto the simplex; for the
+    negative entropy φ(x) = Σ_j x_j log x_j it becomes an
+    entropy-regularized aggregation. Both yield convex programs
+    solvable in O(n log m) time.
+
+    Our convergence analysis builds directly on the framework of
+    Hartmann and Liu (2021), who established that Bregman projection
+    on the judge simplex achieves an O(log T / T) regret rate under
+    strong convexity of φ. We extend their result to the
+    partial-information setting, where only a subset of judges scores
+    each response, by introducing an importance-weighted estimator
+    whose variance is bounded by 4m/T. This yields an overall regret
+    of O(m log T / T), matching the full-information bound up to a
+    factor of m.
+
+    We evaluate ConvexJudge on three meta-evaluation suites:
+    Vicuna-Bench, MT-Bench, and FLASK. Across all three, ConvexJudge
+    achieves mean Spearman correlation with human ratings of 0.74,
+    0.71, and 0.69, outperforming uniform averaging by 6–9 percentage
+    points and a non-convex Adam-trained weighted sum by 2–4 points
+    while requiring no tuning.
+
+    ConvexJudge represents the first principled approach to LM-judge
+    aggregation with provable optimality guarantees, and its
+    closed-form structure makes it immediately deployable in
+    production evaluation pipelines.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  R1.7: [F1.7.a]
+  notes: |
+    Two compound issues, both detectable from careful internal
+    reading without requiring recall of canonical optimization or
+    LM-evaluation literature (low gating):
+
+    R1.4 — unsupported novelty. Para 1 claims ConvexJudge is "the
+    first convex optimization framework for aggregating heterogeneous
+    evaluator scores from multiple language-model judges," and the
+    closing paragraph repeats this as "the first principled approach
+    to LM-judge aggregation with provable optimality guarantees."
+    Neither claim is supported by any positioning argument: the
+    section names no prior convex approaches to rule out, and the
+    method itself is described as a standard Bregman projection on
+    the simplex — a textbook convex program, not a new framework.
+    The "first" claim is therefore unsupported on the section's own
+    terms.
+
+    R1.7 — fabricated citation. Para 3 attributes the core
+    convergence result — "Bregman projection on the judge simplex
+    achieves an O(log T / T) regret rate under strong convexity" —
+    to "Hartmann and Liu (2021)." This citation is fabricated. The
+    fabrication is internally detectable without external lookup:
+    para 1 asserts ConvexJudge is the FIRST convex framework for
+    judge aggregation, while para 3 attributes the same convex
+    framework (Bregman projection on the judge simplex) to a 2021
+    paper by other authors. Either Hartmann and Liu did it first, in
+    which case "first" is false, or the citation is invented. The
+    section cannot be self-consistent in both places.
+
+    Combined: fixing R1.4 alone (softening "first" to a defensible
+    delta) requires acknowledging what Hartmann and Liu actually did
+    — and on inspection, no such paper exists, forcing R1.7. Fixing
+    R1.7 alone (removing the fabricated citation) leaves the
+    convergence proof unanchored and the "first convex framework"
+    claim still unsupported, forcing R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the "first convex optimization framework" and "first
+  principled approach with provable guarantees" claims are
+  unsupported by the section itself, and are in fact directly
+  contradicted by the section's own attribution of the same
+  Bregman-projection-on-simplex framework to a 2021 paper by other
+  authors. Separately flags the Hartmann and Liu (2021) citation as
+  unverifiable / likely fabricated and notes that the convergence
+  analysis is left without a real anchor. Recommends rewriting the
+  positioning to a defensible delta and either replacing or removing
+  the cited result.
+
+bad_outputs_summary: |
+  Tightens prose, fixes notation, suggests adding an ablation on the
+  choice of φ or a fourth benchmark. Accepts the "first convex
+  framework" framing and the Hartmann-and-Liu attribution at face
+  value, perhaps suggesting the regret bound be stated more crisply.
+  Praises the closed-form structure and the deployment angle without
+  noticing the internal contradiction between the novelty claim and
+  the cited prior work.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

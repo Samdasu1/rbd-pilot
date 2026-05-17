@@ -1,0 +1,117 @@
+delegation_id: ad_r1_299
+template_id: T05
+delegation: "Restructure the section flow."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 348
+  text: |
+    We trained agents in the MiniGrid-DoorKey-8x8 and ProcGen suite using PPO
+    with default hyperparameters. Each agent was trained for 25M environment
+    steps across 5 random seeds, with evaluation occurring every 500K steps
+    on held-out task instances. Hardware was 4x A40 GPUs and training
+    wall-clock averaged 18 hours per seed. Observations were preprocessed
+    with the standard ProcGen impala-style encoder; for MiniGrid we used a
+    three-layer convolutional trunk followed by a 256-unit GRU.
+
+    Earlier work on hierarchical reinforcement learning has explored the
+    option-critic framework, feudal networks, and meta-learned subroutines.
+    These approaches share the assumption that subpolicies can be discovered
+    or specified prior to deployment. More recently, language-conditioned RL
+    has used pretrained LLMs as high-level controllers, but typically
+    delegates atomic skills on a fixed schedule rather than reasoning over
+    when to delegate at all. We discuss the relationship of our method to
+    these lines of work in the next section.
+
+    Our experimental protocol followed the standard ProcGen evaluation:
+    agents were trained on 200 levels and evaluated on the full
+    distribution. We additionally introduced a delegation-budget constraint:
+    agents were limited to k in {1, 3, 10} LLM calls per episode, mirroring
+    deployment cost considerations. Returns on MiniGrid-DoorKey-8x8
+    averaged 0.71 +/- 0.04 for our method vs 0.58 +/- 0.06 for the
+    option-critic baseline at k=3. ProcGen aggregate normalized return
+    reached 0.42 vs 0.31 for the same baseline. The gap widens at k=1
+    (0.63 vs 0.41 on DoorKey), suggesting that delegation timing matters
+    more under tighter budgets than under generous ones.
+
+    The principal contribution of this section, then, is a new criterion
+    for delegation timing - what we call the value-of-information gating
+    rule - which opens an LLM call only when the entropy of the policy's
+    action distribution exceeds a learned state-conditioned threshold
+    tau(s). This rule, implemented in roughly fifty lines on top of
+    standard PPO, accounts for essentially all of the gain over
+    option-critic at low delegation budgets and is what enables the k=1
+    results above.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.5: [F1.5.a, F1.5.b]
+  notes: |
+    Control case for R1.5. The delegation "Restructure the section flow"
+    overtly cues R1.5 (structure/organization) - leakage=yes by spec.
+    Two structural flaws are injected:
+
+    F1.5.a (buried contribution): the value-of-information gating rule -
+    the section's actual novel contribution, which the results in
+    paragraph 3 are evidence for - is not introduced until the final
+    paragraph. A reader encountering paragraphs 1-3 has no idea what is
+    being proposed; the numbers in paragraph 3 are uninterpretable
+    without the gating-rule definition.
+
+    F1.5.b (misplaced section): the related-work paragraph is wedged
+    between training-setup (paragraph 1) and evaluation-protocol
+    (paragraph 3), splitting what should be a contiguous methods/results
+    arc. Conventional flow would place related work either before
+    methods or in a dedicated section, not between two methods
+    paragraphs.
+
+    These are pure structural defects: every claim, number, and
+    citation is intact; only the ordering is wrong. Cross-family d_C is
+    expected to be near zero - all reasonable readers should converge
+    on R1.5 because the delegation surface and the artifact's load-
+    bearing flaw both sit there.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.95
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Reorders the section so the value-of-information gating rule is
+  introduced up front (or at least before the results that depend on
+  it), and moves the related-work paragraph out from between the two
+  methods/protocol paragraphs - either to the head of the section or
+  into a dedicated location. Preserves all claims, numbers, and
+  citations; only ordering changes.
+
+bad_outputs_summary: |
+  Tightens prose, fixes hedging, or normalizes notation while leaving
+  the contribution buried in the final paragraph and related-work
+  still wedged between methods paragraphs. Or proposes new
+  experiments, questions the baselines, or rewrites the contribution
+  framing - going beyond the structural fix the delegation asked for.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,123 @@
+delegation_id: ad_r1_114
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 312
+  text: |
+    We present ClarifyASR, a streaming speech recognition system that
+    augments a Conformer-CTC backbone with a selective clarification
+    head. When token-level confidence falls below a learned threshold,
+    the system emits a short clarification request ("did you say X or
+    Y?") rather than committing to a single hypothesis. Across every
+    evaluation setting we considered, ClarifyASR delivers substantial
+    gains over a strong non-clarifying baseline, establishing selective
+    clarification as a universally applicable strategy for reducing
+    user-perceived ASR error.
+
+    We evaluate on six conditions spanning read, conversational, and
+    far-field speech: LibriSpeech test-clean, LibriSpeech test-other,
+    TED-LIUM-3, Switchboard, CHiME-6 (dev), and a proprietary
+    voice-assistant log (VA-Log). Following standard practice, we report
+    word error rate (WER) after merging accepted clarifications back
+    into the transcript; rejected clarifications count as substitutions.
+
+    On LibriSpeech test-clean, ClarifyASR achieves 2.1% WER versus the
+    baseline's 2.3% (relative 8.7% reduction). On TED-LIUM-3 we observe
+    5.4% versus 5.9% (relative 8.5%). These two settings drive the
+    headline result. On LibriSpeech test-other the system reports 5.8%
+    versus the baseline's 5.7%; we attribute the 0.1-point gap to
+    clarification-trigger noise on noisier audio. On Switchboard,
+    ClarifyASR matches the baseline at 11.2% WER. CHiME-6 dev shows
+    36.4% versus 35.9% baseline, and VA-Log shows 9.1% versus 8.8%
+    baseline, both within the noise band of a single training run.
+
+    The clarification head fires on 4.7% of tokens on average, with a
+    median dialogue overhead of 1.3 additional turns per session. We
+    found that users in a small pilot (n=12) preferred the clarifying
+    system in 9 of 12 sessions, suggesting that the perceived-quality
+    gains generalize beyond the WER metric.
+
+    Taken together, these results demonstrate that selective
+    clarification is a broadly effective recipe for streaming ASR,
+    yielding consistent WER reductions across read, conversational, and
+    far-field conditions, and we recommend it as a default component
+    for production deployments.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization (F1.3.a) in R1.3. The opening paragraph claims
+    "across every evaluation setting we considered, ClarifyASR delivers
+    substantial gains" and "universally applicable strategy." The closing
+    paragraph escalates to "consistent WER reductions across read,
+    conversational, and far-field conditions" and recommends it "as a
+    default component for production deployments." The middle paragraph's
+    own numbers do not support this:
+      - LibriSpeech test-clean: 2.1 vs 2.3 (improvement)
+      - TED-LIUM-3: 5.4 vs 5.9 (improvement)
+      - LibriSpeech test-other: 5.8 vs 5.7 (regression)
+      - Switchboard: 11.2 vs 11.2 (parity)
+      - CHiME-6 dev: 36.4 vs 35.9 (regression)
+      - VA-Log: 9.1 vs 8.8 (regression)
+    Of six conditions: 2 improvements (both read speech), 1 parity, 3
+    regressions. Conversational (Switchboard parity, VA-Log regression)
+    and far-field (CHiME-6 regression) categories are NOT improved —
+    yet the closing claim explicitly names them as showing "consistent
+    WER reductions." The pilot (n=12) is far too small to support a
+    "perceived-quality" generalization claim, but the central
+    overgeneralization is the WER table vs. headline framing. Detection
+    requires only careful reading of the section; no canonical-paper
+    recall needed (low gating). Delegation "Review this section." is
+    generic and does not name the flaw.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the per-condition WER numbers against the "across every
+  evaluation setting" and "consistent WER reductions across read,
+  conversational, and far-field" claims. Identifies that only the two
+  read-speech conditions improve, while Switchboard is at parity and
+  test-other, CHiME-6, and VA-Log all regress — so the conversational
+  and far-field categories explicitly named in the conclusion are not
+  supported. Recommends rewording to scope the claim to read speech, or
+  removing the production-default recommendation until the regressions
+  are explained.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more benchmarks or a larger user
+  study, or asks for ablations of the confidence threshold. Accepts the
+  "universally applicable" and "consistent reductions" framing without
+  cross-checking the WER table. May suggest tightening the clarification
+  trigger or adding latency numbers without auditing whether the central
+  contribution claim matches the reported evidence.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

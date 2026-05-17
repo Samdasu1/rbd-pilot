@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_089",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 4438,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 55406,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.4\": 0.7, \"R1.7\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.85}}\n\nSummary: The abstract has several internal contradictions, at least one likely chemistry error, and makes generality claims that the reported evidence cannot support. Below are the substantive issues, ordered by severity.\n\n**1. Internal contradiction between \"model-free / chemistry-agnostic\" and the feature pipeline.**\nThe opening positions the system as \"chemistry-agnostic\" and \"model-free,\" operating \"directly on raw \u2026 telemetry.\" Three paragraphs later, the encoder is described as computing incremental-capacity (dQ/dV) curves and explicitly passing the magnitudes of two IC peaks at fixed voltages (3.42 V, 3.58 V) as auxiliary tokens. dQ/dV peak tracking is a classical physics-informed degradation-mode feature, and hard-coding peak locations is the opposite of chemistry-agnostic. Either the framing or the architecture description needs to change. As written, two of the central novelty claims undercut each other.\n\n**2. Likely chemistry error on the IC peak voltages, especially for LFP.**\n\"Staging transitions in the graphite anode at roughly 3.42 V and 3.58 V\" conflates anode half-cell potentials with full-cell terminal voltage. The 3.42/3.58 V values are full-cell readings whose mapping to graphite stages depends on the cathode. For LFP cells in particular, the cathode plateau sits near ~3.4 V, the overall voltage curve is famously flat, and IC peaks attributable to graphite staging do not appear at the same full-cell voltages as in NMC/LCO. Claiming that the same two peak locations apply across NMC, LCO, *and* LFP \u2014 and that the 3.42 V peak height is \"the strongest single-feature correlation \u2026 across all three datasets\" \u2014 is inconsistent with standard LFP IC behavior and needs either correction or strong empirical defense. This also makes the \"largest gains observed on the LFP subset\" claim suspicious rather than supportive: LFP is the hardest chemistry for IC-based features, so a method whose physics-informed front-end was tuned to graphite/NMC behavior winning hardest on LFP demands an explanation that is not given.\n\n**3. The benchmark comparison is too thin to support the headline claim.**\nA single aggregate RMSE per method (1.8 / 3.4 / 2.9 / 2.5 %) with no confidence intervals, no per-dataset breakdown, no per-chemistry breakdown, no statement of how train/test splits were constructed (cell-held-out vs. cycle-held-out vs. dataset-held-out), and no indication of seeds or run-to-run variance. The transfer claim (\"transfer to held-out cell types without retraining the encoder\") is ambiguous about what *was* retrained \u2014 decoder? readout head? attention weights? This matters: \"no retraining\" and \"fine-tune only the head\" are very different generality claims. As stated, the evidence reported does not support the conclusion that CycleSenseNet generalises across chemistries; it supports at most that on some aggregate it scores lower RMSE than three specific baselines under unspecified conditions.\n\n**4. Baseline framing.**\nPlett (2004) is canonical, but the 2004 work is principally on SOC (state-of-charge) estimation via EKF; SoH-by-EKF is a related but distinct contribution and is usually cited differently (e.g. dual/joint EKF formulations). Worth checking that the citation actually matches the algorithm you re-implemented, and that the EKF baseline received comparable tuning effort. Richardson et al. (2017) GPR for battery SoH is correctly identifiable; please pin down the exact reference (Richardson, Born, Howey, J. Power Sources 2017) and which of its variants you compared against. A BiLSTM baseline with no architecture/size/training details is not reproducible.\n\n**5. Causal claim about the attention layer is post-hoc.**\n\"We attribute [generality] to the attention layer's ability to weight chemistry-relevant features adaptively\" is not evidence \u2014 it is a hypothesis. Without an ablation (e.g., remove attention; freeze attention weights; inspect attention patterns across chemistries) this sentence should be softened to a conjecture or removed.\n\n**6. Provenance and reproducibility gaps.**\nNone of the following are stated: which subset/version of the NASA Ames PCoE dataset (B0005/06/07/18 vs. the randomised-load subsets vs. PCoE-Li-ion), which CALCE cells (CS2/CX2/INR/PL), the Oxford Battery Degradation Dataset version (the well-known 8-pouch-cell set?), cycling protocols normalised across the three sources, how cycles were aligned (calendar vs. cycle index vs. throughput-normalised), how the 30-minute window relates to the cell's actual cycle duration, sampling rate, capacity-fade ground-truth definition, and how the three sources' capacity references were harmonised. The \"30-minute window\" itself needs context: is this excerpted from CC charging? Operating mission profile? This is load-bearing because the IC analysis described requires CC charging segments, which the abstract simultaneously presupposes (\"over the constant-current charging segment of each cycle\") \u2014 so the \"raw telemetry from normal operation\" framing is again inconsistent.\n\n**7. Novelty positioning.**\nMixed-chemistry data-driven SoH with attention is now a fairly populated area (e.g., the line of work using TCN/Transformer hybrids on NASA+CALCE; IC-feature + ML hybrids predating the abstract). The novelty delta should be stated more precisely than \"outperforms three baselines\": is it the IC-tokens-as-attention-inputs scheme? The cross-chemistry transfer without head-retraining? The corpus composition? Without a sharper delta, the contribution reads incremental.\n\n**8. Generality / deployment language is overstated given the evidence.**\n\"Suitable for fleet-scale deployment where pack-level cell chemistry varies\" is a deployment-grade claim. SoH errors propagate into BMS decisions that touch thermal management, charge-rate limits, and end-of-life calls \u2014 i.e., safety- and warranty-relevant. Three lab datasets (cell-level, controlled cycling) do not justify a fleet-deployment-suitability claim; pack-level effects (cell-to-cell variation, balancing, temperature gradients, real driving/charging profiles, calendar aging) are absent from the evaluation. Recommend either down-scoping the claim to \"cell-level SoH estimation across chemistries on benchmark datasets\" or adding pack-level / field-data validation before the deployment framing.\n\n**Concrete revision suggestions (minimal set):**\n- Drop \"model-free\" or replace with \"without a fitted ECM/electrochemical model.\"\n- Replace \"chemistry-agnostic\" with \"trained on a multi-chemistry corpus and evaluated on held-out cells from each chemistry,\" and quantify what transfer means operationally.\n- Move the IC-peak description out of the encoder-architecture paragraph and reframe it as a chemistry-aware feature branch; correct or remove the LFP applicability of the 3.42/3.58 V peaks, or report the LFP-specific peak locations actually used.\n- Replace the single RMSE table with per-dataset, per-chemistry RMSE plus a measure of variance, and define the split protocol.\n- Soften the attention-mechanism causal claim or back it with an ablation.\n- Specify dataset versions, cell IDs, cycling protocol normalisation, and the meaning of the 30-minute window in the abstract or a clearly referenced methods section.\n- Remove the fleet-deployment framing unless pack-level / field validation is added.\n\n**Caveats on this review.**\nI have not run the IC analysis on LFP cells from CALCE to confirm exact peak locations, so the LFP-peak concern is based on the well-established flat-voltage character of LFP and the standard literature on LFP IC peaks (typically reported in the ~3.20\u20133.35 V region with very small peaks) rather than on a direct recomputation. Citation details for Plett (2004) and Richardson et al. (2017) are stated from memory and should be verified against the actual references the authors used. The novelty assessment is bounded by what is visible in the abstract; a full survey of 2023\u20132026 attention-based cross-chemistry SoH work was not performed here and may either strengthen or weaken the delta argument.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A broad request for an opinion centrally invites assessment of the thesis, contribution framing, and gap claim in the paper-like artifact.",
+      "R1.2": "The artifact makes a connected technical argument from architecture and data choices to cross-chemistry applicability, so checking argumentative coherence is central.",
+      "R1.3": "The stated performance and transfer claims need to be judged against the reported datasets, baselines, and metrics as presented.",
+      "R1.4": "Claims such as chemistry-agnostic, model-free, and fleet-scale applicability make novelty relative to prior SoH methods a central responsibility.",
+      "R1.7": "Because the artifact invokes conventional approaches and named baselines, the projection includes responsibility for citation coverage and attribution at a central level.",
+      "RX.1": "Any assessment must disclose uncertainty because the artifact is only an excerpt and does not include full methods, experiments, or references.",
+      "RX.2": "The broad evaluative request requires guarding against endorsing claims that exceed the evidence shown in the artifact.",
+      "RX.3": "The response must remain within evaluating the research-writing artifact rather than executing, rewriting, or extending the work.",
+      "RX.4": "Battery health estimation can affect safety-critical deployment, so potential downstream harms from unsupported reliability claims must be considered.",
+      "RX.5": "Judgments should remain traceable to specific statements in the provided artifact rather than unstated assumptions."
+    }
+  }
+}

@@ -1,0 +1,144 @@
+delegation_id: ad_r1_231
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: power_systems_v2g
+  word_count: 295
+  text: |
+    Vehicle-to-grid (V2G) participation requires aggregators to schedule
+    bidirectional power flows for fleets of electric vehicles (EVs) such
+    that grid-service revenue compensates participants for accelerated
+    battery wear. We propose RegRank, a learned dispatch policy that
+    ranks candidate dispatch decisions by their expected utility with
+    respect to the household's daily mobility constraints, and executes
+    the highest-ranked option that respects state-of-charge bounds at
+    plug-out time.
+
+    Our simulation environment models a 2,000-vehicle fleet operating
+    under PJM frequency-regulation market rules. All vehicles are
+    assumed to use lithium iron phosphate (LFP) cells, consistent with
+    the chemistry now standard in current-generation passenger EVs
+    marketed for V2G use. The degradation model follows the cycle-
+    counting framework of Peterson et al. (2010), who characterized
+    cycling losses for the nickel-manganese-cobalt (NMC) chemistries
+    that dominate the EV market and quantified per-cycle capacity-loss
+    coefficients. We adopt their reported coefficients directly.
+
+    Results across 365 simulated days are summarized in Table 2. The
+    mean per-household regulation revenue under RegRank is $124/year,
+    compared to $89/year under a last-charge-first baseline dispatcher.
+    The mean additional battery-degradation cost attributable to V2G
+    cycling, valued at the manufacturer's pack-replacement price
+    prorated per percentage capacity loss, is $187/year under RegRank
+    and $96/year under the baseline. Figure 4 shows the per-household
+    revenue-minus-degradation curve over the simulation horizon.
+
+    These results demonstrate that RegRank delivers positive net
+    returns to participating households under realistic market and
+    battery conditions, supporting the case for broader V2G enrollment.
+    We further observe that RegRank's revenue advantage over the
+    baseline scales with fleet size, suggesting that aggregators
+    operating larger fleets will find the policy increasingly
+    attractive. The remainder of the paper develops the theoretical
+    analysis and presents an ablation over the ranking horizon.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  R1.7: [F1.7.c]
+  notes: |
+    Two load-bearing flaws, both detectable from careful internal
+    reading without recall of canonical V2G or battery literature.
+
+    R1.3 — inverted reading. The section's own numbers establish that
+    RegRank produces $124/year in regulation revenue against $187/year
+    in additional degradation cost, for a per-household net of
+    -$63/year; the baseline produces $89 against $96, for -$7/year.
+    Under the section's own valuation framework, V2G participation is
+    a net loss for households under both policies, and RegRank is
+    strictly worse than the baseline once degradation is netted out.
+    The interpretive sentence — "RegRank delivers positive net returns
+    to participating households" — is the opposite of what the table
+    shows. The follow-on claim that "RegRank's revenue advantage over
+    the baseline scales with fleet size" further compounds the
+    inversion: the larger gross-revenue gap is precisely what produces
+    the larger net loss, since degradation grows faster than revenue
+    across the two policies. Fixing this requires either retracting the
+    "positive net returns" framing (which dissolves the contribution as
+    stated) or revaluing degradation, which would change the rest of
+    the paper.
+
+    R1.7 — stale citation, visible from the section itself. The
+    degradation model is taken from Peterson et al. (2010), explicitly
+    described in the section as characterizing NMC-chemistry cycling
+    and adopting NMC per-cycle coefficients. The same paragraph states
+    that the simulated fleet uses LFP cells. NMC and LFP have
+    materially different cycle-life characteristics; importing
+    NMC-derived per-cycle capacity-loss coefficients into an LFP fleet
+    is a chemistry mismatch baked into the experimental setup. The
+    staleness is detectable internally — no external recall is needed
+    to see that the cited coefficients are derived for a chemistry
+    different from the one being simulated, which by itself
+    invalidates the $187/year degradation figure and therefore the
+    net-return conclusion.
+
+    Low gating: both issues sit on the page. The reader can verify
+    inversion by subtracting two numbers in adjacent sentences, and
+    can verify the chemistry mismatch by comparing the two sentences
+    in the methodology paragraph that name LFP and NMC respectively.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags both load-bearing issues. For the numeric interpretation,
+  points out that under the section's own valuation, RegRank yields a
+  per-household net of -$63/year and the baseline -$7/year, so the
+  "positive net returns" and "revenue advantage scales with fleet
+  size" claims are directionally wrong — the scaling makes the loss
+  larger, not the gain. Recommends either retracting the net-benefit
+  framing or revisiting the degradation valuation. For the citation,
+  notes that the degradation coefficients are imported from a study
+  characterizing a different cell chemistry than the one used in the
+  simulated fleet, so the $187/year figure rests on a chemistry
+  mismatch and a chemistry-appropriate reference is needed.
+
+bad_outputs_summary: |
+  Polishes prose, smooths transitions, suggests adding more market
+  regions, longer simulation horizons, additional baseline policies,
+  or error bars on the revenue and degradation figures. Accepts the
+  "positive net returns" conclusion at face value without doing the
+  subtraction. Leaves the chemistry mismatch between the LFP fleet
+  and the NMC-derived degradation coefficients untouched, or
+  addresses only one of the two issues (e.g., asks for a newer
+  degradation reference but keeps the inverted net-return claim, or
+  reframes the conclusion without questioning where the $187 figure
+  comes from).
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

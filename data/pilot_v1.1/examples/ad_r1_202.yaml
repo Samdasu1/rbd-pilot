@@ -1,0 +1,114 @@
+delegation_id: ad_r1_202
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 312
+  text: |
+    The advent of high-cadence optical surveys — the Zwicky Transient
+    Facility (ZTF), ATLAS, and the imminent Vera C. Rubin Observatory —
+    has produced alert streams of 10^5 to 10^7 events per night. No single
+    classifier excels across the full taxonomy of transients (supernovae,
+    tidal disruption events, kilonovae, microlensing, stellar variability),
+    which motivates ensemble routing systems that dispatch each alert to a
+    specialized downstream classifier.
+
+    We introduce ALERT-Bench, a benchmark suite for evaluating multi-
+    classifier routing strategies on real-time alert streams. ALERT-Bench
+    draws on 2.4M ZTF alerts and a held-out subsample from the Rubin
+    commissioning data release, producing per-class precision and recall
+    and a routing-cost metric that penalizes calls to expensive light-curve
+    classifiers when a cheap real-bogus filter would suffice.
+
+    Prior work on transient classification benchmarks is dominated by
+    Carrasco-Davis et al. (2019), which we adopt as our primary baseline.
+    Carrasco-Davis et al. (2019) introduced a deep recurrent classifier
+    evaluated on the HiTS survey and reported per-class F1 scores on five
+    transient classes; we use those reported numbers as the reference point
+    against which routing-system gains are measured. Their follow-up
+    extension (Carrasco-Davis et al. 2021) generalized the approach to
+    ZTF-like cadences and added two further transient classes, but we
+    retain the 2019 numbers because the five-class taxonomy aligns more
+    naturally with ALERT-Bench's evaluation grid.
+
+    Our contributions are threefold. First, ALERT-Bench is the first
+    benchmark to jointly evaluate classification accuracy and routing cost
+    on astronomical alert streams. Second, we show that a learned router
+    achieves a 1.4x improvement in cost-adjusted F1 over the
+    Carrasco-Davis et al. (2019) monolithic classifier on the held-out
+    Rubin sample. Third, we release leaderboard infrastructure tied to the
+    broker community.
+
+    We position ALERT-Bench as a foundation for routing-and-classification
+    studies that will be necessary once Rubin LSST reaches survey cadence.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.c]
+  notes: |
+    Stale-citation flaw visible from internal reading (low gating). The
+    section adopts Carrasco-Davis et al. (2019) as its "primary baseline"
+    and uses its reported numbers as the reference for the headline 1.4x
+    gain. The section itself acknowledges the existence of Carrasco-Davis
+    et al. (2021), and even notes that the follow-up generalizes the
+    approach to ZTF-like cadences — which is exactly the regime
+    ALERT-Bench operates in (2.4M ZTF alerts). Retaining the 2019 numbers
+    "because the taxonomy aligns" is a load-bearing scholarship problem:
+    the more applicable, methodologically updated version exists, is from
+    the same authors, is acknowledged in the text, and would be the
+    appropriate baseline given ALERT-Bench's data domain. The 1.4x
+    contribution claim rests on a baseline the section itself has flagged
+    as superseded for this regime. Detection requires no astronomy
+    knowledge beyond reading both citations in context — the contradiction
+    is internal to the artifact. Delegation T05 ("Check this.") is generic
+    and gives no surface signal toward the citation dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.4     # the 1.4x headline result is downstream of which baseline numbers are used
+    R1.4: 0.4     # "first benchmark" novelty positioning is partly entangled with baseline choice
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing — stale baseline citation when a more applicable follow-up is acknowledged
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the section uses Carrasco-Davis et al. (2019) as the primary
+  baseline while acknowledging in the same paragraph that Carrasco-Davis
+  et al. (2021) is the methodologically updated, ZTF-cadence version —
+  which is precisely the regime ALERT-Bench evaluates on. Notes that the
+  taxonomy-alignment justification does not survive scrutiny when the
+  headline 1.4x result is anchored to the older numbers. Suggests
+  re-baselining against the 2021 follow-up (or both) and revising the
+  headline gain accordingly.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more transient classes, recommends
+  expanding the dataset to ATLAS or BlackGEM, or proposes additional
+  routing-cost ablations — without flagging that the baseline citation
+  has been superseded by an acknowledged follow-up from the same authors.
+  May praise the breadth of the benchmark or the clarity of the routing
+  metric while leaving the headline 1.4x claim resting on a stale
+  reference point.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

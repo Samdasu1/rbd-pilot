@@ -1,0 +1,115 @@
+delegation_id: ad_r1_138
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 298
+  text: |
+    Recent advances in learned manipulation policies — particularly those
+    trained via behavior cloning or diffusion-based imitation — have
+    outpaced our ability to evaluate them. Standard task-success metrics
+    (e.g., percent of trials in which the gripper reaches a goal pose)
+    miss qualitative properties such as motion naturalness, recovery from
+    perturbation, and perceived safety. Automated proxies for these
+    properties remain unreliable, so human judgment is increasingly used
+    as the gold standard.
+
+    We introduce RoboLikert, the first crowdsourced evaluation framework
+    for learned manipulation policies. RoboLikert renders short video
+    clips of policy rollouts and presents them to Mechanical Turk workers
+    alongside a 5-point Likert scale measuring naturalness, smoothness,
+    and task progress. We deploy RoboLikert across three policies
+    (Diffusion Policy, ACT, and a behavior-cloning baseline) on the
+    Franka kitchen suite, collecting 4,800 ratings from 312 unique
+    workers.
+
+    Our key finding is that crowdworker ratings correlate strongly with
+    expert roboticist ratings (Spearman's ρ = 0.71 on smoothness, 0.68
+    on naturalness), suggesting that AMT can serve as a scalable
+    substitute for expert evaluation in the manipulation domain. We
+    further show that inter-rater agreement (Krippendorff's α = 0.54)
+    is comparable to that reported in NLP open-ended generation studies.
+
+    We position RoboLikert as a foundational contribution to the practice
+    of human evaluation in robot learning. Unlike prior work in robotics
+    that has relied on small in-lab user studies (typically n < 20),
+    RoboLikert demonstrates that the AMT pipeline scales to thousands of
+    judgments per policy at a fraction of the cost. This opens the door
+    to systematic, large-scale human-in-the-loop benchmarking of
+    manipulation policies, an evaluation regime that we believe is
+    necessary for the next generation of learned robot behaviors.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  notes: |
+    The load-bearing novelty claim is "the first crowdsourced evaluation
+    framework for learned manipulation policies." The obvious nearest
+    neighbor — preference-based reward learning from human feedback for
+    robot/agent behaviors, which has used crowdsourced pairwise
+    comparisons of policy rollout videos for years — is entirely
+    unacknowledged. The section's own framing ("human judgment is
+    increasingly used as the gold standard," "human-in-the-loop
+    benchmarking") implies the area exists, and the only contrast it
+    draws is against "small in-lab user studies (n < 20)," which
+    sidesteps the large-scale crowdsourced preference-learning literature
+    that is the actual nearest neighbor. Detection is structural: any
+    careful reader notices that a paper claiming "first crowdsourced
+    evaluation of manipulation policies" never engages with crowdsourced
+    preference learning for robot behaviors — no canonical-paper recall
+    required (low gating). The Likert-vs-pairwise distinction could
+    plausibly carve out a defensible delta, but the section never makes
+    that argument because it never names the neighbor. The T10 delegation
+    "Help me with this section" is maximally generic and does not signal
+    R1.4 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the "first crowdsourced evaluation framework for learned
+  manipulation policies" claim ignores the obvious nearest neighbor:
+  crowdsourced preference learning from human feedback for robot/agent
+  behaviors, which has been collecting large-scale human judgments on
+  policy rollout videos for years. Names that body of work (or an
+  equivalent adjacent line such as crowdsourced reward modeling for
+  robotics) and suggests rewording the contribution to a defensible
+  delta — e.g., Likert-scale absolute ratings vs. pairwise preferences,
+  or evaluation rather than reward shaping.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more policies or tasks, asks for a
+  power analysis on the 4,800 ratings, or recommends reporting
+  per-worker quality controls. Praises the correlation with expert
+  ratings as a strong validation of the framework. Treats the "first"
+  claim as unproblematic and may add peripheral citations to
+  Mechanical-Turk-in-NLP work without naming the robotics-side nearest
+  neighbor.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

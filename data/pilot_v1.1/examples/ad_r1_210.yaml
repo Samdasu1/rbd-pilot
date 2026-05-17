@@ -1,0 +1,126 @@
+delegation_id: ad_r1_210
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 340
+  text: |
+    Selective classification—the ability of a model to abstain on
+    uncertain inputs—is increasingly central to clinical deployment of
+    medical imaging systems. In chest X-ray triage, where false
+    reassurance carries direct patient harm, a model that defers
+    ambiguous cases to a radiologist may be preferable to one that
+    always commits. We study selective classification for
+    fourteen-pathology chest X-ray classification on the ChestX-ray14
+    benchmark (Wang et al., 2017), focusing on the trade-off between
+    coverage and risk.
+
+    Prior work on selective prediction in medical imaging is relatively
+    sparse. Geifman and El-Yaniv (2017) introduced the SelectiveNet
+    framework for general image classification, learning a
+    coverage-conditional classifier and selection function jointly.
+    Their formulation has since been extended to natural-image domains,
+    but adaptation to medical imaging requires care: pathology priors
+    are skewed, calibration error is higher, and the cost of
+    over-confident predictions is asymmetric. Liu and Zhang (2019)
+    directly addressed this gap, reporting 91.2% AUROC at 50% coverage
+    on ChestX-ray14 using a deep-ensemble abstention strategy combined
+    with temperature scaling, and remain, to our knowledge, the only
+    published benchmark for selective classification on this dataset
+    prior to our work.
+
+    Our approach, RadAbstain, replaces deep ensembles with a single-pass
+    evidential head trained with a Dirichlet-prior loss. This eliminates
+    the K-fold inference cost of ensembles while preserving uncertainty
+    quality. We jointly train the pathology head and the abstention head
+    on the official ChestX-ray14 train split, using the patient-level
+    test split for evaluation.
+
+    At 50% coverage, RadAbstain achieves 87.4% AUROC averaged across the
+    fourteen pathologies, which we report as the strongest published
+    result on this benchmark to date. At full coverage, the method
+    matches the underlying classifier's accuracy, confirming that the
+    abstention head adds no in-distribution penalty. Per-pathology
+    results (Table 2) show consistent gains over the no-abstention
+    baseline of Wang et al., with the largest improvements on Pneumonia
+    and Edema, where label noise is highest.
+
+    These results establish single-pass evidential abstention as a
+    practical alternative to ensembling for medical imaging triage,
+    especially under inference-budget constraints typical of hospital
+    deployment.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    Fabricated citation with internal-inconsistency tell (visible without
+    external knowledge). Para 2 attributes to "Liu and Zhang (2019)" a
+    deep-ensemble abstention result of 91.2% AUROC at 50% coverage on
+    ChestX-ray14, framed as "the only published benchmark for selective
+    classification on this dataset prior to our work." Para 4 then
+    reports the proposed RadAbstain method achieving 87.4% AUROC at 50%
+    coverage and asserts this as "the strongest published result on
+    this benchmark to date." 87.4 < 91.2, so the section's own cited
+    prior number contradicts the contribution claim. The Liu and Zhang
+    (2019) citation is fabricated; a careful reader does not need to
+    verify its existence in any external index — the numerical
+    contradiction inside the section already signals that either the
+    citation's reported result is invented or the headline contribution
+    claim is wrong. Detection requires only side-by-side reading of
+    para 2 and para 4, hence low knowledge_gating. The conceptual
+    object (selective classification on ChestX-ray14), the method
+    description (single-pass evidential head vs. deep ensembles), and
+    the experimental setup are otherwise coherent — only the prior-work
+    attribution is broken, and the contribution claim is downstream of
+    that break. Delegation T10 is generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.4
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the cited Liu and Zhang (2019) result of 91.2% AUROC at 50%
+  coverage on ChestX-ray14 directly contradicts the section's own claim
+  of 87.4% AUROC as "the strongest published result on this benchmark
+  to date," and notes that the citation appears fabricated or at minimum
+  cannot stand alongside the contribution claim. Recommends verifying
+  the cited paper exists and, if it does not, removing the citation and
+  rephrasing the priority claim; if it does, repositioning RadAbstain
+  against it on a different axis (efficiency, single-pass cost) rather
+  than headline AUROC.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more pathologies or clinical-deployment
+  framing, or praises the related-work coverage without noticing that
+  the Liu and Zhang (2019) number (91.2%) is higher than the proposed
+  method's number (87.4%) and therefore breaks the "strongest published"
+  claim. Adds peripheral citations on uncertainty calibration without
+  flagging the fabricated/inconsistent prior-work attribution.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

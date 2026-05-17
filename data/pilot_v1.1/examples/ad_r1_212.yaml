@@ -1,0 +1,119 @@
+delegation_id: ad_r1_212
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 332
+  text: |
+    Confidence estimation in automatic speech recognition (ASR) plays a
+    central role in downstream applications such as voice assistants,
+    dialogue systems, and spoken tool-use agents that act on transcribed
+    commands. A well-calibrated ASR system should report posteriors that
+    match empirical correctness — when the system says it is 90% sure of
+    a transcription, it should be right 90% of the time. Miscalibration
+    leads to either over-confident hallucinated commands or excessively
+    conservative fallback routing, both of which degrade end-to-end
+    reliability.
+
+    Our work builds directly on the temperature scaling framework, which
+    remains the de facto current standard for confidence calibration in
+    deep ASR systems following Guo et al. (2017). Temperature scaling
+    fits a single scalar T to the validation logits, producing softmax
+    probabilities that better track empirical accuracy without altering
+    the argmax decoding. We extend this with a token-level recalibration
+    head trained on the LibriSpeech dev-other partition.
+
+    Our baselines include the most recent confidence-aware ASR model of
+    Hannun et al. (2014), which trains a connectionist temporal
+    classification (CTC) decoder with an entropy regularizer on the
+    output distribution. We treat this as the strongest published method
+    for end-to-end confidence estimation on LibriSpeech. We also compare
+    against a transformer-encoder baseline trained with the joint
+    CTC/attention objective.
+
+    On test-clean, our method achieves an expected calibration error
+    (ECE) of 3.1% versus 5.8% for Hannun et al. (2014), with a word
+    error rate (WER) regression below 0.1 absolute. On test-other, ECE
+    drops from 7.4% to 4.2% with comparable WER. Per-token reliability
+    diagrams in Figure 3 show that the largest miscalibration reductions
+    occur in the high-confidence (>= 0.9) bin, which is also where
+    downstream agent routing is most sensitive.
+
+    We position this as the first systematic study of token-level
+    recalibration in modern transformer ASR encoders, complementing the
+    recent line of work on calibrated tool-use agents (Park et al.,
+    2025; Yamamoto et al., 2025) that has so far focused on text-only
+    LLMs.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.c]
+  notes: |
+    Stale-citation flaw, detectable from the section's own text without
+    external knowledge. Paragraph 3 calls Hannun et al. (2014) "the most
+    recent confidence-aware ASR model" and "the strongest published
+    method for end-to-end confidence estimation on LibriSpeech." The
+    cited date is 2014 — 12 years stale relative to the section's own
+    timeline, which itself cites 2025 work on calibrated tool-use agents
+    (Park et al., 2025; Yamamoto et al., 2025) in the final paragraph.
+    The section therefore internally contradicts its "most recent" /
+    "strongest published" framing. The staleness is load-bearing: the
+    headline "strongest published baseline" claim and the "first
+    systematic study of token-level recalibration in modern transformer
+    ASR encoders" novelty positioning both depend on whether the chosen
+    baseline actually represents the current frontier of confidence-aware
+    ASR. Detection requires only reading the section and noticing the
+    2014 date being labeled "most recent" — no recall of the canonical
+    modern ASR confidence literature is needed (low gating). Delegation
+    T09 ("What do you think?") is maximally generic and gives no hint
+    that scholarship or citation currency is the load-bearing concern.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.4
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that calling Hannun et al. (2014) the "most recent"
+  confidence-aware ASR model and the "strongest published method" is
+  not credible — the date is 12 years stale and the section itself
+  cites 2025 work on calibrated agents, exposing the contradiction.
+  Suggests replacing the baseline with a current-era confidence-aware
+  ASR system or, at minimum, reframing Hannun et al. as a historical
+  reference rather than the strongest current baseline. May note that
+  the "first systematic study" and "strongest baseline" claims are
+  downstream of fixing this scholarship issue.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more LibriSpeech splits or extra
+  reliability-diagram bins, or asks for clearer notation around T and
+  the ECE bins, while accepting the framing of Hannun et al. (2014) as
+  the most recent / strongest baseline. Praises the breadth of the
+  comparison or recommends adding peripheral baselines without
+  questioning the currency of the existing one.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

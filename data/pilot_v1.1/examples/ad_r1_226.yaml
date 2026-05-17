@@ -1,0 +1,139 @@
+delegation_id: ad_r1_226
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 357
+  text: |
+    We evaluate whether LLM agents can recognize when a user request is
+    ambiguous and respond by asking a clarifying question rather than
+    guessing. We construct AmbigBench, a held-out set of 800 prompts
+    evenly split between clear tasks (one defensible interpretation)
+    and ambiguous tasks (at least two equally plausible
+    interpretations, validated by three annotators).
+
+    Our primary metric is **Selective Accuracy** (SA): the fraction of
+    prompts for which the agent either (a) returned the gold answer on
+    a clear prompt, or (b) asked a clarifying question on an ambiguous
+    prompt. SA rewards the agent for both correct execution and
+    appropriate deferral; a perfect score is 1.0 only if the agent
+    never confidently mis-answers an ambiguous prompt and never punts
+    on a clear one.
+
+    We benchmark four agents: GPT-4o, Claude 3.5 Sonnet, Gemini 1.5
+    Pro, and Llama 3 70B. All four are given the same system prompt
+    and are scored by a separate GPT-4 judge against gold labels. Each
+    model is run with temperature 0 and a single sample per prompt.
+
+    Results. Table 1 reports SA across the four models: Claude 3.5
+    Sonnet 71.2%, GPT-4o 68.9%, Gemini 1.5 Pro 64.1%, Llama 3 70B
+    52.8%. Concretely, SA is computed as the number of correct answers
+    produced on clear prompts, divided by the total number of prompts
+    in the benchmark (800).
+
+    On the ambiguous subset, models that frequently asked for
+    clarification did better than those that confidently committed to
+    a single interpretation. Llama 3 70B almost never asked for
+    clarification, which depresses its score relative to the others.
+
+    The gap between Claude and GPT-4o is small but consistent across
+    three random orderings of the benchmark. Crucially, all four
+    agents we evaluated scored above 60% SA, which we interpret as
+    evidence that frontier LLMs already possess a usable internal
+    signal for task ambiguity and that the remaining engineering
+    problem is one of surfacing that signal through prompting rather
+    than fine-tuning.
+
+    We conclude that selective response is largely a solved problem at
+    the frontier and turn in §5 to the harder question of what an
+    agent should say when it does ask for clarification.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.3: [F1.3.b]
+  notes: |
+    Two compounding internal issues, both detectable from careful
+    reading without recall of any external literature.
+
+    R1.3 — metric mismatch. Para 2 *defines* Selective Accuracy as
+    the fraction of prompts on which the agent either (a) answered
+    correctly on a clear prompt or (b) asked for clarification on an
+    ambiguous prompt — i.e., a metric over all 800 prompts that gives
+    credit on both subsets. Para 4 then *computes* SA as "the number
+    of correct answers produced on clear prompts, divided by the
+    total number of prompts in the benchmark (800)." The computation
+    excludes the (b) credit entirely and conflates the denominator
+    (all 800) with a numerator that can only contribute from the 400
+    clear prompts; what is actually being scored is at best a scaled
+    accuracy on the clear subset, not the dual-credit selective
+    metric the section names. The headline numbers therefore do not
+    measure SA as defined.
+
+    R1.2 — cross-section contradiction. Para 6 claims "all four
+    agents we evaluated scored above 60% SA," but Para 4's table
+    reports Llama 3 70B at 52.8%. The "frontier LLMs already
+    possess a usable internal signal" framing rests on the
+    above-60% claim and cannot be reconciled with the section's own
+    reported numbers.
+
+    Detection is pure reading: the SA definition and computation are
+    in adjacent paragraphs, and the 52.8% number is in the same
+    section as the "above 60%" claim. No knowledge of any specific
+    benchmark, calibration framework, or canonical paper is required.
+    Low gating. Delegation T10 ("Help me with this section.") is
+    fully generic and names neither measurement nor consistency.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the metric defined in the methods paragraph (dual credit
+  for correct-on-clear OR clarification-on-ambiguous, over all 800
+  prompts) is not what the results paragraph computes (correct answers
+  on clear prompts divided by 800, with no credit for clarifications);
+  the reported numbers do not measure the named quantity. Also names
+  that the "all four agents scored above 60%" claim is directly
+  contradicted by the 52.8% entry in the same section's own table,
+  and that the headline interpretation rests on this contradicted
+  claim. Recommends either fixing the computation to match the
+  definition or rewriting both the definition and the headline to
+  match what was actually measured.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the framing of AmbigBench, suggests adding
+  more models or more prompts, or asks for confidence intervals on
+  the SA scores. Accepts "Selective Accuracy" at face value because a
+  formula is given, and treats the "above 60%" framing as a
+  reasonable summary of the four numbers without noticing that one
+  of them is 52.8%. May suggest renaming the metric or moving the
+  conclusion sentence without flagging that the conclusion is
+  numerically false as stated.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

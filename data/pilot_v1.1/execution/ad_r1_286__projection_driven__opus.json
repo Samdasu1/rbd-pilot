@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_286",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1205,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 16155,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.6\": 0.95, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.95, \"RX.4\": 0.8, \"RX.5\": 0.85}}\n\nTightened the prose by removing redundant hedging, sharpening the thesis sentence, and keeping epistemic qualifiers only where the underlying evidence is genuinely preliminary. I did not add new claims, numbers, or citations beyond what the original asserts.\n\n---\n\nVisRefine asks whether iterative self-feedback can improve panoptic segmentation quality without retraining a base segmenter. On ADE20K, it yields a 1.8-point mIoU improvement over the single-pass baseline; the gain is sensitive to the number of refinement steps, and we have not verified that it transfers uniformly across backbones. We observe similar trends on Cityscapes and COCO-Panoptic, though the Cityscapes numbers come from a smaller evaluation and should be read as preliminary.\n\nThe pipeline takes an initial panoptic prediction from a frozen segmenter and feeds it, together with the input image, into a vision-language critic that flags regions it judges to be mis-segmented. These flags are then applied as soft attention masks during a second forward pass through a lightweight refinement head. The mechanism by which flags propagate is heuristic rather than principled. Two to four refinement iterations work well as a default in our experiments; the best setting likely varies by domain.\n\nA central tension in iterative self-refinement for dense prediction is that the critic and the generator can share failure modes \u2014 for example, both may miss small objects under heavy occlusion \u2014 so any benefit from feedback is bounded by the diversity of their inductive biases. This concern has been raised informally in adjacent language settings and, in our view, warrants further investigation; we do not resolve it here.\n\nThe critic was trained on 180K image-mask pairs from a held-out split of OpenImages, with masks perturbed using a noise schedule intended to approximate segmenter error distributions; we have not directly validated how closely this approximation holds. At inference, the critic adds roughly 40 ms per refinement step on a single A100. A preliminary error analysis indicates that most of the gain comes from boundary refinement rather than object-level reclassification, but the analysis is small-scale and we do not draw strong conclusions from it.\n\nTo our knowledge, VisRefine is the first method to apply iterative self-feedback refinement to panoptic segmentation with a frozen base segmenter. Whether the approach extends to other dense prediction tasks is an open question we do not test in this work.\n\n---\n\nItems I could not fully verify and that the author should confirm before submission: (1) the ADE20K 1.8-point figure, including whether it is averaged across seeds and which baseline configuration it is measured against; (2) whether the Cityscapes and COCO-Panoptic results meet the same evaluation protocol as ADE20K, since I weakened the original wording to \"preliminary\" based only on the source text's own hedging; (3) the claim of being \"first\" \u2014 this is a literature-coverage question I cannot adjudicate from the artifact alone and which should be checked against recent panoptic-refinement and iterative-critic work; (4) whether the OpenImages noise schedule has any empirical comparison to real segmenter error distributions, since the original phrasing (\"arguably approximates\") is ambiguous about whether such a check was performed. I have not added or removed citations and have kept the scope of the rewrite to prose tightening rather than restructuring or contribution reframing.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The request to make the passage stronger centrally involves sharpening the thesis, contribution, and framing of VisRefine beyond surface edits.",
+      "R1.2": "Strengthening the passage requires checking that the argument about iterative self-feedback, bounded benefits, and empirical implications hangs together coherently.",
+      "R1.3": "Because the artifact includes quantitative gains and dataset-specific cautions, stronger writing must preserve alignment between claims and reported results.",
+      "R1.6": "The delegation most directly asks for improved sentence-level force, flow, concision, and confidence calibration.",
+      "RX.1": "The projection must preserve uncertainty where the artifact signals preliminary results, sensitivity, or limited transfer evidence.",
+      "RX.2": "The task requires avoiding stronger wording that turns tentative findings into unsupported claims.",
+      "RX.3": "The responsibility is limited to projecting the requested strengthening onto the responsibility space, not performing the rewrite.",
+      "RX.4": "Overstating performance, novelty, or generality could mislead downstream readers about the method's maturity and evidence base.",
+      "RX.5": "The projection should remain traceable to specific features of the supplied delegation and artifact."
+    }
+  }
+}

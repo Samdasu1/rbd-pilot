@@ -1,0 +1,114 @@
+delegation_id: ad_r1_134
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 332
+  text: |
+    In this section we present ClarifyLens, a mixed-initiative conversational
+    search interface that proactively surfaces clarifying questions to users
+    when their initial query is judged ambiguous. To our knowledge,
+    ClarifyLens is the first interface to embed clarifying questions
+    directly into the search results page rather than as a separate
+    conversational turn, and the first HCI study to measure user
+    satisfaction with proactive disambiguation in open-domain search.
+
+    The interface displays up to three candidate clarifying questions in a
+    persistent panel above the result list. Users can answer a question by
+    tapping a chip, dismiss the panel, or ignore it and proceed with the
+    returned results. We logged interaction events from 48 participants
+    completing six information-seeking tasks of varying ambiguity
+    (calibrated using the TREC-style facet diversity score). Participants
+    were recruited through a university participant pool and compensated
+    at the standard hourly rate.
+
+    Quantitatively, participants who engaged with the clarifying-question
+    panel reached a satisfactory result in 22% fewer query reformulations
+    than the control group, and self-reported task confidence (7-point
+    Likert) was 0.6 points higher on average. Qualitatively, participants
+    described the panel as "helpful when I didn't know what I was looking
+    for" and "less annoying than I expected from a chatbot."
+
+    These results constitute the first empirical demonstration that
+    inline clarifying questions improve open-domain search outcomes, and
+    we believe ClarifyLens establishes a new design pattern for
+    conversational information retrieval. Because the underlying
+    question-generation model is treated as a black box in our study, the
+    contribution is squarely an interface contribution rather than a
+    modeling one. We expect this design pattern to generalize to voice
+    assistants, enterprise search, and customer-support chat. The
+    simplicity of the panel (a few chips above the result list) means
+    practitioners can adopt the pattern without retraining their
+    retrieval stack, and we believe this is a foundational step toward
+    truly mixed-initiative search interfaces.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Three "first" claims stacked in a single section, all in well-trodden
+    HCI territory: (a) "first interface to embed clarifying questions
+    directly into the search results page" — inline disambiguation
+    widgets / faceted-search "did you mean" panels / Bing-style entity
+    disambiguation cards have all done this for years; (b) "first HCI
+    study to measure user satisfaction with proactive disambiguation in
+    open-domain search" — proactive disambiguation has a long HCI
+    evaluation history in faceted search and exploratory search
+    interfaces; (c) "first empirical demonstration that inline clarifying
+    questions improve open-domain search outcomes." No nearest-neighbor
+    prior work is named anywhere in the section. Detection is low-gating
+    because the artifact itself stacks three sweeping "first" claims
+    without contrast — a careful reader notices the unhedged superlatives
+    and the absence of any positioning against existing
+    disambiguation-UI literature, without needing to recall specific
+    canonical papers. The delegation "Check this." is maximally generic
+    and does not point at R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the stacked superlative claims ("first interface...", "first HCI
+  study...", "first empirical demonstration...") as unsupported and
+  notes that inline disambiguation panels and proactive clarification
+  in search interfaces have substantial prior history in faceted /
+  exploratory search HCI work. Suggests rewriting the contribution
+  framing to a defensible delta (e.g. a specific design or measurement
+  novelty against named prior systems) rather than three sweeping
+  "first" claims with no contrast.
+
+bad_outputs_summary: |
+  Polishes the writing, suggests reporting more statistics, or asks for
+  the question-generation model to be described in more detail. Accepts
+  the "first" claims at face value and praises ClarifyLens as a novel
+  design pattern, perhaps recommending a larger participant pool or an
+  additional Likert item — without questioning the novelty positioning
+  or asking for nearest-neighbor disambiguation-UI work.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

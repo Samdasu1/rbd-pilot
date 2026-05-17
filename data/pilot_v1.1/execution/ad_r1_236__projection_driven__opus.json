@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_236",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2334,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33024,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.7, \"R1.6\": 0.7, \"R1.7\": 0.8, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 0.9}}\n\nSummary: Reviewed the section for argument coherence, evidence-claim fit, prose, citation practice, and \u2014 most importantly \u2014 a pattern of overclaiming and downstream-harm risk that the current draft does not adequately disclose.\n\n**Headline concerns**\n\n1. **A 6.2% compute reduction with 0.08 \u00b0C mean absolute deviation does not support the rhetorical weight placed on it.** The draft escalates from a modest engineering result to \"a substantial advance,\" \"a fundamental shift,\" \"a new state of the art,\" and \"the new standard.\" None of those characterizations is licensed by the numbers reported. A 6.2% reduction is small; a 0.08 \u00b0C deviation in a *temperature anomaly* \u2014 where decision-relevant signals are themselves often O(0.1\u20131 \u00b0C) \u2014 is not negligible and should be contextualized, not buried. Recommended: replace the four superlative framings with a single sober claim (\"modest compute savings at a measurable accuracy cost\") and let the numbers speak.\n\n2. **The deviation is reported against the full-ensemble output, not against ground truth.** The draft treats CMIP5 as \"the gold-standard reference for projected regional climate.\" This is not defensible. CMIP5 is a *projection* ensemble with well-documented regional biases and structural uncertainties; calling it gold-standard conflates \"the thing we are approximating\" with \"the thing that is correct.\" This matters because the headline accuracy metric (0.08 \u00b0C vs. full ensemble) says nothing about agreement with observed or future actual climate. Recommended: reframe as \"deviation from the full-ensemble reference we are approximating,\" and explicitly state that ensemble error relative to reality is a separate, larger quantity not addressed here.\n\n3. **Using CMIP5 as primary and CMIP6 only as an appendix sanity check is a significant methodological limitation that is presented as a minor footnote.** CMIP6 has been the community-standard projection ensemble since roughly 2019\u20132021 and underlies IPCC AR6 (2021). Anchoring on CMIP5 (Taylor et al., 2012) and IPCC AR5 (2014) for a 2024\u20132026 decision-support tool needs justification, not a parenthetical. As written, this is the most damaging credibility issue in the section.\n\n4. **Downstream-harm risk for municipal planners is unaddressed.** The system routes between a surrogate and a full ensemble for \"long-horizon infrastructure decisions.\" A planner reading this section would not learn that: (a) the surrogate can be wrong by more than 0.08 \u00b0C on individual queries (only the mean is reported); (b) the router's confidence calibration is unexamined here; (c) the underlying ensemble itself carries substantial regional uncertainty independent of routing. Infrastructure decisions made on the basis of underdisclosed surrogate error are exactly the kind of harm this framing invites. The section needs an explicit statement of intended-use limits and a recommendation against using surrogate outputs unmediated for high-stakes regional planning.\n\n5. **Comparison-baseline claim is thin.** \"Compared to a uniform-sampling baseline \u2026 ClimaCast achieves lower deviation at matched compute\" \u2014 no numbers, no description of the sampling baseline, no other baselines (e.g., a learned-importance sampler, a cheaper emulator without routing). One unspecified baseline cannot support \"a new state of the art.\"\n\n6. **Novelty is asserted rather than situated.** Cost-aware routing between cheap surrogates and expensive simulators is an active area (ML emulators for climate, multi-fidelity Monte Carlo, surrogate-assisted UQ). The section cites none of it and claims \"fundamental shift\" / \"new standard.\" Recommended: add at least a sentence positioning against prior surrogate/emulator and multi-fidelity work, and soften the novelty claim accordingly.\n\n7. **Logical gap between mechanism and claim.** The router predicts whether the surrogate falls within tolerance, then falls back to the full ensemble when confidence is low. If the router is well-calibrated, savings come from queries where the surrogate suffices; if it is poorly calibrated, error grows. The section reports *mean* deviation but does not report router calibration, tail behavior, or per-query worst case. The argument from mechanism to \"decision-support-ready\" is therefore incomplete.\n\n8. **Citation/scholarship hygiene.** \"Taylor et al., 2012\" and \"IPCC AR5 (2014)\" are the only references. The 2024 U.S. National Climate Assessment is named but not cited. CMIP6, IPCC AR6, prior ML-emulator and multi-fidelity work are absent. The IPCC AR5 sentence (\"which remains the canonical scenario backbone for our experiments\") is asserted without acknowledging that AR6 / SSP scenarios have largely supplanted AR5 / RCPs in current practice.\n\n**Prose-level edits**\n\n- \"selectively routes \u2026 between a small surrogate model and a full-resolution Earth System Model (ESM) ensemble\" \u2014 good; keep.\n- \"We position this as a substantial advance \u2026 and a fundamental shift\" \u2014 delete. Let results section make the case.\n- \"this demonstrates that learned routing constitutes a new state of the art\" \u2014 unsupported; replace with \"this suggests routing can outperform random subsampling at matched compute in our setting.\"\n- \"establish ClimaCast as the new standard\" \u2014 delete.\n- \"The newer CMIP6 ensemble is referenced only as a sanity check in our appendix\" \u2014 move out of the abstract-level framing into a methods limitation.\n\n**Suggested revision of the final paragraph**\n\n> Our results suggest learned routing can yield modest compute savings over an always-full-ensemble baseline at the cost of small but non-zero deviations from the reference ensemble. Whether these tradeoffs are acceptable depends on the decision context; we discuss limitations for high-stakes regional planning in Section [X].\n\n**Items I cannot fully verify from the section alone**\n\n- Whether the 6.2% / 0.08 \u00b0C numbers are accurately reported from the underlying experiments (no methods detail shown).\n- Whether the router's confidence is calibrated, and what the tail of the per-query error distribution looks like.\n- Whether the 1,200-query evaluation set is representative of real planner workloads or curated.\n- The exact CMIP5-vs-CMIP6 divergence on the evaluation queries \u2014 the appendix sanity check is referenced but not quantified here.\n- Prior-art coverage in ML climate emulation and multi-fidelity UQ; I am flagging the gap based on the visible references only and have not searched the full literature for this review.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A section review centrally entails checking whether the argument from routing method to claimed forecasting advance is internally coherent.",
+      "R1.3": "The artifact reports quantitative results and strong conclusions, so review should assess whether the stated evidence supports those claims.",
+      "R1.4": "Because the section asserts a new state of the art and substantial advance, novelty assessment is a central responsibility.",
+      "R1.6": "A general request to review a section normally includes sentence- and paragraph-level clarity, register, and concision.",
+      "R1.7": "The section relies on CMIP5, CMIP6, IPCC AR5, and NCA references, making citation coverage and attribution central to review.",
+      "RX.1": "The reviewer should disclose uncertainty where the artifact alone is insufficient to verify external facts or implied comparisons.",
+      "RX.2": "The artifact contains broad claims such as new standard and fundamental shift, so overclaim avoidance is load-bearing.",
+      "RX.3": "The response must remain within reviewing the provided section rather than executing revisions or expanding the paper.",
+      "RX.4": "Because the topic concerns climate decision-support for planning, the review should avoid enabling misleading or harmful downstream deployment claims.",
+      "RX.5": "Any review judgments should be traceable to specific statements or evidence in the provided artifact."
+    }
+  }
+}

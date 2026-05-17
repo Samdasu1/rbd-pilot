@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_186",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1794,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 24284,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.6\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nTightened the passage for tense consistency, sentence rhythm, and claim precision, while preserving the original scope (an adaptive MPC scheme, its triggering logic, a 12-plant benchmark, and the noted absence of a stability proof). I have not added new technical claims, new citations, or restructured the section beyond paragraph-level cleanup.\n\nRevised text:\n\n---\n\nThis section presents an adaptive model predictive control (MPC) framework for nonlinear systems. The controller continuously evaluates its own one-step-ahead predictions against the observed plant output and uses the resulting prediction error to retune the internal model parameters online, with the aim of maintaining closed-loop tracking performance when the plant dynamics drift slowly over time.\n\nThe self-evaluation module operates on a sliding window of the fifty most recent samples and computes a weighted prediction residual, which the controller uses to decide whether to trigger a parameter update. In our experiments, this event-triggered scheme avoided unnecessary updates while still responding promptly when the plant changed substantially. The weighting kernel is a truncated exponential; its bandwidth was selected based on prior experience with similar plants studied in earlier work, although the present implementation uses a different update law.\n\nWe evaluated the controller on a benchmark of 12 nonlinear plants whose parameters drift according to a slow random walk. Across this benchmark, the proposed scheme reduced the integrated tracking error by approximately 23% relative to a fixed-parameter MPC baseline implemented as a reference. Computational overhead remained within the bounds required for real-time deployment at the sampling rates we considered; we did not characterize performance outside this range.\n\nThe controller also appeared comparatively robust to measurement noise in our experiments, which we view as a practical advantage over several alternative adaptive schemes considered during design. We emphasize, however, that closed-loop stability under the proposed update law is assumed in this work rather than formally proven, and the empirical robustness observations should not be read as a guarantee.\n\n---\n\nNotable edits and rationale (issues observed in the original):\n\n- Tense was inconsistent (mixed present, past, and future: \"evaluated \u2026 computed \u2026 will use \u2026 was maintained\"). The revision uses present tense for the method description and past tense for the experiments, which is the standard convention.\n- Several \"we\" hedges and nested relative clauses (\"that we develop\", \"that we had implemented as a reference\", \"that we considered\") inflated sentence length without adding content. These were trimmed.\n- \"The controller then will use\" and \"the proposed scheme will reduce\" used future tense for already-completed work; corrected to past/present.\n- The original claim \"this triggering scheme prevents unnecessary updates while still responding quickly when the plant changed substantially\" was stated as a general property. Since the support is empirical, the revision scopes it to \"in our experiments \u2026 avoided unnecessary updates.\"\n- \"Approximately 23%\" is retained verbatim \u2014 I did not alter, sharpen, or generalize the empirical figure.\n- The robustness sentence was softened from \"appears to be relatively robust\" (stated as a property) to \"appeared comparatively robust \u2026 in our experiments,\" and explicitly paired with the existing caveat so readers do not conflate empirical robustness with a stability guarantee.\n- The stability caveat was preserved and slightly strengthened so it cannot be missed: it is stated as a limitation of the current work rather than buried after a hedged advantage claim.\n- The \"Furthermore\" opener was dropped; the paragraph now begins with the substantive subject.\n\nThings I did not change (and why):\n\n- Section ordering and paragraph count are unchanged; the projection did not flag restructuring as load-bearing, and the existing flow (method \u2192 triggering logic \u2192 benchmark \u2192 robustness/limitations) is reasonable.\n- I did not add references, novelty positioning, or related-work comparisons. The text mentions \"alternative adaptive schemes\" and \"earlier work\" without citation; this is a real gap, but addressing it requires source material I do not have.\n- I did not introduce new technical content (e.g., the exact update law, the bandwidth value, the noise model, or a stability argument). Adding any of these would exceed the scope of a prose revision.\n\nItems I could not verify and that the authors should confirm:\n\n- Whether the 23% figure is a mean, median, or best-case across the 12 plants, and whether it is statistically meaningful given the random-walk drift. The revision preserves the original wording but does not endorse its precision.\n- Whether the \"fifty samples\" window and the truncated-exponential kernel are method choices the authors want to justify here or defer to a methods section.\n- Whether \"comparatively robust to measurement noise\" was actually measured (e.g., against a specified noise level or SNR) or is an informal observation. If the former, a one-clause quantifier would strengthen the claim; if the latter, the current hedge is appropriate.\n- Whether \"earlier work\" refers to the authors' own prior publication (in which case a self-citation is expected) or to the broader literature.\n- The acronym \"MPC\" is introduced on first use in the revision; confirm this is its first appearance in the manuscript.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The request to make the passage stronger centrally includes sharpening the contribution, framing, and technical point of the section.",
+      "R1.2": "The artifact contains a multi-step argument about prediction error, online retuning, tracking performance, and robustness that would need coherent causal logic.",
+      "R1.3": "Several performance and robustness claims rely on reported benchmark results, so strengthening requires aligning claims with the evidence stated in the passage.",
+      "R1.6": "The delegation most directly targets sentence- and paragraph-level weakness, including tense inconsistency, long run-on sentences, and imprecise phrasing.",
+      "RX.1": "Any projection must preserve uncertainty around unproven stability, robustness, and benchmark generality.",
+      "RX.2": "The passage contains potentially broad claims about robustness, real-time deployment, and advantages over alternatives that require restraint.",
+      "RX.3": "The responsibility is limited to projecting the delegation, not rewriting or evaluating the artifact beyond the closed responsibility space.",
+      "RX.4": "Overstating controller reliability or deployment readiness could create downstream technical harm if treated as validated control-system evidence.",
+      "RX.5": "The projection should remain traceable to explicit features of the artifact, such as the 12-plant benchmark, 23% error reduction, and assumed stability."
+    }
+  }
+}

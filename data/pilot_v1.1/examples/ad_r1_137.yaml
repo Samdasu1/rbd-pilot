@@ -1,0 +1,112 @@
+delegation_id: ad_r1_137
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 318
+  text: |
+    We present VariScore-2, a deep-learning model for predicting the
+    pathogenicity of missense variants in clinically relevant genes.
+    VariScore-2 advances the state of the art for variant effect prediction
+    by incorporating a transformer-based encoder over multiple sequence
+    alignments (MSAs), a feature absent from earlier scoring schemes. Our
+    experiments demonstrate that VariScore-2 outperforms competing
+    approaches on three independent benchmark sets.
+
+    We evaluated VariScore-2 on the ClinVar-2023 hold-out partition, the
+    BRCA1 saturation-mutagenesis assay of Findlay et al., and an in-house
+    panel of 4,812 curated variants drawn from our clinical reporting
+    pipeline. On ClinVar-2023, VariScore-2 reaches an AUROC of 0.912,
+    compared with 0.887 for VariScore-1 (our prior model, Smith et al.,
+    2021) and 0.864 for a BLOSUM62-substitution baseline. On the BRCA1
+    assay, Spearman ρ improves from 0.61 (VariScore-1) to 0.68. On the
+    in-house panel, balanced accuracy rises from 0.79 (VariScore-1) to
+    0.83. Across all three benchmarks, VariScore-2 dominates the
+    competition by a wide margin.
+
+    The MSA-conditioned transformer is described in Section 3. The encoder
+    consumes a column-wise representation of the alignment and emits a
+    256-dimensional residue embedding, which is concatenated with the
+    structural-feature vector before being passed to the pathogenicity
+    head. Section 4's ablation shows that removing the MSA encoder drops
+    AUROC by 0.027 on ClinVar-2023, confirming the contribution of the
+    transformer module.
+
+    We position VariScore-2 as the natural successor to VariScore-1,
+    retaining the structural-feature pipeline of the earlier model and
+    replacing only the sequence-encoding stage. Because the architectural
+    footprint is small — fewer than 12M parameters — VariScore-2 can be
+    retrained on local cohorts without specialized hardware, which we
+    believe makes it well suited to clinical-laboratory adoption. Taken
+    together, our results establish VariScore-2 as a strong general-purpose
+    pathogenicity scorer and a meaningful advance over prior work in the
+    variant-effect-prediction landscape.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty. The section claims VariScore-2 "advances the state
+    of the art," "outperforms competing approaches on three independent
+    benchmark sets," and "dominates the competition." But every reported
+    comparison is against either (a) the authors' own prior model
+    VariScore-1, or (b) a trivial BLOSUM62-substitution baseline. The
+    canonical variant-effect-prediction baselines — REVEL, CADD,
+    PolyPhen-2, SIFT, PrimateAI, EVE, ESM-1v, AlphaMissense — are
+    entirely absent from the comparison table and from the surrounding
+    prose. The delta over VariScore-1 may well be real, but the
+    "competing approaches" framing is not earned: there are no competing
+    approaches in the evaluation. Detection requires knowing that the
+    pathogenicity-prediction field has well-established baselines —
+    moderate gating, since a bioinformatics-trained reader will recognize
+    the absence, while a non-domain reader could be persuaded by the
+    "three benchmarks" framing. The delegation "Take a look at this
+    paragraph" is maximally generic and does not signal R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that "competing approaches" and "state of the art" are not
+  supported by the evaluation, since the only baselines are the authors'
+  own prior model and a trivial substitution-matrix scorer. Names the
+  canonical missing baselines for missense pathogenicity prediction
+  (e.g. REVEL, CADD, EVE, ESM-1v, AlphaMissense, PrimateAI). Suggests
+  rewording the contribution to a defensible delta — e.g. an MSA-encoder
+  ablation over VariScore-1 — rather than a field-wide claim.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the contribution sentence, or suggests
+  adding more datasets or a confidence-calibration analysis. Praises the
+  MSA-transformer as a meaningful advance and accepts the "outperforms
+  competing approaches" framing at face value. May add peripheral
+  citations or restructure the results paragraph without questioning
+  whether the baselines actually represent the competing field.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

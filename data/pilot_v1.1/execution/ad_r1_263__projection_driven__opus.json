@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_263",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2336,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32377,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Reorganized the section into a cleaner flow, tightened prose at the sentence level, surfaced several logical gaps and unsupported claims that the current draft glosses over, and flagged items I cannot verify from the artifact alone.\n\n## Suggested reorganization\n\nThe current ordering interleaves contribution, methodology, results, and related framing. A cleaner spine:\n\n1. Problem and contribution (paragraph 1, mostly as written).\n2. Dataset construction and annotation protocol (currently paragraph 2 \u2014 keep here, but move the experimental setup paragraph adjacent to it, since both describe how the data was produced).\n3. Experimental setup (currently paragraph 4 \u2014 promote out of the middle of the results discussion).\n4. Findings on failure distribution and the boundary/spectral confusion (paragraph 3).\n5. Predictive validation via the early-iteration classifier (paragraph 5).\n6. Positioning relative to prior empirical work (paragraph 6).\n7. Limitations (paragraph 7).\n\nThe current placement of the setup paragraph after the headline finding is jarring \u2014 the reader has already been asked to trust a \"41%\" number before being told what counted as a failure or what hyperparameters produced the runs.\n\n## Logical / argumentative issues\n\n- **The \"41% boundary imbalance\" finding and the \"boundary imbalance is often misdiagnosed as spectral\" claim are in tension.** If the two modes are confusable from early-loss curves, then some unknown fraction of the 41% may itself be mislabeled spectral cases. The section should either (a) report inter-rater agreement *conditional on* each class, or (b) explicitly acknowledge that the 41% headline is an upper bound on the true boundary-imbalance rate under the current rubric.\n- **The kappa of 0.74 is reported globally, but the strongest substantive claim depends on per-class reliability.** A global kappa can mask a low kappa on exactly the pair (boundary vs. spectral) that the paper argues is hardest to distinguish. Per-class or pairwise confusion among annotators would substantially strengthen the argument \u2014 or weaken it honestly.\n- **\"78% accuracy by iteration 5,000\" needs a baseline.** With four classes the majority-class baseline is already 41%. Is 78% measured on a held-out split? Stratified? Time-of-run leakage controlled (i.e., were runs from the same PDE / seed family kept in a single fold)? Without this, the \"enables early abort\" claim does not yet follow.\n- **The causal claim \"this confusion has slowed methodological progress\"** is stronger than the evidence presented. The text asserts it but does not cite or quantify the proposed \"fixes\" that allegedly target the wrong pathology. Either soften to \"we suspect\" / \"this may help explain,\" or add the supporting survey.\n- **The four families are introduced as exhaustive (\"categorizes failures into four families\") but the annotation protocol does not specify an \"other / unclear\" option.** If annotators were forced into four bins, the distribution is partly an artifact of the rubric. Worth stating explicitly.\n\n## Sentence-level edits\n\n- \"PINNs often fail to converge on PDE problems that classical solvers handle routinely\" \u2014 fine, but \"routinely\" is doing work; consider \"PDE problems with well-established classical solutions.\"\n- \"the field lacks a principled taxonomy of these failures\" \u2014 phrasing presumes none exists; if any partial taxonomies exist, soften to \"lacks a shared taxonomy\" or \"lacks an empirically grounded taxonomy.\"\n- \"annotate each trace with the dominant failure signature observed during optimization\" \u2014 \"dominant\" implies multi-label structure; if only one label per run is recorded, say \"the most prominent failure signature\" and note the single-label assumption.\n- \"indicating substantial agreement\" \u2014 this is the standard Landis-Koch gloss; fine, but consider just citing the threshold rather than asserting the interpretation.\n- \"where the network fits low-frequency components but stalls on high-frequency ones\" \u2014 good; keep.\n- \"many proposed 'fixes' target boundary weighting when the actual pathology is spectral\" \u2014 quantify or hedge. \"Several widely cited remediations focus on boundary weighting; in some cases the underlying pathology may be spectral.\"\n- \"The analytical solutions for the heat and Burgers equations are well-known and do not require re-derivation here.\" \u2014 fine, but the sentence reads defensively; consider just citing a standard reference and dropping the meta-comment.\n- \"matching common practice\" \u2014 cite the practice (one or two representative PINN papers) so the reader can check.\n- \"a substrate for cumulative diagnosis rather than ad-hoc fixes\" \u2014 strong rhetorical close; keep, but it implicitly promises that downstream work can build on the labels. Make sure the dataset release / license is stated somewhere in the paper.\n\n## Things to be careful about claiming\n\n- \"78% accuracy \u2026 enables practitioners to abort doomed runs early or switch to mode-specific remediation.\" The first half follows from the number (under the caveats above). The second half \u2014 that mode-specific remediation works \u2014 is not demonstrated in this section. Either show it or drop the second clause.\n- \"PINN-FAIL as the analog for PINN training that profiling datasets have provided for systems benchmarks\" is a framing claim, not a result. Keep it as framing, but signal it as such (\"we view PINN-FAIL as analogous to \u2026\").\n- The limitations paragraph is good but could go further: 1,200 runs across 8 PDEs is ~150 runs/PDE on average, which is thin for per-PDE conclusions; the section currently makes only aggregate claims, so this is fine, but worth stating that per-PDE breakdowns are underpowered.\n\n## Possible downstream-use note\n\nIf the early-failure classifier is intended for practitioners to abort training, the section should note that an aborted run is a self-fulfilling label \u2014 using the classifier in deployment will bias future datasets toward the modes the classifier already recognizes. One sentence in the limitations would handle this.\n\n## Items I could not verify\n\n- The 1,200 / 8 PDE / 41% / 78% / kappa=0.74 numbers are taken at face value; I did not see Section 3 or the experimental tables.\n- I do not know whether the four-family taxonomy already exists in prior literature in a similar form; I am treating the originality framing as given rather than evaluated.\n- \"Common practice\" for Adam 1e-3, depth 5, width 128, tanh \u2014 plausible but I have not checked it against a recent PINN survey.\n- Whether the classifier's 78% is held-out / cross-validated / leakage-controlled is not stated in the excerpt; my comment assumes it may not be and asks for clarification rather than asserting a flaw.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A broad request for help with a research section centrally includes checking whether the argument progression from problem, dataset, taxonomy, validation, and limitations is coherent.",
+      "R1.5": "Because the artifact is a full section-like passage, help plausibly includes section-level ordering and narrative arc.",
+      "R1.6": "The delegation most directly asks for assistance with the prose quality of the section at sentence and paragraph level.",
+      "RX.1": "Any help should disclose uncertainty where the artifact does not provide enough basis to judge a point confidently.",
+      "RX.2": "The projection must preserve responsibility for avoiding stronger claims than the reported evidence supports.",
+      "RX.3": "The agent must stay within helping with the provided section rather than expanding to unrelated paper tasks.",
+      "RX.4": "The agent should avoid changes or advice that could mislead readers or encourage unsupported scientific conclusions.",
+      "RX.5": "The agent should maintain traceability to the provided artifact and avoid inventing unstated evidence or provenance."
+    }
+  }
+}

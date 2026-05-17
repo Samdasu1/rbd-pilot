@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_176",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 6,
+  "output_tokens": 890,
+  "cache_read_input_tokens": 13877,
+  "latency_ms": 14281,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.6, \"R1.3\": 0.7, \"R1.5\": 0.5, \"R1.6\": 0.95, \"R1.7\": 0.2}}\n\nRevised the section to remove pervasive repetition (\"candidate,\" \"evaluator language model,\" \"benchmark set\"), tighten the prose, consolidate the per-language numbers into a single sentence, and surface a few small substantive questions that the original text leaves unanswered.\n\n---\n\n**Revised text**\n\nWe evaluate code generation from candidate models using an open-source evaluator LM. The evaluator is a fine-tuned variant of a publicly available base model, trained on synthetic feedback data covering Python, JavaScript, and Rust.\n\nThe procedure has three steps. (1) For each prompt in our evaluation set, we sample code from each candidate model. (2) We pass each sample to the evaluator along with the original prompt and a scoring rubric. (3) The evaluator returns a score on a five-point scale, which we average across prompts to obtain a final score per candidate model.\n\nTo validate the evaluator, we compared its scores against human ratings on a held-out set of 600 samples (200 each in Python, JavaScript, and Rust). Spearman correlations with human ratings were 0.71 (Python), 0.68 (JavaScript), and 0.64 (Rust).\n\nThe evaluator also emits a natural-language critique alongside each score, intended to help developers interpret the rating. Examples are provided in Appendix B.\n\n---\n\n**Points worth checking before publication**\n\n- The benchmark and the training data both cover Python, JavaScript, and Rust. If the held-out 600 samples are drawn from the same distribution as the training data, the reported correlations may overstate generalization \u2014 clarify the train/test split.\n- \"Across several programming languages\" in the opening is not borne out: only three languages are mentioned. Either broaden the evaluation or drop the implied breadth.\n- The aggregation step (\"aggregate the scores \u2026 to obtain final scores\") is underspecified. State the operation explicitly (mean? per-language mean then macro-average?).\n- No confidence intervals or sample sizes per candidate model are given. Consider adding bootstrap CIs on the Spearman values, since 200 samples per language is modest.\n- The base evaluator model and the source of the synthetic feedback data are not named or cited; add references so the setup is reproducible.\n- \"Rubric\" is mentioned once but not described. A brief gloss (or pointer to an appendix) would help.\n\nUncertainty: the substantive concerns above (train/test overlap, aggregation method, missing citations) are inferred from the text alone \u2014 I cannot verify them against the actual experiments or appendices.",
+  "projection_input": null
+}

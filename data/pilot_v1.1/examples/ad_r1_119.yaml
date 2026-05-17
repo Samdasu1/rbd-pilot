@@ -1,0 +1,118 @@
+delegation_id: ad_r1_119
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 297
+  text: |
+    We introduce RegMagD, a lightweight regression-based debiasing layer
+    for automatic transient classifiers, motivated by the observation
+    that off-the-shelf classifiers exhibit strong magnitude-dependent
+    biases — typically over-predicting Type Ia supernovae among bright
+    sources and under-predicting them among faint sources near the
+    survey detection limit. Across all three benchmarks evaluated,
+    RegMagD reduces the magnitude-dependent classification bias of the
+    underlying classifier by approximately 35% on average, restoring
+    near-uniform per-class performance across the apparent magnitude
+    range.
+
+    We benchmark on three commonly used transient-classification
+    datasets: the ZTF Bright Transient Survey (ZTF-BTS), the ALeRCE
+    alert-stream classification benchmark (ALeRCE-DR1), and the
+    PLAsTiCC-2018 test split. For each dataset we train the same
+    XGBoost backbone with and without the RegMagD post-processing
+    layer and report standard classification metrics: top-1 accuracy,
+    macro-averaged F1, and ROC-AUC, evaluated over the entire test
+    split.
+
+    On ZTF-BTS, the RegMagD classifier reaches 91.4% accuracy versus
+    90.6% for the unmodified baseline, a 0.8-point improvement.
+    Macro-F1 is 88.9 versus 87.8 (+1.1), and ROC-AUC is 0.954 versus
+    0.949. On ALeRCE-DR1, accuracy is 88.5% (vs 88.0%), F1 is 84.4
+    (vs 83.7), AUC is 0.928 (vs 0.925). On PLAsTiCC-2018, accuracy is
+    84.6% (vs 83.7%), F1 is 80.3 (vs 79.1), AUC is 0.903 (vs 0.898).
+
+    These results confirm that RegMagD substantially reduces the
+    magnitude-dependent bias of automatic transient classifiers
+    across three large photometric surveys, supporting our central
+    claim that regression-based post-processing is an effective and
+    survey-agnostic strategy for debiasing automatic evaluators in
+    time-domain astronomy. The cost is negligible: training the
+    regression layer takes under two minutes on a single CPU and the
+    per-alert inference overhead is below 0.1 ms.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch. The central claim is quantitative and specific:
+    "RegMagD reduces the magnitude-dependent classification bias of
+    the underlying classifier by approximately 35% on average" and is
+    restated in the conclusion as "substantially reduces the
+    magnitude-dependent bias ... across three large photometric
+    surveys." However, the only metrics reported in the evidence
+    paragraph are aggregate top-1 accuracy, macro-F1, and ROC-AUC
+    computed over the entire test split. None of these metrics
+    measure magnitude-dependent bias: they are scalar summaries that
+    average across the magnitude axis and would not change if a
+    bright-source over-prediction were exactly cancelled by a faint-
+    source under-prediction. To support the stated claim the section
+    would need bias stratified by apparent magnitude bin (e.g.
+    per-class predicted fraction minus true fraction as a function of
+    m_r), a calibration-vs-magnitude curve, or the slope of residual
+    bias against magnitude. The reported "35% reduction" number is
+    not derivable from any number in the table. Detection requires
+    only careful reading — the mismatch between "magnitude-dependent
+    bias" (the claim) and "aggregate accuracy/F1/AUC" (the evidence)
+    is visible without astronomy expertise (low gating). Delegation
+    T02 is generic and does not name the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notices that the headline claim is about magnitude-dependent bias
+  (and quotes a specific 35% reduction figure) while the evidence
+  paragraph reports only aggregate accuracy, macro-F1, and ROC-AUC,
+  none of which measure how bias varies with apparent magnitude.
+  Recommends reporting per-magnitude-bin bias, a calibration-vs-
+  magnitude curve, or the residual-vs-magnitude slope, and either
+  sourcing the "35% reduction" number from such a measurement or
+  rewording the claim to match what the aggregate metrics actually
+  demonstrate.
+
+bad_outputs_summary: |
+  Accepts the bias-reduction framing and polishes the prose, suggests
+  evaluating on additional surveys (e.g. LSST/Rubin simulations) or
+  swapping the XGBoost backbone for a deep model, or quibbles over
+  the 0.5-point AUC improvements being marginal — without noticing
+  that the reported metrics cannot in principle support a claim
+  about magnitude-dependent bias.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

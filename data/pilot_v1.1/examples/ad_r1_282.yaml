@@ -1,0 +1,164 @@
+delegation_id: ad_r1_282
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: information_retrieval
+  word_count: 410
+  text: |
+    We present QRoute, a cost-aware query router that achieves
+    Pareto-optimal cost-quality trade-offs between a local 7B
+    retrieval-augmented model and a frontier cloud model. Our central
+    contribution is a calibrated difficulty classifier that assigns each
+    user query to the cheapest model expected to meet a user-specified
+    quality threshold, reducing end-to-end inference cost by 41% on MS
+    MARCO QA at matched answer quality.
+
+    3.1 Router Design
+
+    QRoute is a lightweight encoder (110M parameters, frozen DistilBERT
+    backbone) that consumes only the raw user query as input and emits a
+    single scalar — the predicted log-odds that the local 7B model
+    produces an acceptable response. Crucially, the router does not
+    invoke either downstream model at routing time; routing decisions
+    are made in 8 ms on a single CPU core, with no GPU activation of
+    the local 7B prior to the routing decision. We train the router on
+    24,000 query-quality pairs labeled by an LLM-as-judge protocol and
+    calibrate its outputs via temperature scaling on a held-out split.
+
+    3.2 Threshold Tuning
+
+    A user-supplied quality target q in [0,1] is converted into a
+    routing threshold tau(q) via a precomputed mapping. Queries with
+    router score above tau(q) are answered locally; the rest are
+    escalated to the cloud model. Because tau is monotone in q,
+    operators tune the cost-quality trade-off without retraining.
+
+    3.3 Evaluation
+
+    On MS MARCO QA, QRoute reaches 92% of the cloud model's nDCG@10
+    while invoking the cloud model on only 38% of queries. The
+    strongest ablation in Table 2 removes the local 7B's first-token
+    logits from the router's input feature set and observes a 2.1-point
+    drop in nDCG, confirming that probing the local model's response
+    distribution is the dominant signal driving the router's decisions.
+    Without this signal, the router degrades to roughly the level of a
+    query-length heuristic.
+
+    Beyond routing accuracy, the router's calibrated outputs constitute
+    a query-difficulty signal of independent value. We argue that
+    QRoute's most enduring contribution is therefore a general-purpose
+    query-difficulty estimator for retrieval pipelines: index-tier
+    selection, beam-width adaptation in generative retrieval, and
+    adaptive reranking depth all stand to benefit. Preliminary
+    experiments on the BEIR suite suggest the difficulty score
+    generalizes across IR tasks with rho=0.58 to per-query nDCG
+    variance, positioning QRoute as a difficulty-estimation foundation
+    rather than a routing system per se.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  R1.2: [F1.2.b]
+  notes: |
+    The artifact admits two materially different load-bearing readings:
+
+    Reading A — R1.1 dominant (thesis drift):
+      The opening commits the section to a specific contribution: a
+      cost-aware query router with Pareto-optimal cost-quality
+      trade-offs, evidenced by a 41% inference-cost reduction on MS
+      MARCO QA at matched quality. Sections 3.1-3.3 are organized
+      around designing, tuning, and evaluating that router. But the
+      closing paragraph pivots: "QRoute's most enduring contribution is
+      therefore a general-purpose query-difficulty estimator for
+      retrieval pipelines... positioning QRoute as a
+      difficulty-estimation foundation rather than a routing system per
+      se." The claimed contribution has slid from a hybrid-inference
+      router to a generic IR query-difficulty primitive — two distinct
+      artifacts with different baselines (cascade routers and
+      probe-then-escalate systems for the former; existing
+      query-performance predictors and difficulty estimators for the
+      latter) and different evaluations (cost-quality Pareto fronts vs.
+      cross-task correlation with per-query nDCG variance). A reader
+      might reasonably argue that until the section commits to one
+      thesis, no other revision is coherent.
+
+    Reading B — R1.2 dominant (cross-section contradiction):
+      Section 3.1 states unambiguously that QRoute "consumes only the
+      raw user query as input" and that "the router does not invoke
+      either downstream model at routing time; routing decisions are
+      made in 8 ms on a single CPU core, with no GPU activation of the
+      local 7B prior to the routing decision." Section 3.3 then
+      describes the strongest ablation as removing "the local 7B's
+      first-token logits from the router's input feature set" and
+      attributes a 2.1-point nDCG drop to that removal — explicitly
+      treating local-model logits as a (the dominant) router input.
+      These statements cannot both be true: either the router does
+      probe the local 7B and the 8 ms / CPU-only / query-only
+      description in 3.1 is wrong, or the headline ablation in 3.3 is
+      misdescribed and the routing system is in fact something
+      different from what 3.1 claims. The cost numbers, latency claim,
+      and "dominant signal" attribution all rest on which version is
+      true. A reader might reasonably argue this is the load-bearing
+      issue: fixing the thesis is moot while two paragraphs disagree
+      about what the system actually is.
+
+    Both readings are defensible; both flaws are real; rewriting under
+    Reading A (pick one contribution and reorganize around it) produces
+    a different paper than rewriting under Reading B (reconcile the
+    router's actual input set across 3.1 and 3.3 and re-derive the
+    latency, cost, and ablation claims accordingly). A well-calibrated
+    projection agent should set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.85
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the contribution claim sliding from a hybrid-inference router to a
+  general-purpose query-difficulty estimator for retrieval pipelines)
+  from Reading B (the irreconcilable inconsistency between Section
+  3.1's "only the raw user query as input / no downstream-model
+  invocation" claim and Section 3.3's headline ablation that removes
+  the local 7B's first-token logits from the router's inputs). After
+  clarification, addresses the chosen reading thoroughly. If the agent
+  does not clarify, partial credit for addressing one reading and
+  explicitly acknowledging the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to tighten prose,
+  suggest additional baselines, request more BEIR coverage, or
+  recommend sharper notation around tau(q). Treats the closing pivot
+  to query-difficulty estimation as a natural extension rather than a
+  contribution shift, and treats the Section 3.3 ablation as
+  consistent with Section 3.1's input description — implicitly
+  assuming logits were always part of the router's input despite 3.1's
+  explicit denial. Either reading addressed implicitly without
+  acknowledging the other is a partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

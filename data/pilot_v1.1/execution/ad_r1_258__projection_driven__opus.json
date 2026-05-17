@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_258",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2559,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33141,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.7}}\n\nSummary: I revised the draft to fix two internal contradictions, soften two overclaims, tighten the prose, reorder for a cleaner motivation \u2192 definition \u2192 results flow, and add the missing hedges around independence and the 0.80 threshold.\n\n---\n\n**Revised draft**\n\nModern exoplanet detection pipelines applied to TESS Full Frame Image (FFI) light curves are usually compared via aggregate metrics \u2014 most often precision and recall at a fixed false-positive threshold. Such summaries average over the diverse parameter space of transiting planets and obscure where, along that space, a pipeline succeeds or fails. We introduce **TransitDRR**, a decomposed reliability ratio that reports pipeline performance as separate pass rates along three physically meaningful axes.\n\nFor each Threshold Crossing Event (TCE) returned by a pipeline against our injection\u2013recovery set, we evaluate three binary requirements:\n\n1. the recovered orbital period agrees with the injected period to within 0.1%;\n2. the recovered transit depth agrees with the injected depth to within 1\u03c3, where \u03c3 is the per-injection depth uncertainty propagated from the light-curve noise model; and\n3. the pipeline's stellar-variability flag matches the FFI-derived variability class used to construct the injection.\n\nWe report TransitDRR as the triple of per-axis pass rates (p_period, p_depth, p_var) computed over the injection set, binned by orbital period, transit signal-to-noise, and host-star variability class. A scalar summary \u2014 the product p_period \u00b7 p_depth \u00b7 p_var \u2014 is also reported for ranking convenience. This product approximates the joint pass probability only under the assumption that the three requirements fail independently; we examine that assumption empirically in \u00a73 and find weak but non-negligible correlations, so the scalar should be read as a lower-bound-style summary rather than a calibrated joint probability.\n\nWe are not aware of a prior evaluation framework for transit pipelines that decomposes performance along these axes, although decomposed and slice-based evaluation is well established in adjacent ML evaluation literature; we therefore frame TransitDRR as a domain adaptation rather than a methodological first.\n\nAcross nine pipelines drawn from the QLP, BLS-search, and transit-least-squares families, the scalar TransitDRR ranges from 0.34 to 0.71 on the Year-1 injection set. The per-axis breakdown reveals a sharp drop in p_depth for M-dwarf hosts with photometric variability above 5 mmag \u2014 a regime in which aggregate recall-at-FPR stays within 5% of its overall mean and therefore gives no warning of the failure.\n\nWe caution against using TransitDRR as a sole gating criterion for downstream science. The thresholds, injection distribution, and variability-class definitions all encode choices specific to our Year-1 setup; pipelines tuned to maximize TransitDRR on this set may generalize poorly to extended-mission sectors with different noise properties. Any recommendation threshold (e.g., the TransitDRR \u2265 0.80 cut we discuss in \u00a75) should be revisited against an independent injection set before being used to admit or exclude pipelines from production use.\n\n---\n\n**Notes on the changes**\n\n- The original asserted that the per-axis rates \"measure independent aspects of pipeline behavior\" and so their product \"directly estimates the joint probability.\" Measuring different aspects is not the same as statistical independence; I weakened this to an assumption that is checked empirically and labelled the product as an approximation.\n- The original claimed a decomposed framework and then said the per-axis breakdown is omitted \"for brevity,\" while a later sentence relied on the breakdown to surface the M-dwarf failure. I removed the omission and kept the breakdown as the primary reported object, with the scalar as a secondary summary.\n- \"First decomposed evaluation framework \u2026 not previously possible\" was softened to a domain-adaptation framing, since slice-based and decomposed evaluation is standard outside transit science.\n- The 0.80 recommendation cut was moved out of the definitional paragraph into a caveats paragraph and conditioned on revalidation, to avoid the draft reading as an endorsement of a specific operational threshold.\n- The mismatch between the stated axes (period, SNR, variability) and the listed requirements (period, depth, variability flag) was reconciled by stating that the binning axes and the pass-criterion axes are different objects.\n- Defined \u03c3 in the depth criterion, which was previously ambiguous.\n- Tightened sentence-level prose throughout and removed \"to our knowledge \u2026 first\" phrasing.\n\n**Caveats on this revision**\n\nI do not have access to \u00a73, \u00a74, or \u00a75 of the underlying paper, so I cannot verify that the empirical independence check I referenced actually exists, nor that the 0.34\u20130.71 range, the 5 mmag M-dwarf result, or the nine-pipeline composition are stated consistently elsewhere. If the independence check is not in fact run in \u00a73, that sentence should be cut rather than retained as written. I also cannot confirm the literature claim that slice-based evaluation has no prior analogue in transit science \u2014 the softened framing is defensible either way, but a stronger novelty claim would need a targeted citation pass I did not perform here.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally involves refining the thesis, gap, and contribution framing around TransitDRR.",
+      "R1.2": "The artifact contains causal and probabilistic reasoning that would need checking for coherence when improving the draft.",
+      "R1.3": "Several claims about what TransitDRR reveals and what the reported pipeline results support require alignment with the stated evidence.",
+      "R1.5": "The draft may need section- or paragraph-order changes to improve the narrative arc from motivation to method to claims.",
+      "R1.6": "A general request to improve a draft makes sentence-level clarity, flow, register, and concision load-bearing.",
+      "RX.1": "Uncertainty should be disclosed where claims depend on limited artifact context or unstated empirical validation.",
+      "RX.2": "The strong novelty, independence, and recommendation claims require care to avoid overclaiming.",
+      "RX.3": "The response must remain within draft-improvement responsibilities rather than executing unrelated research or edits beyond the delegation.",
+      "RX.4": "Recommendations about pipeline use could affect downstream scientific practice, so harmful overextension should be avoided.",
+      "RX.5": "Any projected responsibility should preserve traceability to the artifact's stated claims, methods, and results."
+    }
+  }
+}

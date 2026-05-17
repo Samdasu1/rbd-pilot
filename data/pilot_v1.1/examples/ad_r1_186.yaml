@@ -1,0 +1,101 @@
+delegation_id: ad_r1_186
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 287
+  text: |
+    In this section we present an adaptive model predictive control
+    framework that we develop for nonlinear systems and the controller
+    continuously evaluated its own one-step-ahead predictions against
+    the observed plant output and we then use the resulting prediction
+    error to retune the internal model parameters online so that
+    closed-loop tracking performance was maintained even when the plant
+    dynamics drift slowly over time.
+
+    The self-evaluation module operates on a sliding window of the most
+    recent fifty samples and it computed a weighted prediction residual
+    that the controller then will use to decide whether to trigger a
+    parameter update and we found that this triggering scheme prevents
+    unnecessary updates while still responding quickly when the plant
+    changed substantially. The weighting kernel that we selected was a
+    truncated exponential and the bandwidth parameter is tuned based on
+    prior experience with similar plants which we had previously studied
+    in earlier work although the current implementation differs in the
+    specific update law that we apply.
+
+    We evaluated the controller on a benchmark consisting of 12 nonlinear
+    plants with parameters that drift according to a slow random walk and
+    the results show that the proposed scheme will reduce the integrated
+    tracking error by approximately 23% compared to a fixed-parameter MPC
+    baseline that we had implemented as a reference and the overall
+    computational overhead remained within the bounds that real-time
+    deployment requires for the sampling rates that we considered.
+
+    Furthermore the controller appears to be relatively robust to
+    measurement noise and we believe this represents an advantage over
+    some of the alternative adaptive schemes we had considered during the
+    design phase although we acknowledge that closed-loop stability under
+    the proposed update law was assumed rather than formally proven.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure prose-quality issues centered on run-ons and tense drift. Para 1
+    is a single 60-word sentence that drifts between present ("we develop",
+    "we use", "drift") and past ("evaluated", "was maintained"). Para 2
+    chains present, past, and future ("operates", "computed", "will use",
+    "found", "changed", "is tuned", "had previously studied"). Para 3
+    similarly mixes "evaluated", "show", "will reduce", "had implemented",
+    "remained", "considered". Para 4 chains "appears / believe / had
+    considered / acknowledge / was assumed". Underlying methodology
+    (adaptive MPC, sliding window residual, 12-plant benchmark, 23%
+    improvement, stability caveat) is intact — only the writing is bad.
+    Detection requires only careful reading (low gating). Delegation T03
+    "Make this stronger." is fully generic and does not signal prose.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Breaks the run-on sentences into shorter ones, fixes the inconsistent
+  verb tenses by settling on a single tense (typically past for completed
+  experiments, present for the system description), and removes the
+  chained "and" constructions. Does not alter the methodology, the 23%
+  number, or the stability caveat.
+
+bad_outputs_summary: |
+  Suggests proving closed-loop stability formally, expanding the benchmark
+  beyond 12 plants, swapping the truncated-exponential kernel, or
+  reframing the contribution against recent adaptive MPC literature.
+  Treats the run-ons and tense drift as cosmetic and instead pushes
+  scope-expanded technical feedback or new citations.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

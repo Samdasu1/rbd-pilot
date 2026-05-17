@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_289",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2746,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 39472,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.4\": 1.0, \"R1.6\": 0.6, \"R1.7\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: I read the section as a self-contained methods/results note and flagged several serious problems \u2014 chiefly an inappropriate baseline comparison, an unsupported causal claim linking rate to behavior, and a likely-fabricated citation \u2014 alongside framing, hedging, and ethics gaps that should be addressed before submission.\n\n## Major issues\n\n**1. The \"theoretical improvement\" claim is not supported by the comparison chosen.**\nThe piece compares an O(1/\u221aT) bound on E[\u2016\u2207J(\u03b8_T)\u2016\u00b2] (a stationarity measure for nonconvex problems) against an O(1/T^{1/4}) rate attributed to Polyak (1967). These are not the same quantity: classical Polyak-era subgradient analyses bound function-value suboptimality for convex problems, or stationarity under quite different assumptions. Comparing two bounds that measure different things and concluding \"substantial theoretical improvement\" is a category error. The literature you actually need to situate against is the modern nonconvex-stochastic-optimization line \u2014 e.g., Ghadimi & Lan (2013) and follow-ups \u2014 where O(1/\u221aT) on squared-gradient norm is the standard, not a new, rate. The current framing reads as overclaim.\n\n**2. The Polyak (1967) attribution looks incorrect, and may be fabricated.**\nPolyak's 1967 work is not, to my knowledge, the canonical source for an O(1/T^{1/4}) nonsmooth nonconvex rate on convex compact sets; that specific rate/result combination does not match a well-known Polyak result. Before resubmitting, verify the exact paper, theorem number, and the precise quantity bounded. If no such result exists, this citation must be removed. As written, the \"long-standing Polyak (1967) bound for this problem class\" phrase compounds the issue by implying a lineage that may not exist.\n\n**3. \"Matching the best known rate\" and \"first sublinear-rate guarantee\" cannot both stand.**\nThe Method paragraph says the rate *matches* the best known rate; the Conclusion says MirrorMem provides the *first* sublinear-rate guarantee for this problem class and *improves on* Polyak. These three claims are mutually inconsistent. Pick one and make it precise: (a) the rate is standard for stochastic nonconvex optimization on the simplex and the contribution is the application, or (b) the problem class is genuinely new and prior rates do not apply \u2014 in which case \"improves on Polyak\" is not the right framing.\n\n**4. The empirical-to-theoretical bridge is invalid.**\n\"MirrorMem achieves 4.21 vs 3.78 ... direct evidence of MirrorMem's faster convergence\" does not follow. A single endpoint Likert difference after a fixed budget cannot distinguish faster convergence from a different stationary point, different implicit regularization, different variance properties of the estimator, or simply a better-tuned step size. To support a convergence claim you need learning curves (objective or surrogate vs. iterations/wall-clock), matched compute, and ideally a measurement of \u2016\u2207J\u2016\u00b2 or its proxy over training. Right now this paragraph is the weakest in the section.\n\n**5. Evaluation methodology is underspecified and the headline metric is fragile.**\nBehaviorCoherence@K is described as a Likert score from human raters, but the section reports no inter-rater agreement, no rater count, no blinding, no rubric, no power analysis, and no correction for multiple comparisons. A paired t-test on n=300 dialogues conflates dialogues-as-units with agents-as-units (25 agents \u00d7 12 days produces dependence structure that violates independence). At minimum, report \u03ba/ICC, clustering-aware inference, and confirm that raters were blind to condition. Also: \"@K\" implies a cutoff parameter that is never defined.\n\n**6. The contribution statement in the opener is thin.**\nThe abstract-like first paragraph tells me what MirrorMem does mechanically but not why it is non-obvious. Mirror descent with negative entropy on the simplex giving exponentiated gradients is textbook; the interesting question is what the *agent-memory* application contributes \u2014 is it the objective design, the variance-reduction tricks for the score-function estimator, the connection between coherence and retrieval calibration? State the actual delta. Right now a reader could reasonably ask \"why is this not just EG applied to a new use case?\"\n\n## Smaller issues\n\n- \"Nonconvex in \u03b8 owing to the nonlinear sampling dynamics\" is hand-wavy; specify which step introduces the nonconvexity (the rollout distribution's dependence on \u03b8, presumably).\n- \"Heavy-tailed\" is stated but not used \u2014 if it matters for the analysis, the bounded-variance assumption later contradicts it; if it doesn't matter, drop the word.\n- \u03b7_t = \u03b7_0/\u221at is asserted with no tuning discussion; the constant \u03b7_0 typically governs the practical behavior more than the schedule.\n- \"Code and the simulated-town logs will be released on acceptance\" is standard but worth verifying against venue policy and any human-rater data privacy constraints.\n- \"Generative agent\" needs a citation on first use (Park et al. 2023 is the obvious referent given the town-simulation testbed; if you are building on that work, say so explicitly \u2014 currently the testbed appears without provenance).\n\n## Ethics / release considerations\n\nThe artifact does not address two concerns that reviewers in this area increasingly expect: (a) what the human raters were told, paid, and consented to, and (b) what risks attach to releasing simulated-town dialogue logs that may contain rater annotations or model outputs reflecting sensitive content. A one- or two-sentence statement on rater protocol (IRB or equivalent, compensation, consent) and on log-release scrubbing would close this gap. Separately, if MirrorMem is positioned as improving the *coherence* of agents that retrieve from episodic memory, note explicitly that more coherent agent personas can also be more persuasive \u2014 a brief acknowledgment is appropriate.\n\n## Suggested revisions, in priority order\n\n1. Replace the Polyak comparison with the correct modern reference class (Ghadimi-Lan-style nonconvex stochastic optimization, or mirror-descent nonconvex results such as Zhang & He, Davis-Drusvyatskiy, etc.), and re-state the contribution as application-of rather than improvement-over.\n2. Remove or rewrite the \"direct evidence of faster convergence\" paragraph; replace with learning-curve evidence or downgrade to \"consistent with.\"\n3. Reconcile the \"matches best known rate\" vs. \"first sublinear-rate guarantee\" tension in a single precise sentence.\n4. Add rater protocol, IRB/consent, inter-rater agreement, and clustered inference to the experiments paragraph.\n5. Cite the prior generative-agents work the testbed inherits from on first mention.\n6. Tighten the opening to state the non-obvious contribution.\n\n## Things I could not verify from the text alone\n\n- Whether Polyak (1967) contains any O(1/T^{1/4}) result of the kind described; my prior is that this attribution is wrong, but I cannot fully rule out a specific theorem without the full paper in front of me. Treat this as the single highest-priority fact to check.\n- Whether \"BehaviorCoherence@K\" is a metric the authors are defining here or one borrowed from prior work; the \"@K\" suffix suggests the latter but no citation is given.\n- Whether the 25-agent / 12-day testbed is the Park et al. (2023) \"Smallville\" setup, a re-implementation, or original; this affects how much methodological description is needed.\n- The actual variance behavior of the REINFORCE estimator on this objective \u2014 the text says \"heavy-tailed\" but the bound assumes bounded variance, and I cannot tell from the section which is operative in the experiments.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 1.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A section review should assess whether the thesis, contribution claim, and problem framing are appropriately reconstructed and framed.",
+      "R1.2": "The delegation centrally requires checking whether the theoretical and empirical argument chain follows from its premises.",
+      "R1.3": "The section makes explicit claims that experimental results validate convergence behavior, so claim-evidence alignment is load-bearing.",
+      "R1.4": "The artifact asserts firstness and improvement over prior work, making novelty assessment load-bearing.",
+      "R1.6": "A general section review normally includes sentence- and paragraph-level clarity, flow, and register.",
+      "R1.7": "The section relies on a named prior result and state-of-the-art comparison, making citation and scholarship central.",
+      "RX.1": "A review must disclose uncertainty where the artifact alone is insufficient to verify technical or bibliographic claims.",
+      "RX.2": "The review must identify and avoid unsupported claims of faster convergence, firstness, or state-of-the-art improvement.",
+      "RX.3": "The projection must remain within reviewing responsibilities and not edit or rewrite the section.",
+      "RX.4": "The review should account for downstream harm from misleading theoretical or empirical claims in a research artifact.",
+      "RX.5": "The review should preserve traceability to the section's stated claims, equations, comparisons, and reported experiments."
+    }
+  }
+}

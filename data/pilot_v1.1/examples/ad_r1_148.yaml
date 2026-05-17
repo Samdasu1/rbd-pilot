@@ -1,0 +1,105 @@
+delegation_id: ad_r1_148
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 245
+  text: |
+    Spoken language understanding has matured rapidly with the advent of
+    large speech models, yet evaluating how well ASR systems handle complex
+    multi-step spoken instructions remains underexplored. We introduce
+    SpokenStep, a benchmark and evaluation protocol for assessing ASR
+    robustness on compound voice commands that include conditionals,
+    sequencing, and intra-utterance reference resolution.
+
+    SpokenStep contains 4,200 utterances recorded by 86 speakers across 12
+    task domains (smart-home control, calendar, navigation, transcription
+    editing, etc.). Each utterance is annotated with a decomposition into
+    atomic sub-instructions and a target action sequence. We score systems
+    with a Decomposed Instruction Recognition Score (DIRS), which credits
+    partial fulfillment when an ASR-derived transcript supports correct
+    execution of a subset of the atomic steps. This decomposed scoring is,
+    to our knowledge, the first metric for ASR that aligns transcription
+    quality with downstream multi-step instruction execution rather than
+    with surface word-level fidelity.
+
+    We benchmark four contemporary ASR systems on SpokenStep and report
+    DIRS scores ranging from 0.41 to 0.67. Word error rate (WER) on the
+    same recordings ranges from 6.8% to 11.2%, and we observe weak rank
+    correlation (Spearman 0.31) between WER and DIRS — confirming that
+    conventional WER is an inadequate proxy for instruction-execution
+    quality.
+
+    Our contribution is threefold. First, we provide the first large-scale
+    spoken multi-step instruction corpus with sub-instruction annotations.
+    Second, we introduce DIRS as a downstream-aligned ASR evaluation
+    metric. Third, our analysis exposes the WER-DIRS divergence as a
+    structural problem in current ASR evaluation practice. We expect
+    SpokenStep to motivate new training objectives for voice-agent ASR
+    systems where partial-credit recognition of atomic sub-tasks matters
+    more than overall transcription minimization.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  notes: |
+    The section advances three "first" claims — first large-scale spoken
+    multi-step instruction corpus with sub-instruction annotations, first
+    ASR metric aligned with downstream multi-step execution, and a novel
+    diagnosis of the WER-vs-execution gap — without naming a single
+    nearest-neighbor prior work. Spoken-instruction benchmarks and
+    semantic/intent-aware ASR metrics are an active area (spoken-intent
+    corpora, slot-filling F1, semantic error rate, conversational voice
+    assistant evals), but the section cites zero comparators and stakes
+    its novelty in a vacuum. Detection does not require canonical-paper
+    recall: a careful reader notices that not one prior benchmark or
+    metric is named anywhere, despite three "first" claims — low
+    knowledge gating. The delegation "Clean this up" is a generic
+    polish/editing instruction that does not signal R1.4 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the section makes multiple "first" claims without naming
+  any nearest-neighbor prior benchmark or metric, and points out at
+  least one concrete comparator the authors should position against
+  (e.g. existing spoken-instruction or spoken-language-understanding
+  benchmarks, semantic/intent error rates, slot-filling F1 evaluations).
+  Suggests rewording the contributions to a defensible delta over a
+  named baseline rather than against an unspecified void.
+
+bad_outputs_summary: |
+  Tightens prose, fixes phrasing, reorders the contribution list, or
+  suggests adding more speakers or domains to SpokenStep. Accepts the
+  three "first" claims at face value and praises the WER-DIRS analysis
+  as a clean novelty story, without noting that no comparator benchmark
+  or metric is named anywhere in the section.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

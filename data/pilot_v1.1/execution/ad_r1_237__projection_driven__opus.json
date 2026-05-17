@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_237",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2422,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32225,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 0.7, \"R1.5\": 0.7, \"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: I revised the abstract to tone down promotional language, tightened the argument chain, reordered for clarity, hedged claims that the reported evidence does not fully support, and flagged remaining items the author should verify.\n\n---\n\n**Revised draft**\n\nWe critically evaluate the standard benchmarks used to compare drug\u2013target interaction (DTI) prediction methods and introduce RigorDTI, a benchmark suite designed to better discriminate among them. Recent years have seen rapid growth in deep-learning approaches to DTI prediction, with successive methods reporting state-of-the-art performance on a small set of shared datasets. On two of the most widely used of these, DAVIS and KIBA, we find that the top fifteen published methods we surveyed fall within roughly one percentage point of mean squared error of one another, leaving little headroom for meaningful comparison.\n\nRigorDTI contributes two things. First, it curates approximately 124,000 binding measurements drawn from ChEMBL, paired with time-based and scaffold-based train/test splits intended to surface generalization failures that random splits obscure. Second, we report reference results on RigorDTI for nine widely cited DTI methods, retrained from the authors' released code where available and otherwise reimplemented (see Methods for details on each).\n\nThe time-split protocol follows a long line of cheminformatics work on retrospective QSAR validation; we adopt it here for the DTI setting and pair it with a scaffold-based hold-out in keeping with established practice. We cite Sheridan and colleagues as a representative reference for this protocol.\n\nAcross the nine methods, a consistent pattern emerges. Under random splits, RMSE values cluster within 0.02 of one another (range 0.71\u20130.73). Under the time-based split, the same methods spread to a range of 0.84\u20131.31 RMSE \u2014 roughly a six-fold increase in dispersion. We read this as evidence that random-split evaluation can mask substantial differences in out-of-distribution generalization among methods that appear nearly indistinguishable under current benchmarks.\n\nOn the basis of these results, we suggest that the community consider RigorDTI, or benchmarks constructed on similar principles, alongside or in place of DAVIS and KIBA when evaluating new DTI methods.\n\n---\n\n**Key changes and rationale**\n\n1. *Promotional language removed.* Phrases such as \"decisively resolves,\" \"transformative advance,\" \"substantial leap forward,\" and \"definitive new standard\" went well beyond what nine retrained methods on one new benchmark can establish. They have been replaced with descriptive claims tied to the evidence actually reported.\n\n2. *\"Discriminative\" softened.* \"More discriminative benchmark suite\" was kept but reframed as a design goal (\"designed to better discriminate\") rather than an established property, since discrimination is demonstrated for nine methods, not in general.\n\n3. *Saturation claim narrowed.* \"The top fifteen published methods cluster within a single percentage point of MSE\" is now scoped to \"the top fifteen \u2026 we surveyed\" \u2014 the original implied an exhaustive survey that the abstract does not document. The author should confirm the exact selection criteria are described in the body.\n\n4. *Sheridan citation.* The original wrote \"first introduced for retrospective QSAR validation by Sheridan and colleagues (Sheridan et al., 2024).\" Time-split validation in QSAR predates 2024 by well over a decade (Sheridan's own work on this dates to around 2013); attributing the *introduction* of the protocol to a 2024 paper is almost certainly a citation error. I rephrased to \"a long line of cheminformatics work \u2026 we cite Sheridan and colleagues as a representative reference.\" Please verify the intended citation and year, and add the foundational reference (e.g., Sheridan, *J. Chem. Inf. Model.* 2013) if appropriate.\n\n5. *\"Long-standing question \u2026 resolved.\"* The claim that one benchmark with nine methods resolves a long-standing question is too strong. Replaced with a narrower interpretive statement about what the dispersion data suggest.\n\n6. *Reordering.* The methodological-lineage paragraph (time splits, scaffold splits) was moved to sit between the contribution summary and the results, so the abstract now reads: problem \u2192 contribution \u2192 method lineage \u2192 results \u2192 recommendation. The original placed lineage after contributions but before any results, which read fine; the revision keeps that order while making the transitions cleaner.\n\n7. *Recommendation softened.* \"Should replace DAVIS and KIBA as the default community benchmark\" is a strong normative claim from a single paper. Revised to a suggestion that the community consider RigorDTI or similarly constructed benchmarks alongside or in place of the current defaults.\n\n8. *Minor prose tightening.* \"An explosion of\" \u2192 \"rapid growth in\"; \"each claiming state-of-the-art on the same handful of datasets\" \u2192 \"with successive methods reporting state-of-the-art performance on a small set of shared datasets\"; \"6\u00d7 increase\" \u2192 \"roughly a six-fold increase\" for register consistency; \"carefully constructed\" deleted as filler.\n\n9. *Implementation provenance.* Added \"and otherwise reimplemented (see Methods for details)\" \u2014 the original said \"retrained from authors' released code where available\" but did not say what happened in the other cases. If reimplementation was not done, this should instead say which methods were omitted and why.\n\n---\n\n**Items I could not verify and that warrant author attention**\n\n- The Sheridan 2024 citation is likely incorrect or at least misleading about precedence; please confirm.\n- \"Top fifteen published methods\" \u2014 the basis of this set (which methods, which leaderboard, which time window) is not specified in the abstract; the body should make this reproducible.\n- \"124,000 binding measurements from ChEMBL\" \u2014 the abstract does not state the ChEMBL version, activity-type filtering (Ki vs. IC50 vs. Kd), or assay-confidence thresholds. These choices materially affect the benchmark and should be stated, at minimum in the Methods.\n- The claim that random-split saturation indicates a lack of *generalization* capacity (rather than, say, label noise ceilings on DAVIS/KIBA) is one plausible interpretation but not the only one; I left the wording neutral, but a sentence in the discussion acknowledging alternative explanations (assay noise floor, narrow chemical diversity in DAVIS/KIBA) would strengthen the paper.\n- Potential downstream-use consideration: if RigorDTI is positioned as a community default, the paper should address dataset-licensing/attribution for the ChEMBL extract and how the splits will be versioned, so that later users can cite a fixed artifact rather than a moving target.\n\nI have not seen the underlying methods, the actual ChEMBL extraction code, or the retraining results, so the substantive critique here is limited to what the abstract itself claims. Recommendations 3, 4, and the \"items to verify\" list in particular depend on details only the author can confirm.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes refining the thesis, contribution framing, and benchmark motivation above the sentence level.",
+      "R1.2": "The argument that benchmark saturation motivates RigorDTI and that RigorDTI resolves comparison problems needs logical checking.",
+      "R1.3": "Several strong claims depend on reported RMSE ranges, dispersion, dataset construction, and method comparisons, so support alignment is central.",
+      "R1.5": "The draft may need section-level or paragraph-level narrative reordering to improve the research story and contribution arc.",
+      "R1.6": "A general request to improve a draft makes sentence-level clarity, concision, register, and flow load-bearing.",
+      "RX.1": "Uncertainty should be disclosed where the draft makes empirical or field-level claims that may depend on incomplete evidence.",
+      "RX.2": "The artifact contains strong language such as definitive, transformative, and decisively resolves, making overclaim avoidance load-bearing.",
+      "RX.3": "The response must stay within improving the research draft rather than performing unrelated review or execution tasks.",
+      "RX.4": "Because benchmark claims can influence scientific practice, the improvement should avoid misleading downstream readers about rigor or generality.",
+      "RX.5": "Changes should preserve traceability to the reported datasets, splits, methods, citations, and numerical results."
+    }
+  }
+}

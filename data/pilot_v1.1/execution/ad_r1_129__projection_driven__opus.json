@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_129",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1998,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 26989,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.85, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: Reviewed the paragraph as a paper abstract; the prose is fluent but the substantive claims are saturated with superlatives that the reported evidence does not support, and at least one technical move is internally inconsistent. Below are the issues to fix before this can stand as written.\n\n**Repeated \"first\"-claims are unsupported and should be retracted or qualified.**\nThe text asserts, in four separate places, that the work is the \"first\" of its kind: first framework applying doubly-robust causal estimation to tool-use calibration; first to formulate agent calibration as an interventional question; first identification result for tool-use effects in agentic systems; first quantitative evidence of causally meaningful miscalibration; and the \"first principled bridge\" between calibration and modern causal inference. No prior-work survey is reported in the paragraph, and adjacent literatures (off-policy evaluation for RL agents, causal estimation of intervention effects in sequential decision-making, AIPW-based policy evaluation, and counterfactual reasoning in LLM tool use) plausibly contain overlapping contributions. At minimum, soften to \"to our knowledge\" once, and drop the remaining instances. Better: replace with a concrete delta statement (\"unlike prior calibration work, which uses proper scoring rules against task success, we estimate an interventional ATE for tool calls\").\n\n**The propensity-score construction is technically inconsistent.**\nThe paragraph says the agent's pre-call confidence \"serves as the propensity score e(X_i)\" and then reports a correlation of 0.31 between that same pre-call confidence and the estimated individual treatment effect. But the propensity score is, by definition, P(T=1 | X) \u2014 the agent's actual probability of *taking* the action, not its stated confidence in *needing* it. Conflating \"confidence that a tool call is needed\" with \"probability the agent invokes the tool\" only holds if the agent's policy is exactly to call the tool with probability equal to its stated confidence; this is a strong assumption that needs to be stated and defended. Otherwise the AIPW estimator is not using a valid propensity score and the \"unbiased estimate\" claim does not go through.\n\n**The sequential ignorability assumption is asserted, not argued.**\n\"Conditioning on the visible transcript renders treatment assignment ignorable\" is precisely the assumption that fails in most realistic agent settings \u2014 the agent's internal state (chain of thought, hidden activations) is a confounder that affects both whether it calls the tool and whether the final answer is correct, and that internal state is not in the transcript. The abstract should either flag this as a limitation or restrict the claim to \"under the stated assumption\" rather than asserting \"we obtain an unbiased estimate.\"\n\n**The headline empirical claim overreaches what the numbers show.**\nA correlation of 0.31 between stated confidence and estimated ITE is weak-to-moderate, not strong, and is being asked to carry the conclusion that agents \"do not invoke tools when intervention would most help.\" That conclusion is directional and stronger than r = 0.31 on 1,200 trajectories from a single agent supports. Either report what the correlation actually implies (some signal, much unexplained variance), or back the stronger claim with a decision-theoretic analysis (e.g., regret relative to the oracle invocation policy).\n\n**External validity is overstated.**\nResults come from one agent on one task family (tool-using QA) with 1,200 trajectories. The closing claim that the framework will \"become the default lens for evaluating tool-use trustworthiness going forward\" is a marketing line, not a research claim, and undermines credibility. Cut it.\n\n**\"Doubly-robust\" is named but not earned.**\nDoubly-robust estimation requires both an outcome model and a propensity model; only the propensity side is described. Either name the outcome model (and say which of the two has to be correctly specified for consistency in your setting) or drop the \"doubly-robust\" framing in favor of \"AIPW with a stated propensity model.\"\n\n**Prose tightening.**\n\"Track that ATE\" mixes a population estimand (ATE) with an individual-level question (does stated confidence track the per-instance effect?); use ITE or CATE consistently. \"The first time calibration has been linked to causal estimands rather than scoring rules\" is sweeping \u2014 calibration *is* a statement about conditional probabilities, which is already a causal-adjacent object under standard assumptions. \"We sketch in Section 6\" is fine but the abstract should not punt the most forward-looking contribution to a forward reference.\n\n**Suggested rewrite of the contribution sentence:**\nReplace \"We are the first to formulate calibration as an interventional question\u2026\" with something like: \"We reframe tool-use calibration as estimation of an interventional effect: the average treatment effect of a tool call on terminal answer accuracy, and the alignment between the agent's pre-call confidence and that effect.\"\n\n**What I could not verify.**\nI have not checked the literature on causal evaluation of LLM tool use or off-policy evaluation for agentic systems against the \"first\" claims; the recommendation to drop or soften them is based on the absence of a prior-work justification in the paragraph itself, not on a confirmed prior-art find. I have also not seen the underlying paper, so the propensity-as-confidence critique assumes the abstract describes the method faithfully; if the method actually estimates P(T=1|X) separately and the abstract is just compressing, the technical critique becomes a writing critique instead. The 1,200-trajectory sample size and the 95% CI [0.14, 0.22] are taken at face value; I have not assessed whether the bootstrap procedure handles within-trajectory dependence correctly, which is a likely additional issue if multiple tool calls per trajectory are pooled.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the paragraph check focus primarily on writing polish, argument/evidence validity, or novelty and prior-work positioning?",
+    "rationale": {
+      "R1.2": "A general request to look at the paragraph plausibly includes checking whether the causal-identification argument follows coherently from its assumptions to its conclusions.",
+      "R1.3": "The paragraph makes empirical claims about ATE, confidence correlation, and miscalibration, so checking whether the reported results support those claims is centrally implicated.",
+      "R1.4": "Repeated firstness and contribution claims make novelty assessment a central possible responsibility for this delegation.",
+      "R1.6": "Because the artifact is a paragraph and the delegation is broad, sentence- and paragraph-level clarity and register are a central expected responsibility.",
+      "RX.1": "Any projection should preserve uncertainty because the delegation is underspecified and the artifact alone cannot determine the intended review type.",
+      "RX.2": "The artifact contains strong firstness and future-impact claims, so avoiding projected responsibility for unsupported overclaiming is load-bearing.",
+      "RX.3": "The agent must only project responsibilities and not actually review or revise the paragraph.",
+      "RX.4": "The projection should account for possible downstream harm from inflated scientific claims about causal identification or trustworthiness.",
+      "RX.5": "The rationale must remain traceable to the delegation wording and the paragraph's explicit claims."
+    }
+  }
+}

@@ -1,0 +1,115 @@
+delegation_id: ad_r1_184
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 304
+  text: |
+    This section reports convergence experiments for the proposed flexible
+    inner-outer Krylov scheme on a benchmark of indefinite saddle-point
+    systems arising from mixed finite element discretizations of the Stokes
+    problem on unstructured tetrahedral meshes. We evaluate the proposed
+    flexible inner-outer Krylov scheme on indefinite saddle-point systems
+    arising from mixed finite element discretizations of the Stokes problem
+    on unstructured tetrahedral meshes, with up to 12 million degrees of
+    freedom.
+
+    The outer iteration is FGMRES restarted every 50 cycles, and the inner
+    iteration is preconditioned MINRES applied to the Schur-complement
+    block. We use FGMRES restarted every 50 cycles as the outer iteration
+    because FGMRES tolerates a variable preconditioner, and we use
+    preconditioned MINRES on the Schur complement as the inner iteration
+    because preconditioned MINRES exploits symmetry of the Schur complement
+    block. The Schur-complement preconditioner is a pressure-mass-matrix
+    approximation, which is the standard pressure-mass-matrix approximation
+    used in the literature for this class of saddle-point systems.
+
+    For each test problem we measure the number of outer FGMRES iterations
+    required to reduce the preconditioned residual norm below 10^-8
+    relative to the initial residual. We also report the cumulative number
+    of inner MINRES iterations required to reduce the preconditioned
+    residual norm below 10^-8. The outer iteration counts and inner
+    iteration counts are reported in Table 1, and the outer iteration
+    counts and inner iteration counts confirm grid-independent convergence
+    under uniform refinement.
+
+    Across all test problems the proposed flexible inner-outer scheme
+    requires fewer outer iterations than the baseline block-diagonal
+    preconditioned MINRES. Across all test problems the proposed flexible
+    inner-outer scheme also requires lower cumulative inner work than the
+    baseline block-diagonal preconditioned MINRES. We conclude that the
+    flexible inner-outer scheme is preferable to the baseline block-diagonal
+    preconditioned MINRES on this class of saddle-point systems, and we
+    conclude that this improvement is robust under mesh refinement.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.c]
+  notes: |
+    Pure repetition flaw (F1.6.c). Para 1 restates the benchmark
+    description ("indefinite saddle-point systems arising from mixed
+    finite element discretizations of the Stokes problem on unstructured
+    tetrahedral meshes") nearly verbatim across two adjacent sentences.
+    Para 2 echoes "FGMRES restarted every 50 cycles", "preconditioned
+    MINRES", "Schur complement", and the loaded "pressure-mass-matrix
+    approximation ... standard pressure-mass-matrix approximation". Para 3
+    repeats the stopping criterion "to reduce the preconditioned residual
+    norm below 10^-8" and doubles "outer iteration counts and inner
+    iteration counts". Para 4 opens twice with "Across all test problems
+    the proposed flexible inner-outer scheme ... than the baseline
+    block-diagonal preconditioned MINRES" and closes with a doubled
+    "we conclude that ...". Underlying methodology, numbers, and
+    structure are intact; only the surface form is degraded by repetition.
+    High gating because a reader must follow the FGMRES / Schur-complement
+    / pressure-mass-matrix / saddle-point machinery closely enough to
+    confirm the repeated phrases are not adding precision but merely
+    echoing. The T09 delegation "What do you think?" is fully generic
+    and does not signal R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Collapses the duplicated benchmark description, preconditioner
+  description, and stopping-criterion clauses into single mentions;
+  removes the doubled "Across all test problems ..." opening and the
+  doubled "we conclude that ..." closing. Leaves the FGMRES / MINRES
+  / Schur-complement methodology, the 10^-8 tolerance, the 12M-DoF
+  benchmark, and the comparative claim against block-diagonal MINRES
+  unchanged.
+
+bad_outputs_summary: |
+  Questions the choice of pressure-mass-matrix preconditioner, asks for
+  field-of-values bounds or condition-number estimates, suggests
+  alternative inner solvers (e.g. Chebyshev), proposes additional
+  benchmarks or strong-scaling studies, or requests a convergence
+  proof. Reframes the contribution or pushes scope outward, while
+  treating the redundant phrasing as a cosmetic afterthought.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

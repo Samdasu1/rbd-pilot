@@ -1,0 +1,167 @@
+delegation_id: ad_r1_233
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: graph_neural_networks
+  word_count: 365
+  text: |
+    Knowledge graphs (KGs) underlie a growing fraction of question
+    answering systems, but real-world user queries frequently admit
+    multiple valid interpretations. A query such as "What is the capital
+    of Georgia?" may refer to the U.S. state or the country; a query
+    about "Mercury" may refer to the planet, the element, or the Roman
+    deity. We propose AmbiGNN, a graph neural network that conditions on
+    the local KG neighborhood of candidate entities and produces a
+    distribution over interpretations of an ambiguous query.
+
+    Our object of evaluation is *interpretation alignment*: the property
+    that, for each ambiguous query, the system's top-ranked interpretation
+    matches the interpretation the *individual user* actually intended.
+    Aligning with user intent — rather than with a corpus-average prior —
+    is what determines whether the user is served by the response, since
+    two users issuing the same surface query may have opposing
+    information needs. To operationalize this, we construct AmbigKG-Eval,
+    a benchmark of 4,200 ambiguous queries drawn from Wikidata-anchored
+    question logs. For each query we collect a single gold interpretation
+    label by majority vote over five crowd annotators and report top-1
+    accuracy against this majority-vote label, defining a system as
+    "interpretation-aligned" when its top-ranked candidate matches the
+    gold label.
+
+    AmbiGNN achieves 71.8% top-1 accuracy on AmbigKG-Eval, compared to
+    58.4% for a BM25 retrieval baseline and 64.1% for a fine-tuned
+    BERT-based classifier without graph structure. We interpret this gap
+    as direct evidence that AmbiGNN is better aligned with user intent
+    on ambiguous queries than non-graph baselines.
+
+    A central methodological contribution of this work is the formulation
+    of ambiguous query answering as a distribution-over-interpretations
+    problem solved by a GNN; to the best of our knowledge, this is the
+    first GNN approach to model query ambiguity as a distribution over
+    candidate interpretations. Our architecture builds on the entity-
+    disambiguation framework of Chen et al. (2022), who use a graph
+    attention network to compute posterior distributions over candidate
+    entities for ambiguous mentions, and on the multi-interpretation
+    retrieval approach of Liu and Park (2023), who train a GNN encoder to
+    score competing interpretations of underspecified queries. AmbiGNN
+    extends these lines of work by additionally conditioning on the
+    user's recent KG interaction history, and the remainder of the paper
+    develops the loss and training procedure.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Two load-bearing flaws, both detectable from careful internal
+    reading without recall of canonical works in entity disambiguation
+    or KG-QA literature.
+
+    R1.3 — metric mismatch. The section defines its object of
+    evaluation, interpretation alignment, as the property that the
+    system's top-ranked interpretation matches "the interpretation the
+    *individual user* actually intended," and underscores that aligning
+    with user intent — "rather than with a corpus-average prior" —
+    is what matters because "two users issuing the same surface query
+    may have opposing information needs." The metric it then reports is
+    top-1 accuracy against a single gold label produced by majority
+    vote over five crowd annotators. A majority-vote label is, by
+    construction, the corpus-average prior the section itself disclaims
+    as the wrong target: it collapses minority-but-correct
+    interpretations into errors and rewards systems that always pick
+    the population-majority sense even when an individual user wanted
+    the minority sense. The interpretive sentence ("better aligned with
+    user intent on ambiguous queries") is therefore not supported by
+    the metric. Fixing this requires a metric tied to per-user intent
+    — e.g., evaluation against per-user labels, distributional metrics
+    against the empirical interpretation distribution, or a
+    minority-sense recall — which would change what the section
+    reports and could rerank AmbiGNN against the BERT baseline.
+
+    R1.7 — missing key prior work. The section asserts, "to the best
+    of our knowledge, this is the first GNN approach to model query
+    ambiguity as a distribution over candidate interpretations," and
+    in the immediately following sentences attributes essentially the
+    same formulation to two prior works it cites as background:
+    Chen et al. (2022), who "use a graph attention network to compute
+    posterior distributions over candidate entities for ambiguous
+    mentions," and Liu and Park (2023), who "train a GNN encoder to
+    score competing interpretations of underspecified queries." Both
+    cited works are GNN methods that produce distributions over
+    candidate interpretations of ambiguous inputs, which is the
+    contribution the section claims as first. The section treats them
+    as friendly building blocks rather than as prior art that the
+    contribution claim must be defended against; the load-bearing
+    omission is the missing engagement with these works as competitor
+    methods. Either the priority claim must be retracted, or the actual
+    differentiator (KG-interaction-history conditioning) must be
+    promoted to the contribution and the related work positioned as
+    direct comparators with reported numbers.
+
+    Low gating: a reader does not need to know whether Chen et al.
+    (2022) or Liu and Park (2023) exist, nor recall canonical entity-
+    disambiguation literature, to see (a) that a single majority-vote
+    label cannot measure a per-user-intent property the section itself
+    defined, and (b) that "first GNN approach to model query ambiguity
+    as a distribution over candidate interpretations" cannot coexist
+    in the same paragraph with two cited GNN approaches that do exactly
+    that.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags both load-bearing issues. For the metric, points out that the
+  section defines its target as per-individual-user intent and
+  explicitly disclaims the corpus-average prior, yet operationalizes
+  evaluation as top-1 accuracy against a majority-vote label — which
+  is exactly the corpus-average prior — so the "better aligned with
+  user intent" interpretation is not supported and could rerank
+  systems if measured against per-user labels, distributional targets,
+  or minority-sense recall. For the prior work, notes that the "first
+  GNN approach to model query ambiguity as a distribution over
+  candidate interpretations" claim cannot coexist with the two cited
+  GNN works (Chen et al. 2022; Liu and Park 2023) that the section
+  itself describes as doing the same thing, and asks the authors to
+  either retract the priority claim, reframe the contribution around
+  the actual differentiator (user-history conditioning), or treat the
+  cited works as direct comparators with reported numbers.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more baselines, larger annotator
+  pools, error bars on accuracy, or a nicer figure of the
+  distribution. Accepts majority-vote top-1 accuracy as a measure of
+  per-user intent alignment without questioning the construct match
+  against the section's own definition. Treats Chen et al. (2022) and
+  Liu and Park (2023) as helpful background rather than as prior art
+  that undermines the "first GNN approach" claim, or addresses only
+  one of the two issues (e.g., softens the "first" wording to "among
+  the first" while leaving the metric–construct mismatch intact).
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

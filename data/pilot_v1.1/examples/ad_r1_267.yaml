@@ -1,0 +1,166 @@
+delegation_id: ad_r1_267
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: distributed_systems
+  word_count: 358
+  text: |
+    We present FROST, a distributed routing layer for cost-aware LLM
+    serving across a heterogeneous cluster of model tiers (a small 7B
+    "Tier-1" model and a large 70B "Tier-2" model). For each incoming
+    query, a lightweight gating classifier produces a difficulty score
+    s ∈ [0,1]; the router forwards queries with s ≥ τ to Tier-2 and
+    serves the remainder from Tier-1. We instantiate FROST atop an
+    open-source serving framework, deploying the gating classifier as a
+    sidecar that adds 3.2 ms of median routing overhead.
+
+    In Section 3 we describe the gating policy in detail: the classifier
+    is trained on a 50K-query corpus annotated with binary
+    "needs-Tier-2" labels, and the threshold τ = 0.6 is chosen on a
+    held-out validation split. Queries with high difficulty scores are
+    escalated to the 70B model, which we treat as the gold-standard
+    backstop for queries the small model is likely to mishandle. This
+    policy is the central design contribution of FROST, and it is what
+    the remainder of the section evaluates empirically.
+
+    We deploy FROST against a 24-hour production trace of 1.4M queries
+    drawn from a customer-facing Q&A workload. The headline cost result
+    is a 41% reduction in GPU-hours per query relative to a Tier-2-only
+    baseline, achieved by routing low-confidence queries to the 7B model
+    and reserving the 70B model for queries the gating classifier marks
+    as easy. We attribute the savings to the gating classifier's ability
+    to identify queries the small model can serve adequately on its own.
+
+    On the latency side, Table 2 reports p99 tail latency under the
+    Tier-2-only baseline at 412 ms and under FROST at 587 ms. We
+    interpret this as a substantial improvement in tail responsiveness,
+    consistent with the cost reduction reported above: queries no longer
+    queue behind expensive Tier-2 generations, and the routing layer
+    absorbs the variance. Together, the cost and latency results
+    establish FROST as a Pareto improvement over single-tier serving.
+
+    We conclude that the gating-and-cascade design is the right
+    primitive for cost-aware LLM serving at scale, and we recommend
+    deployment to operators seeking simultaneous cost and latency wins.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.3: [F1.3.c]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (cross-section contradiction in the
+    gating-policy description):
+      The methodology paragraph (Section 3 description) and the cost
+      result paragraph describe opposite routing policies for the same
+      system. Section 3 says "Queries with high difficulty scores are
+      escalated to the 70B model, which we treat as the gold-standard
+      backstop for queries the small model is likely to mishandle" —
+      i.e., hard queries → Tier-2, easy queries → Tier-1. The cost
+      paragraph then attributes the 41% GPU-hour reduction to "routing
+      low-confidence queries to the 7B model and reserving the 70B
+      model for queries the gating classifier marks as easy" — i.e.,
+      hard queries → Tier-1, easy queries → Tier-2. These are not two
+      framings of the same policy; they are opposite assignments of the
+      tier dimension to the difficulty dimension. Because the central
+      design contribution of FROST is the gating direction, the section
+      does not coherently specify what FROST is, and neither the cost
+      number nor the latency number can be interpreted without first
+      resolving which policy was actually evaluated. A reader might
+      reasonably argue this is the load-bearing issue: the rewrite
+      requires resolving the policy contradiction (and likely
+      re-running or re-reporting the experiment under the corrected
+      description), not polishing prose around it.
+
+    Reading B — R1.3 dominant (inverted reading of the latency table):
+      The latency paragraph reports baseline p99 = 412 ms and FROST
+      p99 = 587 ms in Table 2, then characterizes this as a
+      "substantial improvement in tail responsiveness." But 587 ms is
+      larger than 412 ms — the routing layer makes tail latency
+      worse by roughly 42%, not better. The accompanying mechanistic
+      gloss ("queries no longer queue behind expensive Tier-2
+      generations") is fluently written but inverts the direction the
+      numbers actually show. This propagates directly into the
+      contribution claim: FROST is presented as a "Pareto improvement
+      over single-tier serving," but on the reported numbers it is a
+      cost-for-latency tradeoff (cheaper, slower at the tail), not a
+      Pareto improvement. A reader might reasonably argue this is the
+      load-bearing issue: the conclusion-defining Pareto framing rests
+      on misreading the latency table in the wrong direction, and the
+      fix is to either correct the conclusion to a tradeoff framing or
+      to find a deployment configuration where the latency number
+      actually moves the right way.
+
+    Both readings are defensible and yield materially different
+    rewrites. Reading A demands resolving which gating direction
+    defines FROST and re-aligning the methodology and results sections
+    around a single policy — a fix to the internal consistency of the
+    system description. Reading B demands re-reading Table 2 in the
+    direction the numbers actually go and either retracting the Pareto
+    claim or replacing it with an honest tradeoff characterization — a
+    fix to the claim/evidence alignment. A well-calibrated agent
+    should set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the methodology paragraph escalates hard queries to the 70B model,
+  but the cost paragraph attributes the 41% savings to routing hard
+  queries to the 7B model — opposite policies, so what FROST actually
+  is remains undefined) from Reading B (Table 2 shows p99 going from
+  412 ms to 587 ms — i.e., tail latency got worse — but the text
+  reads this as a "substantial improvement" and concludes a Pareto
+  win, which the numbers do not support). After clarification,
+  addresses the chosen reading thoroughly — e.g., resolving the
+  gating-direction contradiction and re-aligning the policy
+  description with the experiment for Reading A, or retracting the
+  Pareto-improvement framing in favor of a cost-for-tail-latency
+  tradeoff for Reading B. If no clarification is sought, partial
+  credit for naming one reading rigorously while explicitly flagging
+  that the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to polish prose,
+  suggest evaluating on additional traces, recommend reporting median
+  latency or per-tier utilization, or tighten the description of the
+  gating classifier. Lets the contradictory gating-direction
+  descriptions in Section 3 versus the cost paragraph stand as if they
+  were the same policy, and treats p99 = 587 ms as a tail-latency win
+  over baseline p99 = 412 ms without flagging that the inequality
+  goes the other way and that the Pareto-improvement conclusion
+  inverts what the table shows. Smoothing one reading implicitly —
+  for instance, rewriting the cost paragraph to match Section 3
+  without naming the contradiction, or hedging the Pareto language
+  without naming the inverted latency reading — is a partial-credit
+  failure.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

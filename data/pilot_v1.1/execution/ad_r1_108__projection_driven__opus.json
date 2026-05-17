@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_108",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2190,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 34246,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 0.95, \"R1.6\": 0.8, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.85, \"RX.5\": 0.9}}\n\nSummary: Reviewed the section and flagged a cluster of overgeneralization problems where the abstract's sweeping claims are not supported by the single-judge, single-corpus experiment actually reported, along with prose and traceability issues that should be fixed before this section can stand.\n\n**Main issues**\n\n1. **Generalization beyond the evidence.** The opening and closing paragraphs claim the method \"eliminates self-preference bias\" and produces \"judge scores that align with human annotators across model families and evaluation regimes.\" The experiments describe a single judge (GPT-4o), a single corpus (SysReview-Patch, kernel patch descriptions only), and one task type. \"Across model families\" and \"across judge tasks\" are not supported. Either run the additional families/tasks or restrict the claim to the conditions tested.\n\n2. **\"Eliminates\" is too strong for the reported numbers.** A residual mean-score gap of 0.05 and a pairwise self-pick rate of 52% (vs. 50% null) is *reduced*, not *eliminated*. No confidence interval, significance test, or sample-level variance is reported, so even \"52% \u2248 50%\" cannot be asserted without a test. Recommend softening to \"substantially reduces\" and reporting a CI or a binomial test against 50%.\n\n3. **Scope mismatch in the framing.** The first sentence lists kernel patches, incident postmortems, and benchmark reports as target artifacts, but only kernel patch descriptions are evaluated. Either narrow the framing to patch descriptions or explicitly mark postmortems/benchmark reports as motivating examples not yet evaluated.\n\n4. **Evidence chain has gaps that affect the core claim.**\n   - The 62% human side-by-side preference is reported but never linked back to whether DebiasJudge's post-correction scores reproduce that 62% human preference; the post-correction agreement is only reported via Cohen's kappa on (presumably) the absolute-score task. The pairwise post-correction number (52%) is closer to chance than to the 62% human preference, which arguably means the corrected judge *under*-prefers human descriptions relative to humans. This tension is not addressed.\n   - \"Learned bias-correction term per (judge, task) pair\" implies a fit; the section does not say what data the term was fit on, whether the 600 patches were split into train/test, or whether the reported kappa is in-sample. Without this, the headline numbers are not interpretable.\n   - \"Provenance-anonymizing prompt\" is asserted to work but its individual contribution vs. the learned term is not isolated (no ablation).\n\n5. **Untraced quantitative claims.** Every number (4.3, 3.7, 62%, 0.6 \u2192 0.05, \u03ba 0.31 \u2192 0.68, 71% \u2192 52%, 18% latency) is stated without a pointer to a table, figure, or appendix section. Add forward references (e.g., \"see Table 2\") so readers can audit.\n\n6. **Unstated assumptions and risks worth disclosing.**\n   - Expert maintainer ratings are treated as ground truth; inter-rater agreement among maintainers is not given.\n   - Using a frontier model to judge systems-research artifacts at scale has obvious downstream risks (e.g., automated review pipelines deferring to a miscalibrated judge on safety-relevant kernel changes). A one-sentence limitation acknowledging that residual bias and out-of-distribution patches could still mislead downstream decisions would be appropriate.\n   - The 18% latency figure has no baseline definition (per call? end-to-end? including the anonymization prompt tokens?).\n\n7. **Prose tightening.**\n   - \"Building on the observation that frontier models tend to score their own outputs higher than human annotators do\" \u2014 wordy and the citation hook is missing; either cite the prior observation or rephrase as \"Prior work has shown that\u2026\" with a reference.\n   - \"yields judge scores that align with human annotators\" \u2014 annotators do not have scores aligned to them; say \"align with human ratings.\"\n   - \"paving the way for trustworthy autonomous evaluation \u2026 at scale\" \u2014 promotional and not earned by the evidence; cut or rewrite as a hedged outlook (\"These results suggest calibration is a viable component of, but not a substitute for, human oversight in evaluation pipelines.\").\n   - Paragraph 3's \"close to the 50% null\" reads loosely; prefer \"not statistically distinguishable from the 50% null at p=\u2026\" once a test is added.\n   - \"across model families and evaluation regimes\" appears twice with the same unsupported scope; remove both or qualify both.\n\n8. **Minor structural suggestion (light touch, since reorganization is not the priority here).** Consider moving the pairwise-bias paragraph before the kappa paragraph, since pairwise self-pick rate is the most direct operationalization of \"self-preference bias\" named in the opening sentence; the absolute-score gap then reads as a secondary confirmation.\n\n**Concrete revision targets**\n\n- Sentence 1 of paragraph 1: drop the postmortem/benchmark examples or label them as motivating.\n- Last sentence of paragraph 1: replace \"eliminates \u2026 across model families and evaluation regimes\" with \"reduces \u2026 in the single-judge, single-corpus setting evaluated here.\"\n- Paragraph 2: add the train/test split, the \u03ba test set size, and a CI on the 0.05 gap.\n- Paragraph 3: add a binomial test for 52% vs. 50% and define the latency baseline.\n- Paragraph 4: rewrite to avoid \"eliminates\" and \"across \u2026 families \u2026 tasks\"; add a one-sentence limitations note.\n\n**Caveats on this review**\n\n- I do not have access to the paper's tables, appendix, or the SysReview-Patch corpus, so claims about what is or isn't reported are based solely on the 4-paragraph excerpt; some of the gaps I flag (e.g., train/test split, CIs, ablation) may already be addressed elsewhere in the manuscript.\n- The \"across model families\" claim might be substantiated in a section not shown; if so, ignore item 1's first half but the abstract still needs to forward-reference that evidence.\n- I have not verified whether \"DebiasJudge\" or \"SysReview-Patch\" are prior-published names with established conventions; if they are, terminology should match the canonical sources.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general section review centrally includes checking whether the claims about calibration, bias reduction, and generalization follow logically from the stated evidence.",
+      "R1.3": "The section reports quantitative experimental results and draws conclusions from them, so claim-evidence alignment is a central review responsibility.",
+      "R1.6": "Because the delegation asks to review a written section, sentence-level clarity, register, concision, and flow are central expected responsibilities.",
+      "RX.1": "Any review projection must account for uncertainty about what can and cannot be determined from the provided excerpt alone.",
+      "RX.2": "The section contains strong claims such as eliminating bias and enabling trustworthy autonomous evaluation, making overclaim avoidance load-bearing.",
+      "RX.3": "The projection must remain limited to reviewing the provided section rather than executing edits or assessing unrelated parts of the paper.",
+      "RX.4": "The review responsibility includes noticing claims that could encourage unsafe or misleading downstream reliance on autonomous evaluation systems.",
+      "RX.5": "The projection must preserve traceability to the delegation and artifact by tying responsibilities to the excerpt\u2019s stated claims and evidence."
+    }
+  }
+}

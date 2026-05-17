@@ -1,0 +1,119 @@
+delegation_id: ad_r1_121
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 296
+  text: |
+    We evaluate AURIX, our proposed synthetic-speech detector for
+    voice-based online survey platforms, on the task of distinguishing
+    bona fide human respondents from utterances produced by neural
+    text-to-speech (TTS) systems and voice-conversion (VC) attacks. The
+    threat model assumes an LLM-controlled agent that synthesizes
+    natural-sounding open-ended responses through commercial TTS APIs and
+    submits them via voice channels on platforms such as Prolific Voice
+    and Lucid.
+
+    We assemble an evaluation partition of 12,000 utterances: bona fide
+    responses collected from a major panel provider, plus spoofed
+    utterances produced by VITS, YourTTS, XTTS-v2, and FreeVC voice
+    conversion. Following balanced-evaluation practice, we construct the
+    test set with a 50/50 ratio of bona fide to spoofed utterances.
+    AURIX consists of a frozen Wav2Vec2-XLS-R front-end and a lightweight
+    binary discriminator trained with cross-entropy.
+
+    On the held-out partition AURIX attains a classification accuracy of
+    96.4%, an F1 of 0.962, and AUROC of 0.987. Re-implementing the
+    RawNet2 baseline under the identical training recipe yields 91.7%
+    accuracy and 0.918 F1. AURIX therefore improves accuracy by 4.7
+    points absolute and F1 by 4.4 points absolute over the prior best
+    system. We additionally report per-attack accuracy: 97.1% on VITS,
+    96.8% on YourTTS, 95.4% on XTTS-v2, and 96.2% on FreeVC, indicating
+    consistent gains across both end-to-end TTS families and VC
+    pipelines.
+
+    These results establish AURIX as the new state of the art for
+    synthetic-respondent detection in voice-platform settings. We
+    recommend that survey infrastructures deploy AURIX at the
+    accuracy-optimal threshold identified on our development partition,
+    and that future detection benchmarks adopt the balanced 50/50
+    evaluation protocol used here as a common reference point against
+    which subsequent voice-spoofing detectors can be compared.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch. The section claims "state of the art for
+    synthetic-respondent detection" and frames AURIX as a voice-platform
+    anti-spoofing system, but reports only classification accuracy, F1,
+    and AUROC on a class-balanced 50/50 partition. In the canonical
+    anti-spoofing literature (ASVspoof 2019/2021/2024 challenge series;
+    Kinnunen et al., 2018; Wu et al., 2020 on t-DCF), state-of-the-art
+    claims for spoofing-countermeasure systems are established via Equal
+    Error Rate (EER) and minimum tandem Detection Cost Function
+    (min-tDCF), not accuracy/F1/AUROC. These operating-point-aware
+    metrics are the convention precisely because (a) deployed survey
+    infrastructure faces a highly imbalanced prior (bona fide
+    respondents vastly outnumber spoofs), so balanced-set accuracy does
+    not reflect operational performance, and (b) the asymmetric cost
+    structure of false-accept vs. false-reject is what min-tDCF was
+    designed to capture. Reporting accuracy/F1 on a 50/50 split and
+    declaring "new SOTA" is a metric mismatch — the chosen metrics do
+    not measure the deployment quantity the SOTA claim invokes.
+    Recommending an "accuracy-optimal threshold" compounds the mismatch
+    because the threshold that minimizes balanced-accuracy is generally
+    not the threshold that minimizes EER or min-tDCF in deployment.
+    Detection requires recall of the canonical ASVspoof evaluation
+    framework (high knowledge gating). Delegation T10 is generic and
+    contains no leakage of the evidence dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the reported metrics (accuracy, F1, AUROC on a balanced
+  50/50 split) are not the canonical evaluation framework for
+  spoofing-countermeasure systems and therefore do not support a
+  state-of-the-art claim against the existing literature. Suggests
+  reporting EER and min-tDCF under a realistic prior, notes that the
+  recommended "accuracy-optimal threshold" is the wrong operating point
+  for deployment given the asymmetric false-accept / false-reject cost
+  structure, and recommends aligning the protocol with the ASVspoof
+  evaluation convention so the SOTA claim is testable.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more spoofing attack families, asks
+  for a larger evaluation set, or proposes ablating the Wav2Vec2 front
+  end. Accepts the accuracy/F1/AUROC numbers as adequate evidence for
+  the SOTA framing and treats the balanced 50/50 protocol as a
+  reasonable benchmark recommendation rather than identifying the
+  metric/protocol mismatch with the claim being made.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

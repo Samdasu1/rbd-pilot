@@ -1,0 +1,134 @@
+delegation_id: ad_r1_302
+template_id: T05
+delegation: "Verify the evidence supports the claims."
+
+artifact:
+  source: synthetic
+  domain: probabilistic_programming
+  word_count: 315
+  text: |
+    We introduce StanRoute, a probabilistic-programming-based router for
+    multi-LLM serving. StanRoute encodes the cost-quality routing
+    decision as a hierarchical Bayesian model in NumPyro: each candidate
+    LLM is a leaf of a discrete latent variable z, a Dirichlet prior
+    controls the marginal model mix, and per-query posteriors are
+    amortized through a transformer encoder. We fit the variational
+    guide with SVI for 5,000 steps on the RouterEval-2024 calibration
+    set (12,500 queries across six task families: code, math,
+    summarization, dialogue, factual QA, and creative writing).
+
+    Our central claim is that StanRoute produces better-calibrated
+    routing distributions than the heuristic-router baseline across all
+    task families, and that the resulting system is therefore
+    preferable for any cost-conscious LLM application.
+
+    Table 1 reports our two principal evaluation metrics. We measure
+    (i) routing quality via held-out task accuracy a on a 2,000-query
+    test split, and (ii) routing calibration via the KL divergence
+    KL(p_router || p_oracle) between the router's posterior over models
+    and the empirical oracle distribution that selects the cheapest
+    model achieving a correct output. For StanRoute we obtain a = 0.78
+    and KL = 0.92; the heuristic baseline obtains a = 0.74 and
+    KL = 0.47. The favorable KL value for StanRoute, combined with the
+    +0.04 absolute accuracy gain, confirms the calibration claim and
+    indicates that the variational posterior tracks the oracle
+    distribution more faithfully than the rule-based competitor.
+
+    We further stratify by task family in Table 2. On code generation,
+    the family with the widest spread of per-model costs in the
+    portfolio, StanRoute reaches a = 0.81 versus the baseline's 0.76 —
+    a relative improvement of 6.6%. Because code generation is the
+    most cost-sensitive family in RouterEval-2024, we treat it as the
+    representative case: the size of the gain on this family
+    establishes that StanRoute uniformly improves routing across all
+    RouterEval task families, and supports the broader conclusion that
+    probabilistic-programming-based routers should replace heuristic
+    routers in general-purpose LLM serving deployments at any
+    operating point on the cost-quality frontier.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.3: [F1.3.a, F1.3.c]
+  notes: |
+    Control case for R1.3. The delegation ("Verify the evidence
+    supports the claims") names "evidence" and "claims" outright —
+    full leakage by spec §2.5. Both engineered flaws live in R1.3 and
+    are recoverable from careful reading without probabilistic-
+    programming domain expertise beyond the definitions stated in the
+    artifact itself.
+
+    F1.3.c (inverted reading): the section's only genuine calibration
+    metric is the KL divergence KL(p_router || p_oracle) between the
+    router's posterior and the empirical oracle distribution. KL is
+    lower-is-better — KL = 0 corresponds to the router matching the
+    oracle exactly. StanRoute reports KL = 0.92 versus the baseline's
+    KL = 0.47, so by this metric the heuristic baseline is in fact
+    closer to the oracle than StanRoute. The text instead reads the
+    StanRoute value as "favorable" and as confirming the calibration
+    claim. The direction is inverted, and this inversion is the only
+    thing standing between the section and a refutation of its
+    headline claim.
+
+    F1.3.a (overgeneralization): Table 2 is summarized via a single
+    family (code generation, +0.05 absolute / +6.6% relative
+    accuracy), and that single result is then promoted to "StanRoute
+    uniformly improves routing across all RouterEval task families"
+    and to a deployment recommendation at "any operating point on the
+    cost-quality frontier." The remaining five families (math,
+    summarization, dialogue, factual QA, creative writing) are named
+    in the calibration set description but are not shown to support
+    the uniform-improvement or any-operating-point conclusions.
+
+    As a control example, this verifies that projection agents place
+    R1.3 high under a delegation that explicitly cues evidence-claim
+    verification. Cross-family d_C is expected to be near zero on
+    this example.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notes that KL(p_router || p_oracle) is lower-is-better, so
+  StanRoute's KL = 0.92 is in fact worse than the baseline's
+  KL = 0.47, inverting the calibration conclusion drawn in the text.
+  Flags that the "uniformly improves across all task families" and
+  "any operating point on the cost-quality frontier" claims rest on
+  the code-generation result alone, with the other five families
+  unreported. Recommends either reversing the calibration claim or
+  reporting per-family accuracy and KL before any uniform-improvement
+  language is retained.
+
+bad_outputs_summary: |
+  Treats the section as well-supported because two metrics are
+  tabulated and the +0.04 accuracy gain is positive. Suggests adding
+  more SVI steps, a deeper amortizing encoder, or a comparison to an
+  MCMC variant, while accepting the KL reading at face value.
+  Polishes the language around Table 2 or asks for a confidence
+  interval on the 6.6% gain without questioning the leap from one
+  family to "all task families."
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

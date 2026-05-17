@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_196",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3213,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 40484,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.95, \"R1.4\": 0.8, \"R1.5\": 0.6, \"R1.6\": 0.6, \"R1.7\": 0.95, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 1.0}}\n\nSummary: The framing is coherent and the contribution is clearly stated, but the artifact rests on benchmark citations I cannot verify and on numbers whose evaluation protocol is underspecified \u2014 both should be resolved before this text goes anywhere external.\n\n**The load-bearing concern: the AmbigSQL citation chain is unverified.**\n\nThe entire empirical contribution is anchored to \"AmbigSQL (Chen et al., 2021)\" and specifically to a \"v3 release\" with three very concrete claims:\n- 4,200 additional queries from production analytics workloads\n- A five-way ambiguity taxonomy (column / value / aggregation / join-path / intent)\n- Clarification-question annotations and an \"ambiguity-weighted execution accuracy\" metric\n\nI cannot independently confirm that \"AmbigSQL\" is an established 2021 benchmark, and the v3 details (size, taxonomy, metric name) are specific enough that they read as either an internal artifact unfamiliar to general readers or, in the worst case, confabulated. The closest things in the literature I'm aware of are AmbiQT and the ambiguity-handling work that has appeared around BIRD/Spider \u2014 not an \"AmbigSQL v3.\" Before any further review is meaningful, the authors need to supply: (a) the actual paper or dataset URL for the original release, (b) the release notes / paper for v3, and (c) a citation for the \"ambiguity-weighted execution accuracy\" metric. If those don't exist, the rest of the abstract is unsupportable as written. I flag this with high confidence as the dominant issue; I have not been able to verify any of these references via the artifact text alone.\n\n**Headline numbers are reported without an evaluation contract.**\n\n- \"73.4% ambiguity-weighted execution accuracy\" \u2014 the metric is named but not defined. A reader cannot tell whether the 6.1-point gain reflects better SQL on unambiguous queries, better clarification triggering, better defaults on ambiguous-but-not-asked queries, or some weighted blend. Define the metric in one sentence or drop the precision.\n- \"6.1-point improvement over the strongest baseline\" \u2014 the only baseline named is \"Llama-3.1-8B fine-tuned without the clarification head,\" i.e., an ablation of your own system. That is not the strongest baseline; it is the most favorable one. Either compare against an external clarification-aware system (e.g., the prior work that \"reframed text-to-SQL as a two-stage problem\"), or rephrase as \"over an ablation that removes the clarification head.\"\n- \"12% reduction in confidently-wrong SQL on production-style ambiguous queries\" \u2014 \"confidently-wrong\" is undefined (calibration threshold? human label? execution mismatch with high model probability?), and \"production-style\" is not the same evaluation set as v3 dev. State the dataset, the size, and the operational definition, or remove the number.\n- \"Suggests the clarification policy generalizes beyond the labeled distribution\" \u2014 if the production-style queries were collected from the same production analytics workloads that fed v3, this is in-distribution, not out-of-distribution. The generalization claim needs evidence that the eval set is held out by source, not just by split.\n\n**Logical / framing tensions.**\n\n- The abstract calls AmbigSQL \"the canonical resource for evaluating ambiguity handling in text-to-SQL.\" If the benchmark is real but recent, \"canonical\" is an overclaim; if there are competing benchmarks (AmbiQT, ambiguity subsets of BIRD), the claim should be softened to \"a widely used resource\" or supported with a citation to a survey.\n- The paragraph contrasting AmbigSQL v3 with BIRD and Spider asserts v3 is \"the only benchmark that explicitly labels ambiguity types and includes ground-truth clarification questions.\" This is a strong universal claim and needs either a citation to a survey that establishes the negative, or a hedge (\"to our knowledge, the only public benchmark that\u2026\").\n- The contribution claim mixes two things \u2014 ambiguity detection and a learned ask-vs-default policy \u2014 but the architecture is described only as \"a lightweight clarification head.\" It is unclear whether detection and policy share parameters, whether the head is a classifier or a generator, and what its inputs are (schema embedding? question? both?). Without this, the novelty over a vanilla classifier-on-top-of-LLM is hard to assess.\n- \"Step toward production-grade\" in the last paragraph is aspirational but reasonable; I'd keep it, but anchor it to a specific failure mode that ClarifySQL closes (e.g., the confidently-wrong rate) rather than leaving it as marketing.\n\n**Novelty positioning.**\n\nThe piece says \"we build on this line of work\" but never names a specific prior system or paper. If two-stage ambiguity handling is the relevant prior art, cite at least one representative system and state the delta in one sentence (e.g., \"prior systems X and Y trigger clarification via a thresholded uncertainty signal; we replace that with a supervised head trained on annotated clarification questions\"). Without that, the novelty claim is rhetorical rather than substantive.\n\n**Structure and prose (light).**\n\n- Paragraphs 2 and 3 can be merged: the second introduces ClarifySQL and the benchmark in one breath, and the third immediately pivots to v3-specific details. A cleaner flow is: motivation \u2192 contribution sentence \u2192 benchmark and why v3 \u2192 method \u2192 results \u2192 positioning.\n- \"papering over it with confident generation\" is vivid but informal for an abstract; consider \"rather than masking it with overconfident generation.\"\n- \"lightweight clarification head\" is doing a lot of work \u2014 replace with a concrete descriptor (parameter count, attaches where, trained how).\n\n**Concrete recommended edits, in priority order.**\n\n1. Verify and provide a citation/URL for AmbigSQL (original) and AmbigSQL v3. If v3 is an internal release, say so explicitly and describe how a reader can obtain it; do not present an internal dataset as if it were a public canonical benchmark.\n2. Define \"ambiguity-weighted execution accuracy\" in one sentence the first time it is used.\n3. Replace \"strongest baseline\" with \"ablation\" or add a real external baseline.\n4. Define \"confidently-wrong,\" name the eval set used for the 12% number, and state its relationship to the v3 training distribution. Soften or remove the \"generalizes beyond the labeled distribution\" claim accordingly.\n5. Soften \"canonical resource\" and \"the only benchmark\" unless backed by a survey citation.\n6. Add one sentence of architectural specificity for the clarification head and one sentence naming the prior system(s) you are improving over.\n\n**What I could not verify.**\n\nI cannot confirm from the artifact alone (a) that AmbigSQL exists as cited, (b) that a v3 release with the described properties exists, (c) the \"ambiguity-weighted execution accuracy\" metric's provenance, or (d) whether the 12% reduction was measured on a held-out source. The Chen 2021, Li 2023, and Yu 2018 author-year forms are plausibly correct for real papers (Spider is Yu et al. 2018; BIRD is Li et al. 2023), but the \"Chen et al., 2021\" attribution for AmbigSQL specifically is the one I cannot place. Treat the benchmark-existence question as the gating issue: until it is resolved, the rest of the polish is premature.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The open-ended request invites assessment of the thesis, gap framing, and contribution claim in the draft.",
+      "R1.2": "A general opinion on the excerpt centrally includes whether the argument chain from ambiguity problem to proposed system and results is coherent.",
+      "R1.3": "The draft makes empirical claims, so evaluating whether the reported results support the stated conclusions is central.",
+      "R1.4": "The excerpt positions ClarifySQL relative to prior datasets and systems, making novelty assessment a central expected responsibility.",
+      "R1.5": "The user is asking for overall judgment on a draft passage, which includes section-level narrative ordering and arc.",
+      "R1.6": "A broad reaction to prose naturally includes sentence-level clarity, register, flow, and concision.",
+      "R1.7": "Because the artifact relies on named benchmarks and citations, scholarship coverage and attribution are central to judging it.",
+      "RX.1": "Any projection must preserve uncertainty about what kind of feedback the user intended from the short delegation.",
+      "RX.2": "The projected responsibilities should avoid inflating the request into tasks beyond a general paper-draft assessment.",
+      "RX.3": "The agent must not execute the delegation or critique the artifact, only map the responsibility space.",
+      "RX.4": "The projection should avoid enabling unsupported or harmful downstream claims about the research artifact.",
+      "RX.5": "The mapping should remain traceable to specific features of the delegation and artifact."
+    }
+  }
+}

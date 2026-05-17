@@ -1,0 +1,133 @@
+delegation_id: ad_r1_241
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 327
+  text: |
+    Section 3. Confidence-Calibrated NL-to-SQL via Cross-Examined LLM Agents
+
+    The central contribution of this work is a multi-agent verification
+    protocol for natural-language-to-SQL (NL2SQL) translation that
+    improves end-to-end execution accuracy on cross-schema queries by
+    routing each candidate SQL through a debate among three distinct
+    LLM critics before execution. On the BIRD-bench cross-database split,
+    our protocol recovers 8.2 percentage points of execution accuracy
+    over a single-shot baseline of comparable inference cost, closing
+    roughly half the gap between the baseline and an oracle SQL selector.
+
+    We instantiate the protocol with three critic roles: a
+    schema-grounding critic that checks each referenced column against
+    the catalog, a join-cardinality critic that estimates whether the
+    proposed plan is shape-consistent with the foreign-key graph, and
+    an execution-trace critic that runs the candidate against a sample
+    of the table. Critic disagreements are resolved by a fourth
+    aggregator LLM whose decisions we audit. In the course of the audit
+    we observed that the per-critic confidence scores reported by
+    current LLM-based NL2SQL pipelines are essentially uninformative on
+    cross-schema queries: their AUROC for distinguishing executable
+    from non-executable SQL is below 0.55 on BIRD, and on the held-out
+    Spider-DK slice the confidence ordering is anti-correlated with
+    actual correctness on join-heavy queries (Spearman rho = -0.21).
+    To quantify this we introduce a schema-conditional calibration
+    error (SCCE) that adjusts ECE for the heterogeneous prior over
+    per-database difficulty; SCCE admits a per-schema decomposition
+    without requiring a held-out per-schema validation pool.
+
+    These calibration findings ultimately reframe the contribution. The
+    central claim of this paper is that current LLM-based NL2SQL
+    systems are systematically miscalibrated in a way that single-shot
+    generation cannot repair -- multi-agent verification is valuable
+    not because it raises raw execution accuracy, but because it
+    surfaces calibration failures that would otherwise be invisible to
+    a downstream user. The 8.2-point accuracy gain is then a corollary
+    of the calibration analysis.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  R1.5: [F1.5.a]
+  notes: |
+    Two compound issues, both detectable from careful reading of the
+    section alone (no specialized recall of the NL2SQL literature
+    required).
+
+    R1.1 contribution slip (F1.1.b): Para 1 commits to a contribution --
+    "a multi-agent verification protocol... that improves end-to-end
+    execution accuracy" -- with the BIRD 8.2-point gain as the
+    headline evidence. Para 3 explicitly reframes the contribution:
+    "the central claim of this paper is that current LLM-based NL2SQL
+    systems are systematically miscalibrated... The 8.2-point accuracy
+    gain is then a corollary of the calibration analysis." These two
+    framings are related but not equivalent -- the first sells an
+    accuracy-improving system, the second sells an empirical
+    miscalibration finding for which the system is merely an instrument.
+    The section never commits to one as load-bearing; the slip is
+    overt and signaled by the word "reframe."
+
+    R1.5 buried contribution (F1.5.a): The most concretely novel
+    artifact in the section is SCCE, a new calibration metric with a
+    per-schema decomposition that does not require per-schema held-out
+    data. SCCE appears only mid-paragraph in para 2, introduced as a
+    sub-step ("To quantify this we introduce...") with no signposting
+    in the section opening, no mention in the contribution sentences
+    of paras 1 or 3, and no follow-up in the closing. A reader scanning
+    the topic sentences would not see that a new metric is being
+    proposed.
+
+    Compound: resolving R1.1 (choose one contribution) forces a
+    decision about whether SCCE is the contribution, a tool, or
+    incidental -- which is exactly the R1.5 surfacing fix. Conversely,
+    promoting SCCE out of mid-paragraph (R1.5) forces a rewrite of
+    both the para 1 and para 3 contribution sentences (R1.1), since
+    neither currently mentions it.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.85
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Points out that the section advances at least two distinct
+  contribution claims -- a verification protocol that improves
+  execution accuracy (para 1) and an empirical miscalibration finding
+  for which the protocol is merely an instrument (para 3) -- and that
+  the genuinely novel artifact, the SCCE calibration metric, is buried
+  mid-paragraph with no signposting in opening or closing. Recommends
+  choosing one of the three candidate contributions as load-bearing
+  and restructuring the opening and closing sentences so that the
+  chosen contribution is foregrounded throughout.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the BIRD/Spider-DK numerical reporting, or
+  treats the protocol contribution and the miscalibration contribution
+  as compatible framings of one idea. Suggests adding ablations on the
+  three critic roles or extending to more benchmarks while leaving
+  SCCE as a one-sentence parenthetical, and does not flag the explicit
+  contribution reframe in para 3 as a structural problem.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

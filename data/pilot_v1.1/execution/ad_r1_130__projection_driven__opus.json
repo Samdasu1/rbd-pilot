@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_130",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2700,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37108,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.4\": 0.85, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I reviewed the draft introduction for argument structure, claim/evidence support, novelty framing, and the strength of its rhetorical claims, then drafted a revised version that retracts overclaims, makes baselines and metrics more precise, and adds explicit limitations.\n\n## Main issues with the current draft\n\n**1. Two of the strongest claims are not licensed by the evidence presented.**\n- \"the first principled treatment of synthesis-time uncertainty in program induction\" \u2014 this is a sweeping priority claim. There is substantial prior work on calibration in code generation and on uncertainty in program induction (e.g., probabilistic program induction, neural-guided search with posterior estimates, calibration work on code LLMs). The artifact provides no survey, so this claim cannot stand as written.\n- \"we expect it to become a standard component of next-generation programming assistants\" \u2014 pure speculation; should be removed or hedged to a research-direction framing.\n- \"we expect the calibration gains to transfer cleanly\" \u2014 unsupported, and in tension with the later admission that temperature must be refit per task family.\n\n**2. There is an internal contradiction.**\nThe body claims the contribution is principled, general, and a standard step forward, while the final paragraph concedes temperature scaling must be refit per task family. Per-task refitting is a meaningful limitation for a calibration method, and burying it after the contribution claims weakens the argument. The limitation should be surfaced earlier and the contribution claims softened to match.\n\n**3. Several quantitative claims are presented without the scaffolding a reader needs to interpret them.**\n- ECE 0.043 vs 0.18/0.22: no mention of bin count, dataset size, confidence intervals, or seed variance.\n- \"Selective accuracy at 50% coverage is 91.2% vs 78.3%\": no description of how coverage is defined for program synthesis (per-problem? per-token? abstention granularity?).\n- \"HumanEval-style problems\" is vague \u2014 is this HumanEval itself, a derivative, or a held-out internal set? The provenance matters for the comparison to a \"Codex-style\" baseline.\n- The \"Codex-style\" and \"frequency-based\" baselines are underspecified. Raw softmax over what \u2014 token-level joint probability, length-normalized, sequence-level? This matters because naive token-product probabilities are a known weak calibration baseline, so beating them is not, by itself, strong evidence of a principled advance.\n\n**4. The novelty framing leans on a strawman.**\n\"Standard code-generation pipelines\u2026 return top-k candidates without any principled uncertainty signal\" understates prior work. Beam scores, length-normalized log-probs, self-consistency voting, verifier-based reranking, and explicit calibration layers all exist. A more defensible framing is: existing signals are poorly calibrated under ECE/selective-accuracy metrics, and a lightweight temperature-scaled head closes much of that gap.\n\n**5. The \"200 lines of PyTorch\" / \"encourage adoption\" / \"IDE-integrated tooling\" material is promotional rather than substantive.**\nIt belongs, if anywhere, in a discussion section. In an introduction it dilutes the technical contribution and reads as marketing.\n\n**6. Structural ordering.**\nThe section currently goes: pitch \u2192 method sketch \u2192 results \u2192 adoption pitch \u2192 limitation. A cleaner order for an introduction is: problem \u2192 gap in prior work \u2192 contribution \u2192 method sketch (one sentence) \u2192 headline result with one caveat \u2192 explicit scope/limitations \u2192 roadmap. The limitation paragraph should not be the closer; the roadmap (or a measured forward-looking sentence) should.\n\n**7. Sentence-level issues.**\n- \"We position this as a clear step forward\" \u2014 editorializing; let the results position the work.\n- \"We take this as evidence that CalibSynth represents the first principled treatment\u2026\" \u2014 the inference does not follow from the two ECE numbers.\n- \"fills a gap that prior LLM-based code-generation work has left open\" \u2014 vague and unsupported without citations.\n- \"orthogonal to the choice of base model\" is a strong architectural claim presented without evidence; soften to \"in principle applicable to other base models, though we have not tested this.\"\n\n## Suggested revision\n\n> We present CalibSynth, a program synthesis system that pairs each candidate program with a calibrated confidence score. Our goal is narrow: to provide a usable abstention signal for code-generation systems, so that downstream tooling can defer to a human or to a verifier when synthesis confidence is low. Calibration of token- or sequence-level probabilities has been studied for code LLMs, but reliable program-level confidence \u2014 a single score per emitted program, evaluated under standard calibration metrics \u2014 remains weakly supported by current pipelines, which typically rely on length-normalized log-probabilities or beam-rank heuristics.\n>\n> CalibSynth adds a temperature-scaled scoring head on top of a transformer code model. Given a specification (input-output examples and an optional natural-language hint), it returns a ranked list of candidate programs and a per-program score in [0,1]. The implementation is roughly 200 lines of PyTorch on a standard backbone; we describe the architecture in Section 3.\n>\n> We evaluate on [name the benchmark precisely: HumanEval / MBPP / a stated subset], reporting expected calibration error (ECE, 15-bin) and selective accuracy at fixed coverage. Against two baselines \u2014 sequence-level softmax from the unmodified backbone, and a frequency-in-beam heuristic \u2014 CalibSynth reduces ECE from 0.18 and 0.22 to 0.043, and improves selective accuracy at 50% coverage from 78.3% to 91.2% over the stronger baseline. We report seed variance and bootstrap intervals in Section 4.\n>\n> We are explicit about scope. First, the temperature parameter must be refit per task family; we do not currently offer a task-agnostic calibration recipe, and we view this as the main limitation of the present work. Second, our baselines are uncalibrated probability signals from the same backbone; we do not compare against verifier-based reranking or self-consistency methods, which target a related but distinct problem. Third, our gains are measured on [benchmark]-style problems and we make no claim about transfer to other domains or to substantially larger base models without re-evaluation.\n>\n> Section 2 reviews related work on calibration in code generation and on uncertainty in program induction. Section 3 describes the architecture. Section 4 presents the evaluation. Section 5 discusses limitations and the per-task-family fitting requirement.\n\n## Items I could not verify and that you should check before submitting\n\n- Whether the priority claim (\"first principled treatment\") can survive a real related-work pass. I strongly suspect it cannot; please replace it with a positioning that names the closest prior work.\n- The precise definition of the \"selective accuracy at 50% coverage\" metric in your setup, and whether 91.2 vs 78.3 is statistically significant given dataset size and seed count.\n- The exact baseline specification for \"raw softmax\" \u2014 token-product, length-normalized, or sequence-level \u2014 and whether the comparison is apples-to-apples (same decoding, same candidate set).\n- Whether \"HumanEval-style\" refers to HumanEval proper, a held-out split, or a synthetic set; the revision leaves a placeholder you should fill in.\n- The bin count and CI methodology behind ECE 0.043; the revision assumes 15 bins as a common default but you should use whatever you actually ran.\n- Whether the \"orthogonal to base model\" claim has any empirical support in your experiments; if not, drop it rather than weaken it.\n\nI did not attempt to assess citation coverage in depth, as no reference list was provided; the related-work pass above should be done against your actual bibliography.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The section centers on the thesis, gap, and contribution framing for CalibSynth, so helping with it would include conceptual reconstruction.",
+      "R1.2": "The delegation implies checking whether the progression from method to evidence to contribution claim holds together logically.",
+      "R1.3": "The artifact makes empirical claims from ECE and selective accuracy results, making evidence-claim alignment a central responsibility.",
+      "R1.4": "The section explicitly asserts novelty and first-principled status, so novelty assessment is an expected responsibility.",
+      "R1.5": "Because the request targets a section rather than isolated sentences, section-level narrative order and arc are in scope.",
+      "R1.6": "A broad request to help with a paper section includes sentence- and paragraph-level writing polish.",
+      "RX.1": "Any projected help should disclose uncertainty where the artifact does not provide enough context to verify claims fully.",
+      "RX.2": "The artifact contains strong claims such as first-principled treatment and expected transfer, making overclaim avoidance load-bearing.",
+      "RX.3": "The projection must stay within helping with the section and not perform unrelated research or rewriting tasks.",
+      "RX.4": "Claims about downstream users and human deferral carry potential deployment implications, so harm-aware framing remains active.",
+      "RX.5": "Projected responsibility should preserve traceability to the provided section and distinguish artifact-supported observations from assumptions."
+    }
+  }
+}

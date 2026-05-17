@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_240",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2816,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37933,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 0.7, \"R1.5\": 0.7, \"R1.6\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: I read the section as a finite-precision analysis of a simplex power iteration and flagged framing, internal-consistency, and prose issues; I do not rewrite the proofs, since I cannot verify the technical claims from the text alone.\n\n**Framing and contribution**\n\nThe section currently mixes three things \u2014 (i) a motivation that finite-precision behavior of this iteration has not been analyzed in the disambiguation context, (ii) a backward-error bound (Lemma 1), and (iii) a Dobrushin-coefficient sharpening (Theorem 2) \u2014 but never states the contribution as a single sentence. Consider opening the section with one line of the form: \"We give a finite-precision floor for the iterate error and show that, on the disambiguation matrices of Park et al., the floor is a \u221an factor tighter than the bound implied by the spectral gap.\" That gives the reader an anchor before the technical content.\n\nThe closing paragraph is doing real work \u2014 distinguishing the spectral-residual regime from the roundoff-floor regime \u2014 and should be promoted. Right now it reads as a hedge after the experiments; moving its substance into the opening paragraph (and reserving the closing for a brief restatement) would make the scope of the claim visible up front.\n\n**Internal consistency / argument chain**\n\nA few places where the chain wobbles:\n\n1. The standard bound is written as `\u2016x_k \u2212 x*\u2016 \u2264 C (\u03bb\u2082/\u03bb\u2081)^k`. For a row-stochastic M acting on the simplex with the iterate renormalized in \u2113\u00b9, \u03bb\u2081 = 1, so the ratio is just \u03bb\u2082. Writing the ratio form is fine, but be explicit that \u03bb\u2081 = 1 here, or drop it; otherwise a reader wonders whether you are secretly working with a non-stochastic normalization.\n\n2. Lemma 1's bound is stated in terms of `\u2016(I \u2212 M)\u207a\u2016_{1\u22a5}`, while Theorem 2 is stated in terms of `\u03ba((I \u2212 M)|_{1\u22a5})`. The text says Theorem 2 \"replaces the worst-case bound `\u03ba((I \u2212 M)|_{1\u22a5}) \u2264 1/(1 \u2212 \u03bb\u2082)`\", but Lemma 1 was phrased via the pseudoinverse norm, not \u03ba. The reader has to silently identify `\u2016(I \u2212 M)\u207a\u2016_{1\u22a5}` with the relevant condition-number-like quantity. Either unify the notation, or insert one sentence stating the identification.\n\n3. \"once the spectral component has decayed\" is doing a lot of work \u2014 it is the hinge between the transient power-iteration regime and the asymptotic roundoff floor. State the threshold (e.g., \"for k such that (\u03bb\u2082)^k \u2264 n\u00b7\u03b7\", or whatever the proof actually requires) rather than leaving it qualitative.\n\n4. The Wilkinson model is invoked as \"relative error bounded by n\u00b7\u03b7 per matrix-vector product.\" Specify the norm in which this holds (componentwise? \u2113\u00b9? \u2113\u221e?), since the downstream bound is in \u2113\u00b9 and the constant under each norm differs.\n\n5. The Dobrushin coefficient \u03c4(M) is introduced without definition. One line \u2014 \"\u03c4(M) = \u00bd max_{i,j} \u2016M_{i,\u00b7} \u2212 M_{j,\u00b7}\u2016\u2081\" \u2014 costs almost nothing and removes a reference hunt.\n\n**Evidence vs. claim**\n\nTwo places where the claim outruns what the text reports:\n\n- \"Numerical experiments on the WiC-Amb benchmark confirm the predicted scaling.\" This is the only sentence on the empirical side. \"Confirm the predicted scaling\" is a strong verb; the section should at minimum say (a) what was measured (the floor value? its dependence on n? on \u03c4(M)?), (b) the n-range probed, and (c) what \"confirm\" means quantitatively (slope of a log-log fit? agreement within a constant?). Otherwise this reads like a placeholder.\n\n- \"for the disambiguation matrices of Park et al., n ranges from 50 to 400, giving an order-of-magnitude tightening on representative instances.\" A \u221an improvement at n = 400 is \u00d720, at n = 50 is \u00d77 \u2014 \"order-of-magnitude\" is defensible at the top end but is being applied to the whole range. Either narrow the claim (\"up to a factor of ~20 at the largest instances\") or report the per-instance numbers.\n\n**Structure**\n\nThe current order is: motivation \u2192 Lemma 1 (floor) \u2192 Theorem 2 (sharpening) \u2192 experiments \u2192 caveat. The motivation paragraph is overloaded: it states the iteration, the existing analysis, and the gap, all at once. Suggested reorganization:\n\n1. One short paragraph: the iteration, \u03bb\u2081 = 1, the existing spectral-gap picture, and a one-sentence statement of what is new (the finite-precision floor and its sharpening).\n2. The Wilkinson setup and Lemma 1.\n3. Theorem 2 and the comparison to 1/(1 \u2212 \u03bb\u2082).\n4. Experiments with concrete numbers.\n5. Scope caveat (the regime statement currently at the end).\n\n**Sentence-level polish**\n\n- \"the iterative sense-probability refinement used in recent LLM-pipeline disambiguation modules takes the form\" \u2014 heavy noun stack. \"Recent LLM disambiguation pipelines refine sense probabilities by iterating\" is lighter.\n- \"M is a row-stochastic matrix encoding co-occurrence-derived sense-transition probabilities\" \u2014 fine, but a citation to where this matrix is defined would help.\n- \"Our concern in this section is the rate of convergence of this iteration under finite-precision arithmetic\" \u2014 \"rate of convergence\" is misleading: the contribution is about the asymptotic floor, not a rate. Consider \"the limiting error of this iteration under finite-precision arithmetic.\"\n- \"has not, to our knowledge, been treated rigorously in the disambiguation literature\" \u2014 the qualifier \"in the disambiguation literature\" is doing important hedging work (the numerical-analysis literature on stochastic-matrix power iteration is large); keep it, and consider adding \"though the underlying numerical-analysis results are classical\" so a reviewer does not read this as a novelty claim against the wrong field.\n- \"A direct calculation (Lemma 1) shows that\u2026\" \u2014 \"direct\" reads as filler; cut it.\n- \"is independent of k for large k\" \u2014 clearer as \"is a k-independent floor.\"\n- \"an order-of-magnitude tightening on representative instances\" \u2014 \"representative\" is unjustified without saying how the instances were chosen.\n- \"We close by noting that\u2026\" \u2014 drop \"We close by noting that\"; start with the substance.\n\n**Scope and overclaim**\n\nThe \"to our knowledge\" hedge in the first paragraph is appropriate. The remaining overclaim risks are: (i) the experimental \"confirm\" verb above; (ii) the \"order-of-magnitude\" phrasing above; (iii) implicitly claiming novelty for the Dobrushin-coefficient bound itself, which is a classical Markov-chain result \u2014 the novelty being claimed should be specifically the application to the finite-precision floor for this class of matrices, and the text should say so.\n\n**Downstream considerations**\n\nIf this analysis is going to be used to justify lower-precision (e.g., fp16/bf16) implementations of the disambiguation module, the section should say so explicitly or say it does not \u2014 readers will draw the inference either way. A one-sentence statement of what the floor does and does not license would close the gap.\n\n---\n\nUncertainty disclosure: I have not verified Lemma 1, Theorem 2, or the \u221an improvement claim; the comments above are about how the section presents its results, not about whether the results hold. The notational identification between `\u2016(I \u2212 M)\u207a\u2016_{1\u22a5}` and `\u03ba((I \u2212 M)|_{1\u22a5})` may be standard in the authors' framing, in which case point 2 under consistency reduces to adding one bridging sentence rather than a substantive fix. The Park et al. reference and the WiC-Amb benchmark were not consulted; comments on the n-range and \"representative instances\" rely solely on the numbers as reported in the section.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The broad request to help with a research section includes checking whether the thesis, gap, and contribution framing are clear and coherent.",
+      "R1.2": "The technical section depends on a chain from iteration model to backward-error bound to convergence interpretation, making logical consistency central.",
+      "R1.3": "The section invokes numerical experiments and representative instances, so claims should align with the reported empirical support.",
+      "R1.5": "Because the artifact is an entire section, section-level ordering and narrative arc are expected responsibilities.",
+      "R1.6": "A generic request to help with a section most directly asks for sentence- and paragraph-level improvement, making writing polish load-bearing.",
+      "RX.1": "Uncertainty should be disclosed where the artifact makes technical or literature-scope claims that may not be fully verifiable from the excerpt.",
+      "RX.2": "The projection must preserve caution around novelty, empirical confirmation, and order-of-magnitude tightening claims.",
+      "RX.3": "The response must stay within helping with this section rather than executing broader paper review or rewriting unrelated material.",
+      "RX.4": "Technical overstatement in numerical-analysis claims could mislead downstream research use, so harm avoidance is active.",
+      "RX.5": "Any projected responsibility should remain traceable to explicit features of the provided section and delegation."
+    }
+  }
+}

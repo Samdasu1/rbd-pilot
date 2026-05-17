@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_058",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2236,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 32135,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nReviewed the artifact for internal coherence, claim-evidence fit, and prose clarity, and flagged places where assertions outrun what the text reports.\n\n**Key issues**\n\n1. **Citations are referenced by surname only, with no anchors.** \"Wang et al.,\" \"Kim and Park,\" \"Ramirez et al.,\" and \"Chen et al.\" appear without years, venues, or bracketed references. As written, a reader cannot verify any of these attributions, and I cannot confirm from the artifact alone that these works exist as described (in particular, \"SemWER\" attributed to Kim and Park is not something I can corroborate). Add full citations, or qualify the claims if the attributions are tentative.\n\n2. **\"State-of-the-art open ASR systems\" is unsupported.** Six systems are evaluated but none are named, and \"state-of-the-art\" is asserted rather than shown. Either name the systems and justify the SOTA label (e.g., by benchmark standing as of a stated date) or soften to \"six widely used open-source ASR systems.\"\n\n3. **The 2.4\u00d7 claim needs a definition.** \"WER underestimates the impact of code-switch boundary errors by a factor of roughly 2.4\u00d7 relative to their downstream cost on intent accuracy\" mixes two units (a rate metric and a task-accuracy delta) without specifying how the ratio is computed. Spell out the comparison \u2014 e.g., \"the per-error contribution of code-switch boundary errors to WER is 2.4\u00d7 smaller than their per-error contribution to intent-accuracy loss, under [stated normalization].\"\n\n4. **\"Rank ordering disagreed on 4 of 6 systems\" is ambiguous.** A rank ordering is a property of the set, not of individual systems. The intended meaning is probably \"4 of 6 systems occupy different positions in the two rankings\" or \"Kendall/Spearman disagreement at this level,\" but as phrased it is not well-defined. Restate using a standard rank-correlation statistic or a clearly defined pairwise count.\n\n5. **r = 0.91 vs. 0.62 needs scope and uncertainty.** Report: (a) what unit the correlation is over (per-system, per-utterance, per-dataset?), (b) Pearson vs. Spearman, (c) confidence intervals or a significance test, and (d) whether the 0.91 figure is in-sample on the same data used to fit the category weights. If it is in-sample, the comparison to WER's 0.62 is not apples-to-apples and the gain is likely overstated; a held-out split is needed to support the headline.\n\n6. **Calibration/evaluation overlap risk.** The composite metric's weights are \"fit to measured downstream task cost,\" and the headline result is correlation with downstream intent accuracy. If the fitting set and the reporting set overlap, this is essentially training accuracy. The artifact should state the train/test partition explicitly; otherwise the contribution claim is weaker than presented.\n\n7. **Taxonomy classifier is a load-bearing dependency with no validation reported.** Decomposition into nine categories is done by \"a fine-tuned classifier,\" but no accuracy, agreement-with-human, or inter-annotator figure is given. Since the calibrated weights are per-category, classifier error propagates directly into the composite metric. Add a validation number or acknowledge the limitation.\n\n8. **Corpus composition arithmetic and provenance.** 142 hours from three sources plus 18 hours of new data = 160 hours total; the text never gives the total or the per-source breakdown. Add the split. Also clarify whether the 18 hours of code-switched recordings will be released (the closing paragraph implies an \"evaluation suite \u2026 for community use,\" which would require this).\n\n9. **\"Switchboard-Cellular\" naming.** Verify the exact corpus name. Switchboard, Switchboard-2, and Switchboard Cellular Part 1/2 are distinct LDC releases; the bare label is imprecise.\n\n10. **\"Intent-preserving reference transcripts.\"** This is a non-standard annotation; how it was produced, by whom, with what guidelines, and with what inter-annotator agreement should be stated, because SemWER and the composite metric depend on it.\n\n11. **Generalization claim in the closing paragraph.** \"An accompanying evaluation suite \u2026 that operationalizes this metric for community use\" implies generality beyond the three-condition test bed (conversational, accented, code-switched). The weights are fit on this specific mix; transfer to other domains (e.g., read speech, children's speech, low-resource languages) is not demonstrated. Either narrow the claim or flag it as future work.\n\n**Prose-level edits**\n\n- \"Building on this prior work, we examined the behavior of six state-of-the-art open ASR systems\" \u2192 \"we evaluated six widely used open-source ASR systems\" (removes the unsupported superlative and the vague \"examined the behavior of\").\n- \"decomposed every utterance's errors into a taxonomy of nine categories\" \u2192 \"classified each error into one of nine categories\" (the utterance is not what is decomposed).\n- \"a frozen NLU model\" \u2192 name the model and its training data; \"frozen\" alone is uninformative.\n- \"calibrated a composite metric whose error-category weights are fit to measured downstream task cost\" \u2014 tighten to \"fit per-category weights by regressing downstream task cost on error-category counts,\" and state the regression form.\n- \"correlates with downstream intent accuracy at r = 0.91, compared to 0.62 for conventional WER\" \u2014 specify correlation type and unit of observation in-line.\n- The opening sentence (\"Word error rate (WER) has long served as the dominant metric\u2026\") is fine but the second sentence introduces \"Wang et al.\" with no antecedent claim of their own; consider \"Recent work has argued that WER conflates lexical and semantic error types (Wang et al., YEAR)\u2026\".\n\n**Items I cannot verify from the artifact**\n\n- Existence and content of the four cited prior works, and whether \"SemWER\" is the actual name used in the cited literature.\n- Whether the 142-hour figure, the nine-category taxonomy, and the r = 0.91 result are reported on held-out data.\n- Whether \"Switchboard-Cellular\" refers to a specific LDC release.\n- Whether the six ASR systems and the NLU model are named elsewhere in the full paper; if so, several of the comments above may already be addressed.\n\nThese should be checked against the full manuscript and the underlying experimental logs before the framing in the abstract/intro is treated as settled.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check the draft centrally includes verifying whether the argument moves coherently from prior-work gap to experiments, findings, metric, and contribution.",
+      "R1.3": "The artifact makes quantitative and comparative claims that should be checked against the reported experiments, tables, figures, and results as stated in the draft.",
+      "R1.6": "A short 'Check this' delegation commonly includes sentence- and paragraph-level correctness, clarity, and register in a research-writing artifact.",
+      "RX.1": "Any check should disclose uncertainty, especially where the artifact provides claims without full methods, tables, figures, or references.",
+      "RX.2": "The projection must preserve responsibility for identifying claims that may exceed the evidence or wording supported by the artifact.",
+      "RX.3": "The delegation is broad but limited to checking the supplied research-writing artifact, not executing edits or external validation.",
+      "RX.4": "Checking ASR evaluation claims carries responsibility to avoid endorsing misleading metrics, benchmark claims, or downstream task implications that could cause misuse.",
+      "RX.5": "Findings from any check should remain traceable to specific statements, reported results, and provenance in the supplied artifact."
+    }
+  }
+}

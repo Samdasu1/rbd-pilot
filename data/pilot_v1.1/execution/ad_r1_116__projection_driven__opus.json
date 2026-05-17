@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_116",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2440,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32669,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.9, \"RX.5\": 0.8}}\n\nSummary: The artifact's headline framing (\"consistent improvements across all benchmark plants,\" \"uniformly superior\") is directly contradicted by the per-plant numbers it reports, and several quantitative and methodological gaps need to be closed before the text is internally coherent or defensible.\n\n**Direct contradictions between framing and reported results**\n\n1. The opening paragraph claims \"consistent stability and tracking improvements across all benchmark plants.\" The body then reports:\n   - Plant C (two-link manipulator): ITAE 2.18 vs. 2.20 \u2014 the text itself calls this \"essentially identical,\" not an improvement.\n   - Plant E (four-tank): ITAE 3.41 vs. 3.12 \u2014 explicitly described as a ~9% regression, with a higher violation rate (3% vs. 2%).\n   These two plants alone falsify \"consistent improvements across all\" and \"uniformly superior.\" Either the headline must be softened (e.g., \"improvements on 3 of 5 benchmarks, parity on 1, regression on 1\") or the empirical claim must be revisited.\n\n2. \"Eliminates constraint violations entirely\" is true only for Plants A and B in the reported data. On Plant E violations increase. The current phrasing reads as a general property of the method; it should be scoped to the specific plants where it held.\n\n3. The closing claim that results \"motivate its deployment on higher-dimensional industrial systems\" is not supported: none of the five benchmarks is high-dimensional, and the one most coupled / least toy-like system (four-tank) is precisely where the method regressed. This is an overreach and, for a safety-critical control context, a non-trivial downstream-harm concern \u2014 readers may interpret the recommendation as license to deploy in settings the evidence does not cover.\n\n**Evidence gaps**\n\n4. Plant D (CSTR): the tube-MPC ITAE is omitted (\"we omit the tube-MPC number in this section for space\"). Without the baseline, the reported 0.94 is uninterpretable, and Plant D cannot contribute to any aggregate claim. Either include the baseline or exclude Plant D from the comparative narrative.\n\n5. Plant D's constraint-violation rate is not reported at all, although violation rate is one of the two declared metrics. This should be filled in or explicitly flagged as missing.\n\n6. No measure of variability is given (no std. dev., confidence interval, or seed count beyond the \"100 randomized initial conditions\"). Differences such as 2.18 vs. 2.20 (Plant C) and even 0.83 vs. 0.71 (Plant B) cannot be assessed for significance as reported. At minimum, dispersion across the 100 trials and a significance test (or bootstrap CI) should accompany each pairwise comparison.\n\n7. The \"nominal MPC\" baseline is mentioned in paragraph 1 but never appears in the per-plant numbers \u2014 only tube-MPC is compared. Either drop the nominal-MPC mention or add those numbers.\n\n8. The mechanism paragraph (\"we attribute the gains to the constraint-tightening procedure \u2026 adaptively expands or contracts \u2026\") is asserted rather than evidenced. No ablation, no correlation between uncertainty-bound magnitude and the per-plant outcome, and no explanation for why this same mechanism produced a regression on Plant E. An ablation or at least a diagnostic on Plant E is needed before the causal attribution stands.\n\n**Internal-logic issues**\n\n9. The text frames the method as \"uncertainty-aware\" but does not disclose: how the neural surrogate's uncertainty is calibrated, whether the bounds are probabilistic or worst-case, or what happens to the safety guarantee if the surrogate is miscalibrated out-of-distribution. For a safety-critical framing this omission is load-bearing \u2014 it should either be addressed or the safety-critical framing should be tempered.\n\n10. \"Worst-case constraint-violation rate over 100 randomized initial conditions\" is ambiguous: \"worst-case\" usually denotes a max over conditions, but a \"rate\" denotes a frequency. Clarify whether the 4%, 2%, 1%, etc. are fractions of trials with any violation, fractions of timesteps in violation, or something else.\n\n11. ITAE is introduced as \"integrated absolute tracking error\" \u2014 standard ITAE is *time-weighted* integrated absolute error. If the authors mean IAE, the acronym should change; if they mean ITAE in the textbook sense, the expansion should.\n\n**Recommended revisions to the prose**\n\n- Replace \"consistent stability and tracking improvements across all benchmark plants\" with something like: \"improvements on three of five benchmarks, parity on one, and a regression on one, with the gains concentrated on lower-dimensional systems.\"\n- Replace \"uniformly superior approach \u2026 across the standard plant classes\" with a scoped claim tied to the plants where improvements were observed.\n- Remove or substantially qualify the \"motivate its deployment on higher-dimensional industrial systems\" sentence; the four-tank result argues the opposite direction.\n- Add an explicit discussion of the Plant E regression rather than reporting it and moving on \u2014 readers will notice, and addressing it directly improves credibility.\n- Fill in or explicitly mark the Plant D missing baseline and the Plant D missing violation rate.\n- Add per-result dispersion and at least one significance / CI statement, especially for the Plant C near-tie.\n\n**Minor wording**\n\n- \"the broad applicability of uncertainty-aware constraint tightening\" \u2014 \"broad applicability\" is not demonstrated by five low-to-medium-dimensional academic plants; consider \"applicability to several canonical benchmarks.\"\n- \"essentially identical\" is a reasonable hedge for Plant C, but it sits in tension with the paragraph that surrounds it; tightening that paragraph's framing will resolve the local dissonance.\n- \"a regression of roughly 9%\" \u2014 give the exact figure (3.41 vs. 3.12 = 9.3%); rounding adds no clarity and reads as softening.\n- \"adaptively expands or contracts the admissible region\" \u2014 the verb pair is reversed from how constraint *tightening* is usually described; consider rephrasing to avoid implying the admissible set ever grows beyond the nominal constraint set.\n\n**Caveats on the above review**\n\nI have not verified the arithmetic against any source beyond the artifact itself (e.g., that 1.42 \u2192 1.05 is 26% \u2014 it is ~26.1%, so fine; 3.41 vs. 3.12 is 9.3%, so \"roughly 9%\" rounds down). I cannot assess whether the cited plants are in fact \"canonical\" without reference context, and I have not been given access to the underlying experimental protocol, so comments on calibration, ablation, and significance are about what the text should disclose, not assertions about what the underlying work did or did not do. The recommendation to soften the high-dimensional-deployment claim is grounded in the artifact's own evidence (the Plant E regression); if the authors have additional evidence not shown here, that recommendation may need to be revisited.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The delegation to check the passage centrally includes verifying whether the conclusions follow from the reported benchmark outcomes.",
+      "R1.3": "The artifact makes strong performance claims that must be checked against the specific results reported for each plant.",
+      "R1.6": "A generic check of a paper-style passage reasonably includes sentence-level clarity, register, and wording issues.",
+      "RX.1": "Any projection of checking responsibility must preserve uncertainty about what can be verified from the excerpt alone.",
+      "RX.2": "The passage contains broad superiority and deployment claims, making overclaim avoidance active.",
+      "RX.3": "The agent must stay within projection rather than actually editing, rewriting, or evaluating the artifact.",
+      "RX.4": "Because the text concerns safety-critical control and industrial deployment, downstream-harm avoidance is active.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's reported claims and results."
+    }
+  }
+}

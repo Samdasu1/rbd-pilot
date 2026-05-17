@@ -1,0 +1,149 @@
+delegation_id: ad_r1_255
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: anomaly_detection
+  word_count: 351
+  text: |
+    Industrial system telemetry produces millions of log lines per
+    day, the vast majority of which are routine operational events.
+    Identifying the rare windows that indicate genuine faults —
+    without burying operators in false alarms — is the central
+    challenge of log-based anomaly detection. We introduce SCRAD
+    (Self-Critiquing Reasoning Anomaly Detector), a framework in
+    which a single large language model classifies fixed-width log
+    windows as anomalous or benign, generates a free-text
+    justification for each classification, and then critiques its own
+    justification before issuing a final decision or abstaining. To
+    our knowledge, this is the first application of self-critique
+    abstention to log-based anomaly detection, and it represents a
+    clear departure from prior work, which has focused exclusively on
+    supervised classifiers trained on labeled trace corpora.
+
+    The SCRAD pipeline operates in a strictly zero-shot regime: the
+    model receives only a system-prompt description of the target
+    deployment and the candidate window, with no labeled
+    normal/anomalous examples at any stage. This design choice is
+    motivated by the observation that ground-truth anomaly labels are
+    scarce and noisy in production environments. The critic stage
+    rereads the generator's justification and flags hallucinated
+    event types, unsupported temporal claims, and inconsistencies
+    with the window's actual content; the model abstains when the
+    critic disagrees with the generator on the final label.
+
+    We evaluate against two baselines: a frequency-based PCA detector
+    and a log template classifier. SCRAD reduces the false-alarm rate
+    at fixed recall by 38% on the BGL dataset. A central design
+    element is the few-shot retrieval module: at inference time the
+    system retrieves the five nearest historical windows from a
+    curated incident database and includes their labels as in-context
+    examples for the generator, which we find is responsible for
+    roughly two-thirds of the headline false-alarm reduction.
+
+    The abstention rate stabilizes near 11% across all three
+    benchmarks, which we interpret as the model's calibrated estimate
+    of windows where the available evidence is genuinely insufficient
+    for a confident decision. We discuss prompt-template ablations
+    and critic-temperature sweeps in §5.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.4: [F1.4.b]
+  notes: |
+    Two compound issues:
+
+    R1.2 cross-section contradiction: para 2 commits the system to a
+    "strictly zero-shot regime" with "no labeled normal/anomalous
+    examples at any stage." Para 3 then describes a few-shot
+    retrieval module that fetches "the five nearest historical
+    windows from a curated incident database and includes their
+    labels as in-context examples for the generator," and credits
+    this module with "roughly two-thirds of the headline false-alarm
+    reduction." This is k-shot retrieval-augmented classification,
+    directly incompatible with the zero-shot framing in para 2. The
+    contradiction is load-bearing because the headline 38%
+    false-alarm reduction is the section's main empirical claim and
+    the retrieval module is named as its primary driver — fixing the
+    contradiction forces a rewrite of either the methods description
+    or the results attribution.
+
+    R1.4 missing nearest neighbor: the section claims this is "the
+    first application of self-critique abstention to log-based
+    anomaly detection" and contrasts only against a PCA detector and
+    a log template classifier. The actual nearest neighbors are not
+    engaged at all: (a) the self-critique-and-abstain architecture
+    is a near-verbatim instantiation of Self-Refine (Madaan et al.
+    2023) and Reflexion (Shinn et al. 2023), and the
+    generator/critic abstention pattern echoes self-consistency-based
+    uncertainty estimation (Wang et al. 2023); (b) on the
+    application side, LogBERT (Guo et al. 2021) and the more recent
+    LLM-for-logs line (LogPrompt, LogGPT) already cover LLM-based
+    log anomaly detection. The "first ... to log-based anomaly
+    detection" framing collapses both lineages. Detectable at low
+    knowledge gating because the described architecture
+    (generate-justify-critique-iterate-or-abstain) is the recognizable
+    Self-Refine pattern.
+
+    Combined: fixing R1.4 (anchor against Self-Refine / Reflexion
+    and against LogBERT / LogPrompt / LogGPT, sharpen the actual
+    delta) and fixing R1.2 (decide whether the system is zero-shot
+    or retrieval-augmented, and rewrite either para 2 or para 3
+    accordingly, which also reshapes the headline attribution) are
+    both required. Either fix alone leaves the contribution claim
+    incoherent.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.85
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) para 2's "strictly zero-shot regime ... no labeled
+  examples at any stage" is mutually incompatible with para 3's
+  few-shot retrieval module that pulls labeled historical windows
+  as in-context examples, and the headline 38% reduction is
+  credited to that module — the section must commit one way and
+  rewrite either the methods description or the results
+  attribution; (2) the "first application of self-critique
+  abstention to log-based anomaly detection" framing ignores the
+  Self-Refine / Reflexion / self-consistency lineage that the
+  described architecture instantiates and the LogBERT / LogPrompt /
+  LogGPT line on the application side — the section must position
+  against both and sharpen the actual delta. Both fixes are
+  required.
+
+bad_outputs_summary: |
+  Polishes prose, tightens topic sentences, accepts the "first
+  application" framing, suggests adding more datasets or a
+  critic-temperature ablation table. Treats the para 2 / para 3
+  zero-shot vs. few-shot-retrieval inconsistency as a wording
+  ambiguity and recommends "clarifying" it, or accepts the
+  retrieval-driven headline number without noticing it contradicts
+  the zero-shot methods description.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

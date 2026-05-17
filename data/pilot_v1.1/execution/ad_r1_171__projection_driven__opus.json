@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_171",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1293,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 17059,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: I rewrote the passage for clarity and concision \u2014 tightening run-on sentences, fixing tense drift, restoring missing punctuation in lists, and trimming hedges \u2014 without altering the substantive claims, structure, numbers, or scope of the original.\n\nRevised text:\n\n---\nWe describe a skill-decomposed evaluation protocol for instruction-tuned language models and apply it to a suite of open-weight checkpoints selected from recent releases. The protocol yields per-skill scores, which we aggregate into an overall alignment profile that downstream practitioners can use when selecting models for their applications. Responses are decomposed along several axes \u2014 factuality, logical coherence, instruction adherence, and harmlessness \u2014 and each axis is scored independently using a rubric-based judge calibrated against a small set of human-labeled responses.\n\nThe judge is a frozen large model that receives the instruction, the candidate response, and a per-skill rubric, and returns a categorical score on a five-point scale. Scores are averaged across a held-out evaluation set of roughly 1,800 prompts spanning twelve task families curated for this study. During development we observed that the judge exhibits position bias and length bias; we mitigate these by randomizing answer order and length-normalizing the rubric prompts before scoring.\n\nWe compared the skill-decomposed scores against a single-score baseline based on an overall preference judgment. The skill-decomposed protocol produced rankings that disagreed with the baseline on approximately 18% of model pairs. Disagreements concentrate on pairs where one model is stronger on factuality and the other on instruction adherence, suggesting that a single overall score can hide trade-offs that practitioners may care about.\n\nThe protocol also appears stable under rubric perturbations and judge-model swaps, though we acknowledge that broader evaluation across additional judge families would further strengthen the robustness claims made here.\n---\n\nNotes on what changed and what I deliberately left alone:\n\n- Sentence-level edits only: I broke up four run-on sentences, removed redundant \"we had\"/\"we then\" sequences, inserted serial commas in the axis list (\"factuality, logical coherence, instruction adherence, and harmlessness\"), and fixed tense drift (\"had been hiding\" \u2192 \"can hide\"; \"had calibrated\" \u2192 \"calibrated\") where the past perfect was not justified.\n- Hedging: I lightly trimmed \"appears to be reasonably stable\" \u2192 \"appears stable\" and \"suggests that \u2026 had been hiding\" \u2192 \"suggesting that \u2026 can hide.\" These tighten prose without strengthening the empirical claim; the qualifier \"appears\" and the acknowledgment of limited judge-family coverage are preserved.\n- I did not change any quantitative figure (1,800 prompts, twelve task families, ~18% disagreement), the axis list, the five-point scale, or the described mitigations. The closing limitation about broader judge-family coverage is retained verbatim in substance.\n- I did not reorder paragraphs beyond what the original ordering implied; the four-paragraph flow (protocol \u2192 judge mechanics \u2192 comparison result \u2192 robustness caveat) is preserved.\n- I did not add citations, novelty framing, or new caveats \u2014 none were in the source and adding them would exceed the brief.\n\nUncertainty I can flag: I cannot verify from the excerpt alone whether \"length-normalizing the rubric prompts\" is the authors' intended phrasing or a shorthand for a more specific procedure; I preserved it verbatim. Similarly, \"frozen large model\" is ambiguous (frozen weights? frozen prompt?) but I left it as-is rather than guess. If the surrounding manuscript defines these terms, a final pass should confirm the revised wording still matches.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation asks to clean up prose, making sentence- and paragraph-level clarity, grammar, flow, and concision load-bearing.",
+      "RX.1": "Any cleanup should preserve uncertainty markers such as limits on robustness and broader judge-family evaluation.",
+      "RX.2": "The projection must avoid turning cautious claims about stability and trade-offs into stronger claims than the artifact supports.",
+      "RX.3": "The task is scoped to cleanup rather than executing a conceptual rewrite, empirical validation, or citation audit.",
+      "RX.4": "The cleanup should avoid changes that could mislead downstream practitioners about model-selection implications.",
+      "RX.5": "The artifact's reported protocol details, numbers, and causal qualifiers must remain traceable to the provided text."
+    }
+  }
+}

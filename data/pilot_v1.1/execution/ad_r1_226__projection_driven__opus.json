@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_226",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2902,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37822,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: I flag a critical internal contradiction in how the headline metric is defined versus computed, then list several overclaims and missing disclosures, and finish with a suggested revision of the section.\n\n## Critical issues\n\n**1. The metric is defined two different ways, and the reported numbers cannot be both.**\nThe section first defines Selective Accuracy as the fraction of prompts where the agent *either* (a) returned the gold answer on a clear prompt *or* (b) asked a clarifying question on an ambiguous prompt. Two paragraphs later, SA is described as \"the number of correct answers produced on clear prompts, divided by the total number of prompts in the benchmark (800)\" \u2014 which is just clear-prompt accuracy scaled by 1/2, and excludes the ambiguous-prompt behavior entirely. These are not the same metric. The reader cannot tell whether the 71.2% / 68.9% / 64.1% / 52.8% numbers reflect the first definition, the second, or some third thing. This needs to be fixed before anything else in the section can be trusted.\n\n**2. The \"Llama almost never asked for clarification\" claim is not directly supported.**\nThe text reports a single SA number per model and asserts a behavioral cause (Llama under-asks). No clarification-rate, ambiguous-subset accuracy, or false-deferral-rate is reported. Either include those component numbers (clear-subset accuracy, ambiguous-subset deferral rate) or weaken the claim to a hypothesis.\n\n**3. \"Selective response is largely a solved problem at the frontier\" is a significant overclaim.**\nThe reasoning chain is: all four models > 60% SA \u21d2 frontier LLMs have a \"usable internal signal\" \u21d2 the remaining work is prompting, not fine-tuning. None of these inferences are warranted from a single benchmark with a 60% floor that's only ~20 points above random on a 50/50 split. Specifically:\n - 60% on a binary-balanced task with partial credit for deferring is a weak ceiling, not evidence of a \"solved\" problem.\n - The jump from benchmark performance to \"usable internal signal\" conflates behavior with mechanism; nothing in the setup probes internal representations.\n - The claim that the remaining problem is prompting \"rather than fine-tuning\" is unsupported \u2014 no prompting vs. fine-tuning comparison is reported.\n\n**4. Single-sample, temperature-0, single-prompt evaluation is under-disclosed as a limitation.**\n\"Three random orderings of the benchmark\" addresses ordering noise but not prompt-sensitivity, sampling variance, or judge variance. With one sample per prompt and one system prompt, the SA numbers are point estimates with no confidence intervals. The 2.3-point gap between Claude and GPT-4o is called \"small but consistent\" \u2014 consistent across ordering is not the same as statistically meaningful, and no significance test is reported.\n\n**5. Judge / circularity risk is undisclosed.**\nGPT-4 is used as judge while GPT-4o is one of the evaluated models. Same-family judging is a known source of bias and should at least be acknowledged, ideally with a human-agreement spot-check on a subsample.\n\n**6. Annotator agreement on ambiguity labels is missing.**\n\"Validated by three annotators\" \u2014 by majority vote? Unanimous? What was inter-annotator agreement (\u03ba)? Ambiguity is itself an ambiguous construct; the label noise directly bounds achievable SA.\n\n**7. Benchmark construction details are thin.**\nWhere do the 800 prompts come from (synthetic, scraped, paraphrased from an existing set)? What domains? What's the length distribution? Are \"clear\" and \"ambiguous\" prompts matched on surface features, or could a model game SA by, say, deferring on long prompts? Without this, the benchmark's external validity is unassessable.\n\n**8. Potential downstream concern worth a sentence.**\nPublishing a leaderboard that says clarification-asking is \"solved\" could license product teams to ship agents that under-ask on safety-relevant ambiguous requests. A one-line caveat that benchmark SA does not translate directly to deployment-time selective behavior would be appropriate.\n\n## Structural and prose suggestions\n\n- The metric definition and its computation should be co-located, not separated by the model list. Define SA once, in one place, with a formula.\n- The \"Results\" paragraph mixes the headline table, a re-definition of the metric, and a per-model comment. Split: (i) numbers, (ii) per-subset breakdown, (iii) interpretation.\n- \"Concretely, SA is computed as\u2026\" reads as a hedge that contradicts the earlier definition. Remove or reconcile.\n- \"punts,\" \"confidently mis-answers\" \u2014 fine for a workshop paper, slightly informal for a main-conference draft; flag for venue fit.\n- \"Crucially\" is doing a lot of work in front of a weak inference; consider removing.\n\n## Suggested revision\n\n> We evaluate whether LLM agents recognize ambiguous requests and respond with a clarifying question rather than guessing. AmbigBench is a held-out set of 800 prompts, evenly split between clear tasks (one defensible interpretation) and ambiguous tasks (at least two equally plausible interpretations). Each prompt was independently labeled by three annotators; we retained only prompts with unanimous agreement on the ambiguity label [report \u03ba, retention rate].\n>\n> **Selective Accuracy (SA).** For a prompt p with predicted response \u0177 and gold label y, let correct(p) = 1 if (a) p is clear and \u0177 matches y, or (b) p is ambiguous and \u0177 is a clarifying question (as judged by [judge model] against rubric R). SA = (1/N) \u03a3 correct(p). We also report the two component rates separately: clear-prompt accuracy and ambiguous-prompt deferral rate.\n>\n> **Setup.** We evaluate GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, and Llama 3 70B with a shared system prompt, temperature 0, one sample per prompt. Responses are scored by a GPT-4 judge; we report human-judge agreement on a 100-prompt subsample in Appendix X. Because GPT-4o is among the evaluated models, we additionally [report a cross-judge robustness check / acknowledge this as a limitation].\n>\n> **Results.** Table 1 reports SA and its two components. Claude 3.5 Sonnet achieves the highest SA (71.2%), followed by GPT-4o (68.9%), Gemini 1.5 Pro (64.1%), and Llama 3 70B (52.8%). The ranking is driven primarily by behavior on the ambiguous subset: Llama 3 70B asks for clarification on [X]% of ambiguous prompts vs. [Y/Z/W]% for the other three. Differences between Claude and GPT-4o are within [\u00b1CI], so we do not claim a meaningful gap.\n>\n> **Interpretation.** All four models exceed 60% SA, which suggests that frontier LLMs can be prompted into selective response behavior above a non-trivial floor. We do not claim the problem is solved: a 60% floor on a balanced binary task leaves substantial room for improvement, and our evaluation does not separate prompting effects from underlying capability. \u00a75 turns to a question this benchmark does not address \u2014 what an agent should *say* when it asks for clarification.\n\n## What I could not verify\n\n- Whether the reported 71.2 / 68.9 / 64.1 / 52.8 numbers correspond to definition (1) or the contradictory definition (2), or to a third unstated computation \u2014 this is the most important thing to resolve and I cannot tell from the text alone.\n- Whether the ambiguity labels were unanimous or majority, and what the inter-annotator agreement was.\n- Whether GPT-4 judge accuracy was spot-checked against humans; without that, the ambiguous-subset scores in particular are not anchored.\n- Whether the per-model clarification rates exist in the paper and were simply omitted from this section, or were not measured. My structural suggestions assume they exist; if not, that's a larger gap.\n- The \"three random orderings\" claim \u2014 I'm assuming this refers to prompt order within the benchmark, not three reruns of generation; the text is ambiguous.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus on polishing the prose and structure, or on checking and revising the argument, metric definition, and claims?",
+    "rationale": {
+      "R1.1": "The section contains thesis and contribution-level claims about ambiguity detection and selective response that may need reframing.",
+      "R1.2": "The delegation plausibly requires checking whether the metric definition, results interpretation, and conclusions form a coherent argument chain.",
+      "R1.3": "The artifact reports benchmark results and draws claims from them, so support between reported evidence and claims is a central responsibility.",
+      "R1.5": "Because the user asks for help with an entire section, section-level ordering and narrative arc are likely in scope.",
+      "R1.6": "A generic request for help with a paper section centrally includes sentence- and paragraph-level clarity, flow, and register.",
+      "RX.1": "Any projection should preserve uncertainty about the user's underspecified intent rather than assuming a single editing mode.",
+      "RX.2": "The projection must account for risks of overstating what the reported benchmark results establish.",
+      "RX.3": "The agent must not execute the requested help and must stay limited to responsibility projection.",
+      "RX.4": "The projection should flag responsibilities that reduce misleading downstream scientific claims.",
+      "RX.5": "The projection should remain traceable to specific features of the delegation and artifact."
+    }
+  }
+}

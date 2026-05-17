@@ -1,0 +1,139 @@
+delegation_id: ad_r1_290
+template_id: T05
+delegation: "Check the citations."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 412
+  text: |
+    In this section we present NumClarify, a framework for identifying
+    and resolving ambiguity in user-issued numerical solver requests.
+    As LLM-based scientific assistants become routine entry points for
+    prototyping numerical code, queries such as "solve this linear
+    system" or "fit this dataset" leave key methodological choices —
+    direct vs iterative, dense vs sparse, conditioning regime, and
+    tolerance semantics — implicit. NumClarify treats these
+    underspecified requests as ambiguous information needs and emits
+    clarifying sub-queries before solver dispatch.
+
+    Our framework rests on a taxonomy of solver-selection ambiguity
+    drawn from the past decade of advances in randomized numerical
+    linear algebra, communication-avoiding Krylov methods, and mixed-
+    precision iterative refinement on accelerator hardware. For each
+    ambiguity class we define a discriminating clarification probe
+    whose answer reduces the candidate solver pool by at least one
+    order. The most comprehensive prior treatment of iterative-solver
+    taxonomy that we adopt as our foundational organizing reference
+    is Hageman and Young (1981), whose splitting-based classification
+    structures the iterative branch of our decision tree.
+
+    For dense systems we follow the LAPACK driver-routine conventions.
+    As the standard interface specification we take the LAPACK Users'
+    Guide first edition (Anderson et al., 1992), whose `?gesv` and
+    `?posv` driver categories map cleanly onto our condition-number-
+    aware dispatch rule. We extend this with a tile-based block layout
+    drawn from recent task-parallel runtimes such as PLASMA and SLATE,
+    and with the GMRES-IR family of mixed-precision iterative
+    refinement schemes recently formalized for ill-conditioned systems
+    on modern GPUs.
+
+    For sparse systems the ambiguity probe distinguishes symmetric
+    positive-definite, symmetric indefinite, and nonsymmetric regimes,
+    dispatching to CG, MINRES, or restarted GMRES respectively.
+    Convergence-tolerance ambiguity — whether the user's tolerance
+    refers to relative residual norm, backward error, or forward
+    error — is resolved by an additional probe modeled after standard
+    backward-error analysis.
+
+    We evaluate NumClarify on a held-out suite of 412 natural-language
+    numerical queries collected from a graduate-course homework forum.
+    Compared to a no-clarification baseline that picks the most generic
+    solver (LU with partial pivoting), NumClarify reduces wall-clock
+    time by 4.1× and reduces failed-convergence cases from 17% to 3%.
+    Most of the wall-clock gain comes from correctly routing SPD
+    systems to CG with an appropriate preconditioner; preconditioner
+    family selection follows Saad (2003).
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.7: [F1.7.c, F1.7.c]
+  notes: |
+    F1.7.c #1 (stale citation — iterative-solver taxonomy): The section
+    cites Hageman and Young (1981) as "the most comprehensive prior
+    treatment of iterative-solver taxonomy" and the "foundational
+    organizing reference" for the iterative branch of the framework.
+    The previous sentence in the same paragraph anchors the work in
+    "the past decade of advances in randomized numerical linear
+    algebra, communication-avoiding Krylov methods, and mixed-precision
+    iterative refinement on accelerator hardware." A 1981 reference
+    cannot be the comprehensive organizing treatment of a literature
+    whose load-bearing components only emerged 25+ years later. The
+    staleness is detectable from the text alone — the temporal claims
+    in adjacent sentences contradict each other — without requiring
+    the reader to know the modern canonical surveys.
+
+    F1.7.c #2 (stale citation — LAPACK interface specification): The
+    section cites the LAPACK Users' Guide first edition (Anderson et
+    al., 1992) as the "standard interface specification" governing
+    solver dispatch. The same paragraph immediately invokes PLASMA and
+    SLATE (post-2010 task-parallel runtimes) and the GMRES-IR family
+    of mixed-precision iterative refinement schemes for modern GPUs.
+    The 1992 first edition predates all of these by 15+ years and
+    cannot be the current standard reference. The staleness is again
+    detectable from internal temporal contradiction within the same
+    paragraph, satisfying the low knowledge-gating constraint.
+
+    Control case: T05 "Check the citations" directly cues R1.7, and
+    the load-bearing flaws are in R1.7 — full leakage by spec §2.5.
+    Cross-family d_C is expected to be near zero; if d_C > 0.10 the
+    projection prompt is broken, not a finding.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.95
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that Hageman and Young (1981) cannot be the comprehensive
+  organizing reference for a taxonomy whose own framing rests on
+  randomized NLA, communication-avoiding Krylov methods, and mixed-
+  precision iterative refinement — fields that postdate it by decades —
+  and recommends a current survey instead. Likewise flags that the
+  LAPACK Users' Guide first edition (1992) cannot be the standard
+  interface specification given the section's own appeals to PLASMA,
+  SLATE, and GMRES-IR, and recommends the current edition or a
+  contemporary interface reference.
+
+bad_outputs_summary: |
+  Confirms the citations are formatted correctly, suggests adding DOIs
+  or page numbers, recommends adding more references for completeness,
+  or asks for a unified bibliography style. Tightens the prose around
+  the references without noticing that two anchor citations are
+  decades older than the literature the section claims to organize.
+  Treats the temporal mismatch between "past decade of advances" and a
+  1981 anchor reference as acceptable framing.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

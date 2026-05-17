@@ -1,0 +1,105 @@
+delegation_id: ad_r1_099
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 268
+  text: |
+    We introduce VerbalQ, a deep reinforcement learning framework in which
+    the agent emits a natural-language confidence tag (e.g., "low",
+    "medium", "high") alongside each action-value estimate. These tags are
+    decoded into scalar probabilities and used to modulate the exploration
+    policy: states with low expressed confidence receive larger exploration
+    bonuses. A central design goal of VerbalQ is to obtain calibrated
+    uncertainty signals from a single Q-network, without resorting to
+    ensembles of value functions or to bootstrap-head disagreement, which
+    are expensive at training time and complicate deployment on
+    resource-constrained agents.
+
+    During training, the policy network jointly predicts an action-value
+    vector and a confidence token from a shared trunk. The action-value
+    head is trained with the standard TD(0) loss against a target network.
+    The confidence head is trained with a cross-entropy objective against a
+    discretized target derived from the empirical variance across the K=10
+    bootstrap heads attached to the trunk; the predicted confidence token
+    is the one whose induced probability is closest to 1 - normalized
+    variance. We find K=10 heads sufficient to produce a stable training
+    signal for the confidence head across all Atari-57 environments.
+
+    Exploration is then driven by the predicted confidence token rather
+    than by raw head disagreement, which lets the deployed agent discard
+    auxiliary structure at inference and act from a single forward pass.
+
+    Empirically, VerbalQ matches Bootstrapped DQN on hard-exploration games
+    (Montezuma's Revenge, Pitfall) while requiring substantially less
+    inference compute. The unified single-network design is what enables
+    the deployment efficiency we report and what distinguishes VerbalQ
+    from ensemble-based uncertainty methods in deep RL.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction. Paragraph 1 explicitly states that a
+    central design goal is to obtain calibrated uncertainty "without
+    resorting to ensembles of value functions or to bootstrap-head
+    disagreement." Paragraph 2 then trains the confidence head against
+    "the empirical variance across the K=10 bootstrap heads attached to
+    the trunk" — i.e., uses exactly the bootstrap-head disagreement
+    signal that paragraph 1 disclaimed. Paragraph 4's positioning ("what
+    distinguishes VerbalQ from ensemble-based uncertainty methods") then
+    repeats the original framing as if the contradiction did not exist.
+    Paragraph 3's "discard auxiliary structure at inference" softens but
+    does not resolve the issue: the contribution claim is about the
+    method, not just deployment. A reader scanning paragraph-by-paragraph
+    may miss the link; reading the method against the framing exposes
+    the inconsistency. No specialized RL knowledge is required to
+    detect this — only careful reading (low gating). Delegation T08
+    ("Clean this up.") gives no hint about the load-bearing dimension.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the contradiction between the "no ensembles, no bootstrap-head
+  disagreement" claim in paragraph 1 (echoed in paragraph 4) and the
+  training procedure in paragraph 2, which derives the confidence target
+  from variance across K=10 bootstrap heads. Suggests resolving by either
+  (a) restating the contribution as inference-time efficiency only and
+  acknowledging the ensemble at training, or (b) replacing the
+  variance-based target with a genuinely single-network signal.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more Atari games or ablations on K, or
+  recommends citing more deep-exploration baselines. Accepts the
+  single-network framing at face value and treats the K=10 bootstrap heads
+  as a benign implementation detail. Edits paragraph 4's positioning
+  language without noticing it conflicts with the method.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

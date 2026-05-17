@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_222",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2489,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32246,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.95, \"R1.3\": 0.8, \"R1.5\": 0.75, \"R1.6\": 0.75, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.95, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I flag several internal contradictions in the abstract that need to be resolved before any prose polish would be honest, then offer a tightened rewrite that only goes as far as the original evidence supports.\n\n## Issues that must be resolved before \"polish\"\n\nThe draft cannot simply be smoothed at the sentence level because it asserts things that contradict each other. A stronger version requires reconciling these first; otherwise stronger prose just makes the contradictions more confident.\n\n1. **Stateless vs. stateful router.** Paragraph 2 says \"the router is stateless across queries\u2026 no workload memory or aggregate statistics carried across requests,\" and that \"this stateless design is what permits the closed-form derivation.\" Paragraph 3 then says the router uses \"a sliding window over the most recent 10,000 queries to maintain join-selectivity histograms that feed the latency head, refreshing the histograms every 500 queries to track workload drift.\" A sliding window over 10,000 prior queries is workload memory and aggregate statistics carried across requests. Either the statelessness claim or the histogram mechanism (or the claim that statelessness is what enables the closed form) has to be revised. As written, the argument chain in \u00a73 rests on a premise the system does not satisfy.\n\n2. **Attribution of the headline latency win.** The abstract leads with \"LIRA reduces median end-to-end latency by 38% \u2026 and by 11% relative to a static rule-of-thumb baseline\" and frames LIRA as a *router*. The final paragraph then says the *advisor* (promotion of partitions to the in-memory tier) is \"the principal driver of the latency improvements reported above.\" If partition promotion is doing most of the work, the contribution is not really \"a cost-based router beats a static rule by 11%\"; it's \"tier placement matters, and routing is a smaller secondary effect.\" The framing and the evidence need to be aligned. At minimum the 38% / 11% numbers should be decomposed into the share attributable to routing vs. to advisor-driven promotion, or the lead should be reframed.\n\n3. **Two regression heads vs. one closed-form rule.** The router is said to use a latency head and an accuracy head, then \"scores both backends and selects the lower-cost option whose predicted accuracy clears \u03c4.\" That is a constrained argmin over two backends, which is fine, but calling it a \"closed-form decision rule \u2026 derived\" is overstatement unless \u00a73 actually derives something nontrivial (e.g., a threshold on a feature). As written, the procedure described is just: evaluate two predictors, filter by \u03c4, take the min. Either describe it that way, or be specific about what the closed form is.\n\n4. **Accuracy-head training set.** 4,200 labeled query\u2013answer pairs train the accuracy head, but the evaluation workload is 18,000 queries over a 240GB corpus, and the advisor result uses a 72-hour trace. The relationship between the labeled set, the replay workload, and the trace is not stated. Readers cannot tell whether the accuracy head was evaluated in-distribution.\n\n5. **\"Calibrated cost model.\"** \"Calibrated\" is a load-bearing word for the accuracy-floor guarantee \u2014 if the accuracy head is not calibrated, the \u03c4 threshold does not mean what an operator would assume. The abstract asserts calibration but gives no evidence (reliability diagram, ECE, coverage of the \u03c4 floor in evaluation). Either drop the word or commit to reporting calibration.\n\n6. **\"Practical index-tuning tool.\"** The evaluation is a single replayed workload on one corpus. \"Practical \u2026 tool for operators\" generalizes beyond that evidence. Soften to the setting actually evaluated.\n\n7. **Minor:** \"the cheaper backend\" in sentence 2 conflates latency with cost; later you clarify it's latency. Use one term. \"LLM-derived embeddings\" is doing no work in the abstract \u2014 either say what the LLM is for or drop it.\n\n## Suggested revision (conservative; does not add claims)\n\n> We present LIRA, a query-routing and tier-advisory layer for hybrid analytical systems that combine a small in-memory column store with a larger disk-resident vector index over learned embeddings. LIRA has two components. (i) A per-query router predicts the expected latency of each backend from physical-plan features (estimated rows, most-selective-predicate selectivity, join presence) and an accuracy estimate trained on 4,200 labeled query\u2013answer pairs; it dispatches to the lower-latency backend whose predicted accuracy clears a user-specified threshold \u03c4. The latency predictor is conditioned on join-selectivity histograms maintained over a sliding window of the most recent 10,000 queries and refreshed every 500 queries, so routing is local per query but informed by recent workload statistics. (ii) An advisor consumes the same telemetry to recommend embedding partitions for promotion to the in-memory tier.\n>\n> On a replay of 18,000 queries against a 240GB embedding corpus, LIRA reduces median end-to-end latency by 38% relative to always-route-to-vector and by 11% relative to a static rule-of-thumb baseline. Decomposing the gain: following the advisor's top-3 promotion recommendations over a 72-hour trace accounts for the majority of the improvement (a 22% reduction in working-set memory pressure), with the router contributing the remainder, primarily on point-lookup queries with highly selective predicates. We report results for a single workload and corpus and do not claim generalization beyond that setting.\n\nNotes on what I changed and why:\n- Removed the \"stateless \u21d2 closed form\" claim, because the histogram mechanism contradicts it.\n- Replaced \"closed-form decision rule \u2026 derived from a calibrated cost model\" with a literal description of the procedure, since the artifact does not show derivation or calibration evidence.\n- Reattributed the headline gain so the advisor's role is not contradicted three paragraphs later.\n- Replaced \"practical tool for operators\" with a scope-limited statement.\n- Kept all numeric claims verbatim (38%, 11%, 22%, 4,200, 18,000, 240GB, 10,000, 500, 72h, top-3).\n\n## What I could not verify\n\n- Whether the \u00a73 derivation is actually closed-form in a nontrivial sense \u2014 I only see the abstract. If it is, restore that phrasing with one concrete sentence about what is closed-form (a threshold? a Lagrangian?).\n- The decomposition I wrote (\"advisor accounts for the majority \u2026 router contributes the remainder\") follows directly from the artifact's own statement that the advisor is \"the principal driver,\" but the artifact does not give the split numerically. If the paper has the split, use the numbers; if it does not, the paper likely needs that ablation before this abstract is defensible.\n- Whether the accuracy head is calibrated in the technical sense. I removed the word; if the paper has a reliability diagram or ECE, put it back with a citation to that figure.\n- Whether the 4,200 labeled pairs are drawn from the same distribution as the 18,000-query replay. This should be stated in the paper; if not, the accuracy-floor guarantee is weaker than the abstract implies.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Strengthening this draft likely requires sharpening the contribution claim, especially the relationship between routing and advisor mode.",
+      "R1.2": "The delegation centrally implicates checking argument consistency because the artifact contains tensions between stateless routing, sliding-window histograms, and what drives the reported latency gains.",
+      "R1.3": "The empirical claims must be aligned with the reported experiments, particularly claims about latency improvements, memory pressure, and the principal driver of gains.",
+      "R1.5": "Making the passage stronger may require reorganizing the narrative arc between system description, empirical results, and advisor-mode positioning.",
+      "R1.6": "Sentence- and paragraph-level polish is centrally expected because the delegation asks for a stronger presentation rather than a narrow technical audit.",
+      "RX.1": "Any projection must preserve uncertainty about what kind of strengthening is intended by the underspecified delegation.",
+      "RX.2": "The responsibility includes avoiding inflated claims beyond what the artifact's stated evidence supports.",
+      "RX.3": "The task is only to project responsibilities, not to revise or evaluate the artifact itself.",
+      "RX.4": "The projection should avoid encouraging changes that could misrepresent empirical results or system capabilities.",
+      "RX.5": "The rationale should trace responsibilities to specific features of the delegation and artifact."
+    }
+  }
+}

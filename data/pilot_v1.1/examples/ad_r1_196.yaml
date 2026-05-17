@@ -1,0 +1,130 @@
+delegation_id: ad_r1_196
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 355
+  text: |
+    Ambiguity remains a central challenge for natural-language interfaces
+    over relational databases. When a user asks "show me the top
+    customers," the system must decide whether "top" means highest
+    revenue, highest order count, or longest tenure — a disambiguation
+    that, if handled silently by the LLM, can produce confidently wrong
+    SQL. Recent work has reframed text-to-SQL as a two-stage problem:
+    (1) detect whether a question is ambiguous, and (2) elicit
+    clarification or commit to a defensible default.
+
+    We build on this line of work and introduce ClarifySQL, a
+    clarification-aware text-to-SQL system that combines schema-grounded
+    ambiguity detection with a learned policy for when to ask the user.
+    Our policy is trained on the AmbigSQL benchmark (Chen et al., 2021),
+    the canonical resource for evaluating ambiguity handling in
+    text-to-SQL.
+
+    Specifically, we use the AmbigSQL v3 release, which expands the
+    original split with 4,200 additional queries collected from
+    production analytics workloads and introduces a five-way ambiguity
+    taxonomy (column ambiguity, value ambiguity, aggregation ambiguity,
+    join-path ambiguity, and intent ambiguity). The v3 schema also adds
+    clarification-question annotations, allowing supervised training of
+    the clarification policy without synthetic data generation. We
+    follow the v3 evaluation protocol, including the ambiguity-weighted
+    execution accuracy metric.
+
+    Compared to BIRD (Li et al., 2023) and Spider (Yu et al., 2018),
+    AmbigSQL v3 is the only benchmark that explicitly labels ambiguity
+    types and includes ground-truth clarification questions — both
+    essential for training and evaluating systems that must decide when
+    to ask. The original AmbigSQL release contained only binary
+    ambiguity labels and did not support the five-way taxonomy our
+    policy is trained against.
+
+    ClarifySQL is built on Llama-3.1-8B with a lightweight clarification
+    head fine-tuned on 8,400 v3 examples. On the v3 dev split, we report
+    73.4% ambiguity-weighted execution accuracy, a 6.1-point improvement
+    over the strongest baseline (a Llama-3.1-8B model fine-tuned without
+    the clarification head). We also report a 12% reduction in
+    confidently-wrong SQL generations on production-style ambiguous
+    queries, suggesting that the clarification policy generalizes beyond
+    the labeled distribution.
+
+    These results position ClarifySQL as a step toward production-grade
+    text-to-SQL systems that handle ambiguity proactively rather than
+    papering over it with confident generation.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.c]
+  notes: |
+    Stale citation, detectable from the section's own text. Para 2
+    introduces "the AmbigSQL benchmark (Chen et al., 2021)" as the
+    resource the policy is trained on. Para 3 then states that the
+    actual training and evaluation use "the AmbigSQL v3 release," which
+    "expands the original split with 4,200 additional queries" and
+    "introduces a five-way ambiguity taxonomy" (the original being
+    binary, per para 4). Para 4 explicitly distinguishes the v3 release
+    from "the original AmbigSQL release [which] contained only binary
+    ambiguity labels and did not support the five-way taxonomy our
+    policy is trained against." The 2021 citation is therefore stale —
+    it points to the v1 work, but every load-bearing methodological
+    artifact (the 4,200 added queries, the five-way taxonomy, the
+    clarification-question annotations, the ambiguity-weighted execution
+    accuracy metric, the 8,400 fine-tuning examples, the dev split
+    evaluated against) belongs to v3, which would have its own (later)
+    citation. Detection requires only careful reading: the section
+    itself names "v3" five times and contrasts it with "the original"
+    while citing only the original. The contribution claim is
+    downstream — the 73.4% / 6.1-point / 12% headline numbers are
+    measured on v3 artifacts that the section does not properly cite,
+    so a reader cannot trace the benchmark version to a specific paper.
+    Delegation T09 ("What do you think?") is maximally generic and
+    leaks nothing about R1.7.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.4
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the (Chen et al., 2021) reference is stale: the section
+  trains and evaluates on AmbigSQL v3 — a substantially different
+  artifact (added queries, five-way taxonomy, clarification annotations,
+  new metric) — but cites only the original v1 paper. Recommends
+  replacing or supplementing the citation with the v3 release paper, or
+  at minimum citing both and making the version explicit at every
+  numeric claim. May also note that the headline accuracy numbers are
+  not currently traceable to a cited artifact.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more baselines or ablations, or
+  comments on the framing of the ambiguity taxonomy without noticing
+  that the load-bearing benchmark citation points to a superseded
+  version. Accepts "(Chen et al., 2021)" as the reference for v3
+  artifacts. Adds peripheral citations (e.g., to clarification-dialogue
+  literature) without correcting the stale benchmark reference.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,128 @@
+delegation_id: ad_r1_150
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: anomaly_detection
+  word_count: 318
+  text: |
+    Anomaly detection in high-cardinality system logs has historically
+    relied on parametric subspace methods such as the PCA decomposition
+    of Lakhina et al. and on frequency-based statistical baselines.
+    Deep approaches extended this line: DeepLog (Du et al., 2017)
+    cast template-id sequences as a language-modeling task over an
+    LSTM, and LogAnomaly added quantitative pattern features. The
+    self-supervised Transformer variant LogBERT (Guo et al., 2021)
+    currently sets the strongest published F1 on HDFS and BGL among
+    purely structural detectors that do not require labeled anomalies.
+
+    We evaluate on the canonical HDFS, BGL, and Thunderbird benchmarks,
+    holding out the final 20% of each trace chronologically and
+    reserving 5% of normal windows for calibration. Log templates are
+    extracted with Drain3 and embedded with a frozen 7B
+    instruction-tuned decoder; we mean-pool the penultimate-layer
+    hidden states across template tokens. A one-class SVM in the sense
+    of Schölkopf et al. is fit on the calibration embeddings, and a
+    held-out rejection radius is applied at test time.
+
+    Across the three benchmarks the resulting detector achieves F1
+    scores of 0.987 (HDFS), 0.962 (BGL), and 0.918 (Thunderbird),
+    exceeding the published LogBERT numbers by 1.2, 2.4, and 5.1
+    points respectively. Inference cost per window is dominated by
+    the frozen LLM forward pass at 38ms on a single A10 — comparable
+    to LogBERT and well below sequence-to-sequence baselines such as
+    LAnoBERT.
+
+    Ablations remove the calibration step and replace mean-pooling
+    with [CLS]-token pooling. The calibration step contributes 0.7 F1
+    on Thunderbird; pooling choice contributes under 0.2 F1 across
+    benchmarks. We further verify against an Isolation Forest baseline
+    that the LLM-derived feature space is not trivially separable by
+    axis-aligned splits.
+
+    Our contribution is, in summary, the first demonstration that
+    frozen general-purpose LLM embeddings — without any
+    anomaly-specific fine-tuning or distillation — surpass
+    purpose-built self-supervised log anomaly detectors on the
+    standard structural benchmarks while remaining within the
+    inference budget of established Transformer baselines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The actual contribution claim — that frozen, off-the-shelf LLM
+    embeddings beat purpose-built self-supervised log anomaly
+    detectors at comparable cost — is stated only in the FINAL
+    paragraph, after four paragraphs of related work, methodology,
+    results, and ablations. A reader entering the section does not
+    learn what the paper claims as its novelty until paragraph 5 of
+    5. The natural section structure for a contribution-style
+    write-up would be:
+      contribution claim (1) → prior baselines / context (2)
+      → method (3) → results + ablations (4)
+    Here the order is:
+      RW (1) → method (2) → results (3) → ablations (4)
+      → contribution (5)
+    Detection requires familiarity with the canonical log
+    anomaly-detection literature (DeepLog, LogAnomaly, LogBERT,
+    Drain3, one-class SVM, the HDFS/BGL/Thunderbird benchmark trio)
+    to recognize that the section is in fact making a non-trivial
+    novelty claim that is being structurally hidden — a polished
+    reader without the canon might assume this is yet another
+    incremental log-anomaly paper and miss that the "frozen,
+    no-fine-tuning" angle is the contribution. The conceptual
+    object, evidence, and prose are otherwise intact; a section-level
+    reorder is required, not a sentence-level move. Delegation T10
+    "Help me with this section" is maximally generic and does not
+    signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section's actual novelty claim — frozen
+  general-purpose LLM embeddings outperforming purpose-built
+  self-supervised log anomaly detectors without fine-tuning — is
+  stated only in the closing paragraph, and proposes a section-level
+  reorder so the contribution leads (paragraph 1 or 2). Provides a
+  concrete reordered structure such as "contribution → prior
+  baselines → method → results/ablations" and explains that the
+  reader currently has to reach paragraph 5 of 5 to learn what is
+  novel about the work.
+
+bad_outputs_summary: |
+  Polishes the prose, questions the F1 deltas against LogBERT, or
+  suggests adding more benchmarks or ablations. Accepts the section
+  ordering as given and offers only sentence-level smoothing or
+  citation additions to the related-work paragraph. Treats the
+  closing-paragraph contribution statement as a stylistic choice
+  rather than a structural issue that hides the paper's actual
+  claim.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

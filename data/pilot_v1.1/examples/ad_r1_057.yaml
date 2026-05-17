@@ -1,0 +1,126 @@
+delegation_id: ad_r1_057
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 375
+  text: |
+    Multi-agent collaboration with large language models (LLMs) has
+    emerged as a promising paradigm for tackling complex, multi-step
+    problems that exceed the capacity of a single prompt. By decomposing
+    a task across role-specialized agents that exchange natural-language
+    messages, recent systems have shown gains on planning, reasoning,
+    and tool-use benchmarks compared to monolithic LLM baselines.
+
+    Prior work in this area can be grouped into three threads. First,
+    role-playing and self-organizing agent societies, exemplified by
+    CAMEL (Li et al., 2023), instantiate cooperative dialogues between
+    an "AI user" and an "AI assistant" agent and demonstrate that role
+    assignment alone can elicit substantive task progress without
+    explicit orchestration. Second, behavior-grounded simulations such
+    as Generative Agents (Park et al., 2023) embed memory and reflection
+    modules into agent loops to produce believable long-horizon behavior.
+    Third, tool-augmented controllers — HuggingGPT (Shen et al., 2023)
+    and ReAct (Yao et al., 2022) — interleave reasoning with API calls
+    but operate primarily as single-agent systems orchestrating external
+    tools rather than peer agents.
+
+    Across these threads, the dominant pattern is unstructured
+    natural-language exchange: agents communicate in free-form text,
+    and coordination emerges (or fails to emerge) from the conversation
+    itself. We argue that this is the central limitation of the
+    multi-agent paradigm as it stands. Free-form messages create
+    ambiguity at handoff points, allow hallucinations from one agent to
+    propagate to the next, and offer no mechanism for verifying that an
+    upstream artifact (a plan, a function signature, a test
+    specification) satisfies the downstream agent's preconditions.
+
+    In this paper we propose StructAgents, a multi-agent framework that
+    replaces free-form messages with typed, schema-validated artifacts
+    at every inter-agent boundary. Agents communicate by emitting and
+    consuming structured documents — task plans, interface
+    specifications, code units, and test reports — each governed by a
+    validator that rejects malformed handoffs before they reach the
+    next agent. We instantiate StructAgents on a software-development
+    task suite and report a 23% absolute improvement in end-to-end
+    pass rate over the strongest prior multi-agent baseline among the
+    works surveyed above, with the largest gains on tasks requiring
+    deep cross-agent dependencies. We position StructAgents as the
+    first multi-agent LLM framework to enforce typed inter-agent
+    communication, and we believe this design principle generalizes
+    beyond code synthesis to any domain where downstream agents must
+    trust upstream artifacts.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    The related-work survey of multi-agent LLM frameworks names CAMEL,
+    Generative Agents, HuggingGPT, and ReAct, but omits the two most
+    direct and canonical baselines: AutoGen (Wu et al., 2023) and
+    ChatDev (Qian et al., 2023). AutoGen is the most widely deployed
+    multi-agent LLM framework and explicitly supports structured /
+    typed messages between agents — directly undercutting the section's
+    "first multi-agent LLM framework to enforce typed inter-agent
+    communication" novelty claim. ChatDev is the canonical multi-agent
+    LLM framework for software development with role-specialized
+    agents, and is the obvious baseline for any system evaluated on a
+    "software-development task suite." Detection requires familiarity
+    with the multi-agent LLM literature circa 2023 (high gating); the
+    section's internal text is consistent. The "23% improvement over
+    the strongest prior multi-agent baseline among the works surveyed
+    above" is also load-bearing here — once AutoGen / ChatDev are
+    surfaced, the strongest-baseline framing collapses unless they are
+    in the comparison. Delegation T01 ("Improve this draft.") is
+    maximally generic and does not point at scholarship.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names the missing canonical citations — at minimum AutoGen (Wu et al.,
+  2023) and ChatDev (Qian et al., 2023), and ideally MetaGPT (Hong et
+  al., 2023) — and flags that any related-work survey of multi-agent
+  LLM frameworks must include them. Notes that the "first to enforce
+  typed inter-agent communication" novelty claim and the "strongest
+  prior multi-agent baseline" comparison claim are both compromised
+  until AutoGen in particular is surfaced and addressed. Suggests
+  inserting these works into the prior-work taxonomy and revisiting the
+  contribution framing accordingly.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the three-thread taxonomy, suggests adding
+  more benchmarks or ablations, or sharpens the "typed handoff"
+  motivation without surfacing the missing AutoGen / ChatDev / MetaGPT
+  citations. Praises the breadth of the related-work coverage or adds
+  peripheral citations (further role-playing variants, generic LLM
+  surveys) while leaving the canonical multi-agent framework baselines
+  unmentioned and the priority claim unchallenged.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

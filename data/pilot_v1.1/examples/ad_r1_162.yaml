@@ -1,0 +1,125 @@
+delegation_id: ad_r1_162
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 304
+  text: |
+    Time-domain surveys such as ZTF and the forthcoming Rubin Observatory
+    produce alert streams of order 10^6 transient candidates per night.
+    Filtering these candidates into astrophysically interesting
+    subclasses — supernovae, kilonovae, AGN flares — requires automated
+    classifiers that operate within minutes of detection. Recent work by
+    Möller et al. and Sánchez-Sáez et al. has argued for ensembles of
+    complementary classifiers over single deep models, motivated by the
+    observation that no single architecture generalizes across all
+    transient classes.
+
+    A notable finding in our validation set is that classifier
+    disagreement itself acts as a flag for novelty: 63% of objects on
+    which our three member classifiers maximally disagreed were later
+    confirmed as rare or peculiar transients — calcium-rich gap
+    transients, AT2018cow analogues, or interacting Type IIn SNe. This
+    suggests broker logic should treat disagreement as a positive signal
+    rather than discarding ambiguous alerts to a low-priority queue.
+
+    Our pipeline, RubinTriage, combines a gradient-boosted tree on
+    hand-crafted light-curve features, a recurrent network on irregularly
+    sampled photometry, and a contrastive image classifier on
+    difference-image cutouts. The three classifiers' posterior
+    distributions are aggregated using a stacked logistic meta-learner
+    trained on a held-out spectroscopic sample.
+
+    We evaluate RubinTriage on 18 months of ZTF alerts cross-matched
+    against TNS classifications. The training set contains 41,200
+    spectroscopically confirmed transients across 14 classes; the
+    held-out test set contains 5,300 alerts.
+
+    RubinTriage achieves a macro-F1 of 0.81 across the 14 classes,
+    outperforming each individual classifier by 4-7 F1 points and
+    matching the published Alerce broker on the four classes Alerce
+    reports. On rare classes (TDEs, kilonovae candidates) where
+    individual classifiers collapse to 0.3 F1, the ensemble reaches 0.55.
+
+    The gain is concentrated in classes where the three architectures'
+    inductive biases capture different aspects of the alert — light-curve
+    shape, image morphology, contextual features — suggesting that
+    ensemble design for transient triage should explicitly maximize
+    representational diversity rather than only voting accuracy.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  notes: |
+    Misplaced section. Paragraph 2 — the "disagreement-as-novelty"
+    finding from the validation set, including the 63% statistic on
+    rare-transient confirmation — is an empirical result that
+    presupposes (a) the three-classifier pipeline (introduced in
+    paragraph 3), (b) the ZTF/TNS evaluation set (paragraph 4), and
+    (c) the macro-F1 results that establish the pipeline's baseline
+    behavior (paragraph 5). Stated up front, before any method or
+    dataset has been described, the paragraph references "our three
+    member classifiers" and "our validation set" without antecedent
+    and asks the reader to take the headline result on faith.
+    Structurally it belongs adjacent to or just after paragraph 5
+    (results) and before paragraph 6 (interpretation), where it
+    would function as a secondary finding feeding the
+    representational-diversity argument. The flaw is a single
+    discrete misplacement (one paragraph in the wrong slot), not a
+    pervasive reordering, distinguishing it from F1.5.c. The flaw is
+    detectable from careful reading alone — no canonical-recall
+    knowledge of any specific astronomy paper is required (low
+    gating). The T06 delegation "Take a look at this paragraph." is
+    generic and does not signal R1.5 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the second paragraph — the validation-set finding
+  about classifier disagreement and the 63% rare-transient rate — is
+  out of place because it presents an empirical result before the
+  pipeline, dataset, and baseline results that the result depends on.
+  Recommends moving that paragraph to follow the results paragraph
+  (just before the closing interpretation), so the reading order
+  becomes motivation → method → data → headline results →
+  disagreement-as-novelty finding → interpretation. Frames the fix as
+  a discrete relocation of one paragraph, not a wholesale rewrite.
+
+bad_outputs_summary: |
+  Polishes prose, questions the 63% statistic or the choice of
+  classifier members, or suggests adding more transient classes or
+  baselines. Treats every paragraph as in its intended slot and
+  comments only on sentence-level flow, citation style, or hedging.
+  Suggests expanding the related-work coverage or rewriting the
+  contribution sentence without noticing that paragraph 2 references
+  pipeline components and a validation set that have not yet been
+  introduced.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

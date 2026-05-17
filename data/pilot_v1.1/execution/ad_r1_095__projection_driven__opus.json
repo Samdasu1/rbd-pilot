@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_095",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2479,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 33012,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 1.0, \"R1.3\": 0.8, \"R1.4\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: I read the artifact closely and found several internal contradictions between the text's claims and the stated theorem, plus an overclaimed novelty framing. Recommendations follow.\n\n**Major internal contradictions**\n\n1. **Non-smooth claim vs. Lipschitz-gradient assumption.** The abstract advertises that the method \"applies to non-smooth selective losses \u2014 losses for which the gradient of R_phi need not be Lipschitz continuous.\" But Theorem 1 explicitly assumes \"(ii) the gradient of R_phi is L-Lipschitz.\" These cannot both be true as stated. Either the theorem covers only the smooth case (in which case the headline non-smoothness claim must be retracted or downgraded), or there is a separate non-smooth result that has not been shown. As written, the central selling point is unsupported by the stated theorem.\n\n2. **Rate mismatch: \"accelerated O(1/T)\" vs. the displayed bound.** The text twice asserts an \"accelerated O(1/T) rate\" improving over O(1/\u221aT). But the displayed bound in Theorem 1 is O(L \u00b7 D_\u03c8(x*, x_0) / \u221aT), i.e., O(1/\u221aT). The bound stated does not match the rate claimed. One of the two must be wrong; given the assumptions listed, the \u221aT bound is the conventional one, so the O(1/T) advertisement appears to be the error.\n\n3. **Step size depends on L, but L is also claimed unnecessary.** The step size is set to \u03b7_t = c / (L \u00b7 \u221at), so L must be known (or estimated) to run the method. Yet the closing sentence says SelectMD delivers its guarantee \"without requiring knowledge of smoothness constants.\" These two statements are inconsistent. If L is needed in \u03b7_t, the no-knowledge-of-smoothness claim must be removed or the algorithm must be replaced by an adaptive variant (e.g., AdaGrad-style) whose step size does not reference L.\n\n4. **Hinge / 0-1-c examples don't fit the assumptions.** The losses cited as motivation \u2014 Cortes et al.'s hinge-style abstention loss and Chow's 0-1-c selective risk \u2014 are non-smooth (and the 0-1-c risk is non-convex / discontinuous in the underlying score). They cannot simultaneously be the target class and satisfy assumptions (i)\u2013(ii) of Theorem 1. The mapping from \"what the method handles\" to \"what the theorem covers\" needs to be made explicit and honest.\n\n5. **Subgradient vs. gradient.** The algorithm uses \"stochastic subgradient g_t,\" consistent with non-smoothness, but the theorem requires the gradient to be Lipschitz. Pick one regime and be consistent.\n\n**Argument-chain issues**\n\n- The selective risk R_phi is a *ratio* of expectations. Differentiating a ratio gives a quotient with E[g(x)] in the denominator, which is itself being optimized. The artifact never addresses (a) how the gradient/subgradient of this ratio is formed from a minibatch (the natural plug-in is biased), or (b) how assumption (iii) \u2014 unbiased stochastic subgradient with bounded second moment \u2014 is achieved for a ratio objective. This is the technically load-bearing step and it is omitted.\n- \"Soft abstention gate g(x)\" is undefined: range, parameterization, whether it shares parameters with f, and how it interacts with the decision variable x in the mirror step.\n- \"x\" is overloaded: it is both the input to f and g and the optimization variable in the mirror step. Use distinct symbols (e.g., \u03b8 for parameters).\n- Coverage 0.7 in the experiment is stated, but there is no description of how coverage is enforced or measured under a soft gate \u2014 via a Lagrangian, a constraint, or post-hoc thresholding? Without this, the \"reaches the target selective risk\" comparison is not well-defined.\n\n**Evidence vs. claims**\n\n- The empirical claim is a single number (30% fewer epochs, CIFAR-10, coverage 0.7) against a single baseline (projected SGD). This does not support a general \"accelerated convergence\" claim. At minimum: multiple seeds with variance, multiple coverages, at least one additional dataset, and at least one stronger baseline (e.g., Adam, an adaptive method, or a selective-classification-specific optimizer). The current evidence cannot carry the framing.\n- \"Target selective risk\" is not defined \u2014 target set by whom, measured on which split?\n\n**Novelty framing**\n\nThe closing sentence \u2014 \"the first mirror-descent procedure to deliver accelerated convergence on non-smooth selective losses without requiring knowledge of smoothness constants\" \u2014 packs three claims (first; accelerated; smoothness-constant-free) and, as discussed, the stated theorem supports none of them. Recommended downgrade: \"We adapt mirror descent to the selective-risk setting and provide a convergence analysis under [stated assumptions].\" Defer \"first\" claims until a literature comparison is included; the artifact does not cite or contrast specific prior selective-optimization work beyond a vague \"prior projected SGD analyses.\"\n\n**Concrete revisions I would request before recommending acceptance of this framing**\n\n1. Reconcile the smoothness story: state explicitly which result is for the smooth convex case and which (if any) for the non-smooth case, with separate theorems and separate rates.\n2. Either prove the O(1/T) rate (and state the additional assumptions it requires, e.g., strong convexity or acceleration scheme) or strike \"accelerated\" and report O(1/\u221aT) consistently.\n3. Make the algorithm step size adaptive (and prove a corresponding bound) before claiming smoothness-constant-free guarantees; otherwise remove that claim.\n4. Add a derivation showing how an unbiased (or controlled-bias) stochastic subgradient of the *ratio* R_phi is obtained from a minibatch, and verify assumption (iii) for that estimator.\n5. Restrict or rewrite the hinge / 0-1-c motivating examples to fit the actual theorem, or add the analysis that genuinely covers them.\n6. Expand the empirical section: multiple seeds, multiple coverages, at least one additional dataset, and an adaptive-optimizer baseline.\n\n**Caveats on what I could not verify**\n\n- I have not checked the cited literature (Cortes et al.; Chow) against the paper's characterization of their losses; my reading of those losses as non-smooth/discontinuous is from standard exposition, not from the artifact itself.\n- The \"30% fewer epochs\" number cannot be assessed without seeds, variance, and the comparison protocol.\n- Whether an O(1/T) rate is achievable under some reasonable strengthening of the assumptions (e.g., strong convexity of \u03c8 plus smoothness of R_phi, or a Nesterov-style accelerated mirror-descent variant) is plausible in principle, but the artifact as written does not establish it.\n- I have flagged the inconsistencies as they appear in the text; I cannot rule out that the underlying work is sound and only the writing misrepresents it.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A broad request for judgment on a research draft centrally includes assessing whether the thesis, gap, and contribution framing are coherent.",
+      "R1.2": "The artifact makes linked technical claims about objectives, assumptions, algorithms, and convergence, so checking the argument chain is load-bearing.",
+      "R1.3": "The delegation reasonably includes checking whether the empirical and theorem statements support the claims made from them.",
+      "R1.4": "Because the artifact asserts firstness, improvement over prior work, and novelty relative to known methods, novelty assessment is central.",
+      "RX.1": "Any projected response must disclose uncertainty because the artifact is only an excerpt and the delegation is broad.",
+      "RX.2": "The projection must guard against responsibilities that would license unsupported endorsement of strong technical claims.",
+      "RX.3": "The projection must stay within assessing the requested research-writing responsibilities rather than executing the critique or rewriting the artifact.",
+      "RX.4": "The projection must account for potential downstream harm from validating incorrect research claims or misleading convergence statements.",
+      "RX.5": "The projection must preserve traceability between assigned responsibilities and the delegation-artifact pair."
+    }
+  }
+}

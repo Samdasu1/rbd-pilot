@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_166",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2031,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 26329,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nBelow is a revision of the section plus a short list of issues I flagged while editing. I reorganized the four paragraphs, tightened the prose, and softened a few phrasings that read as overclaims. I did not change the technical content (loss form, hyperparameters, citations) \u2014 those are flagged for you to verify rather than rewritten.\n\n---\n\n**Revised section**\n\nPhysics-informed neural networks (PINNs) approximate the solution u(x,t) of a partial differential equation by training a network u_\u03b8 to minimize a composite loss with data, boundary/initial, and PDE-residual terms. A well-documented difficulty with vanilla PINNs is that coordinate MLPs exhibit a spectral bias toward low-frequency modes, which can stall training on problems whose solutions contain sharp fronts or high-frequency structure. Krishnapriyan et al. (2021) report failure modes of PINNs on convection-dominated problems and propose curriculum and sequence-to-sequence remedies. Wang, Yu, and Perdikaris (2022) attribute related failures to imbalanced gradient flows between loss components and introduce a gradient-norm-based balancing scheme. The broader spectral bias of MLPs was analyzed by Rahaman et al. (2019), and Tancik et al. (2020) showed that random Fourier features can mitigate this bias in coordinate-based regression; Wang et al. (2021) extended that analysis to PDE settings via the eigenstructure of the neural tangent kernel.\n\nBuilding on this line of work, we describe SP-PINN (Spectral-Preconditioned PINN). SP-PINN inserts a Fourier feature mapping \u03c6(x) = [cos(Bx), sin(Bx)] before the first hidden layer of u_\u03b8. The entries of B are initialized from a Gaussian and then refined by meta-gradient updates during training, so that the frequency basis adapts to the PDE at hand rather than being fixed in advance.\n\nThe training objective is\n  L = \u03bb_d L_data + \u03bb_b L_bc + \u03bb_r L_residual,\nwith L_residual = (1/N) \u03a3_i |\ud835\udca9[u_\u03b8](x_i, t_i)|\u00b2 and \ud835\udca9 the differential operator of the PDE. The scalar coefficients \u03bb_d, \u03bb_b, \u03bb_r are set by the gradient-balancing scheme of Wang et al. (2022) so that no single term dominates the parameter update.\n\nOptimization alternates between (i) a standard Adam step on the network parameters \u03b8 with B held fixed, and (ii) a meta-gradient step that updates B by differentiating through k = 5 inner optimization steps on the residual loss. We use an inner learning rate of 1e-3 and a meta learning rate of 1e-4 in all experiments reported below. Collocation points are drawn following the residual-adaptive sampling of Wu et al. (2023): at each epoch we sample 2N candidate points uniformly in the domain and retain the N with the largest current residual. Algorithm 1 gives the full procedure; Appendix A derives the meta-gradient.\n\n---\n\n**Issues worth your attention**\n\n1. **Ordering.** As written, the section introduces the method, then states the loss, then surveys prior work, then returns to training details. Readers will lose the thread between paragraphs 1 and 3. I moved the related-work paragraph forward so that motivation (spectral bias, gradient imbalance) precedes the method, and grouped the loss with the training-loop description.\n\n2. **\"Targets the spectral bias\" is doing a lot of work.** The original sentence asserts that the learnable Fourier mapping \"targets\" spectral bias but does not say why a learnable B should help beyond a fixed random B (Tancik et al.). I softened the claim to \"adapts to the PDE at hand,\" which is descriptive rather than evaluative. A stronger justification probably belongs either here or in a dedicated subsection \u2014 but only if you actually have ablations supporting it.\n\n3. **\"By now well documented.\"** Minor, but the phrase reads as filler and tends to age badly. Replaced with a neutral framing.\n\n4. **Loss notation.** The original `L_data` was glossed only implicitly. I added \"data\" alongside \"boundary, initial\" in the opening sentence so the three loss components match the three coefficients introduced later.\n\n5. **\"Throughout\" vs. \"in all experiments reported below.\"** \"Throughout\" is ambiguous (throughout the method? throughout the paper?). The latter phrasing is more precise and forecloses readers wondering whether you tuned the meta-LR per problem.\n\n6. **Citation form.** \"Wang et al. (2022)\" appears in paragraph 2 and \"Wang, Yu, and Perdikaris (2022)\" in paragraph 3 \u2014 same paper, two forms. I left both instances pointing at the same author-year, but you should confirm these are indeed the same reference and pick one citation style. Also worth confirming: Wang et al. (2021) (NTK/Fourier-features-for-PDEs) is a different paper from Wang, Yu, Perdikaris (2022) (gradient balancing); the current text relies on the reader to infer this.\n\n---\n\n**Caveats on the revision**\n\n- I did not verify the bibliographic details of any cited work (authors, years, venues, exact claims). The author-year strings are carried over from your draft.\n- The substantive content of the method (Fourier mapping form, meta-gradient over k=5 inner steps, learning rates, 2N\u2192N residual-adaptive sampling) is unchanged; I have not assessed whether the description matches what is actually implemented or whether the hyperparameters are defensible.\n- The reordering assumes the surrounding paper structure does not already place related work in a separate section. If it does, paragraph 1 of my revision should be cut down or moved out, and the method paragraph should lead.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus mainly on polishing the prose, restructuring the section, or checking the technical argument?",
+    "rationale": {
+      "R1.1": "A broad request to help with the section can centrally include reframing how the method, motivation, and contribution are presented.",
+      "R1.2": "The section contains a technical argument linking PINN failures, spectral bias, Fourier features, and meta-updated preconditioning, so consistency checking is a central plausible responsibility.",
+      "R1.5": "Because the delegation targets an entire section, section-level ordering and narrative arc are centrally in scope.",
+      "R1.6": "General help with a paper section commonly includes sentence- and paragraph-level clarity, flow, and concision.",
+      "RX.1": "The projection should disclose uncertainty because the delegation is underspecified and supports multiple plausible responsibility profiles.",
+      "RX.2": "Any assistance on this research section must avoid strengthening claims beyond what the artifact establishes.",
+      "RX.3": "Scope adherence is load-bearing because the instruction is only to project responsibilities, not to edit or evaluate the artifact directly.",
+      "RX.4": "The projection should avoid downstream harm by not encouraging unsupported technical or scholarly claims.",
+      "RX.5": "The projection should preserve provenance by tying responsibilities to the provided delegation and artifact rather than inventing external context."
+    }
+  }
+}

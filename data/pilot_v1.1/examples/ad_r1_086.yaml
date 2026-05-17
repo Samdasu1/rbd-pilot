@@ -1,0 +1,114 @@
+delegation_id: ad_r1_086
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: probabilistic_programming
+  word_count: 281
+  text: |
+    We present BiasFlow, a probabilistic programming framework for inferring
+    debiased pairwise preferences from LLM-based auto-annotators such as
+    those used in AlpacaEval and MT-Bench. BiasFlow treats the observed
+    annotator preference as a noisy, biased signal of an underlying latent
+    "true" preference and uses variational inference implemented in NumPyro
+    to recover the latent quantity. A central design principle of BiasFlow
+    is that it makes no parametric assumptions about the distribution of
+    latent preferences across model pairs, and it does not impose a linear
+    functional form on the relationship between bias covariates (output
+    length, formatting, refusal rate) and the observed preference. This
+    distinguishes BiasFlow from prior regression-based debiasers, which
+    assume a linear bias model and a Gaussian preference distribution.
+
+    The generative model specifies a joint distribution p(y, z, theta),
+    where y is the observed annotator preference indicator, z is the latent
+    debiased preference, and theta are the bias parameters. We condition on
+    observed annotator outputs across thousands of (model, prompt) pairs
+    drawn from the AlpacaEval-2 release.
+
+    For inference, we exploit the conditional conjugacy of the
+    Beta-Bernoulli likelihood by placing a Beta(alpha_0, beta_0) prior on
+    each latent preference z and updating it via the closed-form posterior.
+    The bias parameters theta enter through a logistic-linear link,
+    theta^T x, with a Gaussian prior N(0, sigma^2 I), and are updated via
+    stochastic variational inference with a mean-field guide.
+
+    On the AlpacaEval-2 length-controlled benchmark, BiasFlow reduces
+    length-bias-induced rank inversion by 38% relative to the regression
+    baseline of Dubois et al., while maintaining comparable agreement with
+    human preferences (Spearman rho=0.91). We attribute this gain to the
+    flexibility of the non-parametric prior over latent preferences, which
+    avoids the misspecification incurred by linear bias models.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction across paragraphs 1, 3, and 4. Paragraph 1
+    positions BiasFlow's contribution as making "no parametric assumptions
+    about the distribution of latent preferences" and not imposing "a
+    linear functional form on the relationship between bias covariates
+    and the observed preference," explicitly contrasting with
+    regression-based debiasers that "assume a linear bias model and a
+    Gaussian preference distribution." Paragraph 3 then specifies a
+    Beta(alpha_0, beta_0) prior on each latent preference z (a parametric
+    distributional assumption) and a logistic-linear link theta^T x for
+    the bias parameters (a linear functional form on the covariates).
+    Paragraph 4 compounds the contradiction by attributing the empirical
+    gain to "the flexibility of the non-parametric prior over latent
+    preferences" — but the prior described in paragraph 3 is a textbook
+    parametric Beta. The contribution claim and the model specification
+    cannot both be true. Detection is low-gating: a careful reader who
+    knows that Beta(alpha,beta) is parametric and that theta^T x is
+    linear can spot the conflict from the section alone, without
+    canonical-paper recall. T05 ("Check this.") is generic and does not
+    cue R1.2.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the framing in paragraph 1 (and reiterated in
+  paragraph 4) — "no parametric assumptions on the latent-preference
+  distribution" and "no linear functional form on bias covariates" —
+  is contradicted by the model specification in paragraph 3, which
+  uses a Beta prior on z (parametric) and a logistic-linear link
+  theta^T x (linear in covariates). Suggests resolving by either
+  weakening the contribution claim to "weakly informative parametric
+  priors with a logistic-linear bias model" or by replacing the prior
+  and link with genuinely non-parametric components (e.g., a
+  Dirichlet-process or GP-link formulation).
+
+bad_outputs_summary: |
+  Polishes prose, asks for additional benchmarks beyond AlpacaEval-2,
+  requests more baselines or human-agreement numbers, or suggests
+  citing more debiasing papers — without noticing that the
+  "non-parametric / non-linear" contribution claim is incompatible
+  with the Beta prior and logistic-linear link actually used. Praises
+  the framing in paragraph 1 or paragraph 4 as the section's strength.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

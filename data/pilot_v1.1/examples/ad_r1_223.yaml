@@ -1,0 +1,141 @@
+delegation_id: ad_r1_223
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: anomaly_detection
+  word_count: 362
+  text: |
+    We introduce SPB-AD, the first unsupervised anomaly-detection
+    framework for identifying self-preference bias in LLM-as-a-judge
+    evaluation pipelines. The core contribution is a residual-based
+    detector with formal detection guarantees: under mild assumptions
+    on the underlying score distribution, we prove that biased judges
+    are flagged with high probability while unbiased judges incur a
+    controlled false-alarm rate. To our knowledge no prior work has
+    cast self-preference bias as a distributional anomaly-detection
+    problem.
+
+    Setup. Given a panel of N candidate judges and M response pairs,
+    we form a score matrix S where S_{ij} encodes judge i's preference
+    between two candidate outputs on item j. We define the
+    self-preference residual r_{ij} as the deviation of judge i's
+    score on its own output from the panel mean on the same pair.
+    A judge exhibiting self-preference bias produces residuals whose
+    distribution is shifted relative to the unbiased reference
+    distribution.
+
+    Method. We fit a multivariate Gaussian to the residual vectors and
+    flag a judge as anomalous when its Mahalanobis distance from the
+    fitted mean exceeds a threshold tau. Crucially, the entire pipeline
+    is fully unsupervised: the reference distribution is estimated
+    directly from the unlabeled score matrix, and no labeled instances
+    of biased or unbiased judging are required at any stage. This is
+    what allows the method to scale to settings where ground-truth
+    bias annotations are unavailable.
+
+    Experiments. We evaluate on a panel of nine open- and closed-weight
+    judges over 8,400 response pairs sampled from MT-Bench-style
+    multi-turn dialogues. To set the detection threshold tau, we use
+    a held-out development set of 1,200 pairs for which we obtained
+    human annotations of whether self-preference occurred, sweeping
+    tau to maximize F1 on this calibration set. The resulting detector
+    achieves 0.81 F1 on a disjoint test split, with the strongest
+    gains on judges from the GPT and Claude families. We further
+    report ablations over residual definitions and panel size.
+
+    The principal deliverable of this work is a carefully curated
+    benchmark of 8,400 annotated judge-comparison pairs, which we
+    release to facilitate future research on bias diagnostics in
+    LLM evaluation.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  R1.2: [F1.2.b]
+  notes: |
+    Two compound issues:
+
+    R1.1 — contribution slip. Para 1 frames the "core contribution"
+    as a residual-based anomaly detector with formal detection
+    guarantees (the object is an algorithm + theorem). The closing
+    paragraph reframes the "principal deliverable" as a curated
+    benchmark of 8,400 annotated judge-comparison pairs (the object
+    is a dataset for the community). Algorithm-with-guarantees and
+    annotated benchmark are different contribution objects with
+    different review criteria; the section silently slips between
+    them rather than picking one. The introductory novelty claim
+    ("first ... framework", "formal detection guarantees") is not
+    what the conclusion actually delivers.
+
+    R1.2 — cross-section contradiction. The Method paragraph states
+    explicitly that the pipeline is "fully unsupervised" and that
+    "no labeled instances of biased or unbiased judging are required
+    at any stage." The Experiments paragraph then uses 1,200
+    human-annotated self-preference pairs as a development set to
+    sweep the detection threshold tau by maximizing F1. Threshold
+    tuning on labeled bias annotations is a supervised calibration
+    step; the resulting detector is not unsupervised in any standard
+    sense, and the unsupervised-scaling motivation in Method does
+    not survive the experimental protocol.
+
+    Detection: moderate gating. A reader needs to recognize that
+    label-based F1 sweeping is a supervised tuning step (not just
+    a prose nit), and that Mahalanobis-distance outlier scoring on
+    a fitted Gaussian is a textbook recipe whose "first ... with
+    formal guarantees" framing collapses into a benchmark-release
+    contribution by the close. Both issues are visible from the
+    text alone but require domain familiarity with what
+    "unsupervised" entails operationally and what differentiates an
+    algorithmic from a dataset contribution.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the section's opening contribution (a detector with
+  formal guarantees) and its closing contribution (a curated annotated
+  benchmark) are different objects, and the authors need to commit to
+  one or restructure to argue for both deliberately; (2) the Method's
+  "fully unsupervised, no labeled instances required" claim is
+  inconsistent with sweeping tau on 1,200 human-annotated pairs to
+  maximize F1, which is supervised threshold calibration. Suggests
+  either recasting the method as semi-supervised / weakly supervised,
+  selecting tau by an unsupervised criterion, or dropping the
+  unsupervised positioning.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more judges to the panel, asks for
+  additional ablations or sensitivity analyses on tau, or recommends
+  citing more LLM-as-a-judge work. Treats "anomaly detector with
+  guarantees" and "released benchmark" as naturally co-existing
+  contributions without flagging the slip, and accepts the
+  unsupervised framing alongside labeled-F1 threshold tuning as if
+  the calibration set did not change the supervision regime.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

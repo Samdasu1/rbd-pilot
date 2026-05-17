@@ -1,0 +1,56 @@
+{
+  "example_id": "ad_r1_030",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 2,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 3214,
+  "latency_ms": 58115,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.7,\n    \"R1.2\": 1.0,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.7,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.3,\n    \"R1.7\": 0.3,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.1\", \"R1.2\", \"R1.3\", \"R1.4\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.1\": \"The artifact's framing of a novel 'curvature-adaptive step-size schedule' requires conceptual reconstruction: the formula actually given (alpha_k = r_k^T r_k / r_k^T A r_k) is the classical steepest-descent step for SPD systems, making the stated thesis and contribution claim internally incoherent and in need of precise characterization.\",\n    \"R1.2\": \"Load-bearing: at least three interlocking contradictions are present. (1) PCG converges in O(sqrt(kappa)*log(1/epsilon)) iterations; the artifact claims its solver matches PCG's rate yet gives O(kappa*log(1/epsilon)), which is strictly worse \u2014 the rate claim is self-refuting. (2) The solver is described as faster than PCG empirically but slower in theory, with no reconciliation. (3) The 'novel' step is identical to standard steepest descent, yet the text frames it as a new adaptive scheme. Any of these alone would invalidate the core argument; all three together mean the logical structure fails at the foundation.\",\n    \"R1.3\": \"The headline empirical claim ('converges in fewer iterations than PCG') rests on three small, potentially favorable benchmarks (1000x1000 FEM, 5000x5000 Laplacian, 200x200 dense) against only a Jacobi-preconditioned baseline. No tables or figures are referenced. The gap between the convergence-rate bound and the empirical faster-convergence claim also requires evidence scrutiny.\",\n    \"R1.4\": \"The algorithm as written is indistinguishable from Cauchy/steepest-descent iteration for SPD systems, a method from the 1950s. The novelty delta against nearest prior work (steepest descent, SD+preconditioning, adaptive step schedules) appears near zero; the 'curvature-adaptive' label does not introduce any formula or procedure not already standard.\"\n  },\n  \"clarification_needed\": false,\n  \"clarification_question\": \"\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.1": "The artifact's framing of a novel 'curvature-adaptive step-size schedule' requires conceptual reconstruction: the formula actually given (alpha_k = r_k^T r_k / r_k^T A r_k) is the classical steepest-descent step for SPD systems, making the stated thesis and contribution claim internally incoherent and in need of precise characterization.",
+      "R1.2": "Load-bearing: at least three interlocking contradictions are present. (1) PCG converges in O(sqrt(kappa)*log(1/epsilon)) iterations; the artifact claims its solver matches PCG's rate yet gives O(kappa*log(1/epsilon)), which is strictly worse \u2014 the rate claim is self-refuting. (2) The solver is described as faster than PCG empirically but slower in theory, with no reconciliation. (3) The 'novel' step is identical to standard steepest descent, yet the text frames it as a new adaptive scheme. Any of these alone would invalidate the core argument; all three together mean the logical structure fails at the foundation.",
+      "R1.3": "The headline empirical claim ('converges in fewer iterations than PCG') rests on three small, potentially favorable benchmarks (1000x1000 FEM, 5000x5000 Laplacian, 200x200 dense) against only a Jacobi-preconditioned baseline. No tables or figures are referenced. The gap between the convergence-rate bound and the empirical faster-convergence claim also requires evidence scrutiny.",
+      "R1.4": "The algorithm as written is indistinguishable from Cauchy/steepest-descent iteration for SPD systems, a method from the 1950s. The novelty delta against nearest prior work (steepest descent, SD+preconditioning, adaptive step schedules) appears near zero; the 'curvature-adaptive' label does not introduce any formula or procedure not already standard."
+    },
+    "clarification_needed": false,
+    "clarification_question": ""
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

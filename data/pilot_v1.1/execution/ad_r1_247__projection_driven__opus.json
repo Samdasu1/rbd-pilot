@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_247",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2312,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33190,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.4\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 1.0}}\n\nSummary: A review of the artifact focused on what the introduction actually claims, whether those claims are supported by what is reported, and how the contribution is positioned against prior work \u2014 with explicit flags where the text overreaches or where I cannot verify a claim from the artifact alone.\n\n**Framing and contribution**\n\nThe framing is workable but underdetermined. The piece argues that the Gauss-Kronrod (GK) difference conflates two distinct sources of uncertainty \u2014 truncation and conditioning \u2014 and proposes a method that separates them and abstains when conditioning dominates. That is a coherent and recognizable contribution shape. However, the abstract-as-written does not actually state a contribution claim: it says what SelectiveQuad does mechanically, but never says what it achieves (e.g., \"avoids spurious convergence on cancellation-heavy integrands at cost X\"). Without a claim of the form \"we show that ...\", the introduction reads more like a system description than a research contribution. I'd add one sentence at the end of the \"We propose\" paragraph stating the empirical or theoretical result the reader is being promised.\n\n**Argument-chain coherence**\n\nThe chain \"standard estimator can be fooled by cancellation \u2192 here is a class of integrands where this happens \u2192 we propose a detector based on interval arithmetic \u2192 we abstain when conditioning dominates\" is internally coherent. Two seams:\n\n1. The jump from \"the GK estimator implicitly assumes well-conditioning\" to \"it can return a small difference even when both rules suffer from similar floating-point error\" is asserted, not argued. A one-sentence mechanism \u2014 that correlated rounding error in g(x) \u2212 h(x) at the GK nodes can produce GK-difference \u226a actual error in either rule \u2014 would close this gap. As stated, a skeptical reader can't tell whether this is a known folk result, a new observation, or hand-waving.\n\n2. The choice of interval arithmetic as the forward-error tool is introduced without justification against alternatives (running-error analysis, condition-number estimation via automatic differentiation, Kahan-style compensated summation as a diagnostic). Even one sentence acknowledging the design space would strengthen the rationale.\n\n**Evidence-claim alignment**\n\nThis is the area I'd push back on hardest given only the introduction. The \"We report on three test integrands\u2026\" paragraph commits to reporting three specific things (tolerance-stratified results, runtime overhead vs. dqag, abstention fraction). That is fine as a promise, but the introduction also makes two stronger implicit claims that the promised evidence may not support:\n\n- That the GK estimator is *misleading* on this class of integrands. To support this, the paper needs to demonstrate cases where GK reports convergence at a tolerance the result does not actually meet \u2014 i.e., a ground-truth comparison, not just SelectiveQuad's own abstention rate. The introduction does not promise such a comparison.\n- That SelectiveQuad's abstention is *correct* \u2014 i.e., it abstains on subintervals that genuinely are ill-conditioned and not on benign ones. False-positive and false-negative rates against a reference computation (extended precision, or symbolic) should be in the promised reporting set.\n\nThree integrands is a small evidence base for a general claim about adaptive quadrature behavior; the introduction should either narrow the claim or signal that broader evaluation appears later.\n\n**Positioning against prior work**\n\nThe artifact mentions QUADPACK and that adaptive quadrature has been studied since the 1970s, but does not engage the prior literature on this specific problem. Interval-arithmetic-based quadrature, verified/validated numerical integration (e.g., the work in the COSY Infinity, INTLAB, and Arb traditions), and condition-aware quadrature are all established threads. Without a sentence distinguishing SelectiveQuad from validated integration packages \u2014 which also produce rigorous uncertainty estimates and can be seen as abstaining when they cannot certify a bound \u2014 the novelty claim is fragile. I cannot tell from the artifact alone whether SelectiveQuad's novelty is (a) the abstention-as-output semantics, (b) the specific decomposition into truncation vs. conditioning components, (c) the engineering of doing this cheaply on top of GK, or (d) something else. The author should state which.\n\n**Overclaim risks specifically flagged**\n\n- \"remain the workhorse of scientific computing libraries\" \u2014 defensible but rhetorical; not load-bearing.\n- \"well-known QUADPACK routines\" \u2014 fine.\n- \"can be misleading when this assumption fails\" \u2014 this is the central motivating claim and needs at least one citation or worked example reference in the introduction itself, not deferred to Section 4.\n- \"distinguishes truncation uncertainty from conditioning uncertainty\" \u2014 strong claim. The method *attempts* to distinguish them; whether the distinction is reliable is what the evaluation must show. I'd soften to \"attempts to separate\" or \"estimates separately\" until the evaluation backs the stronger word.\n- The NaN-tagged abstention is presented as a feature, but the introduction does not acknowledge the cost: downstream consumers of a quadrature library generally expect a number, and a NaN-on-subinterval semantics changes the contract. This is worth one honest sentence.\n\n**Stylistic note that affects readability of the argument**\n\nThe first paragraph repeats \"Adaptive quadrature methods\" as the subject of three consecutive sentences, and the second paragraph does the same with \"The standard error estimator.\" This is anaphora used as a structural device but it makes the paragraphs feel mechanical and obscures the logical connectives (\"because,\" \"however,\" \"as a result\"). Consolidating would also save space for the missing contribution sentence.\n\n**Items I cannot verify from the artifact**\n\n- Whether the three test integrands are representative of the class the method targets, or cherry-picked to favor SelectiveQuad. The introduction asserts \"representative\" without justification.\n- Whether interval arithmetic on each subinterval produces a tight enough forward-error bound to be useful in practice, or whether it is so pessimistic that SelectiveQuad abstains on benign subintervals. This is the central empirical risk and is not addressed in the introduction.\n- Whether the \"user-set ratio\" between conditioning and truncation components is robust across integrands or must be retuned per problem. If the latter, the method's practical value is much weaker than implied.\n- Whether the runtime-overhead comparison to dqag is apples-to-apples (same target tolerance, same domain, same hardware), or whether the comparison framing is favorable to SelectiveQuad.\n- The actual content of Section 4 and beyond; my review is bounded to what the provided introductory text claims.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The open-ended request invites assessment of the paper's core thesis, gap framing, and contribution claim.",
+      "R1.2": "A general reaction to the excerpt centrally includes whether the motivation, problem setup, and proposed response cohere logically.",
+      "R1.3": "Because the artifact references test integrands, tolerances, overhead, and abstention rates, assessing whether reported evidence supports the claims is expected.",
+      "R1.4": "The excerpt positions SelectiveQuad relative to standard Gauss-Kronrod and QUADPACK methods, making contribution delta a central responsibility.",
+      "RX.1": "Any projection of broad judgment must disclose uncertainty caused by the limited excerpt and absent full results or prior-work context.",
+      "RX.2": "The response must avoid overstating what can be inferred from the provided artifact alone.",
+      "RX.3": "The projection must remain within responsibility assignment rather than performing the requested evaluation.",
+      "RX.4": "The projection should avoid enabling misleading research claims or unsafe downstream reliance on unsupported conclusions.",
+      "RX.5": "Judgments about responsibility should be traceable to specific features of the delegation and artifact."
+    }
+  }
+}

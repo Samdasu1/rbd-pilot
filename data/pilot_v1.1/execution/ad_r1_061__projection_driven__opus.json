@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_061",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2447,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 35347,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.85}}\n\nSummary: I reviewed the section and flagged a substantive technical misstatement, several unsupported claims, and overreaching framing that the text should retract or qualify before the section is defensible.\n\n**Substantive issues**\n\n1. The framing of the problem is overstated. The opening sentence asserts a \"pressing problem\" and that \"the field has yet to converge\" on a reliability measure, but the section offers no citation, survey, or quantitative evidence that ML practice is in fact inconsistent on this point. Krippendorff's \u03b1, Cohen's \u03ba, Fleiss's \u03ba, and percent agreement are all in routine use; the gap being asserted needs to be characterized concretely (e.g., \"X% of papers in venue Y report no agreement statistic\") or the claim should be softened to \"reporting practices vary.\"\n\n2. The novelty claim is weak as written and may be incorrect. Krippendorff's \u03b1 has, since its original formulation, been defined to accept arbitrary distance functions \u03b4 \u2014 including specifically the nominal, interval, ordinal, ratio, and set-difference (MASI / Jaccard-like) variants. The text describes \"developing \u03b1_ML\" by plugging in standard \u03b4 choices into the standard formula. As described, this is a re-labeling of existing Krippendorff variants rather than a new coefficient. The contribution should either (a) identify what is genuinely new (e.g., a specific \u03b4 for hierarchical labels, a unified software package, calibration guidance) and foreground that, or (b) reframe the contribution as a *recommendation* or *unification of reporting practice* rather than a new coefficient.\n\n3. The definition of \u03b1_ML contains a likely error. The text states \"\u03b1_ML = 1 \u2212 D_o / D_e.\" The standard Krippendorff definition is \u03b1 = 1 \u2212 D_o / D_e, which is consistent \u2014 but the prose earlier says D_e is \"expected disagreement \u2026 by chance,\" which is correct only if D_e is the expected disagreement under the chance model, not the observed marginal. Please confirm the formula matches the intended estimator and that D_e is computed from the empirical marginals in the standard way; as written, a reader cannot tell whether the chance correction is being applied to a permutation-style or marginal-product estimator, and the two give different values in finite samples.\n\n4. The hierarchical case is asserted but not specified. The abstract claims \u03b1_ML \"accommodates \u2026 hierarchical \u2026 settings\" and the GoEmotions example is cited as hierarchical, but no \u03b4 for hierarchical labels is defined in Section 3 (only nominal, ordinal, multi-label are listed). Either the hierarchical \u03b4 must be defined, or the hierarchical claim should be removed.\n\n5. The empirical validation claim is too weak to support the conclusion. \"Produces values broadly consistent with previously reported agreement statistics\" is not evidence that \u03b1_ML is correct, useful, or preferable \u2014 consistency with prior numbers could equally indicate that \u03b1_ML reduces to a known coefficient in each case (which, per point 2, may be true by construction). The validation needs an explicit comparison table with the prior statistic, the corresponding \u03b1_ML value, and a discussion of when they diverge and why.\n\n6. The recommendation \"we recommend its use across ML annotation contexts\" is not earned by three illustrative datasets. This is an overclaim. Recommended phrasing: \"we illustrate \u03b1_ML on three datasets as a proof of concept; broader evaluation across annotation regimes and annotator-pool sizes is needed before community-wide adoption.\"\n\n7. \"Community-ready standard for benchmark reporting\" goes well beyond what the section demonstrates. No community process, no consultation, no adoption pathway, and no comparison against existing reporting norms is shown. This phrase should be removed or replaced with a description of what would be required to make it standard-ready.\n\n8. Potential downstream concern worth a sentence in the paper: a single scalar reliability coefficient applied across modalities can mask annotator disagreement that is itself informative (e.g., systematic demographic disagreement on toxicity labels). The current framing treats disagreement as noise to be summarized away. At minimum, the section should acknowledge that \u03b1_ML is a summary statistic and not a substitute for disaggregated analysis of who disagrees and why, particularly in subjective-label settings.\n\n9. The closing \"future work\" sentence implicitly concedes that thresholds for training-data quality decisions are not yet calibrated \u2014 but the body of the section recommends adoption *now*. These are in tension. Either soften the recommendation in the body or move the calibration caveat earlier so the reader sees the limit before the recommendation.\n\n**Prose-level fixes**\n\n- \"principled, modality-agnostic\" is doing rhetorical work without content; either define what \"principled\" means here (axiomatic derivation? satisfies specific desiderata?) or drop the adjective.\n- \"we develop \u03b1_ML by adopting Krippendorff's \u03b1 as our base coefficient\" \u2014 if \u03b1_ML *is* Krippendorff's \u03b1 with a choice of \u03b4, say so plainly: \"\u03b1_ML is Krippendorff's \u03b1 instantiated with a modality-specific \u03b4.\"\n- \"\u03b4 is the squared difference\" \u2014 specify whether normalized; raw squared differences are not bounded and interact awkwardly with the D_o/D_e ratio across datasets with different rating scales.\n- \"Jaccard distance between label sets\" \u2014 clarify whether this is 1 \u2212 |A\u2229B|/|A\u222aB| and how empty-set cases are handled.\n- \"values broadly consistent with previously reported agreement statistics\" \u2014 \"broadly consistent\" is vague; replace with the actual numbers or a range.\n\n**Suggested minimal revision of the opening and closing paragraphs**\n\nOpening: \"Reporting practices for inter-annotator agreement in ML annotation pipelines vary across modalities and venues. We propose \u03b1_ML, an application of Krippendorff's \u03b1 with modality-specific distance functions, as a unified way to report reliability across nominal, ordinal, and multi-label annotation tasks.\"\n\nClosing: \"\u03b1_ML provides a single reporting convention applicable across several common label structures in ML datasets. We do not yet have calibration evidence for thresholds, sensitivity to annotator-pool size, or behavior on hierarchical labels, and we treat broader adoption as contingent on that work.\"\n\n**Items I cannot verify from the section alone**\n\n- Whether Section 3 actually defines a hierarchical \u03b4 (the abstract claims this; the summary of Section 3 does not show it). If it does, point 4 is partially moot but the abstract still needs to match.\n- Whether the three \"broadly consistent\" comparisons are quantitatively close or only qualitatively close \u2014 the section gives no numbers.\n- Whether prior work (Artstein & Poesio 2008; Passonneau 2006 on MASI; Krippendorff's own treatment of set-valued data) already covers the multi-label case the authors present as novel; the section cites nothing, so I cannot assess delta against prior work, and this is the single biggest gap blocking a confident novelty judgment.\n- Whether D_e is computed via the standard marginal-product estimator or an alternative \u2014 the section does not say.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general section review centrally includes checking whether the thesis, gap, and contribution framing are coherent at the section level.",
+      "R1.2": "Reviewing the section requires assessing whether the premises about annotation reliability lead logically to the proposed coefficient and conclusions.",
+      "R1.3": "The section makes claims about demonstrations on datasets, so review centrally involves checking whether reported examples support those claims.",
+      "R1.6": "A general review of a paper section normally includes sentence- and paragraph-level clarity, flow, and register.",
+      "RX.1": "The reviewer must disclose uncertainty where the excerpt does not provide enough information to verify technical or empirical claims.",
+      "RX.2": "The section contains broad standard-setting claims, so avoiding overclaim is an active cross-cutting responsibility.",
+      "RX.3": "The projection must stay within reviewing the supplied section rather than executing edits or expanding beyond the artifact.",
+      "RX.4": "Claims about benchmark standards and downstream quality decisions could influence research practice, so potential downstream harm must be considered.",
+      "RX.5": "Any review responsibility should remain traceable to specific statements in the provided section."
+    }
+  }
+}

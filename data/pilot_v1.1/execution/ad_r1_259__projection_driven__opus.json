@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_259",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2618,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37385,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.85, \"R1.4\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.85, \"RX.5\": 0.8}}\n\nSummary: I read this as an abstract/intro for a climate-emulator routing system, and there are several substantive problems \u2014 most seriously a non-stationarity argument that doesn't hold up, several unsupported superlatives, and missing provenance for the artifacts being compared. Below is what I'd push back on before this is circulated further.\n\n**1. The non-stationarity argument is the most serious issue.**\nThe paragraph claiming routing \"remains effective under climate non-stationarity because the difficulty score is computed from synoptic-scale predictors that are themselves the inputs to the underlying emulators\" is a non-sequitur. Input-space coverage of distribution shift is not the same as preservation of the conditional mapping from inputs to *which emulator wins*. Even if the router sees the shifted inputs, the function it learned \u2014 \"linear emulator beats neural emulator by margin X given these synoptics\" \u2014 was fit on 2014\u20132017 ERA5; under SSP5-8.5 forcing, the relative skill of a regularized linear model vs. a transformer trained on historical data can change in ways the router has no signal for (e.g., the linear model's regression coefficients become biased in new regimes; the neural model's training distribution drifts too). The claim that \"any distribution shift the emulators face is reflected in the router's input space\" conflates *observability* of shift with *invariance* of the routing decision. This needs to either be removed, demonstrated empirically with a held-out future-climate test (e.g., pseudo-global-warming experiments, or train-on-early/test-on-late splits with monotonic trend), or downgraded to a hypothesis.\n\n**2. Several claims are overstated relative to what the text actually shows.**\n- \"Substantially advances the state of the art\" \u2014 relative to a single class of prior systems (static lead-time partitioning). The reader can't tell whether per-query routing has been tried in adjacent areas (NWP postprocessing, ensemble subselection, model-of-models for weather). Either cite the prior comparison or soften.\n- \"First work to apply learned per-query routing to climate emulation\" \u2014 a \"to our knowledge\" novelty claim this strong needs at least a sentence on what was searched. Routing/gating ideas are common in ML; a reader will wonder about contemporaneous work on weather mixtures-of-experts, calibrated cascades, or ensemble subset selection.\n- \"Establish adaptive routing as a viable paradigm\" \u2014 one system on one variable (precipitation) over five test years does not establish a paradigm. \"Demonstrate feasibility\" would be defensible.\n- \"63% compute reduction at 4% CRPS penalty\" \u2014 these need confidence intervals or at least a note on how CRPS was aggregated (spatially? temporally? over what mask?) and what \"compute\" means (wall-clock? FLOPs? GPU-hours including the router?). The router itself is 12M parameters and must be evaluated on every query, so the cost accounting should make this explicit.\n\n**3. Evidence-to-claim gaps to close.**\n- The router is trained \"to predict \u2026 whether the statistical emulator will exceed a CRPS threshold relative to the neural emulator.\" Threshold value, calibration method, and class balance are not stated, and they materially determine the 63%/4% tradeoff. The single operating point reported is not enough; readers will want a cost\u2013accuracy frontier.\n- \"8 years of paired forecasts\" for training plus \"2018\u20132022\" for test \u2014 but the non-stationarity paragraph mentions \"thresholds calibrated on 2014\u20132017.\" Is the router trained on 2010\u20132017 and the threshold separately tuned on 2014\u20132017? The temporal splits are ambiguous and at minimum risk leakage between threshold tuning and reported test years.\n- \"FourCastNet-Precip, our 1.4B-parameter precipitation-specialized variant\" is introduced as if it were an established artifact. If this is a contribution of the paper, it should be flagged as such; if it is prior work, it needs a citation. Either way, training data, lead times, and validation against the original FourCastNet need to be documented somewhere the abstract points to.\n- The linear emulator is described as \"regularized linear regression on ERA5 reanalysis predictors.\" For precipitation specifically (heavy-tailed, intermittent, often modeled with a two-stage occurrence/intensity approach), a plain regularized linear regression is a very weak baseline. The 63% routing rate may partly reflect the cheap path being too weak rather than queries being genuinely easy. A stronger cheap baseline (e.g., analog method, quantile regression, gamma GLM) would make the result more credible.\n\n**4. Internal consistency.**\n- The intro says ClimRoute routes \"each forecast query\" but never defines a query \u2014 a single (location, lead-time, initialization) tuple? A spatial field? A batch? This matters because the router's 12M-parameter cost is amortized very differently across those cases.\n- The abstract promises results on \u00a75 (SSP5-8.5 projections) but the quantitative numbers shown are 2018\u20132022 reanalysis-era test. The reader may infer the 63%/4% numbers transfer to the projection setting; if they don't, the framing oversells.\n\n**5. Downstream-use framing.**\nThe artifact positions ClimRoute for \"water-resource and flood-risk applications.\" A 4% aggregate CRPS penalty can hide much larger penalties on the tail events that flood-risk users actually care about \u2014 extremes are precisely the queries a difficulty router is most likely to mis-route, because they are rare in training and the cheap emulator's failure mode there may not be captured by an average-CRPS-threshold objective. Before recommending this for flood-risk use, the paper should report conditional CRPS (and ideally Brier or threshold-exceedance metrics) on the upper-tail subset, and the routing decision quality conditional on event severity.\n\n**6. Smaller framing/scoping suggestions** (lower priority, take or leave):\n- \"Cost-aware climate inference\" is broader than what's shown (one variable, one region not specified, one cheap/expensive pair). Naming the actual scope earlier would help.\n- The abstract never names the spatial domain, resolution, or lead-time range. These are first-paragraph items for a forecasting paper.\n\n**Recommended minimum revisions before circulation:**\n1. Remove or empirically support the non-stationarity argument; do not let the projection-era deployment ride on the current reasoning.\n2. Soften \"substantially advances,\" \"first work,\" and \"establish \u2026 paradigm\" to claims actually supported by the evaluation.\n3. Add provenance for FourCastNet-Precip (is it a contribution or prior work?) and clarify the training/threshold/test temporal splits.\n4. Report tail-conditional skill given the flood-risk framing, or narrow the framing.\n5. Report a cost\u2013accuracy frontier, not just one operating point, and define \"compute\" precisely.\n\n**Uncertainties in this review I cannot fully verify from the artifact alone:** whether per-query routing has prior instances in weather/climate ML literature (I have not searched); whether FourCastNet-Precip is published elsewhere; whether the 2014\u20132017 / 2018\u20132022 split implies leakage or is consistent with an additional 2010\u20132013 training window; and the exact form of the CRPS aggregation. The non-stationarity critique is a logical objection to the argument as written and would be partly rebuttable by empirical evidence the abstract does not include \u2014 if such evidence exists in the body of the paper, my objection becomes \"the abstract under-supports its strongest claim\" rather than \"the claim is wrong.\"",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The broad request invites judgment on the thesis, contribution framing, and whether the proposed adaptive routing idea is conceptually convincing.",
+      "R1.2": "The artifact contains a causal and inferential argument about routing validity, non-stationarity, and long-term threshold transfer that calls for consistency checking.",
+      "R1.3": "The delegation reasonably includes assessing whether the reported compute reduction and CRPS penalty support the claims made about viability and effectiveness.",
+      "R1.4": "Because the excerpt explicitly claims state-of-the-art advancement and first application of learned per-query routing, novelty assessment is a central expected responsibility.",
+      "RX.1": "Any response should disclose uncertainty, especially because only an excerpt and no full experimental or literature context are provided.",
+      "RX.2": "The artifact contains strong claims about robustness, century-scale validity, and novelty, so avoiding overclaiming is load-bearing.",
+      "RX.3": "The response must remain within the requested opinion on the paper artifact rather than performing edits, experiments, or external verification.",
+      "RX.4": "Because the work concerns climate and flood-risk applications, feedback should avoid encouraging unsupported claims that could mislead downstream users.",
+      "RX.5": "Any assessment should be traceable to specific statements in the provided artifact rather than unstated assumptions."
+    }
+  }
+}

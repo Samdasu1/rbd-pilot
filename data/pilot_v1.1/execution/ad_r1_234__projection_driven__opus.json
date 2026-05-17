@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_234",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1506,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 20564,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 0.95, \"RX.4\": 0.3, \"RX.5\": 0.8}}\n\nCleaned-up version below: I tightened prose at the sentence level, reordered the paragraphs so the protocol description precedes results and the framing/positioning paragraph moves earlier, softened a few phrasings that risked overclaiming, and preserved all numerical content verbatim.\n\n---\n\nReproducibility is a foundational concern in data analysis, and the use of large language models (LLMs) as analytical assistants raises an immediate question: given identical prompts and identical data, does an LLM produce the same analytical outcome on repeated invocations? This question is structurally distinct from the well-studied \"analyst variability\" captured by the many-analysts paradigm, in which different human analysts, given the same dataset and question, reach materially different conclusions. Here the analyst is fixed \u2014 the same model at the same temperature \u2014 and the observed variability is purely stochastic.\n\nOur study builds on two threads of prior work: studies of run-to-run variability in LLM outputs, and the broader analyst-variability literature. These motivate our protocol but, to our knowledge, have not been directly combined in the setting of data analysis, where the \"same prompt, different outcomes\" question has received limited empirical attention. We use K=20 independent runs per prompt, which is larger than is common in this evaluation tradition and yields tighter confidence intervals on per-prompt reproducibility estimates.\n\nThe remainder of this section describes the evaluation protocol. We sample N=200 data-analysis prompts spanning regression, hypothesis testing, and exploratory visualization, drawn from a published benchmark. For each prompt we issue K=20 independent calls to the LLM at temperature T=0.7 and collect the full response \u2014 natural-language explanation, code, and reported numerical results. The central question is: across the K runs for a fixed prompt, how reproducible is the analysis?\n\nTo quantify this, we compute pairwise BLEU between the K responses for each prompt and average over all (K choose 2) pairs, with higher BLEU indicating greater textual reproducibility. We report mean BLEU by prompt category and aggregated across categories. As Table 2 shows, mean BLEU is 0.41 for regression prompts, 0.38 for hypothesis-testing prompts, and 0.29 for exploratory tasks. We read these numbers as suggesting that LLM-driven analysis is more reproducible for structured tasks than for open-ended ones; we refrain from characterizing 0.41 as an \"upper bound,\" since it reflects a single model, temperature, and benchmark rather than a property of current models in general.\n\n---\n\nNotes on changes and residual caveats:\n\n- Paragraph order was changed so the framing/positioning material appears before the protocol-and-results block, and the protocol description precedes the results paragraph. This is the most consequential structural edit; if your venue's convention places contribution-positioning later (e.g., at the end of an introduction), this ordering may need to be reverted.\n- The original sentence treating BLEU 0.41 as \"a useful upper bound on what current models achieve\" was softened, because a single experimental configuration cannot support an upper-bound claim across models. I flagged this as overclaiming and rephrased rather than deleting the comparative content.\n- \"Moderately reproducible\" / \"substantially less reproducible\" was softened to a relative comparison, since the original wording assigns absolute qualitative labels to BLEU values without a calibrated threshold.\n- I added \"textual\" before \"reproducibility\" in the BLEU description, because BLEU measures surface text overlap and not, e.g., agreement of reported numerical estimates or conclusions. If you have a separate analysis of numerical agreement, the wording can be relaxed again.\n- I have not verified the cited counts (N=200, K=20, T=0.7) or the Table 2 values against any external source; these were preserved verbatim from the artifact.\n- I did not assess the bibliography or add citations, and I did not evaluate novelty relative to specific prior papers; phrasing around prior work was kept deliberately hedged (\"to our knowledge\", \"limited empirical attention\") so it can be tightened once references are checked.\n- The reordering assumes this passage is a standalone section; if the original paragraph order is dictated by surrounding sections (e.g., a methods section that must open with sampling), the first two paragraphs can be swapped back with no other edits required.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.5": "The request to clean up the passage centrally includes improving the section-level flow and ordering of the evaluation framing, protocol, results, and contribution claims.",
+      "R1.6": "Cleaning up a research passage most directly requires sentence- and paragraph-level improvements in clarity, concision, flow, and academic register.",
+      "RX.1": "Any cleanup should preserve uncertainty around BLEU-based reproducibility and avoid making unsupported precision claims.",
+      "RX.2": "The artifact contains potentially strong claims such as an upper bound and direct novelty, so avoiding overstatement is an active responsibility.",
+      "RX.3": "The delegation asks only for cleanup, so the work must stay within improving presentation rather than conducting new analysis or evaluation.",
+      "RX.4": "Because the text concerns reproducibility of analytical assistants, revisions should avoid language that could mislead downstream methodological interpretation.",
+      "RX.5": "Cleanup should preserve traceability to the reported protocol details, metrics, table references, and contribution framing already present in the artifact."
+    }
+  }
+}

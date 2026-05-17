@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_244",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2155,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29585,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 0.9}}\n\nSummary: I read the section as a focused review, flagging overclaims, internal inconsistencies, evidence-claim gaps, and prose issues, with recommended revisions.\n\n**Substantive issues**\n\n1. The framing-vs-results mismatch is the biggest problem. The section opens by motivating the work as a response to *label noise from reader disagreement* and promises \"a training procedure that is robust\" to it. The summary paragraph then escalates to *\"state-of-the-art AUC\"* and *\"substantially improved calibration.\"* Neither claim is supported by what is reported:\n   - \"State-of-the-art\" requires comparison against the current best published method on this task, not against two in-house baselines (majority-vote CE and symmetric label smoothing). As written, the comparison set is a straw-man pair. Either cite and benchmark against the relevant external SOTA, or downgrade to \"outperforms the baselines we evaluated.\"\n   - \"Substantially improved calibration\" is stated for the disagreement subset (ECE 0.071 \u2192 0.039), but the section never reports calibration on the full set, on the non-disagreement subset, or with confidence intervals. A single point estimate on one subset cannot carry \"substantially.\"\n\n2. The cohort story is internally inconsistent. Paragraph 1 anchors the motivation in \"the DDSM-Plus cohort used throughout this paper\" (kappa 0.42, 18% disagreement). Paragraph 2 then reports results on \"the held-out CSAW-CC split.\" It is not explained whether training was on DDSM-Plus and evaluation on CSAW-CC (a cross-cohort transfer claim, which would be a much stronger but distinct contribution), or whether CSAW-CC is a held-out split *within* DDSM-Plus (in which case the naming is misleading). The closing sentence forward-referencing \"the cross-cohort generalization study of Section 4\" suggests the cross-cohort question is deferred \u2014 which makes the use of CSAW-CC here even more confusing. This needs to be resolved explicitly.\n\n3. Several specific evidence-claim gaps:\n   - The 0.872 vs 0.851 vs 0.858 AUCs are reported without seeds, runs, confidence intervals, or a significance test. A 0.014 gap over label smoothing on a single split is not a defensible improvement claim without variance reporting.\n   - The kappa = 0.42 and \"18% of cases\" figures appear without a citation to the methodology that produced them (how were the three readers selected; was disagreement defined as any non-unanimous read or as majority-vs-minority on the 3/4a boundary?).\n   - The claim that majority-vote-trained classifiers \"degrade systematically on the disagreement subset\" is asserted but not demonstrated in this section \u2014 either show a baseline ECE/AUC stratification, or attribute the claim to prior work with a citation.\n   - The RDL is described as differing from prior disagreement-aware methods that \"typically discard or down-weight high-disagreement cases.\" That characterization should either be cited or softened \u2014 there is a substantial literature on soft-label and crowd-annotation methods that do *not* discard, and the unqualified \"typically\" risks misrepresenting the prior art.\n\n4. The method description has gaps that prevent reproducibility:\n   - \"Learned per-instance weight\" \u2014 learned how, parameterized over what, with what loss? Is the weight bounded? Is there a stop-gradient? The mechanism is the central methodological claim of the section and is currently a single clause.\n   - \"Empirical reader distribution\" over three readers gives at most four distinct distributions per class boundary; clarify whether this is being treated as a continuous target or quantized.\n   - \"Standard augmentations apply\" is too vague for a methods paragraph. Either list them or defer to an appendix and say so.\n\n5. Prose-level suggestions:\n   - \"Bias toward the most confident reader\" \u2014 \"confident\" is the wrong word if you mean \"frequently agreeing with the majority.\" Confidence here is undefined.\n   - \"Non-negligible\" in the first sentence is hedged; given kappa = 0.42 you can simply say \"moderate\" (which is the standard Landis-Koch descriptor for that range) and gain precision.\n   - \"Contributes a regularizer to the main classification loss via a learned per-instance weight\" parses awkwardly; consider \"is combined with the main classification loss using a learned per-instance weight.\"\n   - The closing sentence's \"carry this architecture forward\" is fine, but the preceding \"state-of-the-art\" sentence should be cut or rewritten so the transition reads as a handoff rather than a victory lap.\n\n**Recommended minimal revisions**\n\n- Replace \"state-of-the-art AUC \u2026 and substantially improved calibration\" with something like: \"outperforms majority-vote cross-entropy and symmetric label smoothing baselines on AUC and on calibration over the disagreement subset, under the evaluation protocol described above.\"\n- Add one sentence clarifying the DDSM-Plus / CSAW-CC relationship and whether Section 3 results are within-cohort or cross-cohort.\n- Add variance reporting (n seeds, CI or std) to the three AUC numbers and the two ECE numbers, or state explicitly that single-run numbers are reported and flag this as a limitation.\n- Either cite or soften the \"typically discard or down-weight\" characterization of prior disagreement-aware methods.\n- Expand the per-instance weight mechanism by 2\u20133 sentences, or forward-reference an appendix.\n\n**Caveats on this review**\n\nI have not verified the literature on disagreement-aware label modeling, the published SOTA on BI-RADS 3-vs-4a on CSAW-CC, or whether DDSM-Plus and CSAW-CC are the names of real datasets in the configuration described \u2014 these claims are evaluated for internal coherence only. The numerical critiques (AUC gap, ECE, kappa interpretation) are about reporting standards, not about whether the underlying results are correct. The judgment that 0.014 AUC is not defensible without variance reporting assumes a typical mammography-classification evaluation regime; if the authors have a per-image paired test across a large held-out set, the bar is lower.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the response focus on scientific/argument validity, writing and presentation quality, or both?",
+    "rationale": {
+      "R1.1": "The open-ended request invites assessment of the section's thesis, motivation, and contribution framing.",
+      "R1.2": "A general reaction would normally check whether the argumentative progression from reader disagreement to the proposed training procedure is coherent.",
+      "R1.3": "The section makes empirical claims about AUC and calibration, so feedback would centrally consider whether those claims are supported by the reported results.",
+      "R1.6": "Because the artifact is a draft section, sentence-level clarity, flow, and register are central expected responsibilities.",
+      "RX.1": "The evaluator must disclose uncertainty because the artifact provides only a section excerpt and limited experimental context.",
+      "RX.2": "The evaluator must avoid endorsing strong claims such as state-of-the-art without sufficient comparative evidence.",
+      "RX.3": "The response must stay within evaluation of the provided artifact rather than performing edits or external validation.",
+      "RX.4": "The medical-imaging context requires care to avoid feedback that could encourage unsafe or unsupported clinical claims.",
+      "RX.5": "Any judgment should be traceable to specific statements or evidence visible in the excerpt."
+    }
+  }
+}

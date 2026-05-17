@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_281",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2393,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31386,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.5\": 0.7, \"R1.6\": 0.6, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 1.0}}\n\nSummary: The section contains two internally contradictory architecture specifications, an unsupported metric conversion presented as confirmation, and several framing claims that outrun what the reported evidence can support; these need to be fixed before the section is publishable.\n\n## Critical internal contradictions\n\n1. **Two incompatible architectures are described.** The \"Experimental setup\" paragraph specifies a 5-layer GIN with hidden dimension 256. The \"Architecture and ablations\" paragraph then states \"Our 3-layer GIN with hidden dimension 128 was used for all experiments described above.\" These cannot both be true. The reader cannot tell which configuration produced the headline number, which makes every downstream claim unverifiable. Pick one and reconcile every reference to layer count and hidden width.\n\n2. **The \"Validation\" paragraph is not validation.** Accuracy and ROC-AUC measure different things. A 4.3-point absolute AUC gain does not \"confirm\" a 7.2% relative accuracy gain \u2014 it is an additional, independent measurement on the same runs. Reporting both is fine; framing the AUC number as confirmation of the accuracy number is a logic error. Rewrite as \"we additionally report AUC\" rather than \"we take this as confirmation.\"\n\n3. **Accuracy on MolHIV is the wrong primary metric.** OGB-MolHIV is a heavily class-imbalanced binary task (~3.5% positives); the OGB leaderboard reports ROC-AUC, not accuracy, for exactly this reason. A high accuracy can be achieved by predicting the majority class. Leading with relative accuracy improvement, and treating AUC as secondary, inverts community practice and risks misleading the reader about real-world utility. Promote AUC to the headline metric or justify accuracy explicitly.\n\n## Evidence-claim gaps\n\n4. **\"Consistent across all five runs\" plus \"p < 0.01 by paired permutation test\"** is stated without per-seed numbers or a description of the permutation procedure (what was permuted, against what null). With n=5 seeds, a paired permutation test has at most 2^5 = 32 sign assignments, so p < 0.01 implies essentially all seeds favored the method by a non-trivial margin. Either report the per-seed deltas (or mean \u00b1 std) or soften the significance claim.\n\n5. **Mechanism claim is correlational, not causal.** \"Largest gains accrue to graphs with 20\u201340 heavy atoms \u2014 precisely the size regime in which the base GIN's confidence is lowest\" supports an association between low confidence and large gains. It does not establish that the refinement loop is \"doing useful work on the cases the base model finds hardest\" rather than, e.g., regression to the prior or amplification of majority-class predictions in that bin. A control showing that gains track *correctness-conditioned* confidence, or that gains are not driven by flipping low-confidence negatives to positives, would be needed before the causal phrasing is justified.\n\n6. **\"k=4 optimal; larger values induce oscillation\"** is stated without the sweep numbers, the metric used to select k, or a definition of \"oscillation\" (oscillation in predictions across iterations, in validation metric, or in loss?). At minimum, include the k vs. metric table.\n\n7. **\"No additional training, no labeled feedback data, no auxiliary critic\"** is a strong framing claim that should be checked against the actual procedure: \"k rounds of pseudo-label sharpening\" using a \"perturbed readout\" implicitly defines hyperparameters (perturbation magnitude, sharpening temperature, k) that were selected somehow. If they were tuned on validation labels, then the method is not entirely label-free at deployment; it is training-free but tuning-dependent. State this explicitly.\n\n## Framing and overclaim\n\n8. **\"Drop-in inference-time enhancement for any pre-trained GIN-class molecular classifier\"** generalizes from a single dataset (MolHIV), a single base architecture, and a single scaffold split to \"any\" GIN-class molecular classifier. The experimental evidence supports a much narrower claim. Recommend: \"on OGB-MolHIV with a frozen GIN trained as described, GRAPH-REFINE improves AUC by X.\"\n\n9. **\"7.2% relative improvement in classification accuracy\"** \u2014 relative percentages on accuracy can be inflated when the baseline is high (e.g., 92% \u2192 94% is \"only\" 2 absolute points but >2% relative). Report absolute accuracy for both arms alongside the relative figure.\n\n10. **The opening sentence positions this as a framework \"for graph neural network classifiers on molecular property benchmarks,\"** but the work touches one classifier on one benchmark. Tighten the scope statement to match the evidence.\n\n## Organization and prose\n\n11. **Section ordering is out of sequence.** The \"Architecture and ablations\" paragraph appears after \"Headline result\" and \"Mechanism,\" yet retroactively redefines the architecture used for those experiments. Move all architecture and hyperparameter details into Experimental Setup, and reserve a later subsection for ablations only (k sweep, readout perturbation magnitude, etc.).\n\n12. **\"Pseudo-label sharpening\" is introduced without definition.** Briefly specify the update rule \u2014 what is sharpened, with what temperature or operator, and how the \"critique signal\" is combined with the prior prediction \u2014 so readers can reproduce the method from the text.\n\n13. **Minor prose:** \"node-level embedding via a base GIN encoder, produces a per-graph critique signal by re-running the same encoder under a perturbed readout\" is dense; split into two sentences. \"Re-running the same encoder under a perturbed readout\" is ambiguous \u2014 is the encoder re-run, or only the readout re-applied with perturbation?\n\n## Suggested minimum revision before resubmission\n\n- Resolve the 5-layer/256 vs. 3-layer/128 contradiction throughout.\n- Lead with AUC; report accuracy secondarily with absolute numbers.\n- Remove \"confirmation\" framing between the two metrics.\n- Add the k-sweep table and per-seed deltas.\n- Narrow the closing recommendation to the tested setting.\n- Define \"pseudo-label sharpening\" and \"perturbed readout\" precisely.\n\n## Caveats on this review\n\nI have not independently verified the OGB-MolHIV leaderboard convention beyond general familiarity; the recommendation to lead with AUC should be cross-checked against the current OGB documentation. I also cannot tell from the text alone whether the architecture mismatch is a typo (one number is wrong) or a deeper error (different configs were used in different experiments and conflated in writing); the author should confirm which. The causal critique of the mechanism paragraph assumes standard interpretation of \"confidence\" as max-softmax or margin; if a different confidence definition is used, the critique may need adjustment.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general section review centrally includes checking whether the contribution framing and claimed mechanism are coherent at the section level.",
+      "R1.2": "Reviewing this section requires detecting internal contradictions and failures in the argument chain, so logical consistency is load-bearing.",
+      "R1.3": "The section makes empirical claims from reported results, so checking whether the claims follow from the reported experiments and metrics is load-bearing.",
+      "R1.5": "Because the delegation targets a section, its ordering, narrative arc, and subsection-level presentation are central review responsibilities.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, register, and concision as central expected responsibilities.",
+      "RX.1": "Any review projection must preserve uncertainty about what can be inferred from the provided artifact alone.",
+      "RX.2": "The review responsibility includes avoiding inflated conclusions beyond what the reported evidence supports.",
+      "RX.3": "The agent must remain within the requested review of the provided section rather than executing edits or external audits.",
+      "RX.4": "The review must avoid recommendations or interpretations that could encourage misleading scientific reporting.",
+      "RX.5": "The projection should keep responsibility traceable to the delegation and artifact rather than unstated external assumptions."
+    }
+  }
+}

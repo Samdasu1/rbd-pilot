@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_280",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2669,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 35141,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.85, \"RX.5\": 0.9}}\n\nSummary: Reviewed the four-paragraph passage and flagged internal inconsistencies, an unsupported leap from numerical convergence to a general bias-diagnostic claim, and several places where the prose should be tightened or hedged.\n\n**Substantive issues**\n\n1. *Mismatch between the convergence guarantee and the chosen step size.* The text claims \u03b1 = 1/\u2016B\u2016_\u221e \"by the Gershgorin disc theorem ensures \u03c1(\u03b1B) \u2264 1.\" Two problems. First, \u03c1(B) \u2264 \u2016B\u2016_\u221e is a standard matrix-norm bound and does not require Gershgorin \u2014 invoking Gershgorin here is misleading. Second, \u03c1(\u03b1B) \u2264 1 is exactly the boundary case and does *not* guarantee convergence of Richardson iteration; you need \u03c1(\u03b1B) < 1 (strict). If B has a row that sums to \u2016B\u2016_\u221e, the bound is tight and convergence is not assured by this argument alone. The authors should either (a) tighten the step size (e.g., \u03b1 slightly less than 1/\u2016B\u2016_\u221e, or 1/(\u2016B\u2016_\u221e + \u03b5)), or (b) appeal to an additional property of B (e.g., that the centering 1\u1d40\u03b2 = 0 projects out the dominant eigendirection).\n\n2. *Inconsistency in reported convergence speed.* Paragraph 1 says \"fewer than 30 sweeps across all our experiments\"; paragraph 2 says \"between 12 and 28 sweeps.\" These are compatible but the first is strictly weaker and reads as if the two paragraphs were drafted independently. Pick the tighter, more informative range and state it once.\n\n3. *Unsupported leap to a \"drop-in diagnostic \u2026 without per-model calibration.\"* The evidence presented is: (i) convergence on three judge families, (ii) r = 0.81 against one external human-rated bias set from Chen et al. (2024), and (iii) <5% relative L2 recovery error. None of these establishes that the method generalizes to *any* modern judge without calibration. In particular: r = 0.81 leaves ~34% of variance unexplained; the held-out comparison is against a single human-rated set; and the three families, while diverse, are still three points. The conclusion should be hedged to \"in the regimes we tested\" or similar, and the \"without per-model calibration\" claim needs direct evidence (e.g., a transfer experiment) or removal.\n\n4. *Numerical-tractability claim is overstated.* \"Numerically tractable problem for current LLM-as-judge pipelines\" follows from a convergence demonstration on three judges. The numerical tractability is conditional on B being well-conditioned and on the step-size argument above being valid; it is not a general result. Soften to something like \"tractable on the judge families we evaluated.\"\n\n5. *The bias model itself is asserted rather than justified.* \u03b2 = \u03b1B\u03b2 + c is presented as a definition, but the choice of an affine fixed-point form, the role of \u03b1 (which is also the iteration's step size \u2014 using the same symbol for the model parameter and the iterative relaxation parameter is confusing), and the centering 1\u1d40\u03b2 = 0 are not motivated. Readers will reasonably ask: why this functional form? Why does \u03b1 appear in the model at all rather than only in the solver? Either separate the two \u03b1s notationally or state explicitly that the \"model\" and \"solver\" use the same \u03b1 by design and explain why.\n\n6. *Evidence-claim gaps to repair.*\n   - \"Recovered \u03b2 values correlate at r = 0.81 with \u2026 Chen et al. (2024)\": report sample size, confidence interval, and whether correlation is over items, judges, or pooled.\n   - \"Recovery error stays below 5% relative L2\": specify what the ground truth is for the recovery-error computation (synthetic? bootstrap? held-out split?), because \"recovery error\" without a target is undefined.\n   - \"N = 200 comparisons per cell\": for a K\u00d7K matrix this is K(K\u22121)\u00b7200 comparisons; state K and the total budget so readers can assess statistical noise in B_ij. Standard error on a Bernoulli rate at N=200 is ~0.035, which is non-trivial relative to plausible bias signals.\n   - \"Strips authorship metadata before presenting\": this is a single ablation; the claim that this controls for authorship cues should be tested, not asserted.\n\n7. *Scope drift between paragraphs.* The passage moves from \"fixed-point iteration is well-conditioned\" (paragraphs 1\u20132) to \"this is a drop-in bias diagnostic\" (paragraph 4) without an intermediate argument that *recovery accuracy* (not just *convergence*) generalizes. Convergence and accuracy are distinct properties; the current text conflates them.\n\n8. *Potential misuse if read as a calibration-free diagnostic.* A reader could deploy this as an off-the-shelf audit tool for a new judge and report \u03b2 as \"the\" self-preference bias. Given the single external validation point and the three-family evidence base, that usage would outrun the evidence. The paper should either add a calibration recommendation or explicitly caution against unaudited deployment, especially for downstream decisions about model selection or judge trustworthiness.\n\n9. *Prose tightening.*\n   - \"We therefore conclude that the fixed-point iteration provides a stable, accurate, and broadly applicable mechanism\" \u2014 three adjectives in a row, each of which is doing more work than the evidence supports. Cut to one and qualify.\n   - \"Can be used as a drop-in diagnostic for any modern LLM judge\" \u2014 \"any\" is the load-bearing word and should go.\n   - The third paragraph, on estimation of B_ij, is the natural place to introduce B and N and should appear *before* the convergence analysis, not after. Currently the reader meets B in paragraph 1 with no idea how it is estimated.\n   - Symbol overload: \u03b1 is the model coefficient *and* the Richardson step; c is the centering vector but its construction is not given.\n\n**Suggested minimal revisions**\n\n- Paragraph 1: introduce K, define B_ij with its estimation procedure (currently in paragraph 3), and either rename the iteration's step size or note explicitly the dual role.\n- Paragraph 2: replace the Gershgorin sentence with a correct argument (e.g., \u03c1(B) \u2264 \u2016B\u2016_\u221e by the standard matrix-norm bound; convergence assumes strict inequality, which holds because [state the structural reason]). Drop \"fewer than 30\" in favor of the tighter \"12\u201328.\"\n- Paragraph 3: move earlier; add total comparison count and per-cell standard error.\n- Paragraph 4: replace \"stable, accurate, and broadly applicable \u2026 drop-in diagnostic for any modern LLM judge without per-model calibration\" with \"On the three judge families we evaluated, recovered \u03b2 values track human-rated bias (r = 0.81) and the iteration converges reliably; whether this transfers to other judges without calibration is left to future work.\"\n\n**Items I could not fully verify**\n\n- I have not checked whether Chen et al. (2024) exists as cited or whether r = 0.81 against that benchmark is plausible \u2014 citation accuracy is outside what I can confirm from the paragraph alone.\n- The strict-vs-non-strict spectral-radius issue depends on properties of B (irreducibility, row-sum structure) that are not stated; my critique assumes the worst case. If B is row-stochastic or has a specific structure the authors should make explicit, the bound may be defensible with a one-line addition.\n- The claim that the iteration converges in 12\u201328 sweeps is consistent with \u03c1(\u03b1B) bounded away from 1 in practice, but without knowing actual spectral radii I cannot confirm the reported sweep counts are tight.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the look focus primarily on technical validity of the mathematical and empirical claims, or on prose polish and readability?",
+    "rationale": {
+      "R1.2": "The paragraph contains a mathematical convergence argument whose internal reasoning is likely part of a general review request.",
+      "R1.3": "The paragraph makes claims about convergence, correlation, recovery error, and applicability that should align with the reported experimental evidence if reviewed substantively.",
+      "R1.6": "Because the delegation refers to a paragraph, sentence-level clarity, flow, and register are a central plausible responsibility.",
+      "RX.1": "Any projection should preserve uncertainty caused by the vague phrase 'take a look.'",
+      "RX.2": "The response space must avoid endorsing broad technical or empirical conclusions beyond the delegation.",
+      "RX.3": "The task is only to project responsibility, not to edit, critique, or verify the artifact.",
+      "RX.4": "Potential downstream misuse of unsupported numerical or LLM-judge claims makes harm-aware scoping relevant.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's reported claims."
+    }
+  }
+}

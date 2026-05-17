@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_248",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1662,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 21282,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: Tightened the prose throughout, collapsed hedge-stacking in the results paragraph into calibrated language, and preserved the original structure, technical content, and citations without adding new claims or evidence.\n\n---\n\nWe propose ROUTE-Q, a query-conditioned routing policy that, given a user prompt x, outputs a distribution over a pool M = {m_1, ..., m_K} of candidate LLMs differing in cost, latency, and capability. The policy is parameterized as a small frozen encoder followed by a softmax head, and is trained to minimize expected serving cost subject to a per-query quality constraint estimated from a learned reward model.\n\nROUTE-Q is fit on a dataset D of tuples (x, {(m_k, y_k, q_k, c_k)}), where y_k is the response of model m_k to prompt x, q_k is its scalar quality score under the reward model, and c_k is its measured per-token serving cost. The training objective is\n\nL(\u03b8) = E_x[\u03a3_k \u03c0_\u03b8(k|x) c_k] + \u03b2 \u00b7 max(0, \u03c4 \u2212 E_x[\u03a3_k \u03c0_\u03b8(k|x) q_k]),\n\nwhere the Lagrangian-style penalty coefficient \u03b2 is tuned on a held-out validation slice and the quality threshold \u03c4 is fixed in advance.\n\nPrior work has examined LLM model selection under cost constraints. FrugalGPT (Chen et al., 2023) introduced an LLM cascade that escalates from cheaper to more expensive models when a scoring function judges the cheap model's answer unreliable. RouteLLM (Ong et al., 2024) framed routing as preference-based binary classification between a strong and a weak model, trained on Chatbot Arena traces. AutoMix uses few-shot self-verification to decide cascade exit, and Tabi targets discriminative serving by routing simple queries to small classifiers ahead of an LLM. A separate line of work on mixture-of-experts learns gating decisions across expert subnetworks rather than across separately served models. These approaches differ along three axes: the supervision signal, the granularity of the routing decision, and whether cost is treated as a hard or soft constraint.\n\nAt training time we sample mini-batches of 256 prompts, compute the routed expectation against the cached (q_k, c_k) tables, and update \u03b8 with Adam at a learning rate of 3e-4. The reward model is held frozen throughout. We anneal \u03b2 from 0.1 to 1.0 over the first 10K steps so that the quality constraint does not dominate before the router has learned a non-trivial routing distribution.\n\nOn the held-out evaluation slice, ROUTE-Q reduces serving cost relative to always routing to the strongest model while largely preserving quality scores. Direct comparison with prior cascading approaches is limited: the published cost figures were obtained under serving configurations we did not control for, and we have not re-run those baselines in our setup. Within this caveat, the results are consistent with the hypothesis that learned routing is a viable alternative to fixed cascades, but a head-to-head evaluation under matched serving conditions would be needed to support a stronger claim.\n\n---\n\nNotes on what was changed and what was left alone:\n\n- The hedge-stacked final paragraph (\"we believe... broadly competitive... may to some extent reflect... appear to be largely preserved... tentatively interpret... at least under the conditions we evaluated... not unreasonable... could potentially be taken to suggest... in principle... in some respects warranted... could plausibly be made\") was rewritten to state the actual limitation once (uncontrolled serving configurations, no re-run baselines) and then make a single appropriately-bounded claim. This removes vague overhedging while keeping the substantive caution intact.\n- \"broadly competitive\" was dropped because the surrounding text does not report a number; replaced with the direction of the effect (\"reduces serving cost relative to always routing to the strongest model\") which the artifact supports.\n- Minor sentence-level edits: \"parameterised\"/\"minimise\" \u2192 US spelling for consistency with \"parameterized\" conventions in ML writing (revert if the venue is en-GB); \"response of model m_k on prompt x\" \u2192 \"to prompt x\"; removed \"Concretely,\" and \"A line of\"; tightened the related-work transitions.\n- Structure, equations, notation, the list of cited systems, and the training-details paragraph are unchanged.\n\nItems I could not verify and would flag before submission: whether the AutoMix and Tabi descriptions are accurate as one-liners (no citation years given in the artifact), whether en-US vs en-GB spelling matches the venue, and whether the empirical claim \"reduces serving cost ... while largely preserving quality\" is backed by numbers elsewhere in the paper \u2014 if not, even this softened version is unsupported and should be replaced with the actual measured figures.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Clean this up' most directly requests sentence- and paragraph-level improvement in grammar, flow, register, and concision.",
+      "RX.1": "Any cleanup should preserve appropriate uncertainty already present in the artifact rather than making claims sound more certain than warranted.",
+      "RX.2": "The revised prose must avoid strengthening tentative empirical and comparative claims beyond what the artifact supports.",
+      "RX.3": "The task is limited to cleanup and should not expand into rewriting the research contribution, auditing citations, or evaluating novelty.",
+      "RX.4": "Because the artifact concerns model-routing claims, cleanup should avoid wording that could encourage unsupported deployment or performance conclusions.",
+      "RX.5": "The cleanup should preserve traceability to the artifact's stated method, objective, prior-work comparisons, and evaluation caveats."
+    }
+  }
+}

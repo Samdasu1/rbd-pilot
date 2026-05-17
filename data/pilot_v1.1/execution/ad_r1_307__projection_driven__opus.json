@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_307",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1061,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 14810,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSentence-level polish only: removed hedge-stacking, deduplicated repeated clauses, and tightened phrasing while preserving the original empirical claims, their stated limitations, and the n=28 framing.\n\n---\n\nOur interview study with 28 Mechanical Turk workers suggests that LLM use in text-production HITs may be more widespread than earlier estimates indicate. Of the 28 workers we spoke with, 19 reported routinely using a chatbot assistant for at least some portion of their text-production HITs, and several reported doing so across multiple requesters.\n\nWorkers described their use of these tools in ways that may reflect a pragmatic orientation toward throughput. Several suggested that the tools were helpful for paraphrasing prompts, particularly on summarization HITs with tight time limits. One participant noted, \"I use it when I am tired,\" which may be indicative of fatigue-driven adoption.\n\nSelf-reported usage appeared broadly consistent across demographic strata in our sample: workers based in the United States reported rates comparable to those based elsewhere. Our sample is small, however, and we caution against drawing firm conclusions about subgroup differences.\n\nTaken together, our findings suggest that requester expectations about unaided human text production may be increasingly mismatched with on-platform practice, in ways that warrant further qualitative investigation.\n\n---\n\nNotes on what was changed and what was preserved:\n\n- The original contained two near-identical sentences in paragraphs 1, 2, and 3 (apparent duplications). I collapsed each duplicated pair into a single sentence. In paragraph 1, I read the intended second clause as \"across multiple requesters\" applying to a subset of the 19, and rendered it as \"several\" rather than re-asserting \"19\" \u2014 this is an interpretive choice; if the source data in fact showed all 19 used assistants across multiple requesters, restore the original number.\n- Stacked hedges (\"may possibly,\" \"we would tentatively characterize as broadly comparable,\" \"seemed to suggest that they tended to feel that... were arguably somewhat helpful\") were reduced to a single hedge per claim. The epistemic direction (suggestive, not conclusive) is preserved; only the stacking is removed.\n- The small-sample caveat is retained in plainer form.\n- The closing sentence's self-referential loop (\"mismatch may possibly be increasingly mismatched with on-platform practice\") was treated as a duplication artifact and removed.\n- No claims, numbers, quotations, or framings were added. The \"19 of 28\" figure, the quoted participant remark, the US/non-US comparison, and the call for further qualitative work are all carried over verbatim or near-verbatim.\n\nOne item I cannot verify from the artifact alone: whether the second clause of paragraph 1 was meant to introduce a different statistic (e.g., a smaller subset using assistants across multiple requesters) rather than restate the same 19. If a distinct number belongs there, please reinstate it; my edit assumes the duplication was unintentional.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.0,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The request to 'Polish this' targets sentence- and paragraph-level clarity, grammar, concision, and tone without altering higher-level structure or claims.",
+      "RX.1": "Polishing should maintain appropriate hedging and clearly convey uncertainty where the original does so.",
+      "RX.2": "Edits must not introduce stronger claims or interpretations than the interview data support.",
+      "RX.3": "Scope is limited to copyediting and style, avoiding conceptual reframing, new content, or structural reorganization.",
+      "RX.4": "Language should remain respectful and non-stigmatizing toward workers and requesters to avoid potential harm.",
+      "RX.5": "Preserve original meaning, numbers, and quotations so the polished text remains traceable to the provided artifact."
+    }
+  }
+}

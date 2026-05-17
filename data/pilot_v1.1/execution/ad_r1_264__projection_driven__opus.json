@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_264",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2428,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 28298,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.3, \"RX.5\": 0.7}}\n\nBelow is a light prose pass on the supplied text: tightening sentences, removing editorializing adverbs, softening a few phrasings that overstate what the reported evidence supports, and standardizing punctuation/units. No content has been added, no claims strengthened, and no structural reorganization performed. Edits are conservative and reversible.\n\n---\n\n**Cleaned version**\n\nMolecular property prediction over multi-source bioactivity data suffers from a subtle form of label ambiguity: a single \"IC50\" entry may correspond to enzymatic inhibition, cell-based potency, or a biophysical binding readout \u2014 each with distinct underlying physics and substantially different dynamic ranges. Naive aggregation across these sources, as is common practice with public bioactivity warehouses, collapses physically distinct quantities into a single regression target and degrades downstream model fidelity. We introduce AssayAware, a transformer encoder over SMILES that augments standard tokenization with a learned assay-context vector, allowing the model to disambiguate label semantics during multi-task fine-tuning across heterogeneous bioactivity records.\n\nThe central technical contribution is the assay-conditioning mechanism. Under a stated observability condition on the assay-context distribution \u2014 each assay class is paired with at least three pharmacophorically distinct ligand families \u2014 the model recovers per-assay calibration shifts as a byproduct of multi-task training. This offers an alternative to the hand-curated unit conversions and the silent discarding of inconsistent records used by earlier multi-task chemical models when transferring across assay families.\n\nThe AssayAware encoder is a 12-layer transformer with 768-dimensional hidden states and 12 attention heads. SMILES are tokenized with a BPE vocabulary of 8,192 merges. We pretrain on 5M canonicalized SMILES drawn from ChEMBL release 33 with a masked-token objective at a 15% mask rate, optimized with AdamW (peak learning rate 2 \u00d7 10\u207b\u2074, linear warmup over 6,000 steps, batch size 256). Fine-tuning is performed on a 12-task subset spanning kinase, GPCR, and ion-channel targets, using a held-out scaffold split (Bemis\u2013Murcko grouping, 80/10/10).\n\nEmpirically, the assay-conditioning head reduces per-task RMSE by 0.18\u20130.31 log units relative to an otherwise identical encoder trained without conditioning. In the learned assay-embedding space, cell-based and biochemical assays separate along a single dominant axis, consistent with the prediction that conditioning performs assay-level disambiguation rather than acting as a per-task bias. The assay embeddings may also be useful as a diagnostic for auditing the aggregation pipelines used to construct public bioactivity benchmarks.\n\n---\n\n**Change log (per paragraph)**\n\n- *Paragraph 1*: Replaced em-dash interjection with a cleaner punctuation pattern; rewrote \"Aggregating naively across these sources \u2026 with predictable degradation\" as an active clause; replaced \"enabling\" with \"allowing\" to reduce passive-voice stacking.\n- *Paragraph 2*: \"principal\" \u2192 \"central\" (style); \"a mild observability condition\" \u2192 \"a stated observability condition\" \u2014 the original \"mild\" editorializes about a condition whose stringency is not argued in the excerpt; \"provides a principled basis for transferring\" \u2192 \"offers an alternative to \u2026 used by earlier multi-task chemical models\" \u2014 the original phrasing implies the method *is* principled in a way the excerpt does not demonstrate.\n- *Paragraph 3*: Split the run-on opening sentence; standardized \"2e-4\" as \"2 \u00d7 10\u207b\u2074\" for typographic consistency with the rest of the paragraph; moved the Bemis\u2013Murcko qualifier into parentheses.\n- *Paragraph 4*: Removed \"and \u2014 more strikingly \u2014\" (editorializing adverbial); rewrote \"recovers a meaningful calibration manifold\" as a direct description of what was observed (axis-aligned separation) \u2014 the original word \"meaningful\" is rhetorical and \"manifold\" is stronger than a single dominant axis warrants; softened \"supports the theoretical prediction that conditioning is performing identifiable disambiguation\" to \"consistent with the prediction\" \u2014 a single observed axis is consistent with, but does not establish, identifiability; \"suggests \u2026 may serve as a diagnostic tool\" \u2192 \"may also be useful as a diagnostic\" (parallel softening).\n\n---\n\n**Notes on items I deliberately did not change**\n\n- I did not reorder sections, retitle them, or merge/split paragraphs beyond sentence-level repair.\n- I did not add, remove, or reformat citations or references.\n- I did not assess novelty against prior work, reweigh the empirical claims, or check whether the cited numbers (RMSE deltas, ChEMBL release, hyperparameters) are internally consistent with any underlying tables \u2014 those checks were out of scope for this pass.\n\n---\n\n**Caveats on what I cannot verify from the excerpt alone**\n\n- Whether the \"observability condition\" is in fact mild; the excerpt does not state the theorem or its assumptions in enough detail to judge, and I softened \"mild\" accordingly. If the full paper proves it is mild, \"stated\" can be reverted to \"mild.\"\n- Whether the embedding-space separation justifies the original \"identifiable disambiguation\" wording; this depends on results not shown in the excerpt (e.g., an identifiability argument or ablation). My softening to \"consistent with\" is conservative \u2014 strengthen it back if the paper supports the stronger reading.\n- Whether \"biophysical binding readout\" is the authors' preferred phrasing for the third assay class; I left it unchanged.\n- The RMSE-improvement range (0.18\u20130.31 log units) and the hyperparameters are reproduced verbatim and not independently checked.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.3,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Clean this up' most directly asks for sentence- and paragraph-level improvements to grammar, flow, concision, and register.",
+      "RX.1": "Any cleanup should preserve uncertainty around theoretical and empirical claims rather than making them sound more certain than warranted.",
+      "RX.2": "The artifact contains strong claims about identifiable disambiguation and diagnostic utility, so cleanup must avoid strengthening overclaims.",
+      "RX.3": "The request is broad but ordinary, so the responsibility is to polish the text without performing deeper review, rewriting the research contribution, or changing the scientific substance.",
+      "RX.4": "Because the artifact concerns biomedical model evaluation, cleanup should avoid language that could mislead downstream interpretation of model reliability or benchmark quality.",
+      "RX.5": "Edits implied by the delegation should remain traceable to the provided artifact and not introduce unsupported new facts, citations, or results."
+    }
+  }
+}

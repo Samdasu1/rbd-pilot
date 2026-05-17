@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_113",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1842,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 23777,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nLight copy-edit only: tightened sentences, fixed minor awkwardness, and preserved every quantitative claim, framing decision, and structural choice from the original. No new claims, no softened/strengthened conclusions beyond what the source already states.\n\nRevised text:\n\n---\nWe introduce CausalVote, a compound-inference framework for estimating heterogeneous treatment effects (HTE) from observational text corpora. The setup is motivated by recent applications in which large language models (LLMs) are queried multiple times to extract confounder annotations from unstructured clinical notes, and the resulting per-document annotations are aggregated into a downstream treatment-effect estimate. We study how the number of LLM calls, K, affects the quality of the recovered estimates, and propose an aggregation scheme that majority-votes per-confounder annotations before fitting an outcome regression via doubly robust estimation.\n\nWe evaluate CausalVote on three semi-synthetic benchmarks derived from the MIMIC-III discharge-note corpus, the Yelp business-reviews corpus, and the IMDB review corpus. Each benchmark is augmented with an injected synthetic treatment-and-outcome process so that ground-truth potential outcomes are available. For each benchmark we vary K over {1, 5, 10, 20, 40} and report the root-mean-square error of factual outcome prediction (factual RMSE) on a held-out test fold of (X, T, Y) triples.\n\nAt K=20, CausalVote achieves a factual RMSE of 0.142 on MIMIC-III, compared with 0.181 for the K=1 baseline \u2014 a 21.5% relative improvement. On Yelp, RMSE drops from 0.214 (K=1) to 0.169 (K=20); on IMDB, from 0.252 to 0.198. An ablation that replaces the aggregation step with random selection from the K samples confirms that the gains are attributable to the voting mechanism rather than to repeated sampling alone.\n\nTogether, these results indicate that aggregating multiple LLM calls can substantially improve HTE estimation quality, and provide preliminary scaling trends relating K to causal-effect recovery. We position CausalVote as a step toward sample-efficient deployment of LLM-based confounder extraction in observational causal studies, particularly in clinical and policy domains where unmeasured confounding is a persistent concern.\n---\n\nNotes on the small wording choices I did make (so you can revert any you disagree with):\n\n- \"compound inference framework\" \u2192 \"compound-inference framework\"; \"discharge note corpus\" \u2192 \"discharge-note corpus\"; \"treatment and outcome process\" \u2192 \"treatment-and-outcome process\". Hyphenation of compound modifiers; no semantic change.\n- \"vary K in {\u2026}\" \u2192 \"vary K over {\u2026}\". More standard phrasing for grids.\n- \"demonstrate that \u2026 substantially improves\" \u2192 \"indicate that \u2026 can substantially improve\". The source text reports results on three semi-synthetic benchmarks with injected DGPs; \"demonstrate\" is a strong verb for that evidence base. I softened by one notch but did not alter any number, comparison, or claim about the ablation. If you want the stronger verb back, swap \"indicate\" \u2192 \"demonstrate\" and \"can substantially improve\" \u2192 \"substantially improves\".\n- \"preliminary scaling laws\" \u2192 \"preliminary scaling trends\". \"Scaling laws\" is a loaded term; \"trends\" matches what five K values on three benchmarks can support. Revertible.\n- Dropped \"principled,\" from the final sentence \u2014 it was doing rhetorical rather than informational work, and the surrounding claim (\"sample-efficient deployment\") is unchanged. Restore if you want it.\n- Numbers, K grid, dataset names, RMSE values, the 21.5% figure, the ablation description, and the framing of CausalVote as motivated by clinical-note confounder extraction are all preserved verbatim in substance.\n\nThings I deliberately did not touch:\n\n- The framing as \"compound inference\" / \"HTE from text\" and the contribution claim itself \u2014 left as the authors wrote them.\n- The structural order (motivation \u2192 setup \u2192 results \u2192 positioning) \u2014 unchanged.\n- Citations, related-work delta, and any judgment about how this compares to prior aggregation-of-LLM-calls work \u2014 out of scope for a copy pass.\n- The doubly-robust-estimation choice, the choice of factual RMSE as the headline metric (rather than, e.g., PEHE or ATE error), and the semi-synthetic evaluation design \u2014 these are substantive design decisions, not prose issues, and I left them alone.\n\nCaveats on what I can't verify from the artifact alone:\n\n- I can't confirm the RMSE numbers, the 21.5% figure, or that the ablation result actually rules out \"repeated sampling alone\" \u2014 I'm taking the abstract at its word. If any number is wrong in the underlying experiments, my edits do not fix it.\n- I can't tell whether \"factual RMSE on a held-out test fold of (X, T, Y) triples\" is in fact the right or sufficient evaluation for HTE quality; readers may push back here, but that is a content question outside this pass.\n- The softening of \"demonstrate\" and \"scaling laws\" reflects my read of what the reported evidence supports; if the full paper carries stronger evidence (more datasets, theory, etc.), feel free to restore the original verbs.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation to clean up the draft most directly requests sentence- and paragraph-level improvements in grammar, flow, register, and concision.",
+      "RX.1": "Any projection must preserve uncertainty about the underspecified scope of the cleanup request.",
+      "RX.2": "The artifact contains strong causal and scaling-law claims, so avoiding overclaiming is an active cross-cutting responsibility.",
+      "RX.3": "The agent must stay within projection rather than actually rewriting or evaluating the artifact.",
+      "RX.4": "Because the text references clinical and policy domains, downstream harm from overstated causal reliability must be considered.",
+      "RX.5": "The projection must remain traceable to the delegation wording and the provided artifact."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_080",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1675,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 20253,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.5\": 0.8, \"R1.6\": 0.95, \"RX.1\": 0.8, \"RX.2\": 0.85, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: I tightened prose, reordered the paragraphs into a more conventional flow (contribution framing \u2192 background \u2192 method \u2192 evaluation \u2192 summary), trimmed redundancy, and softened claims where the underlying evidence supports only a narrower statement. I did not rewrite the substantive technical content, add new claims, or alter cited names/numbers.\n\n---\n\nRevised text:\n\n---\n\nWe present GraphClarifyKG, a method for ranking candidate clarifying questions in conversational search grounded on knowledge graphs (KGs). Existing approaches treat clarifying-question selection as a flat text-ranking problem and ignore the entity structure of the underlying KG. We propose a graph attention mechanism that computes question relevance by jointly attending over entity neighborhoods and the user's prior turns, producing a question-specific subgraph embedding conditioned on the conversational state.\n\n**Background.** Given a user query *q* and a candidate clarifying question *c*, prior systems encode the pair (*q*, *c*) with a cross-encoder and rank by the resulting score. KG-grounded variants additionally extract entities from *q* via standard NER, retrieve their *k*-hop neighborhoods from Wikidata, and feed the resulting subgraph through a Graph Attention Network (GAT). Our setup follows this pipeline.\n\n**Method.** We embed each entity using pretrained TransE vectors and propagate them over the retrieved subgraph with a 2-layer GAT, using the default attention heads and hyperparameters from Veli\u010dkovi\u0107 et al. The mean-pooled entity embedding is concatenated with the cross-encoder representation of (*q*, *c*) and passed through an MLP scoring head trained with a margin loss. Because both the GAT and the cross-encoder are off-the-shelf, the full system trains end-to-end in under three GPU-hours on a single A100.\n\n**Evaluation.** We evaluate on ClariQ-KG, a benchmark we release with this paper. Our system reaches Recall@1 of 0.61, compared with 0.54 for a cross-encoder baseline that ignores graph context. The gap is consistent with the model benefiting from entity-neighborhood information in the retrieved subgraph, though we have not yet run ablations isolating which component of the graph signal drives the improvement.\n\n**Summary.** This paper contributes (i) ClariQ-KG, a dataset pairing CAsT-style clarifying-question pools with Wikidata entity links, and (ii) baseline numbers for cross-encoder and KG-augmented rankers on this dataset, providing a reference point for future work on graph-grounded clarification in conversational search.\n\n---\n\nNotes on the edits I made and what I deliberately did not touch:\n\n- Reordered so the contribution paragraph leads, background follows, then method, evaluation, and summary. The original opened by foregrounding the \"graph attention mechanism\" as the central contribution while the summary paragraph instead framed the dataset and baselines as the contributions \u2014 those two statements are in tension. I left both in place but moved the dataset-and-baselines framing to its natural position in the summary, and softened the opening from \"The central contribution of this paper is a novel\u2026\" to \"We propose a\u2026\" so the two paragraphs no longer compete.\n- Removed \"novel\" from the mechanism description and removed \"the first dataset\" from the summary. I have no way to verify priority claims from the artifact alone, and the rest of the text does not substantiate either word.\n- Replaced \"We attribute the gain to the inclusion of entity-neighborhood information\u2026\" with a hedged version that flags the absence of an ablation. A single overall-score comparison does not isolate the source of the gain, so the original phrasing was stronger than the reported evidence supports.\n- Minor prose: expanded KG and GAT on first use, italicized variables, replaced \"The method works as follows\" with a heading, tightened \"yielding a question-specific subgraph embedding tailored to the conversational state\" to \"producing \u2026 conditioned on the conversational state.\"\n- I did not alter numerical results, the cited author, the training-time figure, the architecture details, or the dataset name, since revising those is outside the scope of a cleanup pass.\n\nItems I cannot verify from the artifact alone, flagged so a human can check before submission: (a) whether ClariQ-KG is in fact the first such resource (kept neutral in the rewrite); (b) whether the 0.61 vs. 0.54 gap is statistically meaningful, since no variance or significance test is reported; (c) whether \"default attention heads and hyperparameters from Veli\u010dkovi\u0107 et al.\" is precise enough for reproducibility, or whether the specific values should be stated; (d) whether the baseline cross-encoder is the same backbone used inside GraphClarifyKG \u2014 if not, the comparison conflates two changes and the attribution sentence may need further softening.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.5": "Cleaning up this artifact may require improving section-level narrative coherence between the contribution claim, method description, evaluation, and summary.",
+      "R1.6": "The delegation most directly asks for sentence- and paragraph-level cleanup of grammar, flow, register, and concision.",
+      "RX.1": "Any cleanup should preserve uncertainty around unsupported causal attributions and unstated experimental details.",
+      "RX.2": "The artifact contains potentially strong claims such as novelty and attribution of gains, so avoiding overclaiming is an active responsibility.",
+      "RX.3": "The request is broad but still limited to cleanup rather than executing experiments, auditing literature, or rewriting the research contribution.",
+      "RX.4": "Cleanup should avoid introducing misleading claims that could distort downstream interpretation of the research.",
+      "RX.5": "Edits implied by the delegation would need to remain traceable to the provided artifact rather than adding unsupported external content."
+    }
+  }
+}

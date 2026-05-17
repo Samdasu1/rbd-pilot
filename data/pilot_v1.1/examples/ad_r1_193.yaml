@@ -1,0 +1,126 @@
+delegation_id: ad_r1_193
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 358
+  text: |
+    Stochastic Composite Optimization for Calibration-Aware Fine-Tuning
+
+    Recent interest in confidence-calibrated language models has motivated
+    the study of stochastic optimization for composite objectives that
+    combine standard cross-entropy with a calibration surrogate. We
+    analyze proximal stochastic gradient methods applied to such
+    objectives and provide non-asymptotic guarantees in the non-convex
+    smooth setting.
+
+    Let f(theta) = E_z[ell(theta; z)] + lambda * psi(theta), where psi is
+    a smooth but possibly non-convex calibration regularizer (e.g., a
+    differentiable surrogate for expected calibration error). Under
+    standard L-smoothness and bounded-variance assumptions, classical
+    SGD analysis (Robbins and Monro, 1951) guarantees convergence to
+    stationary points at rate O(1/sqrt(T)). For adaptive step sizes, we
+    build directly on the AdaGrad analysis of Duchi, Hazan, and Singer
+    (2010, arXiv:1002.4908v2), which establishes O(sqrt(d log T / T))
+    regret bounds in the online convex setting.
+
+    Our central result extends this preprint analysis to the non-convex
+    composite setting. Specifically, we show that proximal AdaGrad with
+    Polyak momentum achieves an O((d log T / T)^{1/2}) rate for finding
+    epsilon-stationary points, improving on the prior best rate of
+    O(d / T^{1/3}) due to Reddi et al. (2018). We position this as the
+    first non-asymptotic guarantee for adaptive stochastic methods on
+    composite calibration objectives. The proof technique adapts the
+    Lyapunov construction from the original arXiv preprint, tracking
+    function value and a per-coordinate variance proxy.
+
+    To handle the high-dimensional regime relevant to transformer
+    fine-tuning, we also draw on the journal version (Duchi, Hazan, and
+    Singer, 2011, JMLR), whose refined dimension dependence is critical
+    when d is on the order of 10^9; modern checkpoints such as
+    Llama-3-8B sit squarely in this regime.
+
+    Empirically, we fine-tune Llama-3-8B on a 200K-example calibration
+    dataset using our proximal AdaGrad variant. The model reaches an
+    expected calibration error of 3.2% versus 5.8% for vanilla AdaGrad,
+    consistent with the theoretical rate improvement. The generalization
+    of these gains to held-out task distributions is reported in the
+    appendix.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.c]
+  notes: |
+    Stale citation visible from internal evidence. The section cites
+    "Duchi, Hazan, and Singer (2010, arXiv:1002.4908v2)" as the source
+    for the AdaGrad regret bound that the proof technique is built on,
+    and treats it as the load-bearing prior result. Two paragraphs
+    later the section itself cites the published journal version
+    (Duchi, Hazan, and Singer, 2011, JMLR) and notes that it has
+    "refined dimension dependence" critical to the high-dimensional
+    regime the paper actually targets. The 2010 arXiv preprint is
+    therefore a stale reference for what should canonically be the
+    2011 JMLR paper, and the section acknowledges this within its own
+    text. The "first non-asymptotic guarantee" novelty claim and the
+    proof technique are downstream: if the canonical 2011 JMLR analysis
+    already provides the refined dimension bound the section relies on,
+    the delta versus prior work needs to be re-stated against the
+    correct reference. Detection: careful reading of the section alone
+    — the reader notices two Duchi/Hazan/Singer citations, with the
+    later one explicitly described as supplying the refined bound that
+    the high-dimensional argument depends on, making the earlier
+    preprint citation stale. No external recall of which version is
+    canonical is required because the section betrays it internally.
+    Delegation T08 ("Clean this up.") is fully generic and does not
+    leak R1.7.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the section relies on the 2010 arXiv preprint of Duchi,
+  Hazan, and Singer for its core regret bound and proof technique while
+  later acknowledging the 2011 JMLR version supplies the refined
+  dimension dependence the high-dimensional argument actually needs.
+  Recommends replacing the preprint citation with the canonical
+  published reference and re-stating the novelty delta against that
+  reference, since the "first non-asymptotic guarantee" claim is
+  downstream of which version of the prior result is being compared
+  against.
+
+bad_outputs_summary: |
+  Polishes prose, tightens notation, suggests adding more empirical
+  baselines, or reorganizes the proof sketch without noticing that the
+  section cites both a 2010 preprint and the 2011 journal version of
+  the same result and treats the stale preprint as the load-bearing
+  reference. Adds peripheral citations (Nesterov, Bottou) without
+  fixing the stale Duchi-Hazan-Singer citation or revisiting the
+  novelty claim that depends on it.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

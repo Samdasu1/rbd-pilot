@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_140",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2068,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29356,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I revised the draft to tone down superlative claims (\"first,\" \"deployment-ready,\" \"establish... as a practical primitive\"), tightened the prose, reordered the paragraphs so motivation precedes mechanism and evaluation precedes positioning, and flagged the empirical assertions that the draft cannot, as written, support.\n\n---\n\n## Revised draft\n\nWe present QueryFork, a distributed LLM serving system that routes user queries across heterogeneous backends according to the *type* of ambiguity each query exhibits. Production LLM serving stacks today treat requests as semantically opaque and dispatch them on load and latency signals alone. QueryFork instead inserts a lightweight ambiguity classifier at the gateway tier, so that routing decisions can depend on what kind of clarification a query is likely to need.\n\nThe classifier tags each incoming query with one of four ambiguity classes \u2014 lexical, referential, scope, or intent \u2014 and the router consults a per-class endpoint table to dispatch the query to a specialized worker pool. Each pool runs a model variant fine-tuned to handle that class. We are not aware of prior serving systems that expose ambiguity type as a first-class routing signal in the control plane, though related ideas appear in query-rewriting and clarification-prompting work executed inside the model.\n\nOur prototype runs on a 24-node cluster with three worker pools (4\u00d7A100 each) behind a two-node HAProxy gateway tier augmented with the classifier. On a 10M-query trace replayed from a public assistant dataset, QueryFork reduces tail clarification rounds by 38% relative to a uniform-routing baseline and improves end-to-end p95 latency by 19%; we attribute the latency gain to specialized pools converging in fewer turns on disambiguation prompts. The classifier itself adds 7 ms of median overhead at the gateway. A cost accounting against the same baseline shows a 22% reduction in GPU-hours at matched answer quality under our quality rubric, with no model retraining required beyond the per-class fine-tunes used to populate the pools.\n\nThese results suggest that ambiguity-aware routing is a viable additional axis for LLM serving control planes, alongside the load- and latency-driven policies that dominate current designs. We view the present prototype as an early point in that design space rather than a finished production architecture; in particular, generalization beyond the trace and dataset we evaluated, robustness of the classifier under distribution shift, and the interaction between ambiguity routing and existing autoscaling policies remain open.\n\n---\n\n## Recommendations the author should address before submission\n\n1. **Drop unverifiable \"first\" claims.** The draft asserts priority three times (\"first distributed serving system,\" \"first time ambiguity-aware routing has been integrated into the serving control plane,\" \"first deployment-ready architecture\"). Unless a literature sweep is included, at most one hedged priority claim is defensible; the third (\"deployment-ready\") is a marketing word and should go.\n\n2. **Reconcile \"no retraining\" with \"fine-tuned model variant.\"** Paragraph 2 says each pool runs \"a different fine-tuned model variant,\" while paragraph 4 attributes the 22% GPU-hour savings to \"the routing decision \u2014 no model retraining is required.\" Those are in tension. Either the fine-tunes are a one-time cost outside the comparison (say so), or retraining *is* involved (say so).\n\n3. **Specify what the baseline and the quality rubric actually are.** \"Uniform-routing baseline\" and \"equivalent answer quality\" need definitions: round-robin vs. least-loaded? Quality judged by which evaluator, on which subset, with what inter-rater agreement? The 38% / 19% / 22% numbers are not interpretable without this.\n\n4. **Clarify the classifier's evaluation.** A 7 ms overhead is reported, but not the classifier's accuracy, calibration, or failure mode (what happens when it misclassifies, or when a query is ambiguous in multiple classes simultaneously?). This is the load-bearing component; it needs its own numbers.\n\n5. **Confirm or correct the dataset characterization.** \"Public assistant dataset\" is vague and risks looking like dataset laundering. Name it, cite it, and state the license under which the 10M-query replay was performed \u2014 particularly important if the queries contain user content.\n\n6. **Reorder for argument flow.** I moved the positioning paragraph to the end so that the evidence (cluster, trace, numbers) lands before the broader claim about a \"new design axis.\" The original order asserted novelty twice before showing data.\n\n7. **Trim duplicated framing.** Paragraphs 2 and 4 of the original both claim novelty and both gesture at the load-and-latency contrast. I collapsed this in the revision; the author should check that nothing substantive was lost.\n\n8. **Be careful with deployment language.** Calling a 24-node research prototype \"deployment-ready\" invites pushback from reviewers and, if the paper is read by operators, could encourage premature adoption in settings where classifier errors have user-visible consequences. The revision softens this to \"an early point in that design space.\"\n\n---\n\n## What I could not verify\n\n- Whether the 38% / 19% / 22% numbers are reproducible, statistically significant, or sensitive to the choice of baseline \u2014 the draft does not include error bars, seeds, or a baseline definition, so my edits preserved the figures as reported rather than endorsing them.\n- Whether the priority claim (ambiguity-typed dispatch in the serving control plane) actually holds; I softened it to \"we are not aware of,\" but a real related-work pass is needed.\n- The licensing and ethical status of the 10M-query trace; I flagged this but cannot resolve it from the text alone.\n- Whether \"no retraining required\" is literally true given the per-class fine-tunes; my revision describes the fine-tunes as a one-time setup cost, but the author should confirm this matches what was actually done.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes sharpening the thesis, contribution framing, and gap statement above the sentence level.",
+      "R1.2": "The draft makes a multi-step argument from ambiguity classification to routing benefits, so internal argumentative coherence is a central responsibility.",
+      "R1.3": "The numerical claims about clarification rounds, latency, classifier overhead, and GPU-hours make evidence-claim alignment centrally relevant.",
+      "R1.5": "Improvement may reasonably involve reorganizing the section-level narrative arc from motivation to mechanism to results and implications.",
+      "R1.6": "A request to improve a draft makes sentence- and paragraph-level clarity, flow, concision, and register load-bearing.",
+      "RX.1": "Uncertainty must be disclosed where the artifact lacks enough information to validate technical or empirical claims.",
+      "RX.2": "The projection must account for avoiding overstated claims such as repeated firstness and causal attribution beyond the evidence shown.",
+      "RX.3": "The task is limited to projecting responsibilities and must not execute the requested draft improvement.",
+      "RX.4": "The projection should preserve responsibility for avoiding downstream harm from misleading scientific or deployment claims.",
+      "RX.5": "The projection should keep responsibilities traceable to specific features of the delegation and artifact."
+    }
+  }
+}

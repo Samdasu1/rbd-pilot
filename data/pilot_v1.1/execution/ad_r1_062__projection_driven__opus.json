@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_062",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1984,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 28000,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Reviewed the abstract against its internal logic and the evidence it actually reports; flagged a terminology mismatch, an unsupported leap from cross-condition variation to \"reproducibility bounds,\" missing uncertainty signals, and overreach toward clinical/legal deployment guidance.\n\n**Core issue: the study design does not measure what the text claims it measures.**\n\nThe artifact frames itself as a \"reproducibility analysis,\" but the described experiment varies prompt template and input audio noise across 12 conditions and reports WER per condition. That is a sensitivity/robustness study across deliberately different inputs and instructions \u2014 not a reproducibility study in the standard sense (same input, same procedure, repeated runs, measuring variance). A user \"submitting the same recording on different days\" would, in the described setup, presumably use the same prompt and the same audio; the 12-condition sweep does not directly bound that quantity. Either reframe the contribution as a robustness/sensitivity analysis, or add an actual repeat-run protocol (e.g., N runs per condition at fixed seed/temperature, reporting within-condition variance) before claiming reproducibility bounds.\n\n**Claim\u2013evidence gaps.**\n\n- \"Establish bounds on the reproducibility of LLM-driven ASR pipelines\" is stronger than the data supports. What is shown is a WER range (3.1%\u20138.7%) across a small, hand-picked grid of prompts and noise levels on one dataset with one ASR front end and (presumably) one LLM. Bounds language should be softened to \"illustrate the range of WER outcomes observed under these conditions.\"\n- The named-entity finding (\"majority of inconsistencies are named-entity substitutions \u2026 rewriting proper nouns toward higher-frequency tokens\") is presented as a distributional result but no counts, confidence intervals, or comparison baseline are given. Either include the numbers or hedge the claim.\n- The LLM is never named, the decoding settings (temperature, top-p, seed) are not stated, and the number of utterances/runs is not given. Without these, none of the WER numbers are interpretable as reproducibility evidence.\n- \"Verbose prompts paired with clean audio achieve a WER of 3.1%\" \u2014 is this better or worse than the uncorrected Whisper-medium baseline on test-clean? Whisper-medium already reports low single-digit WER on test-clean; without the baseline, the reader cannot tell whether the LLM stage helps, hurts, or is in the noise.\n\n**Logical chain issues.**\n\n- The jump from \"WER varies across prompts and noise levels\" to \"motivate constrained decoding\" skips a step: variation across deliberately different prompts says little about whether constrained decoding would reduce variance under a fixed prompt. Add the intermediate evidence or remove the recommendation.\n- \"Section 5 \u2026 offers a recommended deployment protocol, including a pre-deployment reproducibility audit checklist practitioners can run before integrating LLM correction into a production transcription stack for clinical or legal use.\" The abstract studies LibriSpeech (read audiobooks), not clinical or legal audio, and does not include any clinical/legal evaluation. Recommending a deployment protocol for those domains on this evidence is out of scope and potentially harmful \u2014 clinical and legal transcription have failure modes (drug names, dosages, party names, dates) that LibriSpeech cannot surrogate for. Either restrict the recommendation to \"general English read-speech pipelines\" or drop the deployment-protocol framing and present the checklist as a research suggestion.\n\n**Specific wording.**\n\n- \"+10 dB SNR, +0 dB SNR\" \u2014 the sign convention is unusual; 0 dB SNR is normally written \"0 dB SNR\" without the plus. Confirm and standardize.\n- \"ranging from terse \u2026 to verbose chain-of-thought instructions\" \u2014 four templates is too few to support a \"ranging\" claim; consider \"four templates spanning a terse-to-verbose spectrum.\"\n- \"the LLM frequently rewriting proper nouns toward higher-frequency tokens such as common English first names\" \u2014 \"frequently\" needs a number, and the example is anecdotal; either quantify or mark as illustrative.\n- \"broader debate over LLM determinism\" \u2014 vague; either cite the debate or cut.\n- Replace \"establish bounds\" with \"characterize the range,\" and \"motivate constrained decoding\" with \"suggest constrained decoding as one mitigation worth evaluating.\"\n\n**Recommended minimal revisions before this abstract is publishable:**\n\n1. Reframe as robustness/sensitivity, OR add same-input repeat runs and report within-condition variance.\n2. Name the LLM, decoding parameters, number of runs, and corpus size.\n3. Report the uncorrected Whisper-medium baseline WER alongside post-correction WER.\n4. Quantify the named-entity finding or label it qualitative.\n5. Remove or scope-restrict the clinical/legal deployment recommendation; if retained, add explicit caveats that LibriSpeech read-speech does not generalize to those domains.\n6. Soften \"bounds\" language throughout.\n\n**What I could not verify.**\n\nI am working only from the abstract \u2014 I have not seen the full paper, the prompts, the LLM identity, the per-condition variance, or Section 5's checklist. Some of the gaps flagged above (e.g., missing decoding parameters, missing baseline, missing named-entity counts) may be addressed in the body; if so, the abstract should still surface those numbers since reviewers and readers often stop here. The Whisper-medium test-clean baseline figure I alluded to is a recollection of published numbers and should be re-checked against the version of Whisper-medium actually used.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check a research passage centrally includes verifying whether the argument from setup to findings to implications is coherent.",
+      "R1.3": "The passage reports experimental conditions and WER results, so checking whether the stated claims follow from those reported results is centrally expected.",
+      "R1.6": "Because the delegation is broad and the artifact is prose, sentence-level clarity, flow, and register are central checking responsibilities.",
+      "RX.1": "Any projection of a terse delegation must preserve uncertainty about the intended kind of checking.",
+      "RX.2": "The check should avoid endorsing stronger conclusions than the artifact supports.",
+      "RX.3": "The responsibility is limited to projecting the delegation, not performing the check or revising the artifact.",
+      "RX.4": "The clinical and legal deployment context makes harm-aware handling of unsupported claims relevant.",
+      "RX.5": "The projection should remain traceable to the wording of the delegation and the artifact."
+    }
+  }
+}

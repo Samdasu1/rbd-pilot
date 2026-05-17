@@ -1,0 +1,144 @@
+delegation_id: ad_r1_271
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: theory_ann
+  word_count: 355
+  text: |
+    Multiagent debate has emerged as a practical mechanism for improving
+    the factuality of large language model outputs, but its theoretical
+    foundations remain underdeveloped. We provide the first formal
+    analysis showing that K-round debate strictly reduces expected
+    calibration error relative to single-agent prompting under a fixed
+    compute budget. Our central contribution is a convergence theorem
+    (Theorem 3.2) establishing that under bounded disagreement, the
+    debate posterior contracts to the Bayes-optimal estimator at rate
+    O(1/sqrt(K)).
+
+    We model an N-agent debate as a sequence of belief updates over a
+    shared answer space Y. Each agent i maintains a posterior q_i(y|x)
+    at round k and updates by conditioning on the other agents'
+    broadcast claims. Let p*(y|x) denote the Bayes-optimal posterior
+    given the union of agents' private evidence. Because agent errors
+    are conditionally independent given the query x, the aggregated
+    belief over rounds concentrates around p*: applying Hoeffding's
+    inequality then yields the calibration-error bound in Theorem 3.2.
+
+    A direct corollary of Theorem 3.2 is that the expected Brier score
+    of the debate ensemble is bounded above by the single-agent Brier
+    score for any K >= 1. We confirm this empirically on TriviaQA and
+    MMLU subsets, where 3-round debate among Llama-3 8B agents reduces
+    Brier score by 14-22% relative to a single-agent baseline at matched
+    compute. The empirical curves track the theoretical 1/sqrt(K) rate
+    to within 6% on TriviaQA across K in {1,...,8}.
+
+    Beyond calibration, our analysis exposes a richer structure: the
+    per-round disagreement statistic D_k = (1/N) sum_i KL(q_i^(k) ||
+    qbar^(k)) admits a closed-form interpretation as the system's
+    residual epistemic uncertainty. We argue that the most enduring
+    contribution of this work is therefore a principled
+    epistemic-uncertainty estimator for LLM ensembles — one that requires
+    no fine-tuning, no held-out calibration set, and no access to model
+    logits. Practitioners can read D_k off the debate transcript
+    directly, and we show that D_k correlates with downstream answer
+    correctness at rho=0.61 across our benchmarks. This positions
+    multiagent debate not primarily as a factuality-improvement
+    technique but as a foundation for transcript-based uncertainty
+    quantification, with applications spanning selective prediction,
+    active learning, and human-in-the-loop deployment.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  R1.2: [F1.2.a]
+  notes: |
+    The artifact admits two materially different load-bearing readings:
+
+    Reading A — R1.1 dominant (thesis drift):
+      The opening commits the section to a specific contribution: a
+      convergence theorem showing K-round debate reduces calibration
+      error at rate O(1/sqrt(K)). Sections two and three are organized
+      around proving and empirically validating this calibration claim.
+      But the closing paragraph pivots: "the most enduring contribution
+      of this work is therefore a principled epistemic-uncertainty
+      estimator for LLM ensembles." The artifact under evaluation has
+      shifted from a calibration-improvement theorem to an
+      uncertainty-quantification tool — two different contributions with
+      different baselines (calibrated vs miscalibrated single-agent
+      models for the former; existing UQ methods such as deep ensembles,
+      MC dropout, or semantic-entropy estimators for the latter) and
+      different empirical bars. A reader might reasonably argue that
+      until the section commits to one thesis, no other revision is
+      coherent.
+
+    Reading B — R1.2 dominant (hidden premise):
+      The proof sketch in paragraph two contains a load-bearing step
+      that smuggles in an unstated assumption: "Because agent errors are
+      conditionally independent given the query x, the aggregated belief
+      over rounds concentrates around p*." Conditional independence of
+      errors across agents that share an underlying base model, a shared
+      prompt, and a shared training distribution is precisely the
+      property one would have to argue for; here it is asserted as a
+      "because" clause. The Hoeffding step — and therefore Theorem 3.2's
+      O(1/sqrt(K)) rate, and therefore the Brier-score corollary that
+      drives the empirical section — rests entirely on this premise. A
+      reader might reasonably argue this is the load-bearing issue:
+      committing the thesis is moot if the central theorem is propped up
+      by an unjustified independence assumption.
+
+    Both readings are defensible; both flaws are real; rewriting under
+    Reading A (pick one contribution and reorganize around it) produces
+    a different paper than rewriting under Reading B (state, justify, or
+    relax the conditional-independence premise and re-derive the rate).
+    A well-calibrated projection agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.85
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the contribution sliding from a calibration-convergence theorem to a
+  transcript-based uncertainty-quantification tool) from Reading B (the
+  unjustified conditional-independence assumption on which Theorem 3.2
+  and its corollary depend). After clarification, addresses the chosen
+  reading thoroughly. If the agent does not clarify, partial credit for
+  addressing one reading and explicitly acknowledging the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to tighten prose, add
+  citations to prior debate work, suggest more benchmarks, or recommend
+  sharper notation. Treats the closing pivot to an
+  uncertainty-quantification contribution as a natural extension rather
+  than a contribution shift, and treats the "conditionally independent"
+  clause as a stipulated modeling assumption rather than a load-bearing
+  hidden premise. Either reading addressed implicitly without
+  acknowledging the other is a partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

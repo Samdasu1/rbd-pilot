@@ -1,0 +1,128 @@
+delegation_id: ad_r1_214
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 408
+  text: |
+    Estimating heterogeneous treatment effects from observational data
+    has become a central problem in modern causal inference.
+    Practitioners increasingly rely on flexible machine-learning nuisance
+    learners — gradient boosting, random forests, and neural networks —
+    to estimate the propensity score and outcome regressions that enter
+    doubly-robust estimators of the conditional average treatment effect
+    (CATE). The uncertainty quantification accompanying these estimates,
+    however, is often poorly calibrated: nominal 95% intervals can cover
+    the true CATE far less than 95% of the time when the nuisance
+    estimators are slow-converging or biased on subpopulations.
+
+    In this paper we introduce CalDML, the first procedure that produces
+    calibrated confidence intervals for CATE estimates obtained from
+    arbitrary machine-learning nuisance learners. CalDML wraps any double
+    machine-learning point estimator with a held-out calibration step that
+    adjusts the interval width to achieve the nominal coverage level,
+    regardless of the convergence rate of the underlying nuisance models.
+
+    Related work. Our approach builds on the doubly-robust score
+    functions of Robins and Rotnitzky (1995) and the cross-fitted DML
+    framework of Chernozhukov et al. (2018), which established
+    root-n asymptotic normality for average treatment effect estimates
+    under fast-enough nuisance convergence. For heterogeneous effects,
+    Wager and Athey (2018) introduced honest causal forests with
+    pointwise confidence intervals that achieve the nominal coverage
+    level under regularity conditions on the forest splits. Künzel et al.
+    (2019) proposed the X-learner family, and Kennedy (2023) developed
+    a doubly-robust learner with explicit rate conditions on the CATE
+    function class.
+
+    These prior methods rely on asymptotic arguments and require strong
+    rate conditions on the nuisance learners. CalDML, in contrast, leans
+    on a split-conformal-style calibration step that holds whenever the
+    calibration fold is exchangeable with the deployment distribution,
+    irrespective of how fast the nuisance learners converge. We frame
+    this as a meaningful step beyond the existing toolbox for CATE
+    inference.
+
+    We evaluate CalDML on three semi-synthetic benchmarks (IHDP,
+    ACIC-2018, and the Lalonde-style observational extension of Smith
+    and Todd, 2005). Across all three, CalDML achieves empirical
+    coverage within 1.5 percentage points of the nominal 95% level in
+    settings where the underlying DML estimator under-covers by 8 to 15
+    points, while inflating average interval width by less than 30%. We
+    position CalDML as a practical default for CATE uncertainty
+    quantification in applied causal-inference workflows.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    Internal-citation contradiction visible from the section's own text
+    (no external knowledge required, hence low gating). Paragraph 2
+    claims CalDML is "the first procedure that produces calibrated
+    confidence intervals for CATE estimates obtained from arbitrary
+    machine-learning nuisance learners." Paragraph 3 then states that
+    Wager and Athey (2018) "introduced honest causal forests with
+    pointwise confidence intervals that achieve the nominal coverage
+    level under regularity conditions" — i.e. calibrated CATE intervals
+    that predate the present work and are acknowledged in the section's
+    own related work. The "first calibrated CI for CATE" novelty claim
+    therefore contradicts the section's own scholarship attribution
+    (F1.7.b in the form of an ignored canonical antecedent that the
+    section itself names). The contribution claim and the framing of
+    novelty against Wager-Athey are downstream of fixing this. Honest
+    causal forests are indeed the canonical prior calibrated-CI method
+    for CATE, so the omission is also a load-bearing scholarship gap
+    even if a reader had no external knowledge. Delegation T02 is
+    generic and does not leak the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.4
+    R1.4: 0.5
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the "first procedure that produces calibrated confidence
+  intervals for CATE" claim in paragraph 2 is contradicted by the
+  section's own description of Wager and Athey (2018) honest causal
+  forests, whose pointwise intervals also target nominal coverage for
+  the CATE. Suggests narrowing the novelty claim to a defensible delta
+  (e.g. finite-sample / split-conformal calibration without rate
+  conditions on the nuisance learners) and explicitly positioning
+  CalDML against honest causal forests rather than around them. May
+  note that the novelty positioning depends on fixing this scholarship
+  issue.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more benchmarks or experimental
+  detail, or recommends restructuring the related-work paragraph
+  without flagging that the "first calibrated CI for CATE" claim
+  contradicts the section's own citation of Wager and Athey (2018).
+  Praises the related-work breadth or proposes peripheral citations
+  (e.g. additional X-learner variants, alternative DML extensions)
+  while leaving the novelty claim intact.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,140 @@
+delegation_id: ad_r1_278
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 306
+  text: |
+    We introduce CalmCPO, an adaptive notification agent that uses
+    constrained policy optimization to balance user engagement against
+    interruption cost in mobile productivity applications. The agent
+    decides, at each candidate notification moment, whether to deliver,
+    defer, or suppress the notification, with the goal of reducing user
+    interruption load while preserving timely delivery of high-priority
+    messages.
+
+    The agent is trained with a CPO-style update that bounds an expected
+    interruption-cost surrogate per session at a user-configurable
+    threshold τ. Reward is shaped by per-notification engagement and a
+    delay penalty; cost is the predicted probability that the user is in
+    a focused work state, estimated from a logistic classifier over
+    keystroke cadence, foreground app, and accelerometer features.
+
+    We deployed CalmCPO in a four-week field study with 38 knowledge
+    workers running our Android client on their primary device.
+    Engagement was measured as click-through rate (CTR) on delivered
+    notifications, and we compared against the device's stock
+    notification scheduler.
+
+    Results. CalmCPO achieved a CTR of 24.1%, compared with 18.7% for
+    the baseline scheduler — a 5.4 percentage-point absolute improvement.
+    We interpret this as direct evidence that CalmCPO reduces user
+    interruption cost: by deferring notifications away from focus periods,
+    the system converts low-quality interruptions into higher-quality
+    ones, lowering the cognitive load of the average user's day.
+
+    We argue that this work demonstrates the value of constraint-based
+    RL for interactive systems and contributes a new methodology for
+    attention-aware notification scheduling. The deployed model adds
+    less than 3 ms of on-device latency per scheduling decision and
+    runs entirely client-side, preserving user privacy.
+
+    Hyperparameters and the full constraint-bound sweep over τ ∈
+    {0.05, 0.1, 0.2, 0.4} are reported in Appendix B; we found τ = 0.1
+    to be a good operating point and used it for the headline result
+    above. Code and the per-session interaction logs (anonymized) will
+    be released on acceptance.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.3 dominant (metric mismatch):
+      The headline claim is that CalmCPO "reduces user interruption
+      cost" and "lowers cognitive load." The metric actually reported
+      is click-through rate (CTR) on delivered notifications — a pure
+      engagement metric. CTR does not measure interruption cost or
+      cognitive load; in fact, higher CTR is consistent with the system
+      successfully attracting attention, which is the opposite of
+      reducing interruption burden. The Results paragraph explicitly
+      labels the CTR delta as "direct evidence" of cognitive-load
+      reduction, but the metric simply does not measure that construct.
+      Rewrite under this reading would either (a) replace the claim
+      with an engagement claim that CTR can support, or (b) add an
+      actual interruption-cost measurement (self-report, task-completion
+      time, focus-session disruption rate) before the cognitive-load
+      claim can stand.
+
+    Reading B — R1.7 dominant (missing key prior work):
+      The section positions itself as contributing "a new methodology
+      for attention-aware notification scheduling" without engaging the
+      canonical HCI literature on exactly this problem — Horvitz et
+      al.'s notification-platform / BusyBody work on cost-of-interruption
+      modeling, Mark et al.'s field studies on interruption recovery,
+      and Iqbal & Bailey's work on opportune-moment notification. These
+      are the load-bearing prior works that any HCI reviewer would
+      expect; their absence is not a citation oversight but a framing
+      problem, because the contribution stops being "new methodology"
+      and becomes "a CPO-based instantiation of an established
+      attention-aware scheduling agenda." Rewrite under this reading
+      would re-anchor the novelty claim against the existing line of
+      work and reframe the contribution as a method-level refinement
+      rather than a new problem statement.
+
+    Reading A is detectable by careful reading of the metric/claim pair.
+    Reading B requires recall of canonical HCI attention-aware-computing
+    references — hence moderate gating. Both flaws are real; rewriting
+    under one does not fix the other; a well-calibrated agent should
+    set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.2
+    R1.3: 0.85
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the reported engagement metric does not measure the cognitive-load
+  construct the claim invokes) from Reading B (the section ignores the
+  canonical body of attention-aware-computing work that defines the
+  problem space). After clarification, addresses the chosen reading
+  thoroughly — either tightening the claim/metric pair or re-anchoring
+  the novelty positioning against the existing literature.
+
+bad_outputs_summary: |
+  Polishes prose, suggests a longer field study, more participants, or
+  more τ values. Accepts CTR as a valid measure of interruption cost
+  and treats the cognitive-load claim as established. Accepts the
+  "new methodology" framing without surfacing the existing HCI work
+  on cost-of-interruption modeling and opportune-moment notification.
+  Either reading addressed implicitly without acknowledging the other
+  is partial credit.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

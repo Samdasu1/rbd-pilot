@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_056",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2627,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 36342,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.4\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.7, \"R1.7\": 0.85, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.85, \"RX.5\": 0.9}}\n\nSummary: Independent review of the CalibRL section flagging a likely overstated novelty claim, several unsupported empirical assertions, prose and structural fixes, and a high-stakes-deployment framing that needs softening.\n\n**Likely false novelty claim (highest priority).**\nThe sentence \"To our knowledge, however, no prior work has used reinforcement learning directly to optimize for calibration in the LLM setting\" is almost certainly too strong. Reward shaping for verbalized confidence and RL-style calibration objectives have been explored in work such as Lin, Hilton & Evans (2022) \"Teaching Models to Express Their Uncertainty in Words\" (which the section already cites but mischaracterizes as purely supervised \u2014 the paper discusses both supervised and RL-style training of verbalized confidence), Kadavath et al. (2022) \"Language Models (Mostly) Know What They Know\" (P(IK) training), and more recently Band et al. / Tian et al. (2023) on RLHF-style calibration tuning. Recommend rewriting to: \"Prior work has explored RL and reward-model variants for calibration (e.g., Lin et al., 2022; Tian et al., 2023). CalibRL differs in that it directly uses a proper-scoring-rule reward (Brier) on verbalized confidence within a standard PPO pipeline, and evaluates cross-domain transfer.\" Do not assert categorical priority; assert a specific delta.\n\n**Evidence-claim gaps.**\nSeveral quantitative claims are presented without enough scaffolding for a reader to evaluate them:\n\n1. \"ECE on TriviaQA from 0.18 to 0.06\" and \"MMLU from 0.21 to 0.09\" \u2014 the baseline being compared against is not named in this section. Is 0.18 the SFT baseline, the RLHF baseline, or the base pretrained model? State it explicitly, and report confidence intervals or seeds.\n2. \"Task accuracy within 0.4% of the SFT baseline\" \u2014 give the absolute accuracy numbers, not just the delta, and clarify whether this is exact-match, top-1, or something else.\n3. \"ECE below 0.10 on all evaluated splits\" \u2014 list the splits and per-split numbers, at least in a table. A single threshold statement obscures whether one split is at 0.02 and another at 0.099.\n4. \"1.7% drop\" for log-loss reward and \"high-variance under PPO\" \u2014 the high-variance claim is attributed to \"prior observations\" but no citation is given. Either cite or soften to \"in our runs, log-loss gradients were noisier (Appendix X).\"\n5. The \"bounded gradient\" justification for Brier is loose: Brier's gradient with respect to the predicted probability is bounded, but the policy-gradient estimator's variance depends on the full RL objective, not just the reward's gradient. Recommend rephrasing as a hypothesis supported by empirical variance measurements, not a theoretical guarantee.\n\n**Logical chain.**\nThe section moves: method \u2192 main result \u2192 OOD transfer \u2192 reward-shape ablation \u2192 framing. The transfer paragraph asserts \"the calibration objective transfers across question types rather than overfitting to TriviaQA's surface form,\" but the only evidence offered is that ECE stays below 0.10. Low ECE on OOD could also be achieved by a model that becomes uniformly under-confident, which would lower ECE without genuine calibration transfer. Reliability diagrams or per-bin accuracy/confidence numbers are needed to support the transfer-vs-flattening distinction. As written, the claim outruns the evidence.\n\nA second chain issue: the closing paragraph says CalibRL is \"a step toward closing the gap between models' internal uncertainty signals and their externally expressed confidence.\" Nothing in the method actually measures or operates on internal uncertainty signals \u2014 the reward is computed only from verbalized confidence and ground-truth correctness. The internal/external framing should be dropped or rewritten to reflect what the method does.\n\n**Structural suggestions.**\n- The \"We frame this as a contribution\u2026\" paragraph mixes positioning, related work, and headline results. Split into (a) related work and delta, (b) headline numbers in a separate results paragraph or pointer to a table.\n- The reward-shape ablation reads as an aside late in the section; if it is load-bearing for the Brier choice, move it adjacent to the method description rather than after the OOD results.\n- Consider adding a one-sentence preview of evaluation setup (datasets, base model, RL algorithm) before the first numbers appear \u2014 currently the reader sees ECE figures without knowing which model family or RL algorithm produced them.\n\n**Prose and citations.**\n- \"reward the policy proportional to the negative Brier score against the binary correctness signal\" \u2014 tighten to \"reward the policy with the negative Brier score between the verbalized confidence c and the binary correctness indicator.\"\n- \"by virtue of its bounded gradient, appears to be a better fit\" \u2014 hedged but still claims more than the data supports; see above.\n- \"an issue identified as critical for high-stakes deployment\" \u2014 passive attribution; cite specifically (e.g., Amodei et al., 2016; Bommasani et al., 2021; or a calibration-specific source).\n- The Christiano et al. (2017) citation is for preference-based deep RL generally; if the intent is RLHF for LLMs, Stiennon et al. (2020) or Ouyang et al. (2022) carry that load alone. Christiano can stay but is not necessary.\n- \"Tian et al., 2023\" is ambiguous \u2014 there are multiple 2023 Tian papers on calibration. Disambiguate by title or venue.\n- Verify the Lin et al. (2022) characterization; the paper covers more than supervised demonstrations.\n\n**High-stakes-deployment framing.**\nThe final paragraph invokes high-stakes deployment as motivation. A 0.06\u20130.09 ECE is a meaningful reduction but is not low enough to justify high-stakes use, and OOD evaluation on a \"held-out medical QA set\" is not the same as evaluation in a real clinical setting. Recommend either removing the high-stakes framing or explicitly stating that CalibRL is not validated for deployment in safety-critical domains and that the medical-QA split is a research benchmark, not a clinical evaluation. As currently written, a downstream reader could plausibly cite this section to justify deployment-readiness claims it does not support.\n\n**Scope check.**\nThe section's stated scope is calibration of verbalized confidence via RL. The closing sentence (\"internal uncertainty signals and externally expressed confidence\") expands scope beyond what the experiments cover. Either bring the experiments to that scope (e.g., compare verbalized confidence to internal probes) or trim the framing.\n\n**Items I could not verify and that the authors should confirm.**\n- Whether Lin et al. (2022) and Tian et al. (2023) include any RL-based calibration training (this directly affects the novelty claim).\n- The exact baselines behind the 0.18 / 0.21 ECE figures.\n- Whether the OOD low-ECE result reflects genuine calibration transfer or distributional flattening \u2014 needs reliability diagrams.\n- Whether prior literature actually establishes log-loss rewards as high-variance under PPO, or whether this is a folk claim.\n- The specific 2023 Tian et al. paper intended.\n\nI have not independently looked up the cited papers in this review; the recommendations above flag where verification by the authors is needed before publication.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general section review centrally includes assessing whether the contribution framing and thesis are clear and appropriate.",
+      "R1.2": "The request entails checking whether the section's argumentative progression from method to results to conclusion is coherent.",
+      "R1.3": "Because the section makes empirical claims from reported ECE and accuracy results, review includes checking whether those claims are supported as stated.",
+      "R1.4": "The section explicitly claims novelty relative to prior RLHF and calibration work, making novelty assessment central.",
+      "R1.5": "Reviewing a section includes evaluating whether the ordering and narrative arc of its paragraphs work at the section level.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, concision, register, and flow.",
+      "R1.7": "The artifact cites prior work and makes literature-coverage claims, so citation and scholarship responsibilities are active.",
+      "RX.1": "Any review must disclose uncertainty where the artifact lacks enough information to verify a judgment.",
+      "RX.2": "The review must avoid endorsing or strengthening claims beyond what the section supports.",
+      "RX.3": "The agent must stay within reviewing the section rather than executing edits or adding unrelated tasks.",
+      "RX.4": "The review must consider possible downstream harm from unsupported high-stakes deployment or calibration claims.",
+      "RX.5": "The review should ground judgments in traceable features of the provided artifact."
+    }
+  }
+}

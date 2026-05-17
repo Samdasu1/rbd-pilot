@@ -1,0 +1,97 @@
+delegation_id: ad_r1_192
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 268
+  text: |
+    In this section we describe the multi-agent retrieval system that we
+    build for ligand prioritization in early-stage hit identification and
+    the system takes as input a target protein sequence along with a
+    candidate library of small molecules and it then routes the candidates
+    through a panel of specialized scoring agents that we had developed
+    during preliminary work and we collect their outputs into a unified
+    ranking that downstream chemists then inspect.
+
+    The agent panel consists of three components which are a docking-score
+    agent a ligand-similarity agent and a pharmacophore-matching agent and
+    each agent produces a scalar score together with a short natural
+    language rationale that we found useful during debugging and the
+    rationales are passed along to the aggregator together with the scores
+    so that the aggregator can weigh agreement and disagreement before
+    emitting a final ordering over the candidate set.
+
+    For aggregation we implemented a learned selection head that takes as
+    input the per-agent scores and the per-agent rationale embeddings and
+    it predicts which single agent's ranking should be trusted for a given
+    target which is a design choice that we made after observing that
+    blended aggregation tends to dilute strong signals from individual
+    agents in cases where one agent is correct and the others are
+    confidently wrong.
+
+    We evaluate the system on a panel of 12 kinase targets that we drew
+    from a publicly released benchmark and the selection-based aggregator
+    recovers more known actives in the top-50 cut than the synthesis-based
+    baseline that we had implemented for comparison and we observe this
+    pattern across most of the targets in the panel.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure prose-quality issues, specifically run-ons and tense drift.
+    Each paragraph is essentially a single chained "and ... and ... and"
+    sentence of 50-70 words. Tense drifts between present ("we build",
+    "the system takes", "we evaluate", "recovers") and past ("we had
+    developed", "we found", "we made", "we had implemented") within and
+    across paragraphs without principled justification. Underlying
+    methodology (panel of three agents, learned selection head, 12
+    kinase target benchmark, top-50 cut comparison) and the contribution
+    framing (selection over synthesis aggregation) are intact — only the
+    writing is bad. Detection requires only careful reading, no
+    pharmacology or ML expertise (low gating). Delegation T05 "Check
+    this." is maximally generic and does not point at R1.6 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Breaks the chained "and" run-ons into shorter sentences and stabilizes
+  tense to a consistent choice (typically present for system description,
+  past for completed experiments). Does not change the agent panel,
+  aggregation design, benchmark, or contribution framing.
+
+bad_outputs_summary: |
+  Questions the selection-vs-synthesis aggregation design, asks for more
+  targets or additional baselines, critiques the choice of three scoring
+  agents, requests ablations on the rationale embeddings, or adds
+  drug-discovery citations. Treats the writing problems as cosmetic and
+  instead reframes the contribution or expands scope.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

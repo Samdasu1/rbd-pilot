@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_278",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2185,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30219,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nSummary: A focused review of the paragraph, flagging where the argument outruns what the reported evidence can support, where prose should be tightened, and where the authors should disclose what they did and did not measure.\n\nThe central problem is the leap from a CTR delta to a claim about interruption cost. The reported study measures one thing \u2014 click-through rate on delivered notifications \u2014 and the discussion then concludes that the system \"reduces user interruption cost\" and \"lowers the cognitive load of the average user's day.\" Neither of those is an observable in the described experiment. CTR is a behavioral response to *delivered* notifications; it says nothing directly about whether the suppressed-or-deferred notifications would have caused interruption, nor about cognitive load, nor about what users experienced during focus periods. A higher CTR is consistent with several alternative explanations \u2014 for example, the system suppressed low-CTR notifications and the remaining pool is simply easier to click \u2014 which would yield the observed effect without any reduction in interruption cost. The paragraph \"We interpret this as direct evidence\u2026\" should be softened substantially; the word \"direct\" is not warranted, and the causal chain from CTR to cognitive load should either be removed or supported by an instrument that actually measures interruption or load (self-report, ESM probes, focus-session disruption counts, etc.).\n\nA second tension sits inside the method/results pairing. The CPO formulation centers on a constraint bound \u03c4 on an interruption-cost surrogate, but the headline result is reported only in CTR terms. The reader is not told whether the constraint was satisfied empirically, what the realized surrogate cost was at \u03c4 = 0.1, or how the \u03c4-sweep in Appendix B compares on either axis. Given that the constraint is the methodological contribution, the body should report at least the realized cost alongside CTR; otherwise the \"constraint-based RL\" framing is decorative rather than load-bearing. Relatedly, the cost signal is itself a *predicted* probability from a logistic classifier over keystroke/app/accelerometer features \u2014 its validation (accuracy, calibration, ground-truth labels) is not described, and any claim that the system \"defers notifications away from focus periods\" inherits that classifier's error. This should be acknowledged.\n\nSeveral comparison and generalization claims also overreach for the design described. n = 38 knowledge workers on Android over four weeks, compared against the device's stock scheduler, is a narrow slice. The phrasing \"the average user's day\" generalizes beyond that population. The baseline comparison is also weak as stated: the stock scheduler is not an attention-aware baseline, so beating it does not isolate the contribution of CPO versus, say, any learned ranker or a simple focus-state suppressor. A fair ablation (e.g., reward-only RL without the constraint, or a heuristic \"suppress during predicted focus\" rule) would be needed to support \"demonstrates the value of constraint-based RL.\" Without it, \"value of constraint-based RL\" should be downgraded to \"feasibility of constraint-based RL in this setting.\"\n\nThere are smaller writing issues. \"5.4 percentage-point absolute improvement\" is reported without a confidence interval, p-value, or any indication of variance across users or weeks \u2014 given a 38-person field study with per-user heterogeneity, the headline number is hard to interpret as-is. \"Less than 3 ms of on-device latency\" is precise but unscoped (median? p99? what hardware?). \"Preserving user privacy\" is a strong claim that follows from \"runs entirely client-side\" only if no telemetry, logs, or model updates leave the device \u2014 the final sentence mentions releasing per-session interaction logs, which implies data does leave the device, so the privacy phrasing and the data-release phrasing should be reconciled. \"Code and the per-session interaction logs (anonymized) will be released on acceptance\" should also note IRB/consent status for releasing behavioral logs from identifiable knowledge workers, and what \"anonymized\" means operationally (timestamps and app identifiers can re-identify).\n\nProse-level suggestions: \"We argue that this work demonstrates\" \u2192 \"We present\"; \"direct evidence\" \u2192 \"evidence consistent with\"; \"the cognitive load of the average user's day\" \u2192 drop or replace with the measured quantity; \"good operating point\" \u2192 state the criterion (e.g., \"highest CTR subject to the constraint holding\"). The two adjacent sentences \"Engagement was measured as CTR\u2026\" and \"Results. CalmCPO achieved a CTR of 24.1%\u2026\" can be tightened, and the \u03c4 discussion currently appears after the headline result, which risks the appearance of selecting \u03c4 post hoc \u2014 the paragraph should state whether \u03c4 = 0.1 was chosen on a held-out split or after seeing deployment results.\n\nConcrete suggested revisions to the two most overreaching sentences:\n- Replace \"We interpret this as direct evidence that CalmCPO reduces user interruption cost: by deferring notifications away from focus periods, the system converts low-quality interruptions into higher-quality ones, lowering the cognitive load of the average user's day.\" with: \"Higher CTR on delivered notifications is consistent with the system shifting delivery away from predicted focus periods. We did not directly measure interruption cost or cognitive load, and a CTR gain alone does not establish either; we discuss this limitation in \u00a7X.\"\n- Replace \"We argue that this work demonstrates the value of constraint-based RL for interactive systems and contributes a new methodology for attention-aware notification scheduling.\" with: \"We show that a CPO-style constraint can be applied to notification scheduling in a deployed mobile setting, and report engagement and realized-cost trade-offs across constraint levels.\"\n\nItems I cannot verify from the paragraph alone, and which the authors should confirm or report: (a) whether the interruption-cost constraint was actually satisfied at deployment time and with what slack; (b) the focus-state classifier's accuracy and calibration on held-out users; (c) statistical treatment of the 5.4-pp CTR delta (within-user vs. between-user, clustering by user, multiple-comparison handling across the \u03c4 sweep); (d) consent and re-identification analysis for the planned log release; (e) whether \u03c4 = 0.1 was selected before or after observing the headline outcome; (f) hardware and percentile for the 3 ms latency figure. Each of these affects whether the current wording is defensible.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the look focus on writing polish, argument and claim validity, or contribution framing?",
+    "rationale": {
+      "R1.2": "The paragraph contains a causal argument from deployment results to conclusions about interruption cost that would need consistency checking.",
+      "R1.3": "The reported evidence is CTR-focused while the paragraph makes claims about interruption cost and cognitive load, making claim-evidence alignment central.",
+      "R1.6": "A request to look at a paragraph commonly entails sentence- and paragraph-level readability, flow, and register review.",
+      "RX.1": "Any projection should preserve uncertainty because the delegation does not specify the intended kind of review.",
+      "RX.2": "The artifact includes potentially strong causal and methodological claims, so avoiding overclaiming is active.",
+      "RX.3": "The projection must stay within responsibility assignment and not perform the requested review.",
+      "RX.4": "The paragraph discusses deployed user-facing notification behavior and privacy, so downstream-harm considerations remain active.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the paragraph's explicit claims."
+    }
+  }
+}

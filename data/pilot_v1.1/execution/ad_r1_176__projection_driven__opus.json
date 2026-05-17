@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_176",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 997,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 14235,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.5\": 0.3, \"R1.6\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Tightened the prose by removing repetition and redundant noun phrases, without changing any factual content, numbers, or claims.\n\nRevised text:\n\n---\nThis section describes the methodology we used to evaluate code generation outputs from candidate language models. The approach relies on an open-source evaluator model to score code samples produced by candidate models across several programming languages. Our evaluator is a fine-tuned variant of a publicly available base model, trained on synthetic feedback data covering Python, JavaScript, and Rust.\n\nThe procedure has three steps. First, we sample code from each candidate model for every prompt in our prompt set. Second, we pass each sample to the evaluator together with the originating prompt and a rubric. Third, the evaluator returns a score on a five-point scale. We then aggregate these scores across prompts to obtain a final score for each candidate model.\n\nWe benchmarked the evaluator against human ratings on a set of 600 code samples \u2014 200 each in Python, JavaScript, and Rust. The evaluator achieved Spearman correlations with human ratings of 0.71 on Python, 0.68 on JavaScript, and 0.64 on Rust.\n\nThe evaluator also emits a natural-language critique alongside each score, intended to help developers understand the reasoning behind the rating. Examples of these critiques appear in Appendix B.\n---\n\nNotes on the edit:\n- Replaced repeated phrases like \"candidate prompt\", \"evaluator language model\", and \"benchmark set\" with shorter referents once context was established.\n- Consolidated the three parallel correlation sentences into one.\n- Collapsed the \"(200 samples \u2026)\" parentheticals into a single per-language breakdown.\n- Preserved every quantitative claim (600 samples; 200 per language; 0.71 / 0.68 / 0.64; five-point scale; Python/JavaScript/Rust coverage; Appendix B pointer) and the original section ordering (methodology overview \u2192 procedure \u2192 benchmarking \u2192 critiques).\n\nCaveats I cannot verify from the artifact alone:\n- Whether \"open-source\" is the precise license status of the base evaluator (the source says \"publicly available base evaluator\"); I kept \"open-source\" only in the first sentence because it was in the original, but you may want to reconcile \"open-source\" vs. \"publicly available\" against the actual license.\n- Whether the sample-then-score-then-aggregate description matches your full pipeline (e.g., temperature, number of samples per prompt, tie-breaking) \u2014 the original is silent on these, and I did not add anything.\n- I did not change \"Spearman correlation\" wording, but if the reported numbers are actually Spearman's \u03c1 on ordinal 5-point scores, that is appropriate; if they were computed as Pearson on the same data, the label would need correction.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.0,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation \"Clean this up\" most directly requests sentence- and paragraph-level improvement of repetitiveness, flow, concision, and register.",
+      "RX.1": "Any cleanup should preserve uncertainty where the artifact reports evaluation results and model behavior.",
+      "RX.2": "The revised text should avoid strengthening claims beyond the reported benchmark correlations and described procedure.",
+      "RX.3": "The task is limited to cleaning the passage rather than redesigning the evaluation, checking citations, or assessing novelty.",
+      "RX.4": "Because the artifact discusses evaluator scores for code generation, cleanup should avoid wording that could mislead downstream readers about reliability or validation.",
+      "RX.5": "The cleaned version should preserve traceability to the original reported methods, sample counts, languages, and correlation values."
+    }
+  }
+}

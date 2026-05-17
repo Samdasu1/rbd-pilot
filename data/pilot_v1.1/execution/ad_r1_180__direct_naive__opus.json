@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_180",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_naive",
+  "input_tokens": 6,
+  "output_tokens": 756,
+  "cache_read_input_tokens": 13389,
+  "latency_ms": 10579,
+  "cost_usd": 0.0,
+  "output_text": "Cleaned up the section: broke run-on sentences, normalized tense to simple past/present, removed first-person narrative asides, and tightened phrasing.\n\n---\n\nWe describe the multi-agent retrieval framework used to evaluate compositional question answering. The framework follows the planner\u2013retriever\u2013reader decomposition established in recent work on agentic search. The planner issues sub-queries; the retriever returns candidate passages from a BM25 index built over the MS MARCO passage corpus; the reader synthesizes the final answer from the retrieved evidence. We instantiate the framework with a three-agent topology and evaluate it on a held-out slice of the BEIR benchmark suite.\n\nFor retrieval, we use a hybrid dense\u2013sparse fusion of BM25 and a ColBERT-v2 late-interaction model. Fusion weights are learned on a validation split sampled from the training set, and the resulting fused scorer is applied at test time to obtain the top-k candidate passages consumed by the reader. The planner decomposes each input query into two to five sub-queries, with the count determined by a learned classifier that estimates structural complexity. The planner occasionally produces redundant sub-queries, which the retriever deduplicates before passing the consolidated passage set downstream.\n\nWe measure end-to-end answer accuracy using exact match and token-level F1, and we additionally report nDCG@10 for the retrieval stage. The multi-agent system improves over the single-agent baseline by 4.3 F1 points on the multi-hop subset of the benchmark, compared with a smaller 1.1-point improvement on single-hop questions. This gap suggests that agentic decomposition contributes most where compositional reasoning is required.\n\nThe planner\u2013retriever interface introduces non-trivial latency that we were unable to fully amortize through caching. The throughput numbers reported in Table 3 reflect this overhead, and we plan to address it in future iterations of the pipeline.\n\n---\n\nUncertainty: I preserved all factual claims (numbers, model names, table reference) as given; I did not verify whether \"Table 3\" or the cited deltas are correct against the rest of the paper. I also assumed \"we had been curating\" was incidental narrative and dropped it; if curation provenance matters for the contribution, reinsert a single sentence about dataset construction.",
+  "projection_input": null
+}

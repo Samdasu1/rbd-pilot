@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_090",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2148,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 28658,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nBelow is a revised version of the passage followed by the substantive concerns that drove the rewrite. The main goal was to bring the claims into line with what the described experiment actually supports, and to retire several conclusions that the evidence does not justify.\n\n---\n\n**Revised text**\n\nWe present JudgeMT, a protocol for using a large language model as an automatic judge of neural machine translation output. JudgeMT is designed to mitigate one well-documented failure mode of LLM-as-judge setups \u2014 self-preference bias, in which a judge favors outputs from its own model family \u2014 by requiring that the judge come from a different family than any system under evaluation.\n\nThe setup is as follows. We collect translations from five MT systems (M2M-100, NLLB-200, Google Translate, GPT-4, Claude) on the WMT22 zh-en and de-en test sets. Each output is scored by a Llama-3-70B judge using a fixed prompt that elicits a 1\u20135 adequacy rating together with a chain-of-thought justification. We compare the resulting system-level rankings against the human direct-assessment (DA) scores released with WMT22.\n\nAt the system level, JudgeMT attains Spearman rank correlation of 0.78 with human DA on zh-en and 0.81 on de-en, compared with 0.74 / 0.76 for COMET-22 and 0.71 / 0.73 for BLEURT-20 in our reproduction. With only five systems per language pair, these correlation gaps are based on very few ranked points and should be read as suggestive rather than statistically separated; we did not compute confidence intervals or significance tests against the baselines.\n\nInspecting per-system means, the judge does not visibly prefer either of the two LLM-family systems whose family differs from the judge: GPT-4 and Claude scores fall within 0.3 points of each other on the 1\u20135 scale, and neither consistently ranks above the other across language pairs. We treat this as weak evidence consistent with the cross-family design reducing one specific form of self-preference (toward the judge's own family). It does not establish absence of bias in general: we did not include a Llama-family MT system in the comparison, so we have not directly tested whether the judge would have preferred its own family had one been present, and bias toward stylistic features correlated with particular training regimes is not ruled out.\n\nA practical implication, within the scope of these two language pairs and these five systems, is that a non-family LLM judge can serve as a useful additional signal for MT system comparison alongside existing metrics. We do not recommend treating JudgeMT as a drop-in replacement for human DA on the basis of this evidence: rank correlations of 0.78\u20130.81 still imply meaningful disagreement with human judgments at the segment and system level, and we have not characterized failure modes (e.g., behavior on low-resource pairs, on systems closer in quality, or on adversarial / hallucinated output). The cost figure of roughly \\$3K per language pair is an order-of-magnitude estimate based on WMT-scale DA collection and should not be read as a validated savings claim.\n\n---\n\n**Why these changes**\n\n1. The original ending \u2014 \"drop-in human-evaluation substitute \u2026 eliminating the per-language-pair cost of human DA collection\" \u2014 is the most load-bearing overclaim. Spearman 0.78\u20130.81 is good but is not equivalence with human DA; presenting it as a substitute conflates rank correlation with interchangeability and ignores residual disagreement. The revision reframes it as a useful signal and flags the unverified cost-savings figure.\n\n2. The self-preference argument as written has a logical gap. Self-preference bias is defined as a judge favoring its own family. The experiment uses a Llama-3 judge, but no Llama-family MT system is in the candidate pool, so the experimental setup cannot actually exhibit (or fail to exhibit) self-preference. The \"GPT-4 and Claude within 0.3 points\" observation is evidence about parity between two non-judge families, not about absence of self-preference. The revision keeps the observation but downgrades the inference and names what was not tested.\n\n3. With n = 5 systems per language pair, the headline correlation comparisons against COMET-22 and BLEURT-20 rest on very few points. The original implies a clean ordering; the revision keeps the numbers but flags the absence of confidence intervals or significance tests so the gap is not read as established superiority.\n\n4. \"Eliminates self-preference bias\" is too strong even granting the setup; at most the design controls for one mechanism. \"Successfully eliminates\" was softened to \"consistent with \u2026 reducing one specific form.\"\n\n5. \"The framework generalizes to any MT comparison setting where a non-evaluated judge family is available\" extends beyond the two high-resource language pairs and five strong systems actually tested. That sentence was removed; the revised closing constrains the implication to the tested conditions.\n\n6. Sentence-level edits: \"central concern in LLM-as-judge research\" is hyperbole for one of several known concerns and was softened. \"Critically\" was removed as load-bearing rhetoric not earned by the evidence. \"Drop-in\" was removed throughout for the same reason.\n\n7. A potential downstream-harm concern worth naming: positioning an LLM judge as a human-evaluation substitute can entrench whichever stylistic preferences the judge model holds, especially for languages and dialects underrepresented in its training. The revised closing leaves room for this by restricting scope to the tested pairs and declining the substitution claim.\n\n**Items I could not verify**\n\n- The reported correlation numbers (0.78 / 0.81 for JudgeMT, and the COMET-22 / BLEURT-20 baselines) are taken at face value from the artifact; I have not checked them against published WMT22 results or independent reproductions.\n- The \\$3K-per-language-pair DA cost figure is plausible at WMT scale but I have not confirmed it against a primary source.\n- Whether the authors did in fact compute significance tests or confidence intervals and simply omitted them from this passage is unknown; the revision assumes they did not, since none are reported.\n- The claim that no Llama-family MT system was included is inferred from the listed five systems; if such a system was present under a different label, the second concern above would need to be revisited.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The broad request to make the passage stronger centrally implicates reframing the contribution claim and thesis above the sentence level.",
+      "R1.2": "Strengthening the passage requires checking whether the argument from setup to validation to implication follows coherently.",
+      "R1.3": "The artifact makes empirical claims about correlations, bias, and practical substitution, so strengthening includes aligning those claims with the reported evidence.",
+      "R1.6": "The delegation naturally includes improving sentence-level force, clarity, concision, and scholarly register.",
+      "RX.1": "The projection must preserve uncertainty around what the reported results can and cannot establish.",
+      "RX.2": "The artifact contains potentially strong claims such as eliminating self-preference bias and replacing human evaluation, making overclaim avoidance load-bearing.",
+      "RX.3": "The agent must stay within projecting responsibility rather than editing or rewriting the artifact.",
+      "RX.4": "Because the passage makes practitioner-facing claims about replacing human evaluation, downstream misuse or overgeneralization is a relevant responsibility.",
+      "RX.5": "Any strengthening responsibility should remain traceable to the artifact's reported setup, metrics, and conclusions."
+    }
+  }
+}

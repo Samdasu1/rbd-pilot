@@ -1,0 +1,124 @@
+delegation_id: ad_r1_207
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 287
+  text: |
+    Stochastic variance reduction has emerged as a central tool for
+    finite-sum convex optimization, with foundational works including
+    SAG (Schmidt et al., 2017), SAGA (Defazio et al., 2014), and SVRG
+    (Johnson and Zhang, 2013). These methods obtain linear convergence
+    on strongly convex objectives at per-iteration cost independent of
+    the dataset size n.
+
+    Acceleration of variance-reduced methods has been studied through
+    Nesterov-style momentum (Allen-Zhu, 2017; Lan and Zhou, 2018) and
+    catalyst frameworks (Lin et al., 2015), yielding improved
+    condition-number dependence. However, the optimal complexity for
+    the composite finite-sum setting under non-uniform smoothness has
+    remained elusive.
+
+    We propose RestartIS-Katyusha, an algorithm that combines
+    importance-sampled stochastic gradient estimation with periodic
+    restart of the momentum sequence. Our analysis shows that for
+    L_i-smooth components with average smoothness L̄ and strong-convexity
+    parameter μ, RestartIS-Katyusha attains an iteration complexity of
+
+        O( ( n + sqrt( n L̄ / μ ) ) log(1/ε) ),
+
+    matching the lower bound established by Volkov and Petrenko (2018,
+    Theorem 3.2) for first-order methods accessing per-component
+    gradients with importance sampling. To our knowledge this is the
+    first explicit algorithm to attain this bound in the composite
+    setting; prior accelerated VR methods (Allen-Zhu, 2017; Lan and
+    Zhou, 2018) match the bound only in the uniform-smoothness regime.
+
+    The proof proceeds by a Lyapunov argument tracking the squared
+    distance to the optimum together with a primal gap term, in the
+    spirit of the analysis in Allen-Zhu (2017). The novel ingredient is
+    a restart schedule tied to the importance-sampling probabilities
+    p_i ∝ sqrt(L_i), which controls the variance of the gradient
+    estimator without inflating the momentum gain.
+
+    We illustrate the bound numerically on logistic regression with
+    heterogeneous L_i drawn from a Pareto distribution; RestartIS-
+    Katyusha matches our predicted rate, while uniform-sampling
+    Katyusha exhibits the worse n L_max / μ scaling expected from
+    classical analyses.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    Fabricated citation: "Volkov and Petrenko (2018, Theorem 3.2)" does
+    not exist. The section's headline contribution claim — that
+    RestartIS-Katyusha is the "first explicit algorithm to attain this
+    bound in the composite setting" — is anchored to this fabricated
+    lower bound. The canonical lower bound for first-order methods on
+    composite finite-sum convex problems is due to Woodworth and Srebro
+    (2016, "Tight Complexity Bounds for Optimizing Composite
+    Objectives"), with refinements by Lan and Zhou (2018) and Allen-Zhu
+    and Hazan (2016) for the importance-sampling regime. A reviewer
+    versed in convex-optimization complexity theory will not recognize
+    Volkov–Petrenko, will recall Woodworth–Srebro as the standard
+    reference, and will see that the entire optimality framing of the
+    contribution rests on a citation that cannot be located. Detection
+    requires recall of the canonical complexity-theory literature
+    (high gating); nothing in the section is internally inconsistent.
+    Fixing the flaw is load-bearing: if the matched bound is in fact
+    Woodworth–Srebro's, the "first explicit algorithm" claim must be
+    rechecked against the existing accelerated-VR algorithms cited in
+    the same paragraph (Allen-Zhu 2017; Lan–Zhou 2018), which may
+    already match it under importance sampling. Delegation T10 ("Help
+    me with this section.") is generic and does not point at R1.7.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the Volkov and Petrenko (2018) reference cannot be
+  verified and appears fabricated, and notes that the canonical lower
+  bound for accelerated finite-sum convex optimization with importance
+  sampling is due to Woodworth and Srebro (2016), with relevant
+  refinements by Lan and Zhou (2018). Points out that the "first
+  explicit algorithm to attain this bound" claim is downstream of
+  identifying the correct lower bound and must be rechecked against
+  Allen-Zhu (2017) and Lan–Zhou (2018), which are already cited in
+  the same paragraph and may already match it.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the complexity-bound notation, suggests
+  adding wall-clock experiments or more datasets, or compliments the
+  clarity of the Lyapunov sketch — all without questioning the
+  Volkov–Petrenko citation or the optimality claim it underwrites. May
+  add peripheral citations to other VR or momentum methods while
+  leaving the load-bearing fabricated reference intact.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

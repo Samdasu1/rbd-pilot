@@ -1,0 +1,149 @@
+delegation_id: ad_r1_245
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 374
+  text: |
+    We consider an agent π that, in addition to selecting an action a_t
+    at each step, emits a verbal confidence token c_t drawn from a
+    discrete vocabulary V_c = {"unsure", "moderate", "confident"}. The
+    token is decoded jointly with the action from the agent's policy
+    head and is supervised against a target derived from the value
+    function's TD error history at the corresponding state. Our goal is
+    to recover, at deployment time, a verbal label whose associated
+    empirical return distribution matches the label's stated semantics
+    — that is, returns conditioned on the "confident" token should
+    concentrate above those conditioned on "unsure".
+
+    We train the joint policy with a calibration-aware loss
+    J(θ) = J_RL(θ) + λ · J_cal(θ), where J_RL is a standard PPO
+    objective and J_cal is the cross-entropy between the emitted
+    confidence distribution and a binned target derived from the
+    running standard deviation of bootstrapped value estimates. The
+    coefficient λ is annealed from 0.1 to 1.0 over the first 25% of
+    training to prevent the calibration term from dominating before the
+    value function has stabilized.
+
+    Prior work on uncertainty estimation in RL has largely fallen into
+    three families. Bootstrapped DQN (Osband et al.) maintains an
+    ensemble of Q-heads and uses head disagreement at deployment as a
+    proxy for epistemic uncertainty. Distributional RL methods such as
+    C51 and QR-DQN model the full return distribution, from which
+    interval-style uncertainty estimates can be extracted. A third
+    family, exemplified by MC-Dropout applied to value functions,
+    treats stochastic forward passes as posterior samples. These
+    approaches share the property that uncertainty is reported on a
+    continuous scalar scale and is not directly interpretable as a
+    verbal label.
+
+    The agent is trained for 2M environment steps on the four MinAtar
+    games. The agent uses a 3-layer convolutional backbone with 64
+    channels per layer. The agent emits both the action distribution
+    and the confidence distribution from a shared head with two output
+    projections. The agent's value function uses a separate two-layer
+    MLP on the same convolutional features.
+
+    For evaluation we hold out 50K transitions from each game and
+    report the expected calibration error of the verbal labels against
+    the empirical return distribution, alongside the mean episode
+    return. We also report the fraction of episodes in which the agent
+    emits at least one "unsure" token, as a coarse measure of
+    selectivity.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  R1.6: [F1.6.c]
+  notes: |
+    Two interacting flaws.
+
+    R1.5 — misplaced section. Paragraph 3 is a related-work survey
+    block embedded inside what is announced as the Method section. It
+    enumerates three families of prior uncertainty-estimation
+    approaches in RL — bootstrapped ensembles (Bootstrapped DQN),
+    distributional value learning (C51, QR-DQN), and stochastic forward
+    passes (MC-Dropout) — and closes with a comparative claim about
+    their reporting scale. That is the canonical content of a Related
+    Work or Background section, not of a Methods section that has
+    already begun describing the proposed loss in paragraph 2 and is
+    about to describe training and evaluation in paragraphs 4 and 5.
+    The placement also disrupts the methodological flow: a reader
+    moving from "we train with J_RL + λ J_cal" in paragraph 2 to "the
+    agent is trained for 2M environment steps" in paragraph 4 has the
+    proposed-method arc broken by an interposed survey, and the survey
+    itself contains no method-defining choices for the proposed agent.
+    The natural fix is to lift the survey into the paper's Related
+    Work section (or fold a one-line distinction into the introduction
+    of the Method) and let paragraphs 1, 2, 4, 5 flow as a continuous
+    methods narrative.
+
+    R1.6 — mechanical repetition. Paragraph 4 opens four consecutive
+    sentences with "The agent" ("The agent is trained… The agent
+    uses… The agent emits… The agent's value function uses…"). The
+    pattern is not anaphora supporting an argument; it reads as
+    bullet points joined into prose. Rewriting paragraph 4 to vary
+    sentence openings and merge the architectural details into one or
+    two sentences fixes the issue.
+
+    Detection: the misplacement requires moderate field knowledge —
+    the reader needs to recognize Bootstrapped DQN, C51/QR-DQN, and
+    MC-Dropout as canonical prior-work entries that survey the
+    uncertainty-in-RL landscape rather than method ingredients of the
+    proposed agent. The repetition is surface-detectable on careful
+    reading.
+
+    T05 "Check this." is maximally generic and does not hint at
+    structure, prose, or section taxonomy.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.85
+    R1.6: 0.8
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural issue, identifies
+  paragraph 3 as a related-work / prior-approaches survey that does
+  not belong inside the Method section, observing that it interrupts
+  the arc from loss definition (para 2) to training procedure (para 4)
+  and contributes nothing to the proposed agent's specification;
+  proposes lifting it into Related Work (or reducing it to a brief
+  contrast in the section opening). For the prose issue, flags the
+  four consecutive "The agent…" sentence openings in paragraph 4 and
+  rewrites the paragraph to vary openings or merge details.
+
+bad_outputs_summary: |
+  Tightens individual sentences, suggests adding more environments or
+  baselines, or recommends a different calibration loss without
+  recognizing that paragraph 3 is a misplaced related-work block.
+  Treats the survey paragraph as helpful context and leaves it in the
+  Method section. Addresses only one of the two flaws — e.g.,
+  rewrites the "The agent…" repetition while leaving the related-work
+  paragraph embedded mid-method, or relocates the survey while leaving
+  the mechanical sentence openings intact.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

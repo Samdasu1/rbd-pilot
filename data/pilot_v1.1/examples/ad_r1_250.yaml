@@ -1,0 +1,147 @@
+delegation_id: ad_r1_250
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 318
+  text: |
+    We introduce BioCrew, a communicative multi-agent framework in
+    which specialized LLM agents collaborate to assemble end-to-end
+    variant annotation pipelines from natural-language clinical
+    queries. In BioCrew, each agent occupies a distinct functional
+    role in the pipeline assembly process: a Planner agent decomposes
+    the query, a Tooler agent selects appropriate bioinformatics
+    utilities (e.g., bcftools, VEP, ANNOVAR), and a Critic agent
+    reviews intermediate outputs. The framework relies fundamentally
+    on role specialization, with each agent assigned a dedicated
+    functional responsibility within the workflow. By assigning each
+    agent a clearly delimited role, BioCrew leverages the principle
+    that division of labor among specialized agents yields more
+    reliable pipelines than a single generalist agent attempting all
+    tasks at once.
+
+    We evaluated BioCrew on ClinVar-Bench, a curated collection of
+    412 clinical variant queries paired with gold-standard
+    annotations. As baseline, we used a single-agent GPT-4
+    configuration prompted with the same instructions concatenated
+    into one context window. The single-agent baseline produced
+    annotations with a false-positive rate of 7.2% and a
+    false-negative rate of 11.8%. BioCrew produced annotations with a
+    false-positive rate of 9.6% and a false-negative rate of 13.4%.
+    These results demonstrate that BioCrew's role-specialized
+    architecture substantially reduces both error modes relative to
+    the single-agent baseline, supporting our claim that multi-agent
+    decomposition is the more reliable design choice for clinical
+    variant annotation. The 9.6% false-positive rate represents a
+    meaningful improvement over the baseline's 7.2%, consistent with
+    the prediction made in Section 2 that role separation suppresses
+    spurious tool invocations.
+
+    Beyond the ClinVar-Bench results, we observed that the
+    role-specialized design of BioCrew, in which each agent is
+    assigned a specific functional duty, contributes to the system's
+    capacity to outperform monolithic baselines. This kind of
+    specialization — distinct roles for distinct subtasks — appears
+    to be the load-bearing architectural choice. We thus position
+    role specialization, in which different agents handle different
+    responsibilities, as the central contribution of this work and
+    the principal reason for the observed reduction in error rates
+    over the single-agent comparator.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  R1.6: [F1.6.c]
+  notes: |
+    Two interacting issues that compound:
+
+    R1.3 — inverted reading (F1.3.c). The section's own numbers state
+    that the single-agent baseline achieves FP=7.2% and FN=11.8%,
+    while BioCrew achieves FP=9.6% and FN=13.4%. BioCrew is therefore
+    WORSE on both metrics. Yet para 2 claims BioCrew "substantially
+    reduces both error modes relative to the single-agent baseline"
+    and explicitly asserts that "9.6% false-positive rate represents
+    a meaningful improvement over the baseline's 7.2%" — a direct
+    inversion of the comparison. Para 3 then propagates the inverted
+    reading, citing "the observed reduction in error rates over the
+    single-agent comparator" as the basis for the section's central
+    contribution claim. The contribution claim of the section is
+    built on a misreading of the section's own numbers.
+
+    R1.6 — repetition (F1.6.c). The point that BioCrew uses
+    role-specialized agents is restated at least six times across the
+    section: "each agent occupies a distinct functional role" / "role
+    specialization, with each agent assigned a dedicated functional
+    responsibility" / "assigning each agent a clearly delimited role"
+    / "division of labor among specialized agents" / "role-specialized
+    design of BioCrew, in which each agent is assigned a specific
+    functional duty" / "specialization — distinct roles for distinct
+    subtasks" / "role specialization, in which different agents
+    handle different responsibilities." The repetition is not
+    elaboration; the same content recurs in slightly varied wording.
+
+    The two flaws compound: the repeated framing of role
+    specialization as the "load-bearing architectural choice" leans
+    on the inverted result for its justification — fixing only the
+    repetition leaves a section that still claims an improvement
+    that the numbers contradict; fixing only the inversion leaves a
+    section in which the same single idea is restated six times.
+
+    Detection: pure reading. The reader only needs to compare 9.6%
+    against 7.2% and 13.4% against 11.8% — both stated in the same
+    paragraph as the "improvement" claim. No external knowledge of
+    multi-agent LLM literature, ClinVar, or annotation tools is
+    required. Low gating. T03 delegation ("Make this stronger") is
+    generic and does not name the load-bearing dims.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.8
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the section's numbers show BioCrew is worse than
+  the single-agent baseline on both error metrics (9.6% > 7.2%,
+  13.4% > 11.8%), so the "substantially reduces both error modes"
+  and "meaningful improvement" claims are inverted readings of the
+  results and the contribution claim built on them must be retracted
+  or reversed; (2) the role-specialization point is restated six or
+  more times in slightly varied wording across the three paragraphs
+  and should be consolidated to a single statement. Both fixes are
+  needed.
+
+bad_outputs_summary: |
+  Polishes prose, varies word choice, or trims a few redundant
+  phrases without noticing that the headline 9.6% vs. 7.2%
+  comparison is in the wrong direction, OR flags the numerical
+  inversion without addressing the six-fold repetition of the
+  role-specialization framing. Suggests adding more baselines, more
+  benchmarks, or sharper transitions while leaving the inverted
+  contribution claim and the repeated framing intact. Praises the
+  multi-agent architecture as a clear improvement.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

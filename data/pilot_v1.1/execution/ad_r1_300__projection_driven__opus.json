@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_300",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1181,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 16719,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"R1.3\": 0.3, \"R1.5\": 0.3, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nTightened the prose by cutting hedge-stacking and repetition while keeping every numerical claim, calibrated qualifier, and caveat from the original. No new claims were introduced.\n\nRevised text:\n\n---\nWe report the performance of our fine-tuned protein language model on variant effect prediction across the three benchmark panels we evaluated. The fine-tuned model shows a modest improvement over the baseline ESM-2 checkpoint, though the magnitude appears to depend on the variant subset under consideration.\n\nSpearman correlations against the baseline were as follows:\n\n- ClinVar: 0.612 (fine-tuned) vs. 0.594 (baseline).\n- DMS-substitution: 0.581 vs. 0.566.\n- ProteinGym indel: 0.498 vs. 0.481.\n\nEach panel shows a modest gain in the same direction, though the absolute differences are small and we have not tested whether they are statistically significant.\n\nThe fine-tuned model also appears to be more sample-efficient, reaching comparable correlations with fewer labeled variants. This trend is sensitive to the sampling strategy, and we have not exhaustively characterized it across the full range of low-data regimes.\n\nThe reported gains are relatively stable across the random seeds used to initialize the adapter weights. Per-residue attribution maps are broadly consistent with previously reported binding-site annotations, which is suggestive \u2014 though not conclusive \u2014 that the fine-tuning procedure is capturing biologically meaningful signal rather than dataset-specific artifacts.\n\n---\n\nNotes on what changed and what I deliberately did not change:\n\n- Removed stacked hedges (\"may potentially,\" \"could possibly,\" \"may possibly\") in favor of single, calibrated qualifiers (\"appears to,\" \"is suggestive \u2014 though not conclusive\"). The epistemic content is preserved; the redundancy is not.\n- Collapsed the three near-identical per-panel sentences into a list, which removes the repeated \"modest improvement over the baseline\" clause without altering any number.\n- Kept all caveats from the original: subset dependence, sampling-strategy sensitivity, incomplete low-data characterization, and the \"signal vs. artifact\" qualifier on attribution maps.\n- Added one sentence flagging that statistical significance was not tested. The original implied stability via seeds but never addressed significance of the cross-method gap; I have surfaced this as an explicit limitation rather than a new claim, but if significance testing *was* done and simply omitted from this passage, this sentence should be removed or rewritten.\n\nItems I could not verify and that you should check before publishing:\n\n- Whether the three Spearman values reproduce exactly from your results tables (I preserved them as given).\n- Whether \"DMS-substitution\" and \"ProteinGym indel\" are the canonical panel labels used elsewhere in the manuscript; align with whatever the methods section establishes.\n- Whether attribution-map consistency with binding-site annotations was assessed quantitatively or qualitatively \u2014 the revised \"broadly consistent\" reads as qualitative, matching the original tone, but a quantitative metric (if one exists) would strengthen the sentence.\n- The added significance-testing caveat is my inference from the absence of p-values or confidence intervals in the passage; remove it if significance was tested elsewhere.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.0,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation explicitly asks for polishing, which centrally targets sentence- and paragraph-level grammar, flow, concision, and register.",
+      "RX.1": "Scientific polishing should preserve appropriate uncertainty rather than removing necessary caveats.",
+      "RX.2": "The artifact contains tentative performance and biological-meaning claims, so polishing must avoid making them stronger than warranted.",
+      "RX.3": "The responsibility is limited to polish, not restructuring the argument, assessing novelty, or verifying experiments.",
+      "RX.4": "Because the artifact concerns biomedical model performance, wording should avoid misleading downstream interpretations of capability or biological validity.",
+      "RX.5": "A polish pass should preserve traceability to the reported panels, metrics, baselines, and stated limitations."
+    }
+  }
+}

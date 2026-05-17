@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_181",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1790,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 23543,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.9}}\n\nSummary: Reviewed the passage for argument coherence, claim-evidence alignment, prose quality, and overreach; flagged several internal inconsistencies and unsupported claims, and suggested sentence-level rewrites without expanding into novelty or citation work.\n\n**Internal inconsistencies and unsupported claims**\n\n1. Comparison to a \"hard-label baseline\" is asserted but the baseline numbers are never reported in the passage. The text says the soft-label model \"improves over the hard-label baseline that we report for comparison,\" yet no comparison values appear. Either add the baseline's calibration error and cross-entropy, or soften the claim to \"we compare against a hard-label baseline reported elsewhere in the paper.\"\n\n2. The 78.4% majority-vote accuracy is described as \"within the range of strong baselines on this benchmark,\" but no range is given and no baseline is named in this passage. As written, the comparison is unverifiable. Either cite specific baseline numbers or remove the framing.\n\n3. The future-work sentence shifts tense: \"span-level annotation tasks where disagreement *was* even more pronounced\" implies prior empirical observation, but no such observation has been reported in the passage. If this is based on pilot data, say so; otherwise change to \"where disagreement may be more pronounced.\"\n\n4. \"We believe the formulation generalizes naturally\" is a bare assertion. Given that \"a full evaluation is left for future work,\" consider downgrading to \"we expect the formulation to extend to span-level tasks, though this remains to be tested.\"\n\n5. The claim that retaining per-annotator labels \"matters for items where annotators legitimately disagree on borderline cases\" is presented as established but is not supported by any reported analysis in this passage (e.g., an ablation comparing aggregated vs. retained labels). Either point to such evidence or rephrase as motivation rather than result.\n\n6. \"Temperature-scaled softmax head\" plus a KL-to-empirical-distribution objective: the role of temperature scaling is not explained. Is the temperature learned, fixed, or tuned post-hoc for calibration? Calibration error of 0.043 is reported as a result, but the reader cannot tell whether that reflects the training objective or a separate calibration step. Clarify.\n\n7. Numbers worth double-checking against the source: 18,432 training instances, 2,048 eval items, 5\u201311 annotators per instance, 8 epochs, batch 32, lr 2e-5, ECE 0.043, cross-entropy 1.21, accuracy 78.4%. These are precise figures and the prose should match the experimental tables exactly.\n\n**Prose-level issues**\n\nThe first four paragraphs are each a single long run-on sentence chained by \"and.\" This obscures the logical structure. Suggested splits:\n\n- Paragraph 1: split after \"for each item.\" Start a new sentence: \"We minimize the Kullback\u2013Leibler divergence between the model output and this empirical distribution, rather than using a hardened majority-vote target as is common in prior work.\"\n\n- Paragraph 2: split after \"annotator judgments.\" New sentence: \"We retain per-annotator labels rather than aggregating up front, in order to preserve the disagreement signal that earlier pipelines collapse during preprocessing.\"\n\n- Paragraph 3: replace the comma splice \"head, we trained\" with a period. Split the long results sentence: \"On the held-out evaluation split (2,048 items), the model achieves a calibration error of 0.043 and a distribution-level cross-entropy of 1.21 against the empirical annotator distribution.\"\n\n- Paragraph 4: \"even though our training objective was not optimized for that metric\" \u2014 tighten to \"despite not optimizing for that metric.\"\n\n- Paragraph 5: tense (\"disagreement was even more pronounced\") and split into two sentences.\n\n**Suggested revision of the results paragraph (illustrative)**\n\n\"The model is a fine-tuned encoder with a temperature-scaled softmax head. We trained for 8 epochs with batch size 32 and learning rate 2e-5. On the held-out split (2,048 items), the model attains an expected calibration error of 0.043 and a distribution-level cross-entropy of 1.21 against the empirical annotator distribution. Under majority-vote scoring, the same model reaches 78.4% accuracy; we report this for comparability with prior work, although the training objective does not target it.\"\n\n**Scope note**\n\nPer the projection, I did not assess novelty against prior work or citation coverage, and did not propose structural reorganization beyond paragraph-internal splits.\n\n**Caveats on what I could not verify**\n\n- I have no access to the underlying paper, tables, or codebase, so the numerical figures, the existence of the hard-label baseline comparison, and the corpus composition cannot be checked against source. The inconsistencies flagged above are internal to the passage; some may resolve once cross-referenced with the rest of the manuscript.\n- Whether 78.4% is in fact \"within the range of strong baselines\" depends on benchmark norms I cannot confirm here.\n- The characterization of temperature scaling's role is inferred from the passage alone and may be clarified elsewhere in the paper.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should \"Check this\" mean writing and clarity only, or a substantive research check covering logic and claim-evidence alignment as well?",
+    "rationale": {
+      "R1.2": "A generic request to check a research passage can centrally include verifying whether the argument chain about soft-label training, disagreement preservation, and evaluation conclusions is internally coherent.",
+      "R1.3": "The passage makes empirical claims about calibration error, cross-entropy, accuracy, and baseline improvement, so checking may centrally include whether the stated claims are aligned with the reported results.",
+      "R1.6": "Because the artifact is a prose draft and the delegation is simply to check it, sentence-level grammar, flow, and concision are centrally implicated.",
+      "RX.1": "Any projection should disclose uncertainty because the delegation is underspecified and could mean proofreading or substantive review.",
+      "RX.2": "The projected responsibility must avoid treating reported metrics or generalization claims as stronger than the artifact supports.",
+      "RX.3": "The projection must stay within responsibility assignment and not perform the requested checking or rewrite the artifact.",
+      "RX.4": "The projection should avoid downstream harm by not encouraging unsupported methodological or empirical claims to pass unexamined.",
+      "RX.5": "The projection should remain traceable to the delegation phrase and the specific claims present in the artifact."
+    }
+  }
+}

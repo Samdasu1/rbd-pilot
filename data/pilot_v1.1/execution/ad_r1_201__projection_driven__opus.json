@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_201",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1209,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 14145,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.5, \"RX.5\": 0.7}}\n\nLight prose polish only \u2014 tightened sentences, smoothed transitions, and fixed minor rhythm/flow issues; left structure, claims, numbers, and citations untouched.\n\nRevised text:\n\n---\nCausal effect identification \u2014 determining whether and how a target estimand can be computed from observational data \u2014 is a central task in applied causal inference. Pearl's do-calculus and the ID algorithm provide a complete answer in principle, but applying them to real studies requires translating informal descriptions into graphical models and reasoning carefully about adjustment sets, mediators, and instruments.\n\nWe introduce CausalDebate, the first multi-agent LLM framework for automated causal effect identification from natural-language study descriptions. CausalDebate orchestrates three specialized agents \u2014 a confounder enumerator, an identification strategist, and a critic \u2014 that exchange structured arguments to produce a valid back-door, front-door, or instrumental-variable adjustment for a target average treatment effect, or a proof of non-identifiability.\n\nRecent work has begun to apply LLMs to causal reasoning. K\u0131c\u0131man et al. (2023) showed that GPT-4 can recover plausible causal graphs from variable names alone, with accuracy exceeding several constraint-based baselines on the T\u00fcbingen pairs. Vashishtha et al. (2023) extended this to a multi-agent setting in which separate LLM agents propose and critique pairwise causal directions. Most directly relevant, Long et al. (2023) proposed a multi-agent debate protocol for the full identification task, evaluated on a curated set of textbook graphs.\n\nCausalDebate differs from these prior efforts in two ways. First, our agents reason over partially specified graphs in which some confounders are latent \u2014 a setting that neither K\u0131c\u0131man et al. nor Vashishtha et al. address directly. Second, we evaluate at substantially larger scale: 240 identification problems, compared with the dozen-graph evaluations typical of prior work.\n\nOn our benchmark, drawn from Pearl (2009) and Hern\u00e1n & Robins (2020), CausalDebate returns a correct adjustment in 78% of cases, compared with 54% for a single-agent GPT-4 baseline and 61% for chain-of-thought prompting. We position CausalDebate as the first multi-agent system to combine LLM reasoning with formal identification machinery, and as a concrete step toward automated causal analysis assistants.\n\n---\n\nNotes on changes:\n- Replaced \"While X, Y\" construction with a cleaner \"X, but Y\" sentence to reduce subordinate-clause weight.\n- Moved \"for a target average treatment effect\" next to its anchor (\"adjustment\") so the trailing \"or a proof of non-identifiability\" reads as a true alternative rather than dangling.\n- Changed \"which neither \u2026 handle directly\" to \"a setting that neither \u2026 address directly\" \u2014 antecedent is now unambiguous, and subject\u2013verb number matches.\n- \"versus\" \u2192 \"compared with\" for parallelism with the next paragraph's phrasing.\n- Final sentence: replaced \"taking a concrete step\" with \"and as a concrete step\" so both claims hang from \"We position \u2026\", giving a cleaner parallel structure.\n\nItems not verified: I have not checked the cited authors, years, or the reported accuracy figures (78% / 54% / 61%, 240 problems) against sources; those were preserved verbatim. The framing claim \"first multi-agent LLM framework\" was also left as written.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Clean this up' most directly asks for sentence- and paragraph-level improvements to clarity, flow, concision, and register.",
+      "RX.1": "Any cleanup should preserve uncertainty where the draft makes empirical or comparative claims that may depend on evidence not shown in the artifact.",
+      "RX.2": "The draft contains strong firstness, scale, and performance claims, so cleanup must avoid making those claims stronger than the text supports.",
+      "RX.3": "The responsibility is limited to cleanup of the provided paper excerpt rather than executing a full review, rewrite, or literature audit.",
+      "RX.4": "Because the artifact concerns automated causal analysis assistants, cleanup should avoid wording that could encourage unsupported reliance on causal conclusions.",
+      "RX.5": "Changes or judgments should remain traceable to the provided artifact and not introduce unattributed external facts."
+    }
+  }
+}

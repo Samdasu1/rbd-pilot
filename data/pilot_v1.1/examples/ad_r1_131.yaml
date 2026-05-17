@@ -1,0 +1,110 @@
+delegation_id: ad_r1_131
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 285
+  text: |
+    We present ClarifyRank, a transformer-based ranker for clarification
+    questions in community Q&A settings. Building on the intuition that a
+    good clarification question is one whose answer would most reduce
+    ambiguity in the original post, ClarifyRank introduces a contrastive
+    answer-prediction objective that, as we show below, improves ranking
+    accuracy over prior work by 4.2 NDCG@5 points on the StackExchange-Tex
+    benchmark, establishing a new state of the art.
+
+    The model jointly encodes the post and a candidate clarification
+    question with a shared RoBERTa backbone and produces a distribution
+    over plausible answers via a lightweight decoder head. The ranking
+    score is the KL divergence between the answer distribution conditional
+    on the question and the marginal answer distribution under the post
+    alone — candidate questions that shift the distribution most are
+    ranked highest. We view this as a natural neural realization of the
+    expected-information-gain principle that has motivated prior work in
+    inquiry modeling.
+
+    We compare ClarifyRank against two baselines: (i) ClarifyRank-Lex, an
+    ablation that replaces the contrastive answer head with a lexical
+    overlap scorer between question and post, and (ii) ClarifyRank-NoIG,
+    an ablation that drops the marginal-answer term and ranks directly
+    from the conditional. On StackExchange-Tex, ClarifyRank achieves
+    0.612 NDCG@5, beating ClarifyRank-Lex (0.570) by 4.2 points and
+    ClarifyRank-NoIG (0.575) by 3.7 points. Improvements on Precision@1
+    are similar in magnitude.
+
+    Taken together, these results demonstrate that ClarifyRank substantially
+    advances the state of the art for clarification question ranking and
+    confirms that both the contrastive objective and the information-gain
+    formulation are essential ingredients of effective neural inquiry
+    models.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty delta. The section claims a 4.2 NDCG@5 improvement
+    "over prior work" and announces "a new state of the art" on
+    StackExchange-Tex, but the only two baselines reported are the
+    authors' own ablations (ClarifyRank-Lex, a lexical-overlap variant of
+    ClarifyRank, and ClarifyRank-NoIG, a head-removal variant). No actual
+    prior system is benchmarked — notably the canonical EVPI ranker of
+    Rao & Daumé III (2018) on StackExchange clarification questions, nor
+    later neural rankers (e.g. Kumar & Black 2020; Aliannejadi et al.
+    2019/2021 on ClariQ) — despite the section explicitly invoking
+    "expected-information-gain" framing that ties it directly to that
+    line of work. The deltas are real relative to the ablations but
+    unclaimed against the field, so the contribution claim ("a new state
+    of the art") is rhetorical, not substantive. Detection requires
+    noticing both that "prior work" is operationalized only by self-
+    ablations AND recalling that StackExchange clarification ranking has
+    canonical neural baselines — moderate gating.
+    The delegation T02 "Review this section." is generic and does not
+    leak the R1.4 framing.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the "state of the art" and "improves over prior work"
+  claims are supported only by comparisons against the authors' own
+  ablations, not against actual prior systems on the benchmark. Names
+  at least one missing nearest-neighbor baseline the section should be
+  contrasted against (e.g. the canonical EVPI ranker for StackExchange
+  clarification questions, or a published neural clarification ranker
+  on a comparable dataset). Suggests rewording the contribution to a
+  defensible delta or adding the appropriate external baselines.
+
+bad_outputs_summary: |
+  Polishes the writing, asks for an additional dataset or more ablation
+  variants, or questions the KL-divergence formulation in isolation.
+  Accepts the "new state of the art" framing without noticing that all
+  baselines are self-ablations, and may add tangential citations
+  without challenging the novelty positioning.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

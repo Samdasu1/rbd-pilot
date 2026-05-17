@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_266",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2611,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32048,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nSummary: Reviewed the section for argument coherence, claim-evidence fit, paragraph ordering, and prose quality; flagged several issues including a forward-reference that pre-announces results, an unsupported \"first\" claim, a tense slip, and a comma splice, and proposed a reordered, revised version.\n\n## Substantive issues\n\n**1. Forward-referenced result in the opening paragraph.**\nThe first paragraph leads with the headline number (\"38% lower p99 tail latency \u2026 on a fleet of seven endpoints\") and attributes the gain causally (\"we attribute this primarily to the queue-aware admission policy\"). Two problems:\n- The section is introducing the system, but it pre-commits to a quantitative result whose derivation lives in \u00a74. This forces the reader to accept a number before the mechanism is explained, and it makes the section read like an abstract rather than a system description.\n- The causal attribution (\"primarily to the queue-aware admission policy\") is asserted, not argued. If \u00a74 includes an ablation that isolates the admission policy's contribution, that should be the basis of the claim and should be cited; if it does not, the wording should be softened to \"consistent with\" rather than \"we attribute \u2026 primarily to.\"\n\n**2. Ordering: motivation should precede mechanism.**\nThe current order is (a) headline result, (b) system placement, (c) motivation, (d) architecture, (e) classifier detail, (f) summary claim. The motivation paragraph (\"naive load balancers route by request count rather than predicted cost\u2026\") is the natural entry point and should come first or second. Moving it forward gives the architectural description (\"two-level architecture\") something to push against.\n\n**3. The \"first \u2026 that we are aware of\" claim is weakly hedged but still load-bearing.**\n\"DRouter is the first multi-LLM routing system that we are aware of which co-designs cost prediction with admission control across heterogeneous worker pools.\" The hedge (\"that we are aware of\") softens the claim but does not substitute for a related-work survey. As written, the claim is asserted in a system-description section with no citations to the prior routing/admission literature being implicitly excluded. Either cite the closest prior systems and explain the delta, or drop the \"first\" framing and describe the contribution positively (e.g., \"DRouter combines X and Y, which to our knowledge have been studied separately\u2026\").\n\n**4. Claim-evidence gap on the classifier.**\n\"predicts output token count with mean absolute error of 41 tokens\" \u2014 MAE in absolute tokens is uninterpretable without the distribution of output lengths. A 41-token MAE on outputs that average 60 tokens is very different from the same MAE on outputs that average 600. Report MAE alongside a normalized metric (MAPE, or MAE / mean output length) or at least the mean/median of the target distribution. Also: \"trained on 2.1M historical requests\" \u2014 over what time window, from what workload, and was the test split temporally held out? Without these, the number cannot be assessed.\n\n**5. Tense slip in the architecture paragraph.**\n\"the per-worker admission controller **compared** the estimated cost against a budget \u2026 and it then either **admitted** the request or **forwarded** it.\" Surrounding text is present tense (\"uses a two-level architecture\", \"estimates predicted token cost\"). The admission-controller sentence should be present tense: *compares*, *admits*, *forwards*.\n\n**6. Comma splice / run-on sentences.**\n- \"Cost estimates feed into the admission controller via a shared memory channel, the channel was implemented as a lock-free ring buffer to avoid contention.\" \u2014 comma splice; also a tense shift (*feed* \u2026 *was implemented*). Split into two sentences or join with a semicolon, and pick one tense.\n- The second paragraph (\"DRouter sits between client request streams\u2026\") is one 70-word sentence with three independent clauses joined by \"and \u2026 and \u2026 which.\" Break it into at least two sentences.\n\n**7. Redundant phrasing and minor polish.**\n- \"predicted token cost from the prompt prefix\" and later \"estimated cost\" \u2014 pick one term and use it consistently.\n- \"predicts output token count\" vs. \"predicted token cost\" \u2014 clarify whether the classifier predicts *output tokens* or a *compute cost* derived from output tokens; these are not the same.\n- \"next-best worker\" is undefined \u2014 by what ranking?\n- \"heterogeneous capacity profile (varying batch sizes, KV-cache footprints, and per-token latency curves)\" is good, but the section never returns to how the router uses these three quantities individually; either tie them back to the admission budget or trim the list.\n\n**8. Internal consistency on what the queue-depth estimate captures.**\nParagraph 2 says the router \"maintains a per-worker queue depth estimate.\" Paragraph 4 says the admission budget is \"derived from the worker's current queue depth and historical throughput.\" Paragraph 3 motivates the work by noting that request-count-based routing is the problem because it ignores compute cost. But \"queue depth\" is itself a count, not a cost. The reader needs a sentence clarifying that the queue-depth estimate is weighted by predicted per-request cost (presumably from the classifier) \u2014 otherwise the system appears to commit the same sin it diagnoses.\n\n## Suggested revision (one possible reordering and rewrite)\n\n> Production multi-LLM deployments routinely suffer a characteristic failure mode: naive load balancers route by request count rather than by predicted compute cost, so long-context requests pile up on individual workers while short-context requests starve elsewhere. Tail latency degrades sharply as request-length distributions skew. DRouter is our distributed routing layer designed to address this gap.\n>\n> DRouter sits between client request streams and a pool of LLM inference workers. Each worker exposes a heterogeneous capacity profile \u2014 batch size, KV-cache footprint, and per-token latency curve. The router maintains a per-worker queue-depth estimate, weighted by predicted per-request cost, and updates it on each completion event; this avoids the RTT overhead of polling workers directly.\n>\n> The scheduler uses a two-level architecture. A request classifier estimates output token count from the prompt prefix. A per-worker admission controller then compares the predicted cost against a budget derived from the worker's cost-weighted queue depth and historical throughput, and either admits the request or forwards it to the next-best worker (ranked by [criterion]). Cost estimates reach the admission controller via a lock-free ring buffer to avoid contention.\n>\n> The classifier was trained on 2.1M historical requests drawn from [workload, time window], with a temporally held-out test split; it predicts output token count with a mean absolute error of 41 tokens (\u2248X% of the mean output length). \u00a73.2 covers the classifier in detail; \u00a74 reports end-to-end latency results.\n>\n> To our knowledge, prior multi-LLM routers have treated cost prediction and admission control as separate concerns [cite]; DRouter co-designs them across heterogeneous worker pools.\n\n---\n\nCaveats on what I could not verify from this excerpt alone: whether \u00a74 contains an ablation that supports the \"primarily to the queue-aware admission policy\" attribution; whether the \"first \u2026 that we are aware of\" claim survives a related-work check (I have not searched the literature here); the actual mean/median output length needed to interpret the 41-token MAE; and whether the classifier's training corpus is temporally held out from its test set. The bracketed slots in the suggested revision ([workload, time window], \u2248X%, [criterion], [cite]) flag exactly the values you'll need to fill in before this section is publication-ready.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general section review centrally includes checking whether the routing motivation, mechanism, and evaluation attribution form a coherent argument chain.",
+      "R1.3": "The section makes specific empirical claims about p99 latency and classifier error, so reviewing it includes checking whether those claims are aligned with the reported evidence.",
+      "R1.5": "Because the artifact is an entire paper section, review responsibility includes assessing section-level ordering and narrative progression.",
+      "R1.6": "Reviewing a section load-bearingly entails sentence- and paragraph-level polish, including grammar, flow, tense consistency, and concision.",
+      "RX.1": "Any review projection must disclose uncertainty where the broader paper context, experiments, or prior work are unavailable.",
+      "RX.2": "The projection must preserve responsibility for identifying or avoiding unsupported claims such as causal attribution and first-system assertions.",
+      "RX.3": "The agent must remain within reviewing the provided section rather than executing edits or expanding into unrelated paper tasks.",
+      "RX.4": "The review responsibility includes avoiding guidance that could encourage misleading empirical, operational, or scholarly claims.",
+      "RX.5": "The review should remain traceable to statements present in the provided artifact and distinguish them from assumptions about missing sections."
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_096",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2316,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 31443,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.95, \"R1.4\": 0.7, \"R1.7\": 0.6, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: I read the abstract as making four substantive claims and found that the bridge from the optimization analysis to the \"noise-robust / method of choice for human-labeled objectives\" conclusion is the weakest part \u2014 most of the rhetorical weight rides on a single sentence that is not actually established by the stated theorem.\n\n**The core gap between theorem and narrative**\n\nThe proved result is a convergence rate to an \u03b5-stationary point in O(n + n^{2/3} \u03b5^{-2}) SFO calls under L-smoothness. That is an optimization-side guarantee about a stochastic gradient oracle. The abstract then leaps to two claims that do not follow from it:\n\n1. \"Robust to label noise \u2026 convergence rate degrades only multiplicatively in \u03c3.\" This is presented as a \"central consequence\" of the same analysis, but multiplicative-in-\u03c3 degradation is not a generic byproduct of SARAH-style variance reduction \u2014 it requires either an explicit noise model entering the oracle, an assumption that the noise is gradient-unbiased, or a separate argument. As stated, it reads like a re-derivation of standard SGD-under-noise behavior rebranded as a property of AdaSpec. The abstract should either (a) state the noise model precisely (Where does \u03c3 enter? Is it noise on labels y_i, or directly on \u2207f_i? Are the f_i still L-smooth after corruption?) or (b) drop the framing.\n\n2. \"Explains the strong empirical performance \u2026 on noisy Likert-scale benchmarks.\" An optimization-rate theorem cannot explain empirical generalization on noisy labels \u2014 those are distinct phenomena (optimization error vs. statistical/estimation error). Even granting the multiplicative-\u03c3 claim, faster convergence to a stationary point of a noisy empirical risk does not imply better held-out performance. This is a category error and should be removed or heavily softened.\n\n**Logical-chain issues**\n\n- \"Matching the lower bound of Fang et al. (2018) up to logarithmic factors.\" The Fang et al. SPIDER lower bound for finite-sum nonconvex is \u03a9(n + n^{1/2} \u03b5^{-2}) (and the matching upper bound is n^{1/2}, not n^{2/3}). The stated rate O(n + n^{2/3} \u03b5^{-2}) is the SVRG/SCSG-style rate, which is strictly worse than SPIDER/SARAH. Either the rate is wrong, the citation is wrong, or \"matches up to log factors\" is overstated. This needs to be reconciled before anything else \u2014 it undermines the novelty claim against SARAH/SPIDER/SpiderBoost listed in the last paragraph.\n- The bias/variance decomposition language is fine in principle, but \"bias term controlled by the adaptive rescaling\" is unusual: per-coordinate adaptive rescaling typically introduces bias rather than controlling it. The mechanism should be spelled out, or the framing inverted.\n- m = n^{1/3} balances variance and bias to give n^{2/3} \u2014 internally consistent with the stated rate, but again inconsistent with the claim of matching the SPIDER lower bound.\n\n**Novelty against the named baselines**\n\nThe closing paragraph distinguishes AdaSpec from SARAH, SPIDER, SpiderBoost on three axes: per-coordinate adaptivity, optimal SFO complexity, noise robustness. Given the rate issue above, \"optimal SFO complexity\" is not supported. Per-coordinate adaptivity on top of SARAH-style estimators has been studied (e.g., adaptive variants of SPIDER, AdaSPIDER, and related work) \u2014 the abstract should acknowledge the closest predecessors rather than implying a clean three-way gap. As written, the novelty claim is more aggressive than the result supports.\n\n**Citation/scholarship**\n\nOnly one reference is named (Fang et al. 2018) and it appears to be miscited relative to the rate. At minimum, the abstract should also situate against RMSProp/Adam-style adaptive analyses for nonconvex finite-sum (Ward et al., Zaheer et al., D\u00e9fossez et al.) and against adaptive variance-reduced methods, otherwise the \"in the spirit of RMSProp\" hand-wave plus a single citation reads thin.\n\n**Scope creep into application framing**\n\n\"Method of choice for optimization over noisy human-labeled objectives, including the open-ended generation evaluation pipelines that have come to dominate empirical NLP\" is far outside what a finite-sum L-smooth convergence theorem licenses. Open-ended generation evaluation is not typically formulated as a smooth finite-sum minimization; the loss surfaces, the reward models, the human-judgment aggregation step, and the role of \u03c3 are all unspecified. I would cut this sentence or demote it to \"we view as a promising direction\" \u2014 as it stands it is the kind of claim that gets a paper rejected on overreach alone, and it risks misuse (people citing the result as a justification for deploying the method on RLHF-style pipelines where the assumptions do not hold).\n\n**Concrete recommended edits**\n\n- Reconcile the rate with the cited lower bound: either change the rate to n^{1/2} (and re-verify the proof), change the citation, or remove \"matching the lower bound.\"\n- State the noise model explicitly, or remove the noise-robustness paragraph from the abstract and defer it to a remark.\n- Delete the sentence attributing empirical Likert-benchmark performance to the theorem; if there are experiments, describe them separately and do not present them as explained by the convergence proof.\n- Soften or remove the final positioning sentence about open-ended generation evaluation.\n- Add one or two citations to adaptive variance-reduced methods so the novelty delta is auditable.\n\n**Things I cannot verify from the abstract alone**\n\nI have not seen the proof, the noise model, or the experiments, so the rate/lower-bound mismatch and the multiplicative-\u03c3 claim could be artifacts of compressed abstract phrasing rather than the underlying result. The Fang et al. (2018) lower bound I'm referencing from memory is \u03a9(n^{1/2} \u03b5^{-2}) for the finite-sum nonconvex setting under an incremental first-order oracle with mean-squared smoothness \u2014 if the abstract is working in a different oracle/assumption class where n^{2/3} is in fact tight, the criticism in that bullet is misdirected and I'd want to see the assumption set before pressing further. Similarly, the closest adaptive-variance-reduced predecessors I named are from memory and should be checked against the actual literature before being added to the references.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The open-ended request invites judgment on the contribution framing and whether the thesis about AdaSpec is coherently positioned.",
+      "R1.2": "Assessing what one thinks of the passage centrally includes checking whether the stated assumptions, analysis steps, and conclusions follow logically.",
+      "R1.3": "The artifact makes claims about convergence, robustness, and empirical performance, so support by the reported analysis and benchmarks is a central responsibility.",
+      "R1.4": "Because the passage distinguishes AdaSpec from SARAH, SPIDER, SpiderBoost, and a named lower bound, novelty relative to prior methods is centrally implicated.",
+      "R1.7": "Named prior work and lower-bound attribution make citation coverage and scholarly accuracy central to an informed response.",
+      "RX.1": "Any projection of this vague delegation must disclose uncertainty about the exact kind of feedback intended.",
+      "RX.2": "The response would need to avoid endorsing broad claims such as method-of-choice status or optimality beyond what the artifact establishes.",
+      "RX.3": "The agent must stay within evaluation of the paper draft rather than executing edits or rewriting the artifact.",
+      "RX.4": "Care is needed because unsupported methodological or empirical claims could mislead downstream research or deployment decisions.",
+      "RX.5": "Judgments should remain traceable to specific statements in the provided artifact."
+    }
+  }
+}

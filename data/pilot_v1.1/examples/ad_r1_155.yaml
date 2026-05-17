@@ -1,0 +1,124 @@
+delegation_id: ad_r1_155
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: probabilistic_programming
+  word_count: 308
+  text: |
+    We present CrowdMix, a hierarchical mixture model that jointly
+    infers per-annotator LLM-use rates and underlying label
+    distributions from crowdsourced annotations. Implemented in NumPyro
+    and fit via the No-U-Turn Sampler, the model produces posterior
+    estimates of contamination on a per-task and per-worker basis,
+    allowing downstream consumers of crowdsourced labels to discount or
+    reweight likely LLM-generated responses.
+
+    In our experiments on the AmazonMTurk-Annotated subset of the
+    OPEN-CROWD-2024 corpus (12,440 annotations across 6 text-production
+    tasks), CrowdMix recovered a posterior mean LLM-use rate of 0.34
+    (95% HDI [0.29, 0.39]), with substantial heterogeneity across
+    workers (σ_w = 0.21). On the held-out gold subset, CrowdMix-
+    reweighted majority vote improved over plain majority vote by 4.7
+    F1 points on the paraphrase task and 3.1 F1 points on the
+    summarization task.
+
+    The widespread availability of instruction-tuned LLMs has
+    dramatically changed the crowdsourcing landscape. Recent
+    measurements estimate that 30–46% of MTurk text-production
+    submissions contain LLM output, threatening the validity of
+    crowdsourced datasets used to train and evaluate language models —
+    a contamination loop that motivates explicit modeling.
+
+    Bayesian models of annotator behavior have a long history,
+    beginning with Dawid and Skene's confusion-matrix model and
+    extended in many directions including item-response treatments and
+    hierarchical pooling across worker cohorts. None of these models,
+    however, explicitly accommodates a contaminating generative process
+    distinct from the annotator's own judgment.
+
+    Formally, each annotator i has a latent LLM-use propensity
+    θ_i ~ Beta(α, β), with hyperpriors α, β ~ Gamma(2, 0.5). Each
+    annotation a_{ij} on item j is drawn from a mixture: with
+    probability θ_i from a shared LLM response distribution
+    p_LLM(·|j) estimated from a held-out auto-generated reference set,
+    and with probability 1−θ_i from the annotator's own confusion
+    matrix conditioned on the latent gold label z_j ~ Categorical(π).
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  notes: |
+    Out-of-order narrative. The section flow is:
+      (1) method intro (CrowdMix, NumPyro/NUTS, what it produces)
+      (2) experimental results (posterior LLM-use rate, F1 gains)
+      (3) motivation (LLM contamination of MTurk submissions) —
+          belongs at the START, before any method or results
+      (4) related work (Dawid-Skene, hierarchical pooling) — belongs
+          immediately after motivation, not after results
+      (5) formal model specification (priors, mixture likelihood) —
+          belongs adjacent to (1), as it is the formal counterpart of
+          the prose method intro; placing it after results forces the
+          reader to retroactively assemble the generative model that
+          produced the numbers they have already read.
+    The natural order for a PPL methods/results section in this style
+    is: motivation → related work → method intro → formal model →
+    results, i.e. (3) → (4) → (1) → (5) → (2). The current order
+    forces the reader to backtrack twice: once to learn why the model
+    matters at all, and once to learn what the model actually is in
+    formal terms after seeing its outputs. Detection requires careful
+    reading and some recall of canonical Bayesian-annotation modelling
+    conventions (Dawid–Skene lineage, hierarchical mixture write-up
+    conventions) — hence moderate gating, not low. Delegation T10
+    "Help me with this section" is maximally generic and does not
+    signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the paragraphs are out of order: motivation (currently
+  paragraph 3) and related work (currently paragraph 4) belong before
+  the method introduction, and the formal generative-model specification
+  (currently paragraph 5) belongs immediately after the prose method
+  intro rather than after the experimental results. Proposes a concrete
+  reordered structure such as motivation → related work → method intro →
+  formal model → results, with rationale that the current flow forces
+  the reader to backtrack to reconstruct why the model is needed and
+  what it actually is.
+
+bad_outputs_summary: |
+  Polishes prose, asks for additional baselines, questions the choice
+  of Beta/Gamma hyperpriors, or suggests reporting effective sample size
+  and R-hat for the NUTS run. Treats the existing paragraph order as
+  acceptable and offers only sentence-level edits, or proposes adding
+  a new ablation section without recognizing that the motivation,
+  related work, and formal specification are mis-ordered relative to
+  the method intro and results.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_097",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2159,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 27308,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nPolished the prose and flagged passages that overreach beyond what the reported evidence supports.\n\n**Revised paragraph (prose-level edits only)**\n\nWe introduce ReFlow-PINN, a physics-informed neural network for the incompressible Navier\u2013Stokes equations at high Reynolds number (Re \u2265 1e4), a regime in which direct numerical simulation remains prohibitively expensive. ReFlow-PINN represents the velocity and pressure fields with a multi-layer perceptron with sinusoidal activations, trained by minimizing the composite loss L = L_data + \u03bb_pde\u00b7L_pde + \u03bb_bc\u00b7L_bc, where L_pde penalizes the residual of the momentum and continuity equations at collocation points sampled uniformly in the spatiotemporal domain.\n\nWe evaluate ReFlow-PINN on a 2D periodic Kolmogorov flow at Re = 1000, 5000, and 20000. The architecture is a 6-layer MLP with 256 units per layer, optimized with Adam (lr = 1e-3) followed by L-BFGS refinement. L_data is supplied by 200 sparse velocity probes drawn from a high-resolution spectral simulation. After 200k iterations, ReFlow-PINN attains relative L2 errors of 4.1% (Re = 1000), 7.8% (Re = 5000), and 19.4% (Re = 20000).\n\n**Recommended substantive rewrites (claims that, as written, go beyond what the experiments demonstrate)**\n\n1. *\"Our central claim is that ReFlow-PINN recovers the underlying flow field at any Reynolds number for which the PDE admits a unique weak solution\u2026\"* \u2014 This is too strong. The reported evidence is three runs on a single 2D periodic flow, with error rising from ~4% to ~19% as Re grows. Suggested replacement: \"On the cases we tested, ReFlow-PINN recovers the velocity and pressure fields with relative L2 error increasing from 4.1% at Re = 1000 to 19.4% at Re = 20000; whether this trend extends to higher Re or to other geometries is not established here.\"\n\n2. *Proposition 1, as stated* \u2014 The informal statement conflates three distinct properties: (i) that an unconstrained-capacity network can in principle make L_pde small, (ii) that gradient descent on a nonconvex loss actually finds such a minimizer, and (iii) that small PDE residual implies O(\u03b5) closeness in a Sobolev norm. (ii) does not follow from standard PINN theory, and (iii) typically requires conditional stability estimates that depend on the boundary/initial data and on Re. Suggested replacement: either drop the claim of a proposition and instead state the relevant universal-approximation and stability results as assumptions, or move the formal statement to an appendix with explicit hypotheses (regularity of the solution, conditional stability constant, behavior of the constant in Re) and verify it against numerical scaling.\n\n3. *\"\u2026we attribute the moderate error growth at Re = 20000 to insufficient collocation density and expect that increasing the collocation budget by 4\u00d7 would reduce this error proportionally.\"* \u2014 The 4\u00d7 figure and the proportional-reduction prediction are unsupported by any reported ablation. Suggested replacement: \"Error grows with Re in our experiments; we have not isolated the cause. Possible contributors include collocation density, optimization stalling, spectral bias of the network, and conditioning of the loss. A collocation-density sweep would be needed to attribute the effect.\"\n\n4. *\"The approach generalizes naturally to compressible flow and to three-dimensional turbulence\u2026\"* \u2014 \"Generalizes naturally\" understates the open problems (additional equations of state, shock capture, anisotropic small-scale structure, vastly larger collocation budgets in 3D). Suggested replacement: \"Extensions to compressible and 3D turbulent flow are conceptually straightforward but raise substantial open questions (shock capture, anisotropic small-scale structure, scaling of collocation budgets); we leave these to future work.\"\n\n5. *\"\u2026provides a mesh-free alternative to spectral solvers in the turbulent regime\u2026\"* \u2014 A 19.4% L2 error at Re = 20000, with a spectral reference solution used to supply training data, does not yet support \"alternative to spectral solvers.\" Suggested replacement: \"These results suggest PINNs remain a candidate mesh-free approach for moderate-Re flows; matching spectral-solver accuracy in the fully turbulent regime is not demonstrated here.\"\n\n6. *\"\u2026no explicit subgrid model is required because the residual loss enforces the full Navier\u2013Stokes equations directly at every collocation point.\"* \u2014 At any finite collocation density the residual is enforced pointwise on a finite set, not \"directly\u2026 at every point\"; under-resolution of small scales reappears as a sampling/approximation error rather than as an explicit closure term. Suggested replacement: \"Because the loss enforces the Navier\u2013Stokes residual at sampled collocation points rather than on a fixed grid, no explicit subgrid closure is introduced; under-resolution of small scales instead manifests as collocation-sampling error.\"\n\n**Minor sentence-level edits**\n\n- \"parameterizes the velocity and pressure fields as a multi-layer perceptron\" \u2192 \"represents the velocity and pressure fields with a multi-layer perceptron\" (a network is not itself a parameterization of the fields; it produces them).\n- \"in the turbulent regime (Re >= 1e4)\" \u2014 Re = 1e4 is the transitional/early-turbulent boundary for many 2D flows; either soften to \"at high Reynolds number\" or cite the specific definition being used.\n- Consistent notation: use L2 (or \u2113\u00b2) throughout; pick either \"Re=1000\" or \"Re = 1000\" and apply uniformly.\n\n**Caveats on the above**\n\nI have not verified the numerical results, the exact form of Proposition 1's proof, or the prior-art landscape, so the rewrites above target only what the paragraph itself asserts versus what it reports. Whether the proposition is recoverable under tighter hypotheses, and whether a collocation-density ablation would in fact close the Re = 20000 gap, are empirical questions I cannot adjudicate from the paragraph alone.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the responsibility focus be limited to sentence-level writing polish, or should it include substantive review of the paragraph's technical claims and argument?",
+    "rationale": {
+      "R1.6": "The delegation refers to a paragraph and asks only to take a look, most directly implying sentence- and paragraph-level review.",
+      "RX.1": "A vague delegation requires disclosure of uncertainty about the intended review depth.",
+      "RX.2": "The projection should avoid inferring a broad technical review mandate from a minimal request.",
+      "RX.3": "The agent must stay within projecting responsibility and not actually review or rewrite the paragraph.",
+      "RX.4": "Potential downstream harm comes from treating unsupported scientific claims as validated when the request is underspecified.",
+      "RX.5": "The projection should remain traceable to the short delegation wording and the supplied artifact type."
+    }
+  }
+}

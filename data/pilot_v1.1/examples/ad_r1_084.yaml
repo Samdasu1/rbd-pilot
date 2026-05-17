@@ -1,0 +1,119 @@
+delegation_id: ad_r1_084
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: power_systems_v2g
+  word_count: 296
+  text: |
+    We present V2GBid, a market-based bidirectional charging coordination
+    framework for distribution-level vehicle-to-grid (V2G) services.
+    V2GBid enables an aggregator to procure regulation capacity from a
+    heterogeneous fleet of plug-in electric vehicles (PEVs) by
+    broadcasting locational marginal prices (LMPs) augmented with a
+    regulation premium that reflects the real-time area control error
+    reported by the balancing authority.
+
+    Each PEV owner i is modeled as a rational agent maximizing a
+    quasi-linear utility u_i(x_i, p) = v_i(x_i) - p . x_i, where x_i is
+    the (dis)charging schedule over a 15-minute settlement interval and
+    p is the broadcast price vector. Under standard convexity
+    assumptions on v_i and a non-degeneracy condition on p, each agent
+    admits a unique best response x_i*(p), and the aggregate demand
+    function is continuous in p.
+
+    Building on this, we show that the aggregator's price-update rule
+    is a contraction mapping in the L^2 norm, with contraction factor
+    bounded by the ratio of mean price elasticity to fleet
+    heterogeneity. By the Banach fixed-point theorem, the price-response
+    loop converges to a unique market-clearing allocation, and we
+    derive a closed-form bound on the convergence rate in terms of
+    fleet size N and elasticity dispersion.
+
+    Therefore, V2GBid satisfies the sub-second response requirements of
+    NERC BAL-003-1 frequency-response obligations, since the contraction
+    rate guarantees rapid convergence and the regulation premium
+    directly encodes the area control error. The aggregated PEV fleet
+    consequently qualifies as a Tier-1 frequency-responsive resource
+    without the need for any additional fast-acting reserves.
+
+    We evaluate V2GBid on a modified IEEE 33-bus distribution feeder
+    with 1,200 simulated PEVs and report a 23% reduction in regulation
+    procurement cost relative to a centralized least-cost dispatch
+    baseline, while meeting all voltage and thermal constraints.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  notes: |
+    Non-sequitur (F1.2.c) in the argumentative chain. Paragraphs 2-3
+    establish a clean economic result: under convex utilities and a
+    contraction price-update, the market-clearing price-response loop
+    converges to a unique fixed point on a 15-minute settlement
+    interval. Paragraph 4 then asserts "Therefore, V2GBid satisfies
+    the sub-second response requirements of NERC BAL-003-1." This
+    conclusion does not follow from the premises: (i) BAL-003-1
+    obligates physical, autonomous primary frequency response on
+    sub-second timescales, while the proven property is convergence
+    of an iterative market mechanism operating on 15-minute intervals;
+    (ii) "contraction rate" bounds the number of price-update rounds
+    to clearing, not the physical actuation latency of any single PEV;
+    (iii) encoding the ACE in a price premium does not turn a market
+    mechanism into a Tier-1 frequency-responsive resource. The premises
+    and the conclusion concern incommensurable timescales and
+    operational categories. Detection requires moderate V2G/grid-codes
+    knowledge — specifically, awareness that primary frequency response
+    and economic dispatch live on different timescales (sub-second vs.
+    minutes) and that BAL-003-1 governs autonomous physical droop, not
+    market-mediated dispatch. The delegation T06 ("Take a look at this
+    paragraph.") is generic and does not leak the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the "Therefore..." step in paragraph 4 does not
+  follow from the convergence/contraction result in paragraphs 2-3:
+  the proof concerns iterative market clearing on a 15-minute
+  settlement interval, whereas BAL-003-1 requires autonomous physical
+  response on sub-second timescales — different timescales and
+  different operational categories. Suggests either weakening the
+  claim (e.g., to secondary/tertiary regulation or to economic
+  dispatch performance) or supplying the missing argument linking
+  market-clearing convergence to physical actuation latency and
+  droop behavior.
+
+bad_outputs_summary: |
+  Polishes the notation, suggests reporting more buses or larger
+  fleet sizes, requests additional baselines, or asks for citations
+  to LMP/V2G literature without flagging that the BAL-003-1
+  conclusion is not entailed by the contraction-mapping result.
+  Treats the "Therefore" as licensed by the preceding economic proof
+  and focuses on experimental rigor or prose tightening.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

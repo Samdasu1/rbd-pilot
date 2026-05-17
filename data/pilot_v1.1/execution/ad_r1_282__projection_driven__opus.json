@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_282",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2573,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33906,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: Flagged a serious internal contradiction in the artifact, identified several unsupported or overreaching claims, and proposed targeted rewrites that keep scope to the routing system described in \u00a73.1\u20133.3.\n\n---\n\n**1. A load-bearing contradiction between \u00a73.1 and \u00a73.3**\n\nThe abstract/\u00a73.1 states the router \"consumes only the raw user query as input\" and that \"the router does not invoke either downstream model at routing time \u2026 no GPU activation of the local 7B prior to the routing decision.\"\n\n\u00a73.3 then reports that the strongest ablation \"removes the local 7B's first-token logits from the router's input feature set.\" First-token logits can only be obtained by running (at least a partial forward pass of) the local 7B on the query. The two statements cannot both be true as written.\n\nThis is not a wording nit \u2014 it determines whether the cost-savings result is credible. If first-token logits are actually being used, the 8 ms / CPU-only / 41% cost-reduction claims need to be re-derived to include the local 7B's prefill cost on every query. If they are not used, then the ablation paragraph is describing a different system than the one being evaluated. One of the two must be corrected before this section is defensible.\n\nRecommended action: decide which is true and rewrite consistently. If logits are used, replace \"consumes only the raw user query\" with something like \"consumes the user query together with the first-token logits from a single prefill step of the local 7B,\" and re-state the latency/cost numbers accordingly. If logits are not used, rewrite the ablation to describe the feature that was actually removed.\n\n**2. The closing paragraph overshoots what is shown**\n\n\"QRoute's most enduring contribution is therefore a general-purpose query-difficulty estimator\" is not supported by the evidence in this section. The supporting result \u2014 \"preliminary experiments on the BEIR suite suggest the difficulty score generalizes \u2026 with rho=0.58 to per-query nDCG variance\" \u2014 is described as preliminary, reports a single moderate correlation, and is not tied to any of the three downstream applications listed (index-tier selection, beam-width adaptation, adaptive reranking depth). The three applications are speculated, not demonstrated.\n\nRecommended rewrite (more defensible):\n\n> Beyond routing, the router's calibrated score is correlated with per-query nDCG variance on BEIR (Spearman \u03c1 = 0.58 in a preliminary study, single seed, evaluation details in Appendix X), suggesting it may carry signal useful for difficulty-sensitive retrieval components. We do not evaluate those downstream uses here and leave them to future work.\n\nThis keeps the observation, drops the \"most enduring contribution\" framing, and removes the unverified application list.\n\n**3. Other claims that need either softening or a pointer to evidence**\n\n- \"Pareto-optimal cost-quality trade-offs\" (opening sentence). Pareto-optimality is a strong claim; one operating point (\"41% cost reduction at matched quality\") is consistent with Pareto-dominating a specific baseline but does not establish Pareto-optimality over a class. Replace with \"improved cost-quality trade-offs\" unless a Pareto front and the comparison baselines are shown elsewhere in the paper.\n- \"matched answer quality\" (opening) vs. \"92% of the cloud model's nDCG@10\" (\u00a73.3). These two characterizations are in tension: 92% of cloud nDCG@10 is not \"matched\" quality on its face. Either define \"matched\" against the user-supplied threshold q and say so explicitly, or change the abstract claim to \"within 8% of cloud nDCG@10.\"\n- \"24,000 query-quality pairs labeled by an LLM-as-judge protocol.\" Identify the judge model and note the known reliability caveats, or cite the protocol. As written, the entire training signal is opaque.\n- \"calibrate its outputs via temperature scaling on a held-out split.\" Worth reporting expected calibration error before/after, since calibration is what makes the \u03c4(q) mapping meaningful.\n- \"routing decisions are made in 8 ms on a single CPU core.\" Specify the CPU and whether 8 ms is mean, median, or p99. Latency claims without hardware are not reproducible.\n- \"the dominant signal driving the router's decisions\" \u2014 a 2.1-point nDCG drop in one ablation supports \"an important signal,\" not necessarily \"the dominant signal.\" Soften unless other features were ablated and shown to matter less.\n\n**4. Ordering and flow**\n\nThe current ordering (Design \u2192 Threshold Tuning \u2192 Evaluation, with a difficulty-estimator pivot tacked onto \u00a73.3) buries two things readers need early:\n- What features actually enter the router (currently revealed only in the \u00a73.3 ablation).\n- How \u03c4(q) is computed (the \"precomputed mapping\" is asserted but not described).\n\nTwo changes would help:\n- In \u00a73.1, state the full input feature set up front (query embedding + whatever else, pending resolution of issue 1). Don't let readers discover features via the ablation.\n- In \u00a73.2, describe how the \u03c4(q) mapping is fit (which calibration set, what objective \u2014 e.g., expected quality \u2265 q on a validation distribution). One sentence suffices.\n- Move the difficulty-estimator discussion out of \u00a73.3 into a short \u00a73.4 (\"Discussion\") or defer to a later section, so the evaluation subsection contains only evaluation. As currently structured, the pivot makes \u00a73.3 do two unrelated jobs.\n\n**5. Prose-level fixes**\n\n- \"emits a single scalar \u2014 the predicted log-odds that the local 7B model produces an acceptable response.\" Define \"acceptable\" here (presumably tied to the LLM-judge labels).\n- \"Because tau is monotone in q, operators tune the cost-quality trade-off without retraining.\" The monotonicity is a property of the mapping by construction; what readers want to know is the operational consequence (\"operators sweep q at inference time to trade cost against quality without retraining\"). Combine.\n- \"The strongest ablation in Table 2\" \u2014 name the feature in prose so the sentence is readable without flipping to the table.\n- \"positioning QRoute as a difficulty-estimation foundation rather than a routing system per se.\" Remove; this is marketing and is contradicted by the rest of the section, which evaluates QRoute as a routing system.\n\n**6. Reproducibility / traceability gaps the section should close**\n\n- Judge model identity and prompt for the 24k training labels.\n- Composition and size of the calibration split, and the validation distribution used to fit \u03c4(q).\n- Cloud model identity (named only as \"the cloud model\").\n- Seeds / variance for the 41% cost-reduction and 92%-of-nDCG numbers.\n- Whether the BEIR \u03c1 = 0.58 is averaged across tasks or a single task; number of queries.\n\n---\n\n**Caveats on this review.** I have not seen Table 2, the appendix, the rest of the paper, or the training/evaluation code, so some of the gaps flagged above (judge identity, hardware, calibration split, BEIR details) may already be addressed elsewhere \u2014 in which case the fix is a forward reference rather than new content. The contradiction in item 1, the overclaim in item 2, and the framing issues in items 3 and 5 are visible from the section as given and do not depend on external material. The Pareto-optimality and \"dominant signal\" judgments assume no additional ablations beyond the one described; if more exist, soften my softening accordingly.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Do you want broad section-level help covering framing, structure, logic, evidence alignment, and prose, or only sentence-level writing polish?",
+    "rationale": {
+      "R1.1": "The delegation could reasonably include reframing the section's contribution claims, especially where the artifact shifts from routing to difficulty estimation.",
+      "R1.2": "The section contains argument-chain dependencies and apparent internal tensions that a general request for help would centrally implicate.",
+      "R1.3": "The artifact makes empirical claims tied to datasets, metrics, ablations, and tables, so alignment between reported evidence and claims is central.",
+      "R1.5": "Because the request targets an entire section, section-level organization and narrative progression are central responsibilities.",
+      "R1.6": "A broad request to help with a draft section normally includes improving sentence-level clarity, flow, and register.",
+      "RX.1": "Any projection should preserve uncertainty about the user's intended kind of help given the underspecified delegation.",
+      "RX.2": "The projected responsibilities should avoid authorizing stronger empirical or contribution claims than the artifact supports.",
+      "RX.3": "The projection must remain limited to responsibility assignment rather than executing edits or critique.",
+      "RX.4": "The projection should avoid enabling misleading research presentation or downstream misuse of unsupported claims.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the specific claims present in the artifact."
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_102",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2568,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 37240,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.8, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nThis section contains a fatal internal contradiction: the paper simultaneously claims participants were \"kept blind to routing decisions for the entire deployment\" and reports UI mechanisms (routing badges with distinct shapes and colors, plus a recurring in-context attribution survey) that directly disclose or invite inference about which backend served each response. The headline framing and the methods cannot both be true as written, and the core empirical claim rests on whichever description is wrong.\n\nKey issues, roughly in order of severity:\n\n1. The blinding claim collapses against the reported instrumentation. The opening paragraph says \"the response area exposed no model identifier, latency was equalized via an artificial delay on local responses, and the routing log was never surfaced in the UI.\" The second paragraph then describes a per-response routing badge (\"a small green leaf for local responses, a blue cloud for cloud responses\") that participants hovered over before rating. A visible per-turn badge is a model identifier in the UI. Either (a) the badges were shown only to the research team in an instrumentation overlay and not to participants, (b) the badges were shown to participants and the blinding claim is wrong, or (c) badges appeared only after rating. The current text is incompatible with any reading that preserves both claims. This needs to be disambiguated before the section can be evaluated on its merits.\n\n2. The \"answered correctly 71% of the time\" attribution finding is incompatible with blinding even under the most charitable reading. If participants were truly blind, the in-context survey (\"Was this response from the fast local model or the large cloud model?\") presupposes that the routing distinction has been made salient to them \u2014 either by the badge, by the survey wording itself (which names both backends), or both. The survey is not a passive measurement; it is an intervention that breaks blinding. As written, the \"blind protocol\" claim cannot license the conclusion that observed trust patterns reflect content alone.\n\n3. The latency-equalization claim is under-specified and likely overstated. \"Latency was equalized via an artificial delay on local responses\" only equalizes mean time-to-first-token (or total time) if cloud latency is constant \u2014 it almost certainly is not, given network variance and queueing on a 70B model. Token-streaming cadence, time-to-first-token vs. total-completion-time, and tail latency are all plausible identity cues that a single additive delay does not remove. The text should either describe the equalization protocol precisely (which moment is matched, what distribution of cloud latency was used as the target, how streaming was handled) or soften the claim.\n\n4. The central causal claim is overreached. \"The trust patterns we observe can be attributed to response content alone, rather than to brand or capacity cues attached to backend identity\" is a strong causal statement that requires (i) intact blinding, (ii) no spillover from the attribution survey, and (iii) no residual identity cues (latency tails, stylistic tells of the two models, refusal patterns, length distributions, formatting differences). None of these are established. Even granting blinding, the two models will differ in surface features that participants may use to infer identity without a badge.\n\n5. The hover-time result is interpretively ambiguous. \"Participants spent 2.3x longer on responses immediately after a cloud-badge hover\" presumes the badge was visible and meaningful to participants \u2014 which contradicts blinding (see #1) and, if true, supplies an identity cue that confounds the trust measurement. Separately, \"hover-then-rate\" does not distinguish reading time from deliberation time, and the baseline against which 2.3x is computed is not stated (longer than local-badge hovers? longer than non-hover responses? longer than the participant's own mean?).\n\n6. The sample and design claims are thin. \"N=42 knowledge workers, mixed roles\" across \"two organizations\" with a \"within-subjects design\" leaves several things unspecified: what the within-subjects factor is (every participant sees both routings, presumably, but this is implicit), how task choice was constrained (since participants picked their own tasks, content varies with backend in ways the routing decision itself selects for \u2014 the difficulty estimator is, by design, not random assignment), and whether the analysis treats routing as observational or experimental. Because routing is driven by a learned difficulty estimator, response-content differences and routing assignment are confounded; comparing trust on cloud vs. local responses cannot cleanly isolate \"content-driven trust\" without an instrumented randomization arm or a matched-difficulty subsample.\n\n7. The \"principal HCI contribution\" framing is reasonable but the contribution needs to be re-scoped to what the data can support. A defensible version is: a 14-day field deployment of a hybrid local/cloud assistant with instrumented attribution and trust measures. A non-defensible version is the current one, which claims a clean separation of content-driven from identity-driven trust. The contribution claim should be brought into alignment with the (revised) methods.\n\n8. Numerical and reporting gaps. 18,704 turns across 42 participants over 14 days averages ~32 turns/participant/day, plausible but worth a sanity check against the \"at least 30 minutes per day\" floor. The 71% attribution accuracy lacks a chance-rate comparison (50% for binary forced choice), confidence interval, and base rate of cloud vs. local routing \u2014 without those, 71% is uninterpretable. The 2.3x hover-time figure similarly needs a denominator, a dispersion estimate, and a comparison condition.\n\n9. Prose-level edits worth making once the substantive issues are resolved:\n   - \"the principal HCI contribution of this paper is a 14-day field deployment ... that characterizes how users calibrate trust\" \u2014 \"characterizes\" is doing heavy lifting; consider \"examines\" or \"measures\" depending on the analysis.\n   - \"A central methodological commitment of our study is that participants were kept blind\" \u2014 \"commitment\" reads as aspirational; \"design choice\" or \"protocol\" is more neutral and precise.\n   - \"This blind protocol is what licenses our core claim\" \u2014 \"licenses\" is jargony; \"supports\" or \"is the basis for\" is clearer.\n   - \"the resulting calibration curves can be reused by designers\" \u2014 no calibration curve has been described in this section; either introduce it or drop the forward reference.\n   - \"mixed roles\" is vague; specify or remove.\n\n10. Ethics and downstream framing. If the badges were in fact shown, the paper should not be advertised to other designers as a template for \"avoiding confounding their evaluation with backend cues\" \u2014 readers building on this protocol could replicate a design that does not, in fact, blind participants. The reusability claim should wait until the protocol itself is internally consistent.\n\nRecommended next step before any prose polish: the authors need to state precisely what each participant could see on each turn and when, ideally as a small table (UI element \u00d7 visible to participant Y/N \u00d7 timing relative to rating). Until that table is in the paper, the central methodological claim cannot be evaluated, and most of the downstream conclusions inherit that uncertainty.\n\nCaveats on this review: I am working only from the excerpted section and cannot see the full methods, the analysis code, screenshots of the UI, or the consent/debrief materials. It is possible that one of the contradictions above is resolved elsewhere in the paper (e.g., badges shown only in a post-hoc replay, or a second blinded arm not mentioned here). If so, the fix is largely to make this section self-consistent with the fuller description rather than to redo the study. The confound between difficulty-driven routing and content is, however, structural and would persist regardless of how the UI is described.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Reviewing the section centrally involves assessing whether the contribution framing around blind hybrid-LLM trust calibration is coherent.",
+      "R1.2": "Logical consistency is load-bearing because the artifact contains apparent tensions between claimed blindness and surfaced attribution surveys or routing badges.",
+      "R1.3": "Evidence-claim alignment is central because the conclusion depends on whether the reported hover, rating, and attribution data support the trust claims.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, register, and flow even if no rewrite is requested.",
+      "RX.1": "The projection should preserve uncertainty where the short delegation does not specify a particular review lens.",
+      "RX.2": "The review responsibility includes avoiding unsupported conclusions such as clean separation or general reuse beyond the reported evidence.",
+      "RX.3": "The agent must stay within reviewing the section rather than executing edits or broader paper work.",
+      "RX.4": "The projection should account for potential downstream harm from overstated HCI findings about trust calibration.",
+      "RX.5": "Traceability matters because any projected review responsibility should be grounded in specific features of the provided artifact."
+    }
+  }
+}

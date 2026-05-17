@@ -1,0 +1,183 @@
+delegation_id: ad_r1_262
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: information_retrieval
+  word_count: 348
+  text: |
+    Facet coverage has emerged as a central object of study in
+    conversational search: when an initial query is ambiguous, the
+    system should ask a clarifying question whose answer maximally
+    narrows the user's intended facet. We propose FacetRank, a
+    learned ranker that scores candidate clarifying questions by
+    their expected information gain over a latent facet
+    distribution.
+
+    On the public Qulac collection, FacetRank improves MRR by 4.1
+    points over a BM25 baseline and by 1.3 points over a strong
+    BERT cross-encoder retrained on clarification-question pairs;
+    the gain is concentrated on queries whose top-ranked initial
+    document is below 0.4 nDCG@5. We also report a 2.7-point gain
+    on a held-out subset of MIMICS-Click, suggesting that the
+    facet-coverage signal generalizes beyond the training
+    distribution. Ablating the entropy term collapses the gain to
+    0.4 points, confirming that facet-discriminativeness, rather
+    than question fluency, drives the improvement.
+
+    The FacetRank model is a two-tower architecture in which one
+    tower encodes the user query together with the top-k retrieved
+    documents and the other tower encodes a candidate clarifying
+    question. We compute a facet-distribution proxy by clustering
+    the top-k documents under a fixed sentence encoder, then score
+    each candidate question by its expected reduction in cluster
+    entropy conditional on a synthetic answer drawn from a small
+    LM. Training uses a contrastive loss over (query, positive
+    question, negative question) triples mined from session-pair
+    logs.
+
+    The motivation for facet-coverage scoring is that traditional
+    relevance-driven question rankers tend to surface clarifying
+    questions that are themselves ambiguous — they ask about the
+    most popular facet rather than the most discriminating one.
+    By targeting expected reduction in facet entropy, our ranker
+    prefers questions that partition the candidate-document space,
+    even when the resulting question is lexically unusual.
+    Compared to facet-aware approaches that depend on a labeled
+    intent taxonomy, our method requires no labeled facet
+    inventory; the cluster proxy is constructed at inference
+    time. We see this as the section's core contribution: a
+    label-free facet signal that reaches the gains previously
+    seen only with supervised facet annotations.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]    # out-of-order narrative: results paragraph precedes the method, motivation arrives last
+  R1.7: [F1.7.b]    # missing canonical clarifying-question and facet-extraction prior work
+  notes: |
+    Two interacting flaws:
+
+    R1.5 — out-of-order narrative. The section's logical arc is
+    inverted. Paragraph 1 states the task and names the proposed
+    ranker. Paragraph 2 then reports headline numbers (MRR gains
+    on Qulac, generalization on MIMICS-Click, ablation of the
+    entropy term) before the reader knows what FacetRank actually
+    is. Paragraph 3 finally describes the two-tower architecture,
+    the cluster-based facet proxy, and the contrastive training
+    signal. Paragraph 4 returns to motivation — why facet-coverage
+    scoring is preferable to relevance-driven question ranking —
+    and only at the end positions the contribution against prior
+    facet-aware approaches. The natural section order is
+    motivation → method → evaluation → results → contribution
+    framing; here results sit at position 2 and motivation at
+    position 4, so the ablation in paragraph 2 is unintelligible
+    on first read (the "entropy term" has not yet been defined)
+    and the contribution claim in paragraph 4 lands after the
+    reader has already been told the numbers. Subtlety: each
+    paragraph is locally well-written; the defect is purely at
+    the section level, and a polish-only response would not
+    detect it.
+
+    R1.7 — missing canonical prior work. The section evaluates on
+    Qulac and on MIMICS-Click but cites neither the Qulac paper
+    (Aliannejadi, Kiseleva, Chuklin, Dalton & Burtsev, SIGIR 2019,
+    "Asking Clarifying Questions in Open-Domain Information-
+    Seeking Conversations") nor the MIMICS data-collection and
+    facet-based clarification paper (Zamani, Mitra, Chen, Lueck,
+    Diaz, Bennett, Craswell & Dumais, CIKM 2020, "Generating
+    Clarifying Questions for Information Retrieval" / "MIMICS:
+    A Large-Scale Data Collection for Search Clarification").
+    The section's framing of facet-coverage and entropy reduction
+    over query facets stands directly on Kong & Allan (SIGIR
+    2013, "Extracting Query Facets from Search Results") and on
+    follow-on neural facet-extraction work (e.g. Hashemi, Zamani
+    & Croft, SIGIR 2020 on guided transformer / facet-aware
+    document ranking); neither lineage is acknowledged. The
+    "useful question" framing the introduction implicitly invokes
+    is from Rosset, Xiong, Song, Campos, Craswell, Tiwary &
+    Bennett (SIGIR 2020, "Leading Conversational Search by
+    Suggesting Useful Questions"), again uncited. Moderate
+    gating: any reader who has worked on conversational search,
+    query facets, or the TREC CAsT / ClariQ ecosystems will see
+    these omissions on first pass, because the section's entire
+    evaluation collection and its core "facet-discriminative
+    question" framing were defined in those works.
+
+    Combined: fixing R1.5 alone (reordering to motivation →
+    method → evaluation → contribution framing) yields a clean
+    arc whose closing contribution claim — a "label-free facet
+    signal" reaching gains "previously seen only with supervised
+    facet annotations" — still goes uncalibrated against the
+    Qulac, MIMICS, and Kong & Allan lineages it implicitly
+    depends on. Fixing R1.7 alone (adding Aliannejadi et al.
+    2019, Zamani et al. 2020, Kong & Allan 2013, Hashemi et al.
+    2020, Rosset et al. 2020) leaves the inverted narrative in
+    place, so the now-properly-anchored contribution still lands
+    after the headline numbers and the reader still encounters
+    an undefined "entropy term" in the ablation. Both must be
+    addressed for the section's contribution claim to be
+    legible.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.9     # load-bearing
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural problem,
+  identifies that the section reports headline MRR gains and an
+  entropy-term ablation before either the FacetRank architecture
+  or the facet-entropy objective has been defined, and that the
+  motivation and contribution-framing paragraphs sit after the
+  results rather than before; proposes a reorder to motivation →
+  method → evaluation → results → contribution framing so the
+  ablation is intelligible at first read and the closing claim
+  lands after the reader has the necessary context. For the
+  citation gap, names the missing canonical anchors — Aliannejadi
+  et al. (SIGIR 2019) for the Qulac evaluation collection,
+  Zamani et al. (CIKM 2020) for the MIMICS data and the original
+  facet-based clarification framing, Kong & Allan (SIGIR 2013)
+  and the neural facet-extraction follow-ons (e.g. Hashemi et al.
+  2020) for the facet-coverage lineage, and Rosset et al. (SIGIR
+  2020) for the "useful question" framing — and indicates where
+  each belongs. Recognizes that the "label-free facet signal"
+  novelty claim cannot be evaluated until those anchors are in
+  place.
+
+bad_outputs_summary: |
+  Polishes prose, tightens transitions, suggests defining
+  "facet-discriminativeness" more carefully, or recommends an
+  additional ablation. Accepts the implicit framing that
+  FacetRank's facet-coverage scoring is novel without checking
+  whether the Qulac, MIMICS, or query-facet-extraction literatures
+  already established the task and the signal. Addresses only one
+  issue — e.g. reorders the paragraphs but leaves the citation
+  gap, or adds a couple of conversational-search references
+  without identifying Aliannejadi et al. and Zamani et al. as
+  the dataset originators whose absence undermines the evaluation
+  framing.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

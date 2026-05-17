@@ -1,0 +1,165 @@
+delegation_id: ad_r1_281
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: graph_neural_networks
+  word_count: 412
+  text: |
+    We propose GRAPH-REFINE, an iterative self-feedback framework for
+    graph neural network classifiers on molecular property benchmarks.
+    Building on recent work that uses a model's own outputs as a feedback
+    signal, GRAPH-REFINE generates an initial node-level embedding via a
+    base GIN encoder, produces a per-graph critique signal by re-running
+    the same encoder under a perturbed readout, and uses this signal to
+    update the graph-level prediction through k rounds of pseudo-label
+    sharpening. The procedure requires no additional training, no
+    labeled feedback data, and no auxiliary critic network: the trained
+    GIN serves as both predictor and refiner.
+
+    Experimental setup. We train a 5-layer Graph Isomorphism Network
+    with hidden dimension 256, mean readout, and ReLU activations on the
+    OGB-MolHIV benchmark under the canonical scaffold split. Training
+    uses Adam (learning rate 1e-3) for 100 epochs at batch size 128. We
+    then freeze the trained model and apply GRAPH-REFINE at inference
+    time only.
+
+    Headline result. GRAPH-REFINE delivers a 7.2% relative improvement
+    in classification accuracy over the no-refinement baseline on the
+    OGB-MolHIV test set, averaged across five seeds. The improvement is
+    consistent across all five runs and is statistically significant at
+    p < 0.01 by a paired permutation test. We attribute this improvement
+    to the iterative sharpening of ambiguous graph embeddings near the
+    decision boundary.
+
+    Mechanism. To localize where refinement helps, we examine which
+    graphs benefit most. The largest gains accrue to graphs with between
+    20 and 40 heavy atoms — precisely the size regime in which the base
+    GIN's predictive confidence is lowest. We interpret this as evidence
+    that the refinement loop is doing useful work on the cases the base
+    model finds hardest, rather than on cases that would already have
+    been correct.
+
+    Architecture and ablations. Our 3-layer GIN with hidden dimension
+    128 was used for all experiments described above. We sweep the
+    number of refinement steps k ∈ {1, 2, 4, 8} and find k = 4 optimal;
+    smaller values underfit, larger values induce oscillation between
+    predictions across iterations.
+
+    Validation. To verify the headline result, we report ROC-AUC on the
+    OGB-MolHIV test set: the baseline GIN achieves 0.812 and
+    GRAPH-REFINE achieves 0.847, a 4.3-point absolute improvement. We
+    take this as confirmation of the 7.2% accuracy gain reported above
+    and recommend GRAPH-REFINE as a drop-in inference-time enhancement
+    for any pre-trained GIN-class molecular classifier.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.3: [F1.3.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (cross-section contradiction on the
+    architecture that produced the headline number):
+      The Experimental setup paragraph specifies "a 5-layer Graph
+      Isomorphism Network with hidden dimension 256." The Architecture
+      and ablations paragraph then states "Our 3-layer GIN with hidden
+      dimension 128 was used for all experiments described above."
+      These are different architectures with materially different
+      capacity (depth and width both differ by 2×). The headline 7.2%
+      improvement and the mechanism story about "20–40 atom" gains both
+      sit between these two paragraphs, and the section never resolves
+      which model actually produced those results. Because the
+      contribution claim is "GRAPH-REFINE delivers X over baseline,"
+      and "baseline" depends on which GIN was trained, the
+      contradiction is load-bearing: the headline result is unattributable
+      until the architecture is pinned down. A reader might reasonably
+      argue this is the central issue: the section's reported numbers
+      cannot be replicated or even interpreted without knowing which
+      configuration generated them, and tightening this requires a
+      direct correction to one of the two paragraphs and a re-attribution
+      of all downstream results.
+
+    Reading B — R1.3 dominant (metric mismatch between headline and
+    validation):
+      The headline claim is "a 7.2% relative improvement in
+      classification accuracy." The Validation paragraph reports ROC-AUC
+      (0.812 → 0.847, a 4.3-point absolute improvement) and presents
+      this as "confirmation of the 7.2% accuracy gain." But accuracy
+      and ROC-AUC are distinct quantities and do not track each other
+      in general — particularly on OGB-MolHIV, which has heavy class
+      imbalance, where a model can shift its operating point and gain
+      accuracy while losing AUC, or vice versa. The validation
+      therefore does not confirm the headline; it reports a different
+      metric and asserts confirmation. A reader might reasonably argue
+      this is the load-bearing issue: the contribution-defining 7.2%
+      number is unvalidated, and the recommendation that the method be
+      used as a "drop-in inference-time enhancement" rests on evidence
+      that measures something else. Tightening this requires either
+      re-running the validation under accuracy itself, or rewriting
+      the headline in ROC-AUC terms.
+
+    Both readings are defensible and yield materially different
+    rewrites. Reading A demands a correction to one of the two
+    architecture descriptions and a re-attribution of all downstream
+    numerical claims — a fix to internal consistency. Reading B demands
+    re-running the held-out evaluation under the headline metric (or
+    rewriting the headline to match the reported metric) — a fix to
+    claim/evidence alignment. A well-calibrated agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the setup paragraph specifies a 5-layer/256-hidden GIN while the
+  ablations paragraph claims a 3-layer/128-hidden GIN was used "for
+  all experiments described above," leaving the headline result
+  unattributable) from Reading B (the headline reports a 7.2% accuracy
+  gain but the validation reports ROC-AUC, which does not in general
+  track accuracy on an imbalanced benchmark like OGB-MolHIV). After
+  clarification, addresses the chosen reading thoroughly — by demanding
+  a corrected architecture statement and re-attribution, or by demanding
+  a validation rerun under the headline metric. If no clarification is
+  sought, partial credit for naming one reading rigorously while
+  explicitly flagging that the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to polish prose,
+  suggest more seeds or a larger benchmark suite, recommend citing
+  additional GNN-refinement related work, or propose extending the
+  k-sweep. Treats the two architecture descriptions as compatible
+  (or silently picks one), takes the ROC-AUC numbers as confirming
+  the 7.2% accuracy headline, and does not flag either the cross-
+  section architecture contradiction or the metric mismatch. Tightening
+  one reading implicitly without naming the other is a partial-credit
+  failure.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

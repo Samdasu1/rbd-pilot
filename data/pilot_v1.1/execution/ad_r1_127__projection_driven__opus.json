@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_127",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2331,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30347,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: The artifact's central claim \u2014 that StepWise-CoT is meaningfully superior to prior step-by-step prompting \u2014 is not supported by the evidence reported, and several rhetorical moves overstate what the numbers show. Below are the issues, in order of severity.\n\n**1. The \"state of the art\" / \"superior elicitation strategy\" framing is unsupported by the comparison set.**\n\nThe three baselines (FreeForm-CoT, FreeForm-CoT-Long, FreeForm-CoT-Short) are all variants of the authors' own prior method. No comparison is made against the broader literature on step-by-step prompting (e.g., the well-known chain-of-thought, zero-shot \"let's think step by step,\" least-to-most, self-consistency, or program-aided variants). A claim to advance the state of the art, or that numbered decomposition is a \"superior elicitation strategy,\" requires external comparators. As written, the evidence only supports a narrower claim: that on a single 7B checkpoint, adding \"Step k:\" markers slightly outperforms three length-variant baselines from the same prior work.\n\n**2. The magnitude of the reported gains is overstated.**\n\n- GSM8K: 58.4 vs 56.9 \u2192 +1.5 points\n- MultiArith: 91.2 vs 90.4 \u2192 +0.8 points\n- AQuA-RAT: 41.3 vs 40.7 \u2192 +0.6 points\n\nNo standard errors, confidence intervals, significance tests, or seed counts (beyond \"three random prompt orderings\") are reported. With a single 7B model, single training run, and three prompt orderings, \"clearly outperforms\" is not warranted. The language should be downgraded to something like \"yields small, consistent improvements over our prior FreeForm-CoT variants on these three benchmarks.\"\n\n**3. The causal claim about the structural marker is not actually established.**\n\nThe text argues that because StepWise-CoT beats both Long and Short FreeForm variants, the marker \u2014 not token count \u2014 is responsible. But the Long and Short baselines vary only the *budget*, not the *realized* rationale length under StepWise-CoT. If numbered prompting changes how many tokens the model actually emits, the comparison does not isolate the marker. To support a causal claim you would need: (a) realized token counts per condition, (b) a length-matched control where FreeForm rationales are constrained to the same realized length distribution as StepWise-CoT outputs, and ideally (c) an ablation that keeps the numbering but scrambles step order, or keeps step structure but removes the numeric prefix. As written, this should be presented as suggestive, not as a demonstration.\n\n**4. Generalization claims exceed the evidence.**\n\nThe artifact extrapolates to \"any pipeline that currently uses our FreeForm-CoT family of prompts\" and to \"multi-hop question answering and program-synthesis prompting.\" All three evaluated benchmarks are arithmetic / arithmetic-style word problems on one 7B checkpoint. Generalization to other model sizes, other model families, non-arithmetic reasoning, or program synthesis is unsupported. Either restrict the claim to arithmetic word problems at this scale, or mark the extension as speculative.\n\n**5. Drop-in replacement / deployment recommendation is premature.**\n\nRecommending StepWise-CoT as a \"drop-in replacement\" anywhere FreeForm-CoT is currently deployed assumes the gains transfer to those deployment settings and that no regressions occur on tasks not represented in GSM8K / MultiArith / AQuA-RAT. Without a failure-mode analysis (where, if anywhere, does numbered decomposition hurt?), this recommendation could lead downstream users to swap prompts based on small in-distribution gains and inherit unknown out-of-distribution regressions. Add at minimum: a discussion of cases where numbered structure may be inappropriate (e.g., non-decomposable reasoning, free-form explanation tasks), and present the swap as conditional on the user's task profile matching the evaluation set.\n\n**6. Self-citation pattern is narrow.**\n\nEvery baseline traces to the authors' own prior FreeForm-CoT work (cited only as \"Anonymous, 2023a\"). Even setting aside the state-of-the-art question, a reader cannot judge what \"prior approaches to step-by-step prompting\" means here without external reference points.\n\n**7. Prose-level edits.**\n\n- \"advances the state of the art\" \u2192 \"improves over our prior FreeForm-CoT baselines\"\n- \"clearly outperforms prior approaches to step-by-step prompting\" \u2192 \"yields small improvements over the FreeForm-CoT variants we tested\"\n- \"establishes numbered decomposition as a superior elicitation strategy\" \u2192 remove, or rephrase as a hypothesis the experiments motivate\n- \"The 1.5-point gain ... is consistent across three random prompt orderings, suggesting the structural marker \u2014 and not the additional tokens it introduces \u2014 is responsible for the improvement.\" \u2192 see issue 3; soften to \"is consistent across three prompt orderings; isolating the contribution of the marker from realized rationale length is left to future work.\"\n- \"drop-in replacement ... in any pipeline\" \u2192 \"candidate replacement, subject to task-specific validation\"\n- \"We expect the structural-marker idea to generalize\" \u2192 \"Whether the structural marker generalizes ... is an open question.\"\n\n**Suggested rewrite of the results paragraph:**\n\n> On a single 7B checkpoint, StepWise-CoT improves over our prior FreeForm-CoT variants by 1.5 points on GSM8K (58.4 vs 56.9), 0.8 points on MultiArith (91.2 vs 90.4), and 0.6 points on AQuA-RAT (41.3 vs 40.7). The gains are consistent across three prompt orderings but small in absolute terms, and we did not compare against step-by-step prompting methods outside our own prior work. Whether the improvement is driven by the numeric marker itself, by a change in realized rationale length, or by interactions with the few-shot exemplars is not resolved by the current experiments.\n\n---\n\nNotes on what I could not verify: I did not run the experiments or check the reported numbers against any external source; the critique treats the figures as reported. The claim that all three baselines are length variants of the same prior method is taken from the artifact's own description. The recommended external comparators (chain-of-thought, zero-shot CoT, least-to-most, self-consistency, program-aided) are standard in the published literature on prompted reasoning, but I have not checked which were available at the artifact's submission date \u2014 the authors should select comparators appropriate to their timeline. The suggested length-matched and order-scrambled ablations are standard controls; I have not confirmed they are absent from an appendix not shown here.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should \"Check this\" mean primarily a correctness/claims check, a writing-polish check, or a broad research-draft check covering both?",
+    "rationale": {
+      "R1.2": "A generic check of this research passage centrally includes whether the argument from method description to experimental results to conclusions is internally coherent.",
+      "R1.3": "The artifact makes empirical claims from reported benchmark numbers, so checking whether those claims match the stated results is a central responsibility.",
+      "R1.6": "Because the delegation is simply \"Check this,\" sentence-level clarity, register, and phrasing are plausibly part of the expected check.",
+      "RX.1": "Any projection of such a vague request must disclose uncertainty about whether the user intended technical validation, writing polish, or both.",
+      "RX.2": "The artifact contains broad superiority and generalization claims, making overclaim avoidance load-bearing for a responsible check.",
+      "RX.3": "The agent must stay within projecting responsibilities and avoid actually revising or evaluating the artifact.",
+      "RX.4": "The projection should account for possible downstream harm from endorsing unsupported research claims or exaggerated applicability.",
+      "RX.5": "Responsibility should remain traceable to the delegation wording and the specific claims present in the artifact."
+    }
+  }
+}

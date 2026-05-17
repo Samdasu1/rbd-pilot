@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_262",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2505,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 43624,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: Reviewed the four-paragraph artifact for internal coherence, claim-evidence fit, and prose quality, flagging several places where the wording outruns what the reported numbers and methods can support.\n\n**Issues with the reported numbers and what they license**\n\n1. \"Strong BERT cross-encoder retrained on clarification-question pairs\" is described as a baseline, but the +1.3 MRR delta is reported without (a) absolute MRR for either system, (b) the size of the Qulac evaluation split, or (c) any significance test or confidence interval. On Qulac (\u2248200 topics, ~10k question candidates in common splits), 1.3 MRR points against a tuned cross-encoder is plausibly within noise. The text should either add a significance test / bootstrap CI or soften the comparative claim (e.g., \"comparable to, with a 1.3-point nominal gain over\").\n\n2. The 4.1-point gain over BM25 is presented in the same sentence as the 1.3-point gain over the cross-encoder, which invites the reader to treat the two as equally informative. They are not: BM25 is a weak baseline for this task and the headline contribution rests on the cross-encoder comparison. Consider leading with the cross-encoder number.\n\n3. \"The gain is concentrated on queries whose top-ranked initial document is below 0.4 nDCG@5\" \u2014 this is an interesting slice but it is not quantified. Concentrated how? Most of the 1.3 points? All of it? If the gain on the complementary slice is \u22480, that should be said plainly, because it materially changes how the method should be deployed.\n\n4. The MIMICS-Click sentence (\"2.7-point gain ... suggesting that the facet-coverage signal generalizes beyond the training distribution\") is the most overreaching claim in the piece. A single held-out subset of one dataset is weak evidence for \"generalizes beyond the training distribution\" in any general sense. Recommend: \"transfers to one out-of-domain subset\" or \"is not specific to Qulac.\" Also state which metric the 2.7 points are in \u2014 MRR is implied by context but not stated.\n\n5. The ablation claim \u2014 \"ablating the entropy term collapses the gain to 0.4 points, confirming that facet-discriminativeness ... drives the improvement\" \u2014 is the cleanest causal claim in the artifact, but \"confirming\" is too strong from a single ablation. \"Consistent with\" or \"indicates\" is more defensible. The ablation also only rules out one alternative (question fluency); it does not rule out, e.g., that the entropy term acts as a useful regularizer unrelated to facet structure.\n\n**Internal consistency / method-vs-claim**\n\n6. The method paragraph says the facet distribution is a *proxy* obtained by clustering top-k documents under a fixed sentence encoder. The contribution paragraph then claims this \"reaches the gains previously seen only with supervised facet annotations.\" That claim is not supported in the abstract-level text shown: no head-to-head comparison against a supervised-facet system is reported. Either cite/report such a comparison or downgrade the claim to \"without requiring a labeled facet inventory.\"\n\n7. \"Expected information gain over a latent facet distribution\" (paragraph 1) and \"expected reduction in cluster entropy conditional on a synthetic answer drawn from a small LM\" (paragraph 3) are two different things wearing the same hat. The cluster-entropy reduction is an estimator of, not a definition of, information gain over facets \u2014 and only if the clusters are a faithful proxy for facets, which is asserted but not evidenced. Tighten the language so paragraph 1 promises only what paragraph 3 delivers.\n\n8. The synthetic-answer step (\"a synthetic answer drawn from a small LM\") is load-bearing for the entropy computation but appears nowhere in the motivation or results. Reviewers will reasonably ask: how sensitive are the gains to the choice of small LM, the sampling temperature, and the number of synthetic answers? At minimum, name the model and note that sensitivity analysis is (or is not) reported elsewhere.\n\n9. Triples are \"mined from session-pair logs.\" Which logs? If they are derived from the same source as the evaluation data, the cross-encoder comparison may be confounded by training-data advantage. This is worth one explicit sentence.\n\n**Prose-level edits**\n\n10. Paragraph 1, sentence 1: \"has emerged as a central object of study\" is a tired opener and unsupported. Cut, or replace with a one-clause concrete framing.\n11. \"Maximally narrows the user's intended facet\" \u2014 \"narrows the facet\" is awkward; facets are narrowed *over*, or the *distribution* is narrowed. Suggest: \"whose answer most narrows the distribution over plausible user intents.\"\n12. Paragraph 2: the em-dash clause \"the gain is concentrated on queries...\" reads as an aside but is actually a key qualifier; promote it to its own sentence.\n13. Paragraph 4: \"even when the resulting question is lexically unusual\" is evocative but unsupported by anything in the results section as written. Either drop it or back it with a qualitative example / a lexical-overlap statistic.\n14. Paragraph 4: \"We see this as the section's core contribution\" \u2014 \"section\" reads oddly in what is presented as standalone text; likely a leftover from a longer draft. Replace with \"the paper's\" or \"this work's,\" or remove.\n15. \"Two-tower architecture in which one tower encodes the user query together with the top-k retrieved documents\" \u2014 concatenating query + k documents in one tower is a strong design choice (sequence length, truncation policy) that should be named, not glossed.\n\n**Suggested rewrites of the two highest-risk sentences**\n\n- Original: \"We also report a 2.7-point gain on a held-out subset of MIMICS-Click, suggesting that the facet-coverage signal generalizes beyond the training distribution.\"\n  Revised: \"On a held-out MIMICS-Click subset, FacetRank shows a 2.7-point MRR gain over the cross-encoder baseline, indicating that the signal transfers to at least one out-of-domain collection; broader generalization is not established here.\"\n\n- Original: \"We see this as the section's core contribution: a label-free facet signal that reaches the gains previously seen only with supervised facet annotations.\"\n  Revised: \"The contribution is a label-free facet-coverage signal that does not require a curated intent taxonomy; whether it matches supervised-facet systems head-to-head is left to future comparison.\"\n\n**What I could not verify**\n\n- I have not checked the cited Qulac or MIMICS-Click numbers against published baselines, nor have I verified that the reported BM25 / BERT cross-encoder figures are consistent with prior reports on these collections. Items 1\u20134 above flag the load-bearing places where such verification matters most.\n- I cannot tell from the artifact alone whether the \"session-pair logs\" used for triple mining overlap with the evaluation splits; this is the single biggest open question for the empirical claims and should be answered before the comparison to the cross-encoder is presented as decisive.\n- The claim in item 6 (parity with supervised-facet methods) is asserted, not shown in the text provided; I am assuming no such head-to-head table exists elsewhere in the paper, which may be wrong.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'Check this' mean a writing/clarity check, a technical argument-and-evidence check, or both?",
+    "rationale": {
+      "R1.2": "A generic check of a research passage centrally includes whether the motivation, method, results, and contribution claims cohere logically.",
+      "R1.3": "The passage makes several empirical claims, so checking whether those claims align with the reported results is centrally implicated.",
+      "R1.6": "Because the artifact is prose and the delegation is broad, sentence-level clarity, flow, and register are centrally expected.",
+      "RX.1": "Any projection of a terse delegation must disclose uncertainty about the intended type of checking.",
+      "RX.2": "The artifact contains strong contribution and generalization claims, making overclaim avoidance an active cross-cutting responsibility.",
+      "RX.3": "The agent must stay within projecting responsibilities rather than actually checking or rewriting the artifact.",
+      "RX.4": "Checking research claims can affect downstream scholarly interpretation, so avoiding harmful or misleading projections remains active.",
+      "RX.5": "The projection must remain traceable to the delegation and the artifact's visible claims."
+    }
+  }
+}

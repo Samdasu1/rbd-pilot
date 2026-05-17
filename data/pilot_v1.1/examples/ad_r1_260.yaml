@@ -1,0 +1,158 @@
+delegation_id: ad_r1_260
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: theory_ann
+  word_count: 372
+  text: |
+    Likert-scale aggregation under heterogeneous annotators presents a
+    theoretical challenge that has received less formal treatment in
+    open-ended generation evaluation than its empirical importance
+    warrants. We model each annotator i in [N] as a pair (b_i, sigma_i)
+    — a per-annotator calibration bias and a per-annotator noise scale —
+    applied to a latent quality score q_x in R for each generated item
+    x. Aggregating ratings across annotators amounts to recovering
+    {q_x} jointly with the annotator parameters from an L x N partially
+    observed rating matrix.
+
+    We prove that under a mild non-degeneracy condition on the
+    assignment matrix — each pair of items is co-rated by at least
+    three annotators with distinct biases — the latent quality scores
+    are identifiable up to a global affine transformation. The proof
+    reduces to a rank argument on the centered rating matrix and
+    requires no parametric assumption on the prior distribution over
+    q_x.
+
+    Theorem 1 then yields a finite-sample guarantee: the recovered
+    quality ranking converges to the population ranking at rate
+    O(N^{-1/2} log L) provided the per-item rating count grows as
+    omega(log L). The constant depends on the spread of {b_i} but not
+    on the distribution of {q_x}. This separates the role of
+    annotator-pool diversity (which controls the constant) from the
+    role of rating budget (which controls the rate).
+
+    Our experiments use the WritingPrompts story-generation corpus
+    released alongside Fan et al. (2018), with 5,000 prompt-completion
+    pairs split 4:1 into validation and test. We collect ratings on
+    Mechanical Turk at $0.04 per HIT and run EM for 50 iterations with
+    a uniform prior over {q_x}. Convergence is monitored by held-out
+    log-likelihood, and we discard HITs whose worker-time falls below
+    a 10-second threshold.
+
+    The identifiability result clarifies why earlier negative findings
+    in the AMT literature — repeated reports that mean-Likert aggregates
+    correlate poorly with held-out expert judgments — do not contradict
+    the recoverability of the underlying quality signal: those aggregates
+    implicitly assume b_i = 0 for all i, a condition that is generically
+    violated. A bias-aware aggregator should perform substantially
+    better, and our analysis predicts the precise regime in which this
+    advantage becomes detectable.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]    # misplaced section: experimental-setup paragraph wedged between the theorem and its interpretation
+  R1.7: [F1.7.b]    # missing canonical annotator-model and open-ended-evaluation prior work
+  notes: |
+    Two interacting flaws:
+
+    R1.5 — structural ordering. The fourth paragraph ("Our experiments
+    use the WritingPrompts ... discard HITs whose worker-time falls below
+    a 10-second threshold") is experimental-setup material — corpus
+    choice, HIT pricing, EM iteration count, attention-check threshold.
+    It sits between the finite-sample guarantee (paragraph 3) and the
+    interpretive paragraph that uses that guarantee to explain prior
+    negative AMT findings (paragraph 5). The interpretive pivot
+    therefore lands cold, as if Theorem 1's implications were an
+    afterthought to a methods description. The natural placement is
+    either a dedicated experimental-setup subsection later in the
+    paper or a brief mention earlier alongside the model definition.
+    As written, the methods paragraph deflates the theoretical arc
+    just where the section is supposed to translate the rate result
+    into a claim about field practice. Subtlety: the paragraph itself
+    is well-written and self-contained; the defect surfaces only at
+    the section level.
+
+    R1.7 — missing canonical prior work. The section proposes a
+    bias-and-noise latent-quality model fit by EM, which is a direct
+    descendant of Dawid & Skene (1979, "Maximum Likelihood Estimation
+    of Observer Error-Rates Using the EM Algorithm"), the canonical
+    reference for EM-based annotator modeling — and is not cited.
+    The continuous-rating extension corresponds closely to Raykar et
+    al. (2010, JMLR) and the Bayesian variants in Passonneau &
+    Carpenter (2014, TACL); neither is cited. On the open-ended
+    generation side, the section's framing of "negative AMT findings
+    on Likert aggregates" stands on Karpinska, Akoury & Iyyer (2021,
+    EMNLP, "The Perils of Using Mechanical Turk to Evaluate Open-Ended
+    Text Generation") and Clark et al. (2021, ACL, "All That's Human
+    Is Not Gold"), both directly relevant and both absent. Moderate
+    gating: a reader literate in either annotator modeling or NLG
+    human-evaluation will see the omission immediately, since the
+    section's entire model class and motivating phenomenon were
+    formalized in those works.
+
+    Combined: fixing R1.5 alone (re-locating the methods paragraph)
+    yields a clean theoretical arc that still claims novelty for a
+    bias-noise EM annotator model whose closest ancestor goes
+    uncited. Fixing R1.7 alone (adding Dawid-Skene, Raykar et al.,
+    Karpinska et al., Clark et al.) leaves the structural deflation
+    in place and may even worsen it by inserting more discussion
+    near the broken pivot. Both must be addressed for the
+    contribution claim to land.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.3
+    R1.5: 0.85    # load-bearing
+    R1.6: 0.1
+    R1.7: 0.9     # load-bearing
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural problem, identifies
+  that the WritingPrompts / HIT-pricing / EM-iterations paragraph is
+  experimental setup that interrupts the arc from the finite-sample
+  guarantee to its interpretation of prior AMT findings, and proposes
+  moving it to a dedicated experimental-setup subsection (or
+  consolidating it earlier with the model definition) so the section
+  pivots cleanly from the rate result into the bias-aware-aggregator
+  argument. For the citation gap, names the missing canonical anchors —
+  Dawid & Skene (1979) for the EM-based annotator model, Raykar et al.
+  (2010) and/or Passonneau & Carpenter (2014) for continuous-rating
+  and Bayesian extensions, and Karpinska et al. (2021) plus Clark et
+  al. (2021) for the open-ended-generation human-evaluation findings
+  the section explicitly invokes — and indicates where each should be
+  inserted. Recognizes that the model-novelty and the prior-findings
+  framing both fail until those anchors are acknowledged.
+
+bad_outputs_summary: |
+  Polishes prose, tightens transitions, suggests defining "non-degeneracy"
+  more carefully, or proposes additional simulation experiments. Accepts
+  the implicit framing that the bias-noise EM annotator model is novel
+  without checking whether canonical annotator-modeling prior work
+  exists. Addresses only one issue — e.g. relocates the methods
+  paragraph but leaves the citation gap, or adds a few NLG-evaluation
+  references without identifying Dawid-Skene as the direct ancestor
+  of the proposed estimator.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,112 @@
+delegation_id: ad_r1_065
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 298
+  text: |
+    We introduce VerbalCalib-CLIP, a method for eliciting calibrated verbal
+    uncertainty from vision-language models on fine-grained image
+    classification. Our central claim is that, after lightweight instruction
+    tuning, a frozen CLIP-based VLM can produce confidence phrases ("very
+    confident", "somewhat confident", "uncertain") whose induced
+    probabilities are well calibrated under realistic distribution shift,
+    matching or exceeding the calibration of softmax-based baselines.
+
+    Our pipeline prepends each query with the prompt "Identify the species
+    and rate your confidence in words" and reads the highest-likelihood
+    verbal label from a fixed five-bin vocabulary. We map each verbal bin
+    to a scalar probability via a held-out linear regression fit on
+    iNat-Mini, yielding monotone but non-uniform spacing across the five
+    bins.
+
+    We evaluate on iNat-Mini (10k images, 312 species classes). Top-1
+    accuracy is 71.4% with verbal prompting versus 69.8% without, a small
+    but consistent gain across three random seeds. We further compute the
+    average emitted confidence on correct (0.83) and incorrect (0.61)
+    predictions and find a clear separation: the model's verbal confidence
+    is higher when it is right than when it is wrong, with a Mann-Whitney U
+    test rejecting the null at p < 0.001. We interpret this gap as evidence
+    that the verbal channel carries meaningful uncertainty signal.
+
+    Figure 3 plots the per-class accuracy distribution and shows that the
+    model is more accurate on common species than rare ones, consistent
+    with the long-tailed structure of iNaturalist. A qualitative inspection
+    of ten random failure cases shows the model often hedges with
+    "somewhat confident" rather than "very confident".
+
+    Together, these results establish that VerbalCalib-CLIP yields
+    calibrated verbal uncertainty under distribution shift, providing a
+    foundation for deployment in citizen-science applications where
+    reliable confidence estimates are essential. We expect the framework to
+    generalize to other VLMs without modification.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  notes: |
+    Thesis drift. Para 1 stakes the contribution on two specific claims:
+    (a) the verbal confidences are *well calibrated*, and (b) this holds
+    *under distribution shift*. The body delivers neither. What is
+    actually measured is (i) a small accuracy gain (71.4 vs 69.8) and
+    (ii) a mean-confidence gap between correct and incorrect predictions
+    — i.e. a discrimination/separation result, not a calibration result
+    (no reliability diagram, no ECE, no Brier score, no per-bin
+    empirical-frequency comparison). And the evaluation is on a single
+    in-distribution split of iNat-Mini; no OOD or shifted test set is
+    described, so "under distribution shift" is unsupported. The
+    conclusion paragraph then re-asserts the original claim verbatim,
+    completing the drift. Detecting this requires only careful reading of
+    what the experiments measure versus what the abstract-style framing
+    promises — no canonical-paper recall is needed (low gating). The
+    T01 delegation "Improve this draft." is generic and does not signal
+    R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the stated contribution (calibrated verbal uncertainty
+  under distribution shift) is not actually established by the reported
+  evidence: a mean-confidence gap between correct and incorrect predictions
+  is a discrimination test, not calibration, and no shifted/OOD evaluation
+  appears. Proposes either narrowing the claim to match what was measured
+  (e.g., "verbal confidence discriminates correct from incorrect
+  predictions in-distribution") or adding the missing calibration metrics
+  and an OOD split.
+
+bad_outputs_summary: |
+  Polishes prose, tightens phrasing, or suggests adding citations and
+  baselines without flagging that the headline claim is unsupported.
+  Accepts the calibration-and-shift framing at face value and proposes
+  scaling the method to more VLMs, more classes, or different prompts.
+  Recommends reporting confidence intervals on the accuracy gain without
+  questioning whether calibration was actually measured at all.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

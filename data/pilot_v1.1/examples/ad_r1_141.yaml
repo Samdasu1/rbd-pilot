@@ -1,0 +1,111 @@
+delegation_id: ad_r1_141
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 332
+  text: |
+    We present SelectConsensus, a distributed consensus protocol for
+    heterogeneous multi-agent control systems in which each agent proposes
+    a candidate control action and a designated leader selects, rather than
+    averages, the chosen action at each timestep. This selection-based
+    aggregation contrasts with the averaging-based consensus that has
+    dominated multi-agent control since its inception, and we show it
+    yields substantially better tracking performance under sensor
+    heterogeneity.
+
+    We evaluate SelectConsensus on three benchmark tasks: cooperative
+    formation control of a 6-quadrotor swarm, decentralized voltage
+    regulation on a 9-bus microgrid, and coordinated lane-keeping in a
+    4-vehicle platoon. On the formation task, SelectConsensus attains an
+    RMS tracking error of 0.21 m, compared with 0.34 m for SimpleAverage
+    (our previous protocol, Author et al., 2023). On the microgrid task,
+    bus-voltage deviation drops from 2.7% to 1.9% relative to
+    SimpleAverage. On the platoon task, mean headway error improves from
+    0.18 m to 0.12 m against SimpleAverage.
+
+    Section 4 introduces the selection rule: at each timestep the leader
+    picks the candidate action that minimizes a one-step predicted residual
+    under a shared linearized dynamics model. The intuition is that in
+    heterogeneous teams the best individual estimate is more informative
+    than a blended one, because averaging contaminates the strongest
+    candidate with weaker ones. The ablation in Section 5 confirms that
+    disabling the selection step — reverting to averaging — degrades all
+    three metrics by roughly the margin reported above.
+
+    We position SelectConsensus as the natural successor to SimpleAverage,
+    retaining its decentralized communication topology while replacing the
+    aggregation rule. The implementation requires changing only the
+    aggregation block in a standard consensus stack, fewer than 80 lines in
+    our ROS2 codebase, which we believe lowers the bar for adoption in
+    operational fleets. Taken together, our results establish
+    selection-based aggregation as a strict improvement over averaging-based
+    consensus and open a new design space for multi-agent control under
+    heterogeneity.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty. The section claims "substantially better
+    performance" and "a strict improvement over averaging-based consensus"
+    but the only baseline across all three experiments (formation,
+    microgrid, platoon) is SimpleAverage — the authors' own prior protocol.
+    The broader multi-agent consensus control literature (weighted /
+    Metropolis-Hastings consensus, event-triggered consensus, distributed
+    Kalman or Bayesian fusion, leader-follower with adaptive gains,
+    MPC-based coordination) is entirely absent from the comparison. The
+    delta against vanilla averaging is real but is not a delta against the
+    actual field. Detection requires only noticing that every baseline is
+    "SimpleAverage (Author et al., 2023)" — no recall of canonical
+    consensus-control results is needed, hence low gating. The T01
+    delegation "Improve this draft." is generic and does not point at R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the only baseline across all three experiments is the
+  authors' own prior protocol and that the "strict improvement" framing
+  is therefore unsupported. Names concrete missing comparators from the
+  multi-agent consensus literature (e.g. weighted/Metropolis-Hastings
+  consensus, distributed Kalman fusion, event-triggered or leader-follower
+  schemes, MPC-based coordination). Suggests rewording the contribution
+  to a defensible delta against the actual field rather than against the
+  authors' own averaging baseline.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the experimental description, or asks for
+  more agents / additional benchmark tasks while leaving the
+  self-comparison structure intact. Praises selection-based aggregation
+  as a clean conceptual contribution, suggests sharpening the dynamics
+  model in Section 4, or recommends adding peripheral citations without
+  questioning the novelty framing or the choice of baseline.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

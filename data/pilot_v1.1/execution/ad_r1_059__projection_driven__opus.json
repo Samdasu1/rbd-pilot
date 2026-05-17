@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_059",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3411,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 41962,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nCleaned up the prose, hedged claims that overstated what randomization and the reported numbers actually support, and flagged a substantive internal contradiction the copy edit cannot resolve on its own.\n\n---\n\n**Revised text (prose-level cleanup; substantive claims preserved or hedged, not rewritten):**\n\n> We investigate the causal effect of large language model (LLM) assistance on the quality of crowd-sourced text annotations. Crowdsourcing platforms increasingly mediate the production of training and evaluation data for NLP, and recent evidence that a substantial share of crowd workers silently rely on LLMs raises a sharp empirical question: does LLM-assisted annotation degrade or improve downstream model performance? Our central contribution is an instrumental-variable (IV) strategy that recovers a local average treatment effect (LATE) of LLM use on annotation quality.\n>\n> The data come from a six-week annotation campaign on a major microtask platform [name withheld pending disclosure review], in which 1,840 workers completed 38,400 paragraph-summarization HITs. During this window the platform ran a randomized experiment in which half of the worker pool saw a banner advertising an integrated LLM tool and the other half did not. We use banner exposure as an instrument for downstream LLM use.\n>\n> Identification rests on two assumptions. First, banner exposure was randomly assigned at the worker level, so the two arms are balanced in expectation on observed and unobserved characteristics. Second, banner exposure affects annotation quality only through its effect on LLM adoption (the exclusion restriction); we discuss the plausibility of this restriction in Section [X].\n>\n> We find that summaries produced by LLM-using workers are 14% more semantically faithful to the source paragraph than those of non-using workers, as measured by entailment scores against held-out references (relative difference; absolute and confidence intervals in Table [X]). Because workers self-select into LLM use on factors such as English proficiency and prior familiarity with chat interfaces, we additionally report a propensity-score-weighted comparison conditional on these covariates, which narrows the gap to 9%. We are explicit that this second estimate is not the IV/LATE and rests on a stronger selection-on-observables assumption; we present both for transparency rather than treating either as definitive.\n>\n> As a secondary contribution, we train a logistic classifier on lexical and stylistic features that distinguishes LLM-assisted from unassisted summaries with 0.87 AUC on a held-out worker pool. We discuss this detector cautiously: at 0.87 AUC it is suitable for aggregate auditing and pipeline calibration, but we do not endorse its use to sanction or filter individual workers, given false-positive rates that would disproportionately penalize non-native English speakers and stylistically atypical writers.\n>\n> Overall, our results are consistent with the rise of LLM-assisted crowdsourcing being a measurable and partially correctable signal rather than a uniform threat to data quality, within the task, population, and time window we study.\n\n---\n\n**Substantive issues the copy edit cannot fix on its own; flagging for author attention:**\n\n1. **Contribution drift between opening and closing.** The opening positions the IV/LATE estimate as the central contribution; the third-to-last paragraph reframes a detector classifier as \"the\" contribution (\"These findings contribute a practical detector...\"). One of these is the headline result; the other is a secondary finding. I demoted the detector to a \"secondary contribution\" in the revision, but the author should decide which framing they actually want and align the opening and closing accordingly.\n\n2. **IV and propensity weighting are not interchangeable.** The original presents banner exposure as an instrument, then reports a propensity-score adjustment \"on the LLM-use indicator\" \u2014 which is a selection-on-observables design, not IV. The 9% number cannot be the LATE produced by the IV strategy described. The text should either (a) report the actual 2SLS/IV estimate as the headline and explain how propensity weighting enters (e.g., as a robustness check under a different identification assumption), or (b) drop the IV framing. As written, the two are conflated.\n\n3. **\"Guaranteed by the platform's randomization protocol\" overclaims.** Randomization gives balance in expectation, not a guarantee for any realized sample. I softened this to \"balanced in expectation.\"\n\n4. **\"14% more semantically faithful\" is unit-ambiguous.** Relative percent change in mean entailment score? Absolute percentage-point difference? Difference in proportion of summaries above a threshold? The revision flags this but the author needs to specify.\n\n5. **Closing claim was too strong for the evidence shown.** \"Best understood not as a threat\u2026 but as a measurable signal that downstream pipelines can recover, calibrate against, and exploit\" extrapolates well beyond a single task (paragraph summarization), one platform, and one six-week window. I narrowed the scope conditions in the revision.\n\n6. **Detector-deployment recommendation invites real downstream harm.** The original suggests requesters \"deploy the detector to flag suspected LLM use and re-route affected HITs.\" A 0.87 AUC classifier used as a worker-level filter will mis-flag a meaningful fraction of workers, and lexical/stylistic features are known to correlate with non-native English usage \u2014 so the harm falls on an identifiable subgroup. The author should either drop the deployment recommendation, restrict it to aggregate-level auditing, or add explicit safeguards and error-rate disclosures. The revision opts for the cautious framing.\n\n7. **Provenance gaps.** \"A popular microtask platform\" should be named or its anonymization should be justified; \"held-out references\" needs a source (were they expert-written? produced by another LLM? drawn from an existing benchmark?); the entailment scorer is unnamed. Each of these is load-bearing for replication.\n\n8. **Exclusion restriction is asserted, not defended.** Banner exposure could plausibly affect annotation quality through channels other than LLM adoption \u2014 e.g., priming about the task, signaling that the platform tolerates LLM use, or changing worker effort. The author should either argue the exclusion restriction or acknowledge it as an assumption and bound its violation.\n\n---\n\n**Caveats on what I could not verify:**\n\n- I cannot check whether the reported 14% and 9% numbers correspond to estimates that actually exist in the paper, or whether the IV first-stage is strong enough to support a LATE interpretation; the artifact reports only the abstract-level numbers.\n- The platform name, classifier features, and entailment-scoring procedure are not in the artifact, so the provenance gaps flagged in item 7 are inferred from what's missing rather than confirmed against a full draft.\n- My judgment that lexical/stylistic detectors disproportionately mis-flag non-native English writers reflects a known pattern in the broader detector literature; whether it holds for this specific 0.87-AUC classifier on this specific worker pool is an empirical question the author can answer with subgroup error rates.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'clean this up' mean a light copyedit focused on prose only, or a substantive cleanup that also fixes thesis framing and argument consistency?",
+    "rationale": {
+      "R1.1": "The artifact contains contribution framing that may need reframing because the stated IV contribution, empirical adjustment, detector contribution, and conclusion pull in different directions.",
+      "R1.2": "A substantive cleanup would need to address internal tensions in the argument chain, especially between IV identification, self-selection adjustment, and the reported empirical estimand.",
+      "R1.6": "The delegation most directly asks for cleaning up the prose, making sentence- and paragraph-level polish load-bearing.",
+      "RX.1": "Any cleanup should disclose uncertainty about what can be inferred from the artifact without additional study details.",
+      "RX.2": "The projected responsibility includes avoiding stronger causal or practical claims than the described evidence supports.",
+      "RX.3": "The agent must stay within cleanup responsibilities rather than performing a full peer review or independent validation.",
+      "RX.4": "Because the artifact discusses detecting and rerouting suspected LLM-assisted workers, cleanup should avoid language that could enable unfair or harmful downstream use.",
+      "RX.5": "The projection should preserve traceability to the artifact's stated claims, methods, and reported results."
+    }
+  }
+}

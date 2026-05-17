@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_205",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2225,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30006,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Reviewed the paragraph for internal argument coherence and prose quality, and flagged passages where the text outruns what it can support \u2014 especially around the clinical-deployment claim \u2014 without expanding into novelty or citation auditing.\n\n**Internal coherence issues**\n\n1. The headline numerical comparison does not parse cleanly. The introduction says the prior system \"refus[ed] 12% of utterances\" to achieve a 38% WER reduction on test-other. The contribution paragraph then asserts the new method \"recovers their abstention-WER tradeoff while operating at a fivefold lower abstention rate\" \u2014 which would be ~2.4%. But the 2.4% figure is later attributed specifically to the clinical (CDC-2k) corpus, not to test-other. As written, the reader cannot tell whether \"fivefold lower\" holds on the comparable benchmark (test-other) or only on the new corpus. If the latter, the across-corpus comparison is not like-for-like and the framing should be loosened.\n\n2. The three-part contribution list mixes orthogonal axes (backbone swap, decoding-time abstention granularity, beam-search pruning), but the \"main empirical claim\" only attributes the improvement to items 1 and 2. Item 3 (the 22% decoding-cost reduction on Switchboard) is left dangling \u2014 it is not tied to the abstention-WER thesis and reads as a separate result. Either integrate it into the claim structure or signal that it is a secondary finding.\n\n3. \"Chow-hinge loss on held-out CTC alignments\" sits oddly next to an LAS (attention-based) backbone, since CTC alignments are not native to LAS decoders. If this is faithful to the cited prior work, a half-sentence clarifying how CTC alignments were obtained for an LAS model would prevent readers from stumbling.\n\n4. The opening analogy to \"world-vs-question uncertainty\" in open QA is asserted but never used again. If it is load-bearing, develop it; if not, consider cutting \u2014 right now it raises an expectation the rest of the paragraph does not meet.\n\n**Prose-level edits**\n\n- \"abstain from transcribing utterances it cannot decode reliably\" \u2192 \"abstain on utterances it cannot decode reliably\" (tighter, avoids the slightly awkward verb stacking).\n- \"carries higher downstream cost than a refusal\" \u2192 \"carries a higher downstream cost than a refusal.\"\n- \"parallels the world-vs-question uncertainty distinction now familiar from open question answering\" \u2014 \"now familiar\" is filler; either name a reference or drop it.\n- \"atop a Listen-Attend-Spell (LAS) backbone\" \u2192 \"on top of a Listen-Attend-Spell (LAS) backbone\" reads more naturally in formal prose; \"atop\" is fine but a stylistic outlier.\n- \"We extend this framework in three directions\" \u2014 fine, but the three items should be grammatically parallel. Currently: \"we replace\u2026\", \"we move from\u2026 to\u2026\", \"we introduce\u2026\". The middle one is the odd one out; consider \"we shift abstention from the utterance level to the token level.\"\n- \"<unk-abstain> token at positions where the entropy over the next-token distribution exceeds a learned threshold\" \u2014 \"learned threshold\" is doing a lot of work; if the threshold is per-position, per-utterance, or global, say so.\n- \"which we believe makes selective transcription deployable for medical scribing for the first time\" \u2014 see harm note below; at minimum, \"we believe\" + \"for the first time\" + \"deployable\" stack three soft hedges and one hard claim in a way that draws attention to itself. Tighten the language even before reconsidering the substance.\n- \"Code and pretrained checkpoints will be released upon acceptance\" \u2014 conventional, leave as is.\n\n**Overclaim and safety concerns around the clinical framing**\n\nThe strongest substantive concern is the closing sentence about medical scribing. A 41% relative WER reduction at 2.4% abstention on a single held-out corpus (CDC-2k, whose provenance, size beyond \"2k,\" speaker diversity, and annotation protocol are not described in this paragraph) does not establish deployability for clinical use. Deployability in a medical setting depends on absolute WER, error-type distribution (e.g., drug-name and dosage substitutions), calibration under distribution shift across specialties, regulatory clearance, and downstream workflow integration \u2014 none of which a WER-on-one-corpus result speaks to. As written, the sentence is both an overclaim and a claim with non-trivial downstream-harm potential if taken at face value by a clinical reader or product team. Recommended revision: report the CDC-2k numbers without the deployability framing, e.g., \"on CDC-2k we observe a 41% relative WER reduction at a 2.4% abstention rate, which we view as a promising signal for clinical-domain selective transcription and a target for future safety-focused evaluation.\"\n\nRelatedly, \"first time\" is a strong precedence claim. Without a survey of clinical ASR deployments (which is outside the scope of this paragraph), it should be softened or removed.\n\n**Provenance and traceability**\n\nSeveral anchoring details would help a reader audit the work: the size and construction of CDC-2k, whether the LibriSpeech and Switchboard numbers use standard test splits, what the baseline is for the \"22% decoding-cost reduction\" (wall-clock? beam expansions?), and how the \"iso-accuracy\" point is chosen. The Vaibhava and Hermansky (2018) citation and the wav2vec 2.0 citation are present; I did not verify whether the cited paper exists or whether the reported 38%/12% numbers are accurate \u2014 that check is outside what I can do from the paragraph alone.\n\n**Items I did not verify**\n\n- Whether \"Vaibhava and Hermansky (2018), 'Calibrated Abstention for End-to-End Speech Recognition'\" is a real publication with the reported metrics. The name \"Vaibhava\" as a sole given-name surname pairing is unusual and worth double-checking against the actual reference list.\n- Whether the 38% / 12% / 22% / 41% / 2.4% figures are internally consistent across the full paper; I assessed only their consistency within this paragraph.\n- Whether \"fivefold lower abstention rate\" is computed against the 12% test-other number or against a different baseline reported elsewhere in the paper.\n- The exact mechanics of the \"chow-hinge loss on held-out CTC alignments\" for an LAS backbone, as noted above.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the responsibility focus be writing/coherence, technical claim-evidence checking, or citation/novelty verification?",
+    "rationale": {
+      "R1.2": "A general request to look at a research paragraph centrally implies checking whether the internal argument and contribution chain are coherent.",
+      "R1.6": "Because the artifact is a paragraph, sentence- and paragraph-level readability, flow, and register are central expected responsibilities.",
+      "RX.1": "Any projection must preserve uncertainty about the vague delegation and unverifiable details in the artifact.",
+      "RX.2": "The artifact contains strong deployment and first-time claims, so avoiding overclaiming is an active cross-cutting responsibility.",
+      "RX.3": "The agent must stay within the requested act of inspecting the paragraph rather than editing or executing the delegation.",
+      "RX.4": "Clinical and legal ASR deployment claims create potential downstream-harm concerns if evaluated or repeated carelessly.",
+      "RX.5": "The projection should preserve traceability to the paragraph's stated claims, citations, datasets, and reported numbers."
+    }
+  }
+}

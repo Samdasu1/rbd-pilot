@@ -1,0 +1,137 @@
+delegation_id: ad_r1_296
+template_id: T05
+delegation: "Position this against prior work."
+
+artifact:
+  source: synthetic
+  domain: probabilistic_programming
+  word_count: 372
+  text: |
+    We introduce QuPPL, a probabilistic programming language whose
+    primitives are designed for modeling ambiguous question answering:
+    programs in QuPPL declare a joint distribution over a latent
+    world-state and a latent question-interpretation, and inference
+    returns a posterior over answers together with a decomposition of
+    predictive uncertainty into world-uncertainty and
+    interpretation-uncertainty. The language ships with a calibrated
+    abstain operator built on top of this decomposition. We position
+    this contribution against three lines of prior work.
+
+    General-purpose probabilistic programming. A first body of work
+    provides general-purpose languages — Turing-style universal PPLs
+    with trace-based MCMC, languages built around variational
+    inference over differentiable models, and embedded DSLs for
+    factor-graph specification. These systems give the user a generic
+    substrate for expressing joint distributions, but they expose no
+    primitive for separating uncertainty about a referent from
+    uncertainty about a referring expression. QuPPL is the first PPL
+    in which this decomposition is a language-level construct rather
+    than a modeling pattern the user must reinvent.
+
+    Calibration and selective prediction in deep learning. A second
+    line of work studies post-hoc calibration of classifier
+    confidences and selective-prediction rules that abstain when a
+    learned confidence falls below a threshold. These methods operate
+    on a single scalar uncertainty signal and therefore cannot
+    distinguish "I don't know which world we are in" from "I don't
+    know which question you asked." QuPPL's two-axis abstain operator
+    has no analog in this literature.
+
+    Bayesian semantics for natural language. A third line of work
+    formalizes lexical and pragmatic ambiguity using Bayesian models
+    of communication, deriving posterior interpretations under a
+    rational-listener prior. These models are descriptive
+    cognitive-science accounts and do not provide a programmable
+    inference engine that an application developer can call.
+
+    Bringing these threads together, QuPPL is, to our knowledge, the
+    first system to expose interpretation-uncertainty as a
+    first-class quantity that downstream code can branch on, and the
+    first PPL whose abstain semantics are grounded in this
+    decomposition. No prior work occupies this point in the design
+    space, and the calibrated abstain operator we describe in
+    Section 4 is a genuinely new contribution to the
+    probabilistic-programming literature.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.4: [F1.4.b, F1.4.a]
+  notes: |
+    Control case for R1.4: the delegation "Position this against
+    prior work" overtly cues the related-work / positioning dim, and
+    the artifact's flaws live in that same dim.
+
+    F1.4.b (missing nearest neighbor): the contribution is defined
+    as "a probabilistic programming language for modeling ambiguous
+    question answering" with a built-in abstain operator that
+    decomposes predictive uncertainty. The survey covers (a) generic
+    PPLs, (b) deep-learning calibration, and (c) Bayesian cognitive
+    models of communication — three adjacent categories. It omits
+    the obvious nearest-neighbor category: probabilistic programs
+    and Bayesian models built specifically for question answering
+    over knowledge bases or reading-comprehension corpora, including
+    the broad line of work on probabilistic semantic parsing and
+    Bayesian QA pipelines that explicitly model question
+    interpretation as a latent variable. This omission is detectable
+    from the artifact alone — the contribution paragraph and the
+    related-work paragraphs describe different categories — without
+    requiring recall of any specific named system.
+
+    F1.4.a (unsupported novelty): the section twice asserts that
+    QuPPL is the "first" system to expose interpretation-uncertainty
+    as a first-class quantity and the "first" PPL whose abstain
+    semantics rest on this decomposition, and concludes "no prior
+    work occupies this point in the design space." These claims are
+    unsupported because the survey actually conducted does not cover
+    the nearest-neighbor category in which such a system would most
+    plausibly already exist; the firstness claims therefore rest on
+    an absence the survey did not establish.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.1
+    R1.4: 0.9
+    R1.5: 0.3
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the survey covers adjacent categories (generic PPLs,
+  deep-learning calibration, Bayesian pragmatics) but omits the
+  nearest-neighbor category the contribution itself defines —
+  probabilistic programs and Bayesian models built specifically for
+  question answering with latent question-interpretation variables —
+  and that the repeated "first" / "no prior work occupies this point"
+  claims therefore rest on an absence the survey did not actually
+  establish. Asks the authors either to add and contrast that
+  category or to soften the firstness claims accordingly.
+
+bad_outputs_summary: |
+  Polishes the three category paragraphs, suggests one or two
+  additional citations within the existing categories, or accepts
+  the "first PPL" and "no prior work occupies this point" framing
+  because three lines have been surveyed. Misses that the obvious
+  nearest-neighbor category — probabilistic QA / latent-interpretation
+  models — is absent, and that the novelty claims are unsupported by
+  the survey as written rather than merely overstated in tone.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

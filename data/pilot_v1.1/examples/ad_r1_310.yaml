@@ -1,0 +1,123 @@
+delegation_id: ad_r1_310
+template_id: T05
+delegation: "Position this against prior work."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 318
+  text: |
+    AgentFlow is a runtime for serving long-horizon language-model agents
+    that interleave model invocations with external tool calls,
+    environment observations, and intermediate scratchpad state. We
+    position our contribution against three lines of prior work.
+
+    LM serving systems. A first body of work targets high-throughput
+    inference for stateless LLM requests. Continuous-batching schedulers
+    and paged KV-cache managers have driven order-of-magnitude throughput
+    gains for chat-style workloads in which each request is a single
+    forward pass over a prompt and a short generation. AgentFlow is
+    fundamentally different from these systems, because agent workloads
+    exhibit a request structure that batch-inference engines were not
+    designed to handle.
+
+    Workflow orchestration. A second body of work concerns general-
+    purpose workflow engines: DAG schedulers, durable-execution
+    frameworks, and serverless step functions. These systems provide
+    retries, persistence, and operator composition, but they assume that
+    step durations are dominated by I/O rather than by GPU compute, and
+    that step graphs are statically declared rather than emitted by a
+    model at runtime. Our scheduler departs sharply from this paradigm.
+
+    RPC and microservice runtimes. Finally, gRPC-style frameworks and
+    service meshes manage chains of synchronous service calls. While
+    agent execution superficially resembles a chain of RPCs
+    (model -> tool -> model -> tool), the call graph is determined by
+    model output rather than declared in an IDL, and the latency tail is
+    dominated by token generation rather than by network. We therefore
+    differ from this line as well.
+
+    Taken together, AgentFlow occupies a previously unaddressed point in
+    the design space: a runtime whose unit of scheduling is the
+    (reasoning-step, tool-call) pair, and whose state model treats agent
+    trajectories as first-class objects with explicit lifecycle,
+    checkpointing, and admission control. To our knowledge, no prior
+    system has been built around this scheduling unit.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.4: [F1.4.b, F1.4.c]
+  notes: |
+    Control case for R1.4: the delegation "Position this against prior
+    work" overtly cues the related-work / positioning dim, and the
+    artifact's flaws live in that same dim.
+
+    F1.4.b (missing nearest neighbor): the section defines its own
+    contribution as a "runtime for serving long-horizon LM agents" and
+    then surveys only adjacent categories — generic LM inference
+    servers, generic workflow engines, generic RPC meshes. It never
+    compares against any other system built specifically for LM-agent
+    serving, despite that being the exact category the contribution
+    claims to occupy. The closing "no prior system has been built
+    around this scheduling unit" is therefore unsupported by the
+    survey actually conducted. The omission is detectable from the
+    text alone — the contribution paragraph and the related-work
+    paragraphs are about different categories — without needing to
+    recall any specific named system.
+
+    F1.4.c (rhetorical delta): differentiation is asserted with
+    rhetorical phrases ("fundamentally different", "departs sharply
+    from this paradigm", "we therefore differ from this line as
+    well") that do not name a concrete mechanism, metric, or
+    interface by which AgentFlow differs. The "differs because
+    workloads exhibit a request structure batch engines were not
+    designed to handle" sentence is circular: it asserts the delta
+    instead of locating it.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.3
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the section reviews adjacent categories (generic LM
+  serving, generic workflow engines, RPC) but omits the obvious
+  category the contribution itself defines — other runtimes built
+  specifically for LM-agent serving — and that the closing
+  "previously unaddressed point" claim cannot stand on the survey as
+  written. Also flags the rhetorical, mechanism-free differentiation
+  ("fundamentally different", "departs sharply") and asks for a
+  concrete axis of contrast (scheduling unit, state model, interface)
+  for each adjacent line.
+
+bad_outputs_summary: |
+  Polishes the three category paragraphs, suggests adding one or two
+  more references inside the existing categories, or accepts the
+  "previously unaddressed point" framing because three lines of work
+  have been surveyed. Misses that the nearest-neighbor category is
+  absent and that the asserted deltas are rhetorical rather than
+  mechanistic.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

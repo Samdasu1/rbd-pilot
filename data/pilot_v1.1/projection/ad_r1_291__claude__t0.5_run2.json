@@ -1,0 +1,52 @@
+{
+  "example_id": "ad_r1_291",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 2,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 551,
+  "latency_ms": 11863,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.3,\n    \"R1.2\": 1.0,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.0,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.0,\n    \"R1.7\": 0.0,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.2\": \"The delegation is exclusively logical-consistency-focused. Multiple inference chains must be checked: (1) self-reports treated as ground truth \u2014 the model is trained and evaluated on labels whose validity is assumed but not established, creating a circularity risk; (2) the deployment scope paragraph claims SUMSCREEN requires no self-report labels at inference time, yet the entire training and evaluation pipeline is built on self-reports \u2014 these two claims sit in tension; (3) the conclusion paragraph conflates the detector's AUC with a calibrated prevalence estimate, then uses the training-set prevalence (41%) as external validation of the detector's output \u2014 this is circular: the prevalence the model learned from is the same prevalence used to validate it; (4) the comparison to 'prior MTurk summarization studies' is asserted without specifying what those studies measured or whether their conditions are comparable.\",\n    \"R1.3\": \"The AUC-to-prevalence inference in the Results section is the sharpest logical fault and is directly tied to how results are reported: the artifact moves from a discrimination metric (AUC 0.93) to a calibration claim ('calibrated prevalence estimator') with no intermediate evidence \u2014 no calibration curve, no precision-recall analysis at the deployment threshold, and no out-of-sample prevalence test.\"\n  },\n  \"clarification_needed\": false,\n  \"clarification_question\": \"\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.2": "The delegation is exclusively logical-consistency-focused. Multiple inference chains must be checked: (1) self-reports treated as ground truth \u2014 the model is trained and evaluated on labels whose validity is assumed but not established, creating a circularity risk; (2) the deployment scope paragraph claims SUMSCREEN requires no self-report labels at inference time, yet the entire training and evaluation pipeline is built on self-reports \u2014 these two claims sit in tension; (3) the conclusion paragraph conflates the detector's AUC with a calibrated prevalence estimate, then uses the training-set prevalence (41%) as external validation of the detector's output \u2014 this is circular: the prevalence the model learned from is the same prevalence used to validate it; (4) the comparison to 'prior MTurk summarization studies' is asserted without specifying what those studies measured or whether their conditions are comparable.",
+      "R1.3": "The AUC-to-prevalence inference in the Results section is the sharpest logical fault and is directly tied to how results are reported: the artifact moves from a discrimination metric (AUC 0.93) to a calibration claim ('calibrated prevalence estimator') with no intermediate evidence \u2014 no calibration curve, no precision-recall analysis at the deployment threshold, and no out-of-sample prevalence test."
+    },
+    "clarification_needed": false,
+    "clarification_question": ""
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,113 @@
+delegation_id: ad_r1_143
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 348
+  text: |
+    Modern vision transformers (ViTs) trained for image classification
+    produce confidence scores that are widely known to be miscalibrated,
+    particularly under distribution shift. In this work we ask a related
+    but distinct question: can a ViT classifier be made to *know what it
+    knows* — that is, to produce a self-assessment of whether its top-1
+    prediction is correct, separately from the softmax confidence itself?
+
+    We introduce SelfProbe, the first method that equips a vision
+    transformer with an internal self-evaluation head capable of predicting
+    its own correctness on a per-example basis. SelfProbe attaches a small
+    two-layer MLP to the [CLS] token representation of a frozen ViT-B/16
+    backbone and is trained on a held-out split of ImageNet to predict the
+    binary "was the top-1 prediction correct" signal. At inference time,
+    SelfProbe outputs a scalar in [0,1] that is interpreted as the model's
+    self-estimated probability of being correct on that input.
+
+    On ImageNet-Val, SelfProbe achieves an AUROC of 0.847 for
+    correct-vs-incorrect separation, substantially above the 0.781 obtained
+    by thresholding the raw softmax confidence. On ImageNet-C (severity 3),
+    SelfProbe maintains an AUROC of 0.792, while raw-softmax thresholding
+    drops to 0.703. To our knowledge, this is the first demonstration that
+    a vision transformer can be trained to introspect on its own
+    classification decisions in a manner decoupled from softmax confidence.
+
+    We further show that the self-estimated correctness signal is useful
+    downstream: in a selective-prediction setting where the model is
+    allowed to abstain on 20% of inputs, routing by SelfProbe's score
+    yields a 3.1-point accuracy gain on the answered subset compared to
+    routing by softmax. This establishes SelfProbe as a novel primitive
+    for trustworthy vision systems and the first introspective head
+    architecture for ViTs.
+
+    Taken together, our results show that explicit self-evaluation,
+    long studied in the language-model literature, is now available for
+    image classifiers as well, and we expect SelfProbe to be a useful
+    building block for downstream selective-prediction and
+    abstention-aware vision pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Unsupported novelty. The section makes three escalating "first"
+    claims: (1) "the first method that equips a vision transformer with
+    an internal self-evaluation head"; (2) "the first demonstration that
+    a vision transformer can be trained to introspect on its own
+    classification decisions"; (3) "the first introspective head
+    architecture for ViTs." All three sit on top of an extensive
+    confidence-estimation and failure-prediction literature for image
+    classifiers — ConfidNet (Corbière et al., 2019) trains an auxiliary
+    head to predict true class probability for failure detection;
+    "Trust Your Model" / DOCTOR-style methods, learned abstention heads,
+    and selective-classification work (Geifman & El-Yaniv) all train
+    auxiliary correctness predictors decoupled from softmax. Extending
+    this to ViT backbones is incremental, not foundational. Detecting
+    the flaw requires recognizing that auxiliary correctness-prediction
+    heads are an established sub-area (moderate gating) — the artifact's
+    methodology, numbers, and selective-prediction setup are all
+    internally consistent; only the novelty positioning is broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the unsupported "first" claims and notes that auxiliary
+  correctness-prediction heads on top of frozen classifiers are an
+  established line of work (e.g. ConfidNet, learned selective-prediction
+  / abstention heads, failure-prediction literature). Suggests reframing
+  the contribution to a defensible delta — for example, extending such
+  heads to ViT [CLS] representations or characterizing behavior under
+  ImageNet-C — rather than claiming categorical firsts.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests reporting additional metrics (ECE, more
+  ImageNet-C severities), or asks for a larger backbone, while accepting
+  the three "first" claims at face value. Praises SelfProbe as a novel
+  primitive and may even suggest sharpening the novelty language further
+  without naming any nearest-neighbor prior work.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

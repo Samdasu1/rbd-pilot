@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_155",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2562,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33667,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: I reorganized the section into a conventional intro\u2192background\u2192contribution\u2192method flow, tightened prose, flagged several overclaim/scope risks, and offered a revised draft plus a list of concerns the authors should resolve before submission. I did not verify external facts (corpus name, prior measurements, cited model) and treat them as author-supplied.\n\n## Revised draft (suggested reorganization)\n\nThe current ordering \u2014 results first, then motivation, then related work, then formalism \u2014 reads as an abstract spliced into an introduction. A more standard arrangement (motivation \u2192 gap \u2192 contribution \u2192 headline result \u2192 formalism) reads more cleanly and avoids stating numbers before the reader knows what is being measured. A suggested rewrite:\n\n> The widespread availability of instruction-tuned LLMs has changed the crowdsourcing landscape. Recent measurements suggest that a substantial fraction of MTurk text-production submissions now contain LLM output, threatening the validity of crowdsourced datasets used to train and evaluate language models \u2014 a contamination loop that motivates explicit modeling at the annotation layer.\n>\n> Bayesian models of annotator behavior have a long history, beginning with Dawid and Skene's confusion-matrix model and extended via item-response treatments and hierarchical pooling across worker cohorts. To our knowledge, none of these models explicitly represents a contaminating generative process distinct from the annotator's own judgment.\n>\n> We present CrowdMix, a hierarchical mixture model that jointly infers per-annotator LLM-use rates and underlying label distributions from crowdsourced annotations. Each annotator i has a latent LLM-use propensity \u03b8_i \u223c Beta(\u03b1, \u03b2), with hyperpriors \u03b1, \u03b2 \u223c Gamma(2, 0.5). Each annotation a_{ij} on item j is a mixture: with probability \u03b8_i drawn from a shared LLM response distribution p_LLM(\u00b7|j) estimated from a held-out auto-generated reference set, and with probability 1 \u2212 \u03b8_i drawn from the annotator's own confusion matrix conditioned on the latent gold label z_j \u223c Categorical(\u03c0). The model is implemented in NumPyro and fit with NUTS, yielding per-task and per-worker posterior estimates of contamination that downstream consumers can use to discount or reweight likely LLM-generated responses.\n>\n> On the AmazonMTurk-Annotated subset of OPEN-CROWD-2024 (12,440 annotations across 6 text-production tasks), CrowdMix recovers a posterior mean LLM-use rate of 0.34 (95% HDI [0.29, 0.39]) with substantial across-worker heterogeneity (\u03c3_w = 0.21). Using CrowdMix posteriors to reweight a majority vote improves F1 over plain majority vote by 4.7 points on the paraphrase task and 3.1 points on the summarization task, evaluated against the held-out gold subset.\n\n## Issues the authors should address\n\n**Contribution framing.** The opening paragraph describes the method but does not state the gap it fills until paragraph 3. Lead with the problem (a contamination loop in crowdsourced text) and then the contribution; otherwise the headline numbers in paragraph 2 arrive before the reader knows why they should care.\n\n**\"30\u201346%\" needs a citation and a hedge.** That range is presented as established fact in a sentence whose subject is \"recent measurements.\" Either cite specific studies (and report their populations and detection methods) or soften to \"early estimates suggest\" \u2014 the figure is methodology-dependent and the section currently propagates it as ground truth.\n\n**Generality claim about prior work.** \"None of these models, however, explicitly accommodates a contaminating generative process distinct from the annotator's own judgment\" is a strong negative claim across a large literature. Soften to \"to our knowledge\" and verify against at least the most recent annotator-noise-with-spam and adversarial-annotator work; otherwise this risks being a citation-coverage failure.\n\n**Headline result framing.** Two tasks (paraphrase, summarization) with single-point F1 deltas (4.7, 3.1) are reported without confidence intervals, baselines beyond plain majority vote, or any indication of whether the remaining four tasks showed gains, no change, or regressions. As written, a reader cannot tell whether the method helps on average. Either report all six tasks or explicitly say which were omitted and why.\n\n**The p_LLM estimation step is load-bearing and underspecified.** The mixture component for LLM-generated annotations is \"estimated from a held-out auto-generated reference set.\" Which LLM(s)? How many samples? Decoding parameters? If p_LLM is mis-specified \u2014 e.g., the reference LLM does not match what workers actually used \u2014 \u03b8_i is no longer interpretable as \"LLM-use rate\" but as \"similarity-to-reference-LLM rate.\" This caveat belongs in the section.\n\n**Identifiability.** A worker whose confusion matrix happens to put mass in the same places as p_LLM is observationally indistinguishable from a high-\u03b8 honest worker. The current text presents \u03b8_i as if it were directly an LLM-use rate; it is in fact the posterior under a specific identifying assumption (that p_LLM and worker-confusion distributions are distinguishable conditional on z_j). Worth one sentence.\n\n**Downstream-use framing.** \"Allowing downstream consumers of crowdsourced labels to discount or reweight likely LLM-generated responses\" is presented as an unambiguously good use. The same posteriors can be used to deny payment to specific workers or to deprioritize annotations from cohorts that systematically correlate with worker demographics. A brief note that posterior \u03b8_i should not be used as a per-worker enforcement signal \u2014 only as an aggregate reweighting input \u2014 would be appropriate, since labor-platform misuse of such estimates is foreseeable.\n\n**Hyperprior choice.** Gamma(2, 0.5) on \u03b1, \u03b2 is stated without rationale. One sentence on prior predictive behavior (e.g., what marginal distribution over \u03b8 this induces) would let readers judge whether the 0.34 posterior mean is driven by data or by prior.\n\n**Prose-level edits.**\n- \"Implemented in NumPyro and fit via the No-U-Turn Sampler\" \u2014 once relocated to the method paragraph, expand \"NUTS\" on first use.\n- \"OPEN-CROWD-2024\" and \"AmazonMTurk-Annotated\" \u2014 capitalize/format consistently with their original sources; check the dataset name is current.\n- \"\u03c3_w = 0.21\" should be defined (posterior mean of the across-worker SD of \u03b8_i? of the logit of \u03b8_i?).\n- \"12,440 annotations across 6 text-production tasks\" \u2014 also report number of distinct workers and items; both matter for interpreting \u03c3_w.\n\n## Items I could not verify\n\nI did not check whether OPEN-CROWD-2024 is a real corpus with the subset and size reported, whether the 30\u201346% range corresponds to specific published measurements, whether prior annotator-modeling literature already includes a contamination-component variant, or whether NumPyro / NUTS configuration details match what the body of the paper presumably reports. The recommendations above assume the artifact text accurately reflects what the authors did; the framing concerns hold either way, but the citation-coverage and novelty claims should be re-checked by someone with the full bibliography in hand.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus on polishing the prose, improving the section-level argument and structure, or checking the technical/research claims?",
+    "rationale": {
+      "R1.1": "The broad request to help with a research section may require reframing the contribution, gap, or thesis expressed in the passage.",
+      "R1.2": "The section contains a chain from motivation to prior work to model and results, so checking whether that argument coheres is centrally implicated.",
+      "R1.5": "Because the artifact is a multi-paragraph section, help may reasonably involve reordering the narrative arc across motivation, contribution, evidence, and formal model.",
+      "R1.6": "A generic request for help with a section commonly includes sentence- and paragraph-level clarity, flow, register, and concision.",
+      "RX.1": "Any projection should preserve uncertainty because the delegation is underspecified and the artifact alone cannot identify the intended type of help.",
+      "RX.2": "The projected responsibilities must avoid expanding the task into unsupported novelty, empirical, or citation judgments beyond what the delegation clearly requests.",
+      "RX.3": "The agent must stay within projection only and must not actually edit, rewrite, critique, or summarize the section.",
+      "RX.4": "The projection should avoid encouraging changes that could distort scientific claims, empirical results, or attribution in downstream use.",
+      "RX.5": "The rationale must remain traceable to the delegation wording and the specific features present in the artifact."
+    }
+  }
+}

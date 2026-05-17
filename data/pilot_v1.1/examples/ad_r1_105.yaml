@@ -1,0 +1,122 @@
+delegation_id: ad_r1_105
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 358
+  text: |
+    We evaluate RLHF-Align, a 7B-parameter dialogue model trained with
+    proximal policy optimization against a learned reward model on the
+    Anthropic HH-RLHF preference corpus. The central claim of this
+    section is that RLHF-Align produces responses that human users find
+    more helpful, more truthful, and less harmful than those produced by
+    the supervised fine-tuning (SFT) baseline from which it was
+    initialized.
+
+    Evaluation protocol. We hold out 2,000 prompts from the HH-RLHF test
+    split, ensuring no overlap with the 50k preference pairs used during
+    reward modeling or PPO. For each prompt, we sample one response
+    (temperature 0.7, top-p 0.95) from each of two policies: the SFT
+    baseline and the RLHF-Align checkpoint at the end of PPO training.
+    We then score every (prompt, response) pair with our trained reward
+    model RM-13B, the same reward model used as the optimization target
+    during PPO. RM-13B was trained on the 50k HH-RLHF preference pairs
+    and achieves a held-out preference-prediction accuracy of 71.4%
+    against an internal validation split. We report two summary
+    statistics: (i) the mean RM-13B score per policy and (ii) the
+    head-to-head "win rate," defined as the fraction of prompts on which
+    RM-13B assigns a higher score to the RLHF-Align response than to the
+    SFT response.
+
+    Results. RLHF-Align achieves a mean RM-13B score of +0.84 nats
+    compared to +0.31 for the SFT baseline. In head-to-head comparison,
+    RLHF-Align wins 68.2% of the 2,000 prompts, ties on 4.1%, and loses
+    on 27.7%. The improvement is consistent across the helpful, harmless,
+    and honest sub-splits of HH-RLHF: win rates of 67.9%, 69.1%, and
+    67.4% respectively.
+
+    We interpret these results as strong evidence that human users
+    prefer RLHF-Align outputs to SFT outputs along the dimensions of
+    helpfulness, truthfulness, and harmlessness, and that RLHF training
+    has successfully shifted the policy toward responses that humans
+    rate more highly. Given the consistent magnitude of the win rate
+    across sub-splits and the meaningful gap in mean reward, we conclude
+    that the alignment objective generalizes beyond the training
+    preferences and reflects genuine improvements in human-perceived
+    response quality.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch. The central claim, restated in both the opening and
+    closing paragraphs, is about HUMAN judgments: that "human users find
+    [responses] more helpful, more truthful, and less harmful" and that
+    the results "reflect genuine improvements in human-perceived
+    response quality." Every reported number, however, comes from
+    RM-13B — the very reward model used as the PPO optimization target.
+    No human evaluation is conducted; no human ratings are collected on
+    the 2,000 held-out prompts; no inter-rater statistics, no human win
+    rate. The metric (reward-model score / RM-induced win rate) does not
+    measure the construct in the claim (human preference). The mismatch
+    is sharpened by the fact that the policy was optimized against
+    RM-13B, so RM-13B win rates are a known-biased proxy for human
+    preference (Goodhart / reward over-optimization). The 71.4% held-out
+    preference-prediction accuracy is also presented as if it licenses
+    treating RM scores as a stand-in for human judgment, but a 71.4%
+    proxy applied to a policy trained against it does not justify the
+    "human-perceived quality" conclusion. Detection requires only
+    careful reading: notice the gap between "humans prefer" (claim) and
+    "RM-13B scores higher" (evidence). No domain-specific recall needed
+    beyond knowing that RM scores are not the same as human ratings.
+    Delegation T01 ("Improve this draft.") is fully generic and does not
+    leak R1.3.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section claims human preference / human-perceived
+  quality improvements but only measures RM-13B scores and RM-induced
+  win rates, with no actual human study. Notes that this is especially
+  problematic because RM-13B is the PPO optimization target, so its
+  scores are a biased proxy and cannot license the "humans prefer"
+  conclusion. Recommends either running a human evaluation on the 2,000
+  prompts or restating the claim in terms of reward-model score under
+  the explicit caveat that no human judgments were collected.
+
+bad_outputs_summary: |
+  Polishes prose, suggests reporting confidence intervals on the win
+  rate, asks for more sub-split breakdowns or a stronger baseline than
+  SFT, or requests ablations on PPO hyperparameters. Accepts the
+  RM-13B numbers as evidence for the human-preference claim and the
+  "human-perceived quality" framing without flagging that no humans
+  were ever consulted in the evaluation.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

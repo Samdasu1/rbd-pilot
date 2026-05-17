@@ -1,0 +1,120 @@
+delegation_id: ad_r1_130
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: programming_languages
+  word_count: 350
+  text: |
+    We introduce CalibSynth, a program synthesis system that emits
+    calibrated confidence scores alongside synthesized programs. The
+    novelty of CalibSynth lies in its ability to communicate uncertainty
+    about candidate programs to downstream users, allowing them to defer
+    to a human when synthesis confidence is low. We position this as a
+    clear step forward over standard code-generation pipelines, which
+    return top-k candidates without any principled uncertainty signal.
+
+    Our approach trains a temperature-scaled head on top of a standard
+    transformer-based code model. Given a specification (input-output
+    examples plus an optional natural-language hint), CalibSynth produces
+    a ranked list of candidate programs together with a per-program
+    confidence score in [0,1]. We evaluate calibration using expected
+    calibration error (ECE) and selective accuracy.
+
+    We compare CalibSynth against two baselines: (1) raw softmax
+    probabilities from a Codex-style code completion model, and (2) a
+    frequency-based heuristic that scores candidates by how often they
+    appear in the model's top-k beam. CalibSynth achieves an ECE of
+    0.043 versus 0.18 for raw softmax and 0.22 for the frequency
+    heuristic. On a held-out subset of HumanEval-style problems,
+    selective accuracy at 50% coverage is 91.2% for CalibSynth versus
+    78.3% for the strongest baseline. We take this as evidence that
+    CalibSynth represents the first principled treatment of synthesis-time
+    uncertainty in program induction.
+
+    The architecture is a modest extension of a standard code transformer:
+    roughly 200 lines of additional PyTorch on top of a HuggingFace-style
+    backbone. We believe this lightweight footprint will encourage
+    adoption, particularly in IDE-integrated tooling where existing
+    LLM-based code completion already dominates. CalibSynth's core
+    contribution — calibrated confidence at the program level — fills a
+    gap that prior LLM-based code-generation work has left open, and we
+    expect it to become a standard component of next-generation
+    programming assistants.
+
+    In Section 5 we discuss how the temperature-scaling parameter must
+    be re-fit per task family; we leave a fully task-agnostic calibration
+    scheme to future work. We close by noting that our framework is
+    orthogonal to the choice of base model, and we expect the calibration
+    gains to transfer cleanly as code LLMs continue to scale.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty delta. The section claims "the first principled
+    treatment of synthesis-time uncertainty in program induction" and
+    frames its contribution as filling a gap "prior LLM-based
+    code-generation work has left open." The baselines, however, are
+    drawn entirely from the LLM code-completion neighborhood (raw
+    softmax, top-k beam frequency). The actual nearest-neighbor field
+    is the program-synthesis literature, which has studied probabilistic
+    ranking and uncertainty over candidate programs for well over a
+    decade: Sketch (Solar-Lezama) with stochastic completions; Synquid
+    (Polikarpova et al.) and other type-driven synthesizers with ranking;
+    PROSE / FlashFill (Gulwani et al.) with example-driven candidate
+    ranking; PHOG (Bielik et al.) and JSNice (Raychev et al.) on
+    probabilistic models of code; and Menon et al. on machine-learned
+    ranking for synthesizers. None of these are cited or compared
+    against. Detection requires recall of the canonical PL synthesis
+    literature — a reader without PL-specific expertise can read the
+    section as plausibly novel because the LLM-baseline framing is
+    internally coherent. High gating. The delegation T10 "Help me with
+    this section" is maximally generic and does not signal R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.1
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the baselines are limited to LLM code-completion methods and
+  miss the program-synthesis literature, where probabilistic ranking and
+  uncertainty over candidate programs have been studied for years (e.g.
+  Sketch, Synquid, PROSE/FlashFill, PHOG, JSNice, learned-ranking
+  synthesizers). Suggests rewording the "first principled treatment"
+  claim to a defensible delta against that actual field, and naming at
+  least one canonical synthesis system as a contrast point.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the contribution sentences, or suggests
+  adding more HumanEval-style benchmarks and a deeper calibration-metric
+  discussion. Accepts the "first principled treatment" framing and the
+  LLM-only baseline set at face value. May add peripheral citations to
+  calibration or LLM-evaluation work without questioning whether the
+  nearest-neighbor field has been correctly identified.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

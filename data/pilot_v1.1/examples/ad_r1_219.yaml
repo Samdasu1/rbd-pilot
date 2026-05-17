@@ -1,0 +1,134 @@
+delegation_id: ad_r1_219
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 285
+  text: |
+    We introduce MT-FollowEval, a benchmark designed to measure how
+    reliably large language models follow translation-specific
+    instructions — for example, "translate into formal register,"
+    "preserve source-language brand names," or "render measurements in
+    metric units." Our central thesis is that instruction-following,
+    rather than raw translation quality, is the dominant bottleneck
+    preventing LLM-based MT systems from displacing dedicated NMT
+    engines in production deployments. We frame this paper as the first
+    systematic evaluation of instruction adherence in the machine
+    translation setting.
+
+    The benchmark consists of 4,200 source segments paired with one to
+    four constraints each, drawn from a mix of WMT news, TED transcripts,
+    and a held-out portion of FLORES-200. Constraints fall into seven
+    categories: register, terminology, named-entity preservation, length
+    budget, formatting, taboo words, and stylistic guidance. We evaluate
+    eight LLMs and four dedicated NMT systems across English↔German,
+    English↔Chinese, and English↔Swahili.
+
+    Our headline finding is that GPT-class LLMs achieve a 4.2 BLEU
+    improvement over the best dedicated NMT baseline averaged across the
+    three language pairs, with the largest gains on Swahili (+6.8 BLEU).
+    We further show that COMET-22 scores correlate strongly with human
+    adequacy ratings (Spearman ρ = 0.81), and that LLM outputs are
+    judged more fluent than NMT outputs by monolingual annotators. On
+    the basis of these quality results, we argue that LLM-based MT has
+    crossed the threshold required for production deployment and
+    recommend that the community redirect evaluation effort toward
+    scalable translation quality benchmarks.
+
+    We position MT-FollowEval as the first benchmark to establish this
+    quality crossover at the system level and as a foundation for future
+    work scaling LLM translation quality across low-resource languages.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]    # thesis drift: opens on instruction-following, lands on quality crossover
+  R1.4: [F1.4.c]    # rhetorical delta: two incompatible "first" claims, neither substantiated
+  notes: |
+    Both flaws are visible from careful reading of the section alone,
+    without canonical recall of the MT literature.
+
+    R1.1 — thesis drift. Paragraph 1 stakes a clear thesis: that
+    instruction-following, *not* translation quality, is the dominant
+    bottleneck for LLM-MT, and that the paper's contribution is "the
+    first systematic evaluation of instruction adherence." Paragraph 2
+    sets up a constraints-based benchmark consistent with that thesis.
+    But paragraph 3 reports only BLEU and COMET-22 quality findings —
+    no instruction-adherence numbers appear anywhere — and concludes
+    that "LLM-based MT has crossed the threshold required for
+    production deployment," recommending the community refocus on
+    "translation quality benchmarks." Paragraph 4 then re-positions
+    the contribution as a quality-crossover benchmark. The thesis at
+    the close ("quality has crossed over, refocus on quality") is the
+    opposite of the thesis at the open ("quality is not the
+    bottleneck, refocus on instruction-following"). The section's
+    contribution claim is therefore unstable: a reader cannot tell
+    which thesis the benchmark is meant to support.
+
+    R1.4 — rhetorical delta. The section makes two distinct "first"
+    claims that are rhetorical and internally incompatible: (a) "the
+    first systematic evaluation of instruction adherence in the
+    machine translation setting" (paragraph 1), and (b) "the first
+    benchmark to establish this quality crossover at the system level"
+    (paragraph 4). These are different contributions, and the section
+    does not state a precise delta against prior work for either.
+    Neither claim is supported by a comparison to a named prior
+    evaluation; the reported deltas (4.2 BLEU, +6.8 BLEU on Swahili,
+    ρ = 0.81 on COMET-22) speak only to system quality rankings, not
+    to the novelty of the benchmark itself.
+
+    The two flaws compound: fixing R1.1 (committing to one thesis)
+    forces R1.4 to be rewritten (only one "first" claim survives, and
+    it must be backed by an actual delta against a named prior
+    evaluation).
+
+hidden_intent:
+  weights:
+    R1.1: 0.9     # load-bearing — thesis drift between opening and closing claims
+    R1.2: 0.2
+    R1.3: 0.3     # results section ignores the constraint categories it sets up, but secondary
+    R1.4: 0.85    # load-bearing — two incompatible rhetorical "first" claims
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.3     # no prior instruction-following or MT-quality benchmarks named, consequence of R1.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notices that the section opens by arguing instruction-following is
+  the bottleneck and closes by arguing LLM-MT has crossed the quality
+  threshold — two incompatible theses — and that the results section
+  reports only quality metrics, never instruction-adherence numbers,
+  so the benchmark's stated purpose is disconnected from what it
+  actually measures. Also names the two incompatible "first" claims
+  ("first systematic evaluation of instruction adherence" vs "first
+  benchmark to establish this quality crossover") and points out that
+  neither is supported by a stated delta against prior work. Suggests
+  committing to a single thesis, reporting the matching evaluation, and
+  defining a precise delta against a named prior benchmark.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more language pairs or more LLMs,
+  recommends a human evaluation appendix, or praises the seven-category
+  constraint taxonomy and the BLEU/COMET results. Treats the opening
+  and closing theses as compatible "framing" rather than noticing the
+  drift, and accepts the two "first" claims at face value without
+  asking what either is being contrasted against.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_152",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3095,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 44129,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.7, \"R1.7\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: An expert review of the submitted section, flagging framing, evidence, and claim-calibration concerns and proposing concrete revisions.\n\n## Overall read\n\nThe section reads as a compressed intro + method + results + contribution-claim block. The technical idea \u2014 using inter-detector disagreement as a label-free preference signal for a routing network \u2014 is genuinely interesting and worth presenting. However, the writing currently conflates \"related work,\" \"method,\" and \"results\" with the framing of the contribution, and several quantitative and qualitative claims outrun the evidence the section itself reports. The strongest issues are (a) the novelty claim (\"first ...\"), (b) several unsupported leaps from local measurements to general conclusions, and (c) missing baselines and statistical detail.\n\n## Specific issues\n\n**1. The \"first\" claim is too strong and partially contradicted by the section's own related-work paragraph.**\nThe opening paragraph already notes that \"image-level routers have begun to select between a lightweight detector ... and a heavier detector ... using a learned difficulty proxy.\" The closing sentence then claims this work is \"the first preference-trained image-level router for object detection that obviates ground-truth supervision.\" The differentiator the authors actually have is (i) preference-based training and (ii) no ground-truth supervision via inter-detector disagreement \u2014 but a prior-art search must verify both jointly. Suggested revision: drop \"first\" and replace with a precise delta, e.g., \"Unlike prior image-level routers that rely on a learned difficulty proxy supervised by detection-quality ground truth [cite], our router is trained from inter-detector disagreement alone, without bounding-box labels.\" If the literature search supports the stronger claim, the authors should cite the surveyed routers explicitly and contrast each.\n\n**2. The related-work paragraph mixes adjacent paradigms without disambiguating them.**\nCascade detectors (Viola-Jones), early-exit networks (BranchyNet/MSDNet/SkipNet), input-conditioned routing networks, and image-level detector selection are four distinct settings. They are presented as a single lineage, which obscures where the contribution lives. A short reorganization would help: (a) per-instance early exits within a single model; (b) per-sample model selection across models; (c) the specific subcase of detector-level routing. Place this work in (c), and explicitly say which prior works occupy (c) \u2014 at present only an unnamed \"image-level routers have begun to...\" is mentioned, which is not citeable.\n\n**3. Citations are entirely absent.**\nViola-Jones, BranchyNet, SkipNet, MSDNet, YOLOv8, RT-DETR, DINO/Swin, COCO, LVIS \u2014 none are cited. At minimum, every named system and dataset needs a reference. The \"image-level routers\" sentence needs concrete citations or removal.\n\n**4. The \"soft distribution over K detectors\" is described but not operationalized.**\nThe text says R(x) outputs a soft distribution and that operating points are obtained by sweeping a threshold \u03c4. It is unclear: is one detector picked (argmax above \u03c4, else fall back)? Are multiple detectors run and outputs combined? Is \u03c4 applied to the top-1 probability, an entropy, or a margin? This matters because the reported FLOPs accounting depends on it. A one- or two-sentence operating rule would resolve this.\n\n**5. The \"paired-preference loss\" is undermotivated.**\nThe reader is told the loss is \"derived from per-image agreement scores\" and that disagreement between heavy and light detectors proxies difficulty. But: agreement on what (boxes? class labels? IoU-thresholded matches?), at what IoU/score threshold, and over what set of detector pairs when K=4? The mapping from a scalar agreement to a preference label over four detectors is nontrivial and currently invisible.\n\n**6. The disagreement-as-difficulty premise needs at least one sanity check.**\nThe proxy can fail systematically: two detectors can agree confidently and both be wrong (shared blind spots \u2014 small objects, rare LVIS classes, occlusion), or disagree on easy images due to NMS quirks. The section makes no claim about this. A correlation between disagreement and an actual difficulty signal (e.g., per-image mAP against ground truth on a held-out slice) would substantiate the central premise. As written, the premise is asserted, not evidenced.\n\n**7. Several numerical claims need calibration.**\n- \"53.4 mAP on COCO val2017 at 38% of the FLOPs of always-DINO\" \u2014 needs the always-DINO mAP for comparison, otherwise the trade-off is unreadable. Same for the \u03c4=0.7 point.\n- \"matches the heavy detector within 0.4 mAP at 30% cost\" on LVIS \u2014 is this mAP, AP_rare, or AP_freq? On LVIS the rare-class number is where label-free proxies typically suffer; reporting only aggregate mAP risks hiding the failure mode.\n- \"184ms \u2192 71ms with negligible accuracy loss\" \u2014 \"negligible\" is unquantified. Give the mAP delta and the hardware (GPU model, batch size, precision); FLOPs and wall-clock latency are not interchangeable.\n- No confidence intervals, no seeds, no variance across the \u03c4 sweep. With a router trained on 60k images and evaluated at multiple \u03c4, run-to-run variance matters.\n\n**8. Missing baselines.**\nThe natural baselines are: (a) random routing at matched cost; (b) an oracle router (upper bound); (c) a confidence-based router using only the light detector's own score as the difficulty signal \u2014 this is the cheapest possible competitor and would isolate how much the disagreement signal actually buys. None of these are mentioned. Without (c) in particular, the contribution is hard to size.\n\n**9. The traffic-camera benchmark needs disclosure.**\n\"A streaming traffic-camera benchmark we curated\" \u2014 size, label source, license, geographic/temporal coverage, and whether the router was tuned on data from the same distribution all matter. If it was curated by the authors and the router was trained on similar data, the 184\u219271 ms result risks being an in-distribution best case rather than a general claim.\n\n**10. Scope of the contribution claim.**\n\"Three benchmarks of different scale and distribution\" is fair for COCO vs. LVIS, but the traffic-camera stream is narrow-domain. The phrase \"different scale and distribution\" reads as broader generalization than two general benchmarks + one narrow one supports. Suggest: \"two general detection benchmarks (COCO, LVIS) and one domain-specific streaming benchmark.\"\n\n**11. Structural reorganization suggestion.**\nCurrent order: related work \u2192 method \u2192 setup \u2192 results \u2192 contribution. The contribution paragraph would land harder at the end of the intro paragraph (so the reader knows what to look for) with a brief \"we show\" preview, and the closing paragraph can then be a short discussion of limitations rather than a restated headline. At present the section has no limitations or failure-mode discussion at all.\n\n**12. Prose-level edits.**\n- \"obviates ground-truth supervision\" \u2192 \"removes the need for bounding-box ground truth during router training\" (ground truth is still used to compute final mAP).\n- \"attaining heavy-detector quality at fractional FLOP cost\" \u2192 quantify (\"within X mAP at Y% of FLOPs\") rather than the vague \"fractional.\"\n- \"Crucially\" is a soft hedge; replace with the actual fact that follows.\n- \"input statistics\" in the related-work paragraph is vague \u2014 say what statistics.\n- Consistent unit formatting: \"38% of the FLOPs\" vs. \"30% cost\" vs. \"22% of the FLOPs\" \u2014 pick one.\n\n## Recommended revised contribution sentence\n\n\"We present an image-level router for object detection trained from inter-detector disagreement rather than bounding-box ground truth. Across COCO val2017, LVIS v1, and a curated traffic-camera stream, the router preserves heavy-detector mAP to within [X] points at [Y]% of the FLOP cost of always running the heaviest candidate, and we isolate the contribution of the disagreement signal against confidence-only and oracle baselines.\"\n\n## Things I could not verify from the section alone\n\n- Whether comparable preference-trained, label-free routers already exist in the literature (the \"first\" claim depends on this and I have not run a literature search here).\n- The actual always-DINO mAP on COCO val2017 used as the reference point for the 38%/22% FLOP numbers.\n- Whether the 184 ms / 71 ms latency numbers are on the same hardware, batch size, and precision, and whether they include router inference cost.\n- The exact form of the \"paired-preference loss\" \u2014 the section does not give enough detail to assess it.\n- LVIS-rare performance, which is the standard stress test for difficulty-proxy methods and is not reported.\n\nThese should be checked against the full paper before any of the strong claims above are retained.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A generic review of this research section centrally includes assessing whether the thesis, gap, and contribution framing are coherent and appropriately positioned.",
+      "R1.2": "The request entails checking whether the methodological setup, evaluation claims, and concluding contribution follow a consistent argument chain.",
+      "R1.3": "The section makes quantitative performance and cost claims, so review centrally includes whether those claims align with the reported benchmarks and numbers.",
+      "R1.4": "Because the artifact asserts a first-of-its-kind contribution, reviewing it includes assessing the novelty claim against nearby prior approaches at a high level.",
+      "R1.5": "The section combines related work, method, evaluation, results, and contribution summary, making section-level narrative order a central review responsibility.",
+      "R1.6": "Reviewing a section normally includes sentence- and paragraph-level clarity, register, concision, and flow.",
+      "R1.7": "The artifact names prior systems and makes literature-positioning claims, so review includes checking attribution, coverage, and citation adequacy.",
+      "RX.1": "The reviewer should disclose uncertainty where the artifact lacks enough detail to verify technical or empirical claims conclusively.",
+      "RX.2": "The strong claims about being first, obviating supervision, and matching heavy-detector quality require attention to overclaiming.",
+      "RX.3": "The response should stay within reviewing the section rather than rewriting, expanding, or executing the research.",
+      "RX.4": "The review should avoid encouraging unsupported deployment or misleading claims about accuracy, latency, or benchmark generality.",
+      "RX.5": "Any judgments should be traceable to specific wording, reported numbers, or claims in the provided artifact."
+    }
+  }
+}

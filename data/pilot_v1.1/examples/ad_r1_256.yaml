@@ -1,0 +1,141 @@
+delegation_id: ad_r1_256
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: climate
+  word_count: 269
+  text: |
+    Climate impact narratives — region-specific risk summaries used by
+    municipal adaptation planners — require synthesizing GCM
+    downscaled outputs, sectoral vulnerability data, and policy
+    context into accessible prose. We propose ICRN (Iterative Climate
+    Refinement Narrator): a single large language model generates an
+    initial regional risk narrative, critiques its own draft, and
+    revises the narrative iteratively until a self-consistency
+    threshold is met. To our knowledge, this is the first work to
+    apply iterative LLM self-feedback to climate impact narrative
+    generation, distinguishing our approach from the single-pass
+    prompted-summarization paradigm that dominates prior climate-NLP
+    work.
+
+    The architecture uses one LLM in two roles, generator and critic,
+    with no external retrieval at any stage; the system relies
+    entirely on the model's parametric knowledge of climate science.
+    The critic prompt instructs the model to flag factual
+    inconsistencies, missing impact categories (heat, flood, drought,
+    vector-borne disease), and unsupported quantitative claims.
+    Refinement loops continue until two consecutive iterations differ
+    by less than 5% on a Jaccard-similarity threshold over named
+    entities and numeric spans.
+
+    For comparison, we evaluate against single-pass generation,
+    few-shot prompting, and chain-of-thought variants of the same
+    base model. Retrieval-augmented generation is a well-known
+    alternative paradigm but addresses a different problem and is
+    not included in our benchmark.
+
+    Across 50 mid-sized U.S. municipalities, ICRN narratives reduce
+    expert-rated hallucination rate from 12% to 4% relative to
+    single-pass. The iterative process benefits substantially from
+    grounding in retrieved IPCC AR6 chapter excerpts, which the
+    system queries during each critique step to verify quantitative
+    claims against authoritative sources; this retrieval pipeline is
+    the primary driver of the hallucination reduction. We discuss
+    prompt-design ablations and refinement-depth scaling in §4.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.4: [F1.4.b]
+  notes: |
+    Two compound issues:
+
+    R1.2 cross-section contradiction: para 2 states the architecture
+    uses "no external retrieval at any stage" and "relies entirely on
+    the model's parametric knowledge of climate science." Para 4
+    then attributes the headline hallucination reduction to a
+    retrieval pipeline: "the iterative process benefits substantially
+    from grounding in retrieved IPCC AR6 chapter excerpts, which the
+    system queries during each critique step ... this retrieval
+    pipeline is the primary driver of the hallucination reduction."
+    The two paragraphs describe incompatible systems; the load-bearing
+    headline metric (12% → 4%) is credited to a component the methods
+    section explicitly excludes. The contradiction also undermines
+    para 3's dismissal of RAG as "a different problem" — if retrieval
+    is in fact the primary driver, the RAG comparison cannot be
+    waved off.
+
+    R1.4 missing nearest neighbor: the section claims this is "the
+    first work to apply iterative LLM self-feedback to climate impact
+    narrative generation" and only contrasts against single-pass /
+    few-shot / chain-of-thought baselines. The actual nearest
+    neighbors are the iterative-self-feedback line itself —
+    Self-Refine (Madaan et al. 2023), Reflexion (Shinn et al. 2023),
+    and Constitutional AI critique-and-revise (Bai et al. 2022) —
+    which the described architecture (single LLM, generator + critic,
+    iterate to convergence) instantiates almost verbatim. The "for
+    climate" wedge may still be defensible, but the section does not
+    engage with the methodological lineage at all, so the novelty
+    claim as stated is unsupported. Detectable at low knowledge
+    gating because the method described is recognizably the
+    Self-Refine pattern.
+
+    Combined: fixing R1.4 (anchor against Self-Refine / Reflexion /
+    CAI and sharpen the actual delta — domain adaptation, evaluation
+    protocol, etc.) and fixing R1.2 (decide whether retrieval is in
+    the system, and if so rewrite the methods description and the RAG
+    comparison) are both required. Either fix alone leaves the
+    section's contribution claim incoherent.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.85
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the methods section says "no external retrieval"
+  while the results section credits the headline hallucination
+  reduction to retrieval of IPCC AR6 excerpts — these descriptions
+  are mutually incompatible and the section must commit one way,
+  which in turn forces a rewrite of the dismissal of RAG as "a
+  different problem"; (2) the "first work" framing ignores the
+  iterative-self-feedback lineage (Self-Refine, Reflexion,
+  Constitutional AI critique-and-revise) that the described
+  architecture directly instantiates — the section must position
+  against this line and sharpen the actual climate-specific delta.
+  Both fixes are required.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the opening sentence, accepts the "first
+  work" framing, suggests adding more municipalities or a larger
+  ablation table. Treats the para 2 / para 4 retrieval
+  inconsistency as a wording issue and recommends "clarifying" it,
+  or accepts the retrieval-driven result without noticing it
+  contradicts the no-retrieval methods description and undermines
+  the RAG comparison.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

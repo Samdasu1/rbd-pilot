@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_051",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 4088,
+  "cache_read_input_tokens": 13218,
+  "latency_ms": 51203,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.9, \"R1.2\": 0.9, \"R1.3\": 1.0, \"R1.5\": 0.7, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.7}}\n\n**Summary:** The draft has a serious framing-vs-evidence mismatch (it is sold as a cross-viewpoint generalization method but reports only standard same-viewpoint benchmark numbers); I lay out the specific gaps and then provide a rewritten version whose claims match what is actually reported.\n\n---\n\n### The core problem: the abstract sells a paper that the experiments do not deliver\n\nThe first paragraph commits to a specific contribution: a method that \"maintain[s] semantic-segmentation accuracy under arbitrary camera viewpoint shifts,\" motivated by fleets with cameras at different heights and pitch angles. The experiments, however, are Cityscapes-val and BDD100K-val \u2014 both standard benchmarks where train and test cameras share the same intrinsics and roughly the same mounting geometry. There is no cross-viewpoint test split, no held-out vehicle, no synthetic viewpoint stress test reported.\n\nThis is the most important issue in the draft. Either the framing must be narrowed to what is actually shown (homography augmentation as a regularizer on standard benchmarks), or cross-viewpoint experiments need to be added. As written, an informed reader will conclude that the headline claim is unsupported.\n\n### Other specific issues\n\n1. **\"The first method designed to...\"** \u2014 a priority claim with no citations of, or comparison to, prior work on viewpoint-robust segmentation, domain randomization for driving cameras, or homography-style augmentation (which has a sizeable existing literature). At minimum this needs to be softened and contextualized.\n\n2. **Causal attribution to boundary sharpening** \u2014 \"gains are concentrated in classes with thin or elongated geometry \u2026 which we attribute to the boundary-sharpening effect of the homography augmentation.\" The per-class breakdown is referenced but not shown, and the mechanism is asserted rather than tested. A more defensible phrasing reports the per-class numbers and offers the mechanism as a hypothesis.\n\n3. **\"Homography augmentation is doing most of the work\"** \u2014 informal, and the arithmetic deserves to be explicit: a 0.9 mIoU drop relative to a 1.6 mIoU total improvement means roughly 56% of the headline gain comes from the augmentation, *if* the scale-and-crop replacement is a fair control. Whether scale-and-crop matches the perturbation budget of the homography pass is not stated.\n\n4. **\"Stabilizes optimization\"** \u2014 claimed but not evidenced (no loss curves, no seed variance). Either drop the claim or report it.\n\n5. **No variance reported** \u2014 single mIoU numbers on a benchmark where 1.6-point gaps over a strong baseline can sit inside seed-to-seed noise. Without seeds \u00d7 runs or at least one re-trained baseline of your own, the comparison to \"DeepLabv3+ trained with the same backbone and schedule\" is hard to read: is the baseline number reproduced by you, or copied from the original paper?\n\n6. **\"Useful default in future segmentation pipelines\"** \u2014 speculative and not load-bearing; either remove or hedge.\n\n7. **Driving-scene framing + unvalidated deployment recipe** is mildly concerning given the context. Recommending a training change as a \"useful default\" for production driving stacks, when the motivating safety case (cross-viewpoint robustness) was not measured, is the kind of overgeneralization that can mislead practitioners. The reframing below avoids that.\n\n8. **Minor prose / structure**:\n   - \"atrous spatial pyramid module\" \u2192 name it ASPP and cite.\n   - \"gives back 0.9 mIoU\" is ambiguous; \"loses 0.9 mIoU\" or \"is 0.9 mIoU lower\" is clearer.\n   - The conclusion repeats the abstract; consider replacing it with a short limitations paragraph (no cross-viewpoint evaluation; no variance; mechanism untested).\n   - Section ordering is fine for an abstract/short paper, but a one-sentence limitations beat between results and conclusion would strengthen it.\n\n### Suggested rewrite (aligned to the evidence actually reported)\n\n> We study homography-based image augmentation as an addition to standard semantic-segmentation training for driving scenes. The motivation is that production fleets contain vehicles with different camera mounting heights and pitch angles, and segmentation networks are known to degrade when the deployment viewpoint differs from the training viewpoint; homography perturbations are a cheap way to inject viewpoint variation at training time. In this work we report only same-viewpoint benchmark results; the cross-viewpoint claim is left to future work.\n>\n> Our model is a standard encoder\u2013decoder: a ResNet-50 backbone, an ASPP module, and a lightweight decoder that upsamples to full resolution. During training, each input image is passed through a random homography sampled from pitch rotations of \u00b18\u00b0, roll rotations of \u00b15\u00b0, and vertical translations of up to 6% of the frame height. All other training hyperparameters match our DeepLabv3+ baseline.\n>\n> On Cityscapes-val we observe 78.4 mIoU versus 76.8 for the matched-schedule DeepLabv3+ baseline (+1.6). On BDD100K-val the gap is +1.2. Both numbers are single runs; we have not measured seed variance, and readers should treat sub-2-point differences accordingly. An ablation that replaces the homography pass with scale-and-crop at a comparable perturbation budget recovers roughly half of the gain (\u22120.9 mIoU), which we read as evidence that the homography component contributes, though we do not isolate its mechanism. Per-class results (not shown here) suggest the improvement is largest on thin/elongated classes; we offer this as a hypothesis rather than a tested claim.\n>\n> Limitations. We do not evaluate on a held-out viewpoint, so the cross-viewpoint generalization claim that motivates the augmentation remains untested. We also do not report variance across seeds or compare to prior work on homography- or perspective-based augmentation, both of which we leave to a fuller version of this work.\n\n---\n\n**What I could not verify and what to treat as advisory:**\n- I have not checked the literature to confirm whether the \"first method\" claim is in fact unsupported; my assertion above rests on the well-known existence of prior viewpoint/homography augmentation work, but a citation search is needed before either keeping or removing the claim.\n- The DeepLabv3+ baseline numbers I quoted in the rewrite (76.8 on Cityscapes) are inferred from the draft's \"+1.6 over DeepLabv3+\" and may not match the actual figure the authors used \u2014 replace with the real measured baseline before publication.\n- The 56% figure (0.9 / 1.6) assumes the scale-and-crop ablation is a fair control matched in perturbation strength; if it is not matched, that arithmetic is misleading and should be reworked.\n- I am treating \"boundary sharpening\" and \"stabilizes optimization\" as authorial intuitions rather than results; if the authors have plots or per-class tables that I have not seen, some of those claims may in fact be defensible as-is.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally involves refining the thesis, deployment gap, and contribution framing above the sentence level.",
+      "R1.2": "The request implies checking whether the argument from viewpoint shift to homography augmentation to benchmark gains is coherent.",
+      "R1.3": "The draft's empirical claims and conclusions need alignment with the reported datasets, ablation, and class-level observations.",
+      "R1.5": "Improvement may require adjusting section-level narrative flow from problem statement through method, evidence, and conclusion.",
+      "R1.6": "Writing polish is load-bearing because the delegation is a general request to improve the draft's clarity, concision, and academic register.",
+      "RX.1": "Any projection of improvement must preserve uncertainty around unsupported or unverifiable claims in the artifact.",
+      "RX.2": "The draft contains strong claims such as being the first method and a future default, so avoiding overclaiming is active.",
+      "RX.3": "The agent must stay within improving the draft rather than performing experiments, rewriting results, or changing the research itself.",
+      "RX.4": "Because the draft concerns deployment in driving scenes, improvements should avoid claims that could encourage unsafe real-world assumptions.",
+      "RX.5": "Edits or recommendations would need to remain traceable to the artifact's stated methods, results, and limitations."
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_303",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2051,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29714,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.4\": 1.0, \"R1.7\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Reviewed the positioning section for how it situates the contribution against prior work and flagged places where the novelty claims outrun what the text actually demonstrates.\n\n**Overall read of the positioning**\n\nThe three-bucket taxonomy (quasi-experimental methods; descriptive LLM-era crowdsourcing studies; pre-LLM annotator quality control) is a reasonable partition, and the framing \u2014 \"we sit at the intersection, no one else does\" \u2014 is a recognizable and legitimate move. The concern is that the framing is asserted rather than substantiated, and the strongest novelty claim (\"first to instrument LLM exposure with platform-level rollouts\") is the most exposed to counterexample.\n\n**Specific issues with the comparative claims**\n\n1. *The three buckets are described without a single citation.* As written, a reader cannot verify that the prior literature looks the way the section says it does. Each of the three paragraphs needs concrete anchors \u2014 e.g., named methodological references for staggered DiD/heterogeneous treatment effects (Callaway\u2013Sant'Anna, de Chaisemartin\u2013D'Haultf\u0153uille, Goodman-Bacon, Borusyak\u2013Jaravel\u2013Spiess), named surveys/telemetry studies for ChatGPT use among crowd workers (e.g., Veselovsky et al. on MTurk LLM prevalence), and named references for the annotator-quality literature (Snow et al., Sheng et al., Callison-Burch, gold-standard / MACE-style work). Without these, the reader has to take the partition on faith.\n\n2. *The \"descriptive studies\" bucket may be understated.* There is already work that goes beyond pure description \u2014 e.g., studies that measure LLM prevalence among crowd workers and discuss implications for dataset contamination, and at least some attempts to quantify quality differences with and without suspected LLM use. The current phrasing (\"they stop at description and do not attempt to identify a causal effect\") risks overstating the gap. A safer formulation is that prior work has not used a credible identification strategy for the effect, rather than that no causal claims have been attempted.\n\n3. *The \"first to instrument LLM exposure with platform-level rollouts\" claim is the load-bearing novelty statement and is the most fragile.* Adjacent designs exist \u2014 staggered rollouts of AI tools (Copilot, ChatGPT enterprise, translation assistants) have been used as instruments or as DiD treatments in labor and productivity work (e.g., the GitHub Copilot RCT/observational papers, call-center generative-AI studies). The text does not have to engage every one of these, but the \"first\" claim should be narrowed to the specific population (crowd-sourced text-annotation quality) rather than the instrument design in general, or it will invite easy counterexamples.\n\n4. *\"No prior work occupies this point in the design space\" plus \"genuinely new contribution\" is doing the same work twice.* One careful sentence is more credible than two superlatives. Consider collapsing to a single, scoped claim: \"To our knowledge, no prior study combines (a) platform-rollout-based identification with (b) crowd-annotation fidelity as the outcome.\"\n\n5. *Cross-bucket interactions are missing.* The most interesting prior work for this paper is likely to be the small set of papers that already cross two of the three buckets \u2014 e.g., descriptive LLM-use studies that gesture at quality consequences, or quality-control work that has been updated post-2023 to consider model-mediated submissions. Acknowledging those crossings, rather than presenting the buckets as cleanly disjoint, strengthens rather than weakens the contribution claim.\n\n6. *The instrument's exclusion-restriction story is implicitly part of the contribution but never positioned.* If platform-level rollouts are the methodological innovation, the section should at least flag that the validity of that instrument (exclusion, monotonicity, no anticipation) is itself a claim to be defended, and that prior IV work in adjacent settings has had to defend analogous assumptions. Otherwise the methodological novelty reads as \"we picked an instrument\" rather than \"we identified an instrument with defensible properties in this setting.\"\n\n**Concrete recommendations**\n\n- Add 2\u20134 citations per bucket; without them the partition is unfalsifiable as written.\n- Replace \"first to instrument LLM exposure with platform-level rollouts\" with a narrower claim scoped to the crowd-annotation outcome, or cite the closest adjacent rollout-as-instrument designs and explain the differentiator.\n- Soften \"do not attempt to identify a causal effect\" to something like \"do not provide a design that identifies the effect under stated assumptions,\" which is both more accurate and harder to refute.\n- Either drop \"genuinely new contribution to the empirical literature\" or earn it by stating the specific empirical gap being filled (population, outcome, identification strategy) in one sentence.\n- Consider a fourth, short paragraph on AI-productivity/rollout-as-treatment studies outside crowdsourcing, since that is the literature most likely to be raised by a reviewer as a missing comparator.\n- The ordering (methods \u2192 descriptive \u2192 pre-LLM QC \u2192 synthesis) is fine; no reorganization needed beyond inserting the citations.\n\n**Caveats on the above**\n\nI have not searched the literature to confirm which exact papers should be cited in each bucket, nor verified whether a published paper has already used platform-level LLM rollouts as an instrument for crowd-worker LLM use specifically. The \"first\" claim may well hold for that narrow scope, but I cannot confirm it from the artifact alone; the recommendation to narrow the claim is a hedge against that uncertainty rather than a finding that a counterexample exists. Likewise, my characterization of the descriptive-studies bucket as possibly understated is based on general familiarity with the area rather than a fresh survey, and should be checked against the authors' own reading of that literature.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 1.0,
+      "R1.5": 0.3,
+      "R1.6": 0.0,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation asks for positioning, which centrally involves shaping the thesis, gap, and contribution claim relative to surrounding work.",
+      "R1.4": "Assessing the delta from prior work is load-bearing because prior-work positioning fails if novelty is misstated.",
+      "R1.7": "The task centrally depends on relevant literature coverage and attribution, even though the main emphasis is contribution positioning rather than a full scholarship audit.",
+      "RX.1": "Uncertainty must be disclosed because claims such as firstness and nearest-prior-work comparisons may depend on incomplete literature knowledge.",
+      "RX.2": "Overclaim avoidance is active because the artifact makes strong novelty and first-design claims against prior work.",
+      "RX.3": "Scope adherence is active to keep the projection limited to responsibility assignment rather than performing the positioning edit.",
+      "RX.4": "Downstream-harm avoidance is active because overstated scholarship claims can mislead reviewers and distort academic attribution.",
+      "RX.5": "Provenance and traceability are active because prior-work positioning should remain tied to identifiable claims and sources."
+    }
+  }
+}

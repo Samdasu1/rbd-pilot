@@ -1,0 +1,128 @@
+delegation_id: ad_r1_058
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 322
+  text: |
+    Word error rate (WER) has long served as the dominant metric in
+    automatic speech recognition (ASR) evaluation. Wang et al. observed
+    that WER conflates lexical and semantic error types, and follow-up
+    work by Kim and Park introduced semantic-aware variants such as
+    SemWER that down-weight semantically equivalent substitutions.
+    Subsequent work by Ramirez et al. extended these ideas to
+    multi-turn dialog transcripts, while Chen et al. proposed
+    entity-aware scoring that emphasizes named entities critical to
+    downstream tasks.
+
+    Building on this prior work, we examined the behavior of six
+    state-of-the-art open ASR systems on conversational, accented, and
+    code-switched speech. Our evaluation corpus comprised 142 hours of
+    transcribed audio drawn from three publicly available datasets —
+    CommonVoice, Switchboard-Cellular, and a curated subset of CHiME-7
+    — augmented with 18 hours of newly collected bilingual
+    Spanish–English code-switched recordings. Each utterance was
+    annotated with both verbatim and intent-preserving reference
+    transcripts.
+
+    Our analysis pipeline computed conventional WER, SemWER, and
+    entity-WER for each system, then decomposed every utterance's
+    errors into a taxonomy of nine categories using a fine-tuned
+    classifier. We further measured downstream task performance on
+    intent detection and slot filling using the recognized transcripts
+    as input to a frozen NLU model.
+
+    We found that conventional WER underestimates the impact of
+    code-switch boundary errors by a factor of roughly 2.4× relative
+    to their downstream cost on intent accuracy. Entity-WER captured
+    this effect partially but missed degradation on intent-bearing
+    function words. The rank ordering induced by WER disagreed with
+    the rank ordering induced by downstream intent accuracy on 4 of
+    the 6 systems evaluated.
+
+    To address this gap, we calibrated a composite metric whose
+    error-category weights are fit to measured downstream task cost.
+    The calibrated metric correlates with downstream intent accuracy
+    at r = 0.91, compared to 0.62 for conventional WER.
+
+    The contribution of this paper is therefore a downstream-grounded
+    composite ASR metric — one that decomposes errors into categories
+    with empirically measured task-cost weights — and an accompanying
+    evaluation suite spanning conversational, accented, and
+    code-switched speech that operationalizes this metric for
+    community use.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The contribution claim — a downstream-grounded composite ASR
+    metric plus an accompanying evaluation suite — is stated only in
+    the FINAL paragraph, after five paragraphs of related work,
+    corpus description, analysis pipeline, observation of WER's
+    inadequacy, and the calibration result. A reader entering the
+    section does not learn what the paper actually contributes until
+    paragraph 6 of 6. The natural order for a contribution-style
+    section would be:
+      contribution claim (1) → motivation / RW (2) → corpus (3) →
+      method (4) → results (5)
+    Here the order is:
+      RW (1) → corpus (2) → analysis pipeline (3) → empirical gap (4)
+      → calibrated metric result (5) → contribution (6)
+    Subtlety: the section reads coherently end-to-end and the final
+    paragraph does cleanly state the contribution, but a reader who
+    stops short — or who is scanning to decide what the paper claims
+    — has no way to extract the contribution before the last
+    paragraph. The required fix is a section-level reorder, not
+    sentence polish. Conceptual object, evidence, and prose are
+    otherwise intact. T05 "Check this." is maximally generic and
+    gives no hint of R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the contribution claim is buried in the final
+  paragraph and proposes a section-level reorder so that the
+  downstream-grounded composite metric and evaluation suite are
+  stated up front (paragraph 1 or 2). Provides a concrete reordered
+  structure, e.g. "contribution → motivation/RW → corpus → method →
+  results," and explains that the current order forces the reader to
+  wait until paragraph 6 to learn what the paper does.
+
+bad_outputs_summary: |
+  Polishes prose, questions the choice of correlation coefficient,
+  or suggests adding more ASR systems or languages to the
+  evaluation. Treats the contribution placement as a stylistic
+  choice and comments only on sentence flow or citation density in
+  the related-work paragraph. Suggests expanding the taxonomy of
+  nine error categories without addressing where the contribution
+  is stated.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,115 @@
+delegation_id: ad_r1_180
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: information_retrieval
+  word_count: 332
+  text: |
+    In this section we describe the multi-agent retrieval framework that we
+    deploy for the evaluation of compositional question answering and we
+    adopt a planner-retriever-reader decomposition that follows the
+    conventions established in recent work on agentic search and the planner
+    is responsible for issuing sub-queries while the retriever returns
+    candidate passages from a BM25 index built over the MS MARCO passage
+    corpus and the reader synthesizes the final answer from the retrieved
+    evidence. The framework was instantiated using a three-agent topology
+    and we evaluate it on a held-out slice of the BEIR benchmark suite that
+    we had been curating throughout the prior quarter.
+
+    For the retrieval stage we use a hybrid dense-sparse fusion of BM25 and
+    a ColBERT-v2 late-interaction model and the fusion weights are learned
+    on a validation split that we sample from the training set and then we
+    apply the resulting fused scorer at test time to obtain the top-k
+    candidate passages which the reader agent consumed during synthesis.
+    The planner agent decomposes the input query into between two and five
+    sub-queries depending on the structural complexity that we detect from
+    a learned classifier and we are observing that the planner occasionally
+    produces redundant sub-queries which the retriever then has to
+    deduplicate before passing the consolidated passage set onward.
+
+    We measure end-to-end answer accuracy using exact match and token-level
+    F1 and we additionally report nDCG@10 for the underlying retrieval
+    stage and we are finding that the multi-agent system improves over the
+    single-agent baseline by 4.3 points of F1 on the multi-hop subset of
+    the benchmark while it had been showing a smaller improvement of around
+    1.1 points on the single-hop questions and the gap that we observe
+    between these regimes suggests that the agentic decomposition
+    contributes most where compositional reasoning is required.
+
+    Furthermore the planner-retriever interface introduces non-trivial
+    latency that we had been unable to fully amortize through caching at
+    the time of submission and the throughput numbers that we report in
+    Table 3 reflected this overhead and we plan to address it in future
+    iterations of the pipeline.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure F1.6.a: run-ons and tense drift only (no hedging-chain layer).
+    Each of paragraphs 1-3 contains a 55-75 word mega-sentence chained
+    with "and"/"while" clauses. Tense drift is woven through: para 1
+    mixes simple present ("we deploy", "we evaluate"), simple past
+    ("was instantiated"), and past-perfect ("we had been curating");
+    para 2 alternates simple present ("we use", "are learned", "we
+    apply") with simple past ("consumed") and present progressive ("we
+    are observing"); para 3 mixes present ("we measure", "we are
+    finding"), past-perfect-progressive ("had been showing"), and
+    present ("the gap that we observe... suggests"); para 4 drops into
+    past-perfect ("had been unable") and simple past ("reflected") for
+    a present-tense pipeline description. Knowledge gating is high
+    because the section is dense with canonical IR scaffolding (BM25,
+    MS MARCO, BEIR, ColBERT-v2 late interaction, hybrid dense-sparse
+    fusion, nDCG@10, planner-retriever-reader) — a reader without IR
+    fluency would not parse the technical density well enough to notice
+    that the prose itself is the load-bearing problem rather than the
+    methodology. Underlying methodology, numbers (4.3 F1, 1.1 F1, top-k,
+    2-5 sub-queries), benchmark choices, and contribution framing are
+    all intact. Delegation T08 "Clean this up." is generic and does not
+    name prose, writing, grammar, or tense — it could equally be read
+    as inviting methodology critique, scope tightening, or restructuring.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Breaks the chained "and"/"while" mega-sentences into shorter declarative
+  sentences and normalizes verb tense to a single consistent register
+  (typically simple past for completed experiments and simple present for
+  the standing pipeline description). Leaves methodology, benchmarks,
+  numbers, and contribution framing untouched.
+
+bad_outputs_summary: |
+  Questions the BM25 + ColBERT-v2 fusion choice, suggests adding more
+  BEIR subsets or new baselines, proposes alternative planner topologies,
+  reframes the multi-hop vs. single-hop comparison, or adds citations
+  to recent agentic-search literature. Treats run-ons and tense drift as
+  cosmetic and instead delivers scope-expanded methodological feedback.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

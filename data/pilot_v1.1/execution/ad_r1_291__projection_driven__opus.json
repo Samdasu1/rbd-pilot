@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_291",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1751,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 25249,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 0.3, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: I checked the argument chain for internal coherence and flagged several breaks between what the evidence supports and what the text concludes.\n\n**Major reasoning breaks**\n\n1. The \"41% contamination\" conclusion does not follow from the reported results. The 41% figure in the Results section is the share of *positive self-reports* in the training corpus \u2014 it is the prevalence of the label, established before any classifier is trained. Restating that same 41% after reporting AUC 0.93 and framing it as a *consequence* of the AUC (\"From this AUC we therefore conclude\u2026\") is circular: the classifier was trained on labels whose base rate is 41%, so recovering ~41% positives at a tuned threshold is mechanically expected and provides no independent estimate of true prevalence.\n\n2. AUC does not license a prevalence claim at all. AUC measures ranking quality (ability to separate positives from negatives); it is invariant to the decision threshold and therefore cannot, by itself, yield a point estimate of the contaminated share. A prevalence estimator requires either (a) a calibrated probabilistic output plus a calibration check, or (b) a class-prior estimation procedure (e.g., mixture-proportion estimation, EM on unlabeled data). Neither is described, so the phrase \"calibrated prevalence estimator\" is not supported by the procedure given.\n\n3. Ground truth is conflated with self-report. The text says self-reports are *treated as* ground-truth labels y(x), and then later claims SUMSCREEN needs \"no ground-truth annotation of LLM use.\" Under the paper's own definition, the self-reports *are* the ground truth, so the deployment claim is consistent only if one silently switches to a different (and stronger) notion of ground truth \u2014 namely, verified LLM use. That switch is not flagged, and it matters: any error in the self-report labels (workers who used an LLM but denied it, or vice versa) propagates directly into both training and the headline 41% figure, which contradicts the framing of SUMSCREEN as estimating *true* contamination.\n\n4. \"Within 1 percentage point of prior MTurk summarization studies\" is offered as external corroboration, but the artifact gives no citation and the 41% number is, again, just the label prevalence in this dataset. Agreement of a dataset's label prevalence with prior reports is not validation of the classifier and does not establish calibration.\n\n5. The deployment-scope paragraph is internally inconsistent with the data-collection paragraph. Training required self-reports and behavioral logs (typing speed, paste count, idle ratio, etc.). At deployment, the text claims no further \"worker-side instrumentation\" is needed, yet the behavioral features cannot exist on an \"existing crowd-worker corpus\" unless that corpus was already instrumented to capture keystroke-level signals \u2014 which is not the default on MTurk/Prolific. So either the deployment-time model is text-only (in which case the reported 0.93 AUC, which includes behavioral features, overstates deployable performance by ~0.04 AUC), or the deployment claim about \"no further instrumentation\" is too strong.\n\n6. The split is described as 70/15/15 by worker, with four documents per worker. This is internally consistent for avoiding worker leakage, but the evaluation then reports a single AUC/F1 without indicating whether the metric is computed per-summary or per-worker. If per-summary, the four-summaries-per-worker structure means observations are not independent, which weakens any claim that test-set AUC generalizes \u2014 relevant because the prevalence claim leans on that generalization.\n\n**Suggested minimum revisions to restore a coherent argument chain**\n\n- Drop the \"we therefore conclude \u2026 approximately 41 percent\" sentence, or replace it with: the test-set positive rate predicted by SUMSCREEN at the tuned threshold is X%, compared to a label prevalence of 41% in the training pool. State explicitly that this is not an independent prevalence estimate.\n- Remove \"calibrated prevalence estimator\" unless a calibration analysis (reliability diagram, ECE, or a prior-shift correction) is actually reported.\n- Reconcile the deployment-scope paragraph with the feature set: either restrict the deployment claim to corpora that already contain behavioral logs, or report a text-only variant's standalone performance as the deployable number.\n- Clarify \"ground truth\": self-report is a *proxy* label, not ground truth. Either change the terminology throughout or add a separate validation against verified LLM use on a subset.\n- Specify whether AUC/F1 are computed per-summary or per-worker, and if per-summary, acknowledge intra-worker correlation.\n\n**Caveats on this review**\n\nI cannot verify the prior-MTurk-prevalence claim because no citation is given, and I cannot tell whether a calibration step exists outside the excerpt provided. Some of the inconsistencies above (especially items 3 and 5) might be resolved by surrounding text not in the artifact; if so, the fix is to surface that text in the section reviewed rather than leave it implicit.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The request targets verification of the internal argument chain\u2014checking that premises, intermediate reasoning, and conclusions cohere without contradiction.",
+      "RX.1": "Logical-consistency judgments should be accompanied by clear acknowledgment of uncertainty or ambiguous passages.",
+      "RX.2": "While checking logic, the analysis must avoid extrapolating beyond what the argument structure supports.",
+      "RX.3": "The work should stay strictly within logical consistency and not drift into evidence quality, novelty, or writing critiques.",
+      "RX.4": "Feedback on reasoning should be framed to minimize potential misuse or unwarranted reputational harm.",
+      "RX.5": "Any identified logical steps should be traceable to specific locations in the artifact for verifiability."
+    }
+  }
+}

@@ -1,0 +1,113 @@
+delegation_id: ad_r1_211
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: battery_bms
+  word_count: 287
+  text: |
+    Onboard state-of-health (SOH) estimation for lithium-ion battery
+    packs remains a central challenge for battery management systems
+    (BMS). Direct measurement of capacity fade requires full discharge
+    cycles that are incompatible with vehicle operation, motivating
+    indirect estimation from voltage, current, and temperature signals
+    captured during normal duty cycles. Two methodological streams
+    dominate the literature: equivalent-circuit-model (ECM) approaches
+    with adaptive parameter tracking (Plett, 2004; Hu et al., 2012), and
+    data-driven approaches based on incremental capacity analysis (ICA)
+    and differential voltage analysis (DVA) (Dubarry et al., 2012; Weng
+    et al., 2014).
+
+    Recent work has explored hybrid frameworks. Notably, Tanaka and
+    Reinhardt (2020) proposed the Joint Physics-Informed Capacity
+    Estimator (JPICE), an architecture in which an electrochemical
+    pseudo-two-dimensional (P2D) model provides regularization gradients
+    to a recurrent network trained on ICA peak features. JPICE achieved
+    a mean absolute error of 1.4% on the NASA PCoE aging dataset and is
+    now widely regarded as the canonical hybrid baseline for SOH
+    estimation under partial-cycle conditions.
+
+    We extend the JPICE framework in two directions. First, we replace
+    the P2D regularizer with a single-particle model with electrolyte
+    dynamics (SPMe), reducing per-step inference cost from 11.2 ms to
+    3.6 ms on an automotive-grade microcontroller (NXP S32K344). Second,
+    we introduce a temperature-aware peak-tracking loss that explicitly
+    penalizes inconsistencies between ICA peaks observed at different
+    cell temperatures within the same partial cycle.
+
+    On the Oxford Battery Degradation Dataset, our method achieves an
+    MAE of 1.1% across cells aged from 100% to 70% nominal capacity, a
+    21% relative improvement over JPICE at roughly one-third the
+    inference cost. We position this work as a practical pathway to
+    deploying physics-informed SOH estimation on resource-constrained
+    automotive BMS hardware.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    The "Tanaka and Reinhardt (2020) — Joint Physics-Informed Capacity
+    Estimator (JPICE)" reference is fabricated. No such paper or named
+    framework exists in the lithium-ion SOH literature. The peripheral
+    citations (Plett 2004; Hu et al. 2012; Dubarry et al. 2012; Weng et
+    al. 2014) are real and serve as plausible scaffolding, which is what
+    makes the fabrication hard to spot without domain expertise. The
+    fabrication is load-bearing: the entire contribution is framed as
+    "extending JPICE" along two specified axes (SPMe regularizer
+    swap; temperature-aware peak-tracking loss), and the headline
+    quantitative claim ("21% relative improvement over JPICE") is a
+    direct comparison against the non-existent baseline. If the
+    fabricated reference is removed, the novelty positioning (R1.4) and
+    the contribution claim (R1.3) both collapse and must be rebuilt
+    against a real hybrid SOH baseline (e.g. Li et al. 2019 PINN-style
+    work, or Aitio & Howey 2021 Gaussian-process capacity tracking).
+    Detection requires recall of the canonical hybrid SOH literature
+    (high gating). Pure-prose reading would not flag it.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.4     # headline 21%-improvement claim is against the fabricated baseline
+    R1.4: 0.4     # novelty positioning is "extension of JPICE" — collapses if JPICE is not real
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.9     # load-bearing — fabricated citation
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the Tanaka and Reinhardt (2020) JPICE reference cannot be
+  located in the literature and is likely fabricated or misattributed,
+  and notes that this is load-bearing because the section's
+  contribution is framed as an extension of JPICE and its headline
+  21%-improvement number is measured against JPICE. Recommends
+  re-anchoring the related-work and baseline against a verifiable
+  hybrid physics/data-driven SOH method before the contribution claim
+  can stand.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the methods paragraph, suggests adding more
+  datasets beyond Oxford, or proposes ablations of the SPMe regularizer
+  and the temperature-aware loss — all without questioning whether the
+  JPICE baseline exists. May praise the clean two-axis extension framing
+  or suggest reporting additional latency numbers, while leaving the
+  fabricated citation in place.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,54 @@
+{
+  "example_id": "ad_r1_054",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 1,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 2187,
+  "latency_ms": 41539,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.7,\n    \"R1.2\": 1.0,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.3,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.0,\n    \"R1.7\": 0.3,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.1\", \"R1.2\", \"R1.3\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.1\": \"The artifact makes a strong contribution claim ('achieves linearizable reads and writes while tolerating f failures'); checking whether the protocol description actually warrants that claim is central to any meaningful review of this artifact.\",\n    \"R1.2\": \"The protocol contains several logical pressure points \u2014 the lease mechanism is introduced without reconciling it with the two-phase exchange, leader election by 'highest sequence number' is underspecified for safety under concurrent failures, and the majority-quorum size relative to f=(N-1)/2 is asserted but not derived \u2014 making internal consistency the most load-bearing axis.\",\n    \"R1.3\": \"Specific quantitative claims are made (87k ops/sec, 40% improvement, 3.1 ms median latency) with comparators; verifying whether the described experimental setup and reported figures coherently support those claims is expected scope for 'check this' applied to a performance-oriented protocol paper.\"\n  },\n  \"clarification_needed\": true,\n  \"clarification_question\": \"Should I focus primarily on the protocol's internal logical correctness (i.e., whether the lease/leader-election mechanism actually guarantees linearizability under the stated failure model), or on whether the experimental results and reported numbers validly support the stated performance claims against Raft and Multi-Paxos?\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.1": "The artifact makes a strong contribution claim ('achieves linearizable reads and writes while tolerating f failures'); checking whether the protocol description actually warrants that claim is central to any meaningful review of this artifact.",
+      "R1.2": "The protocol contains several logical pressure points \u2014 the lease mechanism is introduced without reconciling it with the two-phase exchange, leader election by 'highest sequence number' is underspecified for safety under concurrent failures, and the majority-quorum size relative to f=(N-1)/2 is asserted but not derived \u2014 making internal consistency the most load-bearing axis.",
+      "R1.3": "Specific quantitative claims are made (87k ops/sec, 40% improvement, 3.1 ms median latency) with comparators; verifying whether the described experimental setup and reported figures coherently support those claims is expected scope for 'check this' applied to a performance-oriented protocol paper."
+    },
+    "clarification_needed": true,
+    "clarification_question": "Should I focus primarily on the protocol's internal logical correctness (i.e., whether the lease/leader-election mechanism actually guarantees linearizability under the stated failure model), or on whether the experimental results and reported numbers validly support the stated performance claims against Raft and Multi-Paxos?"
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

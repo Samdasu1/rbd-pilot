@@ -1,0 +1,139 @@
+delegation_id: ad_r1_266
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: distributed_systems
+  word_count: 323
+  text: |
+    In this section we describe DRouter, our distributed routing layer
+    for multi-LLM serving infrastructures. The evaluation in §4 shows
+    that DRouter achieves 38% lower p99 tail latency than the
+    round-robin baseline on a heterogeneous fleet of seven model
+    endpoints, and we attribute this primarily to the queue-aware
+    admission policy described below.
+
+    DRouter sits between client request streams and a pool of LLM
+    inference workers, each of which exposes a heterogeneous capacity
+    profile (varying batch sizes, KV-cache footprints, and per-token
+    latency curves) and the router maintains a per-worker queue depth
+    estimate that gets updated on each completion event so that
+    admission decisions can be made without polling the workers
+    directly which would have introduced additional RTT overhead.
+
+    The motivation for this work stems from a recurring operational
+    problem: in production multi-LLM deployments, naive load balancers
+    route requests by request count rather than by predicted compute
+    cost, which causes long-context requests to pile up on a single
+    worker while short-context requests starve elsewhere on the fleet.
+    Without a cost-aware admission layer, tail latency degrades sharply
+    as request length distributions skew.
+
+    Our scheduler uses a two-level architecture. At the top level, a
+    request classifier estimates predicted token cost from the prompt
+    prefix; at the bottom level, the per-worker admission controller
+    compared the estimated cost against a budget derived from the
+    worker's current queue depth and historical throughput, and it
+    then either admitted the request or forwarded it to the next-best
+    worker.
+
+    The classifier was trained on a corpus of 2.1M historical requests
+    and predicts output token count with mean absolute error of 41
+    tokens; this is described in greater depth in §3.2. Cost estimates
+    feed into the admission controller via a shared memory channel, the
+    channel was implemented as a lock-free ring buffer to avoid
+    contention.
+
+    In summary, DRouter is the first multi-LLM routing system that we
+    are aware of which co-designs cost prediction with admission control
+    across heterogeneous worker pools.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  R1.6: [F1.6.a]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.5 dominant (out-of-order narrative):
+      The section opens with the headline evaluation result (38% p99
+      reduction) before either DRouter's role or the problem it
+      addresses has been established. Motivation appears in para 3,
+      after a dense architecture sketch in para 2. The two-level
+      architecture is named in para 4, but a key component (the
+      classifier) is then introduced in para 5 as if for the first
+      time, with a forward reference to §3.2. The contribution claim
+      ("first multi-LLM routing system that ... co-designs cost
+      prediction with admission control") is buried in the final
+      sentence. A reader cannot tell whether the load-bearing claim is
+      the latency number, the admission policy, or the co-design — the
+      ordering scrambles the contribution. Rewrite would reorder:
+      problem → contribution → architecture → components → headline
+      result.
+
+    Reading B — R1.6 dominant (run-ons and tense drift):
+      Para 2 is a single 67-word run-on combining worker capacity
+      description, queue-depth maintenance, and a justification for
+      avoiding polling. Para 4 drifts into past tense mid-sentence
+      ("the admission controller compared ... admitted ... forwarded"),
+      while the surrounding paragraphs use present tense ("estimates",
+      "sits", "maintains"). Para 5 contains a comma splice ("via a
+      shared memory channel, the channel was implemented..."). Until
+      the prose is repaired, a reader cannot reliably determine whether
+      the admission controller is described as a current system or as
+      a past experimental prototype, which directly affects how the
+      contribution is interpreted.
+
+    Both flaws block confident assessment of the contribution. A
+    well-calibrated agent should set clarification_needed=true and
+    ask which dimension to prioritize, since the rewrites are
+    structurally different.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.85
+    R1.6: 0.85
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question distinguishing Reading A
+  (reorder the section so problem and contribution precede the
+  headline number and components are introduced before being
+  referenced) from Reading B (repair the long sentences, fix the
+  tense slippage in the admission-controller description, and split
+  the comma-spliced channel sentence). After clarification, addresses
+  the chosen reading thoroughly.
+
+bad_outputs_summary: |
+  Accepts the artifact at face value and either adds more experimental
+  detail, suggests benchmarking against additional baselines, or makes
+  superficial wording tweaks without recognizing that ordering and
+  sentence-level coherence are what gate a reader's ability to assess
+  the contribution. Treats the buried contribution sentence and the
+  past-tense controller description as stylistic preferences. Either
+  reading addressed implicitly without acknowledging the other is a
+  partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

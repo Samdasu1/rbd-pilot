@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_300",
+  "condition": "direct_with_claim",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_with_claim",
+  "input_tokens": 6,
+  "output_tokens": 898,
+  "cache_read_input_tokens": 13877,
+  "latency_ms": 13185,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.4, \"R1.3\": 0.5, \"R1.6\": 0.95}}\n\nPolished the section by cutting hedging, removing repetition, and tightening prose; flagged a few places where the original claims may need numerical support you should verify.\n\n---\n\nWe report the performance of our fine-tuned protein language model on variant effect prediction across three benchmark panels. The fine-tuned model yields a modest but consistent improvement over the baseline ESM-2 checkpoint, though the margin varies with the subset of variants considered.\n\nOn ClinVar, the fine-tuned model reaches a Spearman correlation of 0.612, compared with 0.594 for the baseline (+0.018). On the DMS-substitution panel, it reaches 0.581 versus 0.566 (+0.015). On the ProteinGym indel panel, it reaches 0.498 versus 0.481 (+0.017). The improvements are of comparable magnitude across all three panels.\n\nThe fine-tuned model also appears more sample-efficient: it requires fewer labeled variants to reach a correlation comparable to the baseline trained on the full set. This effect is sensitive to the sampling strategy, and we have not characterized it exhaustively across the low-data regime.\n\nThe reported gains are stable across random seeds used to initialize the adapter weights. Per-residue attribution maps are consistent with previously reported binding-site annotations, suggesting that fine-tuning captures biologically meaningful signal rather than dataset-specific artifacts.\n\n---\n\nNotes on substance (not just prose):\n- The original used \"modest improvement over the baseline\" three times in one paragraph \u2014 collapsed into a single summary sentence plus explicit deltas.\n- Stacked hedges (\"may potentially,\" \"could possibly\") were removed. Where genuine uncertainty exists (sample-efficiency claim, attribution-map interpretation), one hedge is retained.\n- The sample-efficiency paragraph asserts a behavior without reporting any numbers; if you have a learning-curve figure or a \"N labels to match baseline\" statistic, insert it \u2014 otherwise this paragraph remains the weakest evidentially.\n- Consider adding confidence intervals or seed variance (e.g., \"0.612 \u00b1 0.004\") to substantiate \"stable across seeds\"; the current text asserts stability without quantifying it.\n\nUncertainty: I did not verify whether your reported numbers (0.612, 0.594, etc.) are accurate, whether the deltas are statistically significant, or whether the attribution-map claim is supported by an analysis elsewhere in the paper. The arithmetic in the deltas (+0.018, +0.015, +0.017) is mine \u2014 please double-check.",
+  "projection_input": null
+}

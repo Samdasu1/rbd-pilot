@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_128",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2400,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32950,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nSummary: I revised the section to tighten the framing, remove unsupported claims, soften forward-looking generalizations, and surface limitations that the original text glossed over. Key edits and rationale follow the revised draft.\n\n---\n\n**Revised draft**\n\nModern robot manipulation pipelines increasingly rely on vision-language models (VLMs) for high-level action selection. Querying frontier-scale VLMs at every step of a long-horizon task is expensive in both wall-clock latency and dollar cost. We introduce RoboRouter, a control framework that routes per-step action queries to differently-sized VLMs based on a learned estimate of step-level difficulty. To our knowledge, this is the first published instance of such a cascade applied to embodied control; we do not claim priority over concurrent or unpublished work.\n\nRoboRouter centers on a small meta-classifier that predicts, from the current observation and a symbolic task description, whether an on-board 3B-parameter VLM is likely to produce a correct action, or whether the query should be escalated to a 70B-parameter cloud-hosted VLM. The classifier is trained on 12,000 trajectories from a teleoperated kitchen-manipulation dataset, with supervision labels derived by comparing small- and large-model rollouts against ground-truth success on the training distribution.\n\nWe evaluate RoboRouter on a Franka Panda arm across 40 long-horizon tabletop tasks drawn from the same task family as the training set. RoboRouter achieves 91.4% task success while routing 23% of action queries to the large VLM, compared with 92.1% for an always-large baseline and 71.8% for an always-small baseline. Measured against the always-large configuration on our hardware and API setup, average cost-per-rollout decreases by 4.2x and end-to-end latency by 2.7x. These numbers are specific to our deployment and the two-model pair we used; they should not be read as universal multipliers.\n\nThe paper makes three contributions. First, we describe and evaluate a cost-aware cascading mechanism for VLM-driven embodied control. Second, we provide evidence that, on this task family, routing decisions can be made from observation features without rollout lookahead \u2014 at a measured success cost of roughly 0.7 percentage points relative to the always-large baseline. Third, we report that a small classifier predicting the competence of a larger model is viable in this setting, and we discuss the conditions under which we would expect the pattern to transfer.\n\nSeveral caveats are important. Generalization beyond the training task family is not established here; the kitchen-manipulation distribution is narrow, and we have not tested the classifier on out-of-distribution objects, cluttered scenes, or non-tabletop morphologies. The cost and latency gains depend on the specific 3B/70B model pair, batching regime, and network conditions, and may shrink or invert with different choices. Routing failures \u2014 cases where the classifier sends a hard step to the small model \u2014 incur task-level costs that we characterize but do not eliminate. We release the trained classifier weights and routing infrastructure so others can reproduce and stress-test these results; we make no claim that the layer will drop in front of an arbitrary policy without retraining or recalibration.\n\n---\n\n**Notable issues and what I changed**\n\n1. *Overclaiming \"first.\"* \"The first robotic control framework to route action queries\u2026\" is hard to defend against concurrent or unindexed work. Softened to a hedged priority claim.\n\n2. *Unsupported generalization paragraph.* The original closing paragraph asserted that the approach \"generalizes beyond manipulation\" and predicted RoboRouter would \"become a standard component.\" Neither is supported by the reported experiments (40 tabletop tasks, one task family, one robot, one model pair). I replaced this with an explicit limitations paragraph.\n\n3. *Cost/latency framing.* \"4.2x cost reduction\" and \"2.7x latency reduction\" are presented as if they were properties of the method. They are properties of the method *in a specific configuration*. I added the configuration scoping inline; consider also reporting absolute numbers (dollars per rollout, seconds per step) in the body.\n\n4. *Train/test overlap risk.* The original abstract is silent on whether the 40 evaluation tasks are held out from the 12,000 training trajectories. I added \"drawn from the same task family as the training set\" as a neutral disclosure; if the evaluation tasks are in fact disjoint (different objects, scenes, or task graphs), say so explicitly \u2014 it is a much stronger result and currently being undersold. If they are not disjoint, the current claims need further tempering.\n\n5. *Label construction.* \"Labels derived from comparing small- and large-model rollouts against ground-truth success\" is ambiguous: is the label \"small model succeeds\" or \"small model matches large model\"? These give different classifiers and different failure modes. Clarify in the body; I left the phrasing alone in the abstract but flag it here.\n\n6. *Contribution framing.* The third contribution (\"meta-modeling \u2026 is a viable design pattern\") was stated as an established result. Reframed as a reported finding scoped to this setting.\n\n7. *Structural ordering.* I kept the original five-paragraph structure (motivation \u2192 method \u2192 results \u2192 contributions \u2192 limitations/release) but replaced the speculative closing paragraph with a limitations-and-release paragraph, which is the more conventional and defensible position for the final paragraph of an introduction or extended abstract.\n\n8. *Sentence-level polish.* Minor: removed \"in principle,\" \"with minimal integration effort,\" and \"we expect \u2026 to become a standard component\" \u2014 phrases that read as marketing rather than claims. Replaced \"prohibitively expensive\" with \"expensive\" since \"prohibitive\" is contradicted by the always-large baseline being run successfully in the same paper.\n\n9. *Numbers worth double-checking.* 91.4 vs. 92.1 is a 0.7-point gap on 40 tasks (~28 successes vs. ~37); confidence intervals are wide at this n. The text should either report CIs or be explicit that the gap is within noise. I did not add CIs to the revision because I cannot compute them from the abstract alone.\n\n---\n\n**Things I could not verify**\n\n- Whether the 40 evaluation tasks are held out from training (item 4 above). The fix depends on the answer.\n- The exact label definition used to train the classifier (item 5).\n- Whether the cost and latency numbers include the classifier's own inference cost. If not, the 4.2x and 2.7x are slightly overstated; if yes, this should be said.\n- Whether \"92.1% for an always-large baseline\" was measured on the same 40 tasks under the same conditions, or imported from a different evaluation.\n- Whether any prior published work (concurrent or otherwise) already proposes VLM cascading for embodied agents \u2014 the \"first\" claim is asserted, not surveyed. I have not done a literature check; recommend confirming before the priority claim, even in its softened form, goes to press.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A broad request to help with a research section centrally includes improving the thesis, contribution framing, and gap presentation above the sentence level.",
+      "R1.2": "The section makes a connected argument from cost limitations to routing design to empirical conclusions, so checking the argument chain is central.",
+      "R1.3": "The text ties specific empirical results to contribution and generalization claims, making evidence-claim alignment a central responsibility.",
+      "R1.5": "Because the artifact is a full section with motivation, method, evaluation, contributions, and broader claims, section-level narrative ordering is centrally implicated.",
+      "R1.6": "A generic request to help with a section centrally includes sentence- and paragraph-level clarity, flow, register, and concision.",
+      "RX.1": "Uncertainty should be disclosed where the artifact makes claims that may depend on unstated experimental or literature context.",
+      "RX.2": "The section contains strong claims such as first, standard component, and drop-in integration, so avoiding overclaim is load-bearing.",
+      "RX.3": "The projection must stay within helping with the section rather than performing unrelated review or execution.",
+      "RX.4": "Claims about robotic deployment and practitioner usability can affect downstream expectations, so harm from unsupported deployment implications should be avoided.",
+      "RX.5": "Any projected responsibility should preserve traceability to the artifact's stated experiments, baselines, and release claims."
+    }
+  }
+}

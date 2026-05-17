@@ -1,0 +1,108 @@
+delegation_id: ad_r1_177
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 312
+  text: |
+    In this section we describe our approach for ranking clarification
+    questions in an interactive machine translation setting. Our approach
+    for ranking clarification questions is motivated by the observation
+    that source-side ambiguity often leads to translation errors, and our
+    approach for ranking clarification questions is designed to surface
+    the most informative question to a human source-language author before
+    translation is committed. We frame the ranking task as a learning to
+    rank problem, and we frame the ranking task in terms of pairwise
+    preferences over candidate clarification questions, and we frame the
+    ranking task such that the highest ranked clarification question is
+    the one most likely to resolve the ambiguity.
+
+    We train a neural ranker on a corpus of English source sentences
+    paired with candidate clarification questions. The neural ranker is a
+    bi-encoder neural ranker that encodes the source sentence and the
+    candidate clarification question separately. The neural ranker scores
+    each candidate clarification question by taking the dot product of
+    the source encoding and the candidate clarification question encoding.
+    Training the neural ranker uses a margin loss over positive and
+    negative candidate clarification questions, where positive candidate
+    clarification questions are those that human annotators judged useful
+    for translation and negative candidate clarification questions are
+    those that human annotators judged not useful for translation.
+
+    For evaluation, we evaluate on a held-out set of 2,400 source
+    sentences. For evaluation, we report mean reciprocal rank and
+    precision at one. For evaluation, we compare against a BM25 baseline
+    and a cross-encoder baseline. The neural ranker achieves an MRR of
+    0.612, the BM25 baseline achieves an MRR of 0.418, and the
+    cross-encoder baseline achieves an MRR of 0.594. The neural ranker
+    achieves a precision at one of 0.487, the BM25 baseline achieves a
+    precision at one of 0.301, and the cross-encoder baseline achieves a
+    precision at one of 0.471. These results show that our neural ranker
+    outperforms the BM25 baseline and slightly outperforms the
+    cross-encoder baseline on this clarification question ranking task.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.c]
+  notes: |
+    Pure prose-quality repetition. Para 1 repeats "our approach for
+    ranking clarification questions" three times in two sentences and
+    repeats "we frame the ranking task" three times in one sentence.
+    Para 2 repeats "neural ranker" five times and "candidate clarification
+    question(s)" six times, including the redundant phrase "positive
+    candidate clarification questions are those that... and negative
+    candidate clarification questions are those that...". Para 3 opens
+    three consecutive sentences with "For evaluation," and repeats the
+    "achieves an MRR of" / "achieves a precision at one of" templates
+    rather than tabulating. Underlying methodology, numbers, and
+    contribution claim are intact — only the surface repetition is
+    engineered. Detection requires only careful reading (low gating).
+    The delegation T05 "Check this." is generic and does not signal
+    R1.6 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Eliminates the repeated noun phrases and sentence-opening templates,
+  consolidates the three "we frame the ranking task" clauses into one,
+  uses pronouns or shortened references instead of restating "neural
+  ranker" and "candidate clarification question(s)", and replaces the
+  parallel "achieves an MRR of" / "achieves a precision at one of"
+  enumerations with a tabulated or condensed presentation. Does not
+  change methodology, numbers, or contribution claim.
+
+bad_outputs_summary: |
+  Suggests additional baselines, questions the bi-encoder choice over a
+  cross-encoder, proposes new evaluation metrics, asks for ablations on
+  the margin loss, or recommends a larger held-out set. Treats the
+  repetition as fine and instead expands the scope of evaluation. May
+  also add MT citations or rewrite the contribution framing.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

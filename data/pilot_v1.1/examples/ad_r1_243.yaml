@@ -1,0 +1,147 @@
+delegation_id: ad_r1_243
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 338
+  text: |
+    Section 4. Re-evaluating Safe Control on the SG-Constraint Suite
+
+    We introduce SG-Constraint, a benchmark suite of twelve continuous-
+    control tasks with hard polytopic state constraints, designed to
+    remedy the lack of standardized comparison between robust-control
+    and safe-reinforcement-learning methods. The suite is the central
+    contribution of this section: standardized constraint specifications,
+    fixed-seed disturbance traces, and a violation-weighted scoring
+    rubric that combines tracking error and constraint-violation rate
+    into a single comparable number.
+
+    On SG-Constraint, tube-based MPC achieves a violation-weighted
+    score of 0.81 +/- 0.03 across all twelve tasks, compared with
+    0.62 +/- 0.08 for SAC-Lagrangian and 0.47 +/- 0.11 for vanilla
+    SAC. The gap widens on tasks 7-10, which use chance-constraint
+    formulations; here tube-MPC's explicit handling of additive
+    disturbances yields the largest advantage, with violation rates
+    one to two orders of magnitude below the safe-RL baselines.
+
+    Each task is specified by a discrete-time nominal model
+    x_{k+1} = A x_k + B u_k + w_k with bounded process noise
+    w_k in W and a polytopic state constraint x_k in X. Disturbance
+    traces are generated from a fixed PRNG seed and shared across
+    controllers, so all methods see identical realizations of w_k.
+    The scoring rubric weights tracking RMSE by (1 - violation_rate)^2
+    to penalize controllers that achieve low error by cutting close to
+    constraint boundaries; constraint formulations span hard, soft,
+    and chance-constrained variants drawn from the standard MPC
+    literature.
+
+    Beyond the suite, the principal methodological contribution of
+    this work is the demonstration that tube-MPC with a learned
+    disturbance set, following the construction of Park and Wei
+    (2024), dominates current safe-RL baselines by a margin that
+    prior ad-hoc benchmarks have failed to reveal. The suite makes
+    the comparison reproducible, but the headline takeaway is the
+    controller-design finding: robust-control methods, paired with
+    modern disturbance-set learning, remain the strongest option
+    for hard-constrained continuous control.
+
+    Future work will extend the suite to nonlinear dynamics and
+    time-varying constraints.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  R1.5: [F1.5.c]
+  notes: |
+    Two compound issues, both detectable from careful reading without
+    specialized recall.
+
+    R1.1 contribution slip (F1.1.b): Paragraph 1 explicitly names "the
+    suite" as "the central contribution of this section" -- a benchmark/
+    artifact contribution whose load-bearing elements are the
+    constraint specifications, fixed-seed traces, and scoring rubric.
+    Paragraph 4 then reframes: "the principal methodological
+    contribution of this work is the demonstration that tube-MPC with
+    a learned disturbance set ... dominates current safe-RL baselines"
+    and explicitly elevates this to "the headline takeaway." The
+    section therefore commits to two incompatible primary
+    contributions: (a) a benchmark/evaluation artifact, evaluated by
+    its design choices and coverage, and (b) a controller-design
+    finding, evaluated by the strength and generality of the
+    head-to-head comparison. The two require different evidentiary
+    standards (suite-design rationale vs. ablations of the disturbance-
+    set learner, sensitivity to A/B/W, comparison to other tube
+    variants), and the section as written commits to neither.
+
+    R1.5 out-of-order narrative (F1.5.c): The natural order for an
+    empirical-comparison section is setup -> method/scoring -> results
+    -> interpretation. Here the results paragraph (para 2: scores,
+    standard deviations, gap on tasks 7-10) is placed before the
+    methodology paragraph (para 3: nominal model, disturbance protocol,
+    scoring formula, constraint families). A reader encountering the
+    0.81 vs 0.62 vs 0.47 numbers in para 2 has not yet been told what
+    "violation-weighted score" means, how disturbances are matched
+    across controllers, or which constraint families the tasks span,
+    and so cannot evaluate the result until reading para 3 and
+    re-reading para 2.
+
+    Compound: deciding which contribution is primary (R1.1) determines
+    the correct narrative order (R1.5). If the suite is primary, the
+    methodology paragraph is the central exposition and must precede
+    any results used as illustration. If the controller-design finding
+    is primary, the comparison protocol must be established before the
+    headline numbers, and the suite description becomes setup. Either
+    resolution forces a re-ordering; cosmetic re-ordering without
+    resolving the contribution slip leaves the section incoherent.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.85
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section commits to two incompatible primary
+  claims -- the benchmark suite as artifact vs. the tube-MPC-with-
+  learned-disturbance-set finding as controller-design takeaway --
+  and asks the authors to choose one as load-bearing, since each
+  demands different supporting evidence. Also notes that the
+  results paragraph appears before the methodology/scoring
+  paragraph, so the headline numbers are unreadable on first pass,
+  and recommends moving the setup-and-scoring exposition ahead of
+  the results, with the final ordering driven by whichever
+  contribution is chosen as primary.
+
+bad_outputs_summary: |
+  Tightens prose, suggests adding more baselines or error bars,
+  or recommends a clearer section title, while accepting both
+  contribution framings as compatible halves of one story.
+  Re-orders paragraphs cosmetically (e.g., moves the future-work
+  sentence) without resolving which claim is load-bearing, or
+  fixes the contribution slip while leaving the results-before-
+  methodology ordering intact.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

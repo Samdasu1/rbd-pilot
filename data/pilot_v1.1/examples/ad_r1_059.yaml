@@ -1,0 +1,136 @@
+delegation_id: ad_r1_059
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 348
+  text: |
+    We investigate the causal effect of large language model (LLM)
+    assistance on the quality of crowd-sourced text annotations.
+    Crowdsourcing platforms increasingly mediate the production of
+    training and evaluation data for NLP systems, and the recent
+    finding that a substantial share of crowd workers now silently
+    rely on LLMs raises a sharp question for empirical NLP: does
+    LLM-assisted annotation systematically degrade or improve
+    downstream model performance? Our central contribution is an
+    instrumental-variable (IV) identification strategy that recovers
+    the local average treatment effect (LATE) of LLM use on annotation
+    quality, holding worker characteristics fixed.
+
+    Our data come from a six-week annotation campaign on a popular
+    microtask platform, in which 1,840 workers completed 38,400
+    paragraph-summarization HITs. The platform conducted a randomized
+    experiment during this window in which half of the worker pool
+    received a banner advertising an integrated LLM tool, while the
+    other half saw no such banner. We use banner exposure as an
+    instrument for downstream LLM use.
+
+    Identification rests on two assumptions. First, banner exposure
+    was randomly assigned at the worker level, so workers in the two
+    arms are statistically equivalent on both observed and unobserved
+    characteristics; this is guaranteed by the platform's randomization
+    protocol. Second, banner exposure affects annotation quality only
+    through its effect on LLM adoption (the exclusion restriction).
+
+    Empirically, we find that workers who used LLMs produced summaries
+    that were 14% more semantically faithful to the source paragraph
+    (as measured by entailment scores against held-out references)
+    than workers who did not. Because workers self-select into LLM
+    use based on English proficiency and prior familiarity with chat
+    interfaces, we adjust for these covariates using propensity-score
+    weighting on the LLM-use indicator, yielding an adjusted gap of 9%.
+
+    These findings contribute a practical detector for LLM-generated
+    crowd output: a logistic classifier trained on lexical and
+    stylistic features distinguishes LLM-assisted from unassisted
+    summaries with 0.87 AUC on a held-out worker pool. Requesters
+    can deploy the detector to flag suspected LLM use and re-route
+    affected HITs. We conclude that the rise of LLM-assisted
+    crowdsourcing is best understood not as a threat to data quality
+    but as a measurable signal that downstream pipelines can recover,
+    calibrate against, and exploit.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  R1.2: [F1.2.b]
+  notes: |
+    Two compound issues:
+
+    R1.1 — thesis drift. Para 1 frames the contribution as causal
+    identification: an IV strategy that recovers the LATE of LLM use
+    on annotation quality. The closing paragraphs deliver a different
+    object entirely: a logistic detector that classifies summaries as
+    LLM-assisted or not, with deployment guidance for requesters. The
+    section opens as a causal-effect paper and closes as a detection
+    paper; the stated contribution and the delivered contribution are
+    different theses.
+
+    R1.2 — cross-section contradiction. Para 2-3 set up an IV design
+    using banner exposure as the instrument for LLM use, and claim
+    identification follows from random assignment of the banner plus
+    the exclusion restriction. Para 4 reports the actual estimate by
+    comparing LLM users vs non-users directly and adjusting via
+    propensity-score weighting on the LLM-use indicator with covariates
+    like English proficiency. That is a selection-on-observables design,
+    not an IV reduced-form / 2SLS estimate. The methods section's
+    identification strategy contradicts what the empirics actually
+    estimate: if random banner assignment identifies the LATE, no
+    propensity adjustment on self-selection is needed (and PSW on the
+    treated indicator does not recover the IV estimand).
+
+    Detection: low gating — a reader who knows what IV identification
+    requires (compliance/first-stage, reduced form on the instrument,
+    not PSW on the endogenous treatment) sees the mismatch from the
+    text alone, and the open-vs-close thesis shift is visible without
+    external recall.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the section opens as a causal-LATE paper and closes
+  as a detector paper — these are different contributions and one of
+  them needs to go or the framing needs to be unified; (2) the stated
+  identification (IV via banner exposure) does not match the actual
+  estimate (PSW on the LLM-use indicator), and these two designs
+  recover different estimands under different assumptions. Suggests
+  either committing to the IV design and reporting reduced-form /
+  2SLS estimates on banner exposure, or dropping the causal claim
+  and presenting the work as a descriptive + detector study.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more covariates to the PSW, requests
+  a sensitivity analysis, or adds citations on crowd-work quality.
+  Treats "causal effect" and "detector" as compatible parts of one
+  contribution without flagging the shift, and accepts IV framing
+  alongside PSW estimation as if they were complementary rather than
+  contradictory identification strategies.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

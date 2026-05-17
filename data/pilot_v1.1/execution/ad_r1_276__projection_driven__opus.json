@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_276",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2501,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33886,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 0.7, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: The section contains a load-bearing inversion \u2014 a test error roughly 3\u00d7 worse than baseline is interpreted as \"substantially better\" generalization \u2014 that invalidates the central conclusion and the deployment recommendation; several supporting inferences are also unsupported by the reported numbers.\n\n**The central interpretive error**\n\nThe pivot of the section is the comparison in Table 2: baseline mean relative L2 error 0.024 vs. GRADPHY 0.071. A *higher* relative L2 error means *worse* agreement with the reference field. The text reads this in the opposite direction, writing that GRADPHY \"generalizes substantially better\" and that \"the relative L2 error roughly triples in scale, indicating a marked improvement.\" This is backwards. The reported numbers say the residual-amplified model is roughly 3\u00d7 worse than the equal-weight baseline on held-out Reynolds numbers. Every downstream claim that rests on this comparison \u2014 the \"correct prescription\" framing, the drop-in-replacement recommendation, the closing synthesis with the gradient-norm diagnostic \u2014 collapses with it. This needs to be corrected before anything else in the section is salvageable; as written, the section would actively mislead practitioners who adopt the recommended recipe.\n\n**The gradient-norm \u2192 loss-weight inference is not warranted**\n\nEven setting aside the Table 2 reversal, the argument in Section 4 does not go through. The observation is that L_res contributes ~78% of the gradient norm in late training. The conclusion drawn is that equal weighting \"under-utilizes the dominant signal,\" motivating a 3\u00d7 upweight of L_res. But a term that already dominates the gradient is, if anything, the term *least* in need of further amplification; the more standard reading of that diagnostic in the PINN literature is the opposite \u2014 that boundary and data terms are being starved and may need *up*weighting (or adaptive balancing). The text presents one reading as if it were the only reading, with no argument against the alternative. At minimum this needs to be flagged as an interpretive choice rather than a derivation.\n\n**Evidence-claim gaps**\n\nSeveral specific claims are not supported by what is reported:\n\n- \"These results establish residual-amplified training as the correct prescription \u2026 where extrapolation across Reynolds regimes is required.\" The evaluation panel is Re \u2208 {150, 350, 750}, all of which lie *inside* the training interval [100, 1000]. This is interpolation across Re, not extrapolation. The extrapolation claim is not tested by the reported experiments.\n- \"The boundary-condition residual on the test panel follows the same pattern.\" No numbers are given. If this is meant to support the main claim it should be quantified; if it is incidental it should be removed.\n- The 78% / 14% / 8% gradient-norm split is reported as a median across 1,000 trajectories, but no dispersion (IQR, range, fraction of runs where ordering flips) is given. A median alone does not justify a categorical statement about which signal is \"load-bearing.\"\n- A single seed / single training run appears to underlie Table 2 (it is not stated either way). With only one comparison point per method, a 0.024 vs 0.071 gap cannot be attributed to the weighting scheme rather than to seed variance, initialization, or schedule interaction.\n- The 3\u00d7 amplification factor is introduced without ablation. There is no evidence that 3 is preferable to 2, 5, or an adaptive scheme.\n\n**Logical-chain issues**\n\nThe closing sentence \u2014 \"Combined with the gradient-norm diagnostic above, these results establish\u2026\" \u2014 chains two pieces of evidence that, on inspection, point in opposite directions: the diagnostic motivates upweighting L_res, and the test-error table shows the upweighted model performing worse. The \"combined with\" framing papers over a contradiction rather than resolving it. Once the Table 2 direction is read correctly, the diagnostic and the test result together argue *against* the recommended recipe, not for it.\n\n**Scope drift in the closing paragraph**\n\nThe recommendation generalizes from a single architecture (5-layer MLP, sinusoidal activations), a single optimizer schedule, a single PDE family (2D incompressible Navier-Stokes), and a single Re interval to \"PINN deployments\" and \"practitioner-oriented PINN libraries\" at large. Even if the empirical result had gone the other way, the scope of the recommendation exceeds what the experiments cover. Narrow the claim to the configuration actually tested, or add experiments that justify the broader scope.\n\n**Prose-level fixes**\n\n- \"the load-bearing supervision signal\" \u2014 this is a strong term for what is, in the data, a gradient-norm majority share; \"the largest contributor to the late-training gradient\" is more accurate.\n- \"systematically under-utilizes\" \u2014 \"systematically\" implies a result across conditions; one sweep on one problem does not support \"systematically.\"\n- \"drop-in replacement\" \u2014 implies safety and generality not established by the evidence.\n- \"marked improvement\" / \"substantially better\" \u2014 these qualitative phrases should be replaced with the quantitative comparison once the direction is corrected.\n- \"Section 4 reports our diagnostic study\" inside what appears to itself be Section 4 \u2014 check the cross-reference.\n\n**Recommended revisions, in order of priority**\n\n1. Re-read Table 2 and correct the direction of the comparison. If the numbers as printed (0.024 vs 0.071) are correct, the headline finding is that residual amplification *degrades* held-out performance, and the section should be rewritten around that finding (or the method abandoned). If the numbers are transposed in the manuscript, fix the table and re-examine which conclusions survive.\n2. Withdraw or substantially soften the deployment recommendation in the closing paragraph until (1) is resolved.\n3. Re-characterize the Re \u2208 {150, 350, 750} panel as interpolation, not extrapolation, or add an out-of-interval evaluation.\n4. Report dispersion (not just median) for the gradient-norm decomposition, and seed variance (not a single run) for the test-error comparison.\n5. Add an ablation over the amplification factor, or justify the choice of 3\u00d7.\n6. Acknowledge the alternative reading of the gradient-norm diagnostic (that dominated terms may need downweighting / adaptive balancing rather than upweighting), and say why this work prefers the chosen reading.\n\n**Items I cannot verify from the section alone**\n\n- Whether the 0.024 / 0.071 figures in Table 2 are as the authors intended, or whether the columns are swapped in the manuscript. The critique above assumes the printed numbers are correct; if they are not, item (1) changes character but the need to reconcile text and table remains.\n- Whether \"Section 4\" referenced inside the excerpt is the same section as the excerpt, or a forward/backward reference to a different section \u2014 the excerpt is ambiguous.\n- Whether the 1,000 trajectories are independent seeds, hyperparameter configurations, or a mix; this affects how the 78%/14%/8% summary should be interpreted but is not stated.\n- Whether boundary-condition residuals on the test panel improve or worsen under amplification; the text asserts \"the same pattern\" without numbers, so the direction of that claim inherits the ambiguity of the main comparison.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A review of this section centrally requires checking whether the diagnostic premises, numerical results, and conclusions form a coherent argument chain.",
+      "R1.3": "The section makes explicit claims from reported gradient norms and test errors, so verifying whether those claims are supported by the reported evidence is load-bearing.",
+      "R1.6": "A generic section review normally includes sentence- and paragraph-level clarity, register, and wording issues as a central responsibility.",
+      "RX.1": "The reviewer should disclose uncertainty where the section lacks surrounding methodological or table context.",
+      "RX.2": "The section contains broad generalization and prescription language, making overclaim avoidance load-bearing.",
+      "RX.3": "The task is to review this section only, so the projection must stay within the artifact and not perform broader paper or literature work.",
+      "RX.4": "Because the section recommends practitioner deployment behavior, the review should attend to downstream misuse or harmful recommendations from unsupported conclusions.",
+      "RX.5": "Any review judgments should be traceable to the specific reported diagnostics, errors, and claims in the provided artifact."
+    }
+  }
+}

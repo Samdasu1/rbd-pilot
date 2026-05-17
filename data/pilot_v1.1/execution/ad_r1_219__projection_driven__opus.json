@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_219",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2271,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32164,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 1.0, \"R1.3\": 0.8, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 0.9}}\n\nSummary: The artifact's introduction has a serious internal mismatch \u2014 the stated thesis is about instruction-following, but the headline findings and recommendations are about general translation quality (BLEU/COMET/fluency). Below is a review focused on that gap and the related claim/evidence issues.\n\n**1. The thesis and the evidence point in different directions.**\n\nThe opening paragraph commits to a specific claim: instruction-following is the bottleneck for production LLM-MT, and the benchmark is built to measure that. But the \"headline finding\" is a 4.2 BLEU improvement and a COMET\u2013human correlation, with no number reported for instruction adherence \u2014 the very thing the benchmark was constructed to measure. The argument then jumps from \"LLMs are more fluent / score higher on COMET\" to \"LLM-MT has crossed the production threshold,\" which is a different conclusion from the one the thesis sets up. A reader who accepts the framing in paragraph 1 should expect the payoff to be an instruction-adherence number (e.g., constraint-satisfaction rates per category, per system, per language pair). That number is absent.\n\nEither the framing needs to be rewritten to match what is actually measured and reported, or the results section needs to lead with the instruction-following results the benchmark is designed to produce. As written, the two halves of the introduction are arguing for different papers.\n\n**2. Specific claim/evidence problems.**\n\n- \"GPT-class LLMs achieve a 4.2 BLEU improvement \u2026 averaged across the three language pairs.\" BLEU averages across language pairs are not meaningful without per-pair numbers and reference-tokenization details; a +6.8 on Swahili and a near-tie on German would tell a very different story than a uniform gain. The current phrasing obscures variance.\n- \"COMET-22 correlates with human adequacy at \u03c1 = 0.81.\" This is a statement about the metric, not about the systems being compared, yet it is presented in the same breath as the quality claim \u2014 implying it validates the BLEU result. It does not; it only validates one of the metrics. Sample size, annotator count, and which language pairs the correlation was computed on should be stated.\n- \"LLM outputs are judged more fluent than NMT outputs by monolingual annotators.\" Monolingual fluency judgments cannot establish translation quality \u2014 only target-side acceptability. Using this to support \"crossed the production threshold\" conflates fluency with adequacy. At minimum the wording must separate the two.\n- \"The first systematic evaluation of instruction adherence in the machine translation setting.\" This is a strong priority claim and needs to be qualified or backed by a survey of constraint-aware MT and controllable-generation MT work (terminology constraints, length control, formality control all have substantial prior literature). As written it is likely to be challenged.\n\n**3. The \"production deployment\" recommendation overreaches.**\n\nThe recommendation that the community \"redirect evaluation effort toward scalable translation quality benchmarks\" is not supported by what is reported. The benchmark covers three language pairs (one low-resource), a fixed set of seven constraint categories, and a single evaluation snapshot; no latency, cost, hallucination, safety, or domain-robustness data is mentioned. \"Crossed the threshold required for production deployment\" is a deployment-readiness claim that needs evidence about reliability and failure modes, not just average quality on news/TED/FLORES. Recommending the community deprioritize quality evaluation on the basis of this evidence is the opposite of what an instruction-following benchmark paper should be arguing \u2014 and it could plausibly influence real deployment decisions in ways the data does not warrant. I would soften this to a much narrower observation, e.g., \"on the three language pairs evaluated and under the metrics reported, LLM outputs are competitive with dedicated NMT on aggregate quality; instruction adherence remains the open question this benchmark targets.\"\n\n**4. Sentence-level issues.**\n\n- \"the dominant bottleneck preventing LLM-based MT systems from displacing dedicated NMT engines\" \u2014 \"dominant\" is unhedged and is a hard claim to defend without a comparative study isolating instruction-following vs. other failure modes. Consider \"a major remaining bottleneck.\"\n- \"we argue that LLM-based MT has crossed the threshold required for production deployment\" \u2014 vague threshold; either define it or remove.\n- \"a foundation for future work scaling LLM translation quality across low-resource languages\" \u2014 the benchmark contains one low-resource pair (Swahili); \"across low-resource languages\" overstates coverage.\n- \"drawn from a mix of WMT news, TED transcripts, and a held-out portion of FLORES-200\" \u2014 clarify whether the held-out FLORES portion is held out from public splits or constructed fresh, since FLORES is widely seen in pretraining and contamination is a live concern for any LLM evaluation claim.\n- The repeated framing \"the first \u2026\" appears twice in close succession; tighten.\n\n**5. Suggested concrete revisions to the introduction.**\n\n- Move the instruction-following result (which is currently missing) into the headline finding slot. If the result is \"LLMs translate fluently but fail constraints at rate X%,\" that is the paper's contribution and should lead.\n- Demote BLEU/COMET/fluency results to context (\"aggregate quality is competitive; the open question is reliability under constraints\").\n- Strike or substantially narrow the production-readiness recommendation.\n- Replace \"first systematic evaluation of instruction adherence in MT\" with a more defensible formulation that acknowledges prior controllable-MT work (terminology constraints, formality control, length control) and states precisely what is new \u2014 e.g., unified multi-category constraint evaluation across general-purpose LLMs and NMT systems.\n- Report per-language-pair numbers in the abstract/intro, not just the average.\n\n**Caveats on this review.**\n\nI have not read the full paper, only the introduction-style artifact provided, so some of what I have flagged as missing (per-pair numbers, instruction-adherence rates, prior-work positioning, contamination handling) may be present later in the manuscript. If so, the introduction still needs to preview those results, because as written it does not. I have also not verified the priority claim (\"first \u2026\") against the literature \u2014 that should be checked against work on terminology-constrained NMT, formality-controlled translation, and length-controlled generation before the claim is retained. The Spearman \u03c1 = 0.81 figure for COMET-22 is plausible but I have not cross-checked it against the original COMET evaluation papers; if the number is borrowed from prior work rather than computed here, that should be cited rather than presented as a result of this study.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to check the excerpt centrally includes detecting internal tensions between the stated instruction-following thesis and the later translation-quality conclusions.",
+      "R1.3": "The delegation reasonably includes checking whether the headline deployment and benchmark claims follow from the reported BLEU, COMET, and human-rating evidence.",
+      "R1.6": "Because the request is broad and the artifact is prose, sentence-level clarity, flow, and register are central expected responsibilities.",
+      "RX.1": "Any projection must disclose uncertainty caused by the underspecified delegation and limited artifact context.",
+      "RX.2": "The check must avoid endorsing broad claims such as production readiness or firstness beyond what the artifact supports.",
+      "RX.3": "The agent must stay within projection and not actually edit, critique, or rewrite the excerpt.",
+      "RX.4": "The projection should account for possible downstream harm from unsupported deployment recommendations or benchmark claims.",
+      "RX.5": "Responsibilities should remain traceable to specific features of the delegation and artifact."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "example_id": "ad_r1_012",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 5,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 2179,
+  "latency_ms": 40398,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.3,\n    \"R1.2\": 0.7,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.3,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.3,\n    \"R1.7\": 0.3,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.2\", \"R1.3\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.2\": \"The artifact contains a severe internal contradiction: it is framed as a model-predictive control framework that 'reasons about future trajectories,' but the described control loop is purely reactive \u2014 it acts on the current depth frame with no prediction horizon, no optimization over a future window, and no uncertainty propagation. The baseline comparison then contrasts this against 'reactive-only baselines,' compounding the inconsistency. The ablation conclusion is also circular (disabling the core safety mechanism trivially increases collisions). These logical failures are central regardless of what 'check' ultimately means.\",\n    \"R1.3\": \"The claim that MPC reasoning reduces unnecessary stops by 23% is unsupported: the described mechanism is reactive, so the attribution of the improvement to predictive reasoning is unfounded. The 197/200 success rate lacks confidence intervals, trial variance, or statistical framing. The fast-motion failure regime (>1.2 m/s) is disclosed but not related back to any theoretical bound or design limit.\"\n  },\n  \"clarification_needed\": true,\n  \"clarification_question\": \"Should I focus on technical and logical correctness (e.g., whether the system as described actually implements model-predictive rather than reactive control, and whether the claims are supported by the reported evidence), or on writing quality and prose polish?\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.2": "The artifact contains a severe internal contradiction: it is framed as a model-predictive control framework that 'reasons about future trajectories,' but the described control loop is purely reactive \u2014 it acts on the current depth frame with no prediction horizon, no optimization over a future window, and no uncertainty propagation. The baseline comparison then contrasts this against 'reactive-only baselines,' compounding the inconsistency. The ablation conclusion is also circular (disabling the core safety mechanism trivially increases collisions). These logical failures are central regardless of what 'check' ultimately means.",
+      "R1.3": "The claim that MPC reasoning reduces unnecessary stops by 23% is unsupported: the described mechanism is reactive, so the attribution of the improvement to predictive reasoning is unfounded. The 197/200 success rate lacks confidence intervals, trial variance, or statistical framing. The fast-motion failure regime (>1.2 m/s) is disclosed but not related back to any theoretical bound or design limit."
+    },
+    "clarification_needed": true,
+    "clarification_question": "Should I focus on technical and logical correctness (e.g., whether the system as described actually implements model-predictive rather than reactive control, and whether the claims are supported by the reported evidence), or on writing quality and prose polish?"
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

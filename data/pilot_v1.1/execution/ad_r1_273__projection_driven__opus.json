@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_273",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2378,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32204,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I rewrote the draft to tighten the framing, remove unsupported generalizations, qualify the convergence argument, and reorder content so methods, results, and interpretation appear in that order; below the revision I list the specific issues I corrected and flag what remains unverifiable from the draft alone.\n\n---\n\n## Revised draft\n\nWe present TRIAGE-MT, a three-agent post-editing pipeline built on a single 70B instruction-tuned LLM. The same base model is prompted in three roles: a Translator produces an initial draft, a Critic identifies span-level errors, and an Editor rewrites the segment conditioned on the Critic's feedback. The loop iterates until the Critic returns \"no further issues\" or a budget of five rounds is exhausted.\n\nWe evaluate on the WMT22 general test sets for en\u2192fr, en\u2192de, and en\u2192zh, comparing TRIAGE-MT against a single-pass decode from the same base model under matched decoding settings. We report COMET-22 and chrF.\n\nAveraged over the three language pairs, TRIAGE-MT improves COMET-22 by +1.8 points over the single-pass baseline (+1.6 en\u2192fr, +1.9 en\u2192de, +1.9 en\u2192zh) and chrF by +0.9 points (+0.7, +1.1, +0.9 respectively). 78% of segments converge \u2014 i.e., the Critic returns \"no further issues\" \u2014 within three rounds, and the mean number of edit rounds per segment is 2.4. The direction of the effect is consistent across both metrics and all three pairs, which we read as suggestive \u2014 though not conclusive \u2014 evidence that the loop is correcting translation errors rather than only paraphrasing the surface form. We have not yet run human evaluation, MQM annotation, or paraphrase-controlled probes that would distinguish these two explanations directly.\n\nTo characterize convergence behavior, we frame the iteration as a fixed-point process: a segment is converged when the Editor's output lies in the Critic's \"acceptable\" set on the following round. Because the Critic and Editor share parameters and operate on the same context window, the Critic's acceptance criterion and the Editor's generation distribution are correlated, which plausibly explains why most segments are accepted within a few rounds. We caution that this same coupling is also a confound: a Critic that accepts its own model family's outputs is not, on its own, evidence that the accepted outputs are correct. The convergence rate should therefore be read as a property of the loop's dynamics, not as a quality measure.\n\nWithin the scope tested \u2014 three high-resource pairs sourced from English, one WMT22 test set per pair, one base model, one decoding configuration, and automatic metrics only \u2014 TRIAGE-MT yields consistent gains over single-pass decoding from the same model. We do not have evidence to support stronger claims: we have not tested low-resource pairs, non-English source languages, alternative base models, domain-shifted inputs, or human-judged quality, and we therefore do not recommend the pipeline as a general drop-in post-editor without further evaluation in the target deployment setting.\n\n---\n\n## What I changed and why\n\n**Removed the \"general-purpose framework / drop-in module\" conclusion.** The evidence covers three high-resource target languages from English on a single test set with a single base model and automatic metrics. The original conclusion generalized well beyond that envelope. I replaced it with a scope-bounded summary plus an explicit list of what was not tested.\n\n**Reframed the \"genuine errors, not paraphrases\" claim.** The reported numbers (COMET +1.8, chrF +0.9) are consistent with the loop fixing errors, but they are also consistent with reference-favoring paraphrase, metric-gaming, or Critic\u2013Editor mode collapse onto preferred surface forms. I downgraded \"we take ... as evidence\" to \"suggestive ... not conclusive\" and named the specific evaluations (human/MQM, paraphrase-controlled probes) that would actually discriminate.\n\n**Fixed the convergence argument.** The original paragraph reasons: \"Critic and Editor share parameters, therefore Editor outputs will be accepted, and we observe this.\" That is close to circular \u2014 shared-parameter agreement predicts acceptance regardless of translation quality. I rewrote it to say explicitly that fast convergence is expected from the coupling and is therefore not informative about correctness. This also removes a latent overclaim that \"fixed-point convergence\" implies quality.\n\n**Tightened the setup paragraph.** Made it explicit that all three agents are the same underlying model in different prompted roles (this is implied but not stated in the original and matters for interpreting the convergence discussion). Added \"matched decoding settings\" as a placeholder \u2014 if the baseline and Translator used different sampling/temperature, the comparison is confounded; if they used the same, this phrasing locks it in.\n\n**Reordered slightly.** Methods \u2192 evaluation setup \u2192 headline results \u2192 convergence analysis \u2192 scoped conclusion. The original mixed the convergence framing in after the results and then drew a broad conclusion; the new order makes the inferential chain easier to audit.\n\n**Sentence-level edits.** \"Built atop\" \u2192 \"built on\"; removed the redundant \"Across the three language pairs ... gains of ...\"; replaced \"we expect ... and this is what we observe empirically\" with a non-circular phrasing; dropped \"agentic self-revision\" as a load-bearing term in the conclusion since it was doing rhetorical rather than descriptive work.\n\n---\n\n## Items I could not verify from the draft\n\n- Whether the single-pass baseline uses the same decoding configuration as the Translator agent. If not, the +1.8 COMET gap is partly attributable to decoding, not to the loop. I inserted \"matched decoding settings\" \u2014 confirm or remove.\n- Whether COMET-22 deltas of +1.6 to +1.9 are statistically significant at the segment level on WMT22 test sizes. The draft reports point estimates only; consider adding bootstrap CIs or paired significance tests.\n- Whether the Critic and Editor prompts were held fixed across language pairs, and whether the \"acceptable set\" is operationalized (e.g., the Critic's literal \"no further issues\" string) or inferred. The fixed-point framing depends on this.\n- Whether any contamination check was done between the base model's training data and WMT22 references.\n- The \"78% converge within three rounds\" figure is reported without a breakdown by language pair; if convergence rates differ substantially across pairs, the aggregate can mislead.\n- Prior work on iterative LLM self-revision for MT (e.g., translate-then-refine, MAD-style multi-agent debate, self-correction pipelines) is not engaged with in the draft and I did not attempt to characterize the delta here; if a related-work section exists elsewhere this is fine, otherwise the contribution claim needs that comparison.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes refining the contribution claim and framing of TRIAGE-MT beyond sentence-level edits.",
+      "R1.2": "The request implies checking whether the fixed-point/convergence reasoning and conclusions follow coherently from the stated premises.",
+      "R1.3": "The draft makes empirical claims from reported COMET, chrF, and convergence results, so improvement requires aligning conclusions with those data.",
+      "R1.5": "The draft's narrative arc from system description to results, convergence interpretation, and recommendation may need section-level ordering improvements.",
+      "R1.6": "Writing polish is load-bearing because a generic request to improve a draft most directly entails clearer, tighter, better-flowing prose.",
+      "RX.1": "Any projected improvement work should preserve uncertainty around empirical interpretation and generality.",
+      "RX.2": "The strong claims about genuine error recovery, general-purpose utility, and drop-in use make overclaim avoidance essential.",
+      "RX.3": "The delegation is only to improve the draft, so projected responsibility must stay within draft-improvement tasks rather than executing experiments or rewriting the artifact here.",
+      "RX.4": "Recommendations about translation-system deployment could affect downstream use, so harms from overstated reliability or fidelity should be considered.",
+      "RX.5": "The projection should preserve traceability to the reported metrics, setup, and claims in the artifact."
+    }
+  }
+}

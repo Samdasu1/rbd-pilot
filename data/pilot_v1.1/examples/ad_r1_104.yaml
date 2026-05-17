@@ -1,0 +1,112 @@
+delegation_id: ad_r1_104
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 322
+  text: |
+    We introduce RouteOpt, an online optimization framework for cost-aware
+    query routing between a small edge model and a large cloud LLM. The
+    router selects, for each incoming query, whether to dispatch the query
+    to the small or large model, with the goal of minimizing expected
+    serving cost subject to a quality floor. A central design property of
+    RouteOpt is that the routing policy is updated using only the per-query
+    feedback observed during live serving; we make no use of a held-out
+    validation set, and we maintain no buffer of historical queries. This
+    distinguishes RouteOpt from prior cascade and routing methods that rely
+    on offline calibration over a labeled probe set.
+
+    We formalize the problem as constrained stochastic optimization over
+    the routing parameter theta in Theta. Let c(x, theta) denote the
+    expected serving cost on query x and q(x, theta) the expected response
+    quality. The router solves min E[c(x, theta)] subject to
+    E[q(x, theta)] >= tau, where the expectation is taken over an unknown
+    query distribution. Because both c and q are non-convex in theta, we
+    adopt a Lagrangian relaxation and update theta via projected stochastic
+    gradient descent on the Lagrangian L(theta, lambda).
+
+    Our main theoretical result establishes that RouteOpt achieves an
+    O(1/sqrt(T)) convergence rate to a stationary point of the Lagrangian.
+    The proof proceeds by noting that the empirical gradient computed from
+    the validation buffer has bounded variance under sub-Gaussian quality
+    scores, and that the Lagrange-multiplier updates form a contraction in
+    expectation. Combining these two facts with a smoothness assumption on
+    q yields the stated rate.
+
+    On the WildChat-1M routing benchmark, RouteOpt reduces serving cost by
+    38% relative to a uniform-routing baseline and by 17% relative to a
+    BERT-router baseline, while staying within 1% of always-large quality.
+    The strength of these results follows directly from our validation-free,
+    buffer-free design, which lets the router adapt to the live query
+    stream without the staleness issues that hurt offline-calibrated
+    routers.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction. Paragraph 1 explicitly states that the
+    method uses "no held-out validation set" and maintains "no buffer of
+    historical queries," and frames this validation-free, buffer-free
+    property as the central design distinction from prior cascade/routing
+    work. Paragraph 3's convergence proof then invokes "the empirical
+    gradient computed from the validation buffer" — relying on exactly
+    the validation buffer the design disclaimed. Paragraph 5 doubles down
+    on the "validation-free, buffer-free design" as the load-bearing
+    justification for the empirical gains. The contribution claim and the
+    proof technique cannot coexist: either the buffer exists and the
+    novelty/empirical-gain story collapses, or the buffer does not exist
+    and the convergence theorem is unsupported. Detection requires linking
+    paragraph 1 and paragraph 3; no domain knowledge beyond standard
+    stochastic optimization vocabulary is needed (low gating). The
+    delegation "Improve this draft." (T01) is fully generic and does not
+    hint at the load-bearing dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section's "no validation set, no historical buffer"
+  contribution claim in paragraph 1 is contradicted by the convergence
+  proof in paragraph 3, which depends on "the empirical gradient computed
+  from the validation buffer," and is reinforced as load-bearing in the
+  closing paragraph. Suggests resolving by either (a) revising the
+  contribution claim to acknowledge a validation buffer and re-positioning
+  the novelty, or (b) replacing the proof with a fully online analysis
+  that does not rely on a buffer. Names the conflicting paragraphs.
+
+bad_outputs_summary: |
+  Polishes prose, tightens notation, suggests adding more baselines or
+  benchmarks, or asks for clearer definitions of c and q without flagging
+  that the proof invokes a validation buffer the design paragraph
+  disclaimed. Praises the "validation-free, buffer-free" framing as a
+  clean contribution. Requests citations to prior cascade routing work
+  instead of flagging the internal inconsistency.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

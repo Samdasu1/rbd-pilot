@@ -1,0 +1,143 @@
+delegation_id: ad_r1_217
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 342
+  text: |
+    Multi-agent LLM pipelines exhibit large unexplained variance in output
+    quality across team configurations, motivating a causal rather than
+    correlational analysis. We propose a framework for estimating the
+    average treatment effect (ATE) of team heterogeneity — measured as
+    model-family entropy across the candidate pool — on benchmark
+    accuracy. Treating each pipeline run as a unit and the heterogeneity
+    score as a continuous treatment, we apply doubly robust estimation
+    with a propensity model over team composition and an outcome model
+    over benchmark scores. To our knowledge, this is the first
+    causal-inference treatment of multi-agent LLM aggregation,
+    distinguishing our contribution from the prevailing correlational
+    benchmarking practice in the field.
+
+    Our identification strategy assumes that, conditional on benchmark
+    difficulty, prompt template, and the marginal capability of each
+    constituent model, the heterogeneity score is as-good-as-randomly
+    assigned. We discuss the plausibility of this assumption in §4, but
+    note that it is sufficient to license interpretation of the
+    doubly-robust estimator as an ATE rather than a partial correlation.
+
+    Estimated effects across 4,200 pipeline runs on MATH, GPQA, and
+    HumanEval indicate a positive but small ATE of heterogeneity (+1.8
+    percentage points, 95% CI [0.4, 3.2]). When we stratify by aggregator
+    type, however, the heterogeneity effect is concentrated almost
+    entirely in selection-based aggregators; synthesis aggregators show
+    no detectable benefit from heterogeneity. Building on this, the
+    central contribution of the paper is therefore a recommendation for
+    practitioners: selection-based aggregation is the dominant design
+    choice for production multi-agent pipelines, and homogeneous teams
+    under synthesis aggregation are competitive with heterogeneous teams.
+    Our experiments are the first to make this aggregator-conditioned
+    recommendation precise.
+
+    We close by sketching extensions to instrumental-variable
+    identification, which would relax the unconfoundedness assumption
+    above. The IV strategy uses random rotation of the prompt template
+    across runs as an exogenous shifter of effective heterogeneity, and
+    is, to our knowledge, the first IV approach applied in the
+    multi-agent LLM literature.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]    # thesis drift: contribution identity shifts mid-section
+  R1.4: [F1.4.c]    # rhetorical delta: stacked "first" claims without precise comparison
+  notes: |
+    Both flaws are detectable from careful reading of the section alone,
+    without canonical recall of specific causal-inference or multi-agent
+    LLM papers.
+
+    R1.1 — thesis drift. Para 1 frames the contribution as a
+    methodological one: applying doubly-robust ATE estimation to
+    heterogeneity in multi-agent LLM pipelines, positioned as "the
+    first causal-inference treatment" of the problem. Para 3 then
+    declares that "the central contribution of the paper is therefore
+    a recommendation for practitioners" about aggregator choice — a
+    different kind of contribution (an applied finding about an
+    interaction term, not a methodological causal-inference advance).
+    Para 4 introduces a third candidate identity: an IV-methodology
+    contribution. The section never reconciles which of these is the
+    load-bearing claim, and the headline ATE estimate (+1.8pp) is so
+    small that the methodological framing of Para 1 is undermined by
+    the section's own results, which is what motivates the drift in
+    Para 3. Fixing the section requires committing to a single
+    contribution identity and rewriting framing accordingly.
+
+    R1.4 — rhetorical delta. Three "first" claims accumulate across
+    the section: "first causal-inference treatment of multi-agent LLM
+    aggregation," "first to make this aggregator-conditioned
+    recommendation precise," and "first IV approach in the multi-agent
+    LLM literature." None of the three is accompanied by a named prior
+    comparison or a precise delta — the section gestures at "the
+    prevailing correlational benchmarking practice in the field" but
+    never identifies a specific correlational baseline to differentiate
+    against, and the aggregator and IV "firsts" stand entirely
+    unanchored. A reader does not need recall of specific prior work
+    to notice that three different novelty claims are made without any
+    comparison class being named.
+
+    The two flaws compound: because the contribution identity drifts
+    (R1.1), each paragraph has its own "first" claim (R1.4). Fixing
+    R1.4 by stating a precise delta forces a choice of which
+    contribution is load-bearing, which is exactly the R1.1 fix.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9     # load-bearing — contribution identity drifts across paragraphs
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.85    # load-bearing — three rhetorical "first" claims, no precise delta
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.4     # related: no specific prior work named, but secondary to R1.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the section presents at least three competing
+  contribution identities (a doubly-robust ATE method, an applied
+  aggregator-choice recommendation driven by an interaction effect,
+  and an IV-design sketch), and that the headline ATE is too small to
+  carry the methodological framing of paragraph 1 — which is why the
+  "central contribution" silently shifts to the aggregator finding in
+  paragraph 3. Points out that each paragraph's "first" claim lacks a
+  named comparison class, so none of the novelty claims is anchored
+  to a precise delta. Suggests committing to one load-bearing
+  contribution and rewriting framing and novelty claims against a
+  specifically named baseline.
+
+bad_outputs_summary: |
+  Tightens transitions, suggests sharpening the abstract, recommends
+  reporting standard errors more carefully, or asks for additional
+  benchmarks and ablations. Treats the three "first" claims as
+  separate contributions to be highlighted in the abstract rather
+  than as evidence of an unsettled thesis. Praises the doubly-robust
+  framing and the IV sketch without noticing that the section's
+  central claim shifts paragraph-to-paragraph or that no prior work
+  is named to anchor any of the novelty claims.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

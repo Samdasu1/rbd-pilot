@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_188",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_naive",
+  "input_tokens": 6,
+  "output_tokens": 740,
+  "cache_read_input_tokens": 13389,
+  "latency_ms": 10672,
+  "cost_usd": 0.0,
+  "output_text": "Cleaned up the section by removing redundant restatements and tightening prose while preserving every substantive claim.\n\nRevised text:\n\n---\nWe evaluated LLM-generated gene function summaries through expert biocurator review. Because automated metrics such as BLEU and ROUGE correlate poorly with biological accuracy, we adopted a manual protocol in which expert biocurators rate each summary along three axes: factual correctness, completeness, and ontology consistency.\n\nWe recruited 12 expert biocurators from three institutional curation teams. In total, they rated 480 generated summaries, with each summary receiving independent ratings from three biocurators on all three axes.\n\nEach summary was produced by prompting the model with the gene symbol and the associated UniProt accession, and asking for a 50\u2013100 word summary of the gene's function. We chose this length range based on pilot studies: summaries shorter than 50 words tended to omit relevant pathway context, while those longer than 100 words tended to introduce hallucinated content.\n\nRatings were collected through a secure web interface that displayed each summary alongside the corresponding GeneCards entry, which biocurators were instructed to consult while rating.\n\nTo quantify inter-annotator agreement, we computed Krippendorff's alpha over the ordinal Likert ratings for each axis. The resulting values were 0.62 for factual correctness, 0.58 for completeness, and 0.71 for ontology consistency.\n\n---\n\nKey changes:\n- Collapsed the triple restatement of \"rate along three axes of factual correctness, completeness, and ontology consistency\" to one occurrence per paragraph.\n- Removed the self-referential \"Krippendorff's alpha was computed... the alpha values were obtained from Krippendorff's alpha applied to...\" loop.\n- Eliminated the \"secure web interface... the secure web interface\" and \"GeneCards entry... the GeneCards entry was therefore presented\" echoes.\n- Reordered so the prompting/length-rationale paragraph and the interface paragraph precede the agreement results, giving a cleaner methods \u2192 results flow.\n- Used an en dash for the numeric range (50\u2013100).\n\nNo factual claims were added or removed; all numbers, axis names, and rationales are preserved verbatim in meaning.",
+  "projection_input": null
+}

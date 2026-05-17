@@ -1,0 +1,106 @@
+delegation_id: ad_r1_142
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 295
+  text: |
+    We present RouteOptima, the first framework to dynamically route natural
+    language queries among heterogeneous large language models based on
+    per-query cost-quality trade-offs. While LLM serving has historically
+    relied on committing to a single backbone model per deployment,
+    RouteOptima introduces a learned router that selects among a pool of
+    candidate LLMs — ranging from 7B open-weight models to GPT-4-tier
+    proprietary endpoints — on a per-query basis, optimizing a Pareto
+    frontier of expected response quality and dollar-cost.
+
+    The router is a three-layer MLP trained on 50k historical queries labeled
+    with per-model quality scores derived from a stronger judge model. At
+    inference, each incoming query is embedded with a frozen sentence
+    encoder, scored by the router, and dispatched to the model with the
+    highest expected quality-per-dollar. We support online router updates
+    via a sliding-window replay buffer that re-fits the head every 10k
+    queries.
+
+    Across four downstream tasks (MMLU, HumanEval, GSM8K, and TriviaQA),
+    RouteOptima achieves 92% of GPT-4's average accuracy at 18% of its
+    inference cost. To our knowledge, this is the first demonstration that
+    a learned per-query router can match GPT-4-tier quality at a fraction
+    of the cost across a broad task mix. We are also the first to formulate
+    LLM serving as a Pareto-optimal scheduling problem over an open pool
+    of heterogeneous endpoints.
+
+    The result establishes routing-over-pool as a deployment-ready paradigm
+    for cost-sensitive LLM serving. We argue this fundamentally reframes
+    how production LLM systems should be architected: rather than committing
+    to a single model, operators should treat the model pool as a first-class
+    scheduling primitive. We expect RouteOptima to serve as the reference
+    architecture for the next generation of cost-aware LLM serving.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Three explicit "first" claims — "the first framework to dynamically
+    route queries among heterogeneous LLMs based on per-query cost-quality
+    trade-offs," "the first demonstration that a learned per-query router
+    can match GPT-4-tier quality at a fraction of the cost across a broad
+    task mix," and "the first to formulate LLM serving as a Pareto-optimal
+    scheduling problem over an open pool" — sit squarely in territory that
+    FrugalGPT (Chen et al., 2023), LLM-Blender (Jiang et al., 2023), Tabular
+    LLM cascades, and the broader model-cascade / model-selection literature
+    have already staked out. FrugalGPT in particular reports nearly the same
+    headline framing (GPT-4-quality at a fraction of cost via cascaded
+    routing) on overlapping benchmarks. The artifact never names a single
+    nearest-neighbor system. Detection requires recall of FrugalGPT or
+    LLM-Blender by name — moderate gating, not low (no internal
+    inconsistency tips the reader off) and not high (these are widely-cited
+    2023 papers, not obscure references). The methodology, experiments,
+    and writing are otherwise clean; only the novelty positioning is broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the multiple "first" claims as unsupported and names at least one
+  nearest-neighbor prior system the section must contrast against — most
+  obviously FrugalGPT, LLM-Blender, or the broader cascade / model-selection
+  literature. Suggests rewording the contribution to a defensible delta
+  (e.g., "first to support online router updates over an open endpoint
+  pool") rather than the sweeping framing currently used.
+
+bad_outputs_summary: |
+  Treats the novelty claims as given and suggests sharpening the prose,
+  adding more benchmarks, tightening the cost-accuracy numbers, or
+  expanding the architectural description. Praises the Pareto-routing
+  framing as a fresh contribution and may add peripheral citations
+  without confronting that the central "first" claims are already
+  occupied by published systems.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

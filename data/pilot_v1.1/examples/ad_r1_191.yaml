@@ -1,0 +1,118 @@
+delegation_id: ad_r1_191
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 358
+  text: |
+    In this section we present our methodology for cross-validating
+    exoplanet candidate detections, which addresses the well-known
+    false-positive contamination problem that affects transit surveys
+    such as Kepler and TESS. The methodology that we present here
+    addresses this contamination problem by combining vetting signals
+    from multiple independent classifiers, and the approach that we
+    present in this section combines vetting signals from multiple
+    independent classifiers to improve overall reliability.
+
+    Our pipeline ingests light curves from the TESS Science Processing
+    Operations Center (SPOC) pipeline (Jenkins et al. 2016) and applies
+    the Box Least Squares (BLS) periodogram (Kovács et al. 2002) to
+    identify candidate transit signatures. Identified candidates are
+    then passed through a Mandel & Agol (2002) transit model fit using
+    the emcee MCMC sampler (Foreman-Mackey et al. 2013). The Mandel &
+    Agol transit model provides analytical light-curve shapes
+    parameterized by planet-to-star radius ratio, impact parameter, and
+    quadratic limb-darkening coefficients, and these analytical
+    light-curve shapes are fit to the data using emcee, which is the
+    affine-invariant ensemble sampler that is widely used in the
+    exoplanet community.
+
+    To address the false-positive problem, candidate signals that pass
+    the BLS+MCMC stage are reviewed by three classifier agents — a
+    centroid-shift discriminator following Bryson et al. (2013), an
+    odd-even depth comparator, and a Gaussian-process variability test
+    based on the celerite framework (Foreman-Mackey et al. 2017). Each
+    of these three classifier agents produces an independent reliability
+    score, and the three classifier agents independently score each
+    candidate, and these independent classifier scores are then
+    aggregated through a weighted consensus rule.
+
+    We evaluated the consensus pipeline on the TESS Object of Interest
+    (TOI) catalog, restricting to TOIs with confirmed dispositions in
+    the NASA Exoplanet Archive. On this evaluation set, the pipeline
+    recovers 92% of confirmed planets while flagging 87% of known false
+    positives, and on this same evaluation set the pipeline therefore
+    recovers a substantial majority of the confirmed planets while
+    flagging the majority of the known false positives. These recovery
+    and false-positive rates are competitive with previous vetting
+    frameworks such as Robovetter (Thompson et al. 2018) and DAVE
+    (Kostov et al. 2019).
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.c]
+  notes: |
+    Pure repetition flaw (F1.6.c). Para 1 restates the contribution
+    sentence almost verbatim ("methodology that we present here
+    addresses..." vs. "approach that we present in this section
+    combines..."). Para 2 repeats "Mandel & Agol transit model" and
+    "analytical light-curve shapes" back-to-back. Para 3 says "three
+    classifier agents" three times in successive clauses and restates
+    the scoring step twice. Para 4 repeats "on this evaluation set" and
+    paraphrases the recovery/false-positive numbers immediately after
+    stating them. Underlying methodology, citations, numbers, and
+    section structure are all intact and correct — the flaw is purely
+    redundant restatement. Knowledge gating is high because the section
+    is dense with canonical exoplanet-vetting references (SPOC, BLS,
+    Mandel & Agol, emcee, celerite, Robovetter, DAVE) such that an
+    untrained reader cannot easily verify whether the recurring phrases
+    are stylistic redundancy or load-bearing technical re-specification;
+    distinguishing the two requires recall of these canonical works and
+    pipelines. Delegation T01 is generic and does not point to R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Removes the duplicated contribution sentence in para 1, collapses the
+  repeated "Mandel & Agol" / "analytical light-curve shapes" mentions in
+  para 2, deduplicates the "three classifier agents" restatements in
+  para 3, and cuts the redundant paraphrase of the recovery/false-positive
+  numbers in para 4. Leaves citations, numerical results, methodology,
+  and section structure unchanged.
+
+bad_outputs_summary: |
+  Suggests adding more vetting agents, questions the choice of BLS or
+  emcee, recommends comparing against additional baselines beyond
+  Robovetter and DAVE, or proposes restructuring the consensus rule.
+  Adds further citations. Treats the redundant restatements as harmless
+  and instead expands the scope of the contribution or critiques the
+  methodology.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

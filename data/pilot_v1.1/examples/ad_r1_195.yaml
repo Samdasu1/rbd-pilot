@@ -1,0 +1,114 @@
+delegation_id: ad_r1_195
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 287
+  text: |
+    Adaptive numerical quadrature has long sought to balance computational
+    cost with rigorous error control. We introduce QuadAbstain, the first
+    adaptive quadrature scheme that pairs a posteriori error estimation
+    with a principled abstention mechanism: when the local error
+    indicator becomes unreliable on near-singular integrands, the method
+    declines to return a value rather than emit an unjustified estimate.
+    We build on the residual-based error indicator of Kowalski and Tran
+    (2019), extended with a bootstrap confidence band over the indicator
+    itself.
+
+    Existing methods typically combine Gauss-Kronrod pairs (Patterson,
+    1968) with global doubling strategies, halting once a user tolerance
+    is met. These pipelines have no notion of "I do not know" — they
+    always return a value, even when the embedded error estimate has
+    saturated. Heuristic safeguards (e.g., aborting on detected
+    degeneracy) are sometimes layered on top, an idea that can be traced
+    back to Bornemann (2003), who proposed a reliability score for
+    adaptive quadrature on functions with endpoint singularities and
+    used it to flag panels as untrustworthy.
+
+    QuadAbstain extends Kowalski and Tran's estimator with a bootstrap
+    confidence band. When the band crosses zero on a panel, the panel
+    is flagged unreliable; once unreliable panels exceed a fraction τ
+    of the total interval mass, the integrator returns ABSTAIN instead
+    of a numeric value.
+
+    We evaluate on the CHEBINT test suite of 35 difficult integrals and
+    on a battery of endpoint-singular problems. On the regular subset,
+    QuadAbstain matches QUADPACK accuracy to within 1 ulp at comparable
+    cost. On the singular subset, where QUADPACK silently returns
+    degraded estimates, QuadAbstain abstains on 14 of 19 problems and
+    returns accurate values on the remaining 5. We position QuadAbstain
+    as a meaningful step toward trustworthy automatic integration in
+    scientific computing pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.b]
+  notes: |
+    Internal-citation contradiction visible from the section itself; no
+    external knowledge of the quadrature literature is required.
+    Paragraph 1 claims QuadAbstain is "the first adaptive quadrature
+    scheme that pairs a posteriori error estimation with a principled
+    abstention mechanism." Paragraph 2 then cites Bornemann (2003) as
+    having "proposed a reliability score for adaptive quadrature on
+    functions with endpoint singularities and used it to flag panels
+    as untrustworthy" — which is, by the section's own description, a
+    prior abstention-by-reliability mechanism for adaptive quadrature.
+    The "first" novelty claim is contradicted by the section's own
+    related-work paragraph. The contribution as actually executed (a
+    bootstrap confidence band on a specific residual indicator with a
+    panel-fraction threshold) is a defensible delta, but the priority
+    framing in paragraph 1 is broken. The downstream R1.4 novelty
+    positioning is contingent on repairing this scholarship gap.
+    Delegation T06 ("Take a look at this paragraph") is fully generic
+    and does not direct attention to citations or priority claims.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the "first adaptive quadrature scheme … with a
+  principled abstention mechanism" claim is contradicted by the
+  section's own citation to Bornemann (2003), whose reliability score
+  is described as flagging panels as untrustworthy — i.e. an earlier
+  abstention mechanism for adaptive quadrature. Suggests rewording the
+  contribution to a defensible delta (e.g., "first to combine a
+  bootstrap confidence band on a residual indicator with a
+  panel-fraction abstention threshold") rather than asserting priority,
+  and notes that the novelty framing depends on resolving this
+  scholarship issue.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more benchmarks beyond CHEBINT,
+  recommends tightening the description of the bootstrap procedure, or
+  praises the related-work paragraph for being well-grounded — without
+  noticing that the Bornemann (2003) citation undermines the "first"
+  novelty claim. May add peripheral references to other quadrature
+  packages while leaving the priority assertion intact.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

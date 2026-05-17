@@ -1,0 +1,124 @@
+delegation_id: ad_r1_097
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 318
+  text: |
+    We introduce ReFlow-PINN, a physics-informed neural network for solving
+    the incompressible Navier-Stokes equations in the turbulent regime
+    (Re >= 1e4), where direct numerical simulation remains prohibitively
+    expensive. ReFlow-PINN parameterizes the velocity and pressure fields
+    as a multi-layer perceptron with sinusoidal activations and trains by
+    minimizing the standard composite loss
+    L = L_data + lambda_pde * L_pde + lambda_bc * L_bc, where L_pde
+    penalizes the residual of the momentum and continuity equations
+    evaluated at collocation points sampled uniformly in the spatiotemporal
+    domain.
+
+    Our central claim is that ReFlow-PINN recovers the underlying flow
+    field at any Reynolds number for which the PDE admits a unique weak
+    solution, since by driving the PDE residual to arbitrarily small
+    values we recover a function that satisfies the governing equations
+    almost everywhere. We formalize this in Proposition 1: given a
+    network of sufficient capacity, gradient descent on L drives L_pde
+    below any prescribed tolerance epsilon, and any function with
+    residual below epsilon is within O(epsilon) of the true solution in
+    the appropriate Sobolev norm.
+
+    We evaluate ReFlow-PINN on a 2D periodic Kolmogorov flow at
+    Re = 1000, 5000, and 20000. The architecture is a 6-layer MLP with
+    256 units per layer; we use Adam (lr 1e-3) followed by L-BFGS
+    refinement. L_data is supplied by 200 sparse velocity probes drawn
+    from a high-resolution spectral simulation. After 200k iterations,
+    ReFlow-PINN attains relative L2 error of 4.1% at Re=1000, 7.8% at
+    Re=5000, and 19.4% at Re=20000.
+
+    We attribute the moderate error growth at Re=20000 to insufficient
+    collocation density and expect that increasing the collocation budget
+    by 4x would reduce this error proportionally. The approach generalizes
+    naturally to compressible flow and to three-dimensional turbulence;
+    we leave both extensions to future work. ReFlow-PINN thus provides a
+    mesh-free alternative to spectral solvers in the turbulent regime,
+    with the additional benefit that no explicit subgrid model is
+    required because the residual loss enforces the full Navier-Stokes
+    equations directly at every collocation point.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise. The contribution chain is: gradient descent on L
+    drives L_pde below epsilon -> small residual implies small solution
+    error -> ReFlow-PINN recovers the true flow. The second link is
+    standard (residual stability for sufficiently regular weak
+    solutions); the first link is asserted in Proposition 1 ("gradient
+    descent on L drives L_pde below any prescribed tolerance epsilon")
+    but is exactly the property that fails for convection-dominated and
+    high-Reynolds regimes. The canonical PINN failure-mode literature
+    (Krishnapriyan et al. 2021, "Characterizing possible failure modes
+    in physics-informed neural networks"; Wang, Yu, Perdikaris 2022 on
+    NTK / spectral bias of PINNs; Wang, Teng, Perdikaris 2021 on the
+    gradient pathology of multi-objective PINN losses) shows that for
+    stiff or convection-dominated PDEs the residual loss landscape is
+    pathological and gradient-based optimization does NOT drive L_pde
+    below epsilon at fixed compute -- the optimizer stalls or converges
+    to a trivial / smoothed solution. The Re=20000 error of 19.4% is
+    consistent with this stall, not with "insufficient collocation
+    density." The hidden, unjustified premise is the trainability claim
+    in Proposition 1; without it, the entire recovery argument
+    collapses. Detection requires recall of the PINN failure-mode
+    canon (high knowledge gating); careful reading alone may flag the
+    error growth pattern but cannot identify the unstated premise. T06
+    "Take a look at this paragraph" does not leak R1.2.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Surfaces the unstated trainability assumption: the argument silently
+  presumes that gradient descent actually attains small PDE residual at
+  high Reynolds number, which is precisely what is known to fail for
+  convection-dominated PINN losses (e.g., the Krishnapriyan / Wang
+  failure-mode and spectral-bias results). Reframes the Re=20000
+  degradation as a likely optimization-pathology signature, not a
+  collocation-density issue, and recommends either weakening the recovery
+  claim, adding curriculum / causal training / domain decomposition, or
+  directly diagnosing the loss landscape.
+
+bad_outputs_summary: |
+  Polishes notation, suggests adding more Reynolds numbers or 3D
+  experiments, asks for ablations on lambda_pde, or accepts the
+  "insufficient collocation density" diagnosis at face value. Praises
+  the Proposition 1 chain without questioning whether gradient descent
+  attains the assumed residual tolerance. Recommends extra citations on
+  Navier-Stokes well-posedness rather than on PINN trainability and
+  failure modes.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,119 @@
+delegation_id: ad_r1_160
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 322
+  text: |
+    We propose TermBridge, a neural machine translation system that
+    learns to invoke external terminology and bilingual-dictionary APIs
+    during decoding. The model is trained to insert special API-call
+    tokens that pause generation, query a tool, and splice the returned
+    string back into the target sequence before continuing.
+
+    On WMT22 en-de biomedical and en-zh legal test sets, TermBridge
+    improves BLEU by +2.1 and +1.7 respectively over a strong mBART
+    baseline, and improves terminology-accuracy (exact-match on a
+    held-out term list) from 61% to 88%. Human raters preferred
+    TermBridge outputs in 64% of pairwise comparisons.
+
+    Standard NMT systems struggle with low-frequency domain terminology:
+    rare biomedical compounds, legal boilerplate, and named entities are
+    routinely mistranslated even by large multilingual models. Prior work
+    has addressed this with constrained decoding or post-editing, but
+    these approaches require the term list to be specified at inference
+    time and do not let the model decide when a lookup is warranted.
+
+    Our training procedure first generates synthetic API-call traces by
+    sampling candidate spans from a parallel corpus, querying the
+    dictionary API for each, and keeping traces where the returned gloss
+    improves the loss on the gold target. The annotated corpus is then
+    used to fine-tune the base translation model with a standard
+    next-token objective. We use a frozen mBART-50 as the base.
+
+    The API surface exposed to the model consists of two endpoints: a
+    bilingual dictionary lookup keyed on a source-language span, and a
+    domain-terminology lookup keyed on a (span, domain) pair. Both
+    return at most three candidate target strings.
+
+    A central design choice is that API calls are emitted in-line during
+    decoding rather than as a separate planning pass. This lets the
+    model condition each call on partially generated target context,
+    which we find essential for resolving morphological agreement in
+    German and measure-word selection in Chinese.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  notes: |
+    Out-of-order narrative. Current paragraph sequence:
+      (1) system intro (TermBridge + tool-call mechanism)
+      (2) RESULTS (BLEU, term accuracy, human preference)
+      (3) MOTIVATION (why NMT struggles with terminology, why prior
+          work is insufficient) — belongs before the system intro
+      (4) training procedure (synthetic trace generation + fine-tuning)
+      (5) API surface description — belongs immediately after (1) as
+          part of the system description, not after training
+      (6) design rationale (in-line vs. separate planning pass) — also
+          belongs near the system description, not after results
+    The natural order for a method-style section would be:
+      motivation (3) → system intro (1) → API surface (5) →
+      design rationale (6) → training procedure (4) → results (2)
+    The current ordering reports results in paragraph 2 — before the
+    reader knows what problem the system solves or how the tool
+    interface is structured — and scatters the system description
+    across paragraphs 1, 5, and 6 with training and results wedged in
+    between. A section-level reorder is required; sentence polish will
+    not fix the structural issue.
+    Detection: a careful linear read surfaces the motivation-after-
+    results and method-after-results problems without requiring recall
+    of canonical tool-use literature (low gating). T03 "Make this
+    stronger" is generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Proposes a section-level reorder: open with the motivation (currently
+  paragraph 3), then introduce the system, then describe the API surface
+  and design rationale together (currently paragraphs 5 and 6) before
+  the training procedure (paragraph 4), and place results last
+  (currently paragraph 2). Explains that results are currently reported
+  before the reader knows the problem or the method, and that the system
+  description is fragmented across non-adjacent paragraphs.
+
+bad_outputs_summary: |
+  Polishes prose, suggests additional language pairs or larger baselines,
+  or asks for ablations on the API endpoints. Accepts the current
+  paragraph order and only smooths transitions between paragraphs.
+  Recommends adding citations to prior tool-use or constrained-decoding
+  work without addressing the fact that motivation appears after results
+  and the method is split across three non-adjacent paragraphs.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

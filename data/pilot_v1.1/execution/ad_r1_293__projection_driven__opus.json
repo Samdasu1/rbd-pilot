@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_293",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 898,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 13707,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nPolished the prose by removing repetition, tightening sentences, and consolidating parallel structures, while preserving every numeric value, claim, and hedge from the original.\n\n---\n\nThis section describes our analysis of failure modes across an ensemble of regional climate downscaling pipelines evaluated over the 1980\u20132020 historical period. We examined output from seven CMIP6-forced downscaling pipelines and annotated cases in which the simulated regional surface trends diverged substantially from the ERA5 reanalysis baseline.\n\nThe annotation procedure identified three recurrent failure patterns, each representing a substantial deviation from the reanalysis baseline:\n\n- a systematic warm bias in summer surface temperature over continental interiors, observed in 412 annotated traces;\n- a systematic dry bias in monsoon-region precipitation, observed in 287 annotated traces;\n- a systematic underestimation of extreme precipitation tails, observed in 156 annotated traces.\n\nTo quantify the prevalence of these failure modes, we computed the fraction of grid cells exhibiting each pattern across the ensemble: 0.34 for the warm-bias pattern, 0.21 for the dry-monsoon pattern, and 0.18 for the extreme-precipitation pattern.\n\nThe failure patterns appear to cluster by model family, suggesting that shared parameterization choices propagate them across pipelines.\n\nThese results inform the design of future regional downscaling pipelines by highlighting which failure modes recur most consistently. They also suggest that ensemble diversity does not, by itself, eliminate the identified failure modes, and that targeted parameterization improvements may be required. We view this set of failure modes as a starting point for a more systematic taxonomy.\n\n---\n\nCaveats on the edits: I preserved the original framing that the patterns \"appear to cluster by model family\" and that improvements \"may be required\" \u2014 the hedged language is intentional and was not strengthened. The trace counts (412 / 287 / 156) and grid-cell fractions (0.34 / 0.21 / 0.18) are reproduced verbatim; I did not verify their internal consistency (e.g., whether trace counts and grid-cell fractions are derived from the same denominator), and the original text does not state the totals, so a reader cannot independently check the proportions. I also did not alter the claim that the seven pipelines constitute an \"ensemble\" in a statistically meaningful sense; if that term is load-bearing elsewhere in the manuscript, it may warrant a definition on first use.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Polish this' centrally asks for sentence- and paragraph-level improvements to grammar, concision, flow, and repetition.",
+      "RX.1": "Any polish should preserve uncertainty markers rather than turning tentative claims into stronger claims.",
+      "RX.2": "The editor must avoid intensifying claims about failure modes, causality, or ensemble implications beyond the artifact's stated evidence.",
+      "RX.3": "The task is limited to polishing and should not expand into restructuring, novelty evaluation, citation work, or experimental critique.",
+      "RX.4": "Because the passage concerns climate-model failure modes, wording should avoid misleading downstream interpretations of the findings.",
+      "RX.5": "Polish should maintain traceability to the reported counts, fractions, baselines, period, and ensemble description."
+    }
+  }
+}

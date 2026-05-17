@@ -1,0 +1,164 @@
+delegation_id: ad_r1_251
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 355
+  text: |
+    We cast the clarifying-question selection problem in
+    conversational information-seeking systems as monotone submodular
+    maximization over a ground set Q of candidate questions, with a
+    utility f(S) corresponding to the expected reduction in posterior
+    uncertainty about the user's information need after asking S ⊆ Q.
+    Under the standard assumptions of monotonicity and submodularity
+    (which we adopt following the conventions of the adaptive
+    submodular literature), the greedy algorithm enjoys the well-known
+    (1 − 1/e) approximation guarantee of Nemhauser, Wolsey, and Fisher
+    (1978). It seems natural to ask whether this guarantee can be
+    sharpened by appealing to additional structural properties of f,
+    and we believe the answer is affirmative.
+
+    To this end, we invoke the curvature-aware refinement of Conforti
+    and Cornuéjols (1984), which states that for a monotone submodular
+    f with total curvature κ ∈ [0, 1], the greedy algorithm achieves a
+    ratio of (1/κ)(1 − e^(−κ)) of the optimum. We find this result to
+    be highly suggestive: as the curvature κ increases, the bound
+    (1/κ)(1 − e^(−κ)) tightens, which we interpret as evidence that
+    greedy performs better on functions of higher curvature. This
+    observation, which we believe may be of independent interest,
+    motivates our central design principle: to construct question
+    pools whose induced utility function exhibits as high a curvature
+    as one can reasonably engineer.
+
+    We operationalize this principle in CurvMax, a procedure that
+    perturbs the candidate question set Q to elevate the empirical
+    curvature of the resulting f. On the ClariQ-2020 development
+    split, we constructed two pools: a baseline pool with measured
+    curvature κ_base ≈ 0.31 and a CurvMax-perturbed pool with
+    κ_CurvMax ≈ 0.79. Greedy on the baseline pool achieves an
+    empirical optimality ratio of 0.83 (averaged over 50 random
+    user-intent draws); greedy on the CurvMax-perturbed pool achieves
+    0.66. We tentatively interpret these numbers as broadly consistent
+    with our theoretical narrative: in the high-curvature regime our
+    bound predicts tighter behavior, and indeed CurvMax operates in
+    that regime. We acknowledge that the absolute ratio for CurvMax is
+    somewhat lower than that of the baseline, though we believe this
+    could plausibly be attributable to finite-sample effects in the
+    curvature estimator and might in principle be remediated by larger
+    evaluation budgets.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  R1.6: [F1.6.b]
+  notes: |
+    Two interacting issues that compound:
+
+    R1.3 — inverted reading (F1.3.c). The section invokes the
+    Conforti–Cornuéjols (1984) curvature-aware bound (1/κ)(1 −
+    e^(−κ)) for greedy on monotone submodular functions and reads
+    its direction backwards. Canonically, this bound approaches 1 as
+    κ → 0 (modular limit) and tightens to (1 − 1/e) as κ → 1 (most
+    submodular); i.e., LOWER curvature gives BETTER worst-case
+    greedy ratios. The section asserts the opposite — "as the
+    curvature κ increases, the bound … tightens, which we interpret
+    as evidence that greedy performs better on functions of higher
+    curvature" — and this inverted reading is load-bearing: it is
+    the sole justification for the CurvMax design principle ("to
+    construct question pools whose induced utility function exhibits
+    as high a curvature as one can reasonably engineer"). The
+    section's own empirics in fact confirm the CORRECT (canonical)
+    direction: the κ ≈ 0.31 pool yields ratio 0.83 while the κ ≈
+    0.79 pool yields 0.66, exactly the ordering predicted by
+    (1/κ)(1−e^(−κ)) read in the right direction. The section
+    rationalizes this away as finite-sample noise rather than
+    recognizing it as falsification of the inverted theory claim
+    and, with it, of CurvMax. Detecting the inversion requires
+    recall of the canonical Conforti–Cornuéjols result and the
+    direction of monotonicity of (1/κ)(1−e^(−κ)) on [0,1] — hence
+    high gating; without that knowledge the "noise" explanation is
+    rhetorically plausible.
+
+    R1.6 — hedging cascade (F1.6.b). The prose is saturated with
+    hedge phrases that defer commitment on essentially every claim:
+    "we believe the answer is affirmative", "It seems natural", "We
+    find this result to be highly suggestive", "we interpret as
+    evidence", "we believe may be of independent interest", "as one
+    can reasonably engineer", "We tentatively interpret", "broadly
+    consistent", "we acknowledge", "we believe this could plausibly
+    be attributable", "might in principle be remediated". The cascade
+    is dense enough that no claim in the section stands as a
+    commitment; in particular, the load-bearing curvature claim is
+    couched as "we interpret as evidence" rather than asserted, which
+    further insulates it from being checked.
+
+    The two flaws compound: the hedging cascade gives the inverted
+    reading rhetorical cover (every direction-claim is softened to
+    "we believe"/"we interpret"/"tentatively"), so a reviewer
+    polishing prose by flattening hedges still leaves a section
+    whose central design principle points the wrong way; and a
+    reviewer who flips the curvature direction without removing the
+    hedges leaves a section whose now-correct claim is still buried
+    under cascade-hedging that prevents any commitment.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.85
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the direction of the (1/κ)(1−e^(−κ)) curvature
+  bound is inverted — the ratio approaches 1 as κ → 0 and tightens
+  to (1 − 1/e) as κ → 1, so LOWER-curvature functions admit
+  STRONGER greedy guarantees; the section's empirics (0.83 at
+  κ ≈ 0.31 vs. 0.66 at κ ≈ 0.79) confirm the correct direction
+  rather than being noise, and the CurvMax design principle is
+  therefore back-to-front and the central contribution claim must
+  be reversed (or the section retracted in its present form);
+  (2) the prose is saturated with a cascade of hedges ("we
+  believe", "tentatively", "broadly consistent", "could plausibly
+  be attributable", "might in principle", "it seems natural", "we
+  find this highly suggestive") that prevents any claim from
+  standing as a commitment and must be cut back to direct
+  assertions where the underlying claim is made. Both fixes are
+  needed.
+
+bad_outputs_summary: |
+  Polishes prose, smooths transitions, or trims a few hedges
+  without flagging that the curvature-direction claim is canonically
+  reversed and that CurvMax therefore recommends maximizing the
+  very property that worsens the worst-case guarantee — leaving an
+  empirically falsified design principle in place. Or flips the
+  curvature direction but leaves the cascade of hedges intact, so
+  no claim in the corrected section is committed. Suggests adding
+  more pools, more random seeds, more baselines, or sharpening the
+  abstract while leaving both the inverted theoretical reading and
+  the pervasive hedging untouched. Praises the curvature-aware
+  framing as a clean refinement of (1 − 1/e) without checking the
+  direction.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

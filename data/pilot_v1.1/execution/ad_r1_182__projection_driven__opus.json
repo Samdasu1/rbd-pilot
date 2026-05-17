@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_182",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1867,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 25805,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: Sentence-level rewrite of the four paragraphs to fix run-on prose and tense drift, plus a punch list of claim/evidence gaps the authors should resolve before this is publishable.\n\n---\n\n**Revised text (prose polish only \u2014 no new claims introduced):**\n\nWe present a streaming anomaly detection framework for monitoring high-throughput log data from a fleet of production microservices. The framework consumes structured log events at rates of up to 40,000 events per second and emits anomaly scores in near real time, which downstream alerting systems consume for incident triage. The detector combines a sliding-window autoencoder with a lightweight density estimator over the bottleneck representation. We trained it on three weeks of historical traffic from a single production cluster and evaluated it on two later weeks held out for assessment.\n\nThe autoencoder is trained with a standard reconstruction objective; its encoder produces 32-dimensional embeddings, which are then fed into a Gaussian mixture density estimator that scores each event for deviation from the bulk of the embedding distribution. Events falling below a fixed quantile threshold are flagged as anomalous. The threshold was selected on a small validation slice reserved earlier in the pipeline.\n\nOn the held-out evaluation traffic, the detector achieves a precision of 0.71 at a recall of 0.63. These numbers are computed against 312 manually labeled incidents annotated by on-call engineers during the corresponding period. The detector flags most labeled incidents within roughly 90 seconds of onset, which we considered acceptable for the monitoring use case.\n\nThe framework also appears to generalize to two additional clusters tested after the main evaluation. We take this as suggestive of reasonable robustness, but acknowledge that more comprehensive cross-cluster evaluation would be needed to support a stronger claim; we leave this to future work.\n\n---\n\n**Issues the authors should address (substantive, not just prose):**\n\n1. **\"Most labeled incidents within ~90 seconds\" is unquantified.** The recall of 0.63 already says 37% of incidents are missed entirely. \"Most\" against the *labeled* set could mean the same 63% covered by recall, or it could mean something tighter (e.g., median detection latency). State the actual fraction and the latency distribution (median, p90), and clarify whether the 90-second figure is over true positives only or over all labeled incidents.\n\n2. **The precision/recall numbers need an operating-point disclosure.** The threshold \"was selected on a small validation slice\" \u2014 how small, and how was it selected (which objective)? Without that, P=0.71 / R=0.63 isn't reproducible and may be optimistically tuned.\n\n3. **No baseline.** A single P/R pair on a custom-labeled set is hard to interpret. Even a trivial baseline (rate-based threshold, EWMA on error counts, or an isolation-forest on the same features) would let the reader judge whether the autoencoder + GMM combination contributes anything beyond simpler alternatives. Without this, the contribution claim is weak.\n\n4. **Label provenance is a soft spot.** The 312 incidents were annotated by on-call engineers \"during the corresponding period.\" Were these labels generated independently of the detector's output, or did engineers see the detector's alerts? If the latter, precision is inflated by construction. State this explicitly.\n\n5. **\"Generalize across two additional clusters\" is doing a lot of work.** What was measured on those clusters \u2014 the same P/R, just visual inspection, alert volume sanity-checks? Either give the numbers or downgrade the wording further (e.g., \"we deployed the detector on two additional clusters and observed qualitatively similar alert volumes; we did not compute precision/recall there\").\n\n6. **Single training cluster, single evaluation window.** Three weeks train / two weeks test from one cluster is a thin evaluation for a claim about a fleet-wide framework. This isn't necessarily fatal, but it should be named as a limitation rather than left implicit.\n\n7. **\"Near real time\" is undefined.** Given that 90-second detection latency is reported elsewhere, the end-to-end scoring latency (per-event, p50/p99) should be stated separately from detection-onset latency \u2014 they're different quantities and readers will conflate them.\n\n8. **Minor consistency:** \"the encoder produced\" (past) vs. \"the autoencoder is trained\" (present) \u2014 pick one tense for the system description. The revised text above uses present throughout for the system and past for the experiment, which is the more standard convention.\n\n9. **\"Downstream alerting systems then consumed\"** \u2014 tense mismatch with the present-tense framing of the system. Fixed in the rewrite.\n\n---\n\n**Caveats on the above:**\n\n- I cannot verify any of the numerical claims (40k events/sec, 32-dim embeddings, P=0.71 / R=0.63, 312 incidents, 90-second latency) from the artifact alone; the recommendations assume the authors will check these against their actual logs and experiment artifacts.\n- Recommendation 4 (label-leakage concern) is a hypothesis based on the phrasing; if the authors' annotation process was in fact blind to the detector, only a one-sentence clarification is needed rather than a methodological change.\n- I did not assess how this work compares to prior streaming-anomaly-detection literature or whether the cited methods are standard, since that was outside the scope I was asked to attend to.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general reaction to the passage centrally includes checking whether the methodological setup, evaluation claims, and conclusions cohere logically.",
+      "R1.3": "The request invites assessment of whether the reported precision, recall, latency, labels, and cross-cluster observations support the stated claims.",
+      "R1.6": "Because the artifact is a draft paragraph, sentence-level clarity, flow, tense consistency, and concision are central expected responsibilities.",
+      "RX.1": "Any projection should preserve uncertainty because the delegation is broad and the artifact provides limited methodological detail.",
+      "RX.2": "The robustness and generalization language requires attention to avoiding claims stronger than the reported evidence supports.",
+      "RX.3": "The response must stay within giving an opinion on the provided draft section rather than performing unrelated review tasks.",
+      "RX.4": "Feedback on anomaly detection and incident triage claims should avoid encouraging unsupported operational conclusions.",
+      "RX.5": "Assessment should remain traceable to the exact statements and metrics present in the artifact."
+    }
+  }
+}

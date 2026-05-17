@@ -1,0 +1,61 @@
+{
+  "example_id": "ad_r1_242",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2995,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 41128,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.85, \"R1.3\": 0.8, \"R1.4\": 0.7, \"R1.5\": 0.9, \"R1.6\": 0.7, \"R1.7\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.5, \"RX.5\": 0.8}}\n\nSummary: A close read of Section 3 surfaces a mismatch between the section's stated \"central contribution\" and what the author later calls the \"load-bearing\" contribution, several unsupported quantitative and complexity claims, weak citation hygiene, and structural issues that obscure the actual argument. Recommendations follow, grouped by issue.\n\n---\n\n**1. The section has two competing \"central contributions,\" and the reader cannot tell which is the thesis.**\n\nParagraph 1 declares: *\"The central contribution of this section is a copy-on-write multi-version index...\"* Paragraph 4 then declares: *\"The load-bearing contribution of this section, however, is the scheduling policy...\"* These cannot both be true as written, and the \"however\" reads as a quiet retraction rather than a deliberate framing.\n\nPick one. Given that the storage layer is explicitly described in the final paragraph as existing *\"to make this scheduler tractable,\"* the scheduler appears to be the actual contribution and the storage design is enabling infrastructure. Recommended rewrite for the opening: name the scheduler as the contribution, name the storage layer as the enabling mechanism, and reorder the section accordingly (see point 5).\n\n**2. Several quantitative and complexity claims are stated without support visible in the section.**\n\n- *\"O(1) amortized random-read cost\"* for a multi-version index over per-annotator histories is a strong claim. With size-tiered compaction (acknowledged later in the same section), point-read cost is typically O(number of tiers) in the worst case and is the standard known trade-off vs. leveled compaction. The \"O(1) amortized\" framing needs either a derivation, a precise statement of the amortization scheme and assumed workload, or softening to \"near-constant under the workload described in \u00a7X.\"\n- *\"typical annotation queries touch O(log N) tiers in expectation\"* \u2014 under size-tiered compaction, tier count is typically \u0398(log N) in the *size of the dataset*, not \"in expectation\" over queries; the phrasing conflates structural depth with a probabilistic statement. Restate as a deterministic structural bound and cite or derive it.\n- *\"reduces annotator-hours to convergence by 38% on three benchmark corpora\"* \u2014 a single aggregate number across three corpora hides variance; report per-corpus numbers, define \"convergence\" operationally, and disclose confidence intervals or seed variance. Otherwise this looks like an averaged headline that may not survive the actual results table.\n\n**3. Citations are gestural rather than specific.**\n\n- *\"in the spirit of O'Neil et al.\"* \u2014 give the year and use the standard 1996 LSM-tree citation. \"In the spirit of\" is doing rhetorical work where a precise reference would suffice.\n- *\"in the spirit of Steinhardt et al.\"* \u2014 same problem; \"in the spirit of\" appears three times in a short section and each time it elides a specific claim/citation pair. Pick the actual paper(s) being invoked (e.g., Steinhardt, Koh & Liang 2017 on data poisoning defenses) and cite directly.\n- *\"BALD-style acquisition [Houlsby et al.]\"* \u2014 supply year (2011) and, if the scheduler is a variant rather than a direct application, state precisely what is borrowed and what is new.\n- *Delta Lake* and *Cassandra* and *RocksDB* are named without citation; at least Delta Lake should be cited (Armbrust et al., 2020) since the section makes a direct comparative claim about its versioning granularity.\n\n**4. The Delta Lake comparison as written is not quite right and risks overclaiming novelty.**\n\n*\"unlike Delta Lake, which versions table state at row granularity, LACUNA versions per-cell label trajectories.\"* Delta Lake's versioning unit is the *file* (via the transaction log over Parquet files), not the row. The contrast the author wants \u2014 that LACUNA tracks per-(item, annotator) cell trajectories over time, which Delta Lake does not natively express \u2014 is real, but the current sentence misstates Delta Lake's mechanism and a reviewer who knows the system will flag it. Rephrase to compare on the dimension the author actually cares about (cell-level label trajectory as a first-class versioned object) without misdescribing the baseline.\n\nRelatedly, the phrase *\"first-class indexed dimension\"* (annotator provenance) is the kind of claim that needs a one-sentence demonstration: what query becomes cheap that was previously expensive? Without that, the novelty claim relative to LSM-tree work reads as rhetorical.\n\n**5. Reorder the section so the storage design follows the motivating problem.**\n\nCurrent order: contribution-claim \u2192 storage layout \u2192 threat model \u2192 query interface \u2192 scheduler (revealed late as the real contribution). The threat model appears in the middle of a storage discussion for no clear reason, and the scheduler \u2014 apparently the actual contribution \u2014 appears last and is squeezed.\n\nSuggested order:\n1. Problem and contribution (state that the scheduler is the contribution; per-annotator storage is the enabling substrate).\n2. Query interface (what the system exposes).\n3. Scheduler (the contribution, with the acquisition function defined precisely).\n4. Storage layout (justified by the access pattern the scheduler induces \u2014 this is the natural place for the compaction-policy argument).\n5. Threat model and scope limits (currently buried mid-section; better as an explicit scope-and-assumptions paragraph near the end or in a dedicated subsection).\n\nThis ordering also lets the compaction-policy choice (size-tiered over leveled) be motivated by the scheduler's access pattern rather than by a generic \"append-mostly\" assertion.\n\n**6. The \"append-mostly\" justification for size-tiered compaction is under-argued.**\n\nThe claim *\"annotation datasets are append-mostly: once a labeling round closes, its sstables are immutable\"* is plausible but not obviously true for the setting the paper otherwise describes \u2014 the scheduler dispatches *fresh annotation tasks*, meaning new labels arrive continuously and may target items already labeled in earlier rounds. That sounds like a workload with ongoing writes into existing logical rows, not a closed-round append-only stream. Either reconcile this (e.g., new labels always land in a new sstable tagged with the round, never mutating prior ones \u2014 in which case say so explicitly) or revisit the compaction choice.\n\n**7. Threat model paragraph: scope is appropriate but the framing leaks.**\n\nDeclaring poisoning and Sybil resistance out of scope is good practice. However, *\"handled by orthogonal upstream defenses in the spirit of Steinhardt et al.\"* implies that such defenses are deployed in conjunction with LACUNA, which is a stronger claim than \"out of scope.\" If the paper does not actually integrate with such a defense, write *\"is out of scope; existing defenses (e.g., Steinhardt et al., 2017) could be composed upstream but are not evaluated here.\"* This both narrows the claim and makes the scope boundary explicit.\n\n**8. Prose-level cleanups.**\n\n- *\"in the spirit of\"* appears three times; vary or replace with direct citation.\n- *\"load-bearing contribution\"* is unusual phrasing for a contribution claim; *\"primary contribution\"* or *\"main result\"* is clearer.\n- *\"maximizes expected information gain over the posterior on true label distributions\"* \u2014 \"over the posterior on\" is awkward; consider *\"maximizes expected information gain about the posterior over true label distributions.\"*\n- *\"recomputing acquisition scores over candidates would dominate scheduling cost\"* \u2014 specify \"over candidate items\" and, if possible, give the asymptotic cost without the index, since this is the sentence that justifies the entire storage layer.\n\n**9. Minor: define notation and terms on first use.**\n\n*N* is used in the O(log N) claim without definition (items? annotations? annotators?). *\"per-cell\"* should be defined the first time it appears (presumably a (item, annotator, round) triple).\n\n---\n\nCaveats on the above: I cannot verify the 38% figure, the exact framing of the BALD/Houlsby variant the scheduler uses, or the precise integration assumed with upstream poisoning defenses without seeing Section 5 and the related-work section. The Delta Lake correction relies on my understanding of its file-granularity transaction log; if the paper is using a non-standard definition or a newer Delta variant, verify against the cited version. The compaction-cost critique assumes a standard size-tiered model; if LACUNA's tiering deviates, the O(1)/O(log N) claims may be defensible but still need an explicit derivation in-text.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the review be primarily a technical research-content review, a writing/organization review, or a broad paper-section review covering both?",
+    "rationale": {
+      "R1.1": "A generic section review centrally includes checking whether the thesis, gap, and contribution claims are framed coherently at section level.",
+      "R1.2": "The reviewer is expected to examine whether the design rationale, assumptions, and conclusions follow logically.",
+      "R1.3": "The section makes performance and empirical-support claims that a review would normally check against the reported evidence.",
+      "R1.4": "The artifact explicitly positions LACUNA against LSM trees, Delta Lake, Cassandra, RocksDB, and BALD-style acquisition, making novelty positioning part of the review burden.",
+      "R1.5": "Reviewing a section includes assessing whether storage layout, threat model, query interface, and scheduler are ordered into a coherent narrative arc.",
+      "R1.6": "A section review commonly includes sentence- and paragraph-level clarity, register, concision, and flow.",
+      "R1.7": "The artifact invokes several named prior works, so attribution, citation adequacy, and literature coverage are active responsibilities.",
+      "RX.1": "Any review should disclose uncertainty where the artifact lacks supporting sections, data, or full references.",
+      "RX.2": "The review must guard against inflated claims about novelty, complexity, empirical gains, or threat-model coverage.",
+      "RX.3": "The delegation is only to review the section, so the projection must avoid responsibilities outside that artifact and request.",
+      "RX.4": "The review should consider possible downstream harms from misleading claims about annotation provenance, poisoning, or identity assumptions.",
+      "RX.5": "The review should preserve traceability to the section's specific claims, terminology, and cited prior-work references."
+    }
+  }
+}

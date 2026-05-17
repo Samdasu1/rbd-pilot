@@ -1,0 +1,145 @@
+delegation_id: ad_r1_259
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: climate
+  word_count: 322
+  text: |
+    Regional precipitation forecasts must balance the computational
+    cost of high-resolution dynamical downscaling against the accuracy
+    demanded by water-resource and flood-risk applications. We propose
+    ClimRoute, an adaptive routing system that dispatches each forecast
+    query to either a lightweight statistical emulator (a regularized
+    linear regression on ERA5 reanalysis predictors) or a
+    transformer-based neural emulator (FourCastNet-Precip, our
+    1.4B-parameter precipitation-specialized variant) based on a
+    learned difficulty score. Compared with prior hybrid systems that
+    statically partition workload by lead time, ClimRoute substantially
+    advances the state of the art by allowing per-query routing.
+
+    The router is a 12M-parameter MLP trained on 8 years of paired
+    forecasts to predict, from synoptic-scale input features, whether
+    the statistical emulator will exceed a CRPS threshold relative to
+    the neural emulator. At inference, queries below the threshold are
+    served by the cheap path; queries above it are escalated. Across
+    our test years (2018-2022), ClimRoute reduces aggregate compute by
+    63% relative to always running the neural emulator while incurring
+    only a 4% CRPS penalty over the all-neural baseline.
+
+    Routing remains effective under climate non-stationarity because
+    the difficulty score is computed from synoptic-scale predictors
+    that are themselves the inputs to the underlying emulators; this
+    internal consistency means that any distribution shift the
+    emulators face is reflected in the router's input space. We
+    therefore expect the routing thresholds calibrated on 2014-2017 to
+    remain valid throughout the 21st-century SSP5-8.5 projections we
+    serve in §5.
+
+    Our core advance is the recognition that climate forecast queries
+    are heterogeneous in difficulty and that adaptive compute
+    allocation is therefore appropriate. To our knowledge, this is the
+    first work to apply learned per-query routing to climate emulation,
+    and our results establish adaptive routing as a viable paradigm
+    for cost-aware climate inference.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  R1.4: [F1.4.c]
+  notes: |
+    Two compound issues:
+
+    R1.4 rhetorical delta: the section's novelty claims —
+    "substantially advances the state of the art by allowing per-query
+    routing," "core advance is the recognition that climate forecast
+    queries are heterogeneous," and "first work to apply learned
+    per-query routing to climate emulation" — are rhetorical rather
+    than methodological. The actual delta over the relevant nearest
+    neighbors is not articulated. Statistical-dynamical hybrid
+    downscaling has a long lineage (BCSD, MOS, Vandal et al.'s DeepSD,
+    Baño-Medina et al.) where lead-time- or regime-dependent model
+    selection is standard; learned per-query routing for compute-cost
+    tradeoffs is the same construct as generic hybrid-inference
+    routers (e.g., the LLM-routing line the authors implicitly draw
+    from) and as mixture-of-experts in weather emulation (Pathak et
+    al.'s FourCastNet ensembling, GraphCast cascade variants). The
+    "first" framing and the "viable paradigm" framing do not name a
+    technical contribution that distinguishes ClimRoute from these.
+
+    R1.2 hidden premise: the para-3 argument — "routing remains
+    effective under climate non-stationarity because the difficulty
+    score is computed from … predictors that are themselves the inputs
+    to the underlying emulators" — silently assumes that the
+    *conditional* relationship between input features and the
+    emulator-error gap is stationary, not just that the input
+    distribution is covered. Under SSP5-8.5 forcing, the statistical
+    emulator's conditional bias structure is precisely what diverges
+    from the neural emulator's (the statistical emulator inherits
+    historical-period regression weights), so the gap function the
+    router predicts is itself non-stationary. Input-space coverage is
+    necessary but not sufficient. The premise underwrites the
+    21st-century-projection validity claim and is never stated, let
+    alone defended with a holdout under shifted forcing.
+
+    Combined: fixing R1.4 requires anchoring against the
+    statistical-dynamical hybrid-downscaling and weather-emulation
+    cascade literature and articulating what is actually new (e.g.,
+    CRPS-threshold-calibrated routing, the specific feature set), and
+    fixing R1.2 requires either retracting the 21st-century-validity
+    claim or supplying out-of-distribution evidence under shifted
+    forcing rather than relying on the input-coverage argument.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the "first work" / "substantially advances" /
+  "viable paradigm" framing has no technical delta against the
+  statistical-dynamical hybrid-downscaling lineage (BCSD, DeepSD,
+  Baño-Medina) and weather-emulator cascade/ensemble work
+  (FourCastNet ensembling, GraphCast variants); the section needs
+  to anchor against these and state what is actually new beyond
+  importing per-query routing. (2) The para-3 stationarity argument
+  silently assumes the input→error-gap conditional is stationary,
+  not just that the input distribution is covered; this premise is
+  load-bearing for the 21st-century projection claim and either
+  needs to be stated and defended (e.g., with an OOD evaluation
+  under shifted forcing) or the projection-validity claim must be
+  retracted. Both fixes are required.
+
+bad_outputs_summary: |
+  Polishes prose, accepts the "first work" and "viable paradigm"
+  framings, suggests adding more baselines or more lead times, or
+  recommends tightening the CRPS-threshold description. Accepts the
+  "input-space coverage implies routing validity under
+  non-stationarity" argument at face value and suggests adding more
+  21st-century scenarios rather than questioning the underlying
+  premise.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

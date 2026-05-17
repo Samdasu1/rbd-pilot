@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_081",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3975,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 50089,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.6, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: The artifact has a serious framing problem \u2014 the described iteration is not Newton-Raphson \u2014 plus several unsupported empirical claims, a model/data mismatch, and missing comparisons to the established annotator-aggregation literature. Substantive issues below, in roughly decreasing severity.\n\n**1. The method is mis-named. The described update is not Newton-Raphson.**\nThe update rule\n- \u03bc \u2190 weighted mean with weights w_j,\n- w_j \u2190 1 / (empirical variance of residuals across items),\n\nis a fixed-point / alternating reweighting scheme. It is exactly the variance-weighted-mean form of iteratively reweighted least squares for a Gaussian observation model with annotator-specific precisions \u2014 essentially an EM step (E-step trivial, M-step alternating). Newton-Raphson would require evaluating the score's Jacobian (the Hessian of the log-likelihood) and taking a step of the form \u03b8 \u2190 \u03b8 \u2212 H\u207b\u00b9 \u2207\u2113. No Hessian appears anywhere. The \"second-order convergence behavior\" framing is therefore unsupported; what is actually being observed is the usual linear convergence of reweighted-mean EM, which is often fast but is not second-order.\n\n**2. The Discussion paragraph mischaracterizes what Newton's method requires.**\nThe text says a \"practical advantage of Newton-style schemes \u2026 is that no gradient computation is needed.\" This is the opposite of true: Newton-Raphson requires both a gradient and a Hessian (or an approximation). The sentence as written would mislead a reader who is not already familiar with the method. Combined with point (1), the framing is self-contradictory: the algorithm is called Newton-Raphson and is then defended on the grounds that it avoids what Newton-Raphson uses.\n\n**3. Model / data mismatch on CIFAR-10H.**\nThe algorithm assumes real-valued y_ij and computes variances. CIFAR-10H is a categorical (10-class) re-annotation of CIFAR-10; the standard representation is per-annotator one-hot or per-item soft label vectors, not scalars. The artifact does not say how categorical annotations were reduced to real numbers, how the residual variance was computed across items with different class supports, or how the method was compared to \"majority voting\" on a non-scalar label space. Without that, the \"12% reduction in discrepancy\" cannot be interpreted.\n\n**4. Unsubstantiated quantitative claims.**\n- \"Converges in 4\u20137 steps\" \u2014 n, distribution of n across items, and tolerance dependence are not reported. The L2 tolerance 10\u207b\u2075 is also scale-dependent: if labels are on a 0\u20131 scale vs. a 0\u20139 scale, this threshold means very different things.\n- \"12% reduces discrepancy with held-out expert labels averaged across five subjective categories\" \u2014 no description of the five categories, no metric definition (accuracy? cross-entropy? Brier?), no variance / confidence interval, no baseline beyond plain majority voting, no comparison with weighted majority voting, Dawid\u2013Skene, or soft-label averaging, and no description of how expert labels were obtained.\n- \"Converges slowly when annotator variance is heterogeneous\" attributed to mean / majority vote \u2014 the mean is a closed-form one-shot estimator; \"slow convergence\" does not apply to it. This sentence appears to confuse statistical efficiency with iterative convergence.\n\n**5. Numerical / definitional gaps.**\n- Initialization of w_j^(0) is not stated. (Implicitly w_j^(0)=1 to recover the unweighted mean, but say so.)\n- s_j^(k) = 0 (a perfectly consistent annotator on the items they see) yields a divide-by-zero in w_j. No regularization or floor is described.\n- s_j is defined as variance across items i, but in many real datasets annotator j labels only a subset of items; behavior under sparse coverage is not addressed.\n- The likelihood the iteration is allegedly maximizing is never written down. Stating the generative model (e.g. y_ij = \u03bc_i + \u03b5_ij with \u03b5_ij ~ N(0, \u03c3_j\u00b2)) would let readers verify that the update is in fact the MLE coordinate update for that model \u2014 and make clear it is not the MLE under the more common categorical / confusion-matrix model used in label aggregation.\n\n**6. Missing prior work.**\nThe annotator-aggregation literature has covered variance-weighted and EM-based consensus estimation for decades: Dawid & Skene (1979), Welinder et al. (2010), Raykar et al. (2010), Whitehill et al. (2009), and the soft-label / CIFAR-10H line (Peterson et al., 2019). The artifact reads as if this body of work does not exist and proposes the method as new. A delta-versus-prior-work statement is needed; on the face of it, the proposed update is a special case of long-established methods.\n\n**7. Scope drift between \"subjective classification\" and the algorithm.**\nThe opening frames the problem as \"subjective classification\" and recommends the method as a \"drop-in replacement for majority voting.\" But the algorithm operates on real-valued labels and produces a real-valued consensus \u03bc_i, which is not a classification output. Either reframe as a soft-label / regression-style aggregation method, or change the algorithm; the current text wants both.\n\n**8. Prose-level suggestions.**\n- \"Newton-Raphson iteration\" appears in the very first sentence and sets up the mischaracterization; rename throughout (e.g. \"iteratively reweighted consensus estimator\") or actually derive a Hessian-based update.\n- \"yielding the rapid convergence behavior characteristic of second-order methods\" \u2014 delete or replace with an empirical convergence-rate plot.\n- \"no gradient computation is needed: the reweighting step gives the next iterate directly from sample statistics\" \u2014 accurate as a description of a closed-form M-step, but should not be sold as a Newton advantage.\n- The phrase \"the discrepancy with held-out expert labels\" needs a defined metric.\n\n**Concrete revision recommendations (minimal vs. structural):**\n- *Minimal:* (a) rename the method, (b) write the generative model and show the update is its MLE coordinate ascent, (c) cite Dawid\u2013Skene and at least one CIFAR-10H paper, (d) specify metric, baselines, and variability for the 12% number, (e) add an \u03b5 in w_j = 1/(s_j + \u03b5) and state the label scale assumed by the 10\u207b\u2075 tolerance, (f) fix the Discussion paragraph's description of Newton's method.\n- *Structural:* if the goal really is a second-order method, derive the Hessian of the joint log-likelihood in (\u03bc, \u03c3) and present a true Newton step; otherwise reposition the contribution as an efficient EM variant with a particular initialization and stopping rule, and benchmark against weighted majority voting and Dawid\u2013Skene rather than plain majority voting.\n\n**Caveats on this review:**\nI have not re-derived the MLE for every plausible generative model the authors might have intended; the critique in (1) assumes the most natural Gaussian-with-annotator-precision model, which is the one the update rule matches. If the authors have a different likelihood in mind, the \"not Newton\" conclusion still holds (no Hessian is computed) but the MLE-coordinate-ascent interpretation in (5) may need adjustment. I have not independently verified the CIFAR-10H result; the 12% figure is critiqued on reporting grounds, not on whether the number itself is reproducible. Prior-work citations in (6) are from memory of the field rather than a fresh literature search; specific publication years should be reconfirmed before inclusion.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The broad request to check a research artifact centrally includes whether the thesis and contribution framing are coherent at the draft level.",
+      "R1.2": "The artifact contains algorithmic and methodological claims whose internal argument chain should be checked for consistency.",
+      "R1.3": "The reported convergence and expert-label discrepancy claims make evidence-to-claim alignment a central responsibility.",
+      "R1.6": "A generic check of a paper excerpt normally includes sentence-level clarity, terminology, and register.",
+      "RX.1": "Any projection of a vague checking request must disclose uncertainty about the intended depth of review.",
+      "RX.2": "The check must guard against stronger claims than the described algorithm and evidence warrant.",
+      "RX.3": "The response must stay within projecting responsibilities rather than performing the requested check.",
+      "RX.4": "The projection must account for possible downstream harm from unvetted methodological or empirical claims.",
+      "RX.5": "The projection should preserve traceability to the delegation wording and the artifact\u2019s specific claims."
+    }
+  }
+}

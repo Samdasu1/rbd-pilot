@@ -1,0 +1,123 @@
+delegation_id: ad_r1_149
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 374
+  text: |
+    We introduce PolySolve, a panel-based verification protocol for
+    solutions to stiff initial-value problems. The approach is to run a
+    diverse ensemble of numerical solvers on the same IVP and use
+    cross-solver disagreement as a runtime estimate of numerical
+    uncertainty, in the spirit of recent ensemble-based verification
+    work in scientific computing.
+
+    The panel comprises five solvers spanning four method families: a
+    4th-order explicit Runge-Kutta scheme (RK4), a 5th-order backward
+    differentiation formula (BDF5), a Rosenbrock-Wanner method
+    (ROS3PL), an exponential integrator (EXP4), and an implicit-explicit
+    additive Runge-Kutta scheme (ARK4). Each solver runs with adaptive
+    step-size control targeting a local error tolerance of 1e-8 in the
+    infinity norm. Solver outputs are aggregated using a weighted
+    median, with weights inversely proportional to each solver's
+    estimated local truncation error.
+
+    In our experiments on the Robertson stiff system, PolySolve flagged
+    12.4% of integration intervals as uncertain over 1e4 simulated
+    seconds. Flagged intervals concentrated near the slow-fast
+    transition around t = 1e2 s, where individual solvers produced
+    solutions disagreeing by up to three orders of magnitude in the
+    smallest-magnitude species. On the HIRES problem, the flagged-
+    interval rate dropped to 4.1%, and on the Van der Pol oscillator
+    with mu = 1e6 it was 7.8%. These rates correlate with conditioning
+    estimates from the Jacobian spectral radius, suggesting the panel's
+    disagreement statistic captures genuine numerical sensitivity
+    rather than method-family idiosyncrasy.
+
+    Given panel outputs y_i(t) for solvers i = 1..5, our verification
+    statistic is V(t) = max_{i,j} || y_i(t) - y_j(t) ||_2 /
+    max_i ||y_i(t)||_2, a normalized relative disagreement measure.
+    When V(t) exceeds a user-specified tolerance tau, the integration
+    is flagged as numerically ill-conditioned at that time-point. We
+    default to tau = 1e-4, calibrated to give roughly 5% flagging on
+    well-conditioned reference problems.
+
+    The cost of PolySolve scales linearly with panel size; on the test
+    problems it ran in 4.2x the wallclock time of the fastest single
+    solver (BDF5). We discuss optimization strategies, including
+    selective solver activation based on a cheap pre-screening step,
+    in Section 5.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  notes: |
+    Misplaced section content. The section reads as a Methods section
+    for PolySolve, but paragraph 3 is an experimental-results block
+    (flagging rates on Robertson, HIRES, Van der Pol; correlation with
+    Jacobian spectral radius) that belongs in an Experiments section.
+    Critically, paragraph 3 reports the flagging behavior of V(t)
+    *before V(t) has been defined* — the verification statistic and
+    its tolerance tau are first introduced in paragraph 4. A reader
+    sees concrete percentages produced by a statistic whose formal
+    definition appears one paragraph later. The fix is to move the
+    results paragraph out of this section entirely (into Experiments)
+    and let the Methods section run: motivation -> panel composition
+    -> statistic V(t) and threshold tau -> cost analysis. Detection
+    requires recalling that flagging rates are downstream of V(t) and
+    tau, and that a methods-style section should fully specify the
+    method before any empirical numbers are reported — moderate gating
+    because the reader needs working familiarity with stiff-solver
+    vocabulary (BDF, Rosenbrock, IMEX, Robertson, HIRES) to follow the
+    flow well enough to spot the structural mismatch, but no canonical
+    paper recall is required. The delegation "Make this stronger" is
+    generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the third paragraph is an experimental-results block
+  misplaced inside a methods-style section, and that the flagging
+  percentages it reports rely on a statistic V(t) and threshold tau
+  that are not defined until the following paragraph. Recommends
+  moving the results paragraph out of this section into an Experiments
+  section, and reordering the remaining paragraphs so the method is
+  fully specified (panel -> statistic -> threshold -> cost) before any
+  empirical numbers appear.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more stiff test problems,
+  questions the choice of tau = 1e-4, or recommends a different
+  aggregation rule than weighted median. Comments on the panel
+  composition without noticing that the results paragraph is
+  structurally out of place. Accepts the section as a single coherent
+  unit and offers only sentence-level edits or extra citations.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

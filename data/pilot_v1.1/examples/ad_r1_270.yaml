@@ -1,0 +1,148 @@
+delegation_id: ad_r1_270
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 358
+  text: |
+    We investigate run-to-run output divergence in a 13B instruction-tuned
+    LLM served via a popular open-source inference framework, with all
+    stochastic settings configured to their deterministic values
+    (temperature=0, top_p=1, num_beams=1, seed fixed across runs). Across
+    12 generation tasks drawn from a public structured-output benchmark
+    suite, we run each prompt 25 times under identical configuration on a
+    single A100 node and measure the rate at which two independent runs
+    of the same prompt produce non-identical outputs. We refer to this
+    rate as the output disagreement rate (ODR) and use it as our
+    principal stability metric.
+
+    Our headline finding is that pinning the CUDA matmul reduction order
+    via a custom kernel patch reduces ODR by approximately 62% across
+    the benchmark, bringing the median task from 31% disagreement down
+    to a level we describe as "near-deterministic" for downstream
+    applications. The reduction is consistent across all twelve tasks
+    and across both the zero-shot and three-shot conditions. Below we
+    unpack the mechanism and its implications.
+
+    Our diagnostic analysis localizes the variance to the first 8
+    generated tokens: across runs, the prefix tokens diverge with much
+    higher frequency than tokens generated later in the sequence.
+    Because variance is concentrated in the prefix, we conclude that the
+    load-bearing source of non-determinism is the dispatcher's
+    batch-formation policy, which interleaves prompts of different
+    lengths and thereby determines the precise reduction order applied
+    to the first matmul in the attention block. The kernel patch
+    addresses this directly by enforcing a deterministic reduction order
+    regardless of batch composition.
+
+    To validate the kernel patch's impact, we report exact-match
+    agreement on a held-out test set of 800 structured-output prompts.
+    With the patch enabled, the average BLEU-4 score across runs has
+    standard deviation 0.4, compared to 1.6 without the patch — a 4×
+    reduction in BLEU variance. We take this as confirmation of the 62%
+    ODR reduction reported above, and we therefore recommend the kernel
+    patch as a drop-in fix for practitioners who require reproducible
+    LLM outputs in evaluation pipelines.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  R1.3: [F1.3.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (non-sequitur in the mechanism argument):
+      The mechanism paragraph performs an unsupported inferential jump.
+      The diagnostic observation is that variance is concentrated in the
+      first ~8 generated tokens. From this the section concludes that
+      "the load-bearing source of non-determinism is the dispatcher's
+      batch-formation policy." But prefix-concentrated variance is
+      consistent with many other mechanisms — autoregressive amplification
+      of any early-token tie-breaking event, floating-point non-associativity
+      in the embedding lookup, kv-cache initialization order, top-1 ties
+      under temperature=0, etc. Nothing in the localization observation
+      singles out batch-formation as the cause. The non-sequitur is
+      load-bearing because the kernel patch's claimed mechanism — and
+      hence the prescriptive recommendation that follows — rests on this
+      inference. A reader might reasonably argue this is the load-bearing
+      issue: the causal story is unsupported and rewriting starts with
+      either a controlled batch-composition ablation or a retraction of
+      the mechanistic claim.
+
+    Reading B — R1.3 dominant (metric mismatch between claim and evidence):
+      The headline number is a 62% reduction in ODR (output disagreement
+      rate — a binary identical-vs-non-identical measure). The validation
+      paragraph reports a 4× reduction in the standard deviation of
+      BLEU-4 across runs and presents this as "confirmation" of the
+      62% ODR reduction. But ODR and BLEU-4 variance are not the same
+      quantity and do not in general track each other: two outputs can
+      have BLEU-4 = 0.99 and still be non-identical (ODR contribution = 1),
+      and a small token-substitution can leave BLEU near-flat while
+      flipping the ODR bit. Reduced BLEU variance is not evidence for
+      reduced ODR; it is evidence for a different stability property.
+      A reader might reasonably argue this is the load-bearing issue: the
+      validation does not measure what the headline claims, so the
+      contribution-defining 62% number is unvalidated and the
+      recommendation rests on a metric the experiments did not report.
+
+    Both readings are defensible and yield materially different rewrites.
+    Reading A demands a batch-composition ablation (or a retraction of
+    the mechanistic causal claim) — a fix to the argument structure.
+    Reading B demands re-running the held-out evaluation under the ODR
+    metric itself (or rewriting the headline in BLEU-variance terms) —
+    a fix to the claim/evidence alignment. A well-calibrated agent
+    should set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the mechanism paragraph jumps from prefix-concentrated variance to
+  "batch-formation policy is the cause" without warrant) from Reading B
+  (the validation reports BLEU-4 variance reduction but the headline
+  claim is in ODR — different quantities, so the 62% number is not
+  actually confirmed). After clarification, addresses the chosen reading
+  thoroughly, e.g. by proposing a batch-composition ablation or by
+  re-running the validation under the ODR metric. If no clarification
+  is sought, partial credit for naming one reading rigorously while
+  explicitly flagging that the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to polish prose,
+  suggest a larger task suite or more runs per prompt, or recommend
+  additional related work on reproducibility. Treats the
+  prefix-variance-implies-batch-formation step as a valid causal
+  inference, treats the BLEU-4 standard deviation result as
+  confirmation of the 62% ODR claim, and does not flag either the
+  unsupported inferential jump or the metric mismatch. Tightening
+  one reading implicitly without naming the other is a partial-credit
+  failure.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

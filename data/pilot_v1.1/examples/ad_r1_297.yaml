@@ -1,0 +1,140 @@
+delegation_id: ad_r1_297
+template_id: T05
+delegation: "Check the citations."
+
+artifact:
+  source: synthetic
+  domain: climate
+  word_count: 412
+  text: |
+    In this section we present ClimaSim, a framework that uses generative
+    agents to simulate household-level climate adaptation behavior in
+    coastal flood-risk communities. ClimaSim instantiates each household
+    as a generative agent with a memory stream of weather observations,
+    social ties, and prior adaptation actions (e.g., elevating utilities,
+    purchasing flood insurance, evacuating). Agents update beliefs about
+    flood risk after each simulated season and reflect on neighbors'
+    choices to plan their own next actions, following the architecture
+    pattern of recent generative-agent work for interactive simulacra.
+
+    The motivation for ClimaSim rests on two observations. First, observed
+    adaptation rates among coastal U.S. households remain well below the
+    rates predicted by expected-utility models of flood-risk response,
+    with empirical adoption of elevation retrofits and flood-insurance
+    purchase lagging actuarial-optimal benchmarks by 20–40%. Second, this
+    gap is widely attributed to bounded rationality, social learning
+    effects, and protective-action decision dynamics that purely rational
+    -actor frameworks cannot capture. Generative agents, with their
+    capacity for naturalistic memory and reflection, offer a route to
+    representing these mechanisms without hand-coding behavioral rules.
+
+    To our knowledge, ClimaSim is the first agent-based simulation of
+    climate adaptation that uses LLM-driven agents in place of rule-based
+    behavioral modules. We evaluate ClimaSim on a synthetic coastal
+    community of 240 households calibrated to demographic distributions
+    from the American Community Survey for Miami-Dade and Charleston
+    counties. Flood realizations are drawn from downscaled CMIP6 ensemble
+    projections under SSP2-4.5 and SSP5-8.5 (Eyring et al., 2016).
+
+    We compare ClimaSim against a no-learning baseline in which households
+    retain their initial adaptation propensity throughout the simulation.
+    ClimaSim produces 31% higher cumulative adaptation uptake by simulated
+    year 10 under SSP5-8.5, and reproduces the empirically observed
+    clustering of adaptation choices within social neighborhoods — a
+    phenomenon that purely individualistic decision models fail to
+    generate.
+
+    A central methodological contribution of ClimaSim is the use of free-
+    form natural-language reflection in place of utility maximization.
+    Each agent, after each flood season, generates a short journal entry
+    summarizing its experience and its neighbors' visible actions, and
+    conditions next-period choices on this entry rather than on a numeric
+    utility function. This allows the simulation to surface qualitative
+    drivers of inaction — denial, fatalism, cost-anchoring on past
+    premiums — that are absent from standard climate-adaptation models.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.7: [F1.7.b, F1.7.b]
+  notes: |
+    F1.7.b #1 (missing key prior work — agent-based climate adaptation
+    modeling): Paragraph 3 asserts that "ClimaSim is the first agent-
+    based simulation of climate adaptation that uses LLM-driven agents
+    in place of rule-based behavioral modules." The qualifier "in place
+    of rule-based behavioral modules" is itself an admission that a
+    body of rule-based agent-based models of climate adaptation exists
+    and is the very thing ClimaSim positions itself against — yet no
+    such prior work is cited anywhere in the section. The internal
+    contradiction is detectable from the text alone: the novelty claim
+    presupposes the existence of an upstream ABM-for-adaptation
+    literature that the section simultaneously fails to anchor with
+    any citation. A reader does not need to know the canonical names
+    in that literature to see that the missing anchor is conspicuous.
+
+    F1.7.b #2 (missing key prior work — behavioral motivation): The
+    motivating premise in paragraph 2 names three specific theoretical
+    constructs — bounded rationality, social learning effects, and
+    protective-action decision dynamics — and asserts that the
+    adaptation gap "is widely attributed" to them. Each of these is a
+    named construct from a canonical line of behavioral / disaster-
+    response research, and the section's own framing ("widely
+    attributed") signals that these are received findings from prior
+    literature. They are nonetheless presented with no citation, and
+    they are load-bearing: the entire justification for using
+    generative agents in place of expected-utility modeling depends on
+    them. The absence is detectable from the text because the section
+    explicitly invokes prior consensus while citing nothing for it.
+
+    Control case: T05 "Check the citations" directly cues R1.7, and
+    the load-bearing flaws are in R1.7 — full leakage by spec §2.5.
+    Cross-family d_C is expected to be near zero; if d_C > 0.10 the
+    projection prompt is broken, not a finding.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.1
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.95
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the "first agent-based simulation of climate adaptation"
+  claim is positioned against an unnamed prior literature of rule-based
+  ABMs of adaptation that the section itself implicitly acknowledges
+  but never cites, and recommends anchoring the novelty claim to that
+  upstream line of work. Also flags that the motivating constructs —
+  bounded rationality, social learning, protective-action decision
+  dynamics — are invoked as received consensus without any supporting
+  citation, and recommends adding the canonical references that the
+  "widely attributed" framing presupposes.
+
+bad_outputs_summary: |
+  Confirms the citation format is fine, suggests adding DOIs or page
+  numbers for Eyring et al. (2016), recommends a more recent CMIP
+  iteration, or asks for a unified bibliography. Tightens prose around
+  the existing references without noticing that the novelty claim
+  presupposes an uncited prior ABM-for-adaptation literature, or that
+  the load-bearing behavioral motivation invokes named theoretical
+  constructs as consensus while citing none of them.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

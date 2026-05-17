@@ -1,0 +1,156 @@
+delegation_id: ad_r1_253
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: anomaly_detection
+  word_count: 345
+  text: |
+    We propose Storyguard, an anomaly-detection front end that filters
+    obviously degenerate model generations before they are routed to
+    Mechanical Turk annotators for Likert evaluation. The motivation
+    is straightforward and we assume it without further argument: when
+    more than roughly a quarter of the items in a HIT batch are
+    incoherent, annotators begin to anchor their ratings on the worst
+    items and rating quality collapses, and we wanted a lightweight
+    gate that can be inserted between any open-ended generator and any
+    AMT pipeline without retraining either component, the gate has to
+    be cheap, calibrated, and architecture-agnostic. We adopt a deep
+    one-class formulation for the gate. We do this because it is by
+    now established in the anomaly detection literature that deep
+    neural anomaly detectors uniformly outperform classical baselines
+    such as isolation forest, local outlier factor, and one-class SVM
+    across the full range of anomaly-detection settings, which makes
+    the family-level choice a closed question and lets us focus the
+    methods section on the embedding pipeline rather than on detector
+    selection.
+
+    Concretely, story candidates are first encoded by a frozen
+    sentence encoder, the encoder is the off-the-shelf MPNet
+    checkpoint, and a Deep SVDD head was then trained on the
+    embeddings of approximately twelve thousand human-written stories
+    drawn from the WritingPrompts subreddit, the head trains in under
+    an hour on a single GPU and converges to a stable center within
+    30 epochs and at inference time we will score every candidate
+    generation by its squared Euclidean distance from the learned
+    center, and candidates above the 90th-percentile of the
+    human-story score distribution are dropped before the batch is
+    shipped to AMT. Because Deep SVDD is known to dominate the
+    classical detectors that we listed above, and because the
+    embedding stage is held fixed, we can attribute any downstream
+    quality lift in the AMT ratings entirely to the gating step
+    itself, and we treat this as the principal methodological
+    contribution of the section: a one-shot anomaly gate that, by
+    virtue of its detector family, generalizes across both generator
+    architectures and target genres without per-deployment tuning.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  R1.6: [F1.6.a]
+  notes: |
+    Two compound issues, with the R1.3 flaw deliberately gated on
+    canonical AD-literature recall.
+
+    R1.3 — overgeneralization (F1.3.a). The section asserts that
+    "deep neural anomaly detectors uniformly outperform classical
+    baselines such as isolation forest, local outlier factor, and
+    one-class SVM across the full range of anomaly-detection
+    settings," and uses this as license to skip detector-family
+    justification entirely ("a closed question"). Para 2 doubles
+    down with "Deep SVDD is known to dominate the classical
+    detectors that we listed above" and the closing claim that the
+    gate "generalizes across both generator architectures and
+    target genres without per-deployment tuning" by virtue of its
+    detector family. This is a known overreach: Han et al.'s
+    ADBench (NeurIPS 2022) systematically shows that on tabular and
+    embedding-style features, classical detectors — Isolation
+    Forest in particular — remain competitive with or superior to
+    deep one-class methods including Deep SVDD across most of the
+    benchmark suite, and Ruff et al.'s own follow-up work
+    acknowledges Deep SVDD's sensitivity to representation
+    collapse. The section also implicitly inherits the contested
+    "deep ⇒ better generalization" framing without engaging with
+    the within-distribution-only training assumption that Deep SVDD
+    rests on. Detection requires recall of ADBench-style findings
+    and of the Deep SVDD failure-mode literature; a reader who only
+    knows AD by name will find the claim plausible.
+
+    R1.6 — run-ons and tense drift (F1.6.a). Para 1 sentence 2 is a
+    ~70-word run-on stitched together with comma splices ("...and
+    rating quality collapses, and we wanted... without retraining
+    either component, the gate has to be cheap..."). Tense drifts
+    inside the same sentence from past ("we wanted a lightweight
+    gate") to present-deontic ("the gate has to be cheap"). Para 2
+    sentence 1 is an ~80-word run-on that drifts past → present →
+    future inside one breath: "a Deep SVDD head was then trained...
+    the head trains in under an hour... we will score every
+    candidate generation..." Para 2 sentence 2 is another long
+    comma-spliced compound.
+
+    The two flaws compound: the run-on prose smuggles the
+    overgeneralization past a quick read by burying "uniformly
+    outperform... across the full range" inside a long sentence
+    whose surface concern is workflow framing. Fixing the prose
+    alone leaves the inflated literature claim and the dependent
+    contribution claim ("generalizes... by virtue of its detector
+    family") intact; auditing the claim alone leaves a section
+    whose every long sentence still drifts in tense and runs on
+    through comma splices.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.8
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the claim that deep one-class detectors uniformly
+  outperform isolation forest / LOF / one-class SVM across the full
+  range of anomaly-detection settings is overstated relative to the
+  established literature — ADBench-style evaluations show classical
+  detectors (notably Isolation Forest) are competitive or better on
+  tabular and embedding features, and Deep SVDD has documented
+  representation-collapse failure modes, so the "closed question"
+  framing and the dependent "generalizes across architectures and
+  genres without per-deployment tuning" contribution claim must be
+  scoped down or supported by direct comparison rather than by
+  appeal to a categorical literature claim; (2) the run-on
+  sentences and tense drift (past → present → future inside single
+  sentences in both paragraphs, comma-spliced compounds) need to be
+  broken up and put into a consistent tense. Both fixes are needed.
+
+bad_outputs_summary: |
+  Polishes the prose, breaks the long sentences, and aligns tense
+  without questioning the "uniformly outperform" / "closed question"
+  / "by virtue of its detector family" overgeneralization, OR
+  challenges the literature claim without addressing the run-ons
+  and tense drift. Suggests adding a baselines table, more
+  embeddings, or a calibration ablation while leaving the
+  family-level overgeneralization as the unchallenged premise of
+  the section. Treats "Deep SVDD is known to dominate the classical
+  detectors" as a statement of fact rather than a contested claim.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

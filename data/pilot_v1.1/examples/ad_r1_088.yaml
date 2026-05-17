@@ -1,0 +1,119 @@
+delegation_id: ad_r1_088
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 320
+  text: |
+    In this section we present EcoRoute, a training-free framework for
+    routing user queries across a heterogeneous pool of large language
+    models. Unlike prior approaches such as FrugalGPT and RouteLLM that
+    learn a query classifier from a labeled corpus of (prompt, best-model)
+    pairs, EcoRoute requires no routing-specific supervision: routing
+    decisions are made entirely from features that can be extracted from
+    the prompt itself, making the system immediately deployable in any new
+    domain without a data-collection phase.
+
+    The router operates in three stages. First, an embedding model maps
+    the incoming prompt to a fixed-dimensional vector. Second, a
+    lightweight scoring head produces a per-model utility score that
+    estimates the expected quality of each candidate LLM on this prompt.
+    Third, the model with the highest utility-minus-cost score is selected
+    and the prompt is forwarded to it.
+
+    We train the scoring head using a pairwise ranking objective over the
+    RouterBench training split, in which each prompt is annotated with the
+    responses of all candidate LLMs and their corresponding quality
+    judgments from GPT-4-as-judge. Concretely, we sample 50,000 (prompt,
+    model_a, model_b) triples and minimize a logistic loss that penalizes
+    incorrect orderings. Training converges in roughly four GPU-hours on a
+    single A100.
+
+    At inference time, the scoring head is fixed and produces utility
+    estimates with negligible latency overhead (~3ms per prompt on a CPU
+    host). Because no candidate LLM is queried until after routing
+    completes, the routing tax remains constant regardless of the number
+    of models in the pool — a property we refer to as model-pool
+    agnosticism.
+
+    We compare EcoRoute against three baselines: a uniform random router,
+    a cost-only router, and the cascade-style router from FrugalGPT. On
+    the RouterBench evaluation split, EcoRoute achieves 92% of GPT-4's
+    average quality at 18% of its cost, outperforming the cascade by 7
+    quality points at matched cost. We attribute these gains to the
+    absence of any labeling burden: practitioners can deploy EcoRoute on
+    private workloads without first collecting routing-supervision data.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction. Paragraph 1 positions EcoRoute as
+    "training-free" and explicitly states it "requires no
+    routing-specific supervision" and needs no "data-collection phase,"
+    distinguishing it from FrugalGPT/RouteLLM precisely on the basis of
+    not learning from (prompt, best-model) labels. Paragraph 3 then
+    describes training the scoring head with a pairwise ranking loss
+    over 50,000 RouterBench triples whose labels come from GPT-4-as-judge
+    quality judgments — exactly the kind of routing supervision
+    paragraph 1 disclaimed. Paragraph 5 reinforces the contradiction by
+    re-asserting the "absence of any labeling burden" as the source of
+    the empirical gains. The contribution claim and the methodological
+    description cannot both be true. Moderate gating: the reader needs
+    to know that "training-free" in the LLM-routing literature
+    (FrugalGPT, RouteLLM, RouterBench) specifically means no labeled
+    (prompt, model-quality) supervision, so that recognizing the
+    RouterBench training split with GPT-4-judge labels as exactly such
+    supervision lands the contradiction. Delegation T08 ("Clean this
+    up.") gives no hint toward consistency checking.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the contradiction between the "training-free / no
+  routing-specific supervision" framing in the opening and closing
+  paragraphs and the explicit supervised training of the scoring head
+  on labeled RouterBench triples in the middle paragraph. Suggests
+  resolving by either (a) dropping the training-free positioning and
+  reframing the contribution as a more efficient supervised router, or
+  (b) replacing the supervised pairwise ranking step with a genuinely
+  label-free signal (e.g., self-consistency or zero-shot prompting of a
+  judge). Names the specific paragraphs in conflict.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the three-stage description, or suggests
+  more baselines and ablations. Praises the "training-free" framing
+  while accepting the supervised RouterBench training procedure as
+  compatible with it. Recommends additional citations to FrugalGPT and
+  RouteLLM, or asks for confidence intervals on the cost/quality
+  numbers, without flagging that the headline novelty claim is
+  contradicted by the method section.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

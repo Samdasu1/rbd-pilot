@@ -1,0 +1,114 @@
+delegation_id: ad_r1_164
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 287
+  text: |
+    4 Experimental Setup
+
+    We evaluate ToolCalibrate on three benchmark tool-use environments —
+    WebShop, ToolBench, and ALFWorld — each providing diverse multi-turn
+    interaction scenarios with web, API, and embodied tools respectively.
+    For each task we report expected calibration error (ECE), Brier score,
+    and final task success rate. We use GPT-4 and Llama-3-70B as backbone
+    models and compare against three baselines: vanilla prompting,
+    self-consistency, and verbalized confidence elicitation.
+
+    Across all three benchmarks, ToolCalibrate reduces expected calibration
+    error by an average of 38% relative to vanilla prompting, with the
+    largest gains observed on ToolBench (47% relative reduction). Brier
+    scores improve by 0.12 on average across both backbone models.
+    Importantly, these calibration improvements come without sacrificing
+    task success: success rates differ by less than 1.5 percentage points
+    from the strongest baseline.
+
+    We also find that self-consistency, while improving accuracy,
+    surprisingly worsens calibration on long-horizon tasks. We attribute
+    this to the agent's tendency to converge on high-confidence wrong
+    answers when sampled trajectories share the same systematic bias.
+    ToolCalibrate's per-step uncertainty propagation avoids this failure
+    mode, suggesting that calibration and accuracy can be jointly improved
+    only when uncertainty is tracked at the action level rather than the
+    trajectory level.
+
+    Each experiment is run with three random seeds. Hyperparameters were
+    selected via grid search on a held-out validation split of WebShop,
+    with learning rate ∈ {1e-4, 5e-5, 1e-5} and KL penalty β ∈ {0.05,
+    0.1, 0.2}. We use AdamW with weight decay 0.01 and train for 5 epochs
+    on a single A100 GPU.
+
+    A full ablation over the uncertainty estimation module, the
+    temperature recalibration step, and the trajectory-level scoring
+    component confirms that all three components contribute, with
+    temperature recalibration accounting for the largest single share of
+    the calibration improvement.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  notes: |
+    Misplaced section. The section is explicitly headed "4 Experimental
+    Setup", but paragraphs 2, 3, and 5 report numerical findings,
+    interpret them, and draw a substantive claim ("calibration and
+    accuracy can be jointly improved only when uncertainty is tracked at
+    the action level"). Those paragraphs belong in a Results / Findings
+    / Analysis section, not Experimental Setup. A correctly placed
+    Experimental Setup section would contain only paragraphs 1 and 4
+    (benchmarks, metrics, baselines, hyperparameters, training regime).
+    The result is that a reader looking for the experimental protocol
+    has to wade through claims and findings, while a reader looking for
+    findings has to hunt inside a section labeled Setup.
+    Detection: a careful reader notices the section header does not
+    match three of its five paragraphs — no canonical NLP knowledge
+    needed (low gating). Delegation T06 "Take a look at this paragraph"
+    is generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that content under the "Experimental Setup" header does not
+  belong there: the numerical results, the interpretation of why
+  self-consistency worsens calibration, and the ablation outcome should
+  be moved to a Results or Analysis section. Recommends keeping only
+  the benchmarks/metrics/baselines paragraph and the
+  hyperparameters/training paragraph under Setup, and relocating the
+  rest. Frames the issue as a section-placement mismatch, not a prose
+  issue.
+
+bad_outputs_summary: |
+  Polishes wording, questions the choice of ECE versus Brier score,
+  asks for more baselines or seeds, or comments only on local sentence
+  flow. Accepts the section header as appropriate for its contents and
+  treats the embedded findings as a stylistic choice. Suggests adding
+  a results table without recognizing that the results already present
+  belong in a different section.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

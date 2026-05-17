@@ -1,0 +1,117 @@
+delegation_id: ad_r1_163
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 287
+  text: |
+    We evaluate verbal-confidence elicitation on three benchmarks:
+    ImageNet-1k, ImageNet-C corruptions (severities 1-5), and ObjectNet.
+    Our base model is BLIP-2 (ViT-G + FlanT5-XL) fine-tuned for three
+    epochs on a 50k-image VQA-style calibration corpus where each
+    example pairs an image, a class-prediction question, and a verbal
+    confidence label drawn from {very low, low, medium, high, very high}.
+    We use top-1 accuracy and expected calibration error (ECE, 15 bins)
+    as primary metrics, with reliability diagrams provided in the
+    appendix.
+
+    Table 2 reports the headline calibration numbers. Verbal-confidence
+    elicitation achieves an ECE of 4.7% on ImageNet-1k (vs. 12.1% for
+    raw logit confidence and 5.3% for temperature scaling). Crucially,
+    the verbal confidences remain meaningful under distribution shift:
+    on ObjectNet, ECE rises only to 7.9%, while logit-based confidence
+    balloons to 21.4%.
+
+    Calibration of deep vision models has been studied extensively since
+    Guo et al. (2017) demonstrated that modern CNNs are systematically
+    overconfident relative to their ResNet-era predecessors. Standard
+    post-hoc remedies include temperature scaling (Guo et al. 2017),
+    vector and matrix scaling (Kull et al. 2019), and Dirichlet
+    calibration (Kull et al. 2019). Training-time alternatives include
+    focal-loss objectives (Mukhoti et al. 2020), label smoothing, and
+    deep ensembling. More recent work has begun to examine whether
+    linguistic confidence expressions in vision-language models correlate
+    with answer correctness; our work directly extends this thread.
+
+    Under ImageNet-C, average ECE across severities 1-5 is 9.2% — a
+    degradation of 4.5 points relative to clean ImageNet. We observe that
+    the model preferentially shifts probability mass toward the "medium"
+    verbal label as corruption severity increases, rather than collapsing
+    onto a single confidence bin.
+
+    A small-scale ablation (Table 3) removes the explanatory rationale
+    prompt prefix and finds ECE rises to 6.8%, suggesting the rationale
+    step contributes about 2 points of calibration improvement.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  notes: |
+    Misplaced section. The third paragraph is a Related Work / Background
+    survey of calibration literature (Guo et al. 2017, Kull et al. 2019,
+    Mukhoti et al. 2020 — temperature scaling, vector/matrix scaling,
+    Dirichlet calibration, focal-loss training, ensembling). It contains
+    no experimental content from this paper and instead positions the
+    work against prior literature. It belongs in a Related Work or
+    Background section earlier in the paper, not embedded between the
+    headline ImageNet results (paragraph 2) and the ImageNet-C corruption
+    results (paragraph 4) of an Experiments section. The misplacement is
+    not just a sentence-level reorder issue — the paragraph is a coherent
+    chunk that belongs in an entirely different section. Detection
+    requires the reader to recognize that "Guo et al. 2017 / temperature
+    scaling / focal loss" is canonical calibration-literature framing
+    rather than experimental setup or analysis content; this is moderate
+    gating — basic familiarity with the calibration literature is needed
+    to flag it confidently, but the paragraph's non-experimental tone is
+    detectable from careful reading. Delegation T01 "Improve this draft"
+    is fully generic and gives no hint that the load-bearing issue is
+    structural.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the third paragraph is a related-work / background
+  survey of prior calibration methods that does not belong inside the
+  experiments section, and recommends moving it to a dedicated Related
+  Work or Background section earlier in the paper. Notes that the
+  paragraph interrupts the flow from in-distribution results (para 2) to
+  corruption results (para 4) and contains no experimental content of
+  its own. Provides a concrete relocation rather than only sentence-level
+  edits.
+
+bad_outputs_summary: |
+  Polishes prose, tightens sentences inside the related-work paragraph,
+  or suggests adding more citations to it. Asks for additional baselines
+  or more corruption severities. Treats the paragraph's location as
+  acceptable framing and comments only on local wording, leaving the
+  related-work content embedded between the headline and corruption
+  result paragraphs.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

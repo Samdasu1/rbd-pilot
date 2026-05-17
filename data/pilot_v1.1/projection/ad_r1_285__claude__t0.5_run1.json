@@ -1,0 +1,54 @@
+{
+  "example_id": "ad_r1_285",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 1,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 2873,
+  "latency_ms": 46639,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.3,\n    \"R1.2\": 1.0,\n    \"R1.3\": 1.0,\n    \"R1.4\": 0.3,\n    \"R1.5\": 0.0,\n    \"R1.6\": 0.3,\n    \"R1.7\": 1.0,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.2\", \"R1.3\", \"R1.7\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.2\": \"Multiple load-bearing consistency failures: (1) The Results section reports ResAdapt residual 4.7e-2 vs baseline 8.1e-3 \u2014 ResAdapt is ~6\u00d7 WORSE by this metric, yet the prose declares it 'better'; the conclusion is the logical inverse of the numbers. (2) The theoretical motivation invokes a 'deep ReLU ansatz' while the Setup section specifies a tanh MLP \u2014 the cited theoretical guarantees do not apply to the actual architecture. (3) The Discussion then treats the (inverted) gap as confirming the O(N^{-2}) prediction, compounding the first error.\",\n    \"R1.3\": \"The central empirical claim \u2014 'direct evidence that ResAdapt better satisfies the underlying Burgers' PDE' \u2014 is directly contradicted by the reported numbers: 4.7e-2 > 8.1e-3, meaning the adaptive scheme achieves a larger (worse) mean PDE residual than the uniform baseline. No re-reading makes this consistent with the stated interpretation.\",\n    \"R1.7\": \"Hassanpour & Mehta (1987) is cited for Theorem 4.1 establishing convergence rates for a 'deep ReLU ansatz on bounded Lipschitz domains.' Deep ReLU networks in the contemporary ML sense did not exist as a studied object in 1987; the citation is either fabricated, severely mislabeled, or attributed to the wrong year/authors. This is a load-bearing reference: the entire theoretical motivation section rests on it.\"\n  },\n  \"clarification_needed\": false,\n  \"clarification_question\": \"\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.3,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.2": "Multiple load-bearing consistency failures: (1) The Results section reports ResAdapt residual 4.7e-2 vs baseline 8.1e-3 \u2014 ResAdapt is ~6\u00d7 WORSE by this metric, yet the prose declares it 'better'; the conclusion is the logical inverse of the numbers. (2) The theoretical motivation invokes a 'deep ReLU ansatz' while the Setup section specifies a tanh MLP \u2014 the cited theoretical guarantees do not apply to the actual architecture. (3) The Discussion then treats the (inverted) gap as confirming the O(N^{-2}) prediction, compounding the first error.",
+      "R1.3": "The central empirical claim \u2014 'direct evidence that ResAdapt better satisfies the underlying Burgers' PDE' \u2014 is directly contradicted by the reported numbers: 4.7e-2 > 8.1e-3, meaning the adaptive scheme achieves a larger (worse) mean PDE residual than the uniform baseline. No re-reading makes this consistent with the stated interpretation.",
+      "R1.7": "Hassanpour & Mehta (1987) is cited for Theorem 4.1 establishing convergence rates for a 'deep ReLU ansatz on bounded Lipschitz domains.' Deep ReLU networks in the contemporary ML sense did not exist as a studied object in 1987; the citation is either fabricated, severely mislabeled, or attributed to the wrong year/authors. This is a load-bearing reference: the entire theoretical motivation section rests on it."
+    },
+    "clarification_needed": false,
+    "clarification_question": ""
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_100",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3422,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 40727,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 0.8, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: I flagged a central self-contradiction (paired outcomes obviate the doubly-robust framing), an unsupported optimality claim, and several missing methodological disclosures, then rewrote the abstract to remove the overclaims and surface uncertainty.\n\n## Substantive issues\n\n**1. The \"doubly-robust\" framing contradicts the data-collection story.**\nThe abstract states that every training prompt is scored by *both* models, yielding paired potential outcomes (Y(L), Y(S)) per x. Under full paired observation there is no missing-counterfactual problem, no propensity score to estimate, and no role for a doubly-robust estimator \u2014 \u03c4(x) can be regressed directly on x using the per-prompt differences Y(L)\u2212Y(S). The closing sentence (\"robust to misspecification of either the outcome model or the propensity model\") therefore attributes the gains to a property the estimator does not, in this setup, possess. Either drop the DR language and re-cast the method as direct CATE regression on paired data, or describe a partially-paired / observational regime where a propensity model is actually fit.\n\n**2. The optimality claim is mathematically too strong.**\n\"Because the meta-model attains low MSE on the success indicator, the threshold policy is therefore the unique cost-optimal policy under every monotone utility, and any deviation strictly increases expected deployment cost.\" Three problems:\n - Low MSE on the outcome is not a premise from which optimality of a \u03c4\u0302-threshold policy follows; the relevant guarantee runs through accuracy of \u03c4\u0302, not Y.\n - Threshold-on-\u03c4 is optimal under a *linear* cost\u2013success tradeoff (or, more generally, when utility decomposes additively into success benefit minus dollar cost). \"Every monotone utility\" is false \u2014 e.g., risk-averse / convex utilities can prefer non-threshold policies.\n - \"Strictly increases\" requires that ties have measure zero and that \u03c4\u0302 equals \u03c4 a.e.; with estimation error neither is guaranteed.\nA safer statement: under a linear cost-of-failure model and assuming \u03c4\u0302 \u2248 \u03c4, the Bayes-optimal policy is a threshold on \u03c4\u0302 at c/\u0394.\n\n**3. Stray symbol and a logical hiccup in the threshold expression.**\n\"c / Delta$\" has a stray `$`. Also, \"Because \u2026 therefore\" is doubly-conjunctive; pick one connective.\n\n**4. Evaluation reporting omits load-bearing details.**\nThe 38% cost / 97% retention / 12-point improvement figures have no confidence intervals, no description of the evaluation distribution (in-domain? held-out task family?), and no definition of \"success\" (binary human label? automatic grader? reference match?). R\u00b2 = 0.71 against \"empirical CATE\" is ambiguous \u2014 per-prompt empirical CATE on binary outcomes takes values in {\u22121, 0, 1}, so R\u00b2 depends heavily on whether it is computed at the prompt level or after aggregation into bins.\n\n**5. Baseline framing.**\n\"Always-large\" is a weak baseline against which a 38% cost reduction is unsurprising. The confidence-cascade comparison is more informative but lacks specification (which cascade? calibrated how?).\n\n**6. Distributional and deployment considerations are absent.**\nA per-prompt router systematically routes some user populations to the smaller model. The abstract makes no mention of whether success-rate retention holds *uniformly* across prompt strata, or only in aggregate; aggregate 97% retention is consistent with substantially worse outcomes on some sub-populations.\n\n**7. Novelty/positioning.**\nThe framing leans on \"causal\" vocabulary where the method, given paired training data, is essentially supervised difference regression with a cost-threshold decision rule. Either justify the causal framing by pointing to a deployment-time covariate shift the DR machinery actually buys you, or down-shift the framing to \"CATE-style routing\" and let the empirical results carry the contribution.\n\n---\n\n## Suggested rewrite\n\nWe present CausalRoute, a per-prompt router that selects between a large model L and a small model S by estimating the conditional treatment effect \u03c4(x) = E[Y(L) \u2212 Y(S) | X = x] of the model choice on task success Y.\n\nBecause our training corpus of 50K prompts is scored by *both* models, every prompt yields a paired observation (Y(L), Y(S)) and \u03c4(x) can be fit by direct regression on the per-prompt difference; no propensity model or doubly-robust correction is required at training time. We train a gradient-boosted regressor on token length, embedding centroid, and reference-model perplexity. On a held-out split the meta-model attains MSE 0.043 on the binary success indicator; we report R\u00b2 = 0.71 against per-prompt empirical CATE, with the caveat that this target is {\u22121, 0, 1}-valued and the R\u00b2 is sensitive to binning.\n\nUnder a linear cost-of-failure utility, the Bayes-optimal policy is to query L whenever \u03c4\u0302(x) > c/\u0394, where c is the per-call price gap and \u0394 is the dollar value of a success. Optimality is conditional on \u03c4\u0302 \u2248 \u03c4 and on the linear-utility assumption; under risk-averse or non-linear utilities, the threshold rule is no longer guaranteed to dominate.\n\nEmpirically, CausalRoute reduces dollar cost by 38% relative to an always-L baseline while retaining 97% of aggregate success rate, and improves cost-adjusted error by 12 points over a confidence-cascade baseline. We have not yet verified that success-rate retention is uniform across prompt strata; aggregate retention is compatible with non-trivial regressions on sub-populations, and we flag this as a deployment-time concern. Confidence intervals, baseline configuration, and a precise definition of \"success\" are reported in the full paper.\n\n---\n\n## What I could not verify\n\nI cannot confirm the empirical numbers (38% / 97% / 12 points / MSE 0.043 / R\u00b2 0.71), the precise success metric, the held-out distribution, the cascade baseline's configuration, or whether the original authors intended a partially-paired data regime that would justify the DR language. The rewrite assumes the paired-data reading is literal; if instead the corpus is observational with the second-model score imputed for only some prompts, the DR framing may be appropriate and the contradiction I flagged dissolves \u2014 but the abstract should then say so explicitly. The fairness/sub-population caveat I inserted is a methodological hedge, not a finding from the paper.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Making the passage stronger centrally involves improving the contribution framing and causal-routing thesis above the sentence level.",
+      "R1.2": "The request is invalidated if the argument chain remains logically unsound, especially around cost-optimality and doubly-robust claims.",
+      "R1.3": "Strengthening requires checking whether reported metrics and experimental setup actually support the stated claims.",
+      "R1.6": "The delegation naturally includes improving sentence-level clarity, precision, and register.",
+      "RX.1": "Uncertainty must be disclosed where the artifact lacks enough information to verify technical or empirical claims.",
+      "RX.2": "The passage contains strong universal claims, so avoiding overclaiming is central to the projection.",
+      "RX.3": "The agent must stay within strengthening the research-writing artifact rather than executing edits or external validation.",
+      "RX.4": "Unsupported deployment or causal claims could mislead downstream decisions, so harm avoidance is active.",
+      "RX.5": "Any projected responsibility should preserve traceability to the artifact's stated methods, metrics, and claims."
+    }
+  }
+}

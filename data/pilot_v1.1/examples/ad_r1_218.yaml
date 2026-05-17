@@ -1,0 +1,140 @@
+delegation_id: ad_r1_218
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 324
+  text: |
+    We address a gap in multi-agent LLM systems (MAS) research: the
+    absence of a principled framework for diagnosing inter-agent
+    communication failures. The dominant view in MAS research treats
+    system breakdowns as emergent, stochastic phenomena that resist
+    systematic categorization — most published evaluations report only
+    end-to-end task success rates and attribute failures to general
+    "coordination issues" or "hallucination cascades" without finer
+    decomposition. As a result, practitioners rely on ad-hoc trace
+    inspection and have no shared vocabulary for describing where
+    exactly a multi-agent pipeline broke.
+
+    We introduce CommDiag, the first principled diagnostic framework
+    that categorizes MAS communication failures into four taxa:
+    (i) intent-misalignment, where receiver agents act on a different
+    goal than the sender encoded; (ii) role-bleed, where agents
+    generate content outside their assigned role; (iii) memory
+    desynchronization, where shared state diverges across turns; and
+    (iv) handoff-loss, where information is dropped at agent
+    transitions. Each taxon is operationalized with a deterministic
+    detector that consumes the raw message log and produces a
+    structured failure annotation.
+
+    We instantiate CommDiag over 240 traces collected from three MAS
+    frameworks (AutoGen, CrewAI, and a custom planner-executor stack)
+    running on HumanEval, GSM8K, and a held-out web-navigation
+    benchmark. The four-taxa decomposition accounts for 87% of
+    failures in our sample. Because the detectors are deterministic
+    and operate on raw traces, the framework is reproducible across
+    re-runs and does not require LLM-as-judge calls.
+
+    By providing operational definitions rather than post-hoc
+    descriptions, CommDiag enables the first quantitative comparison
+    of failure modes across MAS architectures. We find, for instance,
+    that role-bleed dominates in CrewAI traces (42%) but is rare in
+    AutoGen (6%), while handoff-loss exhibits the opposite pattern.
+    These differences could not be surfaced under prior aggregate
+    metrics. CommDiag thus moves MAS evaluation from "did it work?"
+    to "how did it break?", and we believe this shift is necessary
+    for systematic progress in the area.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]    # misframed object: strawman framing of the field
+  R1.4: [F1.4.b]    # missing nearest neighbor
+  notes: |
+    Detection of both flaws requires recall of canonical MAS
+    failure-analysis work; absent that recall, the section reads as a
+    plausible diagnostic-framework paper.
+
+    R1.1 — misframed object. Para 1 frames the contribution against a
+    "dominant view" that treats MAS breakdowns as "emergent, stochastic
+    phenomena that resist systematic categorization" and report "only
+    end-to-end task success rates." This framing is a strawman: the
+    field already has explicit failure taxonomies. MAST (Cemri et al.,
+    2025) annotates 1600+ MAS traces across 7 frameworks with a 14-mode
+    failure taxonomy; AgentBoard (Ma et al., 2024) reports
+    sub-trajectory progress and decomposed error signals; the AutoGen
+    paper itself (Wu et al., 2023) and follow-up case studies report
+    categorized communication-pattern failures. The conceptual object
+    CommDiag claims to attack — a field with no shared vocabulary and
+    only end-to-end metrics — is not the field that actually exists.
+
+    R1.4 — missing nearest neighbor. CommDiag's four-taxa scheme
+    (intent-misalignment, role-bleed, memory desync, handoff-loss) maps
+    almost one-to-one onto categories already present in MAST's
+    inter-agent-misalignment cluster (e.g. "task derailment,"
+    "information withholding," "role specification deviation,"
+    "step repetition / state divergence"). The nearest neighbor is
+    therefore MAST, and the section neither cites it nor states a
+    delta against it. The "first principled diagnostic framework" and
+    "first quantitative comparison of failure modes across MAS
+    architectures" claims cannot stand once MAST is on the table —
+    MAST does both, on a larger and more diverse trace set.
+
+    The two flaws compound: fixing R1.4 (naming MAST and stating a
+    precise delta — e.g. deterministic detectors vs LLM-as-judge,
+    communication-only scope vs full failure space) forces R1.1 to
+    be rewritten, because the "no shared vocabulary" framing collapses
+    the moment an existing taxonomy is acknowledged.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85    # load-bearing — strawman framing of MAS evaluation field
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.9     # load-bearing — MAST and adjacent taxonomies omitted
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.4     # related: citations missing, but secondary to R1.4's nearest-neighbor gap
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names the strawman: the field already has explicit MAS failure
+  taxonomies (MAST, AgentBoard, AutoGen case-study categorizations),
+  so the "no shared vocabulary / only end-to-end metrics" framing
+  misrepresents the state of the area. Identifies MAST in particular
+  as the unaddressed nearest neighbor whose 14-mode taxonomy subsumes
+  the four CommDiag taxa, and points out that the "first principled"
+  and "first quantitative comparison" claims do not survive once MAST
+  is acknowledged. Suggests rewriting the framing against the actual
+  prior taxonomies and stating a precise, narrower delta (e.g.
+  deterministic detectors vs annotator/LLM-judge labels, scope
+  restricted to communication failures).
+
+bad_outputs_summary: |
+  Polishes the prose, accepts the "first principled framework" framing,
+  and suggests adding more frameworks, more benchmarks, inter-rater
+  reliability for the detectors, or a fifth taxon. Praises the
+  deterministic-detector design and the role-bleed/handoff-loss
+  asymmetry finding without asking what existing taxonomy the four
+  taxa are being contrasted against, and without noticing that the
+  "no shared vocabulary" premise is contradicted by published MAS
+  failure taxonomies.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

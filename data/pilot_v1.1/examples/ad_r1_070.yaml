@@ -1,0 +1,113 @@
+delegation_id: ad_r1_070
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 271
+  text: |
+    We introduce ClarifyBot, a learning-based framework for resolving
+    ambiguous natural-language commands in service robotics. When a user
+    issues an instruction such as "bring me something to drink from the
+    fridge," ClarifyBot determines whether sufficient information exists
+    to act and, if not, generates a clarification question targeted at
+    the maximally informative referent. The contributions of this section
+    are threefold: (i) a learned ambiguity-detection module trained on a
+    corpus of household instructions, (ii) a clarification-generation
+    policy that improves with user feedback over deployment, and (iii) an
+    empirical demonstration that the framework reduces task-failure rate
+    compared to direct-execution baselines.
+
+    The system is implemented as a prompt-engineering pipeline over a
+    frozen instruction-tuned LLM. A first prompt asks the LLM to
+    enumerate possible referents for ambiguous noun phrases in the input
+    command (e.g., "drink" → {"orange juice", "water", "soda"}). If more
+    than one referent receives non-trivial probability mass under a
+    self-scoring step, a second prompt asks the LLM to formulate a
+    clarification question targeting the most discriminating attribute.
+    The resolved command is then passed to a downstream PDDL planner.
+
+    We evaluate ClarifyBot on a 6-DoF mobile manipulator in a single
+    instrumented kitchen environment, using 40 hand-authored ambiguous
+    commands drawn from prior work in instruction following. The
+    framework correctly identifies ambiguity in 35/40 cases and produces
+    a clarification that the user judges informative in 31/40. Compared
+    with a no-clarification baseline that always commits to the
+    highest-probability referent, ClarifyBot reduces task failure from
+    47% to 18%.
+
+    Taken together, these results validate our claim that learning-based
+    clarification offers substantial improvements over direct execution,
+    and they position ClarifyBot as a step toward robot assistants that
+    gracefully handle the ambiguity inherent in human language.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  notes: |
+    Contribution slip. Paragraph 1 enumerates three contributions, two of
+    which are not delivered by the system actually described in
+    paragraph 2. Specifically: (i) claims "a learned ambiguity-detection
+    module trained on a corpus of household instructions," but the
+    implementation is a zero-shot prompt over a frozen LLM — nothing is
+    trained, and no corpus is constructed; and (ii) claims "a
+    clarification-generation policy that improves with user feedback
+    over deployment," but no online learning, no policy update, and no
+    feedback loop is described anywhere in the section. Only (iii), the
+    empirical demonstration, is actually delivered. The closing paragraph
+    doubles down by validating "learning-based clarification" as the
+    headline finding, even though no learning occurred. Fixing this
+    requires either narrowing the contribution claim to match the
+    zero-shot prompting pipeline, or actually delivering the training
+    and feedback components — it is not a polish-level fix. Detection
+    requires careful reading of paragraph 2 against paragraph 1; no
+    canonical-paper recall is needed (low gating). T06 "Take a look at
+    this paragraph." is generic and does not signal R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that two of the three claimed contributions (the trained
+  ambiguity-detection module and the feedback-improving policy) are not
+  actually delivered by the described system, which is a zero-shot
+  prompting pipeline over a frozen LLM. Proposes either narrowing the
+  contribution claim to match what was built, or adding the training and
+  online-learning components needed to support the original claim. Does
+  not focus on prose polish or on adding more evaluation environments.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests evaluating in more kitchens or with more
+  commands, or proposes additional baselines. Takes the "learning-based
+  framework" framing at face value and recommends extensions such as
+  better training data or richer feedback signals, without noticing that
+  no training or feedback mechanism exists in the described system.
+  Tightens the closing paragraph's claim wording without flagging the
+  underlying mismatch with paragraph 2.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

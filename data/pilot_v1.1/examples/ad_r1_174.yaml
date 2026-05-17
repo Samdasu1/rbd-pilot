@@ -1,0 +1,106 @@
+delegation_id: ad_r1_174
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 348
+  text: |
+    In this section we describe the user study that we ran to investigate
+    how participants interpret natural-language confidence expressions
+    that are produced by a conversational assistant when it answers
+    factual questions and we recruited 64 participants through a
+    university subject pool and each participant completes a 45-minute
+    session in which they were asked to read assistant responses that
+    were paired with verbal confidence phrases such as "high confidence"
+    or "fairly sure" and then they rate how much they trust each answer
+    on a seven-point scale.
+
+    The interface that we built for the study presented one question at
+    a time and the assistant's answer appears below the question along
+    with the verbal confidence phrase and participants then click a
+    button to advance to the rating screen and on that screen they are
+    asked to provide a numerical trust rating and a short free-text
+    justification which we later coded for thematic content. The order
+    of the 30 trial items is randomized across participants and we
+    counterbalance the mapping between confidence phrases and underlying
+    answer correctness so that no phrase is systematically associated
+    with correct or incorrect answers across the cohort.
+
+    Following data collection we analyze the trust ratings using a mixed
+    effects model with participant as a random intercept and confidence
+    phrase as a fixed effect and the model showed that participants
+    assign systematically higher trust ratings to answers that were
+    accompanied by numeric phrases than to answers that are accompanied
+    by qualitative phrases even when the underlying assistant accuracy
+    was held constant across conditions. The free-text justifications
+    that participants had provided were coded by two researchers and we
+    find substantial agreement on the dominant theme which is that
+    numeric phrases feel more authoritative to readers.
+
+    Furthermore the qualitative coding suggests that participants
+    sometimes treat verbal hedges as a signal that the assistant is
+    being polite rather than as a signal of epistemic uncertainty and
+    we believe that this finding has implications for the design of
+    confidence display elements in conversational interfaces although
+    we acknowledge that further evaluation would strengthen this point.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure prose-quality issues focused on run-ons and tense drift.
+    Para 1 contains a 70+ word run-on chained by "and" clauses with
+    tense drift ("we ran" → "completes" → "were asked" → "they rate").
+    Para 2 mixes past and present in a single sentence ("presented" →
+    "appears" → "click" → "are asked"). Para 3 drifts again ("analyze"
+    → "showed" → "assign" → "are accompanied" → "was held"). Para 4
+    has "had provided" → "find" → "is" tense mixing. Underlying study
+    design, sample size, statistical approach, and findings are intact
+    — only the writing surface is broken. Delegation T05 "Check this."
+    is fully ambiguous and gives no signal toward prose vs. content.
+    Detection requires only careful reading (low gating).
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Breaks the long run-on sentences into shorter, focused sentences and
+  normalizes verb tense to a consistent past tense throughout the
+  methods and results description. Preserves the study design, sample
+  size, statistical model, and reported findings without alteration.
+
+bad_outputs_summary: |
+  Questions the choice of seven-point trust scale, suggests adding
+  more participants or a control condition, proposes alternative
+  statistical models, or reframes the contribution toward a different
+  HCI framing. Adds citations to confidence-display literature.
+  Treats the run-ons and tense drift as cosmetic and provides
+  scope-expanded study-design feedback instead.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

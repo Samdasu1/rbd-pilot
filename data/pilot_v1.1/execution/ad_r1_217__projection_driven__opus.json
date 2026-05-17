@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_217",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2844,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37662,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary of what I did: I read the section as an introduction/abstract-style framing and flagged structural, argumentative, and overclaim issues, then produced a revised draft that tightens the framing, softens the unsupported \"firsts,\" and explicitly surfaces identification caveats. I did not verify external literature claims.\n\n---\n\n## Main concerns with the draft as written\n\n1. **The \"first causal-inference treatment\" and \"first IV approach\" claims are unverifiable from inside the paper.** Both are strong priority claims about a fast-moving literature. Unless a systematic search has been done and is reported in \u00a72/Related Work, these should be softened to \"we are not aware of prior work that...\" or removed.\n\n2. **The thesis shifts midway through.** The opening sells the contribution as \"a framework for estimating ATE of heterogeneity.\" Then in paragraph 3 the central contribution is recast as \"a practitioner recommendation about aggregator choice.\" These are different papers. The reader needs one promise up front. The aggregator-conditioned finding is the more defensible and more interesting contribution \u2014 I'd lead with it.\n\n3. **The identification argument is under-specified and likely too confident.** Conditioning on \"benchmark difficulty, prompt template, and marginal capability of each constituent model\" does not obviously make heterogeneity as-good-as-random \u2014 heterogeneity is a function of which models you chose, and the choice of models is presumably correlated with unobserved researcher intent, cost constraints, and prompt-engineering effort. The sentence \"it is sufficient to license interpretation of the doubly-robust estimator as an ATE rather than a partial correlation\" overstates what conditional ignorability buys you. Doubly robust estimation does not rescue identification when unconfoundedness fails; it only buys you robustness to misspecification of *one* of the two nuisance models given that unconfoundedness holds.\n\n4. **The IV sketch has a plausible exclusion-restriction problem that should be acknowledged, not glossed.** Prompt template rotation almost certainly affects benchmark accuracy through channels other than effective heterogeneity (e.g., it changes each individual model's output directly). That violates the exclusion restriction. Calling it \"an exogenous shifter of effective heterogeneity\" without addressing this is the kind of claim a reviewer will pounce on.\n\n5. **The headline effect size and the practitioner recommendation are in mild tension.** ATE = +1.8 pp with CI [0.4, 3.2] is a small, marginally-significant effect. The strong recommendation (\"selection-based aggregation is the dominant design choice\") rests on a stratified subgroup analysis where one stratum drives the whole effect \u2014 a classic place for false discovery. The subgroup result needs (a) a pre-registration disclosure or correction for multiple stratifications, and (b) a confidence interval reported for *each* stratum, not just the pooled ATE.\n\n6. **\"Heterogeneity = model-family entropy across the candidate pool\" is doing a lot of work and is introduced in one clause.** This is the treatment variable. It deserves a sentence on why entropy-over-families is the right operationalization (vs., e.g., capability variance, training-data overlap, or pairwise disagreement rate). Otherwise the construct validity of the entire ATE is on shaky ground.\n\n7. **\"4,200 pipeline runs on MATH, GPQA, and HumanEval\"** \u2014 readers will want to know runs-per-benchmark and whether the ATE is pooled across benchmarks (which assumes a common effect) or estimated per-benchmark and then averaged. This matters because GPQA and HumanEval test very different capabilities and heterogeneity may behave differently across them.\n\n8. **Sentence-level issues.**\n   - \"distinguishing our contribution from the prevailing correlational benchmarking practice in the field\" \u2014 wordy, and \"prevailing ... practice in the field\" is doubly hedged. Cut to \"distinguishing it from correlational benchmarking.\"\n   - \"Building on this, the central contribution of the paper is therefore\" \u2014 \"Building on this\" + \"therefore\" is redundant.\n   - \"Our experiments are the first to make this aggregator-conditioned recommendation precise.\" \u2014 another priority claim; same caveat as above.\n   - \"as-good-as-randomly assigned\" reads awkwardly; standard phrasing is \"as good as randomly assigned\" or \"conditionally exogenous.\"\n\n---\n\n## Suggested structural reorder\n\nCurrently: motivation \u2192 method \u2192 identification assumption \u2192 results \u2192 recommendation \u2192 IV extension.\n\nI'd suggest: motivation \u2192 **headline finding (aggregator-conditioned recommendation)** \u2192 method in one paragraph \u2192 identification assumption with caveats \u2192 pooled and stratified results \u2192 IV extension as honest robustness sketch, not as a second \"first.\"\n\nThis way the strongest claim sits where readers actually look, and the causal framework is presented as the *means* to the finding rather than as a competing contribution.\n\n---\n\n## Revised draft\n\n> Multi-agent LLM pipelines show large unexplained variance in output quality across team configurations. We ask a causal question: does increasing the heterogeneity of the candidate pool \u2014 operationalized as model-family entropy \u2014 improve benchmark accuracy, and does the answer depend on how candidate outputs are aggregated?\n>\n> Across 4,200 pipeline runs spanning MATH, GPQA, and HumanEval, we estimate a small positive average treatment effect of heterogeneity on accuracy (+1.8 pp, 95% CI [0.4, 3.2]). Stratifying by aggregator type sharpens the picture: the benefit is concentrated in selection-based aggregators, while synthesis aggregators show no detectable gain from heterogeneity in our data. The practical implication, which we view as the paper's main contribution, is that aggregator choice and team composition cannot be tuned independently; under synthesis aggregation, homogeneous teams are competitive with heterogeneous ones.\n>\n> We obtain these estimates with a doubly robust estimator, treating the heterogeneity score as a continuous treatment, with a propensity model over team composition and an outcome model over benchmark scores. Identification rests on the assumption that, conditional on benchmark difficulty, prompt template, and the marginal capability of each constituent model, the heterogeneity score is conditionally exogenous. This assumption is strong \u2014 researcher choice of model mix is plausibly correlated with unobserved factors such as cost constraints and prompt-engineering effort \u2014 and we examine its sensitivity in \u00a74. Double robustness buys robustness to misspecification of one of the two nuisance models; it does not rescue identification if unconfoundedness fails.\n>\n> We close by sketching an instrumental-variable extension that uses random rotation of the prompt template as a shifter of effective heterogeneity. We note up front that the exclusion restriction is non-trivial here, since template rotation also affects each constituent model's output directly; we treat the IV estimates as a robustness probe rather than a primary identification strategy. We are not aware of prior IV approaches in the multi-agent LLM literature, but have not done a systematic survey and do not press this as a priority claim.\n\n---\n\n## Things I could not verify and that should be checked before submission\n\n- Whether the priority claims (\"first causal-inference treatment,\" \"first IV approach\") hold up against the recent multi-agent LLM literature. I would search arXiv for \"causal\" + \"multi-agent\" + \"LLM\" and similar before letting either claim stand, and even then prefer \"we are not aware of.\"\n- Whether the stratified result survives standard multiple-comparison corrections; without seeing the analysis, I can't tell whether the selection-vs-synthesis split is pre-registered or post-hoc.\n- Whether \"model-family entropy\" is the entropy of a distribution over families (Shannon? something else?) or a different quantity \u2014 the section names it but doesn't define it.\n- Whether the 4,200 runs are balanced across benchmarks and aggregator types; the headline ATE is only meaningful if the design is roughly balanced or if the estimator reweights appropriately.\n- Whether the propensity score has adequate overlap across the heterogeneity range; with a continuous treatment, lack of overlap at the tails is a common silent failure mode.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus on prose and structure, or on the substantive research argument and claim strength?",
+    "rationale": {
+      "R1.1": "The section foregrounds thesis, contribution, and causal framing, so helping with it could centrally involve reframing the core claim.",
+      "R1.2": "The artifact contains an argument chain from variance to causal identification to practitioner recommendations, making logical consistency a central possible responsibility.",
+      "R1.3": "The section uses reported experimental effects to support design recommendations, so evidence-claim alignment is centrally implicated.",
+      "R1.5": "Because the delegation targets a section as a unit, section-level ordering and narrative arc are central possible responsibilities.",
+      "R1.6": "A broad request to help with a section commonly includes sentence- and paragraph-level clarity, flow, and polish.",
+      "RX.1": "Uncertainty should be disclosed because the delegation is underspecified and the artifact includes causal and novelty claims.",
+      "RX.2": "Overclaim avoidance is active because the artifact makes strong firstness, causal, and practitioner-recommendation claims.",
+      "RX.3": "Scope adherence is active to prevent executing edits or performing responsibilities beyond the requested projection.",
+      "RX.4": "Downstream-harm avoidance is active because unsupported methodological or production recommendations could mislead readers or practitioners.",
+      "RX.5": "Provenance and traceability is active to keep any projected responsibility grounded in the delegation and the provided artifact."
+    }
+  }
+}

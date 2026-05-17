@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_216",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2692,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37760,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.85, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.4\": 0.85, \"R1.6\": 0.6, \"R1.7\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 1.0}}\n\nSummary: A close read of the abstract surfacing several substantive issues with the claims, argument chain, and evidentiary backing, with concrete suggestions for tightening.\n\n**Overall reaction.** The piece pitches a clear, attractive idea \u2014 wrapping LLM role-play dialogues in a probabilistic-programming layer with denotational semantics and importance-sampling inference \u2014 but the abstract as written makes a number of strong assertions that the surrounding text does not visibly support, and it elides several caveats that a careful reader will immediately pick at. I think the framing is salvageable, but the language needs to retreat from \"first / only / matches\" claims to something the body can actually defend.\n\n**Specific issues**\n\n1. *\"First PPL semantics that compositionally handles role-induced agent stochasticity.\"* This is doing a lot of work. There is a substantial existing PPL literature on stochastic programs whose primitive samplers are themselves complex (LLM-backed PPLs such as LMQL-style constrained generation, the line of work around \"language model programs,\" and older work on PPLs over agent simulators in cognitive science). The abstract should either (a) define \"role-induced agent stochasticity\" precisely enough that the novelty is visibly disjoint from those, or (b) soften to \"we give a denotational account that makes role-conditioning a first-class operator,\" which is a more defensible claim.\n\n2. *Inception-prompts as \"conditioning operators on the joint trajectory measure.\"* This is the conceptual core, but the abstract never says what the base measure is, what \u03c3-algebra trajectories live in, or in what sense the inception prompt is a conditioning operator rather than, say, a re-parameterization of the prior. Without that, the \"denotational\" framing reads as decorative. One sentence pinning down the type \u2014 e.g., \"an inception prompt I induces a map from trajectory measures \u03bc to \u03bc(\u00b7 | role assignments consistent with I)\" \u2014 would do a lot.\n\n3. *\"Matches the wall-clock cost of vanilla LLM-agent simulators \u2026 while additionally returning calibrated posterior estimates.\"* Two problems here. (i) \"Matches wall-clock cost\" and \"additionally returns posterior estimates\" are in tension unless the importance weights are essentially free, which they aren't if the proposal is itself an LLM forward pass \u2014 that doubles inference cost at minimum. The abstract should report the actual overhead. (ii) \"Calibrated\" is a strong word and typically requires either a calibration diagnostic (ECE, coverage of credible intervals against held-out outcomes) or a theoretical guarantee. If the backend is plain importance sampling, calibration depends on proposal quality and ESS, neither of which is mentioned. I would either drop \"calibrated\" or replace with \"consistent importance-weighted estimates (ESS reported in \u00a74).\"\n\n4. *\"To our knowledge, this is the first system to provide inference-as-default for communicative-agent simulations.\"* The \"to our knowledge\" hedge is good, but the claim is broad enough that I would expect at least a footnote contrasting with: LMQL / SGLang / Outlines (constraint-as-conditioning), Genify-style LLM-PPL hybrids, and the agent-simulation work that already uses importance reweighting (e.g., social-simulation papers that weight self-play rollouts). Without those contrasts the novelty claim is hard to evaluate.\n\n5. *\"Three properties emerge.\"* The three bullets are presented as consequences of the framework, but at least the second \u2014 \"importance weights \u2026 give a principled handle on selection bias in agent self-play data\" \u2014 is a non-trivial empirical claim. Importance weights correct sampling bias only when the proposal covers the target's support and weights have finite variance; in long multi-turn dialogues the variance typically explodes. I would either qualify (\"under proposal-coverage assumptions discussed in \u00a75\") or move this from the abstract into a later section where it can be defended.\n\n6. *\"The guide-network proposal can itself be a fine-tuned LLM, bringing amortized inference to bear.\"* Fine \u2014 but as written it conflates two distinct ideas: (a) using an LLM as the proposal at inference time, and (b) amortizing inference by training the proposal across queries. The abstract should pick one or be explicit that both are available.\n\n7. *Benchmark names.* AgentBench-Coop, RolePlay-1k, and MAS-Eval are dropped without citations. At least one of these names does not match any benchmark I can verify; I cannot confirm from the abstract alone that the three are established benchmarks rather than internal evaluations. If any of them is introduced in this paper, that needs to be said explicitly (\"we evaluate on AgentBench-Coop and two new benchmarks we release, RolePlay-1k and MAS-Eval\"). If they are existing, citations are mandatory.\n\n8. *\"Inference-equivalent\" role-play protocols.* The closing promise \u2014 that the denotational account \"will clarify what it means for two role-play protocols to be inference-equivalent\" \u2014 is the most interesting line in the abstract, and it is the only one stated as a hope rather than a result. If the paper actually defines this equivalence (contextual equivalence under all queries? equivalence of induced posteriors over a query class?), the abstract should say which. If it doesn't, the line should be cut, because as written it telegraphs that the most interesting payoff isn't actually delivered.\n\n9. *Prose.* A few sentence-level points: \"communicative agents bound by inception-prompt protocols generate stochastic conversational trajectories\" is doing three things in one clause and would land harder split in two. \"Programmable-inference tooling \u2014 long standard in the PPL community \u2014 available for\u2026\" reads as slightly self-congratulatory of the field; tighten to \"make programmable inference available for multi-agent LLM systems.\" The closing sentence is the longest in the abstract and the weakest; consider ending on the partial-observation example, which is the most concrete demonstration of what the system buys you.\n\n10. *Downstream considerations.* Inference over role-played dialogues is also an inference-over-personas capability, and that has obvious dual-use surface (reconstructing latent intent of a participant from observed outputs, deanonymization-like attacks on dialogue logs). The abstract doesn't need to dwell on this, but the paper should \u2014 and the abstract should not promise capabilities (\"infer the latent intermediate dialogue from a single agent's final answer\") without the paper situating that capability against misuse.\n\n**Recommended edits, minimum viable.**\n- Soften \"first PPL semantics that compositionally handles\u2026\" to a claim the related-work section can actually defend.\n- Drop or operationalize \"calibrated.\"\n- Report concrete overhead vs. vanilla simulators rather than \"matches wall-clock cost.\"\n- Cite or disclose origin of all three benchmarks.\n- Either deliver the \"inference-equivalent\" definition or cut the closing sentence.\n- Add one sentence pinning down what \"conditioning operator on the joint trajectory measure\" formally means.\n\n**What I cannot verify from the abstract alone.**\nI have no access to \u00a73, the related-work section, or the benchmarks, so my comments on novelty (point 1), the existence of AgentBench-Coop / RolePlay-1k / MAS-Eval (point 7), and whether \"calibrated\" is backed by a diagnostic (point 3) are conditional on what the body actually contains. The structural reorganization dimension was de-emphasized in the brief I was given, so I have not commented on section ordering beyond noting which sentences belong in the abstract vs. later sections. My downstream-misuse comment (point 10) is a flag for the authors to consider, not a verified harm \u2014 I cannot tell from the abstract whether the system's inference capability is strong enough to enable the attacks I sketched.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A broad opinion request on a research artifact centrally invites assessment of the thesis, contribution framing, and conceptual positioning.",
+      "R1.2": "Evaluating what one thinks of the draft requires checking whether the argument from semantics to system claims to implications coheres.",
+      "R1.3": "The artifact makes empirical and calibration claims, so assessing whether those claims are supported as reported is centrally expected.",
+      "R1.4": "Claims of being first and differing from prior frameworks make novelty assessment a central responsibility.",
+      "R1.6": "A general reaction to a paper passage naturally includes sentence- and paragraph-level clarity, register, and concision.",
+      "R1.7": "Because the artifact invokes prior frameworks and first-system claims, attribution and literature coverage are centrally relevant.",
+      "RX.1": "The evaluator must disclose uncertainty because the artifact provides only a passage, not the full paper, experiments, or bibliography.",
+      "RX.2": "The response must avoid endorsing strong firstness, calibration, or performance claims beyond what the provided text supports.",
+      "RX.3": "The response must remain within opinion or feedback on the artifact rather than executing edits or adding external content.",
+      "RX.4": "The assessment should avoid encouraging misleading research claims or unsupported deployment implications.",
+      "RX.5": "Any judgments should be traceable to specific statements in the provided artifact."
+    }
+  }
+}

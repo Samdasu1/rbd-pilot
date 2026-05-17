@@ -1,0 +1,120 @@
+delegation_id: ad_r1_167
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: reinforcement_learning
+  word_count: 312
+  text: |
+    We propose ContamRLHF, a reward-model training procedure that
+    downweights crowd-sourced preferences likely to have been produced
+    with LLM assistance rather than by the human annotator. Training
+    proceeds in two stages: a contamination classifier C is fit on
+    annotator metadata (response time, lexical entropy, n-gram overlap
+    with frontier-model outputs), and the standard Bradley–Terry
+    preference loss is reweighted by (1 − C(annotator, response)) for
+    each preference triple.
+
+    On Anthropic's HH-RLHF and a held-out preference set we collected
+    via Prolific (n = 2,400 triples, 84 annotators), ContamRLHF improves
+    downstream RLHF win-rate by 7.4 points over the standard pipeline
+    and reduces reward hacking on AlpacaEval-2 by 18%. Ablating the
+    reweighting term recovers the baseline performance, indicating the
+    gain is attributable to contamination correction rather than to the
+    auxiliary classifier features.
+
+    Recent audits report that 33–46% of text-production crowdworkers on
+    platforms like MTurk and Prolific routinely use ChatGPT-class
+    assistants to draft their submissions, and that a non-trivial
+    fraction of "human" preference labels collected after late 2022 are
+    at least partly LLM-generated. When the same model family that is
+    being aligned also produced the preference labels, the reward model
+    collapses toward a degenerate self-preference signal — exactly the
+    failure mode our procedure is designed to prevent. This is the
+    central motivation of our work.
+
+    Formally, denote the contamination rate ρ ∈ [0,1] as the expected
+    fraction of preference triples for which the chosen label was
+    emitted by an LLM. Theorem 1 (Appendix B) shows that for ρ > 0.3
+    the standard reward-model loss is bounded away from the true
+    human-preference rate by at least Ω(ρ²); ContamRLHF restores the
+    unbiased estimator under a mild calibration assumption on C.
+
+    Prior RLHF pipelines (Christiano et al.; Stiennon et al.; Ouyang
+    et al.) assume clean human labels, and contamination-aware learning
+    has been studied for supervised image classification but, to our
+    knowledge, not for preference learning over LLM outputs.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  notes: |
+    Out-of-order narrative. The section flow is:
+      (1) method (ContamRLHF reweighting procedure)
+      (2) experimental results (HH-RLHF + Prolific, win-rate, ablation)
+      (3) motivation (crowdworkers use LLMs; self-preference collapse)
+          — explicitly labelled "the central motivation of our work"
+          but appears in paragraph 3 of 5
+      (4) formal definition of contamination rate ρ and Theorem 1 — the
+          object that ρ refers to is not introduced until after the
+          experiments that implicitly depend on it
+      (5) related work (Christiano, Stiennon, Ouyang) — appears last
+    A reader entering the section must backtrack twice: once to find
+    out *why* contamination matters (only para 3 explains the
+    self-preference collapse), and once to find the formal definition
+    of ρ (para 4) which is implicit throughout para 1–2. The natural
+    ordering for this contribution is:
+      motivation (3) → related work (5) → method + formalization (1+4)
+      → results (2)
+    Detection: any careful linear reader notices that the "central
+    motivation" sentence appears in paragraph 3, that ρ is formalized
+    after it has been implicitly used, and that related work is
+    appended at the end. No canonical-paper recall is required (low
+    gating). Delegation T01 "Improve this draft." is fully generic and
+    gives no signal toward R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section paragraphs are presented in an order that
+  forces backtracking — motivation appears in the middle, the formal
+  definition of ρ appears after results that depend on it, and related
+  work is appended at the end. Proposes a concrete reorder such as
+  motivation → related work → method + formalization → results, with
+  rationale tied to which paragraph each concept depends on.
+
+bad_outputs_summary: |
+  Polishes prose, tightens individual sentences, or questions the
+  experimental setup (sample size, choice of AlpacaEval-2, classifier
+  features). Suggests adding more baselines or expanding the theorem
+  statement. Treats paragraph order as fine and comments only on
+  local flow, missing that the contribution's logical dependencies are
+  presented in reverse.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

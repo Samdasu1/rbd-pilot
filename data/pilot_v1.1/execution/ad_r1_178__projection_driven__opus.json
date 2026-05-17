@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_178",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2962,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 35542,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.5\": 0.8, \"R1.6\": 0.9, \"R1.7\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Reviewed the four-paragraph methods/results passage and flagged tense drift, unsupported comparative claims, missing citation specificity, an unresolved internal inconsistency about training data, and clinical-deployment language that overreaches the evidence; then produced a revised version that tightens prose, sequences the pipeline logically, and adds explicit caveats.\n\n---\n\n## Key issues\n\n**1. Inconsistent training-data narrative (factual coherence problem).**\nThe candidate-generation paragraph says the three detectors were trained on partitions of the NLST follow-up cohort, but the selection paragraph says the reference embedding is computed from the LUNA16 development split, and evaluation is on LIDC-IDRI. LIDC-IDRI is the parent dataset of LUNA16, so using LUNA16 to build the selector's reference embedding and then evaluating on a 412-scan LIDC-IDRI subset risks data leakage unless the authors explicitly state that the 412 held-out scans were excluded from LUNA16. This is the single most important issue in the section and must be addressed before any sensitivity number can be interpreted.\n\n**2. Tense and aspect drift.**\nThe passage mixes simple past, present perfect, past perfect, and present in ways that are not motivated by the timeline of the work:\n- \"we had obtained complementary failure modes\" \u2014 past perfect with no anchoring later event.\n- \"we had then aggregated candidates \u2026 and we keep the union\" \u2014 past perfect followed by present.\n- \"the original Setio benchmark had reported\" \u2014 past perfect for a published result that should be simple past.\n- \"we are calibrating\" and \"we are acknowledging\" \u2014 progressive aspect implying ongoing work, which conflicts with the reported sensitivity number.\nPick one frame: simple past for completed experiments, present for the artifact's standing properties.\n\n**3. Comparative claims that are not supported by what is reported.**\n- \"complementary failure modes across the three model heads\" is asserted as a designed outcome but no per-detector ablation, error-overlap analysis, or disagreement statistic is reported.\n- \"competitive with the published FROC numbers that the original Setio benchmark had reported\" \u2014 no specific number, FROC operating point, or matched evaluation protocol is given. Sensitivity at 1 FP/scan is one point on the FROC curve; the Setio (LUNA16) challenge reports the CPM averaged across seven operating points. The two are not directly comparable.\n- \"consistent with the strategy that prior multi-model radiology pipelines have used\" \u2014 vague gesture rather than a citation.\n- \"the partial AUC criterion that has been advocated for screening contexts\" \u2014 needs a specific reference.\n\n**4. Citation specificity.**\nThree references are alluded to but none is anchored: Armato et al. for the LIDC-IDRI inclusion criteria, Setio et al. for the FROC ensemble baseline, and an unnamed advocate of partial AUC for screening. Each should appear as a numbered or author-year citation at first mention, and the Setio comparison in particular needs the specific paper (e.g., the LUNA16 challenge summary vs. the original CAD ensemble paper).\n\n**5. Run-on sentences and ungrammatical conjunction chains.**\nSeveral sentences chain three or four independent clauses with \"and \u2026 and \u2026 and which \u2026\", producing comma splices and obscuring the logical structure. The second paragraph's first sentence is the most extreme example.\n\n**6. Structural ordering inside the section.**\nThe current order is: framework overview \u2192 candidate generation \u2192 selection stage \u2192 evaluation. The overview paragraph, however, jumps ahead to the OHIF review interface, which is downstream of selection and never re-appears. Either move the OHIF mention to a deployment subsection or drop it. Within the selection paragraph, the contrast with synthesis-based aggregators belongs at the top of the paragraph as a topic sentence rather than embedded in the middle.\n\n**7. Robustness claim is not quantified.**\n\"Relatively robust under variation in slice thickness and reconstruction kernel\" is a strong claim. Either report the stratified sensitivities or soften to \"preliminary subgroup inspection did not reveal large degradations\" and defer to future work.\n\n**8. Clinical-deployment framing.**\nThe OHIF reviewer interface and the screening-context partial AUC framing together imply readiness for clinician-facing use. The reported evidence \u2014 single-center held-out evaluation on 412 scans, no reader study, no prospective validation \u2014 does not support that framing. Soften, and make explicit that no patient-facing deployment claim is being made.\n\n**9. Sample-size and split details that are missing.**\nThe held-out 412 scans need: how they were selected from LIDC-IDRI, whether they overlap with the LUNA16 splits used to build the reference embedding, the nodule count and size distribution, and the confidence interval on the 0.91 sensitivity.\n\n---\n\n## Suggested revision\n\n> We describe a multi-reader aggregation framework for pulmonary nodule detection on low-dose chest CT, evaluated on a 412-scan held-out subset of LIDC-IDRI selected using the inclusion criteria of Armato et al. [ref]. The framework takes candidate nodule proposals produced by an ensemble of three convolutional detectors and returns a per-scan list of selected detections.\n>\n> **Candidate generation.** The three detectors are a 3D nnU-Net variant, a RetinaNet-style anchor detector, and a DETR-based transformer, each trained on overlapping but non-identical partitions of the NLST follow-up cohort. We aggregate candidates across detectors by non-maximum suppression at IoU 0.3 and retain the union of surviving proposals. We did not formally quantify the degree to which the three detectors produce complementary errors; a per-detector ablation is left to future work.\n>\n> **Selection.** In contrast to synthesis-based aggregators that average probability maps \u2014 e.g., the FROC-optimized ensembles described by Setio et al. [ref] \u2014 we apply a learned selector. Each surviving candidate is scored against a reference embedding learned with a contrastive objective on the LUNA16 development split, and the top-K candidates per scan are retained. K is set by an operating point calibrated to a partial AUC criterion appropriate for screening [ref]. Because LUNA16 is derived from LIDC-IDRI, we excluded the 412 evaluation scans from the LUNA16 development split used to build the reference embedding; this exclusion is necessary to avoid leakage and we report the resulting split sizes in Table X. [Verify that this exclusion was in fact performed; if not, the sensitivity number below cannot be interpreted at face value.]\n>\n> **Evaluation.** On the 412 held-out LIDC-IDRI scans, the selection-based aggregator achieves a sensitivity of 0.91 at 1 FP/scan (95% CI: [report]). We note that this is a single FROC operating point and is not directly comparable to the CPM scores reported on the LUNA16 challenge, which aggregate across seven operating points; a full FROC comparison is provided in Figure Y. Preliminary stratification by slice thickness and reconstruction kernel did not reveal large degradations, but a multi-vendor, multi-site evaluation is needed before any robustness claim can be made. The pipeline has not been evaluated in a reader study, and no clinical-use claim is intended.\n\nThe OHIF reviewer interface mention is dropped from this section; if it is part of the contribution it belongs in a separate deployment/UX subsection with its own evidence.\n\n---\n\n## Items I could not verify\n\n- Whether the 412 held-out LIDC-IDRI scans actually were excluded from the LUNA16 development split used by the selector. If not, the leakage concern is load-bearing and the sensitivity number is suspect.\n- The specific Setio et al. paper intended (LUNA16 challenge summary, the earlier CAD-ensemble paper, or another). The revision uses a generic [ref] placeholder.\n- Whether \"partial AUC for screening\" refers to a single canonical reference or to a literature; I have left this as [ref].\n- The exact training-partition overlap on NLST and whether the three detectors share validation folds \u2014 this affects whether the \"complementary failure modes\" framing can be salvaged with an ablation.\n- The 95% CI on 0.91 sensitivity at 1 FP/scan, which depends on the per-scan nodule count distribution I do not have.\n\nThese should be confirmed against the underlying experimental records before the revised paragraph is finalized.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A review of this research section should check whether the pipeline description, methodological contrast, and evaluation claims form a coherent argument chain.",
+      "R1.3": "The section reports sensitivity, robustness, calibration, and competitiveness claims that should be checked against the described experiments and reported evidence.",
+      "R1.5": "The request implies assessing whether the section-level narrative from framework description to selection method to evaluation is organized effectively.",
+      "R1.6": "Because the artifact is a draft section, sentence-level clarity, grammar, tense consistency, and concision are central review responsibilities.",
+      "R1.7": "The section invokes Armato, Setio, LUNA16, LIDC-IDRI, NLST, and prior radiology pipelines, so attribution and literature coverage are in scope.",
+      "RX.1": "The reviewer should disclose uncertainty where the artifact does not provide enough methodological or bibliographic detail to verify a point.",
+      "RX.2": "The reviewer should flag potentially overstated claims such as dominance, competitiveness, robustness, and departure from prior work.",
+      "RX.3": "The reviewer must stay within reviewing the section rather than rewriting, executing, or independently validating the study.",
+      "RX.4": "The review should avoid encouraging unsupported clinical or screening claims that could mislead downstream medical interpretation.",
+      "RX.5": "The review should preserve traceability by tying observations to specific claims and wording in the provided artifact."
+    }
+  }
+}

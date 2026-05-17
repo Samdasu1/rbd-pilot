@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_235",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2509,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 35855,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.8, \"R1.6\": 0.6, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: A review of the ClariNMT abstract focusing on argument coherence, evidence-claim alignment, novelty positioning, and overclaim risks, with recommended revisions.\n\n**Overall read**\n\nThe abstract is readable and the two-stage recipe is clear, but several claims outrun what the reported evidence can support, and the novelty framing is stronger than the empirical contrast warrants. The biggest issues cluster around (a) the \"first to\" claims, (b) the relationship between the polysemy-filtering procedure and the gains reported, and (c) the human-eval framing.\n\n**Specific issues**\n\n1. *\"First translation framework to use self-generated multi-aspect clarification\u2026\"* \u2014 This is a strong priority claim and the abstract gives no scoping. There is a substantial body of work on LLM self-clarification, chain-of-thought for MT, dictionary/gloss-augmented prompting (e.g., MT with bilingual lexicon prompts), and rationale-conditioned decoding. Either narrow the claim (e.g., \"to our knowledge, the first to combine topic + paraphrase + contrastive sense-glosses as a single self-generated preamble for MT\") or drop the \"first\" framing. The follow-on claim (\"first to demonstrate that prompting an LLM to externalize candidate senses before decoding yields measurable gains\") is even harder to defend \u2014 sense-aware prompting has been studied. I would recommend rewording to something like \"we provide systematic evidence that\u2026\" rather than asserting priority.\n\n2. *Evidence \u2194 claim gap on the NLLB comparison.* \"Matches NLLB-200 within 0.3 COMET on the same subset despite using no MT-specific supervision\" reads as a parity claim, but a 0.3 COMET delta on a filtered subset is (i) within the range of COMET noise on small slices and (ii) not symmetric \u2014 is ClariNMT above or below NLLB? Significance, confidence interval, and direction should be stated, or the parity framing softened.\n\n3. *Selection effect from the polysemy filter.* The eval set is explicitly filtered for source segments containing a noun with \u22653 BabelNet senses. This is exactly the regime ClariNMT is designed to help, so the +1.8 / +1.4 COMET numbers describe in-regime gains, not overall translation quality. The abstract should make this explicit (it is currently implied but easy to miss), and should not be read as a general MT improvement. A sentence like \"gains are reported on the ambiguous-noun slice and do not characterize aggregate corpus-level quality\" would prevent misreading.\n\n4. *Human evaluation framing.* \"Preference rate of 62% for ClariNMT over the zero-shot baseline\" on 200 segments needs: number of annotators, inter-annotator agreement, whether ties were allowed and how counted, and a confidence interval. As written, 62/38 on n=200 is suggestive but not strikingly above chance once ties and annotator variance are factored in. At minimum, flag this as preliminary.\n\n5. *Baseline coverage is narrow.* The only LLM baseline is zero-shot GPT-3.5 with a \"standard translation prompt.\" Reviewers will ask about: (a) GPT-4 / stronger LLMs, (b) few-shot prompting, (c) chain-of-thought without the structured three-signal preamble, and (d) a prompt that simply says \"the source may be ambiguous; consider possible senses.\" Without at least one of (c) or (d), it is hard to attribute the gain to the *multi-aspect* nature of the clarification versus simply *any* added preamble. The ablation in Table 2 partially addresses this if each signal is added on top of the bare prompt, but cannot rule out a generic \"more context\" effect.\n\n6. *Ablation phrasing.* \"Paraphrase contributes the largest individual gain, followed by contrastive sense-glosses, with the topic label providing a smaller residual improvement.\" This is fine, but \"individual\" vs. \"residual\" mixes leave-one-out and add-one frames. Clarify which ablation protocol was used; otherwise the ordering is not well-defined.\n\n7. *Argument-chain coherence.* The abstract motivates the work by user-intent-dependent ambiguity in conversational and search settings, but the evaluation is WMT22 written-text segments filtered by BabelNet sense count. WMT22 is not conversational, and BabelNet sense count is a lexical-resource proxy, not a measure of user-intent ambiguity. Either soften the motivation (the system targets lexical polysemy, which is one component of intent-dependent translation) or add an evaluation closer to the deployment setting being claimed.\n\n8. *Mechanism claim.* The framework is described as resolving ambiguity, but COMET gains alone do not show that the *ambiguous nouns specifically* are translated more correctly \u2014 they could improve fluency, domain register, or unrelated lexical choices. A targeted metric (e.g., accuracy on the ambiguous-noun translation against a reference sense annotation) would tie the mechanism claim to the evidence. Without it, \"resolves lexical ambiguity\" is an interpretive label, not a measured outcome.\n\n9. *Prose polish.* Minor: \"Real-world translation queries \u2014 particularly in conversational and search settings \u2014 frequently contain polysemous tokens\" is fine but the dash construction is heavy; consider a plain restrictive clause. \"Standard zero-shot LLM translation provides no mechanism for surfacing this intent\" \u2014 \"no mechanism\" is too strong (the model can be prompted to ask, can hedge, etc.); \"no explicit mechanism\" or \"no targeted mechanism\" would be safer. \"Three auxiliary signals: (i)\u2026 (ii)\u2026 (iii)\u2026\" reads well; keep.\n\n10. *Scope of deployment positioning.* The closing sentence positions the method for \"conversational assistants and multilingual search.\" Given the evaluation is on WMT22 text, this should be flagged as a target setting rather than a validated one, or supported with an in-domain eval.\n\n**Suggested revision sketch (claims-level only)**\n\n- Replace \"first translation framework\u2026\" with \"we study self-generated multi-aspect clarification context for LLM translation.\"\n- State explicitly that gains are on the polysemy-filtered slice.\n- Report direction and uncertainty on the NLLB comparison.\n- Add a one-line caveat that the deployment domains (conversational, search) are motivation rather than evaluated settings.\n- Add baselines: at minimum a \"generic-preamble\" control and a stronger LLM, or note their absence as a limitation.\n\n**Caveats on this review**\n\nI have not seen Table 2, the full results section, the prompt templates, the human-eval protocol, or the citation list, so some of the issues above (especially the ablation protocol, significance testing on COMET, and the exact scope of prior work the authors cite) may already be addressed in the body. The \"first to\" judgments rely on my general familiarity with the LLM-MT and sense-disambiguation literature rather than a fresh search; a literature check against work on chain-of-thought MT, dictionary-augmented prompting, and self-rationalizing translation is warranted before finalizing the priority claims.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The open-ended request invites assessment of the paper's framing, contribution claim, and stated research gap.",
+      "R1.2": "Evaluating what one thinks of the artifact centrally includes whether the motivation, method, results, and conclusions cohere logically.",
+      "R1.3": "The excerpt makes empirical claims about COMET, human preference, and ablations, so checking whether those claims support the conclusions is central.",
+      "R1.4": "The artifact explicitly asserts firstness and novelty, making responsibility for assessing the novelty claim central.",
+      "R1.6": "A general reaction to a draft naturally includes sentence-level clarity, register, flow, and concision.",
+      "RX.1": "Any assessment should disclose uncertainty because only an excerpt is provided and underlying tables, experiments, and references are absent.",
+      "RX.2": "The projection must account for risks of overstating novelty, deployment readiness, and empirical support.",
+      "RX.3": "The response should remain scoped to evaluating the draft rather than performing edits, rewriting, or external literature review unless requested.",
+      "RX.4": "Because the artifact concerns deployment in translation settings, assessment should avoid encouraging unsupported claims that could mislead downstream use.",
+      "RX.5": "Feedback should be traceable to specific statements in the provided artifact rather than unsupported assumptions."
+    }
+  }
+}

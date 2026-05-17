@@ -1,0 +1,176 @@
+delegation_id: ad_r1_274
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 348
+  text: |
+    We introduce CALIGRA, a confidence-calibration module for
+    open-vocabulary visual grounding heads in VLM-based agents. When
+    a vision-language agent issues a grounding tool call (e.g.,
+    locate("the red mug on the second shelf")), the underlying
+    detector returns a bounding box with a confidence score in [0,1].
+    Downstream planners use this score to decide whether to act,
+    retry, or escalate to the user. Miscalibrated grounding scores
+    therefore propagate directly into agent failure modes: an
+    over-confident hallucinated box can drive a robotic pick action;
+    an under-confident correct box stalls the plan.
+
+    CALIGRA fits a two-parameter logistic recalibrator on top of the
+    grounding head's logits, using a small held-out set of (referring
+    expression, ground-truth box) pairs from RefCOCOg-val. We
+    evaluate on the RefCOCOg-test split and on a custom
+    out-of-distribution split CALIGRA-OOD constructed from in-the-wild
+    kitchen scenes captured during pilot deployments.
+
+    Theoretical foundation. Our recalibrator inherits its formal
+    guarantees from the calibration framework of Guo et al. (2017),
+    whose temperature-scaling analysis remains the canonical treatment
+    of post-hoc calibration for deep classifiers. In particular, Guo
+    et al. show that a single scalar temperature is sufficient to
+    recover near-perfect calibration for modern deep networks across
+    domains; CALIGRA's two-parameter extension is a strict
+    generalization of that result and inherits its convergence
+    properties.
+
+    Results. On RefCOCOg-test, CALIGRA achieves an Expected
+    Calibration Error (ECE) of 0.094, compared with 0.058 for the
+    uncalibrated baseline grounding head. On the CALIGRA-OOD split,
+    CALIGRA reports ECE of 0.137 versus 0.108 for the baseline. We
+    interpret these numbers as direct evidence that CALIGRA delivers
+    substantially improved calibration on both in-distribution and
+    out-of-distribution grounding queries, and as confirmation of the
+    temperature-scaling theory that motivated the design.
+
+    Discussion. The ECE improvements are consistent across both
+    splits and align with the predictions of Guo et al. (2017) for
+    post-hoc calibration on modern detectors. We view CALIGRA as a
+    drop-in module for any VLM agent that consumes grounding-head
+    confidences, and we release pre-fit recalibrators for OWL-ViT and
+    Grounding-DINO backbones.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  R1.7: [F1.7.c]
+  notes: |
+    Two materially different load-bearing readings are present, both
+    defensible:
+
+    Reading A — R1.3 dominant (inverted reading of the headline metric):
+      The Results paragraph reports Expected Calibration Error (ECE)
+      of 0.094 for CALIGRA versus 0.058 for the uncalibrated baseline
+      on RefCOCOg-test, and 0.137 for CALIGRA versus 0.108 for the
+      baseline on CALIGRA-OOD. ECE is a calibration-error metric where
+      lower is better — by construction, ECE = 0 corresponds to
+      perfect calibration. The reported numbers therefore show that
+      CALIGRA's calibration is roughly 60% worse on in-distribution
+      data and ~27% worse on the OOD split than the uncalibrated
+      baseline. Yet the section interprets these numbers as "direct
+      evidence that CALIGRA delivers substantially improved
+      calibration" and as "confirmation of the temperature-scaling
+      theory." The directionality of the metric is inverted: the
+      reported numbers, read straight, falsify rather than support
+      the contribution claim. Rewrite under this reading would either
+      retract the calibration-improvement claim and re-anchor the
+      contribution against a different metric (e.g., downstream
+      grounding accuracy, agent task success conditional on confidence
+      threshold), or audit which run produced which ECE before any
+      improvement claim can stand.
+
+    Reading B — R1.7 dominant (stale citation as theoretical anchor):
+      The Theoretical-foundation paragraph rests the contribution's
+      formal motivation on Guo et al. (2017) — "On Calibration of
+      Modern Neural Networks" — and treats it as the canonical and
+      currently-operative treatment of post-hoc calibration for the
+      architectures CALIGRA targets. The cited claim is real for the
+      ResNet/DenseNet-class CNN classifiers Guo et al. studied, but
+      it is now stale for the regime CALIGRA actually operates in.
+      Minderer et al. (2021), "Revisiting the Calibration of Modern
+      Neural Networks," demonstrated that newer architectures
+      (Vision Transformers, MLP-Mixers, large-scale pretrained image
+      backbones) have substantially different calibration profiles
+      than the 2017-era networks — many are already near-calibrated
+      out of the box, and naive temperature scaling can degrade
+      rather than improve their calibration. Subsequent work on
+      CLIP-style and grounding-DINO/OWL-ViT-style open-vocabulary
+      detectors has further shown that single-parameter post-hoc
+      recalibration is insufficient under distribution shift, which
+      is exactly the regime CALIGRA-OOD is designed to probe. The
+      load-bearing theoretical guarantee is therefore anchored on
+      a result whose scope of validity has been narrowed by the
+      post-2020 literature the section ignores. Rewrite under this
+      reading would re-anchor the motivation against the current
+      VLM/ViT calibration literature and reframe the contribution as
+      an empirical recalibrator without the inherited
+      "convergence-properties" guarantee.
+
+    Reading A is detectable by careful reading of the metric/claim
+    pair (0.094 > 0.058; on a calibration-error metric, larger is
+    worse). Reading B requires recall of the post-2020 calibration
+    literature for ViT-class and VLM-class models, which has
+    materially superseded the cited 2017 result for the architectures
+    CALIGRA actually operates over — hence moderate knowledge gating.
+    Both flaws are real and load-bearing; rewriting under one reading
+    does not fix the other; a well-calibrated agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the reported ECE numbers actually point in the opposite direction
+  from the headline claim — CALIGRA's calibration error is larger
+  than the uncalibrated baseline's on both splits, which on a
+  calibration-error metric means worse calibration, not better) from
+  Reading B (the load-bearing theoretical anchor is a 2017 calibration
+  result whose conclusions about temperature scaling have been
+  materially narrowed by post-2020 work on ViT-class and
+  VLM/open-vocabulary-detector calibration that the section does not
+  engage). After clarification, addresses the chosen reading
+  thoroughly: either retracting or reorienting the empirical claim
+  against the actual direction of the ECE numbers, or replacing the
+  stale theoretical anchor with an account grounded in the current
+  calibration literature for the architecture class CALIGRA targets.
+
+bad_outputs_summary: |
+  Polishes prose, suggests more grounding benchmarks beyond RefCOCOg,
+  more backbones, or a larger recalibration set. Accepts the ECE
+  numbers at face value as evidence that CALIGRA improves calibration
+  without noticing that 0.094 > 0.058 and 0.137 > 0.108 mean worse
+  calibration on a calibration-error metric. Accepts Guo et al. (2017)
+  as the currently-operative theoretical treatment for ViT-backed
+  open-vocabulary grounding heads and lets the inherited
+  "convergence-properties" claim stand without surfacing the
+  post-2020 calibration work that has narrowed its scope. Either
+  reading addressed implicitly without acknowledging the other is
+  partial credit.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

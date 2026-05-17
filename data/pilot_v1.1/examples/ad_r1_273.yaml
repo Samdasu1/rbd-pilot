@@ -1,0 +1,155 @@
+delegation_id: ad_r1_273
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 342
+  text: |
+    We present TRIAGE-MT, a three-agent translation pipeline built atop
+    a single 70B instruction-tuned LLM. A Translator agent produces an
+    initial draft, a Critic agent identifies errors at the
+    span level, and an Editor agent rewrites the segment conditioned on
+    the Critic's feedback. The pipeline iterates until the Critic
+    returns "no further issues" or until a budget of five rounds is
+    reached. We report results on WMT22 test sets for en→fr, en→de,
+    and en→zh, comparing against single-pass baseline outputs from the
+    same base model.
+
+    Across the three language pairs, TRIAGE-MT achieves an average
+    COMET-22 improvement of +1.8 over the single-pass baseline, with
+    gains of +1.6 (en→fr), +1.9 (en→de), and +1.9 (en→zh). On the chrF
+    metric, the corresponding improvements are +0.7, +1.1, and +0.9.
+    We observe that 78% of segments converge — i.e., the Critic returns
+    "no further issues" — within three rounds, and the average number
+    of edit rounds per segment is 2.4. We take the consistent
+    improvement across all three pairs and both metrics as evidence
+    that the multi-agent loop is recovering genuine translation errors
+    rather than producing surface paraphrases.
+
+    To characterize convergence behavior, we treat the iteration as a
+    fixed-point process: a segment is converged when the Editor's
+    output lies in the Critic's "acceptable" set on the following round.
+    Because Critic and Editor are conditioned on the same context window
+    and share the same underlying parameters, we expect the Editor's
+    output to be accepted after at most a few rounds, and this is what
+    we observe empirically.
+
+    We therefore conclude that TRIAGE-MT provides a general-purpose
+    framework for improving translation quality across language pairs
+    through agentic self-revision, and we recommend it as a drop-in
+    post-editing module for any LLM-based translation system that
+    requires higher fidelity at inference time.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  R1.3: [F1.3.a]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (hidden premise in the gain-attribution
+    and convergence arguments):
+      The headline claim — that the +1.8 COMET-22 gain reflects the
+      multi-agent loop "recovering genuine translation errors" — rests
+      on a hidden premise that is never stated and never checked: that
+      Critic and Editor agents have at least partially independent
+      error profiles relative to the Translator. But all three agents
+      are roles played by the same 70B base model with shared
+      parameters, so any error the Translator makes that the base
+      model considers fluent is by construction also invisible to the
+      Critic. Worse, the "fixed-point" convergence story makes the same
+      assumption explicit and then waves it away: the Editor's output
+      is accepted because Critic and Editor "share the same underlying
+      parameters" — i.e., convergence is just the model agreeing with
+      itself, not a quality signal. A second, related hidden premise:
+      the single-pass baseline is single-sample, while TRIAGE-MT spends
+      ~5× compute through repeated sampling; the gain is not isolated
+      from a best-of-N sampling effect at matched compute. A reader
+      might reasonably argue this is the load-bearing issue: the entire
+      attribution of gains to "agentic self-revision" rests on premises
+      that, once stated, undermine the contribution.
+
+    Reading B — R1.3 dominant (overgeneralization beyond the evidence):
+      The closing sentence claims TRIAGE-MT is a "general-purpose
+      framework for improving translation quality across language pairs"
+      and a "drop-in post-editing module for any LLM-based translation
+      system." The evidence is three high-resource pairs (en→fr, en→de,
+      en→zh), all out of English, all into well-represented target
+      languages, evaluated with a single base model on a single test
+      suite. Nothing in the experiments licenses claims about
+      low-resource pairs, non-English source languages, typologically
+      distant pairs, or transfer to other base models. The
+      contribution-defining generality claims outrun the evidence
+      substantially. A reader might reasonably argue this is the
+      load-bearing issue: tightening the scope of the conclusion (and
+      adding cross-pair / cross-model evidence to support what remains)
+      is what the section actually needs.
+
+    Both readings yield materially different rewrites. Reading A demands
+    a same-compute best-of-N baseline, an external (different-model)
+    Critic, and a retraction or qualification of the "genuine errors"
+    framing — a fix to the causal/attribution argument. Reading B
+    demands restricting the conclusion to the evaluated regime and
+    adding low-resource and non-English-source experiments — a
+    scope/evidence fix. A well-calibrated agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the gain-attribution and self-convergence arguments quietly assume
+  Critic/Editor error independence and a compute-matched baseline,
+  neither of which holds when all three agents are the same base
+  model and the baseline is single-sample) from Reading B (the
+  closing claims about "any language pair" and "any LLM-based
+  translation system" overrun three high-resource into-target pairs
+  evaluated with a single base model). After clarification, addresses
+  the chosen reading thoroughly — e.g., proposing a best-of-N
+  same-compute baseline and a heterogeneous-model Critic for Reading A,
+  or restricting the conclusion and adding cross-pair / cross-model
+  evidence for Reading B. If no clarification is sought, partial
+  credit for naming one reading rigorously while explicitly flagging
+  that the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to polish prose,
+  suggest reporting additional metrics (e.g., BLEURT, TER), recommend
+  more WMT test sets, or tighten the framing of the agent roles.
+  Treats the +1.8 COMET-22 gain as established evidence of
+  "genuine error recovery," accepts the same-parameter fixed-point
+  story as a convergence argument, and lets the "any language pair /
+  any LLM-based translation system" generalization stand. Tightening
+  one reading implicitly — for instance, suggesting a fourth language
+  pair without naming the shared-parameter independence gap, or
+  adding a compute-matched baseline without flagging the scope
+  overreach — is a partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,109 @@
+delegation_id: ad_r1_171
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 312
+  text: |
+    In this section we describe the skill-decomposed evaluation protocol
+    that we develop for instruction-tuned language models and we apply it
+    to a suite of open-weight checkpoints that we had selected from recent
+    releases and through this process we obtain per-skill scores that we
+    then aggregate into an overall alignment profile that downstream
+    practitioners can use when selecting models for their applications.
+    Our protocol decomposes responses along several axes including
+    factuality logical coherence instruction adherence and harmlessness
+    and we score each axis independently using a rubric-based judge that
+    we had calibrated against a small set of human-labeled responses.
+
+    The judge is implemented as a frozen large model that receives the
+    instruction the candidate response and a per-skill rubric and the
+    judge produces a categorical score on a five-point scale and we
+    average these scores across a held-out evaluation set of roughly
+    1,800 prompts that span twelve task families which we curated for
+    this study. During development we noticed that the judge tends to
+    exhibit position bias and length bias and we mitigate these by
+    randomizing answer order and by length-normalizing the rubric
+    prompts before scoring is performed.
+
+    We compared our skill-decomposed scores to a single-score baseline
+    that uses an overall preference judgment and we find that the
+    skill-decomposed protocol produced rankings that disagreed with the
+    baseline on approximately 18% of model pairs and the disagreements
+    concentrate on pairs where one model is stronger on factuality while
+    the other is stronger on instruction adherence which suggests that
+    a single overall score had been hiding meaningful trade-offs that
+    practitioners may care about.
+
+    Furthermore the protocol appears to be reasonably stable under
+    rubric perturbations and judge-model swaps although we acknowledge
+    that broader evaluation across additional judge families would
+    further strengthen the robustness claims that we are making in
+    this section.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure prose-quality issues concentrated on F1.6.a: run-on sentences
+    and tense drift. Para 1 opens with a 60+ word run-on chaining "and"
+    clauses and drifts between present ("we describe", "we develop") and
+    past perfect ("we had selected", "we had calibrated"). Para 2
+    contains a 45-word run-on plus tense drift between "the judge is
+    implemented" / "we noticed" / "is performed". Para 3 chains another
+    50-word run-on with tense slipping from "we compared" to "produced"
+    to "had been hiding". Para 4 hedges. Underlying methodology
+    (skill axes, judge setup, 18% disagreement number, twelve task
+    families) is intact — fixing the flaws should not change any
+    methodological claim or number. Moderate knowledge gating: a reader
+    needs some familiarity with LLM-as-judge evaluation conventions
+    (position bias, rubric judges, preference baselines) to parse the
+    section confidently, but the run-ons and tense drift are detectable
+    purely from careful reading. Delegation T08 "Clean this up." is
+    generic and does not name R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Breaks the long run-on sentences into shorter, well-formed ones and
+  normalizes verb tense to a consistent register (typically simple past
+  or simple present throughout). Preserves the methodology, the 18%
+  disagreement figure, the twelve task families, the bias-mitigation
+  steps, and the section's structure.
+
+bad_outputs_summary: |
+  Restructures the section, questions the choice of a five-point rubric
+  or the LLM-as-judge setup, suggests additional judge models or human
+  studies, or reframes the skill-decomposition contribution. Adds
+  citations to prior evaluation work. Treats the run-ons and tense drift
+  as cosmetic and instead delivers scope-expanded methodological
+  feedback.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

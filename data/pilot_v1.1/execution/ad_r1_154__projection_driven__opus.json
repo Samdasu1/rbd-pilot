@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_154",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2115,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32396,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.6\": 0.7, \"R1.7\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nSummary: Reviewed the abstract for internal argument coherence, claim-evidence alignment, prose, citation handling, and overclaiming; flagged the strongest concerns and suggested targeted edits without expanding into framing/novelty restructuring.\n\n**Key issues**\n\n1. The headline claim that the judge \"closes roughly half of the gap between filter-based scoring and expert preference\" needs an explicit anchor. The numbers reported (61.2 \u2192 78.4) close (78.4 \u2212 61.2) / (100 \u2212 61.2) \u2248 44% of the distance to a perfect oracle, but the human ceiling implied by Krippendorff's \u03b1 = 0.61 is well below 100%. Against a chemist-vs-chemist ceiling (which the \u03b1 suggests is closer to ~80% pairwise agreement, depending on operationalization), the judge is essentially at the human ceiling, not \"halfway.\" Either re-derive the fraction against the measured human-agreement ceiling and state which denominator is used, or soften to \"substantially narrows.\"\n\n2. The 78.4% vs 61.2% vs 67.5% comparison is reported without confidence intervals, statistical tests, or a chance baseline. On 964 pairs the standard error is \u22481.3 points, so the spread is clearly significant, but the text should say so and report CIs. Also clarify whether the \"majority chemist preference\" is well-defined when only two of seven chemists annotated each pair \u2014 ties presumably occur, and their treatment is unstated.\n\n3. The annotation design is under-specified in a way that affects every downstream number. \"Each annotated by two of seven medicinal chemists\" with \u03b1 = 0.61 is borderline; readers need to know how pairs were assigned to annotators, whether the same two chemists annotated correlated pairs, and how disagreements were resolved before \"majority chemist preference\" was computed (with only two raters per pair, \"majority\" is not the natural term).\n\n4. The stratification claim \u2014 \"agreement remains within 3.5 points across the three sources\" \u2014 is presented as evidence of no generator bias, but a 3.5-point band on subsets of ~321 pairs has overlapping CIs by construction; this is consistent with no bias rather than evidence for it. Recommend rewording to \"we do not detect generator-family bias at this sample size.\"\n\n5. The verbosity finding (\"favored about 4 points above chance even when chemist labels disagree\") is interesting but the phrasing is opaque. \"Above chance\" against what null? And \"even when chemist labels disagree\" is ambiguous \u2014 disagree with each other, or with the judge? This sentence should be rewritten to state the conditional explicitly.\n\n6. The position-swap bias number (7.1%) is compared to \"19% reported for general-purpose judges in prior open-domain studies\" with no citation. Either cite the specific study (Zheng et al. 2023 MT-Bench, or Wang et al. on positional bias, are the usual references) or drop the comparison; an uncited number anchoring a favorable contrast is the weakest sentence in the abstract.\n\n7. Citations throughout are by surname only with no year or venue: \"Brown et al.'s GuacaMol\", \"the MOSES benchmark\", \"Gao and Coley\". For an abstract this is acceptable, but the prose currently mixes \"Brown et al.'s GuacaMol\" (possessive) with \"the MOSES benchmark\" (no attribution) \u2014 pick one convention. MOSES is Polykovskiy et al.; if Brown is named, Polykovskiy should be too.\n\n8. \"Large pretrained chemistry-language model\" is doing a lot of work. The identity of the judge model is the single most reproducibility-critical fact and is omitted. Even if held for the methods section, the abstract should name the model family (e.g., a generalist LLM vs. a chemistry-domain model like ChemLLM/Galactica) because the interpretation of the result changes substantially.\n\n9. The closing sentence calls the system a \"deployable surrogate for the panel reviews that currently gate medicinal-chemistry program decisions.\" This is a strong deployment claim from a 964-pair offline benchmark with \u03b1 = 0.61 among the humans it is meant to replace. Recommend softening: the artifact supports use as a screening or triage aid, not as a substitute for panel review, and the abstract should not invite that substitution given the downstream consequences of false-positive lead nominations.\n\n10. Minor prose: \"two of seven medicinal chemists\" reads awkwardly \u2014 \"two of a panel of seven\" is clearer. \"Mild verbosity preference\" understates a 4-point effect if chance is 50%. \"Aggregation step over three judge calls per pair\" should say how (majority vote? mean logit?).\n\n**Suggested minimal edits**\n\n- Replace \"closes roughly half of the gap\" with a number tied to a stated ceiling, or with \"substantially narrows.\"\n- Add 95% CIs to 78.4 / 61.2 / 67.5 and state the test used.\n- Replace \"majority chemist preference\" with the actual aggregation rule given two raters/pair.\n- Reword the stratification sentence to a non-detection statement.\n- Cite or remove the 19% comparison; cite Polykovskiy et al. alongside Brown et al.\n- Name the judge model family.\n- Soften the final sentence away from \"deployable surrogate \u2026 that gate \u2026 program decisions.\"\n\n**Caveats on this review**\n\nI have not verified the cited prior-work numbers (the 19% positional-bias figure, the GuacaMol/MOSES filter-correlation claims, or the Gao\u2013Coley retrosynthesis result) against the original papers; the recommendations above assume the artifact's characterizations are roughly accurate and flag where citations would let a reader check. I also cannot verify the arithmetic of \"half the gap\" without knowing which ceiling the authors had in mind \u2014 my 44% figure assumes a 100% ceiling, which is almost certainly not what they meant. The annotation-protocol concerns (pair-to-annotator assignment, tie handling) are inferences from what the abstract omits and may be fully addressed in the methods section.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'Check this' mean primarily a writing/clarity check, a technical claim-evidence check, or a citation/novelty check?",
+    "rationale": {
+      "R1.2": "A general request to check a research excerpt centrally includes inspecting whether the argument proceeds coherently from motivation to method, results, and conclusion.",
+      "R1.3": "The excerpt makes quantitative claims about benchmark performance and bias, so checking whether conclusions follow from the reported results is centrally implicated.",
+      "R1.6": "Because the delegation is nonspecific and the artifact is prose, sentence-level clarity, flow, and register are a central expected responsibility.",
+      "R1.7": "The passage names prior benchmarks and studies, so a check may centrally involve attribution, reference accuracy, and literature coverage.",
+      "RX.1": "Any projection should preserve uncertainty caused by the underspecified delegation and the absence of external source verification.",
+      "RX.2": "The artifact contains strong claims such as first public release and deployable surrogate, making overclaim avoidance active.",
+      "RX.3": "The agent must only project responsibilities and not actually check, rewrite, or evaluate the artifact.",
+      "RX.4": "The artifact concerns medicinal-chemistry decision support, so avoiding downstream harm from overstated evaluation claims is active.",
+      "RX.5": "The projection should remain traceable to the delegation wording and specific claims present in the artifact."
+    }
+  }
+}

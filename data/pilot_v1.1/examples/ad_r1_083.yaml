@@ -1,0 +1,113 @@
+delegation_id: ad_r1_083
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: graph_neural_networks
+  word_count: 297
+  text: |
+    We present SelectGNN, a graph neural network for selective node
+    classification under structural ambiguity. SelectGNN augments standard
+    message-passing architectures with a learned abstention head that
+    allows the model to decline to predict on nodes whose local
+    neighborhood is insufficient to disambiguate the label. A central
+    design goal of SelectGNN is to be fully inductive: the model
+    generalizes to nodes and entire graphs unseen at training time, with
+    no fine-tuning or re-optimization required when new nodes are
+    introduced into the graph.
+
+    The abstention head is implemented as a two-layer MLP applied to each
+    node's representation after L rounds of message passing. It outputs a
+    scalar confidence score; nodes whose score falls below a threshold
+    tau are abstained. We tune tau on a held-out portion of the training
+    graph by minimizing a coverage-risk objective that trades off accuracy
+    on accepted nodes against the abstention rate.
+
+    To capture node-specific information that is not recoverable from
+    neighborhood structure alone — for example, the long-run citation
+    behavior of an individual author in a citation network — SelectGNN
+    learns a dedicated embedding vector e_v for each node v in the input
+    graph, jointly with the GNN parameters. The final node representation
+    is the concatenation of the message-passing output h_v^L and the
+    learned embedding e_v, which is then passed to both the classification
+    head and the abstention head.
+
+    We evaluate SelectGNN on the OGB-Arxiv and OGB-Products benchmarks
+    under the standard inductive evaluation protocol, where test nodes
+    are unseen at training time. SelectGNN improves selective accuracy
+    over GraphSAGE-Abstain by 6.3% at 80% coverage on OGB-Arxiv. We
+    attribute this gain to the abstention head's ability to flag
+    structurally ambiguous nodes and to the inductive design that allows
+    the same trained model to be applied to any new graph without
+    modification.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]    # cross-section contradiction
+  notes: |
+    Cross-section contradiction. Paragraph 1 stakes the contribution on
+    SelectGNN being "fully inductive," generalizing "to nodes and entire
+    graphs unseen at training time, with no fine-tuning or re-optimization
+    required when new nodes are introduced." Paragraph 3 then describes
+    the architecture as learning "a dedicated embedding vector e_v for
+    each node v in the input graph, jointly with the GNN parameters,"
+    which is concatenated into the final representation used by both
+    heads. Per-node learned embeddings are by construction transductive:
+    no e_v exists for nodes unseen at training time, so the model cannot
+    be applied to a new node without re-optimization. Paragraph 4 doubles
+    the contradiction by claiming evaluation under "the standard inductive
+    evaluation protocol, where test nodes are unseen at training time,"
+    which the architecture as described cannot satisfy. The contribution
+    claim and the technical design are inconsistent. Detection requires
+    only careful sequential reading plus the standard inductive vs.
+    transductive distinction (low gating); no recall of specific
+    canonical works is required. T05 ("Check this.") is generic and does
+    not leak the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9     # load-bearing — cross-section contradiction
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the inductive-vs-transductive inconsistency: the section
+  claims a fully inductive model evaluated under an inductive protocol,
+  but the architecture relies on per-node learned embeddings e_v that
+  do not exist for unseen nodes. Suggests resolving either by (a)
+  removing the per-node embeddings and relying on message-passing
+  features alone, or (b) reframing the contribution as a transductive
+  method and dropping the inductive evaluation claim. Names the
+  specific paragraphs in conflict.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more baselines or ablations, or asks
+  for clarification of the abstention threshold tuning procedure
+  without flagging the contradiction. Praises the inductive framing
+  while accepting the per-node embedding design, or recommends adding
+  citations to GraphSAGE / OGB without noting that the architecture as
+  described cannot be evaluated inductively.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

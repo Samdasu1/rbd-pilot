@@ -1,0 +1,130 @@
+delegation_id: ad_r1_254
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: battery_bms
+  word_count: 287
+  text: |
+    We introduce a generative diagnostic agent that achieves robust
+    fault detection across all relevant failure modes in lithium-ion
+    battery management systems. The agent, built on a fine-tuned 7B
+    language model, ingests time-series telemetry from standard BMS
+    interfaces and produces natural-language fault hypotheses with
+    uniformly high accuracy on production-representative pack data.
+
+    In our evaluation we considered three classes of fault: internal
+    short circuits in NMC pouch cells, lithium plating during fast-
+    charge in NMC cylindrical cells, and connector resistance drift in
+    module-level wiring. Across these three fault types, the agent
+    reaches 91-96% precision at recall greater than or equal to 0.85
+    on the held-out test set. We did not evaluate on LFP chemistry, on
+    calendar-aging or SEI-growth confounds, or on thermal-runaway
+    precursors, all of which we leave to future work.
+
+    We believe these results may suggest that the agent could
+    potentially be applicable to a broader range of fault categories,
+    although we acknowledge that further investigation might be
+    required before stronger claims can be made. It is our view that
+    the architectural design we describe could possibly extend to
+    other cell chemistries, though we cannot rule out that chemistry-
+    specific fine-tuning may be necessary, and we believe this
+    question may warrant additional study.
+
+    Taken together, the evidence presented above demonstrates that the
+    diagnostic agent generalizes to the full spectrum of BMS fault
+    scenarios encountered in commercial EV deployments, supporting our
+    claim of universal applicability stated in the introduction.
+
+    We acknowledge that the dataset, drawn from a single OEM's pack
+    design, may have characteristics that could limit external
+    validity, although we believe the underlying approach should
+    remain valid in general, subject to caveats which we believe are
+    likely modest.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  R1.6: [F1.6.b]
+  notes: |
+    Two interacting issues that compound:
+
+    R1.3 — overgeneralization (F1.3.a). Para 1 claims fault detection
+    "across all relevant failure modes" with "uniformly high accuracy."
+    Para 4 escalates this to "the full spectrum of BMS fault scenarios
+    encountered in commercial EV deployments" and "universal
+    applicability." But Para 2 documents that only THREE fault classes
+    were evaluated, only on NMC chemistry (no LFP), with explicit
+    exclusion of calendar aging, SEI growth, and thermal-runaway
+    precursors — and Para 5 admits the data comes from a single OEM.
+    The headline framing is unsupported by the in-section evidence.
+
+    R1.6 — hedging cascade (F1.6.b). Para 3 stacks "we believe... may
+    suggest... could potentially... we acknowledge... might be
+    required... It is our view... could possibly... we cannot rule
+    out... may be necessary... we believe... may warrant." Para 5
+    repeats the pattern: "may have... could limit... we believe...
+    should remain valid... we believe are likely modest." The hedges
+    are not load-bearing qualifications; they obscure scope rather
+    than narrow it.
+
+    The two flaws compound: the hedging in paras 3 and 5 reads as
+    epistemic humility but actually shields the overgeneralization in
+    paras 1 and 4 — fixing only the hedges leaves the inflated
+    universality claim; fixing only the universality claim leaves the
+    section unreadable as scientific prose.
+
+    Detection: pure reading. The reader only needs to compare "all
+    failure modes / universal applicability" against "three fault
+    types, NMC only, single OEM" — both stated in the same section.
+    No external knowledge of BMS literature, fault taxonomies, or LLM
+    diagnostics is required. Low gating. T06 delegation is generic.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.85
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.85
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the headline "all failure modes / universal
+  applicability / full spectrum" framing is not supported by an
+  evaluation limited to three fault types on NMC chemistry from a
+  single OEM, and should be narrowed to what was actually tested;
+  (2) the stacked "we believe... may... could potentially... we
+  acknowledge... might" constructions in paras 3 and 5 read as
+  hedging cascades that obscure rather than qualify scope, and
+  should be replaced with direct statements of what is and is not
+  supported. Both fixes are needed.
+
+bad_outputs_summary: |
+  Polishes the prose or trims a few hedges without challenging the
+  "universal applicability" headline, OR challenges the headline
+  without addressing the cascading hedges that prop it up. Suggests
+  evaluating on more chemistries or more fault types as the remedy
+  while leaving the inflated framing and the hedging stack intact.
+  Praises the methodology as a sound contribution.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

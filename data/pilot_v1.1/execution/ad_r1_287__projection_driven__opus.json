@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_287",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1917,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 34499,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nLight prose pass plus flags on language that promises more than the paragraph demonstrates. No structural reorganization, no new content, no citation verification.\n\n**Prose-level edits suggested**\n\n- \"the first framework for principled causal inference under ambiguous treatment definitions\" \u2014 \"the first\" is a strong priority claim and the modifier \"principled\" is doing rhetorical rather than technical work. Consider: \"a framework for causal inference under ambiguous treatment definitions.\" If a priority claim is genuinely intended, it belongs in the contributions paragraph with a citation sweep behind it, not in the opening sentence.\n- \"Many observational queries \u2026 admit multiple defensible operationalizations\" \u2014 clean. The em-dash list reads well.\n- \"Standard practice fixes one operationalization and reports a single ATE\" \u2014 fine, though \"Standard practice\" is a sweeping characterization; \"A common practice\" is safer.\n- \"calibrated ambiguity set\" \u2014 the word \"calibrated\" is later softened to \"attains nominal coverage \u2026 under standard regularity conditions.\" Consider using \"coverage-controlled\" consistently (it already appears later) rather than introducing \"calibrated\" here.\n- \"the modern double-machine-learning paradigm with cross-fitted nuisance regressions (Robins and Rotnitzky, 1995)\" \u2014 the prose attaches a 1995 citation to the phrase \"modern double-machine-learning paradigm.\" DML in its current form is typically associated with Chernozhukov et al. (2018); Robins & Rotnitzky 1995 is foundational for doubly-robust estimation but not for cross-fitted DML. Worth checking \u2014 this read as a likely mis-citation.\n- \"returns the union of pointwise confidence intervals across versions, which we show attains nominal coverage of the ambiguity-aware estimand\" \u2014 the union of pointwise CIs is a well-known conservative construction; \"attains nominal coverage\" needs care. If the result is conservative (coverage \u2265 nominal), say so; if it is exactly nominal, that is a stronger claim that merits a hedge or a forward-pointer to the theorem.\n- \"Across all four versions, the ambiguity set excludes zero, supporting the qualitative conclusion that the program had a positive earnings effect.\" \u2014 \"supporting\" is appropriately hedged. Good.\n- \"set width grows monotonically with disagreement, as desired\" \u2014 \"as desired\" reads as editorial. Prefer \"consistent with the design goal\" or simply drop it.\n- \"Our contribution is the first end-to-end procedure \u2026\" \u2014 second instance of \"first.\" If retained, the related-work section needs to defend it; otherwise soften to \"an end-to-end procedure.\"\n- \"agnostic to the choice of base estimator and composes with any modern doubly-robust outcome-regression / propensity-score combination\" \u2014 \"any\" is universal and almost certainly false at the boundary (e.g., estimators violating the cross-fitting assumptions, non-Donsker classes without sample splitting, etc.). Suggest \"composes with standard doubly-robust \u2026\" and a forward-pointer to the assumptions.\n- \"deployment-ready tool\" \u2014 strong claim for a paper whose empirical section is one real dataset (LaLonde) plus one synthetic benchmark. Suggest \"a practical tool\" or \"a candidate tool for applied use,\" with deployment-readiness left as a claim the user can form after reading the evaluation.\n- Minor mechanics: \"doubly- / robust\" hyphenation is consistent; \"double-machine-learning\" hyphenated as a compound modifier is fine; the em-dash spacing is consistent. \"ambiguity-aware estimand\" is introduced without prior definition \u2014 consider one-clause gloss on first use.\n\n**Claim-strength flags worth attention before submission**\n\n- Two uses of \"first\" (framework, end-to-end procedure). Either commit to the priority claim and back it in related work, or remove both.\n- \"Calibrated\" / \"nominal coverage\" / \"coverage-controlled\" are used somewhat interchangeably. Pick one and use it consistently; if the guarantee is conservative, say \"valid (possibly conservative) coverage.\"\n- \"Deployment-ready\" overshoots the evaluation as described (one real dataset, one synthetic benchmark, no robustness / sensitivity / external-validity analysis mentioned).\n- \"Agnostic \u2026 composes with any \u2026\" \u2014 universal quantifier on estimator class is almost certainly stronger than the theory supports.\n- Single LaLonde evaluation: the paragraph already hedges with \"supporting the qualitative conclusion,\" which is good. No further softening needed there.\n\n**Out-of-scope notes (flagged, not addressed)**\n\nI did not assess novelty against the prior literature, did not propose section-level reorganization, and did not audit the bibliography beyond flagging the Robins & Rotnitzky 1995 attachment to \"modern DML\" as a likely mis-citation worth checking against Chernozhukov et al. (2018).\n\n**Items I cannot verify from the artifact alone**\n\n- Whether the priority claim (\"first framework\") survives a related-work sweep \u2014 I have not searched the literature.\n- Whether the coverage guarantee is exact-nominal or conservative \u2014 depends on the unstated theorem statement.\n- Whether the Robins & Rotnitzky 1995 citation is actually intended for the doubly-robust lineage (in which case it may be defensible at a different sentence) rather than for cross-fitted DML \u2014 I am inferring intent from one sentence.\n- Whether \"ambiguity-aware estimand\" is formally defined elsewhere in the paper.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the responsibility be limited to sentence-level writing polish, or should it include substantive research-content review of claims, evidence, novelty, and citations?",
+    "rationale": {
+      "R1.6": "The delegation points to a paragraph and asks to look at it, making sentence- and paragraph-level writing feedback the most directly expected R1 responsibility.",
+      "RX.1": "A reviewer would need to disclose uncertainty because the artifact is only an excerpt and the intended review mode is underspecified.",
+      "RX.2": "The paragraph contains strong claims such as firstness, deployment readiness, and coverage control, so avoiding overclaiming is an active cross-cutting responsibility.",
+      "RX.3": "The agent must stay within projection rather than actually reviewing, editing, or rewriting the paragraph.",
+      "RX.4": "Because the artifact concerns causal inference for applied policy analysis, downstream misuse or overstated reliability is a relevant risk to keep in scope.",
+      "RX.5": "Any projected responsibility should remain traceable to explicit wording in the delegation and artifact."
+    }
+  }
+}

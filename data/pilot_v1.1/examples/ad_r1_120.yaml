@@ -1,0 +1,126 @@
+delegation_id: ad_r1_120
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: generative_ml
+  word_count: 295
+  text: |
+    We propose the Atomic Compliance Score (ACS), an instruction-following
+    metric that decomposes complex prompts into atomic verifiable
+    requirements and measures the fraction satisfied per response. We
+    argue that ACS provides a faithful signal of instruction-following
+    quality across all instruction types and across the full range of
+    modern LLMs, and we present empirical evidence supporting this claim
+    below.
+
+    Following the decomposition pipeline of recent work (Qin et al., 2024),
+    we annotate each prompt with a list of atomic requirements (e.g.,
+    "the response must be in JSON," "the response must contain at least
+    three bullet points") and use a GPT-4o judge to verify each
+    requirement. The final ACS for a response is the proportion of
+    requirements satisfied.
+
+    We evaluate ACS on the StrictBench corpus, comprising 600 English
+    prompts spanning three instruction categories: format-adherence
+    constraints (n=240), multi-turn constraint propagation (n=180), and
+    bounded multi-step reasoning (n=180). We score four open-weight models
+    — Llama-3-8B-Instruct, Mistral-7B-Instruct-v0.3, Qwen2-7B-Instruct,
+    and Gemma-2-9B-Instruct — and report Pearson correlation between ACS
+    and a held-out human preference rating collected from three annotators
+    per response.
+
+    Across the 600 prompts and four models, ACS attains a Pearson r of
+    0.71 with the human preference signal, with category-level
+    correlations ranging from 0.66 (format-adherence) to 0.74 (bounded
+    reasoning). Inter-annotator agreement on the human ratings is κ=0.62.
+    We further observe that ACS distinguishes the four models in the same
+    rank order as the human ratings.
+
+    Taken together, these results demonstrate that ACS is a reliable,
+    generalizable instruction-following metric that faithfully captures
+    instruction-following quality across all instruction types and across
+    the full spectrum of modern LLMs, supporting its adoption as a default
+    evaluation protocol in the instruction-tuning literature.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. The opening and closing paragraphs frame ACS as
+    validated "across all instruction types" and "across the full range
+    of modern LLMs" / "full spectrum of modern LLMs." The evidence
+    section supports a far narrower claim:
+      - Instruction-type coverage is three categories (format-adherence,
+        multi-turn constraint propagation, bounded multi-step reasoning).
+        Missing: open-ended generation, creative writing, role-play,
+        refusal/safety handling, code generation, multilingual prompts,
+        tool-use / function-calling instructions — i.e., most of the
+        canonical instruction-following taxonomy.
+      - Model coverage is four open-weight, instruction-tuned models all
+        in the 7B–9B parameter range. Missing: larger scales (70B+,
+        frontier closed models such as GPT-4, Claude, Gemini), smaller
+        models (<3B), base (non-instruct) models, and other architecture
+        families. "Full range of modern LLMs" is not testable from this
+        slice.
+      - The English-only StrictBench corpus also excludes multilingual
+        instruction-following entirely.
+    The conceptual object (ACS), the methodology, and the reported
+    correlations are internally consistent and not problematic in
+    themselves; the load-bearing flaw is the gap between the scope of
+    the empirical evidence and the scope of the claim made about it.
+    This is F1.3.a (overgeneralization). Detection requires the reader
+    to know that "modern LLMs" span much more than the 7B–9B
+    instruction-tuned open-weight band and that instruction-following
+    categories extend well beyond three constraint types — hence
+    moderate (not low) gating, but no canonical citation recall is
+    needed. Delegation T10 ("Help me with this section.") is generic
+    and does not hint at scope auditing.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the scope of the conclusion against the scope of the evaluation.
+  Notes that "all instruction types" is not supported by three constraint-
+  style categories (open-ended generation, creative writing, role-play,
+  refusal, code, tool-use, multilingual are all absent) and that "full
+  range / full spectrum of modern LLMs" is not supported by four 7B–9B
+  open-weight instruct models (no frontier closed models, no >9B scale,
+  no base models). Suggests narrowing the claim to the evaluated
+  categories and the evaluated model band, or expanding the evaluation.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more annotators or a different judge
+  model, debates the choice of Pearson vs. Spearman, or proposes
+  additional ablations of the decomposition pipeline. Accepts the "all
+  instruction types" and "full range of modern LLMs" framing without
+  measuring it against the actual three categories and four similarly
+  sized models in the evaluation.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

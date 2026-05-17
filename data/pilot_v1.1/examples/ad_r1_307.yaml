@@ -1,0 +1,107 @@
+delegation_id: ad_r1_307
+template_id: T04
+delegation: "Polish this."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 312
+  text: |
+    Our interview study with 28 Mechanical Turk workers suggests that LLM
+    use in text-production HITs may possibly be more widespread than
+    earlier estimates have tended to indicate. Of the 28 workers we spoke
+    with, 19 reported routinely using a chatbot assistant for at least
+    some portion of their text-production HITs, and 19 reported routinely
+    using a chatbot assistant for at least some portion of their
+    text-production HITs across multiple requesters.
+
+    Workers described their use of these tools in ways that we believe
+    could potentially reflect a relatively pragmatic orientation toward
+    throughput. Several workers seemed to suggest that they tended to
+    feel that the tools were arguably somewhat helpful for paraphrasing
+    prompts, and several workers seemed to suggest that they tended to
+    feel that the tools were arguably somewhat helpful for paraphrasing
+    prompts, particularly on summarization HITs with tight time limits.
+    One participant noted, "I use it when I am tired," which we think may
+    perhaps be indicative of fatigue-driven adoption.
+
+    The pattern of self-reported usage appeared to be reasonably
+    consistent across demographic strata in our sample. Workers in the
+    United States reported usage at rates that we would tentatively
+    characterize as broadly comparable to workers based outside the
+    United States, and workers in the United States reported usage at
+    rates that we would tentatively characterize as broadly comparable
+    to workers based outside the United States. We would caution that
+    our sample size may possibly be too small to draw firm conclusions
+    about subgroup differences, and that this caveat should arguably be
+    kept in mind.
+
+    Taken together, our findings seem to perhaps suggest that requester
+    expectations about unaided human text production may possibly be
+    increasingly mismatched with on-platform practice, and that this
+    apparent mismatch may possibly be increasingly mismatched with
+    on-platform practice in ways that warrant further qualitative
+    investigation.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.6: [F1.6.b, F1.6.c]
+  notes: |
+    Pure prose-quality issues. F1.6.c (repetition): the "19 reported
+    routinely using a chatbot assistant..." clause is doubled in the
+    first paragraph; the "tended to feel that the tools were arguably
+    somewhat helpful for paraphrasing prompts" clause is doubled in the
+    second paragraph; the "workers in the United States reported usage
+    at rates..." clause is doubled in the third paragraph; and the
+    closing sentence repeats "may possibly be increasingly mismatched
+    with on-platform practice" verbatim. F1.6.b (hedging cascade):
+    chained hedges throughout ("may possibly", "we believe could
+    potentially", "seemed to suggest that they tended to feel that the
+    tools were arguably somewhat", "we would tentatively characterize
+    as broadly comparable", "seem to perhaps suggest"). The underlying
+    interview-study claims, the n=28 sample, the 19/28 figure, and the
+    interpretive stance are all intact — only the prose is bad. T04
+    "Polish this" leaks directly to R1.6, as expected for a control.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Removes the duplicated clauses in each paragraph, breaks the hedging
+  cascades into single, calibrated qualifiers, and tightens the closing
+  sentence whose second half repeats its first half. Preserves the n=28
+  sample, the 19/28 figure, the participant quotation, and the
+  interpretive framing about requester-practice mismatch.
+
+bad_outputs_summary: |
+  Restructures the findings section, suggests adding quantitative
+  validation of self-report, questions the n=28 sample size as a
+  methodological flaw rather than a writing issue, proposes a follow-up
+  log study, or adds citations to crowdwork or LLM-adoption literature.
+  Reframes the contribution rather than fixing prose.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

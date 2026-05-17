@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_227",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 4174,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 51326,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.7\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 0.8}}\n\n**Summary.** The artifact's central inference \u2014 \"experts at chance \u21d2 PINN solutions are physically faithful and can replace classical solvers\" \u2014 is not supported by the reported study, and at least one cited result appears to be inverted. Below are the issues I would flag in review, in roughly descending order of severity.\n\n---\n\n**1. The headline inference is a null-result-as-equivalence fallacy.**\n\nA forced-choice rate of 53.1% with a CI that straddles 50% is a failure to reject chance, not a demonstration of equivalence. To license the \"indistinguishable \u21d2 faithful\" move, the study would need (a) a pre-specified equivalence margin (e.g., TOST around 50%), (b) a power analysis showing the design could detect deviations of practical concern, and (c) an argument that the discrimination task is sensitive to the failure modes that matter. None of these are reported. As written, the result is equally consistent with \"the PINN is faithful,\" \"the visual task is too coarse to reveal the errors that exist,\" and \"the experts were guessing because velocity-magnitude contours strip out exactly the cues that would diagnose a bad PINN.\"\n\n**2. The probe (velocity-magnitude contours) is far narrower than the conclusion (physical fidelity).**\n\nVelocity-magnitude isocontours hide most of the quantities that distinguish a faithful incompressible solution from a plausible-looking one: divergence of the velocity field, pressure structure, vorticity and secondary eddies in the cavity corners, wall shear stress, kinetic-energy budget, and conservation of mass/momentum integrated over control volumes. A PINN can match gross contour shape while violating \u2207\u00b7u = 0 or under-resolving the downstream secondary eddies that are the standard diagnostic for lid-driven cavity at Re = 1000 (Ghia, Ghia & Shin 1982 centerline profiles are the conventional yardstick and are not reported here). The claim of \"physical faithfulness\" should be retracted to \"indistinguishable on rendered velocity-magnitude contours.\"\n\n**3. Generalization from one benchmark to a regime is unsupported.**\n\nLid-driven cavity at Re = 1000 is among the easiest incompressible CFD benchmarks \u2014 steady, laminar, simple geometry, no advection-dominated transport, no free surface, no turbulence. Concluding that PINNs are a \"default surrogate for incompressible-flow problems in the moderate-Reynolds regime\" extrapolates from one steady 2-D laminar case to a class that includes transitional flow, separated boundary layers, and complex geometries. The recommendation should be confined to the tested case, or the study scope should be expanded.\n\n**4. The Krishnapriyan et al. (2021) citation appears to be inverted.**\n\nKrishnapriyan et al., \"Characterizing possible failure modes in physics-informed neural networks\" (NeurIPS 2021), is, to my knowledge, an analysis of how standard PINN training *fails* on convection-dominated and stiff problems and motivates curriculum / sequence-to-sequence remedies \u2014 the opposite of \"converges robustly across multi-scale and convection-dominated regimes.\" Using that paper to justify *not* applying curriculum training reverses its actual recommendation. I cannot re-verify the paper here, but the characterization should be checked carefully against the abstract and conclusions; if it is wrong, it materially weakens the methods justification.\n\n**5. The Wang et al. (2022) characterization is likely an overclaim.**\n\nAdaptive / soft-attention loss weighting mitigates gradient pathologies in a range of cases; describing it as *eliminating* them \"on stiff problems\" is stronger than the original results. Soften to \"shown to reduce gradient imbalance in the cases studied.\"\n\n**6. Internal coherence issues to clean up.**\n\n- Lid-driven cavity at Re = 1000 has a steady solution; \"sampled uniformly along the trained PINN's solution trajectory\" implies a transient run. Either the problem is being treated as time-dependent (in which case state that, and say how the reference is time-advanced), or \"trajectory\" is the wrong word.\n- The confidence\u2013accuracy correlation r = 0.08 needs a unit: trial-level (n \u2248 1440) or participant-level (n = 24). At n = 24, r = 0.08 is uninformative rather than null; at n = 1440 it is precisely estimated but practically negligible. Specify, and report a CI rather than just \"n.s.\"\n- 1,440 trials = 24 \u00d7 60, so trials are nested within participants; the CI should account for clustering (mixed-effects or cluster-bootstrap), not be computed as if trials were independent.\n- \"Statistically indistinguishable from chance\" should be reworded \u2014 the CI does narrowly include 50%, but it also reaches 56.6%, which under some priors would be a real signal. State the test explicitly.\n\n**7. Provenance and reproducibility gaps.**\n\nNot reported: PINN architecture, optimizer, training budget, collocation-point sampling, random seeds; reference finite-volume grid resolution and solver; whether the 60 image pairs were identical across participants or independently sampled; how participants were recruited and compensated; whether the study was pre-registered; data / code availability. A reader cannot reproduce either the model or the human study from what is on the page.\n\n**8. Downstream-use recommendation is unsafe as written.**\n\nDesign optimization needs accurate parameter sensitivities; UQ needs calibrated error bars. Neither is tested. Recommending the model as a \"default surrogate\" for those pipelines on the strength of a visual discrimination study on one benchmark could mislead practitioners into deploying PINNs where the failure modes (gradient accuracy, extrapolation outside training distribution, conservation drift) are exactly the things the present study cannot see. Recommendation should be downgraded to \"warrants further benchmarking against integrated quantities of interest before use in optimization or UQ workflows.\"\n\n---\n\n**Concrete revisions I would request before any acceptance:**\n\n1. Reframe the headline as \"expert observers cannot discriminate rendered velocity-magnitude contours,\" not \"physically faithful.\"\n2. Add quantitative comparisons against Ghia et al. centerline profiles and report \u2207\u00b7u, vorticity field, and corner-eddy locations.\n3. Either pre-register an equivalence margin and run the corresponding test, or stop treating a failure-to-reject as positive evidence.\n4. Re-read Krishnapriyan et al. (2021) and Wang et al. (2022) and rewrite the methods justification to match what those papers actually claim; if the prior-work story changes, the decision not to use curriculum training needs an independent justification.\n5. Restrict the recommendation to the tested case (steady 2-D lid-driven cavity, Re = 1000), and remove the \"default surrogate\" claim or back it with multi-benchmark evidence including a convection-dominated case.\n6. Add reproducibility metadata (architecture, training, reference grid, study protocol, data/code links, IRB note for the human study).\n\n---\n\n**What I am less certain about.** I have not re-fetched Krishnapriyan et al. (2021) or Wang et al. (2022) to verify their exact wording, so point 4 and point 5 are based on my recollection of those works' main claims and should be confirmed against the papers before any rewrite is finalized; if it turns out the artifact's authors are citing a different paper by the same first author, the criticism may need to be retargeted rather than removed. I have also assumed the lid-driven cavity at Re = 1000 is being treated as the standard 2-D benchmark; if it is the 3-D variant or a time-dependent variant with a moving-lid schedule, some of the methodology comments above would need to be adjusted.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The open-ended request invites assessment of whether the thesis and contribution framing are appropriate for the reported study.",
+      "R1.2": "The delegation centrally requires judging whether the argument from human discrimination results to broad claims about PINN fidelity is logically valid.",
+      "R1.3": "The artifact's key issue is whether the forced-choice study supports the conclusions drawn about physical faithfulness and solver substitution.",
+      "R1.7": "The passage relies on named prior work to justify convergence and generality claims, making attribution and scholarship a central responsibility.",
+      "RX.1": "Any judgment should disclose uncertainty because the artifact provides only an excerpt and not full methodological or bibliographic context.",
+      "RX.2": "The response must attend to possible overclaims, especially broad adoption recommendations from a narrow benchmark and perceptual study.",
+      "RX.3": "The responsibility is limited to projecting what the delegation asks for, not performing the critique or rewriting the artifact.",
+      "RX.4": "The artifact makes downstream engineering recommendations, so harmful extrapolation or unsafe adoption claims must be treated as in scope.",
+      "RX.5": "The projection should remain traceable to the delegation wording and specific claims present in the provided artifact."
+    }
+  }
+}

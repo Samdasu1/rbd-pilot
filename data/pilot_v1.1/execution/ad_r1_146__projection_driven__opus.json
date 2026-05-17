@@ -1,0 +1,59 @@
+{
+  "example_id": "ad_r1_146",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2424,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 36900,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 0.7, \"R1.4\": 0.6, \"R1.5\": 0.6, \"R1.6\": 0.7, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: A focused critique of the abstract/intro section, flagging overclaims, missing comparators, unsupported framing, and prose issues, with concrete revision suggestions.\n\n## Main issues\n\n**1. The contribution framing is narrower than the prose implies.**\nThe section pitches CalibVar as a general advance for \"uncertainty-aware variant interpretation,\" but the only reported comparator is the authors' own prior system (CalibVar-v1). Without comparison to widely used baselines in the field (e.g., REVEL, AlphaMissense, ESM1b, PrimateAI-3D, EVE, CADD), readers cannot place the numbers on an absolute scale. The current text implicitly invites the reader to read 0.943 AUROC as \"state of the art,\" which is not supported. Either add external baselines or explicitly restate the contribution as \"an incremental improvement over our prior architecture.\"\n\n**2. \"We are unaware of any prior method that achieves comparable calibration\u2026\" is an unsafe claim.**\nThis is an absence-of-evidence statement dressed as evidence. It is also conditioned on a very specific qualifier (\"ClinVar-2024 split at the same parameter budget\"), which makes it both unfalsifiable and uninformative. Replace with either (a) a concrete tabulated comparison of ECE against named prior methods, or (b) a qualified statement: \"Among the methods we evaluated (list), none achieved ECE below X on this split.\"\n\n**3. Several efficacy claims are stated without the supporting machinery the reader needs.**\n- The 92.4% vs 84.1% high-confidence accuracy is reported without (i) the size of the high-confidence subset, (ii) the class balance in that subset, or (iii) confidence intervals. A high-confidence subset that is 95% benign variants can reach 92% accuracy trivially.\n- ECE is reported as a single averaged number across three benchmarks; this masks per-benchmark variance and the binning scheme. Specify the number of bins and report per-benchmark ECE.\n- AUROC deltas of 0.015, 0.014, and 0.013 are presented as substantive without any statistical comparison (DeLong test, bootstrap CIs, or paired evaluation). On benchmarks of typical ClinVar size these deltas can fall inside noise.\n\n**4. \"Calibration\" claims need to distinguish what was actually demonstrated.**\nTemperature scaling on a held-out split improves *marginal* calibration but says nothing about *conditional* calibration across clinically meaningful subgroups: variant type (missense vs. synonymous-adjacent edge cases), gene constraint, ancestry of the source cohort, or rare-vs-common stratification. For a clinical-genetics framing this matters. Either report subgroup calibration or scope the claim explicitly.\n\n**5. The clinical-deployment framing overreaches relative to what was tested.**\nPhrases like \"broadly useful as clinical genetics laboratories transition toward computationally assisted variant triage at population scale\" and \"straightforward to integrate into existing ACMG-based curation pipelines\" go beyond what a retrospective benchmark study supports. ACMG/AMP integration involves evidence-code mapping (PP3/BP4 strength assignment per the 2022 Pejaver framework), which the abstract does not address. Either describe how CalibVar's probabilities map to evidence strengths, or remove the integration claim.\n\n**6. The \"200 lines of code\" and \"no architectural changes to upstream feature extractors\" claims are out of place in the contribution paragraph.**\nImplementation simplicity is fine to mention, but here it crowds out information the reader actually needs (datasets, splits, what was held out, whether the test set leaks into training of the upstream extractors). Move to a contributions bullet or methods preamble.\n\n**7. The \"CalibVar-v1 (Anonymous Authors et al., 2023)\" attribution is awkward.**\nIf this is a double-blind submission, fine \u2014 but the parenthetical reads oddly in a paper that otherwise uses \"we\" and \"our previous architecture.\" Either drop the citation or replace with \"(citation withheld for review).\" Also, calling the new system *CalibVar* and the prior system *CalibVar-v1* is confusing \u2014 naming-wise, the current paper should be v2 or have a distinct name.\n\n**8. Data-leakage and dataset-construction questions are not addressed.**\n\"ClinVar-2024 held-out split\" needs a one-sentence description: held out from what training set, and by what criterion (random, by gene, by submission date)? Variant prediction benchmarks are notoriously prone to circularity (training variants reappearing in test, or sharing a gene with training variants). The abstract is the right place to at least signal that the split was constructed to avoid this \u2014 or to flag the limitation.\n\n**9. Prose-level issues.**\n- \"emit point pathogenicity scores without confidence signals\" \u2014 most modern predictors *do* emit a score in [0,1] that is at least nominally a probability. The distinction the authors actually mean is \"uncalibrated\" probability vs. calibrated. Rewrite to make that precise.\n- \"closes the gap between predicted and empirical accuracy across the full probability range\" \u2014 \"closes\" is too strong if any nonzero ECE remains. Use \"narrows\" or quantify.\n- \"substantial step forward\" is editorializing; let the numbers do the work.\n- \"particularly pronounced\" \u2014 pick one of *particularly* or *especially*; \"pronounced\" already carries emphasis.\n- Repeated sentence-initial \"We\" / \"CalibVar\" \u2014 vary openings.\n\n## Concrete revision suggestions\n\n- Add external baselines or restate the contribution as a within-line architectural refinement.\n- Replace the \"we are unaware of any prior method\u2026\" sentence with a tabulated calibration comparison or remove it.\n- Report per-benchmark ECE, binning scheme, subset sizes for the high-confidence regime, and confidence intervals on AUROC deltas.\n- Add one sentence on the construction of the ClinVar-2024 held-out split (date cutoff? gene-level holdout?).\n- Scope or remove the ACMG/AMP integration claim unless evidence-strength mapping is shown.\n- Rename the prior system or the new system to avoid the \"CalibVar / CalibVar-v1\" collision.\n- Tighten prose per item 9.\n\n## What I could not verify\n\nI have no access to the underlying experiments, datasets, code, or appendix, so I cannot confirm whether subgroup calibration, baseline comparisons, or split-construction details are in fact reported elsewhere in the paper. Items 1, 3, 4, 8 may be partially addressed in sections not shown; if so, the abstract should still surface enough of that detail to prevent the overclaim reading. The clinical-deployment concern (item 5) is based on the abstract alone and may be tempered by a discussion or limitations section I have not seen.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A review of this section centrally includes assessing whether the thesis, gap, and contribution claims are framed appropriately.",
+      "R1.2": "The reviewer is expected to check whether the argument from method to benchmark results to clinical utility is internally coherent.",
+      "R1.3": "The section makes quantitative performance and calibration claims, so reviewing whether the stated evidence supports those claims is central.",
+      "R1.4": "The artifact contains explicit claims about prior approaches and comparable calibration, making novelty assessment a central review responsibility.",
+      "R1.5": "Because the request targets a whole section, section-level narrative order and progression are part of the expected review.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, register, and concision.",
+      "RX.1": "The projection should preserve uncertainty about what can be inferred from the section alone.",
+      "RX.2": "The review responsibility includes identifying and avoiding unsupported claims of clinical usefulness, novelty, or superiority.",
+      "RX.3": "The agent must stay within reviewing the section rather than executing edits or broader research tasks.",
+      "RX.4": "Because the artifact concerns clinical-genetics triage, review responsibilities include avoiding downstream harm from overstated or unsafe claims.",
+      "RX.5": "The review should attend to traceability from claims to reported benchmarks, figures, and cited prior work."
+    }
+  }
+}

@@ -1,0 +1,115 @@
+delegation_id: ad_r1_096
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 287
+  text: |
+    We study stochastic first-order optimization for finite-sum nonconvex
+    objectives of the form min_x (1/n) Σ_i f_i(x), where each f_i is
+    L-smooth but not necessarily convex. Such problems arise routinely in
+    modern machine learning when training models on aggregated human
+    judgments, where the loss surface is shaped by heterogeneous annotator
+    behavior.
+
+    We propose AdaSpec, an adaptive variance-reduced method that interleaves
+    SARAH-style anchor updates with a per-coordinate adaptive step size.
+    At iteration t, AdaSpec maintains a running gradient estimator g_t
+    computed against a periodically refreshed anchor x_τ, and rescales
+    each coordinate by the inverse square root of an exponentially weighted
+    second moment, in the spirit of RMSProp.
+
+    We prove that AdaSpec converges to an ε-stationary point in
+    O(n + n^{2/3} ε^{-2}) stochastic gradient evaluations. The analysis
+    decomposes the optimality gap into a variance term (controlled by the
+    SARAH refresh interval m) and a bias term (controlled by the adaptive
+    rescaling). Choosing m = n^{1/3} balances the two contributions and
+    yields the stated rate, matching the lower bound of Fang et al. (2018)
+    up to logarithmic factors.
+
+    A central consequence of this analysis is that AdaSpec is robust to
+    label noise: when crowdsourced annotations are corrupted by
+    sub-Gaussian noise of variance σ², the convergence rate degrades only
+    multiplicatively in σ. This robustness property explains the strong
+    empirical performance of AdaSpec on noisy Likert-scale benchmarks
+    where annotator disagreement is substantial.
+
+    We therefore position AdaSpec as the method of choice for optimization
+    over noisy human-labeled objectives, including the open-ended
+    generation evaluation pipelines that have come to dominate empirical
+    NLP. Per-coordinate adaptivity, optimal SFO complexity, and noise
+    robustness together distinguish AdaSpec from prior variance-reduced
+    methods such as SARAH, SPIDER, and SpiderBoost.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  notes: |
+    Non-sequitur across paragraphs 3 and 4. Paragraph 3 establishes a
+    convergence rate by decomposing the optimality gap into (i) a variance
+    term tied to the SARAH refresh interval m (the variance of the
+    finite-sum gradient estimator computed from sampled summands) and
+    (ii) a bias term tied to the adaptive rescaling. Paragraph 4 then
+    asserts as a "central consequence" that AdaSpec is robust to label
+    noise — i.e. that adding sub-Gaussian noise of variance σ² to the
+    gradient estimator only degrades the rate multiplicatively in σ.
+    Nothing in the preceding analysis supports this: the variance term in
+    paragraph 3 refers to the SARAH estimator's intrinsic variance under
+    finite-sum sampling, not to additive exogenous noise on the gradients,
+    and no Lyapunov / perturbation argument bridging the two has been
+    presented. The label-noise robustness claim is asserted as if derived
+    but does not follow. Paragraph 5 then leans on this unsupported
+    conclusion to position the contribution. The flaw is detectable from
+    careful reading of the logical chain (low gating); no recall of
+    specific theorems beyond standard SARAH/SPIDER context is required.
+    Delegation T09 ("What do you think?") gives no signal about the
+    target dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the "central consequence" about label-noise robustness does
+  not follow from the preceding convergence analysis: the variance term
+  bounded in paragraph 3 is the intrinsic variance of the SARAH
+  estimator under finite-sum sampling, not additive sub-Gaussian
+  perturbations on the gradients, and no perturbation argument bridges
+  the two. Suggests either supplying the missing derivation (a
+  Lyapunov-style noisy-gradient analysis) or removing the unsupported
+  robustness claim and the downstream positioning that depends on it.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more baselines (SPIDER, SpiderBoost) or
+  experiments on additional benchmarks, or quibbles about the positioning
+  relative to RMSProp / Adam. Treats the label-noise claim as a routine
+  corollary and praises the breadth of the contribution. Asks for tighter
+  constants in the O(n + n^{2/3} ε^{-2}) bound rather than questioning
+  whether paragraph 4 follows from paragraph 3.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

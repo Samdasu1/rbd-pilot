@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_304",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1969,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 34288,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.7\": 1.0, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 1.0}}\n\nCitation check on the six references in the passage. I verified each against what is publicly known about the cited work; flagged items range from \"likely correct but worth double-checking the exact venue/page\" to \"appears fabricated or misattributed.\"\n\n**1. Gray and Suri, 2019** \u2014 \"crowdsourcing platforms have become central to constructing parallel corpora for low-resource language pairs\"\n- Likely intended referent: Mary L. Gray and Siddharth Suri, *Ghost Work: How to Stop Silicon Valley from Building a New Global Underclass* (Houghton Mifflin Harcourt, 2019). The book is about crowdwork generally; it is not specifically about parallel corpus construction for low-resource MT. The citation supports the existence of crowdsourcing platforms but does not directly support the narrower claim being made. Recommend either (a) softening the in-text claim to \"crowdsourcing platforms underpin much modern data work (Gray and Suri, 2019), including parallel corpus construction\u2026\" or (b) replacing with an MT-specific reference (e.g., Pavlick et al. 2014 on language demographics of MTurk workers, or work from FLORES / NLLB / Masakhane on low-resource parallel data collection).\n\n**2. Kocmi et al., 2022** \u2014 WMT22 General Translation task\n- Plausible and almost certainly correct: Tom Kocmi et al., \"Findings of the 2022 Conference on Machine Translation (WMT22),\" *Proceedings of the Seventh Conference on Machine Translation*, 2022. Confirm exact author list and title in the references section.\n\n**3. Papineni et al., 2002** \u2014 BLEU\n- Correct canonical citation: Kishore Papineni, Salim Roukos, Todd Ward, Wei-Jing Zhu, \"BLEU: a Method for Automatic Evaluation of Machine Translation,\" ACL 2002. No issue.\n\n**4. Rei et al., 2020** \u2014 COMET\n- Correct: Ricardo Rei, Craig Stewart, Ana C. Farinha, Alon Lavie, \"COMET: A Neural Framework for MT Evaluation,\" EMNLP 2020. No issue.\n\n**5. Kowalski et al., 2019** \u2014 \"in their original COMET formulation\"\n- This appears to be **fabricated or misattributed**. COMET was introduced by Rei et al. in 2020 (cited immediately above), not by anyone named Kowalski in 2019. There is no well-known \"Kowalski et al. 2019\" paper that originated COMET or established that \"neural evaluation metrics are sensitive to reference quality.\" The sentence also contradicts itself by attributing the \"original COMET formulation\" to a 2019 paper while the COMET paper is 2020. Recommend deleting this citation entirely and either (a) dropping the claim or (b) replacing it with a real source on reference-quality sensitivity of neural metrics \u2014 e.g., Freitag et al. 2020 (\"BLEU might be Guilty but References are not Innocent,\" EMNLP 2020) or Freitag et al. 2021 on expert MQM annotation.\n\n**6. Liu and Tang, 2024** \u2014 \"watermarking-based detection for LLM-generated translation outputs in shared task submissions\"\n- I cannot verify this reference. No widely indexed 2024 paper by \"Liu and Tang\" on watermarking LLM-generated translations in shared tasks is known to me. It may exist (the name is common and 2024 is recent), but the specificity of the claim \u2014 watermarking applied to shared-task MT submissions \u2014 is unusual and would be a notable contribution if real. Recommend the authors verify the citation key resolves to a real paper with the described content; if not, replace with an actual reference (e.g., Kirchenbauer et al. 2023 on LLM watermarking generally, or work on detecting LLM-generated MT outputs such as Macketanz et al. or shared-task organizer reports flagging suspected LLM submissions).\n\n**Additional observations not strictly about citations but relevant to scholarship:**\n- The phrase \"To our knowledge, this is the first systematic study of LLM contamination in MT reference data\" should be checked against concurrent work on data contamination in evaluation benchmarks (e.g., Sainz et al. 2023, Golchin and Surdeanu 2023) and on detecting LLM-generated text in crowdsourced datasets (e.g., Veselovsky et al. 2023, \"Artificial Artificial Artificial Intelligence: Crowd Workers Widely Use Large Language Models for Text Production Tasks\"). Veselovsky et al. is a near-direct precedent on the crowdworker-LLM-use side and arguably should be cited even if the MT-reference angle is novel.\n- Quantitative claims (\"approximately 18%\", \"1.2\u20132.4 BLEU points\", \"approximately 0.8 points\") are not citation issues but should be tied to specific tables/sections in the paper.\n\n**Items I could not verify and that should be checked against the actual references list / a literature search:**\n- Whether \"Liu and Tang, 2024\" resolves to a real paper matching the described content.\n- The exact title, venue, and author list of Kocmi et al. 2022 as written in your bibliography.\n- Whether the Gray and Suri citation in your bibliography points to *Ghost Work* or to a different paper of theirs that I am not aware of.\n- The \"Kowalski et al., 2019\" item is, on the evidence available to me, almost certainly wrong, but I cannot rule out that it refers to an obscure paper I am unaware of; even so, it cannot be the \"original COMET formulation,\" so the surrounding sentence needs rewriting regardless.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.0,
+      "R1.3": 0.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 1.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.7": "The delegation explicitly asks to check citations, making reference accuracy, attribution, and literature coverage load-bearing.",
+      "RX.1": "Citation checking must disclose uncertainty where bibliographic facts or source contents cannot be verified from the artifact alone.",
+      "RX.2": "The projection should avoid implying that unsupported citation or novelty claims have been validated.",
+      "RX.3": "The task is limited to citation-related responsibility and should not expand into rewriting, structural critique, or experiment evaluation.",
+      "RX.4": "Incorrect citation validation could misattribute work or propagate false scholarship, so harm avoidance remains active.",
+      "RX.5": "Citation checking depends on traceable provenance for cited works, claims, and attribution links."
+    }
+  }
+}

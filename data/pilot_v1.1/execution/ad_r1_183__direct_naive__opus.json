@@ -1,0 +1,15 @@
+{
+  "example_id": "ad_r1_183",
+  "condition": "direct_naive",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_direct_naive",
+  "input_tokens": 6,
+  "output_tokens": 909,
+  "cache_read_input_tokens": 13389,
+  "latency_ms": 12884,
+  "cost_usd": 0.0,
+  "output_text": "Revised the paragraph to eliminate pervasive redundancy (tautological definitions, repeated lists, and restated claims), tightening it by roughly 40% while preserving every substantive fact.\n\n---\n\n**Revised version:**\n\nIn this section we describe MolRoute, a benchmark for evaluating multi-LLM routing systems on drug discovery tasks. MolRoute provides a standardized evaluation protocol for routing-based systems applied to molecular property prediction and related workflows.\n\nThe benchmark covers three task families: ADMET property prediction, retrosynthesis planning, and molecular question answering. The ADMET subset spans solubility, permeability, and toxicity endpoints. The retrosynthesis subset draws single-step problems from USPTO-50K, where the router must dispatch each query to one of several candidate models. The molecular QA subset consists of property-focused questions that test whether the router can direct queries to the appropriate specialist.\n\nThe routing pool contains seven candidate LLMs spanning two categories: general-purpose models (GPT-4, Claude) and chemistry-specialized models (Galactica and a fine-tuned Llama variant). This mix lets us assess whether routers can effectively choose between generalists and specialists for drug discovery tasks.\n\nOur headline metric is cost-adjusted accuracy \u2014 accuracy divided by per-query cost in dollars \u2014 which captures the accuracy/cost trade-off practitioners face in deployment. We also report raw accuracy and raw cost separately.\n\nPreliminary results show that learned routers outperform fixed-model baselines on cost-adjusted accuracy by 18\u201324%, and this gain is consistent across all three task families.\n\n---\n\n**Key changes:**\n- Collapsed the three-sentence definitional opener (\"benchmark we constructed\u2026 benchmark we call MolRoute\u2026 benchmark designed to evaluate\u2026\") into one.\n- Removed the ADMET tautology (\"solubility, permeability, and toxicity\u2026 namely solubility, permeability, and toxicity\").\n- Cut the duplicated \"general-purpose and chemistry-specialized\" framing that appeared three times in one paragraph.\n- Deduplicated the two cost-adjusted-accuracy justifications into a single clause.\n- Removed the closing restatement that \"this is consistent across ADMET, retrosynthesis, and molecular QA\" since those three families were just named.\n\n**Uncertainty:** I assumed \"GPT-4\" and \"Claude\" are intentional names rather than placeholders for specific versions (e.g., GPT-4o, Claude 3.5 Sonnet); if the paper requires versioned model identifiers, those should be specified. I also did not verify the 18\u201324% figure or the USPTO-50K characterization against the underlying experiments.",
+  "projection_input": null
+}

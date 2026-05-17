@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_301",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2191,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29727,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 1.0, \"RX.1\": 0.7, \"RX.2\": 0.7, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: Reframed the conceptual story around the theoretical contribution as the load-bearing claim, demoted the benchmark-suite framing, and flagged where the current narrative overreaches.\n\n---\n\n**Reframed conceptual story (proposed)**\n\nThe paper is currently pitched as three things at once \u2014 a new method (FairCPO), a theoretical result (sublinear regret), and a community benchmark suite. These three framings pull in different directions and dilute each other. The strongest, most defensible spine is the theoretical one. I would recommend reorganizing the narrative around it as follows.\n\n*Core thesis.* Exposure-constrained ranking has, until now, only had asymptotic convergence guarantees. This paper's contribution is the first **sublinear (O(\u221aT)) regret bound** for an exposure-constrained ranker against the best feasible stochastic policy in hindsight, obtained by adapting constrained-MDP analysis to the slate-action structure of ranked retrieval. FairCPO is the algorithm that the bound is proved about; the empirical results on MSLR-WEB30K, Yahoo! LTR Set 1, and Istella-S are evidence that the algorithm is also practically competitive at matched exposure-violation budgets, not the headline finding.\n\n*Why this reframing.* The current draft's opening positions FairCPO as a method paper and only arrives at the regret bound in the second paragraph \u2014 yet the authors themselves say the principal contribution is theoretical. The framing should match. Leading with the theoretical gap (asymptotic-only guarantees) and the closing of that gap gives the paper a single, sharp claim; the method and the experiments then become the vehicle and the sanity-check, respectively.\n\n*Suggested three-beat structure for the abstract/intro:*\n1. **Gap.** Prior exposure-constrained rankers come with at most asymptotic convergence; no finite-time regret guarantee was known.\n2. **Result.** Under bounded relevance and a Slater condition, FairCPO \u2014 a primal-dual constrained policy optimization scheme with a trust-region primal step \u2014 achieves O(\u221aT) regret against the best feasible stochastic policy in hindsight. The proof lifts a constrained-MDP technique to slate actions.\n3. **Corroboration.** On three standard LTR corpora, the same algorithm matches or beats fairness-constrained baselines (1.4\u20132.7 NDCG@10 at matched exposure-violation budgets), so the theoretical guarantee is not bought at a practical cost.\n\n---\n\n**Issues with the current framing that the reframe should fix**\n\n1. *The benchmark-suite framing is doing too much work and should be cut back or split off.* The third paragraph escalates from \"we release code and data\" to \"FairCPO is a benchmark suite\" to \"future work should report on the FairCPO suite.\" That escalation is not earned within the paper: a benchmark becomes a benchmark through community adoption, not through self-designation, and recommending that other researchers structure their evaluations around your artifact in the same paper that introduces it is the kind of move reviewers and downstream readers will (rightly) push back on. I'd recommend (a) describing the release factually \u2014 repackaged corpora, seven baseline implementations, leaderboard server \u2014 and (b) dropping the recommendation that future work report on it. Let adoption decide.\n\n2. *\"Establish FairCPO as a benchmark suite\" conflates the method, the artifact, and the evaluation protocol.* These are three different objects and the paper is stronger if they are named separately. Consider distinct names for the algorithm vs. the released harness/leaderboard.\n\n3. *\"To our knowledge this is the first sublinear regret guarantee for any exposure-constrained ranker\"* is the load-bearing novelty claim and should be stated once, clearly, with the qualifiers visible: against the best feasible *stochastic* policy in hindsight, under bounded relevance and a Slater-type condition. Hiding the qualifiers makes the claim look broader than it is and invites a reviewer to find a counterexample under different assumptions.\n\n4. *Tighten the contribution count.* As written, the paper claims (i) a new method, (ii) a first-of-its-kind theorem, (iii) empirical SOTA, and (iv) a community benchmark. Four headline contributions in three paragraphs reads as overclaiming. Two \u2014 the theorem and the algorithm it analyzes \u2014 are enough; the experiments support them and the release is infrastructure.\n\n5. *\"Regret-bounded frontier we establish\"* is a phrase to retire. A single O(\u221aT) bound is a point, not a frontier, and the metaphor reads as marketing.\n\n---\n\n**Concrete recommendations (in priority order)**\n\n- Lead with the theoretical gap and the regret bound; demote the method description and the NDCG numbers to supporting roles.\n- State the assumptions of the theorem (bounded relevance, Slater condition, comparison class = best feasible stochastic policy in hindsight) in the same sentence as the bound itself.\n- Cut the self-designation as a benchmark suite and the recommendation that future work report on it. Keep the artifact release as a factual paragraph.\n- Separate the names of the algorithm and the released evaluation harness so readers can cite them independently.\n- Soften \"first sublinear regret guarantee for any exposure-constrained ranker\" to make the scope of \"any\" explicit (e.g., \"for exposure-envelope-constrained stochastic rankers in the slate-action setting\").\n\n---\n\n**Caveats on this reframe**\n\n- I have not verified the prior-work landscape, so the claim that only asymptotic convergence results exist for exposure-constrained ranking is taken at face value from the artifact; if there is a finite-time bound in adjacent work (e.g., bandit-style fair ranking, or constrained online LTR), the \"first sublinear regret\" framing will need to be narrowed further. Confirming this is a prerequisite to leading with the theoretical claim.\n- I have not assessed whether the proof technique actually closes the slate-action gap as described, or whether the Slater-type condition is mild enough to be reasonable in practice \u2014 both materially affect how strongly the theoretical contribution can be foregrounded.\n- The judgment that the benchmark-suite framing is overreach is based on the artifact's own text recommending downstream adoption; if the release has already seen independent uptake not described here, that calculus could change.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 1.0,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation directly asks to reframe the paper's conceptual story, which centers on thesis, gap, and contribution framing above the sentence level.",
+      "RX.1": "Any projection of a conceptual reframing task should preserve uncertainty about what can be inferred from the short delegation and artifact alone.",
+      "RX.2": "The responsibility includes avoiding inflated contribution or benchmark claims while reframing the conceptual story.",
+      "RX.3": "The task is limited to projecting responsibility for reframing, not actually rewriting or evaluating the artifact.",
+      "RX.4": "The projection should account for risks from misleading fairness-in-ranking claims or recommendations downstream.",
+      "RX.5": "The mapping should remain traceable to the delegation wording and the artifact's stated conceptual claims."
+    }
+  }
+}

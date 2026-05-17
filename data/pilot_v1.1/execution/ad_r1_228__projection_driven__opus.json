@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_228",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2740,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37311,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 1.0, \"R1.3\": 1.0, \"R1.6\": 0.6, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 0.9, \"RX.4\": 1.0, \"RX.5\": 0.8}}\n\nSummary: The artifact's core claim \u2014 that the panel has \"high predictive skill\" \u2014 does not follow from what is actually measured, and several downstream recommendations overreach. Below are the substantive problems, in order of severity, followed by suggested revisions.\n\n**1. The headline conflates inter-model agreement with predictive skill.**\n\nThis is the central defect. \"Skill,\" in the forecast-verification literature, refers to performance against an observed reference (e.g., hindcast vs. observations, or improvement over a baseline like climatology or persistence). What the artifact computes is `1 \u2212 (normalized inter-model standard deviation)` \u2014 a measure of *ensemble consensus*, not skill. Models can agree strongly and still be jointly wrong; shared structural biases (common parameterizations, shared ancestry of model code, shared forcing datasets) routinely produce confidently incorrect consensus. For end-of-century projections there is *no observation* to verify against, so \"predictive skill\" is not a quantity that can be estimated from the 2080\u20132100 spread at all.\n\nRecommended fix: rename the metric throughout to \"inter-model agreement\" or \"ensemble consensus,\" and remove every occurrence of \"skill,\" \"predictive skill,\" \"forecasts reliably,\" and \"high predictive skill.\" If a skill claim is wanted, it must be supported by an out-of-sample hindcast evaluation against observations, which the artifact does not report.\n\n**2. The conclusion contradicts the data the artifact itself presents.**\n\nThe text reports that two of six regions (Northeast Brazil, Southeast Australia) show sign disagreement across panel members, then excludes them from the headline and concludes the panel \"reliably forecasts regional precipitation change.\" A 33% sign-disagreement rate across the evaluated regions is incompatible with the headline \"high predictive skill \u2026 across all six regions \u2026 supporting its use for downstream adaptation planning.\" The exclusion is also methodologically circular: regions are dropped *because* they disagree, and the remaining agreement is then offered as evidence of reliability.\n\nRecommended fix: report the full six-region result as the headline. Either (a) frame the finding as \"agreement is high in four regions and low in two, with the latter tied to known structural uncertainty,\" or (b) if the two regions are genuinely out of scope, justify that exclusion *a priori* (not post hoc from the spread) and narrow the title and abstract accordingly.\n\n**3. The 10% claim is not supported by the reported quantity.**\n\nThe text states the panel \"agrees within roughly 10% on the sign and magnitude\" based on a mean agreement score of 0.78. A normalized-spread index of 0.78 does not translate to a 10% agreement window without additional assumptions (e.g., about the distribution shape, the normalization denominator, and whether \"10%\" refers to absolute precipitation, percent of climatology, or anomaly magnitude). As written, the inference is not derivable from what is reported.\n\nRecommended fix: either drop the \"within roughly 10%\" claim, or report the actual inter-model range (min, max, IQR) in physical units (mm/yr or % of 1995\u20132014 climatology) per region, and let the reader see the spread directly.\n\n**4. Two downstream claims go well beyond what consensus can support.**\n\n- *\"Adaptation planners can draw on its projections with confidence.\"* Confidence for adaptation requires calibrated uncertainty against observations, not internal agreement. Recommending adaptation use on the basis of ensemble consensus alone risks maladaptation in regions where shared model bias is plausible (notably tropical precipitation, monsoon onset, Sahel rainfall \u2014 three of which are in the panel).\n- *\"Further single-model development is not the bottleneck for actionable regional guidance.\"* This is a strong claim about research priorities that the analysis does not address. Inter-model agreement says nothing about whether the models are jointly correct or whether the remaining error budget is dominated by structural, forcing-scenario, or internal-variability sources.\n\nRecommended fix: remove both claims, or replace with a hedged statement: \"These results characterize the degree of inter-model agreement under SSP3-7.0; assessing fitness for adaptation use additionally requires hindcast validation and consideration of common-bias structures, which are outside the scope of this analysis.\"\n\n**5. Internal logical inconsistency in the exclusion rationale.**\n\nThe artifact says the two low-agreement regions reflect \"known structural uncertainty in monsoon and storm-track representation.\" If known structural uncertainty produces disagreement in those regions, the same class of structural uncertainty could be producing *spurious agreement* in West Africa (monsoon-influenced) and the Mediterranean (storm-track-influenced). The argument as written does not address why the same physical mechanisms would be reliable in some regions and not others.\n\nRecommended fix: either drop the structural-uncertainty appeal or extend it consistently and acknowledge that high agreement in West Africa and the Mediterranean may also be subject to it.\n\n**6. Missing methodological detail that should be present.**\n\n- Which CMIP generation? \"Latest CMIP-style ensemble\" is unspecific; CMIP6 vs. a downscaled subset materially affects interpretation.\n- How were the nine models selected from the broader ensemble? Selection on agreement (even implicitly) would inflate the consensus metric.\n- Are the nine models independent? Shared code lineage (e.g., MPI-derived, NCAR-derived families) means nine members may represent far fewer independent draws, which directly inflates the agreement statistic.\n- Region definitions (lat/lon boxes or IPCC AR6 regions?) and the seasonal vs. annual aggregation are not stated.\n- Internal variability vs. forced response: with only nine models and no initial-condition ensemble per model, internal variability cannot be separated from forced spread.\n\nRecommended fix: add a brief methods paragraph specifying ensemble generation, model selection criteria, independence treatment, region definitions, season, and how internal variability is handled.\n\n**7. Sentence-level prose suggestions.**\n\n- \"1 minus the spread, normalized by the regional climatology\" is ambiguous about the order of operations; write the formula explicitly.\n- \"supporting its use for downstream adaptation planning\" \u2014 in the abstract this is a recommendation, not a finding; move to a clearly labeled implications sentence and qualify.\n- \"We exclude these two regions from the headline summary statistics\" \u2014 say so in the abstract too, not only in the results; selective headline reporting without abstract-level disclosure is a presentation issue.\n- \"agree within roughly 10%\" \u2014 vague; quantify or remove.\n\n**Suggested minimal rewrite of the headline sentence:**\n\n> \"Across six target regions under SSP3-7.0, nine CMIP-class models show high inter-model agreement on end-of-century precipitation change in four regions (West Africa, South Asia, the Mediterranean, U.S. Southwest) and substantial disagreement, including sign disagreement, in two (Northeast Brazil, Southeast Australia). We interpret agreement as a necessary but not sufficient condition for use in adaptation planning; verification against observations and assessment of common-bias structures are required before such use.\"\n\n**Items I could not fully verify**\n\n- I cannot confirm whether the nine models in question are in fact from CMIP6 or a different ensemble, nor whether any of them share code lineage that would reduce effective ensemble size; the artifact does not name them.\n- The \"within roughly 10%\" figure may correspond to a defensible derivation from the agreement index under specific distributional assumptions that the artifact has omitted; without the underlying numbers I am treating it as unsupported, but it may be recoverable.\n- The characterization of monsoon and storm-track representation as the dominant source of disagreement in Northeast Brazil and Southeast Australia is plausible and consistent with the literature, but the artifact provides no citation and I have not independently verified it for this specific model panel.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation plausibly asks whether the headline thesis and contribution framing are appropriate for the reported results.",
+      "R1.2": "Checking the artifact centrally requires evaluating whether its premises, exclusions, and conclusions cohere logically.",
+      "R1.3": "The artifact makes strong claims from reported regional results, so checking support between evidence and claims is load-bearing.",
+      "R1.6": "A generic request to check a draft reasonably includes sentence- and paragraph-level clarity, flow, and wording issues.",
+      "RX.1": "Any projection of this broad request must preserve uncertainty about what kind of checking was intended.",
+      "RX.2": "The artifact contains strong forecasting and planning claims, making overclaim avoidance an always-active responsibility.",
+      "RX.3": "The response must stay within projection rather than performing the requested check or rewriting the artifact.",
+      "RX.4": "Because the artifact discusses climate adaptation planning, avoiding downstream harm from unsupported confidence claims is active.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's explicit claims."
+    }
+  }
+}

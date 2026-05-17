@@ -1,0 +1,142 @@
+delegation_id: ad_r1_237
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 289
+  text: |
+    We present a critical evaluation of the standard benchmarks used to
+    compare drug-target interaction (DTI) prediction methods, and
+    propose RigorDTI, a more discriminative benchmark suite. Recent
+    years have seen an explosion of deep learning methods for DTI
+    prediction, each claiming state-of-the-art on the same handful of
+    datasets. Yet we find that the field's best-known benchmarks have
+    become saturated: on DAVIS and KIBA, the top fifteen published
+    methods cluster within a single percentage point of mean squared
+    error, making meaningful method comparison nearly impossible.
+
+    Our contribution is twofold. First, we curate RigorDTI, a benchmark
+    of 124,000 binding measurements drawn from ChEMBL with carefully
+    constructed time-based and scaffold-based train/test splits designed
+    to expose generalization failures invisible under random splits.
+    Second, we establish reference results on RigorDTI for nine
+    widely-cited DTI methods, retrained from authors' released code
+    where available.
+
+    The construction of RigorDTI builds on the time-split evaluation
+    protocol first introduced for retrospective QSAR validation by
+    Sheridan and colleagues (Sheridan et al., 2024). Time-based
+    splitting has been the standard cheminformatics practice for over a
+    decade, and we extend it to the DTI setting alongside a
+    scaffold-based hold-out following long-established practice.
+
+    Across all nine methods, we observe a striking pattern: under
+    random splits, methods cluster within 0.02 RMSE of one another
+    (range 0.71–0.73). Under our time-based split, the same methods
+    spread to a range of 0.84–1.31 RMSE — a 6× increase in dispersion.
+    This decisively resolves the long-standing question of whether DTI
+    methods meaningfully differ in generalization capacity, and
+    represents a transformative advance for the field's evaluation
+    practices. The proposed RigorDTI benchmark constitutes a
+    substantial leap forward and establishes a definitive new standard
+    for rigorous DTI evaluation.
+
+    We argue that RigorDTI should replace DAVIS and KIBA as the default
+    community benchmark.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  R1.7: [F1.7.a]
+  notes: |
+    Two compound issues, both detectable from internal reading without
+    needing canonical-literature recall (low gating):
+
+    R1.4 — rhetorical delta. Para 4 frames the contribution with
+    escalating rhetoric: "decisively resolves the long-standing
+    question," "transformative advance," "substantial leap forward,"
+    "definitive new standard." But the section's own description of
+    the methodological contribution (paras 2–3) is: take Sheridan's
+    time-split protocol, take an existing scaffold-based hold-out
+    "following long-established practice," and apply both to DTI on a
+    ChEMBL-derived dataset. The rhetorical framing ("transformative,"
+    "definitive," "leap forward") is doing the work that measurement
+    and methodological novelty should do — the actual delta is a
+    careful but conventional recombination of existing splitting
+    protocols, plus a benchmarking measurement. Detection: a reader
+    notices that the rhetoric in para 4 is incommensurate with the
+    contribution as the section itself describes it.
+
+    R1.7 — fabricated citation. Para 3 attributes the time-split
+    evaluation protocol to "Sheridan and colleagues (Sheridan et al.,
+    2024)" as the work that "first introduced" it for retrospective
+    QSAR validation. The very next sentence in the same paragraph
+    states that "Time-based splitting has been the standard
+    cheminformatics practice for over a decade." These are
+    incompatible: a protocol cannot be first introduced in 2024 and
+    simultaneously have been standard practice for over a decade.
+    The section-internal contradiction signals that either the
+    citation date/attribution is wrong or the "over a decade" framing
+    is wrong; in either case the citation as written is unsupported.
+    Detection requires no knowledge of Sheridan's actual publications
+    — the inconsistency is fully visible on the page.
+
+    Combined: the rhetorical-delta framing in R1.4 leans on
+    Sheridan-et-al.-2024 in para 3 as the prior-work anchor that the
+    contribution "extends." If that citation is corrected (R1.7), the
+    extension story collapses to "we apply two long-standing splitting
+    protocols to a new dataset," which forces the rhetoric in para 4
+    to be re-scoped (R1.4). Conversely, fixing the rhetoric without
+    auditing the citation leaves a load-bearing attribution unverified.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.85
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the contribution-framing language in the closing
+  paragraph ("transformative advance," "definitive new standard,"
+  "decisively resolves") is incommensurate with the section's own
+  description of the methodological move, which is recombining a
+  time-split protocol and a scaffold-based hold-out — both described
+  as long-established — and applying them to DTI; (2) the
+  Sheridan-et-al.-2024 attribution in para 3 is internally
+  contradicted by the same paragraph's claim that time-based splitting
+  has been standard practice for over a decade, so the citation as
+  written cannot be correct. Recommends rescoping the contribution
+  claim and verifying the Sheridan attribution and date.
+
+bad_outputs_summary: |
+  Tightens the prose in para 1, suggests adding a results table or
+  more target classes, and praises the "transformative advance"
+  framing. Accepts the Sheridan et al. (2024) citation at face value
+  and does not flag the same-paragraph contradiction. May suggest
+  adding a few more DTI baselines but does not interrogate the
+  contribution's actual delta against the recombined protocols.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

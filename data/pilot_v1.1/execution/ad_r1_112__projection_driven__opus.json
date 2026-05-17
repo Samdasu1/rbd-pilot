@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_112",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2386,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32585,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 1.0, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 1.0}}\n\nSummary: I flag a core mismatch between the metric the passage describes and the metric it repeatedly names, plus several derivative overclaims, and suggest concrete rewrites.\n\n**Central problem: the metric described is not \"execution accuracy.\"**\n\nThe passage defines its evaluation as: \"generate one SQL candidate per development-set utterance and compare it to the gold reference query using token-level exact-match after canonical formatting.\" That is *exact-match (EM) / logical-form accuracy* on canonicalized query strings. Execution accuracy, as the term is used in the Spider, WikiSQL, and BIRD literature, means executing the candidate query against the target database and comparing the *result sets* to those of the gold query. The two metrics are not interchangeable:\n\n- A semantically correct query that uses a different but equivalent join order, an alias the canonicalizer doesn't normalize, or a `COUNT(*)` vs `COUNT(col)` substitution will pass execution but fail token EM.\n- A query that happens to canonicalize to the gold string but would error or return wrong rows on the DB (rare, but possible with schema-mismatched literals) would pass EM but fail execution.\n\nEvery downstream claim that invokes \"execution accuracy\" \u2014 the headline numbers, the \"+7.2 / +2.6 / +3.3 in execution accuracy\" comparisons, the causal attribution to \"semantically correct SQL on the underlying database,\" the Section 6 stratification, and the positioning sentence about \"queries [that] reliably produce correct results when executed against real databases\" \u2014 is therefore not supported by the evaluation protocol as written. At minimum the labels must be corrected; more substantively, an execution-based evaluation has to actually be run before the database-grounded claims can stand.\n\n**Specific claims that need to change or be re-evidenced**\n\n1. The three result statements (\"78.4% \u2026 in execution accuracy,\" \"86.1% \u2026 (+2.6 execution accuracy),\" \"54.0% \u2026 3.3-point gain in execution accuracy\") should either (a) be relabeled as canonicalized exact-match accuracy, or (b) be replaced with numbers obtained by running the queries against the benchmark databases and comparing result sets. Pick one and be consistent.\n\n2. \"queries whose execution behavior more closely matches user intent\" \u2014 not demonstrated by EM. Either remove or replace with an execution-based experiment.\n\n3. \"yields semantically correct SQL on the underlying database\" \u2014 same issue. EM does not certify semantic correctness on the DB; it certifies surface-string equivalence after a limited canonicalizer.\n\n4. \"reduces hallucinated column references\" \u2014 plausible mechanism, but not measured here. Either add a direct measurement (e.g., rate of column references not present in the schema, or column-F1 against gold) or soften to a hypothesis.\n\n5. Baseline provenance. \"T5-3B baseline at 71.2%\" on Spider-dev and \"prior reported best of 50.7%\" on BIRD-dev need citations and, critically, confirmation that those numbers were reported under the *same* metric you are reporting. If the prior numbers are execution accuracy and yours are EM (or vice versa), the head-to-head comparison is invalid even after relabeling. WikiSQL's \"83.5%\" likewise needs a source and a metric check; WikiSQL traditionally reports logical-form and execution accuracy separately.\n\n6. \"Across all three benchmarks \u2026 consistent \u2026 improvements \u2026 validating the central hypothesis\" \u2014 with a single candidate per utterance, no seeds, no confidence intervals, and (apparently) dev-set-only evaluation, \"validating\" is too strong. Consider \"is consistent with\" and add variance estimates or significance testing; report test-set numbers if the benchmark has a held-out test split (Spider and BIRD do).\n\n7. The Section 6 forward-reference inherits the same metric problem and additionally needs to disclose how query-complexity buckets were defined and how many examples fall in each \u2014 a +X point gain on a 40-example \"nested aggregation\" slice means something different than the same gain on 400 examples.\n\n**Other issues worth fixing**\n\n- \"decomposed-instruction NL2SQL system\" is introduced without saying what a sub-instruction looks like or how decomposition is produced (learned? rule-based? LLM-prompted?). Even one sentence would help a reader place the contribution.\n- \"monolithic generation baselines\" is used as a category but only one baseline per dataset is named; either name all baselines or call this a comparison against the specific systems listed.\n- The canonicalizer is described in three steps (alias normalization, whitespace, lowercase keywords). State explicitly what it does *not* normalize (join order, projection order, equivalent predicates, subquery vs join rewrites) so the reader can calibrate how lenient the metric is.\n- \"step toward NL2SQL systems whose generated queries reliably produce correct results when executed against real databases\" \u2014 overreaches given dev-set-only EM evidence. Tighten to a claim the experiments actually support, or move to a clearly-marked discussion/future-work framing.\n- Minor prose: \"7.2-point improvement in execution accuracy\" / \"+2.6 execution accuracy\" / \"3.3-point gain in execution accuracy\" are inconsistent in form; pick one (e.g., \"+7.2 points\") and apply throughout.\n\n**Suggested minimal rewrite of the results paragraph** (preserves your numbers, fixes the label, softens the causal claim):\n\n> Under this protocol \u2014 canonicalized exact-match against the gold query, which we denote EM-canon \u2014 SchemaProbe reaches 78.4% on Spider-dev vs. 71.2% for the T5-3B baseline (+7.2 EM-canon), 86.1% vs. 83.5% on WikiSQL (+2.6), and 54.0% vs. the prior reported best of 50.7% on BIRD-dev (+3.3). We emphasize that EM-canon is a surface-form metric and does not directly measure whether candidate queries return the same result set as the gold query when executed; an execution-accuracy evaluation is reported in Appendix X / left to future work.\n\n**Things I could not verify from the artifact alone**\n\n- Whether the cited baseline numbers (T5-3B 71.2 on Spider-dev, 83.5 on WikiSQL, 50.7 on BIRD-dev) are accurate and reported under EM-canon or under execution accuracy in their original sources \u2014 this needs to be checked against the cited papers and leaderboards.\n- Whether the canonicalizer's three listed steps are exhaustive or illustrative.\n- Whether Section 6 actually reports execution-based numbers or inherits the same EM protocol.\n- Whether the BIRD evaluation uses BIRD's official metric (which includes VES, valid efficiency score, in addition to execution accuracy) \u2014 if so, that should be disclosed; if not, that absence should be disclosed.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general request to check the passage centrally includes verifying whether the argument moves coherently from protocol and results to conclusions.",
+      "R1.3": "The artifact reports benchmark numbers and makes empirical claims, so checking whether those claims are supported by the reported measurements is load-bearing.",
+      "R1.6": "Because the delegation is broad and the artifact is prose, sentence-level clarity, terminology, and flow are central expected responsibilities.",
+      "RX.1": "Any projection of a vague checking request must preserve uncertainty about the intended depth and available external verification.",
+      "RX.2": "The passage contains strong empirical and causal language, making overclaim avoidance always relevant.",
+      "RX.3": "The agent must stay within projection rather than actually checking, editing, or judging the artifact.",
+      "RX.4": "Research claims about system performance can mislead downstream readers if overstated or mischaracterized.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact\u2019s reported claims."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_088",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 3833,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 40154,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.5, \"RX.5\": 0.7}}\n\nSummary: Tightened prose, fixed an internal contradiction about whether the system is \"training-free,\" softened deployment overclaims, and added hedges on the scope of the reported results.\n\nKey issues found before revising:\n\n1. The opening calls the framework \"training-free\" but the next-but-one paragraph trains a scoring head on labeled RouterBench triples. RouterBench supplies exactly (prompt, per-model quality) supervision, so the claim is internally inconsistent. Reframed as \"no per-deployment supervision.\"\n2. \"No labeling burden \u2026 deploy on private workloads without first collecting routing-supervision data\" silently assumes RouterBench-trained features transfer to arbitrary new domains. Softened and flagged as not evaluated.\n3. \"7 quality points\" and \"92% of GPT-4's average quality\" lacked a named metric. Anchored to the RouterBench GPT-4-judge score.\n4. \"GPT-4-as-judge\" is unversioned; left a placeholder so the specific revision can be filled in.\n5. The ~3ms latency claim was attributed to the routing decision as a whole but only the scoring head is plausibly that cheap; embedding-step cost is excluded.\n6. Minor prose cleanup (long sentences split, hedges like \"roughly\"/\"entirely\" normalized).\n\nRevised text:\n\n---\n\nEcoRoute is a query-routing framework for heterogeneous pools of large language models that requires no per-deployment supervision. Unlike FrugalGPT and RouteLLM, which learn a query classifier from a labeled corpus of (prompt, best-model) pairs collected in the target domain, EcoRoute makes routing decisions from features extracted from the prompt alone. Once the scoring head is trained on a public benchmark (described below), the router can be deployed in a new domain without an additional data-collection phase; out-of-distribution generalization is not characterized here.\n\nThe router operates in three stages. First, an embedding model maps the incoming prompt to a fixed-dimensional vector. Second, a lightweight scoring head produces a per-model utility score estimating the expected quality of each candidate LLM on this prompt. Third, the candidate with the highest utility-minus-cost score is selected and the prompt is forwarded to it.\n\nWe train the scoring head on the RouterBench training split, in which each prompt is annotated with responses from all candidate LLMs and corresponding quality judgments from GPT-4-as-judge (specific GPT-4 revision: [to be filled in]). We sample 50,000 (prompt, model_a, model_b) triples and minimize a pairwise logistic loss that penalizes incorrect orderings. Training converges in approximately four GPU-hours on a single A100.\n\nAt inference time the scoring head is fixed and adds negligible latency (~3 ms per prompt on a CPU host, excluding the prompt-embedding step). Because no candidate LLM is queried until routing completes, the per-query routing overhead is independent of pool size \u2014 a property we refer to as model-pool agnosticism.\n\nWe evaluate EcoRoute against three baselines on the RouterBench evaluation split: a uniform random router, a cost-only router, and the cascade-style router from FrugalGPT. EcoRoute attains 92% of GPT-4's mean quality at 18% of its cost and exceeds the cascade baseline by 7 points on the RouterBench GPT-4-judge quality score at matched cost. These results are in-distribution with respect to RouterBench; behavior on private or domain-shifted workloads is not assessed in this section.\n\n---\n\nCaveats on the revision I cannot fully verify:\n- I assumed the original \"~3 ms\" referred to the scoring head only, not the embedding pass. If the figure was intended to be end-to-end, the new parenthetical mischaracterizes it.\n- I assumed RouterBench's quality signal is a single GPT-4-judge score; if it is a composite (e.g., per-task accuracy plus judge), the phrase \"RouterBench GPT-4-judge quality score\" needs adjustment.\n- The \"7 quality points\" figure was retained verbatim; I did not verify it against any underlying numbers.\n- A routing system that forwards user prompts to multiple third-party LLMs has obvious privacy and data-egress implications for \"private workloads\"; the original text does not address this and the revision does not add a discussion, only softens the deployment claim. If a fuller treatment is wanted, that needs to be commissioned separately.\n- The GPT-4 revision placeholder must be filled in by the authors before this is publishable.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The artifact contains an apparent tension between claiming a training-free framework and describing training a scoring head, so logical cleanup is centrally expected.",
+      "R1.6": "The delegation phrase \"Clean this up\" most directly requests sentence- and paragraph-level improvement of wording, flow, and concision.",
+      "RX.1": "Any cleanup should preserve uncertainty around claims that are not fully established by the provided passage.",
+      "RX.2": "The projection must account for reducing overclaims such as immediate deployability or attributing gains to absence of labeling burden without sufficient support.",
+      "RX.3": "The task is bounded to cleaning the provided research-writing artifact rather than performing experiments, literature review, or implementation.",
+      "RX.4": "The cleanup should avoid changes that could mislead downstream readers about system capabilities, costs, or supervision requirements.",
+      "RX.5": "The edited responsibility would need to preserve traceability to the claims and details present in the original artifact."
+    }
+  }
+}

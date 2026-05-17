@@ -1,0 +1,125 @@
+delegation_id: ad_r1_168
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 312
+  text: |
+    We construct PINNBench, a benchmark for physics-informed neural
+    network architectures spanning four canonical PDE families: linear
+    heat conduction, viscous Burgers', the second-order wave equation,
+    and the incompressible Navier–Stokes system at low Reynolds numbers.
+    For each family we instantiate twelve problem variants drawn from
+    forward simulation, inverse coefficient recovery, and parameter
+    identification tasks, yielding 48 reference problems each paired
+    with a closed-form or high-fidelity pseudospectral reference
+    solution.
+
+    Each problem is specified by a manifest declaring (i) the governing
+    PDE in residual form, (ii) initial and boundary conditions, (iii)
+    the spatial-temporal sampling grid for collocation, residual, and
+    evaluation points, and (iv) the reference solution with an accepted
+    tolerance. The manifest format follows the YAML schema introduced
+    in Appendix B and is verified by a constraint checker that confirms
+    PDE residual evaluation against a reference Chebyshev pseudospectral
+    solver, ensuring that any framework-agnostic submission can be
+    scored deterministically.
+
+    In our experiments, baseline PINN architectures achieve mean relative
+    L2 errors of 4.2e-3 on heat, 1.1e-2 on Burgers', 8.7e-3 on wave,
+    and 3.4e-2 on Navier–Stokes, with substantial variance across
+    initialization seeds. Architectures incorporating random Fourier
+    feature embeddings reduce the Navier–Stokes error to 1.8e-2.
+    Training-time differences across architectures range from 1.3× to
+    6.1×, and adaptive collocation strategies dominate fixed-grid
+    approaches on stiff problems.
+
+    To enable reproducible evaluation, the benchmark supplies a thin
+    wrapper interface, BenchmarkRunner, that loads a manifest,
+    instantiates the solver under test, fixes the random seed, and
+    returns a results dictionary containing pointwise residual
+    statistics, evaluation-set L2 error, and training wall-clock time.
+    Adapters for JAX, PyTorch, and Julia/Lux are provided so that
+    submissions need not commit to a framework choice.
+
+    Finally, the benchmark commits to a single composite scoring metric,
+    S = 0.5·L2 + 0.3·log(time) + 0.2·residual_max, designed to
+    discourage architectures that achieve low solution error at the
+    cost of unreasonable training budgets.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.b]
+  notes: |
+    Misplaced section. The section is titled and framed as benchmark
+    construction (manifest schema, residual checker, runner interface,
+    scoring metric) — i.e. methods/design content. Paragraph 3 ("In
+    our experiments, baseline PINN architectures achieve mean relative
+    L2 errors of 4.2e-3 on heat...") is an experimental-results
+    paragraph: it reports per-PDE error numbers, ablation-style
+    comparisons across Fourier features, training-time ratios, and a
+    qualitative finding about adaptive vs. fixed collocation. That
+    block belongs in the Experiments / Results section of the paper,
+    not in the Benchmark Construction section. Its presence here
+    conflates "what the benchmark is" with "what we measured on it"
+    and forces the reader to disentangle design commitments from
+    empirical findings — and, more importantly, lets a reader come
+    away believing the construction section reports validated baseline
+    behavior, which is a contribution-claim conflation.
+    Detection: any careful linear read notices that paragraph 3
+    abruptly shifts from "the benchmark provides X" to "we measured Y,"
+    and that paragraphs 4 and 5 then return to construction details
+    (runner interface, scoring metric). No canonical recall required
+    (low gating). The delegation "Make this stronger." is generic
+    enough not to signal structural issues, so R1.5 is not leaked.
+    The natural fix is to move paragraph 3 wholesale into the
+    Experiments section, not to polish or trim it in place.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the experimental-results paragraph (the one reporting
+  per-PDE L2 errors, Fourier-feature comparisons, and training-time
+  ratios) does not belong in a benchmark-construction section and
+  proposes moving it into the Experiments / Results section. Notes
+  that the surrounding paragraphs are about design (manifest schema,
+  runner interface, scoring metric) and that the misplaced block
+  conflates "what the benchmark is" with "what we observed on it."
+  Provides a concrete relocation rather than line-level edits.
+
+bad_outputs_summary: |
+  Polishes the prose, sharpens the transition sentences, or suggests
+  reporting more PDE families or more baseline architectures. Treats
+  the embedded results paragraph as a normal part of methods and only
+  recommends tightening its numbers, adding error bars, or rewording
+  the scoring-metric paragraph. Does not flag that an entire paragraph
+  belongs in a different section.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_073",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1733,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 22565,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: Light prose polish of the four paragraphs, plus flags on phrasing that risks overstating what the described system actually demonstrates.\n\nPolished prose (suggested revision)\n\nWe present ProtoCAMEL, a type system for verifying communication protocols between cooperating LLM agents. As multi-agent systems built on role-playing prompts scale to longer conversations, undetected protocol violations \u2014 an agent stepping outside its assigned role, or emitting a message of an unexpected shape \u2014 can accumulate and degrade task completion. ProtoCAMEL aims to prevent such violations by checking, at the language level, that only well-typed messages flow between roles.\n\nThe system operates as follows. Each agent is wrapped by a dispatcher that intercepts outgoing messages before they are forwarded to a peer. On dispatch, the message string is parsed into a JSON-like structure, and a sequence of runtime predicates is evaluated against it: that the role field matches the sender's declared role, that the body is non-empty, and that any tool-call payload references a permitted tool name. If any predicate fails, the dispatcher rolls the message back, re-prompts the originating agent with a corrective instruction, and logs the violation for offline analysis.\n\nWe instantiate ProtoCAMEL on a two-agent task-solver pair (a \"user\" role and an \"assistant\" role) and evaluate it on a 500-task benchmark adapted from a single-agent instruction-following suite to a cooperative two-agent setting. Across these trials, ProtoCAMEL flagged 412 messages that failed at least one predicate; end-to-end task success rose from 61.4% (no checking) to 78.2%.\n\nThese results suggest that exposing a type system for inter-agent messages to designers is a practical route to making role-playing systems more robust at scale. The framework's chief advantage is that violations of the specified predicates are caught at dispatch time, rather than being diagnosed post-hoc from conversation logs.\n\nNotes on word choices and claims that need tightening\n\n- \"safe communication protocols\" in the opening sentence overloads \"safe.\" The mechanism described checks role consistency, non-emptiness, and tool-name whitelisting \u2014 that is a well-formedness check, not a safety property in any standard sense. I removed \"safe\" to avoid promising more than the predicates deliver.\n- \"type system\" is used loosely. What is described is runtime predicate checking on parsed JSON-like strings \u2014 closer to a dynamic schema/contract checker than a static type system. I left the term in place since the artifact is verbatim, but the authors should consider qualifying it (e.g., \"runtime-checked type discipline\") or defending the choice.\n- \"caught 412 protocol violations that would otherwise have propagated downstream\" presumes the counterfactual. The system only observes messages it intercepts; whether each of the 412 would have caused downstream harm is not established by the described setup. The revision says \"flagged 412 messages that failed at least one predicate,\" which is what the procedure actually measures.\n- \"eliminating an entire class of failures\" is stronger than the evidence. Success rose from 61.4% to 78.2%, so roughly 21.8% of tasks still fail \u2014 a substantial residual. The class is reduced, not eliminated. I cut that clause.\n- \"ensuring at the language level\" \u2192 softened to \"checking \u2026 at the language level.\" The mechanism is enforcement-by-rollback-and-reprompt, which does not guarantee a well-typed message ever emerges; it only guarantees no ill-typed message is forwarded. Worth being explicit about that distinction somewhere in the paragraph.\n- \"500-task adaptation of single-agent instruction following\" is ambiguous about provenance. I rephrased to make the adaptation step explicit, but the source benchmark should be named in the full paper.\n- Minor prose: \"Upon dispatch\" \u2192 \"On dispatch\"; \"produces\" \u2192 \"emits\"; \"one of a permitted set of tool names\" \u2192 \"a permitted tool name\"; smart quotes around role names normalized to straight quotes for consistency.\n\nItems I did not act on\n\n- I did not reorganize the paragraph order, expand coverage of related work, or add citations, since those were out of scope for this pass.\n- I did not assess novelty against prior agent-protocol or schema-validation work.\n\nThings I could not verify\n\n- Whether \"ProtoCAMEL\" is the authors' intended name or a placeholder, and whether the suggested softening of \"type system\" is acceptable to them \u2014 these are authorial calls.\n- Whether the 61.4% \u2192 78.2% improvement is statistically meaningful at n=500; the paragraph reports point estimates only, and a confidence interval or paired comparison would strengthen the claim. I flag this but did not introduce numbers I cannot source.\n- Whether any of the 412 flagged messages were false positives (well-intentioned messages that the predicates rejected). If a non-trivial fraction were, the rollback-and-reprompt loop may itself be costing task success, and the headline gain understates a tradeoff. The paragraph as written does not address this.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the paragraph be treated primarily as a writing-polish request, an argument/claims check, or a contribution-positioning review?",
+    "rationale": {
+      "R1.6": "The delegation targets a paragraph and most naturally implies sentence- or paragraph-level review of wording, flow, and clarity.",
+      "RX.1": "Any response should disclose uncertainty because the requested kind of review is underspecified.",
+      "RX.2": "The response should avoid overstating what can be inferred from a single paragraph and limited delegation.",
+      "RX.3": "The response should stay within the paragraph-level inspection implied by the delegation.",
+      "RX.4": "The response should avoid advice that could encourage unsupported or misleading research claims.",
+      "RX.5": "The response should keep observations traceable to the provided paragraph rather than external assumptions."
+    }
+  }
+}

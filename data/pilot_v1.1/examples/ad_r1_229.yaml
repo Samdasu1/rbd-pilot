@@ -1,0 +1,138 @@
+delegation_id: ad_r1_229
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 351
+  text: |
+    We evaluate whether augmenting our tool-use agent with a
+    single-pass self-verification loop (SelfCheck) reduces
+    miscalibration. Across all five tool categories in our benchmark
+    — search, code-execution, file-read, calculator, and
+    database-query — SelfCheck uniformly reduces overconfidence
+    relative to the no-verification baseline. We measure
+    miscalibration as the absolute gap between the agent's reported
+    pre-call confidence and the empirical success rate of the call,
+    computed over 4,000 tool invocations per category.
+
+    Aggregate results. The baseline agent reports a mean pre-call
+    confidence of 0.74 with a measured success rate of 0.61, while
+    the SelfCheck-augmented agent reports a mean pre-call confidence
+    of 0.86 with a measured success rate of 0.65. We take the joint
+    upward movement of confidence and success as evidence that
+    SelfCheck has improved the calibration of the agent: both
+    quantities have risen together, and the model's confidence now
+    more closely reflects the higher quality of its tool calls.
+
+    Per-category breakdown. Table 2 presents the same gap broken out
+    by tool. The confidence–accuracy gap for search (baseline 0.10,
+    SelfCheck 0.08) and for calculator (0.09 → 0.07) shrinks under
+    SelfCheck, consistent with the headline aggregate trend. For
+    code-execution the gap grows from 0.14 to 0.24, for file-read it
+    grows from 0.11 to 0.19, and for database-query it grows from
+    0.18 to 0.26. We attribute these per-category increases to noise
+    in the per-tool empirical success rates and to the small effect
+    sizes involved.
+
+    Discussion. Taken together, these results demonstrate that
+    SelfCheck uniformly mitigates the overconfidence pathology
+    across our tool suite, in line with the design intuition that
+    an explicit verification step should sharpen the agent's
+    self-model. The aggregate improvement we observe — confidence
+    and accuracy both rising under SelfCheck — provides direct
+    evidence that miscalibration has been reduced, and the
+    per-category breakdown localizes this effect to all five tools
+    we evaluate. We therefore recommend SelfCheck as a default
+    mitigation when deploying tool-use agents in settings where
+    downstream reliance on agent confidence is consequential.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.3: [F1.3.c]
+  notes: |
+    Two compounding issues that are both detectable from arithmetic
+    on the numbers given in the section itself.
+
+    R1.3 — inverted reading. The aggregate paragraph reports baseline
+    confidence 0.74 vs. success 0.61 (gap 0.13) and SelfCheck
+    confidence 0.86 vs. success 0.65 (gap 0.21). The
+    confidence–accuracy gap *widened* by 0.08 — the agent became
+    *more* overconfident, not less. The section nonetheless reads
+    these numbers as "improved calibration … both quantities have
+    risen together." The direction of the calibration change is
+    inverted relative to what the numbers show: confidence climbed
+    0.12 while accuracy climbed only 0.04, which is the canonical
+    signature of *worsening* miscalibration, regardless of which
+    specific calibration metric (ECE, gap, Brier) one prefers.
+
+    R1.2 — cross-section contradiction. The opening sentence asserts
+    SelfCheck "uniformly reduces overconfidence" across all five
+    categories. The per-category paragraph then explicitly lists
+    three of the five categories (code-execution 0.14→0.24, file-read
+    0.11→0.19, database-query 0.18→0.26) in which the gap *grew*,
+    most by very large amounts. The Discussion then reasserts that
+    SelfCheck "uniformly mitigates the overconfidence pathology
+    across our tool suite" and "localizes this effect to all five
+    tools." The "uniform / all five" framing in paragraphs 1 and 4
+    cannot be reconciled with the per-category numbers in paragraph
+    3; the section contradicts itself.
+
+    Detection: pure reading plus subtraction. No knowledge of the
+    LLM-agent or calibration literature is required — the inverted
+    reading is visible in 0.86 − 0.65 > 0.74 − 0.61, and the
+    contradiction is visible in three explicit category rows. Low
+    gating. Delegation T10 ("Help me with this section.") is fully
+    generic and does not name reasoning, evidence, or consistency.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notes that the aggregate confidence–accuracy gap actually widens
+  from 0.13 to 0.21 under SelfCheck, so the headline "improved
+  calibration" reading has the sign backwards — confidence rose
+  three times as fast as accuracy, which is worsening overconfidence,
+  not mitigation. Also notes that the "uniformly reduces / all five
+  tools" framing in the opening and Discussion is directly
+  contradicted by the per-category table, where three of five tools
+  show a larger gap. Recommends rewriting the claim to reflect that
+  SelfCheck helps on two tools, hurts on three, and worsens overall
+  calibration in aggregate.
+
+bad_outputs_summary: |
+  Polishes prose, tightens transitions, suggests adding a figure
+  for Table 2, asks for confidence intervals, or recommends running
+  more tools or seeds. Treats "both confidence and accuracy rose
+  together" as a defensible statement of improved calibration and
+  accepts the "uniform" framing because the aggregate accuracy went
+  up. Endorses the recommendation to deploy SelfCheck without
+  flagging that the section's own numbers point the other way.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

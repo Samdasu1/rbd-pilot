@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_117",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2532,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32916,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.95, \"R1.6\": 0.7, \"RX.1\": 0.95, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.8, \"RX.5\": 0.85}}\n\nSummary: I reviewed the section as written and flagged a set of internal contradictions between the headline claims and the reported numbers, plus several places where the prose overreaches what the evidence supports.\n\n**Headline claim contradicts the reported results.**\nThe opening paragraph asserts \"uniformly improved execution accuracy over single-model baselines across the full suite of text-to-SQL benchmarks.\" The body then reports three results that contradict this:\n\n- WikiSQL: 89.1% vs. baseline 89.6% \u2014 a 0.5-point regression.\n- SParC: 64.2% vs. baseline 65.1% \u2014 a 0.9-point regression.\n- KaggleDBQA: 38.2% with \"no baseline number reported in this section\" \u2014 so improvement is unverified, not established.\n\nOf the five benchmarks named, only two (Spider-dev, BIRD-dev) actually show gains. The \"uniformly improved\" wording must be retracted. A faithful version would read something like: \"RouteSQL improves execution accuracy on Spider-dev (+2.3) and BIRD-dev (+1.5), is approximately on par on WikiSQL (\u22120.5) and SParC (\u22120.9), and lacks a direct baseline comparison on KaggleDBQA.\"\n\n**\"Strictly dominant\" / \"dominates monolithic deployment\" is unsupported and should be removed.**\nStrict dominance requires being no worse on every axis and strictly better on at least one. The reported data show two regressions on quality (small but real) traded against a cost reduction. That is a Pareto tradeoff, not dominance. The same applies to the closing claim that routing \"dominates monolithic deployment for structured-query workloads\" \u2014 the section provides no evidence for the general workload claim, only for five SQL benchmarks under one baseline configuration. Recommend replacing with: \"RouteSQL offers a favorable cost-quality tradeoff: substantial cost reduction with mixed accuracy effects across benchmarks.\"\n\n**The 38% cost-reduction figure needs scope qualification.**\n$0.011 \u2192 $0.0068 is a 38.2% reduction, which is arithmetically fine, but the prose should make clear (i) which query mix this average is taken over, (ii) which API/list-price assumptions back the $0.011 figure for GPT-4, and (iii) whether the Qwen-7B inference cost includes hosting/amortization or is marginal-only. As written, a reader cannot reproduce the number. Also: \"roughly 71% of queries routed to the smaller model\" and \"38% cost reduction\" together implicitly assume the remaining 29% are priced at the GPT-4 rate \u2014 worth stating, not implying.\n\n**\"No quality loss\" on simpler queries is asserted without evidence in this section.**\n\"Simpler queries \u2026 are reliably handled by the smaller backend with no quality loss\" is a strong empirical claim. The section reports only aggregate per-benchmark numbers; it does not report a stratified comparison (e.g., accuracy on single-table/no-aggregation queries for the small backend vs. the large backend). Either add the stratified evidence or soften to \"appear to be handled\" / \"the router prefers the smaller backend for these queries.\"\n\n**\"Strongest deployment-ready \u2026 to date\" is unsupported here.**\nThe section benchmarks against exactly one baseline family (DAIL-SQL/GPT-4). A \"strongest to date\" claim requires comparison against the current frontier of routing systems and recent specialized SQL systems, not a single prompting baseline. Recommend deleting or scoping the claim to \"outperforms the DAIL-SQL/GPT-4 baseline on 2 of 5 benchmarks while reducing cost.\"\n\n**Router-overhead claim needs a comparator.**\n\"~12ms of overhead \u2026 negligible relative to backend latency\" \u2014 backend latency is not reported in this section, so \"negligible\" is asserted rather than shown. Either give the backend latency figure or say \"small in absolute terms.\"\n\n**Baseline-selection wording is loose.**\n\"The strongest single-model baseline available for each suite \u2014 GPT-4 with the DAIL-SQL prompting strategy\" reads as if DAIL-SQL/GPT-4 is independently the strongest on each of the five suites. This is not obviously true for WikiSQL or SParC, where suite-specific systems have historically led. Either cite the per-suite SOTA being compared to, or change to \"a strong, widely used single-model baseline.\"\n\n**Prose-level fixes.**\n- \"a learned cost-quality tradeoff\" \u2192 \"a learned cost-quality routing policy\" (the tradeoff is the property; the policy is what is learned).\n- \"the full suite of text-to-SQL benchmarks\" overstates: it's five benchmarks, not the full suite. Say \"across five widely used text-to-SQL benchmarks.\"\n- \"with no baseline number reported in this section\" reads as an internal editor's note and should not appear in a published draft \u2014 either report the baseline or omit KaggleDBQA from the headline tally.\n- \"question-match score\" for SParC is being compared against an \"execution accuracy\" baseline elsewhere in the paragraph; if the SParC baseline is also question-match, say so; if not, the comparison is not apples-to-apples and should be flagged.\n- \"schema-link cardinality, join depth, and aggregation count\" \u2014 minor: \"schema-linking cardinality\" is more standard usage if referring to predicted schema links.\n\n**Suggested revision of the opening paragraph (illustrative):**\n\"We propose RouteSQL, a multi-LLM routing layer for text-to-SQL workloads that dispatches each natural-language query to one of several backend LLMs under a learned routing policy. Across five text-to-SQL benchmarks, RouteSQL improves execution accuracy on Spider-dev and BIRD-dev, matches the baseline within roughly one point on WikiSQL and SParC, and reduces average per-query inference cost by approximately 38% relative to a DAIL-SQL/GPT-4 single-model baseline. These results suggest that learned routing is a favorable cost-quality operating point for production text-to-SQL systems, particularly when small-model accuracy is adequate on the dominant query strata.\"\n\n**Items I could not verify from this section alone (caveats on the recommendations above):**\n- Whether KaggleDBQA has a DAIL-SQL/GPT-4 published number that should be inserted, or whether the omission is intentional.\n- Whether the SParC baseline figure (65.1%) is question-match or interaction-match \u2014 the metric name appears only on the RouteSQL side.\n- Whether the cost figures ($0.011 / $0.0068) include router-inference cost or only backend cost; the 12ms overhead is reported in latency, not in dollars.\n- Whether \"Qwen-7B-SQL-tuned\" refers to a specific publicly released checkpoint or an in-house fine-tune \u2014 naming convention varies and a citation/footnote should disambiguate.\n- Whether stratified per-difficulty accuracy is reported elsewhere in the paper; if so, the \"no quality loss on simple queries\" claim should be cross-referenced rather than asserted bare.\n\nRecommend the authors reconcile the headline claim with the table before any further revision, since several downstream sentences inherit the \"uniformly improved\" / \"strictly dominant\" framing.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The section makes broad contribution and dominance claims whose framing is central to a review of the passage.",
+      "R1.2": "The delegation calls for checking whether the argumentative movement from benchmark results and cost reductions to deployment conclusions holds together.",
+      "R1.3": "The artifact reports specific benchmark and cost numbers, so review centrally includes whether the claims match the evidence stated in the section.",
+      "R1.6": "A generic section review normally includes sentence- and paragraph-level clarity, register, and flow.",
+      "RX.1": "The review should disclose uncertainty where the section lacks enough information to verify claims externally.",
+      "RX.2": "The artifact contains strong claims such as strictly dominant and strongest deployment-ready, making overclaim control load-bearing.",
+      "RX.3": "The projection must stay within reviewing the provided section rather than executing edits or performing an external audit.",
+      "RX.4": "The review should avoid endorsing unsupported deployment claims that could mislead downstream readers or practitioners.",
+      "RX.5": "Any responsibility assigned should remain traceable to the provided wording, numbers, and claims in the artifact."
+    }
+  }
+}

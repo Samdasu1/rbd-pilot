@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_204",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1802,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 20913,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.95, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: Light prose polish only \u2014 tightened sentences, fixed minor awkwardness, normalized punctuation/hyphenation \u2014 with flagged items I could not verify left untouched in substance.\n\nRevised text:\n\n---\nRecent work in vision-language pretraining has expanded the toolkit for automatic annotation of image datasets. Where crowd-sourced labeling once dominated large-scale dataset construction (Deng et al., 2009; Lin et al., 2014), several recent results suggest that vision-language models (VLMs) can produce annotations of comparable quality on standard recognition tasks at a fraction of the cost. This shift is particularly salient given recent evidence that paid crowd annotators themselves now route a non-trivial share of text-labeling work through LLMs (Veselovsky et al., 2023), raising the question of what \"human-labeled\" means in practice today.\n\nThe most influential demonstration of the VLM-as-annotator paradigm in vision is Radford et al. (2022), who showed that frozen CLIP embeddings, paired with a lightweight prompt-tuned classification head, match human annotator agreement on the ImageNet-Hard subset to within 0.4 accuracy points. Their \"ZeroLabel\" pipeline has since become a standard reference for VLM-as-annotator work and is widely cited as evidence that VLM-derived labels can substitute for human annotations in downstream supervised pretraining.\n\nBuilding on ZeroLabel, our work introduces VisCurate, a curation pipeline that pairs VLM pseudo-labels with disagreement-based active sampling. We adopt the prompt-tuning recipe of Radford et al. (2022) as our base annotator and add a second-stage filter that flags instances on which two prompt variants disagree about the predicted label. We report a 23% reduction in required human review effort relative to the single-stage ZeroLabel baseline at matched downstream classification accuracy.\n\nWe evaluate on three benchmarks: a 100k-image curated subset of LAION-400M, the fine-grained bird-identification dataset CUB-200, and the medical-imaging set CheXpert. Across all three, VisCurate matches or exceeds ZeroLabel on downstream linear-probe accuracy while requiring fewer human review passes, supporting our central efficiency claim.\n---\n\nEdits made (prose-level only):\n- \"particularly relevant\" \u2192 \"particularly salient\" to avoid collision with \"recent ... recent\" cadence.\n- \"raising questions about what ... in practice in 2024\" \u2192 \"raising the question of what ... in practice today\" (singular question reads more cleanly; \"today\" avoids dating the manuscript and is faithful to the original framing).\n- \"when paired with\" \u2192 \"paired with\" (tightening; comma pair preserved).\n- \"within 0.4 accuracy points\" \u2192 \"to within 0.4 accuracy points\" (idiomatic).\n- \"instances where two prompt variants disagree on the predicted label\" \u2192 \"instances on which two prompt variants disagree about the predicted label\" (restrictive \"on which\" + \"disagree about\" is more standard).\n- \"We claim a 23% reduction\" \u2192 \"We report a 23% reduction\" (softens self-assertion to a reporting verb; substantive number untouched).\n- \"bird identification dataset\" \u2192 \"bird-identification dataset\"; \"medical imaging set\" \u2192 \"medical-imaging set\" (compound-modifier hyphenation).\n- \"substantially fewer human review passes\" \u2192 \"fewer human review passes\" (drops an intensifier that the surrounding text does not quantify).\n\nItems I did not change but flag for your attention:\n- The \"23% reduction ... at matched downstream classification accuracy\" sentence is a quantitative headline; I left the number alone, but you may want to confirm in the body that the matched-accuracy condition is defined precisely (matched on which benchmark, at what tolerance).\n- The claim \"match human annotator agreement on the ImageNet-Hard subset within 0.4 accuracy points\" attributed to Radford et al. (2022) \u2014 I did not verify this against the cited paper; the original Radford et al. (2021) CLIP paper does not, to my knowledge, report a \"ZeroLabel\" pipeline or an \"ImageNet-Hard\" 0.4-point result. If the (2022) citation refers to a different work, the citation key and year should be checked; if it is meant to be the CLIP paper, the description may not match. I have not altered the citation, but please verify before circulation.\n- \"Veselovsky et al., 2023\" \u2014 not verified.\n- CUB-200 is commonly cited as CUB-200-2011; confirm which version you mean.\n- CheXpert is a chest-radiograph dataset; the phrase \"medical-imaging set\" is accurate but vague \u2014 consider naming the modality if downstream readers will care.\n\nUncertainty disclosure: I cannot verify any of the cited works or the quantitative claims (0.4 accuracy points, 23% reduction) from this excerpt alone, and I flagged in particular the Radford et al. (2022) / \"ZeroLabel\" / \"ImageNet-Hard\" attribution, which does not match my recollection of the canonical CLIP paper. Treat the prose edits as confident and the flagged citation/factual items as needing your independent check.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.3,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.6": "The delegation 'Clean this up' most directly asks for sentence- and paragraph-level improvement of grammar, flow, register, and concision.",
+      "RX.1": "Any projection should preserve uncertainty about the exact intended cleanup scope because the delegation is brief.",
+      "RX.2": "The projection should avoid inflating the task into novelty, evidence, or scholarship judgments not explicitly requested.",
+      "RX.3": "The responsibility boundary is limited to projecting the delegation, not performing cleanup or revising the artifact.",
+      "RX.4": "The projection should avoid enabling harmful downstream changes such as unsupported strengthening of claims.",
+      "RX.5": "The projection should remain traceable to the wording of the delegation and the artifact context."
+    }
+  }
+}

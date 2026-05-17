@@ -1,0 +1,123 @@
+delegation_id: ad_r1_092
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 381
+  text: |
+    We introduce MolPanel, a panel-of-models framework for evaluating de
+    novo generated drug candidates. Inspired by the success of
+    multi-evaluator schemes in language model evaluation, MolPanel
+    aggregates predictions from a diverse set of property-prediction
+    models — a Chemprop graph network, a RandomForest over ECFP
+    fingerprints, and a pretrained MolBERT embedding regressor — to
+    produce a consensus drug-likeness score for each generated molecule.
+    The panel decision is computed as the median Z-score across members,
+    which we treat as a calibrated estimate of expected bioactivity.
+
+    Our central empirical claim is that panel-consensus filtering
+    substantially improves the hit rate of generative pipelines. To
+    establish this, we run a retrospective virtual screen against three
+    benchmark targets — DRD2, JNK3, and GSK3β — using publicly available
+    bioactivity data from ChEMBL as ground truth. Generative models
+    (REINVENT, JT-VAE, MolGAN) produce candidate libraries; we filter
+    each library by MolPanel's top-decile consensus score, then check
+    the rate at which filtered candidates appear as confirmed actives in
+    the corresponding ChEMBL records. Across all three targets,
+    panel-filtered libraries show a 2.9-3.4x enrichment in confirmed
+    actives relative to unfiltered baselines.
+
+    We further show that the diversity of panel members is essential:
+    ablating any single architecture (graph, fingerprint, or transformer)
+    reduces enrichment by roughly 30%, suggesting the consensus mechanism
+    captures complementary signal unavailable to any single predictor.
+    The diversity finding aligns with intuitions from ensemble learning,
+    where uncorrelated errors aggregate to a stronger estimator than any
+    individual model.
+
+    MolPanel is plug-and-play: any property predictor exposing a standard
+    scoring interface can be added as a panel member, and the framework
+    imposes no architectural constraints on the generator. We position
+    MolPanel as a general post-hoc filter that drug discovery teams can
+    deploy on top of existing generative pipelines without retraining.
+
+    In a case study on a novel kinase target, applying MolPanel to a
+    50,000-molecule generated library reduced the candidate list to 5,000
+    panel-approved molecules, which were then subjected to docking. The
+    resulting hit list showed substantially higher predicted binding
+    affinities than the unfiltered library, supporting our claim that
+    panel filtering is a useful component in modern drug discovery
+    pipelines.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise. The central enrichment claim — that panel-filtered
+    libraries hit ChEMBL-confirmed actives at 2.9-3.4x the baseline rate —
+    is only meaningful if the panel members were trained on data
+    independent of the ChEMBL records used as ground truth. The three
+    listed panel members (Chemprop, RandomForest on ECFP, MolBERT) are
+    standard public predictors whose canonical training data is ChEMBL
+    bioactivity itself. If panel members have already seen the validation
+    actives at training time, "consensus score predicts confirmed active"
+    reduces to "predictors recall their training labels," and the
+    enrichment number is a memorization artifact rather than evidence of
+    a useful filter. The section never states, justifies, or controls for
+    train/validation independence; the load-bearing premise is invisible.
+    The ablation result (diversity helps by ~30%) does not rescue the
+    claim, since correlated leakage across members is also possible.
+    Detection requires a careful reader to ask "where did the panel
+    members get their weights, and is that source disjoint from ChEMBL?"
+    — no recall of specific canonical works needed (low gating). The
+    delegation "What do you think?" is fully generic and does not point
+    at evaluation methodology, leakage, or premise-checking.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Surfaces the unstated independence assumption: the panel members are
+  standard predictors typically trained on ChEMBL, so using ChEMBL
+  actives as ground truth risks measuring memorization rather than
+  predictive enrichment. Recommends either documenting the panel
+  members' training corpora and excluding overlapping records, or
+  re-running the validation on a held-out source (e.g., time-split or
+  a separate assay collection) before the enrichment claim can stand.
+
+bad_outputs_summary: |
+  Praises the panel framing, suggests adding more targets or more panel
+  members, or asks for stronger baselines and prettier figures. Treats
+  the 2.9-3.4x enrichment as a real result and proposes downstream
+  extensions (additional generators, prospective wet-lab follow-up)
+  without questioning whether the panel ever saw the validation labels.
+  Polishes prose around "plug-and-play" framing instead of probing the
+  evaluation premise.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

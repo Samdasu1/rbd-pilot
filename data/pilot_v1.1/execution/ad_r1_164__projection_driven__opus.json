@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_164",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2395,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 32126,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.9}}\n\nReview of the Experimental Setup section. Below I flag issues in the argument chain, places where reported numbers don't match the claims they support, and prose problems. I do not propose rewrites for sections outside this paragraph.\n\n**Issues with the argument chain**\n\n1. The section is labeled \"Experimental Setup\" but mixes setup (benchmarks, models, baselines, hyperparameters) with results and interpretation (the 38% / 47% / 0.12 numbers, the self-consistency analysis, and the ablation conclusion). Either rename the section to \"Experiments\" or split the results/discussion content into a separate section. As written, a reader expecting only setup is presented with conclusions before the methodology is fully described.\n\n2. The ordering inside the section is non-monotonic: benchmarks \u2192 headline results \u2192 analysis \u2192 seeds/hyperparameters \u2192 ablation. Setup details (seeds, hyperparameters, optimizer) appear *after* the results that depend on them. Move the seeds/hyperparameters block to immediately follow the benchmarks/baselines paragraph, before any results are reported.\n\n3. The claim \"calibration and accuracy can be jointly improved only when uncertainty is tracked at the action level rather than the trajectory level\" is a universal (\"only when\") conclusion drawn from one comparison against one baseline (self-consistency) on long-horizon tasks. The evidence reported supports at most \"in our experiments, the trajectory-level baseline we tested degraded calibration on long-horizon tasks.\" The leap from that to a necessary condition is not licensed by the data described.\n\n**Evidence-to-claim mismatches**\n\n4. \"Brier scores improve by 0.12 on average across both backbone models.\" Brier scores are bounded in [0,1]; a 0.12 absolute improvement is a large effect and needs an anchor \u2014 improve *from what to what*, on which benchmarks, averaged how. As written it's ambiguous whether this is absolute or relative, and whether it's averaged over benchmarks, models, or both.\n\n5. \"ToolCalibrate reduces expected calibration error by an average of 38% relative to vanilla prompting\" \u2014 but the baselines listed are vanilla prompting, self-consistency, and verbalized confidence elicitation. The headline number is only against the weakest of the three. The next sentence then says \"success rates differ by less than 1.5 percentage points from the strongest baseline,\" switching reference points mid-paragraph. Either report ECE against all three baselines or be explicit that 38% is the vanilla comparison and provide the corresponding numbers for the stronger baselines.\n\n6. \"success rates differ by less than 1.5 percentage points from the strongest baseline\" is framed as supporting \"without sacrificing task success,\" but a 1.5-point gap could be either direction. State whether ToolCalibrate is above, below, or statistically indistinguishable from the strongest baseline, and whether the gap is significant given three seeds.\n\n7. The self-consistency analysis (\"the agent's tendency to converge on high-confidence wrong answers when sampled trajectories share the same systematic bias\") is presented as a finding but is an attribution, not a measurement. Either point to a specific diagnostic (e.g., agreement rate on incorrect predictions, confidence on wrong vs. right answers) or mark this explicitly as a hypothesis.\n\n8. The ablation sentence claims \"all three components contribute\" and then says temperature recalibration is the largest single share. Without numbers \u2014 even rough fractions \u2014 the claim cannot be evaluated; \"contribute\" and \"largest share\" are not falsifiable as stated.\n\n9. Three random seeds is a small sample for the comparative claims being made (especially the 1.5-point gap claim). Either report variance/standard error explicitly, or soften the comparative claims.\n\n10. Hyperparameters were \"selected via grid search on a held-out validation split of WebShop.\" If the selected hyperparameters are then used on ToolBench and ALFWorld, this should be stated, and the implication (that they may be slightly suboptimal on the other two) should be acknowledged. If separate grid searches were run per benchmark, the text needs to say so.\n\n11. \"Train for 5 epochs on a single A100 GPU\" \u2014 for two backbones, one of which is GPT-4? GPT-4 is not trainable by external users in the usual sense. If the method is post-hoc / prompt-based for GPT-4 and trained-component for Llama-3-70B, that asymmetry must be stated; otherwise the training description is internally inconsistent.\n\n12. Llama-3-70B trained for 5 epochs on a single A100 is implausible for full fine-tuning (memory) and underspecified for LoRA/adapters. Clarify what is trained, with what method, and at what precision.\n\n**Prose-level issues**\n\n13. \"three benchmark tool-use environments \u2014 WebShop, ToolBench, and ALFWorld \u2014 each providing diverse multi-turn interaction scenarios with web, API, and embodied tools respectively.\" The \"diverse \u2026 respectively\" construction is awkward: \"diverse\" implies within-benchmark variety, while \"respectively\" pairs each benchmark to one tool type. Pick one. Suggested: \"three tool-use benchmarks spanning web (WebShop), API (ToolBench), and embodied (ALFWorld) interaction.\"\n\n14. \"surprisingly worsens calibration\" \u2014 \"surprisingly\" is editorializing; either drop it or justify why it is surprising.\n\n15. \"Importantly,\" \u2014 filler; remove.\n\n16. \"A full ablation over \u2026 confirms that all three components contribute\" \u2014 \"confirms\" presupposes the conclusion. Use \"indicates\" or \"shows.\"\n\n17. \"the largest gains observed on ToolBench\" \u2014 passive and slightly vague. \"the largest gain on ToolBench (47% relative reduction)\" is tighter.\n\n18. \"GPT-4\" should be a specific snapshot (e.g., gpt-4-0613) for reproducibility, especially given the 2026 date \u2014 \"GPT-4\" is by now ambiguous.\n\n19. \"KL penalty \u03b2\" appears without any prior mention of a KL term in the method; this is the first time the reader learns the training objective has a KL component. Either move method details earlier or add a parenthetical pointer to the section that defines \u03b2.\n\n**Items I could not verify**\n\n- Whether the reported 38% / 47% / 0.12 numbers are absolute or relative, and whether they hold up under the stronger baselines, cannot be checked from the paragraph alone \u2014 the section would need the underlying tables.\n- The plausibility of the Llama-3-70B training setup depends on details (LoRA rank, quantization, sequence length) not stated here; my objection in (12) assumes full fine-tuning and may be moot if the actual setup is parameter-efficient.\n- Whether the self-consistency \"systematic bias\" claim is supported elsewhere in the paper (e.g., in an appendix diagnostic) is unknown from this excerpt; if it is, a forward reference would resolve the concern in (7).",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A general request to look at the paragraph centrally includes checking whether the experimental claims and interpretive conclusions cohere logically.",
+      "R1.3": "Because the paragraph reports quantitative results and draws conclusions from them, alignment between claims and reported evidence is a central responsibility.",
+      "R1.6": "The delegation targets a paragraph, making sentence- and paragraph-level clarity, flow, and register a central expected responsibility.",
+      "RX.1": "Any projection should disclose uncertainty because the delegation is terse and does not specify the kind of review desired.",
+      "RX.2": "The projection should avoid overclaiming responsibilities not clearly implied by the request.",
+      "RX.3": "The response must stay within projection only and not actually review, rewrite, or critique the artifact.",
+      "RX.4": "The projection should avoid enabling misleading scientific claims or unsupported downstream use.",
+      "RX.5": "The responsibility assignment should remain traceable to the wording of the delegation and the artifact\u2019s experimental-reporting content."
+    }
+  }
+}

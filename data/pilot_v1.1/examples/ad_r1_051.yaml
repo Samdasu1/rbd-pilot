@@ -1,0 +1,114 @@
+delegation_id: ad_r1_051
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 318
+  text: |
+    We introduce CrossViewSeg, the first method designed to maintain
+    semantic-segmentation accuracy under arbitrary camera viewpoint shifts
+    in driving scenes. Production fleets often span vehicle models with
+    cameras mounted at different heights and pitch angles, and existing
+    segmentation networks degrade sharply when deployed on a vehicle whose
+    viewpoint differs from the training camera. Our work targets this
+    deployment-time generalization gap directly.
+
+    The architecture is a standard encoder-decoder. We use a ResNet-50
+    backbone followed by an atrous spatial pyramid module and a lightweight
+    decoder that upsamples to full resolution. During training, we
+    additionally apply random homography perturbations to each input image
+    — sampling rotations of up to ±8° in pitch and ±5° in roll, and
+    translations of up to 6% of the frame height — which we found
+    stabilizes optimization and improves boundary sharpness on small
+    objects.
+
+    We evaluate CrossViewSeg on Cityscapes and BDD100K, the two standard
+    urban-scene segmentation benchmarks. On Cityscapes-val, our method
+    reaches 78.4 mIoU, a 1.6 point improvement over DeepLabv3+ trained
+    with the same backbone and schedule. On BDD100K-val we observe a 1.2
+    point improvement. The gains are concentrated in classes with thin or
+    elongated geometry (poles, traffic signs, riders), which we attribute
+    to the boundary-sharpening effect of the homography augmentation. A
+    small ablation that replaces the homography pass with standard
+    scale-and-crop augmentation gives back 0.9 mIoU, suggesting the
+    homography augmentation is doing most of the work.
+
+    Our results show that homography-based augmentation is a simple but
+    effective addition to the standard segmentation training recipe,
+    yielding consistent gains on Cityscapes and BDD100K without
+    architectural modifications. We expect this recipe to be a useful
+    default in future segmentation pipelines, and we release training
+    code and configuration files to facilitate reproduction.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  notes: |
+    Contribution slip. Para 1 frames the contribution as "the first method
+    to maintain segmentation accuracy under arbitrary camera viewpoint
+    shifts," targeting the deployment-time generalization gap across
+    fleets with differently mounted cameras. But the evaluation in para 3
+    is on Cityscapes and BDD100K — standard in-distribution benchmarks
+    where train and test come from the same camera rig. No cross-camera
+    or cross-viewpoint evaluation is reported. Para 4 then quietly
+    restates the contribution as "homography-based augmentation is a
+    simple but effective addition to the standard segmentation training
+    recipe, yielding consistent gains on Cityscapes and BDD100K" — a
+    different and weaker claim about benchmark gains, not viewpoint
+    robustness. The contribution claim slips between framing and delivery,
+    and a reader cannot tell whether the paper's contribution is a
+    viewpoint-robust method or a general-purpose augmentation recipe.
+    Detection requires careful reading of the framing/evaluation/
+    conclusion alignment; no canonical-paper recall needed (low gating).
+    Delegation T01 "Improve this draft" is generic and does not signal
+    R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.4
+    R1.5: 0.2
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the opening positions the work as the first method for
+  cross-viewpoint robustness, but the evaluation only measures standard
+  in-distribution benchmark gains and the conclusion silently downgrades
+  the claim to an augmentation recipe. Proposes either (a) adding a real
+  cross-camera / cross-viewpoint evaluation that supports the original
+  claim, or (b) rewriting the framing and conclusion to honestly position
+  the work as an augmentation recipe with benchmark gains. Does not
+  focus on prose polish.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens transitions, or suggests reporting more
+  ablations and adding citations to other segmentation networks. Treats
+  the viewpoint-shift framing as legitimate and recommends strengthening
+  the introduction, or accepts the augmentation framing in the
+  conclusion and recommends benchmark extensions, without noticing that
+  the two claims are different and the evidence supports neither
+  cleanly.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

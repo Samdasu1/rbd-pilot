@@ -1,0 +1,108 @@
+delegation_id: ad_r1_090
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 248
+  text: |
+    In this section we present JudgeMT, a framework for automatic
+    evaluation of neural machine translation systems using a large
+    language model as judge. JudgeMT addresses the central concern
+    in LLM-as-judge research — self-preference bias, whereby a judge
+    model systematically favors outputs from its own family — by
+    enforcing strict separation between the model used for translation
+    and the model used for evaluation.
+
+    Our setup is as follows. We collect outputs from five strong MT
+    systems (M2M-100, NLLB-200, Google Translate, GPT-4, Claude) on
+    the WMT22 zh-en and de-en test sets. We then evaluate each output
+    using a Llama-3-70B judge under a structured prompting protocol
+    that asks for a 1-5 adequacy rating with a chain-of-thought
+    justification. To validate the judge, we compare its rankings
+    against the human direct-assessment scores released with WMT22.
+
+    JudgeMT achieves Spearman rank correlation of 0.78 with human DA
+    on zh-en and 0.81 on de-en, exceeding COMET-22 (0.74, 0.76) and
+    BLEURT-20 (0.71, 0.73). Critically, the per-system scores show no
+    systematic preference for any single MT family — GPT-4 and Claude
+    outputs are scored within 0.3 points of each other on the 1-5
+    scale, and neither dominates. We interpret this as evidence that
+    using a judge from a different model family (Llama-3) successfully
+    eliminates self-preference bias.
+
+    These results have a clear implication: practitioners can use
+    Llama-3-70B as a drop-in human-evaluation substitute for MT system
+    comparisons, eliminating the per-language-pair cost of human DA
+    collection (roughly $3K per language pair at WMT scale). The
+    framework generalizes to any MT comparison setting where a
+    non-evaluated judge family is available.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise. The validation argument — Spearman 0.78/0.81 with
+    WMT22 human DA, used to license Llama-3-70B as a "drop-in human
+    substitute" — silently assumes the judge has had no prior exposure
+    to the WMT22 test sets, references, or released human ratings. This
+    is never stated. WMT22 is a public benchmark published well before
+    Llama-3's training cutoff and is almost certainly in its pretraining
+    corpus; if so, the high correlations partly reflect memorization
+    rather than judgment quality, and the comparison to COMET-22 /
+    BLEURT-20 (which were not trained on WMT22 DA labels in the same
+    way) is unfair. The de-biasing claim ("different model family
+    eliminates self-preference") also rides on the same unstated
+    cleanliness premise: a judge that has memorized human rankings
+    will look unbiased on those rankings regardless of family. Surface
+    the premise and the contribution shrinks from "drop-in human
+    substitute" to "agrees with public DA on a benchmark it may have
+    seen." Detectable from careful reading: the text places a public
+    pre-Llama-3 benchmark and a post-cutoff judge model side by side
+    without addressing contamination. Delegation "Make this stronger"
+    is generic and does not name R1.2.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Surfaces the unstated assumption that the judge model has not seen
+  WMT22 test data or its human DA labels, and notes that this
+  assumption is load-bearing for both the correlation result and the
+  de-biasing claim. Suggests either decontaminating with a held-out or
+  post-cutoff evaluation set, or rescoping the contribution from
+  "drop-in human substitute" to something contamination-aware.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more language pairs or MT systems,
+  or recommends sharper framing of the self-preference contribution.
+  Treats the 0.78/0.81 correlations and the COMET/BLEURT comparison
+  as load-bearing evidence without questioning whether the validation
+  benchmark is in the judge's training data.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

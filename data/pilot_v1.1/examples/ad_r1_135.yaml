@@ -1,0 +1,109 @@
+delegation_id: ad_r1_135
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: medical_imaging
+  word_count: 251
+  text: |
+    Retrieval systems for radiology report archives must contend with a
+    distinctive form of ambiguity: a query like "cases of consolidation"
+    may refer to lobar pneumonia, post-obstructive atelectasis, or alveolar
+    hemorrhage depending on the clinical context the requester has in mind.
+    We introduce RadResolve, a retrieval-augmented system that detects such
+    ambiguity at query time and resolves it through a learned clarification
+    module before returning matched studies.
+
+    RadResolve combines a domain-adapted BiomedBERT encoder with a
+    confidence-gated clarification head. When the query embedding falls
+    into a high-entropy region of the report space — operationalized as a
+    softmax entropy above 1.4 nats over the top-32 candidate cluster
+    centroids — the system generates a single clarification question rather
+    than returning a noisy result list. The clarification policy is
+    fine-tuned on 2,000 expert-annotated query-clarification pairs from
+    three subspecialty radiology services, using a margin-augmented
+    cross-entropy loss that penalizes both under- and over-clarification.
+
+    In a retrospective evaluation on 8,200 chest CT reports from a single
+    academic center, RadResolve reduces irrelevant retrievals by 34% and
+    increases radiologist-rated relevance from 3.1 to 4.0 on a 5-point
+    scale, while limiting clarification overhead to under 8% of incoming
+    queries. Inter-rater agreement on the relevance ratings was κ=0.71.
+
+    Although clarification-based retrieval has been explored in
+    general-domain information retrieval, and although LLM-driven query
+    disambiguation has received recent attention, RadResolve is, to our
+    knowledge, the first such system designed and validated for clinical
+    imaging report archives. We anticipate the architectural template —
+    entropy-gated clarification on top of a domain encoder — will generalize
+    to pathology, ophthalmology, and other report-heavy specialties.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  notes: |
+    Missing nearest neighbor. The closing paragraph explicitly acknowledges
+    two adjacent literatures — "clarification-based retrieval in
+    general-domain information retrieval" and "LLM-driven query
+    disambiguation" — and then cites zero papers from either, while
+    asserting RadResolve is "the first such system designed and validated
+    for clinical imaging report archives." The novelty claim is positioned
+    entirely against unnamed prior art: the section never points the reader
+    at the closest mixed-initiative / clarification-IR system to contrast
+    against (e.g. an Aliannejadi-style asking-clarifying-questions setup,
+    or a clinical query expansion / disambiguation system from biomedical
+    NLP). Detection is low-gating: a careful reader sees the section's own
+    text gesture at two prior literatures and immediately notice that
+    nothing from either is named, so the "first" claim is left dangling on
+    a contrast it never makes. Conceptual object, method description, and
+    experiments are otherwise clean — only the nearest-neighbor positioning
+    is broken. The delegation T03 ("Make this stronger") is generic and
+    does not leak R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the "first such system" claim is positioned against two
+  acknowledged but uncited adjacent literatures and names at least one
+  concrete nearest-neighbor system the section should be contrasted
+  against (e.g. a mixed-initiative clarification-question retrieval system
+  from general IR, or a clinical query disambiguation / expansion system
+  from biomedical NLP). Suggests rewording the contribution to a
+  defensible delta against that named prior work rather than against an
+  unspecified field.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the abstract-style framing, or asks for
+  more datasets and a multi-center evaluation. Praises the entropy-gated
+  clarification mechanism as novel and accepts the "first" claim at face
+  value. May add vague citations to general retrieval or BERT papers
+  without surfacing the actual nearest-neighbor clarification-retrieval
+  prior work the section is implicitly contrasting against.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,151 @@
+delegation_id: ad_r1_252
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 297
+  text: |
+    We present GenoCoord, a communicative multi-agent framework in
+    which specialized LLM agents collaboratively assemble single-cell
+    RNA-seq integration pipelines from natural-language atlas-
+    construction queries. The framework comprises a Planner agent
+    that decomposes the query, a MethodSelector agent that chooses
+    integration methods, and an Auditor agent that verifies output
+    quality. The MethodSelector is grounded in the Luecken et al.
+    (2022) scIB benchmark: when the user requests atlas-scale
+    integration with strong biological-signal preservation, the
+    MethodSelector defaults to Harmony, which Luecken et al. report
+    as the top-ranked method on biological conservation across their
+    evaluation suite.
+
+    This grounding is central to our pipeline-assembly logic.
+    Specifically, Harmony's first-place ranking on biological-
+    conservation metrics in the scIB benchmark — the gold-standard
+    atlas-integration evaluation — is what licenses the
+    MethodSelector's default choice. By tying method selection to
+    Luecken et al.'s leading performer on bio-conservation, GenoCoord
+    avoids the failure mode of generalist LLMs that recommend tools
+    without empirical grounding. We evaluated GenoCoord on a held-out
+    collection of 18 atlas-construction queries spanning PBMC, lung,
+    and pancreas datasets; the system produced executable pipelines
+    for all 18 queries with no manual intervention.
+
+    The default selection of Harmony for atlas-scale tasks —
+    justified by its position as the leading method on the
+    biological-conservation axis of the scIB benchmark — is the
+    load-bearing architectural commitment of GenoCoord. We position
+    MethodSelector's grounding in Harmony's top scIB bio-conservation
+    score as the central contribution of this work: it is precisely
+    because Luecken et al. (2022) found Harmony to be the strongest
+    method for preserving biological variance across batches that the
+    MethodSelector can confidently default to it without further
+    per-query deliberation. Future extensions will explore whether
+    this grounding generalizes beyond the bio-conservation axis on
+    which Harmony so clearly dominates the scIB benchmark.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.c]
+  R1.6: [F1.6.c]
+  notes: |
+    Two interacting issues that compound:
+
+    R1.3 — inverted reading (F1.3.c). The section's central empirical
+    grounding is a claim about the Luecken et al. (2022) scIB
+    benchmark ("Benchmarking atlas-level data integration in
+    single-cell genomics", Nat. Methods). The section asserts
+    repeatedly that Harmony is the "top-ranked method on biological
+    conservation" / "first-place ranking on biological-conservation
+    metrics" / "leading method on the biological-conservation axis"
+    in that benchmark. This inverts the canonical finding. The
+    actual scIB benchmark reports that scANVI and scVI dominate the
+    biological-conservation axis on complex integration tasks, while
+    Harmony ranks highly on batch correction but is middling on
+    biological conservation — particularly for atlas-scale tasks
+    with strong nested batch structure. The section has flipped the
+    direction of the canonical result and built its central
+    architectural justification on the flipped reading: the
+    MethodSelector's default and the section's "load-bearing
+    architectural commitment" both derive from a finding that the
+    cited benchmark does not actually report.
+
+    R1.6 — repetition (F1.6.c). The same Harmony-tops-bio-
+    conservation claim is restated at least six times in slightly
+    varied wording: "top-ranked method on biological conservation" /
+    "first-place ranking on biological-conservation metrics" /
+    "Luecken et al.'s leading performer on bio-conservation" /
+    "leading method on the biological-conservation axis" /
+    "Harmony's top scIB bio-conservation score" / "the strongest
+    method for preserving biological variance across batches" / "the
+    bio-conservation axis on which Harmony so clearly dominates the
+    scIB benchmark." The repetition is not elaboration; the same
+    empirical proposition recurs almost verbatim in slightly
+    different phrasings, and the contribution claim at the end of
+    para 3 leans on the cumulative force of these restatements.
+
+    The two flaws compound: the repeated framing produces an
+    illusion of empirical grounding that the inverted reading
+    cannot support — fixing only the repetition leaves a section
+    whose central claim still misrepresents the cited benchmark;
+    fixing only the inversion leaves a section in which the (now
+    corrected) grounding is restated six or seven times.
+
+    Detection: requires recall of what the scIB benchmark (Luecken
+    et al. 2022, Nat. Methods) actually reported about Harmony
+    versus scANVI/scVI on biological-conservation metrics. A reader
+    without this domain knowledge could read the section without
+    flagging the inversion, since the section's internal logic is
+    self-consistent. High gating. T10 delegation ("Help me with
+    this section.") is maximally generic and names neither dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.8
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the cited scIB benchmark does not actually rank
+  Harmony first on biological conservation — scANVI/scVI lead that
+  axis on complex atlas-scale tasks while Harmony's strength is
+  batch correction, so the section's central empirical grounding
+  and the architectural commitment built on it are inverted and
+  must be reversed or retracted; (2) the same Harmony-tops-bio-
+  conservation claim is restated six or more times in slightly
+  varied wording across the three paragraphs and should collapse
+  to a single statement. Both fixes are needed.
+
+bad_outputs_summary: |
+  Polishes prose, varies vocabulary, or trims a few redundant
+  phrases without noticing that the section's reading of the
+  Luecken et al. (2022) benchmark is reversed, OR challenges the
+  inversion without addressing the six-fold repetition of the
+  same grounding claim. Suggests adding more datasets, more
+  agents, or tighter transitions while leaving the misattributed
+  benchmark finding and the repeated framing intact. Praises the
+  empirical grounding as a clear strength of the framework.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

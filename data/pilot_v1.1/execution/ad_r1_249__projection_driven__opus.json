@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_249",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2181,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 28224,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.9, \"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: Reordered the section to put the system introduction first and results last, tightened prose, flagged unsupported comparative claims, and noted missing provenance for benchmark numbers and re-ranker behavior.\n\n## Main issues\n\n**1. Section ordering is inverted.** The passage opens with a results paragraph before the reader has been told what VariantTalk is, what it does, or how it is evaluated. The natural flow is: (a) what the system is, (b) how it works, (c) hyperparameters / configuration, (d) evaluation protocol, (e) headline results. The current order forces the reader to hold an uninterpreted F1 claim in mind while the system is described.\n\n**2. The opening results sentence is simultaneously hedged and unsupported.** Phrases like \"we believe to be broadly comparable,\" \"arguably somewhat complicated,\" and \"as faithfully as the published descriptions appeared to permit\" stack hedges without ever committing to a quantitative claim or pointing to a table. Either the numbers are reported (with a reference to a table and to the specific prior systems being compared against), or the comparison should be omitted. As written, the sentence reads as deflective.\n\n**3. Several factual placeholders are missing provenance.** The text refers to \"the consensus annotations\" for each benchmark, \"a five-level ACMG-style vocabulary,\" and \"a local mirror of ClinVar and dbSNP\" without citing the source releases, version dates, or the precise five labels used. For a clinical-variant pipeline these are load-bearing details.\n\n**4. Inconsistency between described pipeline and reported configuration.** The pipeline description says the re-ranker emits a pathogenicity tag from a five-level vocabulary, but the configuration paragraph describes the re-ranker as scoring candidate-evidence pairs with a chain-of-thought prompt decoded greedily \u2014 it is not stated how the scalar score or rationale is mapped onto the five-level label, nor whether the tag comes from the highest-scoring candidate or from a separate classification head. The evaluation paragraph then reports micro-F1 against \"consensus annotations\" without saying whether F1 is computed on entity spans (NER stage), normalized identifiers (retrieval stage), or pathogenicity labels (re-ranking stage). These three are very different metrics.\n\n**5. Evaluation completeness.** Reporting only micro-averaged F1 on three corpora, with per-mutation-type breakdowns relegated to a supplement, is defensible \u2014 but the section should at least state whether macro-F1, precision, and recall move in the same direction, and whether the \"broadly comparable\" claim holds under all three.\n\n## Suggested revision\n\n> VariantTalk is a retrieval-augmented language-model pipeline for annotating clinically significant variants in unstructured case reports. The pipeline runs in three stages. First, a fine-tuned BioBERT named-entity-recognition model extracts candidate variant mentions. Second, a retrieval stage normalizes each mention to HGVS form and queries a local mirror of ClinVar (release [DATE]) and dbSNP (build [N]) for matching canonical identifiers, returning up to 50 candidates per mention. Third, a frozen instruction-tuned LLM re-ranks each candidate\u2013evidence pair using a chain-of-thought prompt of 512 tokens decoded greedily, and assigns a pathogenicity tag from a five-level ACMG-style vocabulary ([list the five labels]).\n>\n> The NER model is fine-tuned with learning rate 2e-5, batch size 16, for five epochs. All other components are used without further training.\n>\n> We evaluate on the official train/development/test splits of BC5CDR, NCBI-Disease, and BioASQ-Task7b, and report micro-averaged F1 against [specify: entity spans / normalized identifiers / pathogenicity labels]. Per-mutation-type breakdowns (substitution, insertion, deletion) and a confusion analysis are provided in Supplement S2.\n>\n> Table [N] reports F1 against [specific prior systems, cited]. [State the actual numbers and the direction of the comparison.] Because prior work used different entity-span normalization conventions, we re-normalized predictions to match each benchmark's released convention; details are in Supplement S[X].\n\n## Smaller prose fixes\n\n- \"namely BC5CDR and NCBI-Disease and BioASQ-Task7b\" \u2192 \"BC5CDR, NCBI-Disease, and BioASQ-Task7b.\"\n- \"we observed F1 scores that we believe to be broadly comparable\" \u2014 replace with a direct numerical comparison or drop.\n- \"arguably somewhat complicated by the fact that\" \u2192 \"complicated by\" (or remove).\n- \"as faithfully as the published descriptions appeared to permit\" \u2014 say what was done, not how hard it felt.\n- \"extracts candidate variant strings\" \u2192 \"extracts candidate variant mentions\" (strings is imprecise for spans).\n- \"emit a pathogenicity tag drawn from a five-level ACMG-style vocabulary\" \u2014 name the five levels inline; \"ACMG-style\" without enumeration is hand-wavy.\n- \"readers interested in performance variation across\u2026\" \u2192 \"Supplement S2 reports performance by substitution, insertion, and deletion classes\" (avoid addressing the reader).\n\n## Items I cannot verify from the artifact alone\n\n- Whether the F1 numbers are in fact \"broadly comparable\" to prior transformer pipelines \u2014 the section does not provide them, so the claim cannot be checked and should either be substantiated or removed.\n- Which exact five labels are meant by \"ACMG-style,\" and whether they correspond to the standard ACMG/AMP five-tier classification (pathogenic / likely pathogenic / VUS / likely benign / benign) or a variant of it.\n- Which stage's outputs are scored by the reported micro-F1.\n- The ClinVar / dbSNP release versions, and whether the \"local mirror\" is frozen for reproducibility.\n- Whether the re-ranker's tag is taken from the top-scored candidate, aggregated across candidates, or produced by a separate decoding step \u2014 the description leaves this ambiguous.\n\nThese gaps are flagged for the authors to resolve; I have not attempted to fill them in.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A section review centrally includes checking whether the described method and evaluation claims form a coherent argument chain.",
+      "R1.3": "The artifact makes performance and benchmark claims, so review responsibility includes checking whether those claims are aligned with the reported evaluation description.",
+      "R1.5": "The section-level ordering is implicated because the artifact opens with results before introducing the method and pipeline.",
+      "R1.6": "A generic request to review a paper section makes sentence-level clarity, grammar, flow, and register load-bearing.",
+      "RX.1": "The projection must preserve uncertainty where the short delegation does not specify a narrower review type.",
+      "RX.2": "The review scope should avoid inflating the artifact's performance or comparability claims beyond what is stated.",
+      "RX.3": "The agent must stay within projection rather than performing the requested review or editing the section.",
+      "RX.4": "Because the artifact concerns clinical variant annotation, review responsibilities include avoiding harmful overstatements or unsafe implications.",
+      "RX.5": "Any projected responsibility should remain traceable to concrete features of the delegation and artifact."
+    }
+  }
+}

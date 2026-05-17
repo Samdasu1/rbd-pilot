@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_169",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2331,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29280,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.5\": 0.8, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 1.0, \"RX.4\": 0.85, \"RX.5\": 0.8}}\n\nBelow is a tightened revision followed by the rationale for each substantive change. The revision keeps every empirical claim already in the artifact, sharpens framing, softens overreaches, surfaces uncertainty that was implicit, and reorders so the contribution lands before methods.\n\n---\n\n**Revised abstract**\n\nContinuous variant-pathogenicity scores from tools such as CADD, REVEL, and AlphaMissense are widely used to rank candidate variants, but downstream clinical workflows increasingly demand that these scores behave as probabilities \u2014 i.e., that a score of 0.8 correspond to roughly 80% pathogenicity across analogous cases. Recent ClinVar-based benchmarks suggest that current predictors are systematically miscalibrated, with reliability curves deviating from the diagonal most visibly in the 0.4\u20130.7 range.\n\nWe present, to our knowledge, the first cross-predictor benchmark of post-hoc recalibration for missense pathogenicity scores evaluated on a temporally held-out ClinVar cohort, and we release per-predictor calibration mapping tables so that clinical pipelines can substitute calibrated probabilities for raw scores. The cohort comprises 14,302 missense variants from ClinVar two-star submissions deposited after the training cutoffs of all five predictors under study; we fit isotonic regression and Platt scaling on a 30% calibration split and report expected calibration error (ECE), maximum calibration error (MCE), and Brier score on the held-out 70%.\n\nIsotonic regression reduced ECE by 41%\u201368% relative to raw scores across all five predictors, while Platt scaling produced smaller but more uniform improvements. The largest gain was observed for AlphaMissense (raw ECE 0.137 \u2192 0.044), consistent with the view that protein-language-model scores carry strong rank information but uncalibrated magnitudes. A subgroup analysis stratified by gene-level constraint (pLI) showed degraded calibration in low-constraint genes for every predictor, with residual ECE above 0.08 even after isotonic correction.\n\nThese results indicate that post-hoc recalibration can substantially improve probability estimates for most of the score range, but residual miscalibration in low-constraint genes is large enough that the calibrated probabilities should not be treated as a drop-in replacement for ACMG evidence weighting in that subgroup without further validation. The released mapping tables are intended as a starting point, not as clinically validated classifiers.\n\n---\n\n**What changed and why**\n\n1. *Lead with the contribution.* The original buried its novelty in the final paragraph. The contribution sentence and the artifact release now appear in paragraph two, before methods detail, which is the standard structure for a results-forward abstract and makes the \"what is new\" immediately legible.\n\n2. *Hedge the cutoff claim.* \"Drawn from ClinVar two-star submissions deposited after the training cutoffs of the predictors under study\" is a strong leak-freeness assertion. Some predictors (notably ensemble methods like REVEL) incorporate features derived from upstream tools whose own cutoffs may differ, and ClinVar deposition date is not the same as variant first-observation date. The revision keeps the claim but the discussion below flags this \u2014 see point 7.\n\n3. *Soften \"systematically miscalibrated.\"* Changed to \"suggest that current predictors are systematically miscalibrated.\" The original phrasing presents a benchmarking conclusion as established fact; the cited evidence is recent and the field's consensus is still forming.\n\n4. *Soften the AlphaMissense interpretation.* \"Consistent with the hypothesis that\u2026\" became \"consistent with the view that\u2026\" \u2014 a mechanistic claim about what protein-language-model scores encode is not directly tested here, and the wording should not imply that this study adjudicates it.\n\n5. *Sharpen the subgroup-analysis implication.* The original ended with \"We discuss the implications \u2026 for ACMG-style evidence weighting downstream,\" which is vague. The revision states the actionable implication directly: in low-constraint genes the residual ECE is large enough that the calibrated outputs are not a drop-in replacement for ACMG weighting without further validation. This is both stronger and more honest.\n\n6. *Add an explicit \"not clinically validated\" line.* The artifact release is framed as enabling clinical pipelines to substitute calibrated probabilities for raw scores. That phrasing, unqualified, invites misuse \u2014 clinical labs may interpret it as endorsement for direct deployment. The closing sentence now states explicitly that the mapping tables are a starting point and not clinically validated classifiers. This is a meaningful safety-of-use addition for a clinical-genomics audience.\n\n7. *\"First cross-predictor benchmark\" claim.* I have flagged this in the revision with \"to our knowledge\" because I cannot verify the priority claim against the literature from the artifact alone. Several 2023\u20132024 calibration papers on ClinVar holdouts exist; whether any of them is cross-predictor in the same sense is something the authors will need to defend in the discussion.\n\n8. *Minor prose fixes.* \"Behave as probabilities \u2014 that is, a variant assigned score 0.8 should be pathogenic in roughly 80% of analogous cases\" was kept but the analogue framing is slightly tightened. \"Deviating sharply\" \u2192 \"deviating \u2026 most visibly,\" because \"sharply\" overstates without a quantitative reference. \"Across all five predictors evaluated\" \u2192 \"across all five predictors,\" because \"evaluated\" is redundant with the preceding sentence.\n\n9. *Methods are now contiguous.* The original split methods across paragraphs 2 and 3. The revision keeps the cohort, fit, and metric description in a single paragraph so the reader is not toggling between methods and results.\n\n---\n\n**Items I could not verify from the artifact alone**\n\n- Whether the \"first cross-predictor benchmark\" priority claim holds against the 2023\u20132025 literature.\n- Whether all five predictors' training cutoffs are genuinely earlier than the ClinVar deposition window used; ensemble predictors complicate this.\n- Whether 30%/70% calibration/evaluation split sizes are pre-registered or chosen post hoc; if post hoc, the ECE point estimates inherit selection variance that the abstract does not currently report (no CIs).\n- The 41%\u201368% ECE-reduction range is a relative improvement; absolute residual ECE per predictor is not given except for AlphaMissense. If the authors intend the abstract to be self-contained, one additional number (e.g., median residual ECE across predictors) would help.\n\nThese four are flagged for the authors' attention but I did not modify the revision to assert anything about them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Strengthening the artifact centrally involves sharpening the thesis, gap, and contribution claim above the sentence level.",
+      "R1.2": "A stronger version would be expected to improve the coherence of the argument from calibration problem to method, results, subgroup limitation, and contribution.",
+      "R1.3": "Because the artifact makes quantitative and empirical claims, strengthening requires checking that claims track the reported experiments and metrics.",
+      "R1.5": "The delegation plausibly includes improving the abstract-like narrative arc and ordering of problem, method, findings, implications, and contribution.",
+      "R1.6": "The broad request most directly calls for sentence- and paragraph-level improvements in force, clarity, concision, and register.",
+      "RX.1": "Any projection must preserve uncertainty where the artifact does not provide enough information to verify claims independently.",
+      "RX.2": "Strengthening must avoid inflating claims such as clinical substitutability, firstness, or probability interpretation beyond what is warranted.",
+      "RX.3": "The responsibility remains limited to improving the research-writing artifact rather than executing analysis or auditing the underlying dataset.",
+      "RX.4": "Because the topic concerns clinical genomics, the projection must account for possible downstream harm from overstated calibration or clinical utility.",
+      "RX.5": "The projection should preserve traceability to the artifact's stated methods, metrics, cohort, and reported numerical results."
+    }
+  }
+}

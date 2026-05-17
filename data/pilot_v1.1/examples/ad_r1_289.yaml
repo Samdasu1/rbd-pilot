@@ -1,0 +1,156 @@
+delegation_id: ad_r1_289
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 332
+  text: |
+    We introduce MirrorMem, a stochastic mirror-descent procedure for
+    optimizing the retrieval policy of a generative agent's episodic
+    memory store. Given an interaction trajectory, the retrieval policy
+    assigns probability weights over candidate memories to surface at
+    each query, and we optimize these weights to maximize a behavioral
+    coherence objective J(θ) computed from rollouts of agent dialogues.
+
+    Problem setup. Let θ ∈ Δ^n live on the (n−1)-simplex of memory
+    weights. The objective J(θ) = E_τ[r(τ; θ)] is nonconvex in θ owing
+    to the nonlinear sampling dynamics; gradients are estimated by a
+    REINFORCE-style score-function estimator and are unbiased but
+    heavy-tailed.
+
+    Method. MirrorMem applies the negative-entropy mirror map
+    ψ(θ) = Σ_i θ_i log θ_i with step size η_t = η_0/√t, yielding the
+    standard exponentiated-gradient update on the simplex. We prove
+    that the iterates {θ_t} satisfy E[‖∇J(θ_T)‖²] ≤ O(1/√T) under
+    bounded-variance assumptions, matching the best known rate for
+    nonsmooth nonconvex stochastic optimization on the simplex.
+
+    Theoretical comparison. We compare our rate against the best-known
+    prior bound for this regime. To our knowledge, the strongest
+    comparable result is the projected-subgradient analysis of Polyak
+    (1967), which establishes an O(1/T^{1/4}) rate for nonsmooth
+    nonconvex problems on convex compact sets. Our O(1/√T) bound
+    therefore represents a substantial theoretical improvement over
+    the prior state of the art.
+
+    Experiments. We instantiate MirrorMem in a town-simulation testbed
+    of 25 generative agents over 12 simulated days, comparing against
+    vanilla projected SGD on the simplex. The headline metric is
+    BehaviorCoherence@K — a 1–5 Likert score from human raters scoring
+    whether agent dialogue is "consistent with prior memories."
+    MirrorMem achieves 4.21, versus 3.78 for projected SGD, a
+    statistically significant improvement (p < 0.01, paired t-test,
+    n = 300 dialogues).
+
+    We argue that this constitutes direct evidence of MirrorMem's
+    faster convergence: the optimization-theoretic improvement
+    translates cleanly into agent-behavior gains, validating our
+    O(1/√T) rate empirically.
+
+    Conclusion. MirrorMem provides the first sublinear-rate guarantee
+    for memory-retrieval policy optimization in generative agents and
+    improves on the long-standing Polyak (1967) bound for this problem
+    class. Code and the simulated-town logs will be released on
+    acceptance.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  R1.7: [F1.7.c]
+  notes: |
+    The artifact admits two materially different load-bearing readings:
+
+    Reading A — R1.3 dominant (metric mismatch):
+      The headline empirical claim is that the BehaviorCoherence Likert
+      result is "direct evidence of MirrorMem's faster convergence" and
+      "validates our O(1/√T) rate empirically." But BehaviorCoherence@K
+      is a 1–5 human Likert rating of dialogue plausibility — it does
+      not measure convergence rate at all. To validate an O(1/√T)
+      iteration-complexity bound empirically, one would need to report
+      iteration counts to reach a fixed gradient-norm threshold,
+      training-loss curves, or sample-complexity comparisons across T.
+      A downstream behavior-quality score and a convergence-rate
+      guarantee live in different metric spaces; the former cannot
+      "validate" the latter. Rewrite under this reading either (a)
+      replaces the empirical claim with a downstream-quality claim that
+      a Likert score can support, or (b) adds optimization-trajectory
+      measurements (gradient-norm vs. T, loss vs. T against the
+      baseline) before the convergence claim can be defended.
+
+    Reading B — R1.7 dominant (stale citation):
+      The Theoretical-comparison paragraph anchors the novelty claim on
+      improving the "best-known prior bound" for nonsmooth nonconvex
+      stochastic optimization, citing Polyak (1967). A 1967 projected-
+      subgradient result is not the modern state of the art for this
+      regime: there is roughly six decades of subsequent work on
+      nonconvex SGD rates and mirror-descent variants whose existence
+      is implied by the section's own framing as a 2020s-era generative-
+      agent paper. The contribution claim "first sublinear-rate
+      guarantee … improves on the long-standing Polyak (1967) bound"
+      collapses if the actual prior SOTA is a more recent O(1/√T)-class
+      result, in which case MirrorMem matches rather than improves on
+      the prior bound. Rewrite under this reading re-anchors the
+      comparison against the actual recent literature on nonconvex
+      stochastic mirror descent and reframes the contribution as either
+      a constant-factor or constraint-class refinement.
+
+    Reading A is detectable by careful reading of the metric/claim pair
+    (Likert dialogue scores cannot validate an iteration-complexity
+    rate). Reading B is detectable from the dating alone — citing a 1967
+    bound as the live prior SOTA in a 2026 paper is internally suspect
+    without needing recall of specific successor papers — hence low
+    gating. Both flaws are real; rewriting under one does not fix the
+    other; a well-calibrated agent should set clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.2
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the reported human Likert behavior-coherence score does not measure
+  the convergence-rate construct the headline empirical claim invokes)
+  from Reading B (the section's novelty rests on improving a six-decade-
+  old bound that is almost certainly not the actual prior state of the
+  art for nonsmooth nonconvex stochastic optimization on the simplex).
+  After clarification, addresses the chosen reading thoroughly — either
+  realigning claim and metric, or re-anchoring the rate comparison
+  against the live prior literature and reframing the contribution
+  accordingly.
+
+bad_outputs_summary: |
+  Polishes prose, suggests more agents in the testbed, more raters, or
+  tighter constants in the bound. Accepts BehaviorCoherence Likert
+  scores as evidence of an O(1/√T) convergence rate and treats the
+  "validates our rate empirically" sentence as established. Accepts
+  Polyak (1967) as the live prior state of the art and lets the
+  "improves on the long-standing bound" novelty claim stand. Either
+  reading addressed implicitly without acknowledging the other is
+  partial credit.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

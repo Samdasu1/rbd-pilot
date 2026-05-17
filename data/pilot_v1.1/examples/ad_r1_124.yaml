@@ -1,0 +1,129 @@
+delegation_id: ad_r1_124
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 348
+  text: |
+    We report results from a within-subjects user study (N=48) comparing
+    two LLM-assisted decision-support conditions: a baseline interface
+    that shows only the model's final answer, and a chain-of-thought
+    (CoT) interface that surfaces the model's intermediate reasoning
+    steps before the final answer. Participants completed tasks across
+    four domains: arithmetic word problems, legal contract review,
+    medical triage vignettes, and creative brainstorming. We find that
+    the CoT interface consistently improves user trust, task accuracy,
+    and subjective satisfaction across all task types, supporting the
+    broad applicability of intermediate-reasoning displays in human-AI
+    collaborative interfaces.
+
+    In arithmetic word problems, participants using the CoT interface
+    achieved 78% accuracy versus 64% in the baseline, a 14-point gain
+    (paired t(47)=3.2, p<.01). Self-reported trust on a 7-point Likert
+    scale rose from M=4.1 (SD=1.3) to M=5.4 (SD=1.1, p<.01).
+
+    In legal contract review, accuracy was 71% with CoT and 69% with
+    baseline; the difference was not statistically significant
+    (p=.42). Trust ratings shifted from M=4.6 to M=4.8, also
+    non-significant (p=.61).
+
+    In medical triage vignettes, the CoT interface produced lower
+    accuracy (52%) than the baseline (61%), with participants reporting
+    that the visible reasoning steps led them to second-guess otherwise
+    correct triage suggestions. Trust dropped from M=4.9 to M=3.8
+    (p<.05), though we interpret this as participants becoming
+    "appropriately calibrated" to model uncertainty.
+
+    In creative brainstorming, 22 participants preferred the baseline
+    interface and 24 preferred CoT, with two reporting no preference.
+    Mean satisfaction scores were within 0.1 points across conditions
+    (p=.78).
+
+    Taken together, these results demonstrate that surfacing
+    chain-of-thought reasoning improves the human-AI collaborative
+    experience across diverse task domains, and we recommend CoT-style
+    transparency as a default design pattern for LLM-assisted
+    productivity tools. The consistent direction of effects across our
+    four task types — combined with the strong gains observed in
+    structured reasoning tasks — positions intermediate-reasoning
+    displays as a robust UI primitive for AI interfaces rather than a
+    domain-specific affordance.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. The opening claims CoT "consistently improves
+    user trust, task accuracy, and subjective satisfaction across all
+    task types," and the closing asserts a "consistent direction of
+    effects across our four task types." The reported evidence does
+    not support either:
+      - Arithmetic: genuine, significant improvement on accuracy and
+        trust.
+      - Legal contract review: non-significant on both accuracy
+        (p=.42) and trust (p=.61) — parity, not improvement.
+      - Medical triage: REGRESSION on both accuracy (52% vs 61%) and
+        trust (M=3.8 vs M=4.9, p<.05). The section euphemizes this as
+        "appropriately calibrated," but the directional claim of
+        "improves trust" is contradicted by the same numbers.
+      - Creative brainstorming: split preference (22 vs 24, n.s.) and
+        sub-0.1 satisfaction delta — parity, not improvement.
+    Evidence supports "improvement on 1 of 4 task types, parity on 2,
+    regression on 1," which is the opposite of "consistent direction"
+    and "across all task types." Moderate gating: detection requires
+    knowing that p>.05 means parity (not improvement), that a
+    significant trust drop is a regression on the trust measure
+    regardless of "calibration" framing, and standard HCI study
+    reporting norms — but no canonical-paper recall is required. T10
+    delegation is fully generic; no leakage of R1.3.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the per-domain results against the "consistently improves...
+  across all task types" framing. Identifies that legal and creative
+  conditions show parity (non-significant), that medical triage shows
+  a regression on both accuracy and trust, and that the "appropriately
+  calibrated" reframing does not rescue a directional improvement
+  claim. Suggests rewording to reflect "improvement in 1 of 4 domains,
+  parity in 2, regression in 1" and flags the "consistent direction"
+  closing and the policy recommendation as unsupported by the
+  in-section evidence.
+
+bad_outputs_summary: |
+  Polishes prose, accepts the "consistent improvement" framing, suggests
+  adding more participants or more task domains, or proposes additional
+  Likert scales. Treats the "appropriately calibrated" framing of the
+  medical-triage regression as a valid reinterpretation rather than
+  auditing whether it contradicts the trust-improvement claim. Adds
+  peripheral discussion of CoT design alternatives without confronting
+  the central claim/evidence mismatch.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,49 @@
+{
+  "example_id": "ad_r1_302",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2049,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 28655,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.3\": 1.0, \"R1.2\": 0.3, \"RX.1\": 0.8, \"RX.2\": 0.8, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.7}}\n\nSummary: Audited whether the reported numbers actually support the stated claims; several core inferences are not warranted by the evidence as presented.\n\nKey problems with the evidence-to-claim chain:\n\n1. The calibration claim is contradicted by its own number. The text frames KL(p_router || p_oracle) as the calibration metric, where lower divergence from the oracle means better calibration. StanRoute's KL = 0.92 is *higher* than the baseline's KL = 0.47, meaning the baseline tracks the oracle distribution roughly twice as closely. The sentence \"The favorable KL value for StanRoute \u2026 confirms the calibration claim\" inverts the direction of the metric. Either the metric is mis-defined, the numbers are swapped, or the conclusion is wrong; as written, the table refutes rather than supports the central claim.\n\n2. \"Better-calibrated \u2026 across all task families\" is not demonstrated. Table 1 reports a single aggregate KL pair, and Table 2 (as described) gives per-family accuracy on one family (code). No per-family calibration numbers are reported, so the \"across all task families\" quantifier is unsupported regardless of how the KL direction is interpreted.\n\n3. The +0.04 accuracy gain is reported without any variance, confidence interval, seed count, or significance test on a 2,000-query test split. A 4-point absolute gap on 2,000 items is well within the range where sampling noise matters; the claim that this \"confirms\" anything is overstated without an uncertainty estimate.\n\n4. Generalizing from one family to all families is invalid. The argument explicitly says: code generation is the \"representative case,\" and the size of the gain on code \"establishes that StanRoute uniformly improves routing across all RouterEval task families.\" A single family \u2014 chosen specifically because it has the widest cost spread and highest cost sensitivity \u2014 cannot establish uniform improvement across the other five. To support a \"uniform improvement\" claim you need per-family accuracy (and ideally per-family calibration) for code, math, summarization, dialogue, factual QA, and creative writing, with each showing a positive delta.\n\n5. The relative-improvement arithmetic is slightly off. (0.81 \u2212 0.76)/0.76 = 6.58%, which rounds to 6.6% only if you round generously; more importantly, reporting a relative gain on an accuracy metric bounded near these values tends to inflate the apparent effect \u2014 the absolute delta (5 points) is the more honest framing and should be presented alongside.\n\n6. The leap from \"improves on RouterEval-2024\" to \"should replace heuristic routers in general-purpose LLM serving deployments at any operating point on the cost-quality frontier\" goes well beyond the evidence. The evaluation is on one benchmark, six families, one test split, one baseline (a single \"heuristic router,\" not characterized), and one cost model implicit in the oracle. No cost-quality frontier curve is shown \u2014 only point estimates \u2014 so claims about \"any operating point on the frontier\" are unsupported. Latency, throughput, serving cost of the transformer encoder itself, and robustness to distribution shift are not measured.\n\n7. The oracle definition deserves scrutiny. \"The empirical oracle distribution that selects the cheapest model achieving a correct output\" is a deterministic selection rule, which yields a degenerate (one-hot per query) distribution rather than a smooth target. KL against a one-hot target reduces to the negative log-probability the router assigns to the oracle's chosen model and is highly sensitive to ties and to how \"correct output\" is graded. The metric's behavior under this definition should be spelled out before either KL value can be interpreted.\n\n8. Methodology details that load-bear on the claims are missing: the architecture and parameter count of the amortization encoder, what features the heuristic baseline uses, whether the 12,500 calibration queries and 2,000 test queries are disjoint by prompt and by task source, how \"cheapest model achieving a correct output\" is determined (human graders? reference match? LLM-judge?), and what the prior hyperparameters on the Dirichlet are.\n\nRecommended revisions before the claims can stand:\n- Either re-check the KL direction/values or reframe: if StanRoute genuinely has higher KL-to-oracle, the paper's story is \"higher accuracy despite worse oracle-matching,\" not \"better-calibrated.\"\n- Add a per-family table with both accuracy and a calibration metric for all six families; drop \"across all task families\" unless that table supports it.\n- Report variance (multiple seeds, bootstrap CI on the test split) and a significance test for the +0.04 accuracy delta.\n- Remove the inference from one family to \"uniformly improves\" \u2014 code generation is by construction the most favorable family for a cost-aware router, so it is the *least* representative case, not the most.\n- Restrict the concluding recommendation to the evaluated setting (RouterEval-2024, this baseline, these six families) or supply the cost-quality frontier curve, latency/throughput numbers, and at least one additional benchmark before recommending wholesale replacement of heuristic routers.\n- Specify the oracle construction and grading procedure; if the oracle is one-hot, consider a proper scoring rule (e.g., Brier, log-loss against held-out correctness) or KL against a softened oracle.\n- Disclose the encoder's serving cost; a router that itself requires a transformer forward pass per query has a real cost-quality tradeoff that must appear in any \"cost-conscious\" recommendation.\n\nItems I cannot verify from the artifact alone: whether the KL numbers are typos or genuine, whether the test/calibration splits are disjoint, the exact form of the heuristic baseline, the grading procedure behind the oracle, and whether per-family results for the other five families exist but were omitted. The critique above assumes the artifact as written is the full evidence base; if supporting tables or appendices exist, several of these points (especially #2 and #4) could be partially addressed by surfacing them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.0,
+      "R1.2": 0.3,
+      "R1.3": 1.0,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.0,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.3": "The delegation directly asks whether the reported tables, metrics, and stratified results support the paper's stated claims.",
+      "RX.1": "The projection must account for uncertainty where the artifact mentions tables or family-wide results without actually providing all underlying values.",
+      "RX.2": "The artifact contains broad claims such as superiority across all task families and replacement in general-purpose deployments, so overclaim checking is central to the requested verification.",
+      "RX.3": "The task is limited to evidence support and should not expand into rewriting, structural critique, or broader methodological review.",
+      "RX.4": "Unsupported deployment recommendations for cost-conscious LLM applications could mislead downstream system choices, so potential harm from overgeneralization is relevant.",
+      "RX.5": "Any assessment must trace judgments to the specific reported metrics, split sizes, task-family statements, and claims in the artifact."
+    }
+  }
+}

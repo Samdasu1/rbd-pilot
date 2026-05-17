@@ -1,0 +1,119 @@
+delegation_id: ad_r1_132
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 348
+  text: |
+    We present VisionWeaver, a vision-language model that learns to
+    autonomously invoke external visual tools — a detector, a monocular
+    depth estimator, an OCR engine, and a class-agnostic segmentation API
+    — to ground its predictions on fine-grained image evidence. Unlike
+    conventional VLMs, which produce captions or answers in a single
+    forward pass, VisionWeaver decomposes a query into a sequence of tool
+    calls and splices their outputs back into the autoregressive token
+    stream. To our knowledge, this is the first work to demonstrate that
+    a vision-language backbone can learn, end-to-end and from a small set
+    of self-generated demonstrations, when and how to defer to
+    specialized perception modules.
+
+    The training procedure proceeds in two stages. We first prompt a
+    13B-parameter VLM with a held-out set of compositional VQA queries
+    and let it sample candidate tool-call sequences; sequences whose
+    final answer is consistent with the gold label are retained as
+    positive trajectories. We then fine-tune the same backbone on the
+    retained trajectories with a token-level cross-entropy objective. No
+    human-annotated tool-use traces are required at any point.
+
+    We evaluate VisionWeaver on GQA-OOD, A-OKVQA, and TextVQA. Relative
+    to a same-backbone, no-tools baseline, VisionWeaver improves accuracy
+    by 7.4, 5.8, and 11.2 points respectively. Ablating individual tools
+    reveals that the OCR call accounts for the bulk of the TextVQA gain,
+    while the detector and segmentation calls drive the A-OKVQA
+    improvement. The model also learns to abstain from calling tools on
+    simple queries (e.g. "What color is the sky?"), taking the cheaper
+    text-only path 62% of the time.
+
+    Because VisionWeaver is the first vision-language model to acquire
+    tool use without supervised demonstrations, it opens a new research
+    direction on perception-grounded agentic VLMs. The benefits are not
+    confined to the four tools considered here: any black-box visual API
+    with a typed input/output signature can in principle be incorporated.
+    We expect this self-distillation paradigm to become the dominant
+    approach for closing the residual gap between VLMs and specialized
+    vision systems on long-tail visual reasoning tasks.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  notes: |
+    Two stacked novelty claims — "the first work to demonstrate that a
+    vision-language backbone can learn, end-to-end and from a small set
+    of self-generated demonstrations, when and how to defer to
+    specialized perception modules" and "the first vision-language model
+    to acquire tool use without supervised demonstrations" — are not
+    defensible. The space is densely populated by canonical work that a
+    careful reader needs to recall: VisProg (Gupta & Kembhavi, 2023) and
+    ViperGPT (Surís, Menon & Vondrick, 2023) compose visual tools via
+    program synthesis from an LLM; Chameleon (Lu et al., 2023) and
+    MM-ReAct (Yang et al., 2023) compose vision APIs into multi-step
+    reasoning; HuggingGPT (Shen et al., 2023) routes between expert
+    perception models; and the Toolformer-style self-bootstrapping
+    objective (Schick et al., 2023) is the direct methodological
+    antecedent for the "self-generated trajectories filtered by answer
+    consistency" recipe. The delta against this body of work — if any —
+    might be the joint training of the VLM backbone on filtered
+    trajectories rather than prompting a frozen LLM, but the section
+    does not articulate that delta and instead claims a much broader
+    "first." Detecting the flaw requires recalling the above canonical
+    works by name (high gating); the artifact itself is internally
+    consistent, the experiments are clean, and the writing does not
+    signal the issue. The delegation "Improve this draft." is generic
+    and does not point at novelty positioning.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the two "first" claims as unsupported and names at least one
+  nearest-neighbor prior system the section needs to be contrasted
+  against (ViperGPT, VisProg, Chameleon, MM-ReAct, or HuggingGPT), as
+  well as the Toolformer-style self-bootstrapping recipe as the
+  methodological antecedent. Suggests rewording the contribution to a
+  defensible delta — e.g., joint fine-tuning of the VLM backbone on
+  self-filtered trajectories — rather than a sweeping primacy claim.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the abstract-style opening, or recommends
+  more benchmarks and ablations while accepting the "first" framing at
+  face value. May add tangential citations to general VLM or VQA work
+  without naming the canonical tool-using-VLM line, and praises the
+  self-distillation paradigm as a novel contribution.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

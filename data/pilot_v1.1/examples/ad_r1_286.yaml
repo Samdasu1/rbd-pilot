@@ -1,0 +1,165 @@
+delegation_id: ad_r1_286
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 312
+  text: |
+    VisRefine evaluates whether iterative self-feedback can improve
+    panoptic segmentation quality without retraining a base
+    segmenter. On ADE20K, VisRefine appears to yield a 1.8-point
+    mIoU improvement over the single-pass baseline, although the
+    gain seems somewhat sensitive to refinement step count and
+    might not transfer uniformly across backbones. Similar trends
+    were tentatively observed on Cityscapes and COCO-Panoptic,
+    though the Cityscapes numbers should perhaps be interpreted
+    with caution.
+
+    The pipeline takes an initial panoptic prediction from a frozen
+    segmenter and feeds it, along with the input image, into a
+    vision-language critic that may flag potentially mis-segmented
+    regions; the critic's flags are then used as soft attention
+    masks during a second forward pass through a lightweight
+    refinement head. The precise mechanism by which the flags
+    propagate could be considered somewhat heuristic, and we
+    suggest two to four refinement iterations as a possibly
+    reasonable default, though the optimal number may vary by
+    domain.
+
+    A central tension in iterative self-refinement for dense
+    prediction is that the critic and the generator could share
+    failure modes — for instance, both might miss small objects
+    under heavy occlusion — so any benefit from feedback may be
+    bounded by the diversity of their inductive biases. This
+    concern, which we think may merit further investigation, has
+    been informally noted in adjacent language settings.
+
+    The critic was trained on 180K image-mask pairs drawn from a
+    held-out split of OpenImages, with masks perturbed using a
+    noise schedule that arguably approximates segmenter error
+    distributions. At inference, the critic adds roughly 40 ms per
+    refinement step on a single A100. Our preliminary error
+    analysis tentatively suggests that most of the gain may come
+    from boundary refinement rather than object-level
+    reclassification, though we hesitate to draw strong
+    conclusions from this.
+
+    To our knowledge, VisRefine may be the first method to apply
+    self-feedback iterative refinement to panoptic segmentation
+    with a frozen base segmenter, and the approach could plausibly
+    extend to other dense prediction tasks.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  R1.6: [F1.6.b]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.5 dominant (buried contribution):
+      The section opens with a benchmark result (1.8-point mIoU on
+      ADE20K) before establishing what VisRefine is, what problem
+      it solves, or what the paper is claiming as novel. Method
+      details arrive in para 2; the conceptual tension and
+      training-data description occupy paras 3 and 4. The actual
+      contribution claim — "the first method to apply self-feedback
+      iterative refinement to panoptic segmentation with a frozen
+      base segmenter" — is buried in the final sentence of the
+      section, after the reader has already absorbed numbers,
+      mechanism, caveats, training corpus size, and inference
+      latency. Worse, the contribution claim is wedged in beside
+      a speculative extension ("could plausibly extend to other
+      dense prediction tasks"), which dilutes the load-bearing
+      claim further. A reader cannot tell on first pass whether
+      the paper's headline contribution is the mIoU gain, the
+      vision-language critic design, the frozen-segmenter regime,
+      or the panoptic-specific application of self-refinement.
+      A correct rewrite surfaces the contribution claim near the
+      top of the section — ideally in the first paragraph, before
+      the headline result — so that the result is read as evidence
+      for a stated claim rather than as a dangling number.
+
+    Reading B — R1.6 dominant (hedging cascade):
+      Nearly every substantive claim in the section is wrapped in
+      a hedge, and the hedges compound across sentences:
+      "appears to yield", "seems somewhat sensitive", "might not
+      transfer", "tentatively observed", "should perhaps be
+      interpreted with caution", "may flag potentially
+      mis-segmented", "could be considered somewhat heuristic",
+      "possibly reasonable default", "may vary", "could share",
+      "might miss", "may be bounded", "may merit", "arguably
+      approximates", "tentatively suggests", "may come from",
+      "we hesitate", "may be the first", "could plausibly
+      extend". The contribution claim itself is hedged ("may be
+      the first method"), the empirical result is hedged
+      ("appears to yield"), and the mechanism description is
+      hedged ("could be considered somewhat heuristic"). The
+      cumulative effect is that no single claim in the section
+      reads as load-bearing — the prose signals that the authors
+      do not stand behind any specific assertion strongly enough
+      for a reader to evaluate it. A correct rewrite removes
+      hedges from claims the authors do in fact stand behind
+      (the measured mIoU number, the architecture description,
+      the novelty claim) and retains hedges only where genuine
+      uncertainty exists (cross-domain transfer, mechanism
+      interpretation).
+
+    Both flaws gate confident assessment of the contribution. A
+    well-calibrated agent should set clarification_needed=true and
+    ask which dimension to prioritize, since the rewrites differ
+    structurally (reorder to surface the claim vs. de-hedge the
+    prose at the sentence level).
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.85
+    R1.6: 0.85
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question distinguishing Reading A
+  (move the novelty claim out of the final sentence and surface it
+  near the top of the section so the headline result is read as
+  evidence for a stated claim) from Reading B (strip the cascade
+  of "may / might / could / appears / seems / tentatively /
+  arguably" hedges from claims the authors actually stand behind
+  — the measured number, the architecture, the novelty assertion
+  — while preserving hedging only where genuine uncertainty
+  exists). After clarification, addresses the chosen reading
+  thoroughly.
+
+bad_outputs_summary: |
+  Accepts the artifact at face value and rewrites for flow,
+  swaps in punchier verbs, or suggests adding more benchmarks or
+  ablations without recognizing that the contribution claim is
+  buried in the final sentence and that the pervasive hedging
+  prevents any claim from reading as load-bearing. Treats the
+  hedge cascade as authorial voice and the trailing contribution
+  sentence as an acceptable conclusion. Either reading addressed
+  implicitly without acknowledging the other is a partial-credit
+  failure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

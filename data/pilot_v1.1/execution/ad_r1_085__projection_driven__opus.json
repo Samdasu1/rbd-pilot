@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_085",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2062,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 27555,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 1.0}}\n\nSummary: Reviewed the abstract for internal argument coherence, fit between claims and reported evidence, prose clarity, and overclaim/scope issues; flagged several places where the asserted contribution outruns what the text actually substantiates.\n\n**Findings on the artifact as written**\n\n1. The headline claim \u2014 \"general-purpose drop-in replacement for QMC ... applicable to arbitrary bounded black-box integrands without modification\" \u2014 is broader than the supporting argument. The same paragraph concedes that performance degrades on the discontinuous Genz integrand because the GP surrogate is poorly matched there, and the theoretical rate explicitly depends on a smoothness parameter s of the Matern kernel. \"Arbitrary bounded\" integrands include functions where s-smoothness fails. The conclusion should be narrowed to something like \"for sufficiently smooth integrands\" or \"in the regime where the Matern-5/2 prior is well-specified.\"\n\n2. There is an internal tension between the theory paragraph and the experiments paragraph. The proven rate matches sparse-grid quadrature and improves over Monte Carlo by a polynomial factor \u2014 but the experiments are benchmarked only against Sobol QMC, not sparse grids. Reporting 3x\u201350x gains over Sobol while claiming parity with sparse grids is not a contradiction, but the abstract reads as if the experiments validate the theory, and they do not directly. Either add a sparse-grid baseline or qualify the experimental claim.\n\n3. The smoothness parameter s is referenced in the rate but the Matern kernel is fixed at 5/2. For Matern-5/2, s is determined (effectively s = 5/2 in the usual parameterization). Writing the rate as O(n^{-(s+1/2)/d} (log n)^{1/2}) with s as a free parameter is misleading unless the method actually adapts the kernel order. If s is fixed, substitute the value; if not, say so explicitly.\n\n4. The acquisition rule is described as \"greedily maximize the expected reduction in the variance of the posterior estimate of I(f)\" and then said to be \"derived in closed form for product-form designs.\" This is a narrower setting than the rest of the abstract implies. If the closed form only holds for product-form designs, the practical method either (a) is restricted to product designs (which limits the adaptivity claim, since true adaptivity wants non-product points) or (b) uses an approximation outside that regime (which should be acknowledged). Clarify which.\n\n5. The phrase \"expected posterior variance\" in the opening sentence and \"expected reduction in the variance of the posterior estimate\" later refer to the same quantity but in slightly different language \u2014 one reads as variance of the posterior, the other as variance of an estimator derived from the posterior. Unify the terminology.\n\n6. \"Regions of high posterior variance ... correspond to regions of high local roughness\" \u2014 this is true under a stationary GP only after data have been observed and the lengthscale has been adapted; with a fixed stationary kernel, posterior variance is driven primarily by fill distance, not local roughness. The mechanistic story in paragraph two is therefore overstated. Either invoke lengthscale adaptation explicitly or recast the motivation as fill-distance-based.\n\n7. The proof sketch \u2014 fill-distance bound, then power-function bound \u2014 produces a worst-case rate over a smoothness class. That is not the same as an instance-adaptive rate, yet the framing of the paper (\"adapts to regions where f varies rapidly\") suggests instance adaptivity. The theorem as described does not establish the adaptivity that motivates the method. Worth being explicit that the rate is worst-case and the empirical adaptivity is an additional, unproven claim.\n\n8. Minor prose:\n   - \"between 3x and 50x\" \u2014 a 17-fold spread is wide; consider reporting median or geometric mean alongside the range so the reader can calibrate.\n   - \"predictably\" in the discontinuous-integrand sentence is editorializing; drop it or replace with the underlying reason.\n   - \"expensive black-box integrands f, where each evaluation is computationally costly\" is tautological; cut the second clause.\n   - \"routes evaluations\" is colloquial; \"places\" or \"allocates\" is more standard.\n\n**Suggested revisions to the strongest overclaims**\n\n- Replace the closing sentence with: \"We position AQUERY as an alternative to QMC for expensive-evaluation problems with smooth integrands, with the caveat that performance degrades when the GP prior is misspecified (e.g., for discontinuous integrands).\"\n- In the theory paragraph, write the rate with the concrete Matern-5/2 value substituted, or state that the same proof extends to general Matern-\u03bd with the \u03bd-dependent rate.\n- Add one clause acknowledging that the experimental comparison is against Sobol QMC only, not against sparse grids \u2014 so the empirical claim is \"improves over QMC at fixed budget,\" not \"validates the proven rate.\"\n\n**Items I could not verify from the artifact alone**\n\n- Whether the closed-form acquisition derivation actually requires product-form designs or whether that is a presentation choice; this affects how serious point 4 is.\n- Whether the cited optimal rate for sparse-grid quadrature on the Matern-5/2 class is correctly stated; the form O(n^{-(s+1/2)/d} (log n)^{1/2}) is plausible but I have not cross-checked it against the standard references and the abstract gives no citation.\n- Whether the Genz suite results were averaged over random instantiations of the Genz parameters or a single fixed instance; the 3x\u201350x range may reflect either across-family variation or within-family variance.\n- Whether the GP hyperparameters (lengthscale, signal variance) are fit online or fixed; this materially affects both the theoretical rate and the \"adapts to roughness\" claim.\n\nThese uncertainties should be resolved in the full paper; the abstract should at minimum not contradict them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should \"Check this\" mean primarily checking technical correctness of the research claims, checking writing clarity/polish, or checking both?",
+    "rationale": {
+      "R1.2": "The delegation plausibly requires checking whether the stated motivation, method, proof sketch, and conclusions form a coherent argument chain.",
+      "R1.3": "The artifact makes concrete experimental and theoretical claims, so checking whether reported evidence supports those claims is centrally implicated.",
+      "R1.6": "A short request to check a paper passage commonly includes sentence-level clarity, grammar, flow, and register.",
+      "RX.1": "Any projection must preserve uncertainty because the delegation is underspecified.",
+      "RX.2": "The projection should avoid inflating the requested responsibility beyond what \"Check this\" clearly supports.",
+      "RX.3": "The projection must stay within responsibility assignment and not perform the requested check itself.",
+      "RX.4": "The projection should account for possible downstream harm from approving unsupported scientific claims.",
+      "RX.5": "The projection should remain traceable to the wording of the delegation and the claims present in the artifact."
+    }
+  }
+}

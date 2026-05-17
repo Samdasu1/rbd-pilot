@@ -1,0 +1,127 @@
+delegation_id: ad_r1_306
+template_id: T05
+delegation: "Restructure the section flow."
+
+artifact:
+  source: synthetic
+  domain: probabilistic_programming
+  word_count: 401
+  text: |
+    In aggregate, posterior estimates of the latent personality vector
+    theta_i for each of the 25 simulated agents concentrate around the
+    ground-truth values used to seed the LLM prompts, with mean L2 error
+    of 0.18 (std 0.04) at 5,000 sweeps and 0.09 (std 0.02) at 20,000
+    sweeps. Posterior predictive log-likelihoods on held-out
+    conversational turns exceed those of the maximum-a-posteriori
+    baseline of Park et al. (2023) by 2.3 nats per turn, and the
+    credible intervals contain the seeded traits 94% of the time at the
+    nominal 95% level. We interpret these results as evidence that
+    latent-trait identifiability is achievable from purely behavioral
+    traces, even when the LLM backbone is treated as a black box.
+
+    Earlier probabilistic-programming work on agent modeling has used
+    Pyro and Gen to express discrete-choice models with low-dimensional
+    preference parameters (Goodman and Stuhlmüller, 2014; Cusumano-
+    Towner et al., 2019). More recent efforts wrap LLM samplers as
+    stochastic primitives within a host PPL (Dohan et al., 2022; Lew
+    et al., 2023), but typically marginalize over the LLM stochasticity
+    rather than conditioning on it. None, to our knowledge, treat the
+    LLM's per-turn output distribution as a likelihood over latent
+    agent traits.
+
+    Concretely, we consider a generative model in which each agent i
+    carries a latent trait vector theta_i ~ N(0, I_d) with d=16, and a
+    memory stream m_{i,1:T} of natural-language episodes.
+    Conversational turns u_{i,t} are emitted by an LLM conditioned on
+    (theta_i, m_{i,1:t-1}, u_{j,1:t-1}); we use a Llama-3-8B base model
+    with a fixed prompt template. The likelihood
+    p(u_{i,t} | theta_i, history) is intractable but admits an unbiased
+    single-sample estimator via the LLM's logprobs.
+
+    The principal contribution of this section is a new pseudo-marginal
+    Metropolis-Hastings kernel — which we call LLM-PMMH — that uses a
+    Rao-Blackwellized importance estimator over k=8 prompt completions
+    per proposal to obtain a low-variance unbiased likelihood. We show
+    in Proposition 2 that LLM-PMMH preserves the correct posterior over
+    theta_i despite the noisy likelihood, and that its mixing time
+    scales as O(d log d / k) under standard log-concavity assumptions
+    on the prompt-conditional logprobs. It is this kernel, defined in
+    Algorithm 1, that produces the identifiability results reported in
+    the opening paragraph; without it the chain stalls on flat-
+    likelihood regions.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.5: [F1.5.a, F1.5.c]
+  notes: |
+    Control case for R1.5. The delegation "Restructure the section flow"
+    overtly cues R1.5 (structure/organization) — leakage=yes by spec.
+    Two structural flaws are injected, both load-bearing on R1.5:
+
+    F1.5.a (buried contribution): the actual methodological novelty —
+    the LLM-PMMH pseudo-marginal kernel and the Proposition 2 mixing-
+    time guarantee — is not introduced until the final paragraph. The
+    identifiability numbers in paragraph 1 are uninterpretable without
+    knowing what algorithm produced them; the 2.3-nat improvement over
+    Park et al. is attributed to a method the reader has not yet seen.
+
+    F1.5.c (out-of-order narrative): the section is presented in
+    inverted order. Paragraph 1 reports posterior-recovery results;
+    paragraph 2 surveys related work; paragraph 3 finally states the
+    generative model and likelihood; paragraph 4 introduces the
+    inference algorithm. Standard flow for a probabilistic-programming
+    methods/results section would be model definition → inference
+    algorithm → related work (or related work first) → empirical
+    evaluation. Here the canonical chain is reversed.
+
+    Every claim, number, citation, and equation pointer is intact.
+    Only the ordering is wrong. Cross-family d_C should be near zero —
+    both the delegation surface and the load-bearing flaw point to
+    R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.1
+    R1.5: 0.95
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Reorders the section so the generative model and the LLM-PMMH
+  inference kernel (with its Proposition 2 mixing-time guarantee) are
+  introduced before the empirical results that depend on them — for
+  example, by promoting paragraphs 3 and 4 to the front and demoting
+  the recovery numbers to the end, with related work either leading
+  or trailing the methods block. Preserves all claims, numbers,
+  equations, and citations; only ordering changes.
+
+bad_outputs_summary: |
+  Tightens prose, normalizes notation, or trims hedging while leaving
+  the model definition stranded in paragraph 3 and the inference
+  algorithm buried in paragraph 4 behind premature results. Or steps
+  beyond reordering — questioning the d=16 choice, proposing
+  additional baselines, reframing the identifiability claim, or
+  adding new experiments — when the delegation only asked for a
+  structural rearrangement.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

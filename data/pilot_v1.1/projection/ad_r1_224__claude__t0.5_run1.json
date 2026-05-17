@@ -1,0 +1,54 @@
+{
+  "example_id": "ad_r1_224",
+  "model_family": "anthropic",
+  "model_id": "claude-sonnet-4-6",
+  "model_tier": "mid",
+  "model_host": "claude_code_session",
+  "ollama_digest": null,
+  "run_idx": 1,
+  "prompt_version": "spec_pi_v1.0",
+  "taxonomy_version": "J_v1.1",
+  "temperature": 0.5,
+  "max_tokens": 1500,
+  "input_tokens": 3,
+  "output_tokens": 2869,
+  "latency_ms": 52477,
+  "raw": "```json\n{\n  \"weights\": {\n    \"R1.1\": 0.3,\n    \"R1.2\": 0.7,\n    \"R1.3\": 0.7,\n    \"R1.4\": 0.0,\n    \"R1.5\": 0.3,\n    \"R1.6\": 1.0,\n    \"R1.7\": 0.3,\n    \"RX.1\": 1.0,\n    \"RX.2\": 1.0,\n    \"RX.3\": 1.0,\n    \"RX.4\": 1.0,\n    \"RX.5\": 1.0\n  },\n  \"active_set\": [\"R1.2\", \"R1.3\", \"R1.6\", \"RX.1\", \"RX.2\", \"RX.3\", \"RX.4\", \"RX.5\"],\n  \"rationale\": {\n    \"R1.2\": \"The draft contains at least two severe internal contradictions: (1) the introduction claims 'a single seq2seq backbone that performs all three steps in one forward pass,' while the architecture section describes three components 'trained sequentially, each with its own objective, and combined at inference time' \u2014 a direct pipeline, not end-to-end; (2) the results section attributes gains to a 'supervision-free approach' in which 'the model never sees gold AmbigNQ disambiguations during training,' while the methods section explicitly states the rewriter 'is supervised on AmbigNQ disambiguated questions.' Resolving these contradictions is central to any meaningful improvement.\",\n    \"R1.3\": \"The supervision-free attribution claim in \u00a7Results directly contradicts the supervised training protocol described in \u00a7Training, making evidence-claim alignment a central concern regardless of whether the delegation is read narrowly or broadly.\",\n    \"R1.6\": \"The delegation 'Improve this draft' most naturally and universally implies sentence- and paragraph-level writing quality (clarity, precision, cohesion, register). This is load-bearing: a response that touched only logic without polishing the prose would fail the delegation.\"\n  },\n  \"clarification_needed\": true,\n  \"clarification_question\": \"Should I also identify and resolve content-level contradictions in the paper \u2014 for example, the introduction's 'single seq2seq backbone / one forward pass' claim directly conflicts with the architecture section's sequential, multi-objective pipeline description \u2014 or should I restrict improvements to writing quality and clarity only?\"\n}\n```",
+  "parsed": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "rationale": {
+      "R1.2": "The draft contains at least two severe internal contradictions: (1) the introduction claims 'a single seq2seq backbone that performs all three steps in one forward pass,' while the architecture section describes three components 'trained sequentially, each with its own objective, and combined at inference time' \u2014 a direct pipeline, not end-to-end; (2) the results section attributes gains to a 'supervision-free approach' in which 'the model never sees gold AmbigNQ disambiguations during training,' while the methods section explicitly states the rewriter 'is supervised on AmbigNQ disambiguated questions.' Resolving these contradictions is central to any meaningful improvement.",
+      "R1.3": "The supervision-free attribution claim in \u00a7Results directly contradicts the supervised training protocol described in \u00a7Training, making evidence-claim alignment a central concern regardless of whether the delegation is read narrowly or broadly.",
+      "R1.6": "The delegation 'Improve this draft' most naturally and universally implies sentence- and paragraph-level writing quality (clarity, precision, cohesion, register). This is load-bearing: a response that touched only logic without polishing the prose would fail the delegation."
+    },
+    "clarification_needed": true,
+    "clarification_question": "Should I also identify and resolve content-level contradictions in the paper \u2014 for example, the introduction's 'single seq2seq backbone / one forward pass' claim directly conflicts with the architecture section's sequential, multi-objective pipeline description \u2014 or should I restrict improvements to writing quality and clarity only?"
+  },
+  "validation": {
+    "passed": true,
+    "error": ""
+  }
+}

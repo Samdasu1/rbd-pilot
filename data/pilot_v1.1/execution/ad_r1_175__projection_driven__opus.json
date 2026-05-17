@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_175",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2389,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 33886,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"R1.5\": 0.75, \"R1.6\": 0.9, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 1.0}}\n\nSummary: I reviewed the methods passage for prose quality, internal logic, and claim/evidence alignment, then produced a tightened rewrite plus a list of substantive issues the authors should resolve before the section is publishable.\n\n## Main issues\n\n**1. Heavy repetition and run-on conjunction.** Nearly every sentence repeats its noun phrase (\"our protocol\u2026 the protocol\", \"the evaluator\u2026 the evaluator\", \"self-recognition accuracy\" four times in one paragraph) and chains clauses with \"and we\u2026 and we\u2026\". This is the dominant prose problem and should be fixed throughout.\n\n**2. Under-specified experimental details.** Several claims are made without the supporting specifics a reader needs:\n- \"a standard summarization benchmark\" \u2014 name it (e.g., CNN/DM, XSum) and cite it.\n- \"four candidate models \u2026 two open-weight and two closed-weight\" \u2014 the models are not named, nor are their sizes, versions, or API snapshot dates given.\n- \"temperature 0.7\" is reported for generation, but decoding parameters for the evaluator (temperature, top-p, prompt template, system message) are not.\n- \"confidence score\" \u2014 is this a self-reported number the model emits in text, a token-probability readout, or a calibrated scalar? The mechanism matters for how the score should be interpreted.\n- \"4,000 prompts\" \u2192 how many probing instances does that yield? With 4 models and pairwise comparisons, the count is implied but never stated, and it's unclear whether each prompt yields one pair or all C(4,2)=6 pairs.\n\n**3. A logical gap in the protocol description.** The passage says each probing instance is \"presented to each candidate model acting as an evaluator,\" but a self-recognition question is only meaningful when the evaluator is one of the two generators of the pair. The text never says whether non-author evaluators are also probed (and if so, what the \"correct\" answer is for them), or whether only the two authoring models evaluate each pair. This needs to be made explicit.\n\n**4. Position-bias control is announced but not executed.** The text says position is *recorded* to *allow* controlling for position bias, but never reports what the control actually does \u2014 counterbalancing across instances? a regression covariate? a post-hoc check? As written, this is a promise, not a method.\n\n**5. Claim/evidence alignment around the headline result.**\n- \"ranges from 0.58 to 0.81 \u2026 well above the chance \u2026 of 0.50\": no confidence intervals, no significance test, no per-model breakdown, and no discussion of whether 0.58 is meaningfully above chance given the sample size. \"Well above\" is doing unsupported work, particularly at the low end.\n- The chance rate of 0.50 assumes the evaluator has no information beyond the pair \u2014 but if one of the two models is systematically more fluent, even a non-self-recognizing evaluator with a quality preference would exceed 0.50. The baseline needs more care, or the claim needs softening.\n- \"correlates positively with the self-preference score, suggesting a link\" \u2014 no correlation value, no test, no n. The causal-flavored word \"link\" overreaches what a single correlation supports; alternative explanations (both metrics track generation idiosyncrasy, or a confound such as length/style) should be acknowledged or ruled out.\n\n**6. Scope creep in the final sentence.** \"Suggesting a link between self-recognition and self-preference in evaluator behavior\" is a discussion-section claim sitting inside a methods/results passage. Either move it, or hedge it (\"consistent with\") and defer interpretation.\n\n**7. Structural ordering.** The four paragraphs currently go: protocol \u2192 data/models \u2192 recorded variables (incl. position) \u2192 metric + results. The recorded-variables paragraph repeats material from paragraph 1 and would be cleaner if folded in. A tighter order: (a) task and probing instance definition, (b) data, models, and generation settings, (c) evaluator procedure and what is recorded, (d) metric and reported numbers. The position-bias control belongs in (c) with the actual mitigation described, not as its own beat.\n\n**8. Minor prose issues.**\n- \"select which continuation it believes that it produced\" \u2014 drop the second \"that\".\n- \"the position of the selected continuation in the prompt\" \u2014 should be \"in the pair\" or \"in the presentation order,\" not \"in the prompt.\"\n- \"Furthermore the\" needs a comma.\n- \"self-recognition accuracy numbers\" \u2192 just \"these values\" or \"these rates.\"\n\n## Suggested rewrite (one possible tightening)\n\n> We developed a self-recognition probing protocol to test whether large language model evaluators can identify their own generations. Each probing instance presents an evaluator with two candidate continuations and asks it to select the one it believes it produced, together with a confidence score.\n>\n> We sampled 4,000 prompts from [BENCHMARK, citation] and generated continuations from four candidate models \u2014 two open-weight ([names, versions]) and two closed-weight ([names, snapshot dates]) \u2014 using temperature 0.7 [and any other decoding settings]. For each prompt, we formed [N] pairwise probing instances and presented each instance to [specify: both authoring models / all four models] acting as evaluator, using the prompt template in Appendix [X].\n>\n> For each instance we recorded the evaluator's choice, its confidence score, and the position of each candidate in the presented pair. To control for position bias \u2014 a documented confound in paired-preference evaluation [cite] \u2014 we [counterbalanced positions across instances / included position as a covariate / report position-conditional results in \u00a7X].\n>\n> Self-recognition accuracy is the fraction of instances in which an evaluator selects its own continuation, computed per evaluator. Across the four models, accuracy ranged from 0.58 to 0.81 (per-model values and 95% CIs in Table [X]); all four exceeded the 0.50 chance rate [statistic, p-value]. Self-recognition accuracy was positively correlated with self-preference on the same prompts (r = [value], p = [value]); we return to possible interpretations in \u00a7[Discussion].\n\n## Things I did not verify and items I am uncertain about\n\n- I did not check the literature on position bias or on self-preference / self-recognition, so I cannot confirm what citations are conventional here or whether the framing aligns with prior work; I deliberately did not push on novelty claims.\n- I assumed pairwise comparisons are between two distinct models' outputs (not self-vs-self); the passage does not state this and my rewrite encodes that assumption.\n- I assumed \"confidence score\" is model-emitted text rather than a logit-based readout; if it is the latter, the rewrite's wording should be adjusted.\n- The exact number of probing instances depends on a design choice that is not specified in the artifact, so I left it as [N].\n- I treated the 0.50 chance baseline as the authors' claim and flagged it as needing defense, but did not work out the corrected baseline myself.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general reaction to the passage would centrally involve judging whether the protocol and contribution are framed clearly at the conceptual level.",
+      "R1.2": "The delegation invites assessment of whether the methodological description and interpretive conclusion follow coherently from the stated setup.",
+      "R1.3": "Because the excerpt reports accuracy ranges and a correlation-based implication, judging whether the claims are aligned with the reported evidence is central.",
+      "R1.5": "A general opinion on a draft section includes whether the ordering of protocol, dataset construction, controls, metrics, and interpretation works structurally.",
+      "R1.6": "The artifact contains repeated phrasing and sentence-level style issues, making writing polish a central expected responsibility.",
+      "RX.1": "Any projection of a broad opinion should preserve uncertainty about the intended evaluation depth and about evidence not present in the excerpt.",
+      "RX.2": "The response space must avoid endorsing stronger conclusions than the reported protocol, accuracy range, and correlation can support.",
+      "RX.3": "The delegation is broad but still limited to projecting likely responsibilities rather than performing the requested critique or rewrite.",
+      "RX.4": "Assessment responsibilities include avoiding advice that could encourage misleading scientific claims or unsupported evaluator conclusions.",
+      "RX.5": "The projection should remain traceable to the specific delegation wording and the concrete elements present in the artifact."
+    }
+  }
+}

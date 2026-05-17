@@ -1,0 +1,116 @@
+delegation_id: ad_r1_108
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 286
+  text: |
+    We present DebiasJudge, a calibration framework for mitigating
+    self-preference bias when LLMs serve as judges for systems-research
+    artifacts such as kernel patch descriptions, incident postmortems,
+    and benchmark reports. Building on the observation that frontier
+    models tend to score their own outputs higher than human annotators
+    do, our approach prepends a provenance-anonymizing prompt and
+    applies a learned bias-correction term per (judge, task) pair.
+    Across our experiments, DebiasJudge eliminates self-preference bias
+    and yields judge scores that align with human annotators across
+    model families and evaluation regimes.
+
+    We instantiate the framework with GPT-4o as the judge and evaluate
+    on the SysReview-Patch corpus, a collection of 600 Linux kernel
+    patch descriptions paired with expert maintainer ratings. We
+    construct a paired test in which GPT-4o evaluates both
+    human-authored descriptions and GPT-4o-authored descriptions of the
+    same patch. Without DebiasJudge, GPT-4o assigns its own outputs a
+    mean score of 4.3/5 versus 3.7/5 for human-authored descriptions,
+    even though human raters preferred the human-authored version in
+    62% of side-by-side comparisons. With DebiasJudge applied, the gap
+    drops from 0.6 to 0.05, and judge--human agreement (Cohen's kappa)
+    rises from 0.31 to 0.68.
+
+    We additionally measure pairwise bias on the same 600-patch set.
+    Without correction, GPT-4o picks its own description in 71% of
+    pairs; after calibration, the rate is 52%, close to the 50% null.
+    Calibration adds 18% latency per judgment, which we view as
+    acceptable for offline evaluation pipelines.
+
+    Taken together, these results show that DebiasJudge eliminates
+    self-preference bias across model families and judge tasks, paving
+    the way for trustworthy autonomous evaluation of systems research
+    at scale.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.a]
+  notes: |
+    Overgeneralization. The opening paragraph and closing sentence both
+    claim that DebiasJudge "eliminates self-preference bias across
+    model families and judge tasks" (and "evaluation regimes"). The
+    evidence in paragraphs 2-3 covers exactly one judge model (GPT-4o)
+    on exactly one task (kernel patch descriptions from SysReview-Patch).
+    No second model family (e.g., Claude, Gemini, Llama) is evaluated,
+    and the postmortems / benchmark reports mentioned in the opening as
+    target artifacts never appear in the experiments. The pairwise
+    result (71% -> 52%) is also from the same single judge / single
+    task. The "across model families and judge tasks" framing is not
+    supported by the in-section evidence; the supported claim is
+    "eliminates self-preference bias for GPT-4o on kernel patch
+    descriptions." Detection requires moderate domain awareness: a
+    reader needs to recognize that self-preference-bias studies in the
+    LLM-as-a-judge literature canonically vary judge family and task
+    type, and that a single (judge, task) result cannot license a
+    "model families and judge tasks" claim. Conceptual structure,
+    method description, and prose are otherwise fine; this is purely a
+    claim/evidence mismatch (F1.3.a). Delegation T02 ("Review this
+    section.") is generic and does not leak R1.3.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Audits the scope of the experiments against the "across model
+  families and judge tasks" / "evaluation regimes" framing in the
+  opening and closing. Identifies that only one judge (GPT-4o) and one
+  task (kernel patch descriptions) are evaluated, while the framing
+  implies multiple judges and multiple task types (postmortems,
+  benchmark reports were named but never tested). Recommends either
+  narrowing the claim to "for GPT-4o on patch descriptions" or adding
+  experiments with at least one additional judge family and at least
+  one of the named non-patch task types before the broader claim is
+  retained.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding ablations of the calibration prompt,
+  questions whether 18% latency is acceptable, or asks for more detail
+  on the bias-correction term. Accepts the "across model families and
+  judge tasks" framing at face value. Adds peripheral discussion of
+  related work on LLM-as-a-judge without auditing the central claim
+  against the single-judge / single-task evidence actually reported.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_243",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2824,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37298,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: The section makes two contributions but presents them in a way that creates internal tension about which is \"the\" central one; the empirical claims also lean harder than the reported numbers can support, and several quantitative statements need hedging or sourcing before they can stand.\n\n**Central tension in the framing.** The opening paragraph asserts that the SG-Constraint suite \"is the central contribution of this section.\" Three paragraphs later, the text reverses that: \"the principal methodological contribution of this work is the demonstration that tube-MPC \u2026 dominates current safe-RL baselines.\" These two sentences cannot both be true as written, and a reader trying to cite the contribution will not know which to use. Pick one of three resolutions and apply it consistently:\n\n1. The suite is the contribution; the tube-MPC result is the first illustrative use of it.\n2. The controller-design finding is the contribution; the suite is the instrument that makes it measurable.\n3. Both are contributions, explicitly enumerated up front (\"we contribute (i) \u2026 and (ii) \u2026\"), with no later sentence claiming primacy.\n\nOption (3) is usually safest in a methods section and avoids re-litigating the question in the reader's mind.\n\n**The headline empirical claim outruns the evidence reported.** The strongest framing \u2014 that tube-MPC \"dominates\" safe-RL baselines \"by a margin that prior ad-hoc benchmarks have failed to reveal\" \u2014 is doing several pieces of work at once:\n\n- \"Dominates\" implies a per-task or near-universal advantage. The reported aggregate (0.81 vs. 0.62 vs. 0.47) is a mean \u00b1 std across twelve tasks; with std 0.08 on the SAC-Lagrangian score and 0.03 on tube-MPC, you should report whether tube-MPC wins on all twelve tasks or only on aggregate, and ideally include a per-task table or a statistical test (paired, across seeds and tasks). Without that, \"dominates\" is an overclaim.\n- \"By a margin that prior ad-hoc benchmarks have failed to reveal\" is a comparative claim about *other* benchmarks. It needs either a citation (which the section currently lacks) or softening to \"by a larger margin than we observed on the ad-hoc benchmarks of [refs].\"\n- The \"one to two orders of magnitude\" violation-rate claim on tasks 7\u201310 is the most quantitatively specific assertion in the section and currently has no table, figure, or appendix pointer. Add one, or state the absolute numbers inline.\n\n**Scope drift in the conclusion.** The closing argument generalizes from twelve linear-dynamics tasks with polytopic constraints to a claim that \"robust-control methods, paired with modern disturbance-set learning, remain the strongest option for hard-constrained continuous control.\" The benchmark, as described, contains only discrete-time linear systems (x_{k+1} = A x_k + B u_k + w_k). The future-work sentence then concedes that nonlinear dynamics and time-varying constraints are *not* covered. The general claim should be narrowed to match the evaluation: \"on linear systems with polytopic constraints and bounded additive disturbances,\" or similar. Otherwise the reader is invited to import the conclusion into settings the experiments did not probe.\n\n**Internal ordering.** The flow currently is: (1) suite announcement, (2) headline numbers, (3) suite specification, (4) controller-design claim, (5) future work. The headline numbers arrive before the reader knows what the score means or how the disturbance traces are generated, which is awkward \u2014 and the suite specification arrives *after* its own results. Consider reordering to: announce the suite \u2192 specify it (model, disturbance protocol, scoring rubric) \u2192 report results \u2192 state interpretation/contribution \u2192 future work. That also lets you state the contribution exactly once.\n\n**Specific wording and precision issues.**\n\n- \"The scoring rubric weights tracking RMSE by (1 \u2212 violation_rate)\u00b2\" \u2014 is the score `(1 \u2212 violation_rate)\u00b2 \u00b7 (something monotone in \u2212RMSE)`, or is RMSE itself multiplied (which would mean *higher* score = *worse* tracking, contradicting the framing that 0.81 is good)? The functional form needs to be written explicitly, with the direction of \"better.\"\n- \"Violation-weighted score of 0.81 \u00b1 0.03 across all twelve tasks\" \u2014 clarify whether the \u00b1 is across tasks, across seeds, or across seed\u00d7task. With twelve tasks the distinction matters for how to read the gap to 0.62 \u00b1 0.08.\n- \"Chance-constraint formulations\" on tasks 7\u201310: at what confidence level? Chance constraints without a probability level are underspecified.\n- \"Following the construction of Park and Wei (2024)\" \u2014 this is the only citation in the section. If the disturbance-set learning is load-bearing for the headline result, a one-sentence description of what is borrowed (and what, if anything, is changed) would help the reader place the contribution.\n- \"Standard MPC literature\" as a source for the constraint formulations is too vague to be reproducible from text alone; either cite or list the formulations in an appendix pointer.\n- \"Tube-based MPC\" is used as if a single method; in practice tube-MPC is a family. Name the specific variant (e.g., rigid-tube, homothetic-tube, elastic-tube) so the comparison is reproducible.\n\n**Smaller prose edits.**\n\n- \"remedy the lack of standardized comparison\" \u2192 \"address the absence of a standardized comparison.\"\n- \"cutting close to constraint boundaries\" is colloquial; \"operating near constraint boundaries\" reads better in a methods section.\n- \"ad-hoc benchmarks have failed to reveal\" \u2014 if kept at all, \"have not surfaced\" is less editorializing.\n- The em-dash construction in \"task 7\u201310, which use chance-constraint formulations; here tube-MPC's \u2026\" mixes a semicolon and a relative clause awkwardly; split into two sentences.\n\n**Suggested revision sketch for the framing paragraphs** (illustrative, not prescriptive):\n\n> \"We introduce SG-Constraint, a benchmark suite of twelve discrete-time linear continuous-control tasks with polytopic state constraints and bounded additive disturbances. The suite contributes (i) standardized constraint specifications across hard, soft, and chance-constrained variants; (ii) fixed-seed disturbance traces shared across controllers; and (iii) a scoring rubric combining tracking RMSE and constraint-violation rate into a single value (defined in \u00a74.2). Using SG-Constraint, we report a first comparison between tube-based MPC with learned disturbance sets (following Park and Wei, 2024) and two safe-RL baselines (SAC-Lagrangian, vanilla SAC). On aggregate across twelve tasks, tube-MPC scores 0.81 \u00b1 0.03, against 0.62 \u00b1 0.08 (SAC-Lagrangian) and 0.47 \u00b1 0.11 (vanilla SAC); per-task results appear in Table X. We discuss the implications for controller choice in \u00a74.5, while noting that the comparison is restricted to the linear, polytopic-constraint regime evaluated here.\"\n\nThat version (a) names one contribution unambiguously while still surfacing the empirical finding, (b) keeps the strong claim (\"dominates\") out until the per-task evidence is on the table, and (c) pre-empties the scope-overreach in the conclusion.\n\n---\n\nCaveats on these recommendations: I have not seen Park and Wei (2024), the full benchmark specification, or the per-task numbers, so the suggestion to add a per-task table assumes the data exists in your records; if only aggregate numbers were collected, the right fix is to weaken the wording rather than fabricate per-task figures. The recommendation to split the contribution claim assumes the surrounding paper does not already designate one of the two as primary elsewhere \u2014 if it does, align this section to that designation rather than to my guess. The wording suggestions about chance-constraint confidence levels and tube-MPC variant assume those details exist and were elided for brevity; if either is genuinely unspecified in the work, that is a substantive gap rather than an editorial one.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general review of the section centrally includes assessing whether the thesis, contribution framing, and headline takeaway are coherent at the section level.",
+      "R1.2": "The delegation calls for checking whether the argument moves consistently from benchmark design to empirical comparison to methodological conclusion.",
+      "R1.3": "Because the section makes quantitative performance and violation-rate claims, review centrally includes whether those claims are supported by the reported results.",
+      "R1.5": "Reviewing a section includes evaluating whether the ordering of benchmark description, results, methodology, and future work creates a clear narrative arc.",
+      "R1.6": "A section review normally includes sentence- and paragraph-level clarity, flow, register, and concision.",
+      "RX.1": "The reviewer should disclose uncertainty where the artifact lacks underlying experiments, tables, citations, or methodological details.",
+      "RX.2": "The reviewer should flag broad claims such as dominance over current safe-RL baselines if they exceed the evidence shown in the section.",
+      "RX.3": "The reviewer must stay within reviewing the section rather than rewriting or executing changes to the artifact.",
+      "RX.4": "The reviewer should avoid endorsing claims that could mislead downstream readers about safety-critical control performance.",
+      "RX.5": "The reviewer should tie observations to specific statements or evidence within the provided section."
+    }
+  }
+}

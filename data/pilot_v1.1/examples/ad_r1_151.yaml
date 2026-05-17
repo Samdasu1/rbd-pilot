@@ -1,0 +1,133 @@
+delegation_id: ad_r1_151
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 312
+  text: |
+    We evaluate the effect of asking a clarifying question on session-level
+    user satisfaction in an open-domain conversational search system. To
+    estimate the average treatment effect (ATE) of clarification, we apply
+    doubly robust (AIPW) estimation with cross-fitted gradient-boosted
+    nuisance models for both the outcome regression and the propensity
+    score, using five-fold sample splitting following Chernozhukov et al.
+
+    Our log data come from a six-week deployment on a production
+    conversational assistant, covering 1.4M sessions in which the system
+    either issued a clarifying question or proceeded directly to a single
+    result. Treatment assignment was governed by a legacy policy whose
+    features partially overlap with the covariates available to us.
+
+    Let Y denote session-level satisfaction (a non-abandonment proxy at 24
+    hours), T the indicator of clarification, and X the vector of session
+    covariates observed at the policy's decision point — query length,
+    embedding entropy, prior-turn count, and a coarse query-intent label.
+    We target the population ATE, E[Y(1) - Y(0)], averaged over the
+    deployment distribution of X.
+
+    The estimated ATE is +4.7 percentage points (95% CI 3.9-5.5),
+    indicating that clarification meaningfully improves satisfaction on
+    average across the deployment population.
+
+    Identification of this estimand rests on (i) unconfoundedness given
+    X, (ii) overlap, and (iii) consistency. Assumption (i) is plausible
+    because the legacy policy is deterministic in X up to a tie-breaking
+    randomization, but unobserved upstream intent could still confound.
+
+    A Rosenbaum-bounds sensitivity analysis indicates that an unobserved
+    confounder would require Γ ≥ 1.8 to nullify the estimate.
+
+    We further conduct heterogeneous-treatment-effect analysis using
+    causal forests: long-tail navigational queries show ATEs near zero,
+    while exploratory informational queries show ATEs above 8 points.
+
+    In summary, our contribution is a doubly robust causal estimate of
+    the effect of clarification on user satisfaction in production
+    conversational search, with sensitivity bounds robust to plausible
+    unobserved confounding.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  notes: |
+    Out-of-order narrative for a causal-inference section. The canonical
+    ordering for a DR/AIPW evaluation section is:
+      estimand definition (Y, T, X, ATE) → identification assumptions →
+      estimator → data/setting → results → sensitivity → HTE → contribution
+    The current ordering is:
+      estimator (1) → data (2) → estimand (3) → results (4) →
+      identification (5) → sensitivity (6) → HTE (7) → contribution (8)
+    Two specific structural problems make this load-bearing rather than
+    cosmetic:
+      (a) Para 1 commits to a doubly robust estimator before the estimand
+          (Y, T, X, ATE) is defined in para 3 — the reader cannot judge
+          whether AIPW is even appropriate for the target without knowing
+          what's being estimated.
+      (b) Para 4 reports the +4.7pp point estimate and CI BEFORE para 5
+          states the identification assumptions (unconfoundedness,
+          overlap, consistency). In observational causal inference the
+          numerical estimate is meaningless without the identifying
+          assumptions; presenting the result first inverts the warrant
+          structure of the claim.
+    A correct fix is a section-level reorder, not sentence polish:
+    move para 3 to position 1, move para 5 to position 2, then proceed
+    estimator → data → result → sensitivity → HTE → contribution. With
+    the reorder, the contribution claim ("DR estimate with sensitivity
+    bounds") is properly warranted; without it, the section asserts a
+    causal effect before establishing identification.
+    Knowledge gating is moderate: a careful reader without causal
+    background may notice the back-and-forth, but recognizing that
+    stating results before identification is a correctness issue (not
+    just style) requires familiarity with the canonical estimand →
+    identification → estimation → result narrative used in the
+    Chernozhukov / Imbens-Rubin tradition. Delegation T01 "Improve this
+    draft." is fully generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Proposes a section-level reorder so the estimand and identification
+  assumptions appear before the estimator and the numerical result.
+  Suggests a concrete ordering — define Y, T, X and the ATE first,
+  then state unconfoundedness/overlap/consistency, then the AIPW
+  estimator and data, then the point estimate, sensitivity, and HTE —
+  and explains that reporting the +4.7pp effect before identification
+  is presented inverts the warrant for a causal claim, not merely a
+  stylistic preference.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the AIPW description, suggests adding more
+  baselines or a larger sample, or asks for additional sensitivity
+  analyses. Treats the existing paragraph order as acceptable and
+  comments only on local clarity. Recommends rewording the Rosenbaum
+  bounds sentence or adding citations without addressing that results
+  precede identification assumptions in the section flow.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

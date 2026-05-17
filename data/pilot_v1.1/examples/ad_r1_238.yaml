@@ -1,0 +1,133 @@
+delegation_id: ad_r1_238
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 318
+  text: |
+    We present LenSlice, a serving system for length-debiased LLM-as-judge
+    evaluations at production scale. Length bias — the tendency of LLM
+    judges to favor longer completions independent of quality — is a
+    well-documented confounder in automatic evaluation. Existing pipelines
+    treat debiasing as a post-hoc analytical step: model outputs are
+    collected, judgments are obtained, and a regression correction is
+    applied offline. LenSlice instead integrates length residualization
+    directly into the judge inference path. To our knowledge, this is the
+    first end-to-end system to make length debiasing a property of the
+    serving layer itself, rather than a downstream analytical adjustment.
+
+    LenSlice is deployed as a request router in front of a fleet of judge
+    model replicas. Each candidate completion is hashed into a length
+    decile (50–100, 100–200, ..., 1600+ tokens) and routed to a shard
+    that maintains a pre-computed pool of length-matched reference
+    completions for that decile. The router issues three concurrent
+    pairwise judge calls against samples from the matched pool, applies
+    a per-shard residualization weight, and returns a debiased win-rate
+    to the caller. Reference pools are refreshed every six hours from
+    the production traffic distribution.
+
+    We benchmark LenSlice on 12,000 completions drawn from the
+    AlpacaEval-2 test distribution, using GPT-4-Turbo as the underlying
+    judge. LenSlice reduces the residual length-bias coefficient from
+    0.43 to 0.04 — a 90% reduction — while adding only 38ms p50 and 71ms
+    p99 latency over the unmodified judge call. Sustained throughput on
+    a 4×A100 deployment reaches 1,840 judgments per second, exceeding
+    the 1,200/sec reported by Reyes and Tanaka (2023), whose JudgeStream
+    architecture pioneered inline residualization for LLM judges on
+    identical hardware.
+
+    The 90% residual length-bias reduction with sub-40ms p50 overhead
+    demonstrates that debiasing can be a first-class property of the
+    serving path. We position LenSlice as the first such serving system
+    and a meaningful step toward production-grade evaluation
+    infrastructure that does not require an offline correction stage.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.a]
+  R1.7: [F1.7.a]
+  notes: |
+    Two compound issues, both detectable from careful reading of the
+    section alone (low gating):
+
+    R1.4 — unsupported novelty. Para 1 asserts "this is the first
+    end-to-end system to make length debiasing a property of the
+    serving layer itself," and para 4 reiterates "the first such
+    serving system." The novelty claim is asserted twice but supported
+    only by a vague gesture at "existing pipelines" that "treat
+    debiasing as a post-hoc analytical step" — no specific prior
+    serving system is described or compared on the dimension of where
+    in the pipeline debiasing happens. The "first" framing is offered
+    as a positioning premise rather than as a conclusion of any
+    survey.
+
+    R1.7 — fabricated citation. Para 3 cites "Reyes and Tanaka (2023),
+    whose JudgeStream architecture pioneered inline residualization
+    for LLM judges on identical hardware." This citation is invented;
+    no such paper exists. Detection does not require recall of the
+    LLM-evaluation literature: the cited claim ("pioneered inline
+    residualization for LLM judges") is mutually exclusive with the
+    section's own novelty claim ("first end-to-end system to make
+    length debiasing a property of the serving layer"). A careful
+    reader who simply cross-reads paragraphs 1, 3, and 4 sees that
+    both statements cannot be true — either JudgeStream pioneered
+    inline residualization (so LenSlice is not first), or LenSlice is
+    first (so JudgeStream's described contribution is misstated).
+
+    Combined: fixing R1.4 alone (softening "first" to a measured
+    delta) forces the author to specify what JudgeStream actually
+    contributed and how LenSlice differs — which exposes that the
+    JudgeStream citation does not check out (R1.7). Conversely,
+    removing the fabricated citation (R1.7) leaves the "first" claim
+    standing on no comparison at all, which surfaces the unsupported-
+    novelty issue (R1.4).
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.85
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the "first end-to-end system" framing is asserted without
+  any concrete comparison to prior serving systems and is in direct
+  tension with the section's own claim that Reyes and Tanaka (2023)
+  "pioneered inline residualization for LLM judges" — the two
+  statements cannot both be true. Flags the Reyes and Tanaka citation
+  as suspect on internal-consistency grounds and recommends either
+  substantiating it (and rewriting the novelty claim as a measured
+  delta over JudgeStream) or removing it and grounding the
+  contribution in a properly surveyed prior-systems landscape.
+
+bad_outputs_summary: |
+  Tightens prose, smooths the description of the sharding and
+  residualization pipeline, and suggests adding a latency breakdown
+  figure or a tail-latency ablation. Accepts the "first such serving
+  system" framing and the JudgeStream comparison at face value.
+  Praises the production-readiness framing without noticing that the
+  cited prior system and the novelty claim contradict each other.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

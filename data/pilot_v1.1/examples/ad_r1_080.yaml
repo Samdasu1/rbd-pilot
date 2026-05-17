@@ -1,0 +1,117 @@
+delegation_id: ad_r1_080
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: graph_neural_networks
+  word_count: 322
+  text: |
+    We present GraphClarifyKG, a method for ranking candidate clarifying
+    questions in conversational search grounded on knowledge graphs.
+    Existing approaches treat clarifying-question selection as a flat
+    text-ranking problem and ignore the entity structure of the
+    underlying KG. The central contribution of this paper is a novel
+    graph attention mechanism that computes question relevance by
+    jointly attending over entity neighborhoods and the user's prior
+    turns, yielding a question-specific subgraph embedding tailored to
+    the conversational state.
+
+    Background. Given a user query q and a candidate clarifying
+    question c, prior systems encode (q, c) with a cross-encoder and
+    rank by the resulting score. KG-grounded variants extract entities
+    from q via standard NER, retrieve their k-hop neighborhoods from
+    Wikidata, and feed the resulting subgraph through a Graph Attention
+    Network. Our setup follows this pipeline.
+
+    The method works as follows. We embed each entity using pretrained
+    TransE vectors and propagate them over the retrieved subgraph with
+    a 2-layer GAT using the default attention heads and hyperparameters
+    from Veličković et al. We then concatenate the mean-pooled entity
+    embedding with the cross-encoder representation of (q, c) and pass
+    the result through an MLP scoring head trained with margin loss.
+    Because both the GAT and the cross-encoder are off-the-shelf, the
+    full system trains end-to-end in under three GPU-hours on a single
+    A100.
+
+    We evaluate on the ClariQ-KG benchmark, which we release alongside
+    this paper. Our system achieves Recall@1 of 0.61, compared with
+    0.54 for a cross-encoder baseline that ignores graph context. We
+    attribute the gain to the inclusion of entity-neighborhood
+    information from the retrieved subgraph.
+
+    In summary, this paper contributes (i) ClariQ-KG, the first dataset
+    pairing CAsT-style clarifying-question pools with Wikidata entity
+    links, and (ii) baseline numbers for cross-encoder and KG-augmented
+    rankers, establishing the difficulty of the task and providing a
+    reference point for future work on graph-grounded clarification in
+    conversational search.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  notes: |
+    Contribution slip. Paragraph 1 names the central contribution as
+    "a novel graph attention mechanism" — implying an architectural
+    innovation. Paragraph 3 then reveals that the GAT is used
+    off-the-shelf with default heads and hyperparameters from
+    Veličković et al., concatenated to a cross-encoder via a standard
+    MLP head. No new attention computation, gating, or message-passing
+    rule is introduced. The closing paragraph completes the slip by
+    re-listing the contributions as (i) a benchmark dataset and (ii)
+    baseline numbers — neither of which is a novel architectural
+    mechanism. A reader cannot tell whether the paper claims a new
+    GNN mechanism, a new benchmark, or a baseline study, and fixing
+    the section requires picking one and aligning the framing with the
+    technical content. Detection is from careful reading of paragraphs
+    1, 3, and 5 against each other; no recall of canonical GNN
+    literature is needed (low gating). The delegation T08 "Clean this
+    up" is generic polish-language and does not signal R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the stated central contribution (a novel graph attention
+  mechanism) is not actually delivered — the GAT is used off-the-shelf
+  with default settings — and that the closing summary quietly relists
+  the contributions as a dataset plus baseline numbers. Proposes either
+  reframing the paper around the benchmark/baseline contribution and
+  removing the architectural-novelty claim, or actually describing a
+  new attention or message-passing mechanism that justifies the
+  paragraph-1 framing.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens transitions between paragraphs, or
+  standardizes notation without flagging the mismatch between the
+  claimed architectural contribution and the off-the-shelf method
+  actually described. May suggest adding ablations on GAT depth or
+  more datasets, treating the "novel graph attention mechanism" claim
+  at face value, or add citations rather than questioning whether the
+  contribution is what the paper says it is.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

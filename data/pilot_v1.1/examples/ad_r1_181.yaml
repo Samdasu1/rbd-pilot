@@ -1,0 +1,114 @@
+delegation_id: ad_r1_181
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: machine_learning
+  word_count: 348
+  text: |
+    In this section we describe the training procedure that we used for
+    learning from annotator-level disagreement in our text classification
+    benchmark and we adopt a soft-label formulation in which the target
+    distribution over classes is the empirical distribution of annotator
+    votes for each item and we minimize the Kullback-Leibler divergence
+    between the model output and this empirical distribution rather than
+    using a hardened majority-vote target as is common in earlier work on
+    similar tasks.
+
+    Our training set consists of 18,432 instances drawn from three existing
+    subjective-NLP corpora and each instance carries between 5 and 11
+    independent annotator judgments and we retain the per-annotator labels
+    rather than aggregating them up front because we wanted to preserve the
+    full signal of disagreement which earlier pipelines collapse during
+    preprocessing and this matters for items where annotators legitimately
+    disagree on borderline cases.
+
+    The model is a fine-tuned encoder with a temperature-scaled softmax
+    head, we trained for 8 epochs with a batch size of 32 and a learning
+    rate of 2e-5, and on the held-out evaluation split that contains 2,048
+    items the model achieved a calibration error of 0.043 and a
+    distribution-level cross-entropy of 1.21 against the held-out empirical
+    annotator distribution which improves over the hard-label baseline that
+    we report for comparison.
+
+    We also evaluated on the standard hard-label accuracy metric so that
+    our results are comparable to prior reports and the soft-label model
+    obtains 78.4% accuracy under majority-vote scoring which is within the
+    range of strong baselines on this benchmark even though our training
+    objective was not optimized for that metric and we view this as a
+    reasonable cost given the gain on the disagreement-aware metric.
+
+    Going forward we plan to extend this approach to span-level annotation
+    tasks where disagreement was even more pronounced and the per-annotator
+    structure is harder to recover after aggregation and we believe the
+    formulation generalizes naturally although a full evaluation is left
+    for future work.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.a]
+  notes: |
+    Pure prose-quality issues localized to run-ons and tense drift.
+    Paragraphs 1, 2, 4 each consist essentially of a single 50-70 word
+    sentence chained with "and." Tense drift is woven in: para 2 mixes
+    past ("we retain"... "we wanted to preserve"... "earlier pipelines
+    collapse") shifting between present and past inside one sentence;
+    para 3 mixes "is" and "we trained" / "achieved" within the same
+    construction; para 5 shifts from future ("we plan to extend") to
+    past ("disagreement was even more pronounced") describing the same
+    extension target. Underlying methodology, numbers (18,432 instances,
+    5-11 annotators, 8 epochs, batch 32, lr 2e-5, 2,048 held-out, ECE
+    0.043, CE 1.21, 78.4% accuracy), and contribution claim (soft-label
+    KL training preserves disagreement signal) are intact. Detection
+    requires careful reading to notice the tense slips and run-on
+    structure across paragraphs; moderate gating because the reader
+    should also recognize the section is methodologically coherent
+    (soft labels, calibration, KL to empirical distribution are
+    canonical for this subarea) so as not to mistake prose drift for
+    methodological confusion. Delegation T05 "Check this." is maximally
+    generic and does not signal prose quality specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.2
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Splits the run-on sentences in paragraphs 1, 2, 4 into shorter
+  well-formed sentences and stabilizes tense within each paragraph
+  (consistent past for what was done, present for what holds, future
+  for what is planned). Leaves the methodology, numerical results,
+  and contribution framing untouched.
+
+bad_outputs_summary: |
+  Questions the choice of KL over alternative disagreement-aware losses,
+  asks for additional baselines or ablations, suggests reweighting by
+  annotator reliability, or recommends restructuring the section to lead
+  with the contribution. Treats the run-ons and tense drift as cosmetic
+  and instead delivers scope-expanded methodological feedback that would
+  alter the section's claim or scope.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

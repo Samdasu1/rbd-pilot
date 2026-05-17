@@ -1,0 +1,120 @@
+delegation_id: ad_r1_077
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: nlp
+  word_count: 312
+  text: |
+    We present DialogueDev, a multi-agent communication protocol for
+    collaborative software development with large language models.
+    DialogueDev structures interactions among role-conditioned agents — a
+    Product Manager, an Architect, a Programmer, and a Reviewer — into
+    typed message channels with explicit handoff conditions. Each channel
+    enforces a schema over message contents (e.g., specification, code
+    patch, review comment), and a coordinator agent arbitrates which
+    channel is active at each turn. By making inter-agent communication
+    explicit and structured, we aim to reduce the role confusion and topic
+    drift commonly observed in unstructured multi-agent LLM systems.
+
+    The protocol is implemented over a fixed set of GPT-4 instances with
+    frozen weights. Agents communicate via JSON-typed messages, and the
+    coordinator routes messages by inspecting message-type tags rather
+    than free-form intent. We evaluate DialogueDev on HumanEval-X and on a
+    held-out subset of 80 GitHub issues drawn from medium-popularity
+    Python repositories.
+
+    Our central contribution, however, is a new chain-of-thought
+    decomposition strategy, which we call Reflective Subgoal Prompting
+    (RSP). RSP instructs a single LLM to generate, critique, and revise an
+    explicit list of subgoals before emitting code. We find that RSP,
+    applied to a single GPT-4 instance with no multi-agent infrastructure,
+    achieves a pass@1 of 78.4% on HumanEval-X, compared to 71.2% for a
+    vanilla zero-shot baseline. On the GitHub issue subset, RSP resolves
+    34 of 80 issues end-to-end, while the zero-shot baseline resolves 21.
+    Crucially, RSP's gains are largely orthogonal to those obtained from
+    agent decomposition: a stripped-down single-agent prompt with RSP
+    recovers most of the multi-agent system's performance.
+
+    We argue that reflective subgoal prompting represents a more
+    parsimonious account of where the gains in recent multi-agent
+    code-generation systems originate. Section 5 shows that the dominant
+    variance across configurations is explained by the prompting
+    strategy, not by the communication topology among agents. We
+    therefore frame our contribution as a prompting-level intervention
+    rather than an architectural one.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  notes: |
+    Thesis drift. Para 1 announces the contribution as DialogueDev, "a
+    multi-agent communication protocol" with typed channels and a
+    coordinator agent — i.e. a system/architecture-level contribution.
+    Para 3 then pivots: "Our central contribution, however, is a new
+    chain-of-thought decomposition strategy" (Reflective Subgoal
+    Prompting), and the headline empirical claim is that RSP applied to
+    a single agent recovers most of the multi-agent system's
+    performance. The closing paragraph completes the drift, reframing
+    the contribution as "a prompting-level intervention rather than an
+    architectural one." Two distinct conceptual objects (a
+    communication protocol vs. a single-agent prompting strategy) are
+    each named as the central contribution, and the slip is not
+    acknowledged or reconciled. A reader cannot tell whether the paper
+    is positioning against unstructured multi-agent baselines or
+    against zero-shot prompting baselines, nor what the paper's
+    take-away novelty actually is. Detection requires recognizing that
+    "multi-agent communication protocol" and "chain-of-thought
+    prompting strategy" are distinct contribution types in the
+    LLM-for-code literature (moderate gating); no recall of specific
+    canonical works is required. The delegation T02 "Review this
+    section." is generic and does not signal R1.1 specifically.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.4
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section names two different central contributions
+  (a multi-agent communication protocol and a single-agent prompting
+  strategy) and that the headline finding actually undermines the
+  opening framing. Proposes choosing one conceptual object — either
+  reframe the section around RSP and reposition DialogueDev as a
+  testbed, or restructure so the protocol is the load-bearing
+  contribution and RSP is an ablation. Does not focus on grammar or on
+  adding more baselines.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens hedging, or suggests adding more
+  benchmarks and ablation rows without noticing that the section
+  declares two incompatible contributions. Takes the opening DialogueDev
+  framing at face value and proposes protocol-level extensions, or
+  takes the RSP framing at face value and suggests prompting-strategy
+  variants, without flagging that the section itself cannot decide
+  which contribution is central.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

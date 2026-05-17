@@ -1,0 +1,129 @@
+delegation_id: ad_r1_101
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 358
+  text: |
+    Photometric redshift (photo-z) estimation underpins virtually every
+    cosmological analysis from upcoming Stage-IV surveys such as LSST,
+    Euclid, and Roman. We introduce DEEP-z, a deep ensemble framework for
+    photo-z point estimation and predictive uncertainty quantification.
+    DEEP-z trains 50 convolutional neural networks on ugrizy photometry
+    and aggregates their outputs through a Gaussian-mixture readout,
+    producing a per-galaxy redshift posterior p(z|f) where f denotes the
+    observed flux vector.
+
+    We assess both point-estimate quality and distribution-level
+    calibration. On the validation set, the bias ⟨Δz/(1+z)⟩ is below
+    0.001, the scatter σ_NMAD = 0.018, and the catastrophic outlier
+    fraction is 1.4%. Distribution-level calibration is evaluated using
+    the probability integral transform (PIT): the PIT histogram is
+    uniform within Poisson noise, and the empirical coverage of nominal
+    68% credible intervals is 67.9%. We further confirm sharpness via
+    the continuous ranked probability score (CRPS), which is lower than
+    that of every baseline considered.
+
+    Our spectroscopic comparison set is drawn from the COSMOS2020
+    super-catalogue, restricted to objects with high-confidence redshift
+    flags. We use 80% of these objects for ensemble training and
+    temperature-scaling calibration, and reserve 20% as the held-out
+    validation set on which the metrics above are computed. The held-out
+    set spans i = 17.5 to i = 25.3 and 0 < z < 3, matching the nominal
+    LSST "gold sample" magnitude limit and redshift range.
+
+    DEEP-z is compared against template-fitting baselines (BPZ, EAZY)
+    and a standard random-forest regressor. It achieves the lowest
+    σ_NMAD and the most uniform PIT histogram of all methods evaluated,
+    with statistically significant improvements at the 5σ level under a
+    bootstrap test over the held-out sample.
+
+    Because the PIT histogram is uniform and 68% coverage is recovered
+    on the held-out set, we conclude that DEEP-z provides calibrated
+    redshift posteriors across the full LSST gold-sample regime,
+    including for the faint, high-redshift galaxies that dominate
+    cosmological weak-lensing tomography. We therefore recommend DEEP-z
+    posteriors be used directly as inputs to LSST 3x2pt analyses without
+    additional per-tomographic-bin recalibration.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  notes: |
+    Hidden premise (F1.2.a) in the calibration argument. The section's
+    contribution claim — calibrated posteriors "across the full LSST
+    gold-sample regime, including for the faint, high-redshift galaxies"
+    — rests on the unstated assumption that the COSMOS2020
+    spectroscopic comparison set is representative of the target
+    photometric population in (color, magnitude, redshift) space. This
+    assumption is canonically false: high-confidence spec-z samples are
+    severely selection-biased toward bright, emission-line, and low-z
+    galaxies, with completeness collapsing at i ≳ 24 and 1.5 ≲ z ≲ 3
+    (the regimes that actually dominate weak-lensing tomographic bins).
+    A PIT histogram and 68% coverage measured on such a held-out set
+    cannot be extrapolated to the faint/high-z target population — this
+    is precisely the problem motivating dedicated programs like C3R2
+    (Masters et al. 2017, 2019) and the Newman et al. (2015) /
+    Cunha et al. (2014) analyses of spec-z representativeness for
+    Stage-IV cosmology. The flaw is load-bearing: surfacing the hidden
+    premise forces the contribution claim to be retracted to "calibrated
+    on the spec-z-accessible subspace" or motivates a re-weighting
+    /SOM-based analysis. Detection requires recall of the
+    representativeness literature (high knowledge gating); a careful but
+    generalist reader sees "uniform PIT, 67.9% coverage" and accepts
+    the calibration claim. Delegation T06 is generic and does not name
+    R1.2.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the calibration conclusion implicitly assumes the
+  spectroscopic validation sample is representative of the target
+  photometric population, and notes that high-confidence spec-z
+  catalogues like COSMOS2020 are systematically biased toward bright,
+  low-z, emission-line objects — so PIT uniformity and 68% coverage on
+  the held-out set do not license the claim of calibration for the
+  faint, high-z galaxies that dominate LSST weak-lensing bins. Suggests
+  either retracting the scope of the calibration claim, applying
+  importance reweighting / SOM-based representativeness corrections, or
+  augmenting with deep spec-z programs targeting the underrepresented
+  color regions.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more baselines (e.g., GPz, ANNz2),
+  proposes more uncertainty metrics (e.g., reliability diagrams, QQ
+  plots), or asks for ablations over ensemble size. Accepts the PIT
+  uniformity and 68% coverage as sufficient evidence of calibration
+  across the full gold-sample regime. May ask for cosmological-impact
+  forecasts or extended discussion of the Gaussian-mixture readout
+  without flagging the hidden representativeness assumption underlying
+  the headline calibration claim.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

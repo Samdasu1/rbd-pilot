@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_187",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2240,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31692,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.7, \"R1.6\": 1.0, \"RX.1\": 0.9, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: I reviewed the section and found the prose suffers from pervasive hedging that, paradoxically, both weakens the contribution and obscures whether claims are actually supported; below I flag the main problems and suggest concrete revisions.\n\n## Principal issues\n\n**1. Hedge stacking dilutes every claim.**\nNearly every sentence layers two or three hedges (\"tentatively,\" \"seems to,\" \"appears to be,\" \"may, to some extent,\" \"broadly encouraging,\" \"would likely be needed\"). The cumulative effect is that a reader cannot tell which statements are factual reports of what happened in the experiments versus interpretive speculation. Hedging is appropriate for interpretation; it is inappropriate for reporting what was measured. Separate the two registers:\n\n- *Factual* (no hedge): \"We evaluated the method on 24 benchmark problems\u2026 On 17 of 24 problems, the refined iterate reduced the objective faster per iteration than vanilla gradient descent.\"\n- *Interpretive* (single, calibrated hedge): \"We interpret this as suggestive evidence that curvature-aware refinement helps in mildly nonconvex regimes, though the mechanism is not established.\"\n\n**2. The thesis is not actually stated.**\nThe opening paragraph describes a procedure (\"produces a candidate, evaluates a feedback signal, refines the step\") but never tells the reader what is new, what problem this solves that existing trust-region or adaptive methods do not, or what the central claim is. Add one sentence near the top of the form: \"Our contribution is X; the central claim is Y.\" Right now the section reads as a method description and an empirical anecdote without a thesis.\n\n**3. The feedback signal is underspecified.**\n\"A normalized estimate of the directional second-derivative along the candidate step\" \u2014 normalized how? Estimated how (finite differences, Hessian-vector product, autodiff)? What is the cost per step? The phrase \"values close to one are usually associated with productive progress\" is unfalsifiable without a definition: close to one of what quantity, and what is \"productive\"? This gap also makes the relationship to trust-region methods impossible to evaluate.\n\n**4. Evidence does not match the prose around it.**\nThe text says the procedure \"seemed to make somewhat faster progress\" \u2014 faster in what metric (iterations to tolerance, wall-clock, final objective)? On how many of the 24 problems specifically? \"The majority\" and \"a smaller subset\" should be numbers. Without these, the empirical claim is not checkable, even informally. Similarly, \"computational overhead appears to be relatively manageable\" needs a number \u2014 e.g., a multiplicative factor over a baseline step.\n\n**5. Logical gap between the curvature signal and the failure cases.**\nThe section attributes weaker performance on \"a smaller subset of problems\" to \"the heuristic nature of the feedback signal.\" But the rest of the section also treats the signal as heuristic on the problems where it *did* work. If the signal is heuristic everywhere, heuristic-ness alone cannot explain selective failure. Either identify a structural property of the failing problems (e.g., near-degenerate Hessians, saddle proximity) or state that the cause is currently unknown.\n\n**6. Suggested structural reordering.**\nThe current order is: (a) method sketch + analogy to trust region, (b) signal definition + interpretation, (c) experiments, (d) overhead + summary. I would suggest: (1) one-sentence contribution statement, (2) precise signal definition with cost, (3) algorithm in display form (currently missing \u2014 even pseudocode would help), (4) experimental setup with metrics and baselines named explicitly, (5) results with numbers, (6) failure-mode analysis, (7) overhead, (8) limitations and what is preliminary. Putting the analogy-to-trust-region remark in a later \"relation to prior work\" sentence rather than the opening would also strengthen the framing.\n\n**7. Specific prose fixes.**\n\n- \"broadly consistent with recent proposals on self-feedback procedures\" \u2192 name them or remove the gesture; an unsourced \"broadly consistent\" carries no information.\n- \"may, to some extent, be viewed as an adaptive variant of trust-region methods\" \u2192 either it is or it is not; pick a sharper formulation, e.g., \"can be cast as a trust-region method with radius set by [signal]\" if true, or drop the comparison.\n- \"Rosenbrock-style ridges, Rastrigin-style multimodal landscapes\" \u2192 \"-style\" is vague; if these are the actual Rosenbrock and Rastrigin functions, say so; if they are modifications, describe the modification.\n- \"relative improvement that we would characterize as modest but, in our view, broadly encouraging\" \u2192 replace with a number and a single descriptor.\n- \"we tentatively conclude that \u2026 may offer a potentially useful direction\" \u2192 triple hedge; one is enough.\n- \"we readily acknowledge\" \u2192 \"we acknowledge.\"\n\n**8. Limitations should be a discrete paragraph, not diffused.**\nCurrently the caveats are scattered across every paragraph, which is why the section reads as anxious rather than careful. Consolidate them: a single paragraph stating (i) the benchmark suite is small and synthetic, (ii) the signal lacks a convergence guarantee, (iii) comparisons are against vanilla gradient descent only \u2014 no momentum, Adam, or trust-region baselines are reported. This is more honest than the current diffuse hedging because it tells the reader what was *not* done, rather than just gesturing that something might be wrong.\n\n**9. Comparison baselines.**\nThe text compares only to \"a vanilla gradient step.\" For a paper claiming an adaptive first-order method, the relevant baselines are at minimum momentum / Nesterov and Adam, and ideally a standard trust-region or L-BFGS implementation since the method is positioned near trust-region. Without these, \"faster than vanilla gradient\" is too weak to support the broader framing.\n\n## Caveats on this review\n\nI have not seen the surrounding paper, so my comments on novelty and on what counts as adequate comparison are based only on the framing in this section; some of what I flag as missing may be in adjacent sections. I also cannot verify the empirical claim about \"majority of 24 problems\" \u2014 I am taking the authors' description at face value and only critiquing how it is reported. The suggested reordering is one defensible option among several; an author with more context on the paper's overall arc may reasonably choose differently.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A section review centrally includes checking whether the thesis, contribution framing, and stated relationship to existing optimization methods are clear and coherent.",
+      "R1.2": "The reviewer is expected to assess whether the reasoning from curvature feedback to refinement behavior to optimization benefit is internally consistent.",
+      "R1.3": "The section makes empirical claims about benchmark performance and overhead, so checking alignment between those claims and the reported evidence is central.",
+      "R1.5": "Because the artifact is a full section, review naturally includes whether the narrative order and section-level progression work effectively.",
+      "R1.6": "Reviewing a prose section load-bearingly entails attention to sentence-level clarity, hedging, register, concision, and flow.",
+      "RX.1": "Any review projection must preserve uncertainty about what can be inferred from the provided section alone.",
+      "RX.2": "The artifact contains deliberately tentative empirical claims, so avoiding stronger projected responsibilities than requested is required.",
+      "RX.3": "The delegation asks only for review of this section, so the responsibility must stay within that artifact and not expand to executing edits or external validation.",
+      "RX.4": "Review responsibilities should avoid encouraging misleading, overstated, or potentially harmful research claims about optimization performance.",
+      "RX.5": "Projected responsibilities should remain traceable to specific features of the delegation and artifact."
+    }
+  }
+}

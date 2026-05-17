@@ -1,0 +1,115 @@
+delegation_id: ad_r1_060
+template_id: T07
+delegation: "Make sure this is solid."
+
+artifact:
+  source: synthetic
+  domain: anomaly_detection
+  word_count: 348
+  text: |
+    In this section we describe an anomaly detection framework that we
+    developed for identifying potentially anomalous self-preference
+    patterns in large language model judges, where a judge model may
+    perhaps tend to score its own outputs somewhat more favorably than
+    outputs produced by other models. The framework that we developed
+    detects these potentially anomalous self-preference patterns by
+    comparing score distributions, and the framework appears to detect
+    these self-preference patterns with what seems to be reasonable
+    accuracy on the evaluation suites that we considered.
+
+    Our detection method takes as input a collection of judge scores
+    and tries to identify possibly anomalous deviations from what one
+    might roughly expect under a no-bias null hypothesis. We compute a
+    statistic that may approximately capture the degree of deviation,
+    and we then use this statistic to flag potentially anomalous judges
+    for further review. The statistic that we use to flag potentially
+    anomalous judges is, broadly speaking, a kind of likelihood ratio,
+    and it appears to be more or less effective at flagging potentially
+    anomalous judges in the settings that we examined.
+
+    We evaluated the detection method on a benchmark of judge outputs
+    that we collected, and the detection method achieved what we would
+    tentatively describe as fairly competitive performance, with results
+    that seem to be roughly comparable to or perhaps somewhat better
+    than several existing approaches that we examined. The detection
+    method appears to be relatively robust under varying prompt
+    templates, and the detection method also appears to be relatively
+    robust under varying score scales, although we should acknowledge
+    that further and more comprehensive evaluation would likely
+    strengthen these robustness claims to some extent.
+
+    Furthermore, the detection method seems to potentially generalize,
+    at least to some degree, to settings beyond those that we directly
+    studied, and we believe that the detection method could plausibly
+    be useful for practitioners who wish to detect potentially
+    anomalous self-preference in deployed judge systems, though we
+    acknowledge that additional validation would arguably be helpful
+    to more firmly establish this generalization claim.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: partial
+
+engineered_flaws:
+  R1.6: [F1.6.b, F1.6.c]
+  notes: |
+    Pure prose-quality issues focused on hedging cascade (F1.6.b) and
+    repetition (F1.6.c). Hedging stacks pile multiple modifiers per
+    claim: "may perhaps tend to score ... somewhat", "what seems to be
+    reasonable accuracy", "possibly anomalous deviations from what one
+    might roughly expect", "may approximately capture", "broadly
+    speaking, a kind of", "more or less effective", "tentatively
+    describe as fairly competitive", "roughly comparable to or perhaps
+    somewhat better", "appears to be relatively robust", "would likely
+    strengthen ... to some extent", "seems to potentially generalize,
+    at least to some degree", "could plausibly be useful", "would
+    arguably be helpful". Repetition: "potentially anomalous
+    self-preference patterns" recurs three times in para 1; "the
+    statistic that we use to flag potentially anomalous judges" repeats
+    within one sentence; "the detection method" is repeated as a
+    sentence subject 6+ times across paras 3-4; "the detection method
+    appears to be relatively robust" appears twice consecutively.
+    Underlying methodology, numbers, and contribution are intact.
+    Delegation "Make sure this is solid" partially leaks toward R1.6
+    because "solid" can be heard as a writing/quality cue, but it could
+    also invite methodology/evidence checks — hence partial.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Strips stacked hedges down to at most one qualifier per claim,
+  eliminates repeated noun phrases such as "potentially anomalous
+  self-preference patterns" and "the detection method," and varies
+  sentence subjects. Leaves the methodology, statistic, and benchmark
+  claims unchanged.
+
+bad_outputs_summary: |
+  Questions the likelihood-ratio statistic, suggests new baselines or
+  additional benchmarks, proposes ablations on prompt templates, or
+  reframes the contribution around a different bias definition. Treats
+  the hedging and repetition as cosmetic and instead delivers
+  scope-expanded methodological feedback or adds citations.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

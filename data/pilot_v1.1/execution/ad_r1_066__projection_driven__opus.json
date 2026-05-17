@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_066",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2407,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 32461,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.5\": 0.7, \"R1.6\": 0.9, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: I flagged a central framing contradiction in the draft, tightened the prose, and produced a revised version that either removes or honestly qualifies the \"multi-agent\" claims so they match the architecture actually described.\n\n---\n\n**The core problem with the draft**\n\nThe opening and closing paragraphs claim a \"multi-agent collaborative framework\" in which \"specialized agents [are assigned] to different physical constraints.\" The architecture section, however, describes a single feedforward network u_\u03b8(x, t) trained with a weighted sum of three loss terms and an Adam update on the summed gradient. That is the standard PINN setup. There are no agents \u2014 no separate parameter sets, no per-agent optimizers, no communication or negotiation mechanism, no decomposition of \u03b8 across constraints. Calling each loss term an \"agent\" is a relabeling, not an architectural change, and the \"avoids gradient pathologies\" claim is then unsupported because the gradients are in fact summed exactly as in a monolithic PINN.\n\nThis is the dominant issue. Everything downstream (novelty, generalization claims, the FSI/reactive-flow extension) inherits it. The draft must either (a) describe a genuine multi-agent mechanism, or (b) drop the multi-agent framing and present the work for what the methods section actually supports \u2014 a careful application of loss-weight annealing to stiff PDEs.\n\nI have written the revision assuming (b), because the experiments and architecture as described do not justify (a). If the authors do have a genuine multi-agent mechanism not captured in this draft, the methods section needs to be rewritten before the framing claims can stand.\n\n**Other substantive issues**\n\n- The loss-weighting scheme is attributed to Wang et al. (2021) but is otherwise the only \"novel\" mechanism on offer. The contribution relative to that prior work is not articulated.\n- Results are thin: a single seed appears to be reported, no confidence intervals, no wall-clock or compute comparison, no baseline beyond \"standard PINN.\" The 2.1\u00d7 boundary-residual reduction on Allen\u2013Cahn is reported without the corresponding solution-error number, which is the quantity readers actually care about.\n- The ablation (\"removing the PDE-residual term yields 4\u00d7 degradation\") is near-tautological for a PINN and does not support the claim that \"all three constraints are essential\" in any informative sense \u2014 without the PDE residual it is not a PINN.\n- \"2D Burgers' equation\" with \u03bd = 0.01 should specify the domain, boundary/initial conditions, and the reference solution used to compute the relative L2 error.\n- \"Section 5\" is referenced but not included; if extensions are aspirational they should be marked as such rather than cited as if delivered.\n- \"Generalizes naturally to fluid\u2013structure interaction and reactive flow\" is asserted without evidence; on the present results it is speculation.\n\n**Smaller prose issues**\n\n- \"stiff multi-physics problems\" \u2014 Burgers and Allen\u2013Cahn are single-PDE benchmarks, not multi-physics; the motivation overshoots the evaluation.\n- \"gradients from these objectives often conflict during training\" is the right observation but is then not actually addressed by the proposed method as described.\n- \"exploits the collaborative structure of the problem decomposition\" \u2014 circular; the decomposition is the method, not a property the method exploits.\n- \"joint objective\" and \"composite loss\" are used interchangeably; pick one.\n- Hyphenation: \"physics-informed,\" \"boundary-condition,\" \"learning-rate-annealing\" are inconsistent across the draft.\n\n---\n\n**Revised draft (multi-agent framing removed; claims matched to evidence)**\n\nWe study physics-informed neural networks (PINNs) for parameterized PDEs in regimes where the PDE residual, boundary conditions, and observational data produce conflicting gradients during training. We do not propose a new architecture; instead, we report a careful empirical study of a loss-weight annealing scheme on two benchmark problems and characterize when it helps.\n\nThe model is a single feedforward network u_\u03b8(x, t) trained by minimizing\n\n    L(\u03b8) = \u03bb_pde \u00b7 L_pde(\u03b8) + \u03bb_bc \u00b7 L_bc(\u03b8) + \u03bb_data \u00b7 L_data(\u03b8),\n\nwhere L_pde is the mean squared PDE residual at collocation points, L_bc is the boundary-condition mismatch, and L_data is the supervised loss on observations. The weights {\u03bb_pde, \u03bb_bc, \u03bb_data} are updated during training using the learning-rate-annealing scheme of Wang et al. (2021); \u03b8 is updated with Adam on the summed gradient. Our contribution relative to Wang et al. is [to be specified by the authors \u2014 e.g., a modified schedule, a new diagnostic, or a controlled comparison]; we do not claim a new optimizer or a new architecture.\n\nWe evaluate on two benchmarks. For the 2D Burgers' equation with \u03bd = 0.01 on [domain to be specified] with [BC/IC to be specified], we obtain an L2 relative error of 1.4 \u00d7 10\u207b\u00b3 against a [reference solver, resolution] solution, compared with 3.2 \u00d7 10\u207b\u00b3 for an otherwise identical PINN with fixed loss weights. For the Allen\u2013Cahn equation, the boundary-condition residual at convergence is reduced by 2.1\u00d7 relative to the same baseline; the corresponding solution L2 error is [value]. Results are mean \u00b1 std over [N] seeds. Removing the PDE-residual term degrades accuracy by 4\u00d7, as expected for a PINN; we include this ablation only for completeness and do not interpret it as evidence that the three terms are individually optimized.\n\nLimitations. The benchmarks are single-PDE problems on simple domains; we have not evaluated the method on coupled-physics systems such as fluid\u2013structure interaction or reactive flow, and we make no claims about behavior in those regimes. The method also inherits the known sensitivity of PINNs to collocation-point sampling and to the annealing schedule's hyperparameters; we report sensitivity in Appendix [X]. Compute cost is comparable to the baseline PINN to within [%]; we did not observe wall-clock savings.\n\n---\n\n**Items I could not verify and which the authors must confirm**\n\n- Whether the work as actually implemented contains any mechanism beyond a single network with weighted-sum loss. If it does, the methods section in the draft does not convey it, and my revision understates the contribution; if it does not, the original framing overstates the contribution and my revision is the honest version.\n- The numerical results (1.4e-3, 3.2e-3, 2.1\u00d7, 4\u00d7) are taken as reported; I have not checked them against any source.\n- The reference to Wang et al. (2021) is taken as given; the exact paper, its scheme, and the delta should be made explicit in the revision.\n- Whether a \"Section 5\" exists; if the extensions described there are not implemented, they should be moved to a Future Work paragraph and marked as such.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Improving the draft centrally includes sharpening the thesis, contribution claim, and framing of the multi-agent PINN idea.",
+      "R1.2": "The delegation implies checking whether the stated architecture, training procedure, and claimed advantages form a coherent argument chain.",
+      "R1.3": "Because the draft reports quantitative results and ablations, improvement requires aligning claims with the evidence actually presented.",
+      "R1.5": "The draft-level request reasonably includes improving section-level narrative order and the progression from motivation to method, evidence, and implications.",
+      "R1.6": "Writing polish is load-bearing because a generic request to improve a draft necessarily includes sentence-level clarity, flow, and concision.",
+      "RX.1": "Any projected improvement responsibility should preserve uncertainty around unsupported or underspecified technical claims.",
+      "RX.2": "The draft contains generalization and advantage claims, so avoiding overstatement is an active cross-cutting responsibility.",
+      "RX.3": "The projection must stay within improving the research draft rather than executing experiments or rewriting the artifact here.",
+      "RX.4": "Scientific draft improvement should avoid changes that could mislead readers about methods, results, or applicability.",
+      "RX.5": "The projection should preserve traceability to the provided artifact and distinguish reported evidence from inferred needs."
+    }
+  }
+}

@@ -1,0 +1,123 @@
+delegation_id: ad_r1_305
+template_id: T05
+delegation: "Check the logical consistency."
+
+artifact:
+  source: synthetic
+  domain: systems
+  word_count: 322
+  text: |
+    We describe ROUTELM, a query router that dispatches natural-language
+    prompts between a small LM (S) and a large LM (L) so as to minimize
+    inference cost while preserving end-task accuracy. The router is a
+    meta-model phi that, given a prompt x, predicts whether S(x) will be
+    an acceptable substitute for L(x).
+
+    Training. We construct a supervised corpus of 480k prompts spanning
+    eight task families. For each prompt, we run both S and L offline,
+    score their outputs with task-specific judges, and emit a binary
+    label y(x) in {0, 1} marking whether S(x) is acceptable. phi is a
+    4-layer transformer trained with binary cross-entropy on this
+    corpus. Class balancing is applied because S is judged acceptable
+    on 71 percent of prompts on average.
+
+    Routing. At serving time, phi emits a score p(x) in [0, 1].
+    Prompts with p(x) > tau are dispatched to S; the rest are
+    dispatched to L. The threshold tau is selected on a held-out split
+    to enforce a target accuracy floor.
+
+    Portability. A central advantage of our framework is that it
+    requires no labeled difficulty information, so ROUTELM can be
+    deployed in new domains without any ground-truth curation. We
+    exploit this in Section 5, where we port ROUTELM to a
+    customer-support corpus for which only raw prompts are available.
+
+    Cost analysis. On the eight-task suite, ROUTELM dispatches 64
+    percent of queries to S and 36 percent to L. Because S costs
+    1/20 as much as L per token, total inference cost falls by 60
+    percent relative to a pure-L baseline. The router phi achieves
+    AUC 0.89 on the binary routing task. From this AUC we therefore
+    conclude that ROUTELM preserves end-task accuracy to within
+    0.5 points of the pure-L baseline.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.2: [F1.2.b, F1.2.c]
+  notes: |
+    Control case for R1.2. The delegation "Check the logical
+    consistency" overtly leaks the load-bearing dim (logical
+    correctness / internal consistency), hence leakage=yes.
+
+    F1.2.b (cross-section contradiction): the Training paragraph
+    explicitly describes constructing a 480k-prompt SUPERVISED
+    corpus with binary labels y(x) produced by running both S and
+    L offline and scoring with judges — i.e., labeled difficulty
+    information IS used. The Portability paragraph then claims the
+    framework "requires no labeled difficulty information, so
+    ROUTELM can be deployed in new domains without any ground-truth
+    curation." These two statements cannot both be true of the
+    same training pipeline; the contradiction is load-bearing
+    because the Section-5 portability claim is grounded in it.
+
+    F1.2.c (non-sequitur): the Cost-analysis paragraph reports
+    AUC 0.89 on the binary routing task and then concludes "from
+    this AUC we therefore conclude that ROUTELM preserves
+    end-task accuracy to within 0.5 points of the pure-L
+    baseline." Routing AUC does not entail any specific end-task
+    accuracy gap — that would require a calibrated threshold
+    sweep against a downstream evaluation, not a property of the
+    binary classifier alone. The conclusion does not follow from
+    the premise even if both numbers are correct in isolation.
+
+    Both flaws are detectable from careful reading without
+    requiring recall of canonical works (knowledge_gating=low):
+    the contradiction is between two adjacent paragraphs, and
+    the non-sequitur is a direct premise-conclusion mismatch.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the Training paragraph describes a supervised pipeline
+  with explicit binary labels y(x), which directly contradicts the
+  Portability paragraph's claim that no labeled difficulty
+  information is required. Separately flags that routing AUC 0.89
+  does not entail an end-task accuracy gap of 0.5 points — the
+  conclusion does not follow from the stated premise and would
+  require an actual downstream evaluation. Suggests either
+  reconciling the supervision claim or replacing the AUC-based
+  conclusion with a measured end-task gap.
+
+bad_outputs_summary: |
+  Polishes prose, renames variables, suggests more task families,
+  or proposes ablations on tau without flagging either the
+  supervised-vs-unsupervised contradiction across paragraphs or
+  the AUC-to-accuracy non-sequitur. Accepts the 0.5-point claim
+  as established by AUC. Treats the section as logically sound
+  and only requests minor clarifications.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

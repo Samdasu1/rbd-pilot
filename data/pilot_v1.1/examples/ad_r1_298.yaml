@@ -1,0 +1,145 @@
+delegation_id: ad_r1_298
+template_id: T05
+delegation: "Check the logical consistency."
+
+artifact:
+  source: synthetic
+  domain: anomaly_detection
+  word_count: 322
+  text: |
+    We present ROUTERSCAN, an anomaly detector for multi-LLM routing
+    systems. ROUTERSCAN flags routing decisions in which the selected
+    model produced an anomalous output — refusals, degenerate
+    generations, or off-task responses — so that operators of routing
+    pipelines (e.g., systems that dispatch each query among GPT-4,
+    Claude, Llama-3-70B, and Mistral-7B) can audit serving quality
+    without manually inspecting raw logs.
+
+    Data collection. We instrumented a production-style router serving
+    four LLMs and collected 12,400 query–response pairs over three
+    weeks. Two annotators independently labeled each response as
+    anomalous or normal using a written rubric, with disagreements
+    resolved by a third adjudicator. 18.2 percent of responses were
+    labeled anomalous. We treat these labels y(x) as ground truth for
+    both training and evaluation, splitting queries (not responses)
+    70/15/15 across train, validation, and test partitions.
+
+    Detector. ROUTERSCAN is a logistic-regression head on top of a
+    frozen MPNet encoder of the query-response concatenation,
+    augmented with six routing-log features (selected model, output
+    token count, end-to-end latency, retry count, top-logprob, finish
+    reason). The detector is trained with class-balanced binary
+    cross-entropy.
+
+    Deployment scope. A central practical advantage of ROUTERSCAN is
+    that it is fully unsupervised: it requires no annotated examples
+    of anomalous routing decisions and no ground-truth labels of any
+    kind, and it can be deployed on any router's logs without further
+    labeling effort. Operators can therefore enable ROUTERSCAN on
+    their existing routing infrastructure and immediately receive
+    anomaly scores for every served query.
+
+    Results. On the held-out test split, ROUTERSCAN achieves AUC 0.91
+    and F1 0.74 at the validation-tuned operating point. Routing-log
+    features contribute roughly 0.05 AUC over a text-only ablation.
+    From this AUC, we therefore conclude that the rate of anomalous
+    routing decisions in production multi-LLM systems is approximately
+    18 percent, consistent with prior router-quality audits and
+    establishing ROUTERSCAN as a calibrated prevalence estimator for
+    routing anomalies.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.2: [F1.2.b, F1.2.c]
+  notes: |
+    Control case for R1.2. The delegation "Check the logical
+    consistency" overtly names the load-bearing dim (internal logical
+    consistency / premise-conclusion validity), hence leakage=yes.
+
+    F1.2.b (cross-section contradiction): the Data-collection
+    paragraph explicitly states that two annotators labeled each
+    response and that those labels y(x) are used as ground truth for
+    both training and evaluation — i.e., the detector is a supervised
+    classifier whose training and test sets both depend on annotated
+    anomaly labels. The Deployment-scope paragraph then claims
+    ROUTERSCAN is "fully unsupervised," requires "no annotated
+    examples of anomalous routing decisions and no ground-truth labels
+    of any kind," and can be dropped onto any router's logs without
+    further labeling effort. A logistic-regression head trained with
+    class-balanced binary cross-entropy on annotator-provided y(x) is
+    not unsupervised, and the trained model does not stop being
+    supervised when redeployed. The two paragraphs cannot both be true
+    of the same artifact; the contradiction is load-bearing because
+    the section's portability claim depends on it.
+
+    F1.2.c (non-sequitur): the Results paragraph reports AUC 0.91 and
+    concludes "from this AUC we therefore conclude that the rate of
+    anomalous routing decisions in production multi-LLM systems is
+    approximately 18 percent." AUC measures the ranking discrimination
+    between positive and negative classes on a labeled test set; it
+    does not entail any particular base-rate or prevalence estimate,
+    and certainly not one for a different (production) population. The
+    18 percent figure is just the training-set annotation rate
+    restated, not an inference derivable from AUC. A prevalence
+    estimate would require a calibrated detector applied to a sampled
+    target population, not a discrimination metric. The conclusion
+    does not follow from its stated premise.
+
+    Both flaws are detectable from careful reading of the section
+    alone without recall of canonical works (knowledge_gating=low):
+    the contradiction is between two adjacent paragraphs of the same
+    section, and the non-sequitur is a direct premise-conclusion
+    mismatch about what AUC supports.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.9
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the Data-collection paragraph trains and evaluates
+  ROUTERSCAN on annotator-provided y(x) labels with class-balanced
+  binary cross-entropy, which directly contradicts the Deployment-scope
+  paragraph's claim that the detector is fully unsupervised and
+  requires no annotations or ground-truth labels of any kind.
+  Separately flags that AUC 0.91 does not entail an 18 percent
+  prevalence estimate for production routing — AUC is a discrimination
+  metric on a labeled test set, while the 18 percent figure is just
+  the training annotation rate restated. Suggests either narrowing
+  the deployment claim to "supervised, transferable across routers"
+  or replacing the AUC-based prevalence conclusion with a calibrated
+  estimate on a sampled target population.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more LLM backends to the routing
+  pool, proposes extra routing-log features, or recommends ablations
+  on the encoder without flagging either the supervised-vs-unsupervised
+  contradiction across paragraphs or the AUC-to-prevalence
+  non-sequitur. Accepts the 18 percent production-anomaly conclusion
+  as supported by the reported AUC. Treats the section as logically
+  sound and only requests minor clarifications or additional
+  router-quality citations.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

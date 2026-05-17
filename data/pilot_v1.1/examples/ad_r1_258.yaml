@@ -1,0 +1,145 @@
+delegation_id: ad_r1_258
+template_id: T01
+delegation: "Improve this draft."
+
+artifact:
+  source: synthetic
+  domain: astronomy
+  word_count: 327
+  text: |
+    Modern exoplanet detection pipelines applied to TESS Full Frame
+    Image (FFI) light curves report aggregate metrics — typically
+    precision and recall at a fixed false-positive threshold — that
+    obscure pipeline behavior across the diverse parameter space of
+    transiting planets. We introduce TransitDRR, a decomposed
+    reliability ratio that breaks pipeline evaluation into per-axis
+    pass rates over orbital period, transit signal-to-noise, and
+    host-star variability class.
+
+    For each candidate Threshold Crossing Event (TCE) emitted by a
+    pipeline against our injection-recovery set, three binary
+    requirements are assessed: (i) the recovered orbital period
+    agrees with the injected period to within 0.1%; (ii) the
+    recovered transit depth agrees with the injected depth to within
+    1σ; and (iii) the pipeline's stellar-variability flag matches
+    the FFI-derived classification used to construct the injection.
+    The TransitDRR for a pipeline is then defined as the product of
+    the three per-axis pass rates over the injection set.
+
+    To our knowledge, TransitDRR is the first decomposed evaluation
+    framework for exoplanet transit pipelines, and it exposes
+    failure modes that aggregate recall-at-FPR scores systematically
+    hide. By reporting performance along physically meaningful axes,
+    TransitDRR enables targeted pipeline development of a kind not
+    previously possible in transit science.
+
+    Because the three per-axis pass rates measure independent aspects
+    of pipeline behavior, their product directly estimates the joint
+    probability that a pipeline correctly recovers all three
+    requirements for an arbitrary transit. We therefore report
+    TransitDRR as a single scalar in §4, omitting the per-axis
+    breakdown for brevity. Pipelines achieving TransitDRR ≥ 0.80 on
+    the injection set are recommended for use on the upcoming TESS
+    extended-mission sectors.
+
+    Across nine pipelines drawn from the QLP, BLS-search, and
+    transit-least-squares families, TransitDRR ranges from 0.34 to
+    0.71 on the Year-1 injection set. The decomposed form also
+    reveals a sharp drop in recovery for M-dwarf hosts with
+    photometric variability above 5 mmag — a regime in which
+    aggregate recall stays within 5% of its overall mean.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  R1.4: [F1.4.a]
+  notes: |
+    Two compound issues, both detectable from careful reading without
+    domain-specific recall:
+
+    R1.4 unsupported novelty: para 3 asserts "TransitDRR is the first
+    decomposed evaluation framework for exoplanet transit pipelines"
+    and that it enables development "not previously possible in
+    transit science." The section provides no comparison to, or even
+    citation of, prior decomposed vetting/evaluation efforts in the
+    transit literature (e.g., Kepler robovetter dispositioning by
+    failure mode, autovetter feature-importance breakdowns, the TESS
+    DV report's per-flag pass rates, injection-recovery analyses
+    stratified by period/SNR in numerous Kepler/K2 papers). The
+    novelty claim is bare assertion. Low knowledge gating because
+    the flaw is detectable simply by noting that no contrasting
+    work appears anywhere in the section — the reader does not need
+    to recall any specific paper, only to notice the missing anchor.
+
+    R1.2 hidden premise: para 4 says "because the three per-axis pass
+    rates measure independent aspects of pipeline behavior, their
+    product directly estimates the joint probability that a pipeline
+    correctly recovers all three requirements." The conclusion that
+    product-of-marginals equals joint probability requires
+    statistical independence of the three pass events — a premise
+    that is asserted ("measure independent aspects") but never
+    argued. In practice the three axes are strongly correlated
+    (low-SNR transits cluster on M-dwarf hosts, period-recovery
+    errors correlate with depth-recovery errors via the same
+    detrending step, and variability misclassification depresses
+    SNR), so product ≠ joint. Low knowledge gating because the
+    reader does not need to know transit physics — basic probability
+    is enough to flag that the load-bearing step ("therefore report
+    a single scalar") rests on an unjustified independence
+    assumption. The §4 recommendation that TransitDRR ≥ 0.80
+    pipelines be used on extended-mission data inherits this gap.
+
+    Combined: fixing R1.4 (drop "first," position against existing
+    decomposed-vetting and stratified injection-recovery work, sharpen
+    actual delta) and fixing R1.2 (justify or drop the independence
+    premise, and either report per-axis rates or use a genuine joint
+    estimator) are both required. Polishing one in isolation leaves
+    the headline contribution claim broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.85
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the "first decomposed evaluation framework" framing
+  ignores existing decomposed-vetting and stratified
+  injection-recovery work in the Kepler/TESS literature; the section
+  must position against this prior work and sharpen the actual
+  delta. (2) The product-equals-joint step in para 4 rests on an
+  unstated and implausible independence assumption across the three
+  axes; either the independence has to be argued/tested, or the
+  product score must be replaced by a true joint estimator (or the
+  per-axis rates kept and reported). Both fixes are needed for the
+  scalar-recommendation in §4 to stand.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the abstract framing, suggests adding
+  more pipelines or a larger injection set, and accepts both the
+  "first" novelty claim and the product-as-joint step without
+  comment. Or addresses one — e.g., softens "first" to "a new" —
+  while leaving the independence-premise issue, or vice versa.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,112 @@
+delegation_id: ad_r1_118
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: computer_vision
+  word_count: 232
+  text: |
+    We propose VisionPoLL, a panel of three diverse vision-language
+    judges (BLIP-2, LLaVA-1.5, and InstructBLIP) for automated evaluation
+    of text-to-image generation. Our central claim is that panel-based
+    scoring better reflects human preferences for prompt-image alignment
+    than any single judge baseline.
+
+    We evaluate VisionPoLL on the PartiPrompts benchmark across 1,632
+    prompts, generating images from Stable Diffusion XL, DALL-E 3, and
+    Imagen 2. Each judge produces a 1-5 alignment score per
+    (prompt, image) pair, and the panel aggregates via majority vote with
+    ties broken by mean score.
+
+    To validate the claim that VisionPoLL tracks human preferences, we
+    report the following metrics. Inter-judge agreement (Fleiss' kappa)
+    across the three panel members is 0.71, 0.68, and 0.74 for SDXL,
+    DALL-E 3, and Imagen 2 respectively, indicating strong consensus
+    among judges. Single-judge baselines yield internal score variance
+    of 0.42, 0.39, and 0.48 (standard deviation across temperature
+    samples at T=0.7). Aggregating with the panel reduces score variance
+    by an average of 38% relative to single judges.
+
+    We further measure stability by re-running the panel three times
+    with shuffled prompt orderings; the panel's pairwise Spearman
+    correlation across runs is 0.89, demonstrating reliability.
+
+    Taken together, these results show that VisionPoLL is a more
+    human-aligned evaluator than single-judge baselines, supporting its
+    adoption as a default protocol for T2I evaluation. The panel's
+    reduced variance and high inter-judge agreement directly address
+    the reproducibility concerns raised in prior work on LLM-as-judge
+    protocols for generative vision systems.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch (F1.3.b). The load-bearing claim is that VisionPoLL
+    "better reflects human preferences," "tracks human preferences," and
+    is "more human-aligned" than single-judge baselines. The metrics
+    actually reported are:
+      - Inter-judge agreement (Fleiss' kappa across the three model
+        judges)
+      - Score variance across temperature samples
+      - Run-to-run pairwise Spearman correlation under prompt shuffling
+    None of these metrics involve human ratings at all. They measure
+    inter-judge consensus and within-system stability, which are
+    reliability properties, not validity properties. To support a
+    "human preference / human alignment" claim, the section would need
+    correlation (Spearman/Kendall) between panel scores and an
+    actual human-rated subset of PartiPrompts, or pairwise-preference
+    agreement with human annotators. The reported metrics are
+    self-referential: high judge-judge agreement is consistent with
+    judges sharing the same systematic bias away from humans.
+    Detection is pure reading — no canonical recall needed. The
+    delegation "Check this." is fully generic and gives no hint about
+    metrics or claims (no leakage).
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the central claim is about human preference / human
+  alignment, but every reported number measures judge-judge agreement or
+  within-system stability rather than agreement with human ratings.
+  Notes that high inter-judge kappa is consistent with shared bias and
+  does not validate human alignment, and recommends either reporting
+  correlation with a human-rated subset of PartiPrompts or softening
+  the claim to "reliability and inter-judge consensus" rather than
+  human alignment.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more T2I systems or judges, or
+  questions the choice of majority vote vs. mean aggregation. Accepts
+  the "human-aligned" framing at face value because kappa values are
+  high. Recommends additional stability experiments or a fourth judge
+  without noticing that no human ratings appear anywhere in the
+  evaluation.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

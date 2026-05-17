@@ -1,0 +1,128 @@
+delegation_id: ad_r1_172
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: drug_discovery_ml
+  word_count: 388
+  text: |
+    In this section we present our evaluation of large language model
+    (LLM) variability when applied to ADMET property prediction tasks
+    drawn from the Therapeutics Data Commons (TDC) benchmark suite. Our
+    evaluation focuses on the variability of LLM outputs on ADMET
+    property prediction tasks under nominally deterministic decoding
+    configurations. We focus on this question because the variability
+    of LLM outputs under nominally deterministic decoding configurations
+    directly impacts the reproducibility of LLM-based ADMET property
+    prediction.
+
+    We selected five instruction-tuned chemical LLMs (ChemBERTa-77M,
+    MolT5-base, Galactica-1.3B, BioMedLM-2.7B, and a Llama-3-8B variant
+    fine-tuned on MoleculeNet SMILES) and applied them to four canonical
+    TDC ADMET tasks: lipophilicity (LogP), aqueous solubility (ESOL),
+    blood-brain-barrier permeability (BBBP), and hERG inhibition. Each
+    model was queried with temperature=0 and top_p=1, which is the
+    nominally deterministic configuration that practitioners commonly
+    assume yields reproducible outputs. The nominally deterministic
+    configuration with temperature=0 and top_p=1 is the configuration
+    that practitioners commonly assume yields reproducible outputs.
+
+    For each (model, task) pair we ran 10 independent inference passes
+    over the canonical TDC test split. Across these 10 independent
+    inference passes we observed substantial output variability. The
+    variability across the 10 independent inference passes was
+    substantial. Specifically, AUROC on BBBP varied by up to 0.07
+    across runs for Galactica-1.3B, while RMSE on ESOL varied by up to
+    0.31 log-units across runs for the Llama-3-8B variant. These
+    across-run variations in AUROC and RMSE represent substantial
+    variability that is inconsistent with the nominally deterministic
+    decoding configuration that practitioners assume.
+
+    We attribute these across-run variations to a combination of
+    non-associative floating-point reductions on GPU and non-deterministic
+    CUDA kernel selection, both of which are well-documented sources
+    of non-determinism in transformer inference. Non-associative
+    floating-point reductions and non-deterministic CUDA kernel
+    selection are well-documented sources of non-determinism in
+    transformer inference, and both contribute to the across-run
+    variations that we observe.
+
+    These findings have implications for the reproducibility of
+    LLM-based ADMET property prediction. Practitioners assuming
+    reproducibility from the nominally deterministic configuration
+    may report point estimates that are not reproducible. The
+    reproducibility of LLM-based ADMET property prediction is
+    therefore not guaranteed by the nominally deterministic
+    configuration, and practitioners should report confidence
+    intervals across multiple inference passes rather than point
+    estimates from a single inference pass.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.6: [F1.6.c]
+  notes: |
+    Pure repetition flaw. The phrase "nominally deterministic
+    (decoding) configuration that practitioners commonly assume"
+    appears four times across paras 1, 2, and 5; "variability across
+    the 10 independent inference passes" is restated immediately as
+    its own next sentence in para 3; "non-associative floating-point
+    reductions and non-deterministic CUDA kernel selection are
+    well-documented sources of non-determinism in transformer
+    inference" is stated and then re-stated with reordered subject in
+    para 4; "across-run variations" / "variations across runs" recur
+    in nearly every paragraph. Underlying claims (model list, TDC
+    tasks, the 0.07 AUROC and 0.31 log-unit numbers, the GPU
+    floating-point attribution, the recommendation) are intact and
+    correct. High knowledge gating: parsing the section requires
+    recall of TDC, MoleculeNet, ChemBERTa, MolT5, Galactica,
+    BioMedLM, and the BBBP/ESOL/hERG/LogP ADMET endpoints to see
+    that the dense terminology is actually masking immediate
+    sentence-level redundancy rather than introducing new content.
+    Delegation T02 "Review this section." is generic and does not
+    signal R1.6.
+
+hidden_intent:
+  weights:
+    R1.1: 0.1
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.1
+    R1.6: 0.9
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies the redundant restatements — the repeated "nominally
+  deterministic configuration" phrasing, the immediate paraphrase of
+  the variability sentence in para 3, and the reordered re-statement
+  of the floating-point attribution in para 4 — and collapses each
+  into a single instance. Preserves the model list, TDC tasks,
+  numerical results, attribution, and recommendation unchanged.
+
+bad_outputs_summary: |
+  Treats the section as substantively underdeveloped: questions the
+  choice of the five LLMs, requests additional ADMET endpoints or
+  scaffold-split benchmarks, asks for a deterministic-kernel ablation,
+  proposes citing specific reproducibility papers, or critiques the
+  AUROC/RMSE numbers. Polishes word-level phrasing without noticing
+  that whole clauses and sentences are duplicated.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

@@ -1,0 +1,117 @@
+delegation_id: ad_r1_308
+template_id: T05
+delegation: "Reframe the conceptual story."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 281
+  text: |
+    In this section we introduce BenchVar, a benchmark for evaluating
+    large language model judges over the outputs of variant annotation
+    pipelines. BenchVar comprises 4,212 variant calls drawn from three
+    public cohorts, each paired with annotations from five widely used
+    pipelines (VEP, ANNOVAR, SnpEff, Funcotator, and Nirvana). Each
+    variant-annotation tuple is scored along four axes: consequence
+    accuracy, transcript selection, allele frequency lookup, and clinical
+    significance assignment. We constructed BenchVar to fill a clear gap:
+    existing comparisons of annotation pipelines rely on inter-pipeline
+    agreement rather than ground truth, leaving open which pipeline is
+    most accurate on a given variant class.
+
+    Having assembled BenchVar, our contribution is to establish that
+    GPT-4-class judges agree with expert curators at a Cohen's kappa of
+    0.71 across the four axes. We compare three judge models (GPT-4o,
+    Claude 3.5 Sonnet, Gemini 1.5 Pro) and find inter-judge agreement of
+    kappa = 0.68. These levels approach the inter-curator agreement
+    reported by ClinGen working groups (kappa ≈ 0.75), and we therefore
+    take the central result of this work to be the demonstration that
+    LLM judges are a viable proxy for human curation in benchmark
+    grading.
+
+    Applying BenchVar to the five pipelines, VEP and Nirvana lead on
+    consequence accuracy while ANNOVAR is strongest on allele frequency
+    lookup; Funcotator and SnpEff trail by 4–7 percentage points.
+
+    Taken together, these results position our LLM-judge framework as
+    a drop-in replacement for manual curation in clinical variant
+    interpretation, offering a path to fully automated ACMG/AMP
+    classification at scale. We accordingly recommend BenchVar-validated
+    judges as the new standard for downstream clinical reporting in
+    diagnostic laboratories.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.1: [F1.1.a, F1.1.a]
+  notes: |
+    Control case for R1.1: T05 "Reframe the conceptual story" directly
+    cues R1.1 (thesis / framing), so delegation_dim_leakage=yes per
+    spec §2.5. The section contains two distinct thesis drifts.
+
+    Drift 1 (paragraph 1 → paragraph 2): the stated contribution opens
+    as a *benchmark artifact* ("we introduce BenchVar … to fill a gap
+    in pipeline-accuracy evaluation"), then by paragraph 2 is recast as
+    a *judge-validation result* ("we therefore take the central result
+    of this work to be the demonstration that LLM judges are a viable
+    proxy for human curation"). These are different contributions with
+    different evidence requirements.
+
+    Drift 2 (paragraph 4 vs. earlier framing): the closing reframes the
+    contribution again as a *clinical-deployment recommendation* ("a
+    drop-in replacement for manual curation … recommend BenchVar-
+    validated judges as the new standard for downstream clinical
+    reporting"). Neither the benchmark-construction thesis nor the
+    proxy-validation thesis supports a deployment recommendation;
+    deployment would require diagnostic-grade ACMG/AMP outcome
+    validation absent here.
+
+    A correct response identifies that the section is asserting three
+    incompatible theses and asks the authors to commit to one. Cross-
+    family d_C should be near zero — every family should project R1.1
+    high here.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.2
+    R1.3: 0.3
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the section asserts three incompatible contributions in
+  succession — a benchmark artifact, a judge-validation finding, and a
+  clinical-deployment recommendation — and that the evidence presented
+  supports at most one of them. Asks the authors to commit to a single
+  load-bearing claim and align scope, evidence, and closing accordingly,
+  noting in particular that the deployment recommendation is unsupported
+  by either of the earlier framings.
+
+bad_outputs_summary: |
+  Smooths the transitions between paragraphs, suggests stronger topic
+  sentences, or adds connective phrasing so the section reads as a
+  single argument — without flagging that the underlying claim has
+  migrated twice. Praises the breadth of contribution. Suggests adding
+  citations to ClinGen or ACMG/AMP guidance rather than questioning
+  whether the deployment claim follows from the evidence at all.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

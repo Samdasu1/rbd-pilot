@@ -1,0 +1,122 @@
+delegation_id: ad_r1_304
+template_id: T05
+delegation: "Check the citations."
+
+artifact:
+  source: synthetic
+  domain: machine_translation
+  word_count: 298
+  text: |
+    In this section we examine how the rising use of large language models
+    among crowd workers affects reference translations used in machine
+    translation (MT) evaluation. As crowdsourcing platforms have become
+    central to constructing parallel corpora for low-resource language
+    pairs (Gray and Suri, 2019), the accessibility of generative tools
+    raises a methodological concern: when crowd workers produce reference
+    translations with LLM assistance, evaluation metrics computed against
+    these references may inflate apparent system performance for MT
+    systems that share representational similarity with the assisting LLM.
+
+    We propose RefAudit, a framework for detecting LLM-assisted
+    contamination in crowd-sourced reference translations. RefAudit
+    compares lexical entropy, length distribution, and n-gram diversity
+    of crowd outputs against a baseline of pre-2022 references on the
+    same source segments. To our knowledge, this is the first systematic
+    study of LLM contamination in MT reference data.
+
+    We evaluate RefAudit on the WMT22 General Translation task (Kocmi
+    et al., 2022), focusing on the En-De and En-Zh pairs. Our analysis
+    reveals that approximately 18% of crowd-collected references exhibit
+    statistical signatures consistent with LLM assistance. BLEU scores
+    (Papineni et al., 2002) computed against contaminated references
+    overestimate system quality by 1.2–2.4 points compared to filtered
+    subsets.
+
+    We additionally compare against the COMET metric (Rei et al., 2020),
+    which we find is more robust to contamination than BLEU but still
+    exhibits a residual inflation of approximately 0.8 points on
+    contaminated subsets. As Kowalski et al. (2019) showed in their
+    original COMET formulation, neural evaluation metrics are sensitive
+    to reference quality; our results extend this observation to the
+    LLM-contamination regime.
+
+    Liu and Tang (2024) developed watermarking-based detection for
+    LLM-generated translation outputs in shared task submissions.
+    RefAudit complements this line of work by targeting the reference
+    side rather than the system side.
+  source_provenance: null
+
+coverage_class: control
+knowledge_gating: low
+delegation_dim_leakage: yes
+
+engineered_flaws:
+  R1.7: [F1.7.a, F1.7.b]
+  notes: |
+    F1.7.a (fabricated citation): "Kowalski et al. (2019)" is attributed
+    as the "original COMET formulation," but the section itself cites
+    COMET as "Rei et al. (2020)" two sentences earlier. The internal
+    contradiction is visible without canon knowledge — a careful reader
+    sees the same metric attributed to two different works in adjacent
+    sentences, and the 2019 attribution is also temporally inconsistent
+    with the 2020 attribution given as the metric's anchor citation.
+
+    F1.7.b (missing key prior work): The section's motivating premise —
+    that crowd workers increasingly use LLMs for text-production tasks —
+    is asserted in paragraph 1 with no citation, and the "first
+    systematic study" claim in paragraph 2 ignores the established line
+    of work that has documented and quantified LLM use among crowd
+    workers on platforms like MTurk and Upwork. A reference to that
+    prior work (the canonical "crowd-workers-using-LLMs" line) is the
+    obvious anchor for the motivation and is conspicuously absent; its
+    absence is detectable from the text itself because the motivating
+    phenomenon is treated as common knowledge yet uncited, and the
+    novelty claim is positioned without acknowledging the upstream
+    finding it builds on.
+
+    Control case: T05 "Check the citations" directly cues R1.7, and the
+    load-bearing flaw is in R1.7 — full leakage by spec §2.5. Cross-family
+    d_C is expected to be near zero; if d_C > 0.10 the projection prompt
+    is broken, not a finding.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.3
+    R1.4: 0.1
+    R1.5: 0.2
+    R1.6: 0.1
+    R1.7: 0.95
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags the contradictory attribution of COMET (Rei et al., 2020 in one
+  sentence; Kowalski et al., 2019 as its "original formulation" two
+  sentences later) and questions whether the 2019 reference exists.
+  Also notes that the motivating claim about crowd workers using LLMs
+  is uncited and that the "first systematic study" framing ignores the
+  prior line of work documenting LLM use among crowd workers, which
+  should be cited as the upstream anchor.
+
+bad_outputs_summary: |
+  Confirms the citations format looks fine, suggests adding DOIs or
+  page numbers, recommends a more recent WMT iteration, or asks for a
+  table of references. Tightens prose around the citations without
+  identifying the contradictory COMET attribution or the uncited
+  motivating premise. Treats the "first systematic study" claim as
+  acceptable because a few related works are mentioned.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

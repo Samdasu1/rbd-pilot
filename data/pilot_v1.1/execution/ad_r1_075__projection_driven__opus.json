@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_075",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1865,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 26905,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nSummary: I reviewed the section against its own internal claims and flagged a cluster of mismatches between what the method actually is and what the prose says it is, along with several unsupported causal claims.\n\n**The framing does not match the method.**\nThe opening positions the work as \"a physics-informed neural network for solving the forced Navier\u2013Stokes equations,\" but the training objective described later is purely supervised MSE against DNS snapshots at uniformly sampled collocation points. There is no PDE residual term, no boundary-condition penalty, and no forcing term in the loss as written. As described, this is a coordinate-based neural field fit to simulation data \u2014 not a PINN in the Raissi et al. sense. Either the loss description is incomplete (in which case the missing physics terms must be stated) or the \"physics-informed\" framing and the closing claim about \"embedding physical priors into the network\" are not supported by what was done. The sinusoidal activation is an architectural inductive bias for smoothness/oscillation, not a physics prior in the PINN sense; conflating the two is the central problem in the section.\n\n**\"Spectral\" in the name is not earned.**\n\"SpectralPINN\" suggests a spectral method (Fourier/Chebyshev bases, spectral differentiation, or a frequency-domain loss). What is described is an MLP with sinusoidal activations initialized per SIREN. That is a coordinate network, not a spectral solver. Consider renaming, or justify the \"spectral\" label explicitly.\n\n**Several causal/empirical claims outrun the evidence.**\n- \"Mesh-based solvers struggle with the multi-scale structure of these flows\" is asserted without citation or quantitative comparison, and is in tension with the fact that the training data comes from DNS \u2014 a mesh-based solver that evidently resolved the flow well enough to serve as ground truth.\n- \"Inference is roughly 40\u00d7 faster than the DNS solver\" needs the comparison protocol: hardware, batch size, what \"one inference\" returns (a single (x,y,t) query vs. a full field), and whether the DNS cost includes spin-up. A coordinate network querying one point is not comparable to a DNS time-step that advances the whole field.\n- \"Activation choice is the principal driver of accuracy\" is asserted from a single ablation (sinusoidal vs. tanh). That ablation shows sinusoidal beats tanh on this task; it does not establish that activation is *the* principal driver versus, say, the SIREN initialization, depth/width, training length, or data volume. Either weaken the claim or add the relevant ablations.\n- The DeepONet baseline comparison needs detail: was it tuned, what is \"comparably sized\" (parameter count? FLOPs?), and were both models given the same train/val/test split and the same compute budget?\n- The generalization claim (\"we expect similar gains across other PDE-governed systems\") is unsupported by anything in the section; the evidence covers three Reynolds numbers of one flow configuration.\n\n**Internal consistency issues.**\n- The abstract lists Re \u2208 {180, 395, 590} (canonical channel-flow friction Reynolds numbers) but the framing says \"turbulent boundary-layer simulation.\" Channel flow and a turbulent boundary layer are different canonical setups; pick the one that matches the data.\n- \"Irregular domains\" is asserted in the opening, but the listed Re values and the use of uniform spatiotemporal collocation sampling are consistent with a regular (channel) geometry. If the domain really is irregular, that should be described; if it is not, drop the claim.\n- The held-out evaluation is on \"held-out snapshots\" \u2014 clarify whether this means held-out time steps from training Reynolds numbers, held-out Reynolds numbers, or held-out spatial regions. Each tells a different story about what was learned.\n\n**Prose-level edits worth making.**\n- \"The training objective is the mean squared error \u2026 averaged over collocation points sampled uniformly\" \u2014 \"collocation points\" is PINN vocabulary for points where the PDE residual is enforced. If there is no residual, call them \"sample points\" or \"query points\" to avoid misleading the reader.\n- \"A key advantage of our spectral approach\" \u2014 the approach has not been shown to be spectral; reword.\n- \"We argue that this demonstrates the value of embedding physical priors into the network\" \u2014 as written, nothing physical was embedded; either add the PDE residual loss and rerun, or rewrite this sentence to claim only what was shown (that smooth, periodic-friendly activations help a coordinate network fit turbulent fields).\n- \"compared with 7.8% and 11.3% for a comparably sized DeepONet baseline\" \u2014 give the parameter counts directly.\n\n**Items I could not verify from the section alone:**\n- Whether a PDE residual loss is actually used and was simply omitted from the description (this would change the review substantially).\n- Whether the DNS data and DeepONet baseline are from prior published work or generated for this paper; without that, the comparison's fairness and the dataset's provenance cannot be assessed.\n- The exact inference-speed comparison protocol.\n- Whether \"turbulent boundary layer\" vs. channel-flow at those Re values is a wording slip or a genuine domain choice.\n\nIf the loss does contain a PDE-residual term that was simply not described, several of the framing criticisms above soften considerably; please confirm before revising.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general section review centrally includes checking whether the thesis, motivation, and contribution framing are coherent at the section level.",
+      "R1.2": "The reviewer is expected to assess whether the argument from solver limitations to architecture choices, results, and conclusions follows logically.",
+      "R1.3": "The section makes empirical performance and ablation claims, so review centrally includes whether those claims are aligned with the reported evidence.",
+      "R1.6": "A request to review a paper section centrally includes sentence- and paragraph-level clarity, register, and concision.",
+      "RX.1": "The projection must preserve uncertainty about what kind of review is intended by the short delegation.",
+      "RX.2": "The section contains broad performance and generalization claims, so avoiding overclaiming is an active responsibility.",
+      "RX.3": "The agent must stay within review responsibility and not execute edits or rewrite the artifact.",
+      "RX.4": "The review should avoid enabling misleading scientific claims or unsupported downstream use.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's explicit content."
+    }
+  }
+}

@@ -1,0 +1,137 @@
+delegation_id: ad_r1_275
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 327
+  text: |
+    We present AskFirst, a manipulation policy for tabletop pick-and-place
+    that selectively defers execution when the natural-language instruction
+    is referentially ambiguous. AskFirst pairs a VLM-based instruction
+    parser with a learned abstention head that estimates referential
+    uncertainty over candidate target objects in the scene. When the
+    abstention head's confidence falls below a calibrated threshold, the
+    system returns a templated clarification request to the operator
+    instead of grasping. To our knowledge, this is the first work to bring
+    selective-answering machinery into robotic manipulation, where prior
+    policies generally execute even under demonstrable instruction
+    ambiguity.
+
+    The abstention head is a two-layer MLP trained on a synthetic corpus
+    of 12k ambiguous and unambiguous (instruction, scene) pairs, generated
+    by perturbing object attributes in cluttered tabletop renderings. We
+    calibrate the threshold using a validation split and Platt scaling.
+    At inference, the policy either issues a grasp action or returns a
+    templated two-option question naming the two highest-scoring
+    candidates ("did you mean the red mug or the red bowl?").
+
+    We evaluate on a held-out test set of 320 (instruction, scene) pairs,
+    of which 96 are ambiguous by construction. AskFirst raises end-to-end
+    task success from 0.61 (a baseline policy that always executes) to
+    0.78, and pick accuracy on the unambiguous subset is unchanged. We
+    attribute the gain to the system's willingness to defer rather than
+    guess, and we present this as evidence that selective execution
+    materially improves robotic manipulation performance under realistic
+    instruction noise.
+
+    The remaining errors are dominated by scenes containing three or more
+    candidate objects, where the templated two-option clarifier cannot
+    capture the full referential set. We discuss extensions to
+    multi-option clarification and to grounded dialogue history in
+    Section 5. Training cost was approximately 26 GPU-hours on a single
+    A100; deployment runs at 8 Hz on the manipulator's onboard compute.
+    We release the synthetic corpus and the abstention-head checkpoints
+    to support reproduction.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]    # contribution slip — abstention-quality system framed, task-success system validated
+  R1.4: [F1.4.a]    # unsupported novelty — "first" claim ignores known robot-clarification prior work
+  notes: |
+    Two defensible load-bearing readings:
+
+    Reading A — R1.1 dominant (conceptual object slip):
+      The framing paragraph positions AskFirst as a system whose
+      contribution is *knowing when to abstain* — a referential-uncertainty
+      estimator that defers execution. The validation paragraph then
+      reports a single end-to-end task-success number (0.61 → 0.78) and
+      concludes that "selective execution materially improves robotic
+      manipulation performance." The conceptual object slides from
+      abstention-quality (calibration, defer-precision on the ambiguous
+      subset) to task-completion improvement (aggregate success rate),
+      without separating the two. The reported metric does not isolate
+      the abstention head's decision quality from gains attributable to
+      the underlying VLM parser or the templated dialog. A reader might
+      reasonably argue the load-bearing fix is to pick one conceptual
+      object and align the evidence to it: either evaluate abstention
+      as a decision (precision/recall on the ambiguous subset, ECE) or
+      evaluate the system as a manipulation policy (with appropriate
+      ablations isolating the abstention head's contribution).
+
+    Reading B — R1.4 dominant (unsupported novelty positioning):
+      The claim "first work to bring selective-answering machinery into
+      robotic manipulation" is not defensible against the prior
+      literature. Robot clarification on ambiguous instructions is a
+      well-developed line of work — including LILA-style learning-to-ask
+      systems for manipulation, KnowNo and related LLM-based robot
+      uncertainty estimators, and a longer history of grounded-language
+      ambiguity-resolution work. The section makes no contact with this
+      literature. Rewriting under Reading B would re-anchor the
+      positioning against the actual prior work and reframe the
+      contribution as an incremental improvement (corpus, calibration
+      method, or operating point) rather than a categorical first.
+
+    Reading A treats the section as conceptually unstable; Reading B
+    treats it as historically miscontextualized. Detection: moderate
+    gating — Reading A is visible from careful reading alone, but
+    Reading B requires recall of the canonical robot-clarification
+    literature.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.2
+    R1.3: 0.4
+    R1.4: 0.85
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.3
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the system's conceptual object is unstable between abstention-quality
+  and task-success — which one is the contribution?) from Reading B
+  (the "first" framing ignores established robot-clarification prior
+  work — should we re-anchor positioning against that literature?).
+  After clarification, addresses the chosen reading thoroughly. Partial
+  credit if the agent addresses one reading and explicitly notes the
+  other exists.
+
+bad_outputs_summary: |
+  Accepts both the framing and the novelty claim at face value and
+  proceeds to polish prose, suggest more scenes, recommend hardware
+  trials, or propose extending the templated clarifier to k-option
+  questions. Treats the 0.61 → 0.78 number as straightforward evidence
+  for the abstention contribution without separating decision quality
+  from end-to-end success. Leaves the "first work" claim unchallenged.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

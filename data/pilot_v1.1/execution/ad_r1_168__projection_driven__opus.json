@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_168",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2307,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30700,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.5\": 0.8, \"R1.6\": 1.0, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.8}}\n\nStrengthened revision below, followed by notes on what I changed and what I deliberately did not touch.\n\n---\n\n**Revised text**\n\nWe present PINNBench, a reproducible benchmark for evaluating physics-informed neural network (PINN) architectures across four canonical PDE families: the linear heat equation, the viscous Burgers' equation, the second-order wave equation, and the incompressible Navier\u2013Stokes system at low Reynolds numbers (Re \u2264 100 in all included problems). For each family we specify twelve problem variants spanning forward simulation, inverse coefficient recovery, and parameter identification, yielding 48 reference problems. Each problem is paired with either a closed-form solution or a high-fidelity Chebyshev pseudospectral reference, against which submitted solvers are scored.\n\nEvery problem is fully specified by a YAML manifest (schema in Appendix B) declaring: (i) the governing PDE in residual form, (ii) initial and boundary conditions, (iii) the spatial\u2013temporal sampling grids for collocation, residual, and evaluation points, and (iv) the reference solution together with an accepted tolerance. A constraint checker validates each manifest by evaluating the declared PDE residual against the pseudospectral reference at the manifest's evaluation points, so that any framework-agnostic submission can be scored deterministically from the manifest alone.\n\nTo enable reproducible evaluation, the benchmark ships a thin wrapper, `BenchmarkRunner`, which loads a manifest, instantiates the solver under test, fixes the random seed, and returns a results dictionary containing pointwise residual statistics, evaluation-set relative L2 error, and training wall-clock time. Reference adapters are provided for JAX, PyTorch, and Julia/Lux, so submissions are not tied to a particular framework. Wall-clock numbers are reported on a single fixed hardware configuration (described in Appendix C); cross-hardware comparisons are out of scope.\n\nIn our reference experiments, baseline PINN architectures achieve mean relative L2 errors of 4.2 \u00d7 10\u207b\u00b3 on heat, 1.1 \u00d7 10\u207b\u00b2 on Burgers', 8.7 \u00d7 10\u207b\u00b3 on wave, and 3.4 \u00d7 10\u207b\u00b2 on Navier\u2013Stokes, with substantial variance across initialization seeds (see Table 2 for per-seed spreads). Adding random Fourier feature embeddings reduces the mean Navier\u2013Stokes error to 1.8 \u00d7 10\u207b\u00b2 on the variants we tested; we do not claim this generalizes beyond the included problems. Training-time differences across the surveyed architectures span a 1.3\u00d7 to 6.1\u00d7 range, and adaptive collocation strategies outperform fixed-grid sampling on the stiff variants in our suite.\n\nThe benchmark reports a single composite score,\n\n  S = 0.5\u00b7L2 + 0.3\u00b7log\u2081\u2080(time) + 0.2\u00b7residual_max,\n\nintended to discourage architectures that achieve low solution error only at the cost of disproportionate training budgets. The weighting is a design choice rather than a derived optimum; we report the three components separately alongside S so that readers can apply their own weighting. The composite score is not intended as a universal quality measure for PINNs outside this benchmark.\n\n---\n\n**Notes on changes**\n\nStructural and flow changes:\n- Reordered the paragraphs so that *what the benchmark is* \u2192 *how problems are specified* \u2192 *how it is run* \u2192 *what we measured* \u2192 *how we score*. The previous draft put the empirical results before the runner description, which inverted the natural reading order for a benchmark paper.\n- Promoted the runner/adapter paragraph above the results paragraph, since the results are produced *by* the runner.\n\nTightening and precision:\n- Defined \"low Reynolds numbers\" with a concrete bound (Re \u2264 100) rather than leaving it qualitative.\n- Changed scientific-notation formatting to a consistent `\u00d7 10\u207b\u207f` form, and `log` to `log\u2081\u2080` (since the base materially changes the score's behavior and \"log\" alone is ambiguous between natural and base-10).\n- Replaced \"dominate\" with \"outperform \u2026 on the stiff variants in our suite,\" which is what the data actually supports.\n- Replaced \"ensuring that any framework-agnostic submission can be scored deterministically\" with a version that names *what* the checker checks (residual evaluated at manifest evaluation points), removing a small logical gap where the previous sentence asserted determinism without showing why.\n\nHedging and scope:\n- Added explicit scope statements: the Fourier-feature result is not claimed to generalize; the composite score is not claimed to be a universal PINN quality measure; cross-hardware timing comparisons are out of scope.\n- Reframed the composite weights as a design choice and committed to reporting components separately, which removes the implicit overclaim that the chosen weights are principled.\n- Removed \"commits to a single composite scoring metric\" \u2014 the prior phrasing read as a stronger methodological commitment than the rest of the text supports.\n\nWhat I did not change:\n- I left the numeric results, the architecture inventory, the four PDE families, and the 12 \u00d7 4 = 48 problem count as written. Strengthening the framing should not silently expand the empirical claims.\n- I did not touch citations or related-work positioning.\n- I did not rewrite Appendix B's schema or introduce new sections.\n\nItems I cannot verify from the artifact alone, and which the authors should confirm before publishing:\n- That the Chebyshev pseudospectral solver is genuinely the reference for *all* 48 problems (the original wording \"closed-form or high-fidelity pseudospectral\" suggests a mix; my revision preserves that ambiguity but the manifest-checker sentence assumes pseudospectral as the comparator \u2014 please reconcile).\n- That `log` in the original metric was indeed base-10; if it was natural log, change `log\u2081\u2080` back to `ln` in my revision.\n- That the 1.3\u00d7\u20136.1\u00d7 training-time range and the Fourier-feature improvement are computed on identical hardware and seed counts; if not, the comparison sentences need a hardware/seed caveat.\n- The Re \u2264 100 bound is a plausible default for \"low Reynolds\" PINN suites but I am inferring it; substitute the actual bound used.\n\nA residual concern worth flagging: a benchmark that prescribes a single composite score can shape the field's optimization target in ways the authors may not intend. The revised wording (report components separately; score is benchmark-specific) reduces but does not eliminate this. Consider whether the paper should explicitly invite alternative aggregations rather than only permitting them.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The request to make the passage stronger centrally invites sharpening the thesis, contribution, and benchmark value proposition above the sentence level.",
+      "R1.2": "Strengthening the artifact requires checking that the claims about benchmark design, validation, experiments, and scoring cohere as an argument.",
+      "R1.5": "The delegation plausibly includes improving the order and narrative progression of the benchmark description, experiment results, interface, and scoring metric.",
+      "R1.6": "Writing polish is load-bearing because the natural reading of 'Make this stronger' is to improve force, clarity, concision, and register of the prose.",
+      "RX.1": "Any projection should preserve uncertainty about what kind of strengthening is intended without inventing unstated tasks.",
+      "RX.2": "The responsibility includes avoiding stronger wording that would overstate the benchmark's validation, coverage, or implications.",
+      "RX.3": "The agent must remain within the delegation and artifact rather than performing evaluation, rewriting, or external research.",
+      "RX.4": "The projection should avoid enabling misleading scientific claims or benchmark misuse downstream.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the specific responsibilities implied by the provided artifact."
+    }
+  }
+}

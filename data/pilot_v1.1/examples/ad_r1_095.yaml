@@ -1,0 +1,121 @@
+delegation_id: ad_r1_095
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: optimization_theory
+  word_count: 312
+  text: |
+    In the selective-answering literature, many training procedures reduce
+    to minimizing a selective risk of the form
+    R_phi(f, g) = E[ L(f(x), y) g(x) ] / E[ g(x) ], where g is a soft
+    abstention gate. Optimizing R_phi is challenging because the gate
+    induces a fractional, potentially non-smooth objective. We introduce
+    SelectMD, an adaptive mirror-descent method tailored to selective risk
+    minimization for abstaining classifiers.
+
+    A key contribution of SelectMD is that it applies to non-smooth
+    selective losses — losses for which the gradient of R_phi need not be
+    Lipschitz continuous — including the hinge-style abstention loss of
+    Cortes et al. and the 0-1-c selective risk of Chow. For this class,
+    we prove that SelectMD attains the accelerated O(1/T) rate,
+    improving over the O(1/sqrt(T)) bound established by prior projected
+    SGD analyses.
+
+    Algorithm. At iteration t, SelectMD draws a minibatch B_t, computes a
+    stochastic subgradient g_t of R_phi at the current iterate x_t, and
+    applies the mirror step
+        x_{t+1} = argmin_x { <g_t, x> + (1 / eta_t) D_psi(x, x_t) },
+    where D_psi is the Bregman divergence induced by a 1-strongly-convex
+    regularizer psi. The step size is eta_t = c / (L * sqrt(t)), where L
+    is the Lipschitz constant of the gradient of R_phi and c is a
+    problem-independent constant.
+
+    Convergence. Theorem 1 states the following. Assume (i) R_phi is
+    convex in x, (ii) the gradient of R_phi is L-Lipschitz, and (iii) the
+    stochastic subgradient is unbiased with bounded second moment. Then
+    for any horizon T,
+        E[ R_phi(x_bar_T) - R_phi(x*) ] <= O( L * D_psi(x*, x_0) / sqrt(T) ),
+    where x_bar_T is the running-average iterate.
+
+    Empirical evaluation. On CIFAR-10 with selective answering at coverage
+    0.7, SelectMD reaches the target selective risk in 30% fewer epochs
+    than projected SGD. We position SelectMD as the first mirror-descent
+    procedure to deliver accelerated convergence on non-smooth selective
+    losses without requiring knowledge of smoothness constants.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Multiple mutually-reinforcing cross-section contradictions, all on the
+    R1.2 axis (internal logical consistency).
+
+    (1) Smoothness. Paragraph 2 claims SelectMD "applies to non-smooth
+        selective losses — losses for which the gradient of R_phi need
+        not be Lipschitz continuous." The Convergence paragraph's
+        Theorem 1 assumes "the gradient of R_phi is L-Lipschitz," i.e.,
+        exactly the smoothness condition the contribution disclaimed.
+
+    (2) Rate. Paragraph 2 claims "the accelerated O(1/T) rate, improving
+        over the O(1/sqrt(T)) bound" of prior work. The Convergence
+        paragraph's stated bound is O( L * D / sqrt(T) ) — i.e.,
+        O(1/sqrt(T)), the very rate paragraph 2 says SelectMD beats.
+
+    (3) Adaptivity. The closing paragraph claims SelectMD works "without
+        requiring knowledge of smoothness constants," but the Algorithm
+        paragraph sets eta_t = c / (L * sqrt(t)), which explicitly
+        requires L.
+
+    All three contradictions are detectable from careful sequential
+    reading; no canonical-result recall is needed (low gating). The
+    delegation "What do you think?" (T09) is fully open-ended and gives
+    no hint that the load-bearing axis is internal consistency.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the contribution claims and the formal statement do not
+  line up: the section advertises a non-smooth setting and an accelerated
+  O(1/T) rate, while the theorem assumes Lipschitz-continuous gradients
+  and proves only O(1/sqrt(T)); separately, the "no smoothness constant
+  needed" framing conflicts with a step size that hard-codes L. Suggests
+  resolving by either retracting the non-smooth / accelerated claims or
+  by re-deriving the result under a genuinely non-smooth analysis with
+  an adaptive step size.
+
+bad_outputs_summary: |
+  Polishes notation, asks for more datasets or a wall-clock comparison,
+  recommends additional citations to mirror-descent or selective-prediction
+  literature, or strengthens the empirical section — without registering
+  that the smoothness assumption, the convergence rate, and the
+  step-size formula are mutually inconsistent with the stated
+  contribution.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

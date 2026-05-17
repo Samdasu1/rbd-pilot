@@ -1,0 +1,117 @@
+delegation_id: ad_r1_102
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: hci
+  word_count: 320
+  text: |
+    We present ChatLane, a chat assistant that routes each user turn
+    between an on-device 1.3B-parameter model and a cloud-hosted
+    70B-parameter model using a learned difficulty estimator. The
+    principal HCI contribution of this paper is a 14-day field
+    deployment (N=42 knowledge workers, mixed roles) that characterizes
+    how users calibrate trust toward a hybrid LLM system. A central
+    methodological commitment of our study is that participants were
+    kept blind to routing decisions for the entire deployment: the
+    response area exposed no model identifier, latency was equalized
+    via an artificial delay on local responses, and the routing log
+    was never surfaced in the UI. This blind protocol is what licenses
+    our core claim, namely that the trust patterns we observe can be
+    attributed to response content alone, rather than to brand or
+    capacity cues attached to backend identity.
+
+    The deployment took place across two organizations and used a
+    within-subjects design. Each participant interacted with ChatLane
+    for at least 30 minutes per day on tasks of their own choosing and
+    rated each response on a 7-point usefulness scale. After every
+    fifth turn, the assistant surfaced a brief in-context survey
+    ("Was this response from the fast local model or the large cloud
+    model?") so that we could correlate stated attribution with
+    measured trust across the deployment window. We additionally
+    instrumented the UI to record which routing badge — a small green
+    leaf for local responses, a blue cloud for cloud responses —
+    participants hovered over before submitting their rating.
+
+    Across 18,704 logged turns, hover-then-rate sequences revealed
+    that participants spent 2.3x longer on responses immediately after
+    a cloud-badge hover, and the in-context attribution survey was
+    answered correctly 71% of the time. We conclude that ChatLane's
+    blind deployment cleanly separates content-driven from
+    identity-driven trust, and that the resulting calibration curves
+    can be reused by designers of future hybrid assistants who wish
+    to avoid confounding their evaluation with backend cues.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  notes: |
+    Cross-section contradiction (F1.2.b) on R1.2. Paragraph 1 stakes
+    the contribution on a strict blind protocol: "the response area
+    exposed no model identifier" and "the routing log was never
+    surfaced in the UI," and the central claim (content-driven vs.
+    identity-driven trust separation) is explicitly licensed by this
+    blindness. Paragraph 2 then describes a visible per-response
+    routing badge (green leaf for local, blue cloud for cloud) that
+    participants hovered over before rating; paragraph 3 reports
+    "hover-then-rate" effects keyed on the cloud badge. A visible
+    leaf/cloud badge is itself a model identifier in the response
+    area, so the deployment was not blind in the sense paragraph 1
+    requires, and the headline conclusion about cleanly separating
+    content-driven from identity-driven trust is not actually
+    supported by the described instrumentation. Detection requires
+    reading the paragraphs together and noticing that the UI
+    instrumentation in P2/P3 negates the methodological commitment
+    of P1; moderate HCI gating because the reader must recognise
+    that visible backend cues invalidate a "blind" trust-calibration
+    claim, but no canonical citation recall is required. The T02
+    delegation ("Review this section.") is generic and does not
+    point at internal consistency.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the stated blind-deployment protocol is contradicted by
+  the visible per-response leaf/cloud badge described later in the
+  same section, and notes that the headline claim about separating
+  content-driven from identity-driven trust is not licensed once the
+  badge is in the UI. Suggests resolving by either dropping the badge
+  (truly blind) or rewriting the contribution as trust calibration
+  under transparent backend cues. Names the specific paragraph pair
+  in conflict.
+
+bad_outputs_summary: |
+  Polishes prose, asks for more participants or a longer deployment,
+  requests additional baselines, or suggests reporting effect sizes
+  and IRB details — without noticing that the visible routing badge
+  contradicts the blind-protocol framing. Praises the within-subjects
+  design or the in-context attribution survey while leaving the
+  central inconsistency between P1 and P2/P3 unflagged.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

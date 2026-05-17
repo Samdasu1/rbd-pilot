@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_107",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2239,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 31278,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.7, \"R1.3\": 1.0, \"R1.6\": 0.6, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.9}}\n\nSummary: The section's headline framing \u2014 that MARCO is robust to \"real-world sensor degradation\" and is \"the leading approach for robust cooperative perception under sensor degradation, occlusion, and communication unreliability\" \u2014 is not supported by the evidence actually reported, which is a single mAP comparison on the default OPV2V test split. Below are the issues I would flag to the authors, ordered by severity.\n\n**1. The headline claim and the reported evidence describe different experiments.**\nThe opening paragraph promises a demonstration of robustness to four named stressors: heavy occlusion, sparse LiDAR returns, lossy V2V channels, and partial sensor failure. The results paragraph then reports only aggregate mAP@0.5/0.7 on the default OPV2V test split. No stress-test split, channel-loss simulation, sensor-dropout protocol, or occlusion-conditioned slice is described or measured. As written, the section claims robustness it does not test. Either (a) add per-condition evaluations (e.g., simulated packet loss rates, dropped agents, occlusion bins) and report breakdowns, or (b) rewrite the framing to claim only what the aggregate comparison supports: a small gain over CoBEVT on the standard split.\n\n**2. The magnitude of the gains does not justify \"substantially improves\" or \"leading approach.\"**\nThe reported deltas over CoBEVT are 0.5 mAP@0.5 and 0.8 mAP@0.7. No confidence intervals, seed variance, or significance test is reported, so the reader cannot tell whether the gap exceeds run-to-run noise \u2014 which on OPV2V is often in the 0.2\u20130.5 mAP range. Words like \"substantially,\" \"strong robustness,\" and \"the leading approach\" should be softened to something like \"modestly improves\" or \"matches or slightly exceeds,\" and a variance estimate (multiple seeds, or at least a stated single-seed caveat) should be added.\n\n**3. The ablation is under-described and over-interpreted.**\nA 0.4 mAP@0.5 drop from removing the selective gate is reported as \"confirming its role,\" but: (i) only one metric is given (no @0.7, no per-condition); (ii) the drop is smaller than the claimed improvement over CoBEVT, which is internally awkward \u2014 if the gate accounts for 0.4 of the 0.5 gain, the remaining headroom is essentially noise; (iii) it is unclear whether the ablation replaces the gate with uniform fusion, mean pooling, or removes fusion entirely. Specify the ablation baseline and report both IoU thresholds.\n\n**4. Cross-backbone generality claim is unsupported by the text shown.**\nThe closing paragraph asserts that gains \"hold under both\" PointPillars and SECOND, but no numbers are given for either backbone-specific comparison. Either include the table rows (MARCO vs. CoBEVT under each backbone, both metrics) or drop the generality claim. Also note an internal tension: PointPillars is mentioned earlier as \"the strongest single-agent baseline\" and later as a backbone for MARCO itself; clarify which configuration is being compared where.\n\n**5. Logical gap between mechanism and result.**\nThe attribution paragraph asserts that the gain comes from the gate \"down-weighting unreliable BEV cells from agents whose viewpoints are heavily occluded or whose transmissions are degraded.\" Since the experiments do not vary occlusion or transmission reliability, this mechanism is asserted rather than demonstrated. Either add a diagnostic experiment (e.g., gate-weight visualization conditioned on agent occlusion or simulated channel SNR) or rephrase as a hypothesis rather than an explanation of the observed result.\n\n**6. Protocol details that affect reproducibility and interpretation.**\n- \"Compressed BEV features over a simulated V2V channel\" \u2014 specify the compression scheme, bitrate, and whether any channel noise/loss is injected in the reported numbers. As written it is ambiguous whether the V2V channel is lossless in these experiments.\n- \"Aggregated across all scenes\" \u2014 clarify whether mAP is computed scene-wise then averaged or globally over all detections.\n- State the number of training seeds and whether reported numbers are best-of-N, mean, or single-run.\n- CoBEVT numbers: clarify whether these are quoted from the original paper or re-run under your protocol. If quoted, the comparison may be confounded by protocol drift.\n\n**7. Prose-level edits.**\n- \"2-7 connected vehicles\" \u2192 \"2 to 7\" (and use an en-dash if range form is preferred).\n- \"the previous state-of-the-art CoBEVT\" \u2014 preferable to cite and let the reader judge SOTA status; \"a strong recent baseline\" reads less promotional.\n- \"establish MARCO as the leading approach\" is a marketing register that does not fit a results section; replace with a measured statement of the numerical outcome.\n- The last paragraph reads as an afterthought; integrate the backbone-generality discussion with the main results table or remove.\n\n**Suggested rewrite of the opening and closing framing (illustrative, not prescriptive):**\nOpening: \"We evaluate MARCO on the OPV2V benchmark and report a small but consistent improvement in aggregate detection mAP over a strong recent baseline (CoBEVT). The selective feature-fusion module is intended to down-weight unreliable BEV cells; we test its end-to-end contribution via ablation, and leave direct evaluation under controlled occlusion and channel-loss conditions to future work (or to Section X, if such experiments exist).\"\nClosing: replace \"establishes MARCO as the leading approach\" with a sentence reporting the numerical gap and noting that targeted stress-test evaluations would be needed to substantiate the robustness claim.\n\n---\n\nCaveats on this review: I have not verified the cited CoBEVT numbers (88.7 / 80.6) against the original paper, nor the standard OPV2V protocol details, so my comments about protocol ambiguity are based only on what this section says. I also do not know whether a later section of the paper contains the missing stress-test experiments \u2014 if it does, the fix is mainly to forward-reference them and tone down this section's standalone claims rather than to add new experiments. The variance/significance concern is based on typical OPV2V seed spreads reported in the literature; the actual variance for this specific training pipeline could be smaller or larger.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 1.0,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The request to review the section includes assessing whether the section-level claim about robustness and selective fusion is framed appropriately.",
+      "R1.2": "A review should check whether the causal and argumentative chain from benchmark results to robustness conclusions is coherent.",
+      "R1.3": "The section makes quantitative performance and ablation claims, so verifying whether those claims are supported by the reported results is load-bearing.",
+      "R1.6": "A general section review centrally includes sentence- and paragraph-level clarity, flow, concision, and register.",
+      "RX.1": "The reviewer must disclose uncertainty because the artifact provides only the section text and not tables, experimental details, or external sources.",
+      "RX.2": "The section contains strong claims about leadership and robustness, so avoiding unsupported overclaiming is always active.",
+      "RX.3": "The task is only to review this section, so responsibility must remain bounded to the provided artifact and requested review scope.",
+      "RX.4": "The review should avoid downstream harm by flagging claims that could mislead readers about robustness or state-of-the-art status.",
+      "RX.5": "Any projected review responsibility should preserve traceability to the section's stated claims, numbers, baselines, and ablation statements."
+    }
+  }
+}

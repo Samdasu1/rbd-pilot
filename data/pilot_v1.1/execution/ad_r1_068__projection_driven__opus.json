@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_068",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1865,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 25728,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 1.0}}\n\nSummary: Reviewed the paragraph and identified a major internal contradiction, several unsupported or overreaching claims, and a few prose issues; recommendations below stay within the paragraph as given.\n\n**Internal contradiction between the framing and the ablation**\n\nThe paragraph opens by asserting that \"semantic constraints on program behavior are sufficient to resolve specification ambiguity\" and that enforcing \"well-typedness and termination at synthesis time\" reduces the space \"to a single canonical candidate.\" It then closes with the opposite empirical finding: removing the type-check filter costs only 1.8 points, while removing the PCFG ranker collapses accuracy to 12%. The conclusion paragraph itself acknowledges this by stating that PCFG ranking is \"the dominant contributor\" and that \"lightweight statistical parsing... without semantic reasoning\" is the primary lever.\n\nThese two framings cannot both stand. Either:\n- the contribution is semantic disambiguation (in which case the ablation refutes it), or\n- the contribution is statistical parsing (in which case the opening framing should be rewritten and the \"semantic-disambiguation framework\" label is misleading).\n\nThe author should pick one framing and align the abstract-like opening, the method description, and the conclusion to it.\n\n**Termination is described but never demonstrated**\n\nThe opening claims Polysem enforces \"well-typedness *and termination* at synthesis time,\" but the method section only describes static type-checking. There is no mechanism shown for termination checking (which is, in the general case, undecidable). Either the termination claim should be dropped or a concrete mechanism (e.g., structural recursion check, totality checker) should be named. As written, the termination claim is unsupported.\n\n**\"Single canonical candidate per intent\" is not what the method does**\n\nThe method returns \"the first parse that type-checks\" from the top-K. That is a first-passing candidate under an arbitrary ranking, not a canonical candidate, and it depends on K, on the PCFG's likelihood ordering, and on tie-breaking. The phrase \"single canonical candidate per intent\" overstates what the procedure guarantees.\n\n**Evidence-claim gaps in the evaluation**\n\nSeveral specific issues:\n- \"Exceeding the published 55.2% baseline of greedy beam search\" \u2014 greedy search and beam search are different procedures; this phrasing conflates them. Clarify which baseline from Kulal et al. is being cited and at what beam width.\n- The HumanEval number (41% pass@1) is reported with no baseline, no model-size context, and no description of the \"held-out subset.\" Without a comparison point or subset definition, the number cannot be interpreted.\n- The ablation numbers (1.8 points, 12%) are stated without indicating which benchmark they were measured on, with what K, or with what variance across seeds.\n- \"Top-1 accuracy\" on SPoC and \"pass@1\" on HumanEval are different metrics; the paragraph slides between them without comment.\n\n**Overreach in the closing thesis**\n\n\"This supports the broader thesis that lightweight statistical parsing... is the primary lever for accurate code synthesis\" generalizes from two benchmarks (one of them a held-out subset) to a broad claim about code synthesis as a whole. The evidence supports a narrower claim \u2014 that on these two benchmarks, under this pipeline, the PCFG component dominated the type filter. Recommend tightening to that scope.\n\n**Prose-level edits**\n\n- \"resolve specification ambiguity without requiring user interaction\" \u2014 the paragraph never establishes that user interaction was the prior alternative; either motivate this contrast or drop it.\n- \"forest of derivations ranked by their PCFG likelihood\" \u2014 \"forest... ranked\" is slightly awkward; \"a ranked list of derivations\" or \"the top derivations under the PCFG\" reads more cleanly.\n- \"the first parse that type-checks is returned\" \u2014 clarify whether ties or no-pass cases (all K fail type-check) are handled, and what is returned then.\n- \"The central claim of this section is that...\" \u2014 heavy; consider \"We claim that...\" or fold it into the opening sentence.\n\n**Suggested minimum revision path**\n\n1. Rewrite the opening to match what the ablation actually shows: the contribution is a PCFG parser over NL prompts with a cheap type-filter pass, and the type filter contributes marginally.\n2. Drop the termination claim or substantiate it.\n3. Replace \"single canonical candidate\" with an accurate description of the first-passing-parse procedure.\n4. Add baselines / subset definition for HumanEval; clarify the SPoC baseline.\n5. Narrow the closing thesis to the two benchmarks evaluated.\n\n**Caveats on this review**\n\nI have not verified the cited numbers against Kulal et al. (2019) or against any published HumanEval leaderboard, and I cannot confirm whether the SPoC \"55.2% greedy beam search\" figure is reported as such in the original paper. The reading that the opening framing contradicts the ablation is based solely on the text of the paragraph as given; if \"Polysem\" is defined elsewhere in the paper to include the PCFG as part of \"semantic disambiguation,\" that broader definition would change the analysis but would itself be a terminological problem worth flagging. The prose suggestions are stylistic and the author may have reasons for the current phrasing that are not visible from this excerpt alone.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'take a look' mean primarily a writing-polish pass, an argument-validity pass, or both?",
+    "rationale": {
+      "R1.2": "A general request to inspect the paragraph centrally includes checking whether the internal argument and conclusion cohere.",
+      "R1.3": "The paragraph makes empirical and ablation-based claims, so checking whether reported results support those claims is centrally implicated.",
+      "R1.6": "Because the delegation points to a paragraph rather than a full paper, sentence- and paragraph-level polish is a central expected responsibility.",
+      "RX.1": "Any projection should preserve uncertainty caused by the underspecified phrase 'take a look.'",
+      "RX.2": "The projection should avoid inflating the delegation into full novelty, citation, or experimental-design review.",
+      "RX.3": "The projection must stay within responsibility assignment and not perform the requested inspection itself.",
+      "RX.4": "The projection should avoid enabling unsupported or misleading downstream treatment of the paragraph as validated.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the artifact's paragraph-level paper-writing context."
+    }
+  }
+}

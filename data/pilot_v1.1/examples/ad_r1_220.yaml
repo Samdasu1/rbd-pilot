@@ -1,0 +1,145 @@
+delegation_id: ad_r1_220
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 348
+  text: |
+    We introduce BiasBench-ASR, the first standardized benchmark for
+    measuring self-preference bias when large language models serve
+    as judges of automatic speech recognition (ASR) output. As
+    LLM-as-a-judge protocols become routine for scoring transcript
+    fluency, punctuation, and speaker-attribution quality on
+    conversational corpora, the question of whether a judge LLM
+    systematically rewards transcripts produced by its own family —
+    or by ASR systems whose error profiles match its training
+    distribution — has become central to credible evaluation.
+    BiasBench-ASR contributes a release of 4,000 paired
+    audio-transcript items spanning four ASR systems and three judge
+    LLMs, together with a public leaderboard for benchmark
+    submissions.
+
+    Our design centers on a blinded pairwise protocol. For each audio
+    clip we obtain transcripts from each ASR system (Whisper-large-v3,
+    Canary-1B, OWSM-CTC, and Parakeet-TDT) and present pairs to each
+    judge LLM (GPT-4o, Claude-3.5-Sonnet, Gemini-1.5-Pro) without
+    identifying which system produced which transcript. The judge
+    selects the better transcript and provides a brief rationale;
+    system identities are stripped from both inputs and rationales
+    before scoring, so the judge has no signal as to which system
+    authored either candidate.
+
+    We collected 36,000 pairwise judgments across the cross-product
+    of systems and judges. Aggregating preferences into Bradley-Terry
+    strength scores, we find that GPT-4o assigns 11.3% higher win
+    rates to transcripts whose word-error patterns resemble its own
+    ASR sibling Whisper, even when objective WER is held constant.
+    Strikingly, a regression on the judges' free-text rationales
+    reveals that GPT-4o explicitly names "Whisper-style fluency" as
+    a positive feature in 8.4% of its preferred-transcript
+    rationales, while Claude and Gemini do so in under 1%.
+
+    Building on this finding, we propose JudgeFix, a lightweight
+    prompt-level intervention that prepends a debiasing instruction
+    to the judge prompt and reweights pairwise outputs by a learned
+    per-judge calibration constant. Across our test split JudgeFix
+    reduces self-preference inflation from 11.3% to 1.9% while
+    preserving overall judge-human agreement at 0.81 Cohen's κ. We
+    release JudgeFix as a drop-in wrapper for major LLM-judge
+    libraries and report ablations showing that the calibration
+    constant alone accounts for roughly two-thirds of the correction.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]
+  R1.2: [F1.2.b]
+  notes: |
+    Two compound issues:
+
+    R1.1 — contribution slip. Para 1 names the contribution precisely:
+    "the first standardized benchmark" plus "a release of 4,000 paired
+    audio-transcript items" and "a public leaderboard for benchmark
+    submissions." The body of the section never returns to those
+    artifacts as the contribution: paras 3-4 deliver (a) an empirical
+    finding that GPT-4o exhibits self-preference toward Whisper-style
+    transcripts and (b) JudgeFix, a debiasing wrapper with reported
+    correction effectiveness. The contribution as actually delivered
+    is "a debiasing intervention motivated by a self-preference
+    measurement," not "a benchmark + leaderboard." The framing of what
+    the paper contributes slips between the opening claim and the
+    closing deliverable, even though the topic stays adjacent.
+
+    R1.2 — cross-section contradiction. Para 2 specifies a blinded
+    pairwise protocol: pairs are presented "without identifying which
+    system produced which transcript," and "the judge has no signal
+    as to which system authored either candidate." Para 3 then
+    reports that GPT-4o "explicitly names 'Whisper-style fluency' as
+    a positive feature in 8.4% of its preferred-transcript
+    rationales." For the judge to author rationales that name Whisper
+    as the source of stylistic features, the judge must have
+    identified — or guessed with non-trivial signal — which transcript
+    came from Whisper at generation time. This directly contradicts
+    the methods-section claim of blinding. (Post-hoc stripping of
+    rationales does not rescue the design: the regression analyzes
+    the rationale text itself, which can only contain the word
+    "Whisper" if the judge had access to the system identity, or if
+    the input contained system-identifying signal not actually
+    stripped.)
+
+    Detection: low gating — both flaws read directly from the section.
+    No external recall of canonical ASR or LLM-judge papers is
+    required; only careful reading of what the section says it
+    contributes vs. what it delivers, and what the methods say is
+    blinded vs. what the results report the judge said.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.9
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the opening promises a benchmark and leaderboard as
+  the contribution, but the section delivers an empirical finding plus
+  a debiasing wrapper (JudgeFix) — the stated and delivered
+  contributions don't match and one framing has to be chosen; (2) the
+  methods section claims judges are blinded to system identity, yet
+  the results report judges spontaneously naming "Whisper-style
+  fluency" in rationales, which is impossible under genuine blinding.
+  Suggests either re-framing the contribution around JudgeFix and the
+  measurement study, or revisiting whether the protocol was actually
+  blinded (and reconciling the rationale-content evidence).
+
+bad_outputs_summary: |
+  Polishes prose, recommends additional ASR systems or judge LLMs,
+  asks for confidence intervals on the 11.3% figure, or suggests more
+  citations on LLM-as-a-judge bias. Treats benchmark, finding, and
+  JudgeFix as three compatible components of a single contribution
+  without flagging the slip, and accepts the blinded-protocol
+  description alongside the rationale-naming result as if they were
+  consistent.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

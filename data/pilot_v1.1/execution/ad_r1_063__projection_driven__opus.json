@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_063",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2089,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 29779,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.85, \"R1.3\": 0.9, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.9, \"RX.5\": 0.9}}\n\nSummary: Flagged a central internal contradiction between the stated framing and the actual protocol, identified multiple unsupported claims, noted prose issues, and listed what cannot be verified from the section alone.\n\n**Central contradiction between framing and protocol**\n\nThe opening paragraph promises a \"fine-grained, skill-resolved profile\" that \"disentangles\" competences (stiff regimes, Hamiltonian conservation, oscillatory behavior). The protocol that follows does not deliver this. It computes a single scalar aggregate E = mean log-error over all 142 problems at three tolerances. That is exactly the kind of aggregated, conflated number the introduction criticizes in DETEST and Hairer\u2013Wanner. Nowhere in the described method is there a partition of the bank by competence axis, a per-axis metric, or any reported per-axis result. Either the protocol must report E (and cost) broken down per competence category (with the category taxonomy defined explicitly), or the framing must be retracted. As written, the contribution claim is not supported by the experiment.\n\n**Claims that are not backed by the reported evidence**\n\n- \"First fine-grained, skill-resolved profile of widely deployed numerical ODE solvers.\" Nothing in this section establishes priority over prior decomposed benchmark work (e.g., stiff-only or symplectic-only suites), and the reported numbers are not skill-resolved.\n- \"We recommend NUMSKILL as a standardized replacement for aggregated testbanks.\" The reported quantity *is* an aggregate. The recommendation is not earned by the results shown.\n- \"Radau IIA achieves the lowest aggregate score\" / \"DOPRI5 leads at the loose end\" from two scalar numbers, with no statement of bootstrap confidence widths, no per-tolerance variance, and no significance test versus the other solvers.\n- The reference solution is described as \"quadruple-precision Radau at very tight tolerance.\" \"Very tight\" is unquantified; without a stated reference tolerance and a self-consistency check (e.g., halving tolerance and comparing), the global errors e_i are not anchored.\n- The metric log10(e_i / TOL_i) is reported without justifying the choice (why ratio-to-tolerance rather than absolute error, or work-precision), and without handling of e_i = 0 or e_i below floating-point noise.\n\n**Logical and methodological gaps that should be addressed in-text**\n\n- 142 problems \"drawn from existing collections\" \u2014 which collections, with what selection criteria? Without this, both reproducibility and any novelty-versus-prior-suites claim are ungrounded.\n- \"Normalized to a common interface\" \u2014 what does normalization touch (rescaling time, state, tolerances)? Normalization can change which solver wins.\n- Solver list mixes a method (DOPRI5), a method family (Radau IIA \u2014 which stage order?), an extrapolation scheme (GBS), and a multistep family (BDF \u2014 which order, fixed or variable?). The configurations need to be pinned down or the comparison is not well-defined.\n- Wall-clock cost \"normalized to DOPRI5 at TOL=1e-6\" \u2014 hardware, compiler, language binding, and whether costs include Jacobian factorization for implicit methods are all unspecified and materially change the ranking.\n- Bootstrap over 142 problems gives confidence on the mean, but if problems are heterogeneous in difficulty the bootstrap CI is not a meaningful uncertainty on solver competence \u2014 this should be acknowledged or replaced with a stratified analysis.\n\n**Prose-level edits**\n\n- \"conflates a solver's behavior on stiff regimes, conservation-sensitive Hamiltonian systems, and oscillatory integrals\" \u2014 \"oscillatory integrals\" is the wrong term for ODE integration; use \"highly oscillatory systems\" or \"problems with oscillatory solutions.\"\n- \"the full bank to a fixed final time T\" \u2014 T should either be given or stated to vary per problem; a single T across 142 heterogeneous IVPs is unlikely to be meaningful.\n- \"global error e_i = ||y_i(T) \u2212 y*_i(T)||_2\" \u2014 clarify whether this is absolute, relative, or component-scaled; the 2-norm of unscaled state mixes units.\n- \"headline metric\" is informal; prefer \"primary aggregate metric.\"\n- \"first fine-grained, skill-resolved profile\" \u2014 soften to \"an initial step toward \u2026\" pending the protocol actually being skill-resolved.\n- The closing sentence (\"we recommend NUMSKILL as a standardized replacement\u2026\") is an overclaim and should be reduced to something like \"we suggest skill-resolved profiles as a complement to aggregated testbanks.\"\n\n**Suggested minimum rewrite of the contribution claim**\n\nReplace the final paragraph with a version that (a) reports what was actually measured (an aggregate E and a wall-clock cost across a curated bank), (b) acknowledges that a true skill-resolved decomposition is future work or appears elsewhere in the paper, and (c) drops the \"standardized replacement\" recommendation until per-axis evidence is presented.\n\n**What I could not verify from this section alone**\n\n- Whether Table 2, referenced but not shown, contains per-axis breakdowns that would resolve the framing/protocol mismatch.\n- Whether earlier or later sections define a problem taxonomy that the metric is computed over.\n- Whether the prior-work comparison (DETEST, Hairer\u2013Wanner) is fairly characterized; some Hairer\u2013Wanner material does separate stiff from non-stiff, which weakens the \"conflates\" critique as stated.\n- Quantitative claims (E = \u22121.21, E = +0.34) cannot be checked against the underlying table.\n- The novelty claim relative to existing decomposed or work-precision-diagram studies (e.g., SciMLBenchmarks, ODE test set work by Mazzia and others) is not assessable from this section alone and should be checked against the related-work section before publication.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Reviewing the section centrally involves assessing whether the benchmark's thesis, gap, and contribution are framed coherently.",
+      "R1.2": "The delegation calls for checking whether the methodological and argumentative sequence supports the stated conclusions.",
+      "R1.3": "The section makes result-based claims from Table 2 and reported metrics, so alignment between claims and reported evidence is central.",
+      "R1.6": "A general section review normally includes sentence- and paragraph-level clarity, register, and concision.",
+      "RX.1": "The reviewer should disclose limits imposed by seeing only this section and not the full paper, experiments, or tables.",
+      "RX.2": "The strong claims about being first and replacing existing testbanks require attention to avoiding overclaiming.",
+      "RX.3": "The response must remain within reviewing the provided section rather than executing edits or evaluating unavailable material as fact.",
+      "RX.4": "Review should avoid encouraging unsupported benchmark adoption or misleading scientific conclusions.",
+      "RX.5": "Any projected responsibility should be traceable to statements present in the provided artifact."
+    }
+  }
+}

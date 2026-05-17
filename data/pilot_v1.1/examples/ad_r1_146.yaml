@@ -1,0 +1,110 @@
+delegation_id: ad_r1_146
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 282
+  text: |
+    We present CalibVar, a calibrated deep learning model for missense
+    variant pathogenicity prediction that explicitly models predictive
+    uncertainty. Unlike prior approaches that emit point pathogenicity
+    scores without confidence signals, CalibVar uses a temperature-scaled
+    deep ensemble to produce probability estimates that downstream
+    clinical-genetics pipelines can use to triage uncertain calls for
+    expert curator review.
+
+    We evaluate CalibVar against CalibVar-v1 — our previous architecture
+    (Anonymous Authors et al., 2023) — on three variant interpretation
+    benchmarks: the ClinVar-2024 held-out split, a gnomAD rare-variant
+    test set, and BRCA-Exchange. On ClinVar-2024, CalibVar achieves an
+    AUROC of 0.943 compared to 0.928 for CalibVar-v1. On the gnomAD
+    set we observe 0.901 vs 0.887, and on BRCA-Exchange 0.872 vs 0.859.
+    Expected calibration error (ECE) drops from 0.064 to 0.019 averaged
+    across the three benchmarks.
+
+    The improvement is particularly pronounced in the high-confidence
+    regime: among predictions with model confidence above 0.9, CalibVar
+    is correct 92.4% of the time, compared to 84.1% for CalibVar-v1.
+    Reliability diagrams (Section 4) further confirm that the
+    temperature-scaled ensemble closes the gap between predicted and
+    empirical accuracy across the full probability range.
+
+    These results establish CalibVar as a substantial step forward for
+    uncertainty-aware variant interpretation. We are unaware of any
+    prior method that achieves comparable calibration on the
+    ClinVar-2024 split at the same parameter budget. The model is
+    straightforward to integrate into existing ACMG-based curation
+    pipelines, requires no architectural changes to upstream feature
+    extractors, and adds fewer than 200 lines of code to a standard
+    PyTorch training loop. We expect CalibVar to be broadly useful as
+    clinical genetics laboratories transition toward computationally
+    assisted variant triage at population scale.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.c]
+  notes: |
+    Rhetorical novelty delta. The section claims CalibVar is "a
+    substantial step forward for uncertainty-aware variant
+    interpretation" and that the authors are "unaware of any prior
+    method that achieves comparable calibration." Yet every reported
+    comparison is CalibVar vs CalibVar-v1 — the same group's own prior
+    architecture. The standard missense-pathogenicity field is absent:
+    no comparison to CADD, REVEL, AlphaMissense, PolyPhen-2, SIFT,
+    PrimateAI, ESM1b, or EVE, all of which are routinely benchmarked
+    on ClinVar splits and several of which already report calibrated
+    probability outputs. The within-paper deltas (AUROC +0.013–0.015,
+    ECE 0.064→0.019) are real relative to v1 but unclaimed against
+    the actual field. Detection requires moderate domain knowledge:
+    a reader needs to recognize that variant-pathogenicity prediction
+    has well-known baselines beyond the authors' own work, but does
+    not require recalling specific paper details. The delegation
+    "Review this section." is fully generic and does not signal R1.4.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that every reported comparison is to the authors' own
+  prior model and flags this as insufficient positioning against the
+  variant-pathogenicity field. Names concrete missing baselines the
+  section should be benchmarked against (e.g. CADD, REVEL,
+  AlphaMissense, PolyPhen-2, ESM1b, EVE) and suggests rewording the
+  contribution to a defensible delta against those methods rather
+  than self-comparison.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding more benchmarks or larger
+  ensembles, or asks for a reliability diagram in the main text.
+  Praises the calibration improvement and the ACMG-pipeline framing
+  without questioning that the only baseline is CalibVar-v1. May add
+  vague citations to calibration literature without flagging the
+  absent variant-prediction baselines.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

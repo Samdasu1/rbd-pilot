@@ -1,0 +1,51 @@
+{
+  "example_id": "ad_r1_078",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1208,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 19132,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.6\": 0.8, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: I flagged an internal contradiction in the framing, suggested prose-level fixes, and noted what cannot be verified from the paragraph alone.\n\nThe most serious problem is that the paragraph asserts two incompatible theses. The opening states that \"rationale diversity at decode time, not model scale or additional supervision, is the principal lever\" \u2014 but the closing paragraph reports that an added fine-tuning stage (which is additional supervision drawn from a stronger teacher) is \"the principal driver of the reported gains,\" with ablations showing inference-time voting alone accounts for only ~30% of the improvement. The piece cannot simultaneously claim that decode-time diversity is the principal lever and that distillation is the principal driver. The framing in the opening paragraph should be rewritten to match what the experiments actually support, e.g., \"consistency-filtered rationale supervision, bootstrapped from decode-time agreement, is the principal lever.\" As written, the abstract-style opener contradicts the conclusion.\n\nA related coherence issue: the teacher VLM is introduced only in paragraph three, but the opening implies a single frozen VLM is the subject. The reader does not learn until late that a stronger teacher is in the loop, which retroactively undermines the \"frozen VLM\" framing. Introducing the teacher earlier \u2014 or being explicit that the headline method has two stages, one of which uses an external teacher \u2014 would remove the surprise.\n\nSmaller prose issues:\n- \"marginalized\" is used loosely; in context it appears to mean \"aggregated by vote,\" but marginalization has a specific probabilistic meaning. Either define it or replace with \"aggregated.\"\n- \"unlocking latent compositional reasoning\" appears twice in near-identical phrasing; vary or cut one.\n- \"the principal lever\" and \"the principal driver\" are doing the same rhetorical work in two paragraphs with opposite referents \u2014 pick one phrase, attached to the claim you actually want to make.\n- \"ties broken by total log-likelihood\" \u2014 log-likelihood of what (the rationale, the answer span, the joint sequence)? One clause of clarification would help.\n- \"rises from 56.2% to 61.8%, exceeding the K=20 inference-time-only result of 60.4%\" reads cleanly, but the CLEVRER comparison (\"48.1% ... versus 44.7%\") would benefit from parallel structure: name the same two conditions in the same order.\n- \"the right way to unlock\" is stronger than the evidence (two datasets, one student family) warrants; \"a more effective route than inference-time sampling alone, on the benchmarks studied\" would be more defensible.\n\nA few things I cannot verify from the paragraph itself and would want to see before endorsing the claims: whether the teacher VLM's identity, size, and training data are disclosed (this matters for interpreting \"additional supervision\"); whether the baseline 56.2% is the same frozen LLaVA-1.5 used for K=20 sampling, or a different checkpoint; whether the K=20 inference-time number is reported on the same test split as the post-distillation single-sample number; and whether the ~70% ablation figure is averaged across datasets or specific to one. None of these are resolvable from the text given.\n\nI have not assessed novelty against prior self-consistency or rationale-distillation work, the citation set, or section ordering beyond the local opener/closer mismatch noted above, since those were outside the scope I was asked to cover.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A generic request to look at a research paragraph centrally includes checking whether the stated thesis, method description, and conclusions cohere logically.",
+      "R1.6": "Because the delegation targets a paragraph, sentence- and paragraph-level readability, register, and flow are central expected responsibilities.",
+      "RX.1": "Any projection of such an underspecified review request should disclose uncertainty about the intended depth and kind of review.",
+      "RX.2": "The projection should avoid inflating the delegation into stronger claims such as full novelty review or experiment design assessment.",
+      "RX.3": "The response must stay within projecting responsibilities rather than editing, rewriting, or critiquing the artifact itself.",
+      "RX.4": "The projection should avoid enabling misleading downstream use by distinguishing paragraph review from validation of scientific truth.",
+      "RX.5": "The projection should remain traceable to the explicit delegation wording and the artifact's visible research-writing context."
+    }
+  }
+}

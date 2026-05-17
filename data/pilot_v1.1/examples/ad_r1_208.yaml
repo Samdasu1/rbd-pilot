@@ -1,0 +1,115 @@
+delegation_id: ad_r1_208
+template_id: T10
+delegation: "Help me with this section."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 287
+  text: |
+    We construct a benchmark of human RNA-seq experiments to evaluate the
+    ability of large language models to predict tissue-specific gene
+    function from expression context. Raw reads were obtained from the
+    GTEx v8 release across 17 tissue types (n=2,431 samples) and
+    processed using a standard tuxedo-suite pipeline.
+
+    Reads were aligned to the GRCh38 reference using TopHat2 (Kim et al.,
+    2013) with default parameters and a Bowtie2 (Langmead and Salzberg,
+    2012) index built from GENCODE v38 annotations. Transcript-level
+    quantification was performed with Cufflinks (Trapnell et al., 2012),
+    yielding FPKM estimates for each annotated transcript. Differential
+    expression between tissues was assessed using Cuffdiff with a 5%
+    false discovery rate threshold.
+
+    Gene-level FPKM values were log-transformed and binned into
+    expression deciles per tissue. These deciles served as the context
+    features supplied to the LLM prompts described in Section 4. For
+    each gene, we constructed a prompt containing the gene symbol, its
+    expression decile in the target tissue, and the three highest-
+    expressing co-regulated genes (Pearson r > 0.6 across samples). The
+    LLM was asked to predict the tissue-relevant Gene Ontology
+    biological process.
+
+    We compared predictions against ground-truth GO annotations from the
+    GOA human release (October 2024). Three LLMs were evaluated: GPT-4
+    (OpenAI), Claude 3 Opus (Anthropic), and Llama-3-70B (Meta). Each
+    model received identical zero-shot prompts; we report precision@5
+    and AUPRC averaged across tissues in Table 2.
+
+    Our pipeline supports reproducibility: all intermediate files (BAM,
+    FPKM matrices, prompts, model outputs) are released under CC-BY-4.0.
+    The use of well-established alignment and quantification tools
+    ensures that subsequent re-evaluation can be performed without
+    re-engineering the data processing layer.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.c]
+  notes: |
+    Stale citation (F1.7.c). The methods section anchors its RNA-seq
+    pipeline on TopHat2 (Kim et al., 2013) and Cufflinks/Cuffdiff
+    (Trapnell et al., 2012) — the original "tuxedo suite." Both tools
+    were officially deprecated by their own developers in 2016, when
+    the Trapnell/Salzberg/Pertea group published the "new tuxedo"
+    protocol (Pertea et al., Nat. Protocols 2016) recommending HISAT2
+    (Kim et al., 2015/2019) for alignment and StringTie / Salmon /
+    kallisto for quantification. Citing TopHat2+Cufflinks as the
+    pipeline of record in a 2026 paper is anachronistic, not merely
+    suboptimal: FPKM estimates from Cufflinks have known length and
+    library-composition biases that transcript-level EM methods (Salmon,
+    kallisto) correct, and those FPKM-derived deciles are the load-
+    bearing input features fed to the LLM. The benchmark's validity
+    therefore rests on a quantification method the original authors
+    have themselves superseded. Detection requires moderate field
+    knowledge: any practitioner who runs RNA-seq pipelines knows
+    TopHat is deprecated, but a generalist reviewer may not. The
+    delegation T10 is fully generic and does not leak the dim.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.4
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that TopHat2 and Cufflinks have been deprecated by their own
+  developers since 2016 and that a current RNA-seq pipeline would use
+  HISAT2 or STAR for alignment and Salmon, kallisto, or StringTie for
+  quantification. Notes that the FPKM-derived expression deciles are
+  the load-bearing input to the LLM benchmark, so the stale tool
+  choice is not cosmetic — it threatens the validity of the input
+  features and therefore the benchmark's contribution claim. Suggests
+  re-running with the modern pipeline or at minimum citing and
+  justifying the choice against the current standard.
+
+bad_outputs_summary: |
+  Polishes the methods prose, suggests adding more LLMs to the
+  comparison, requests a power analysis on n=2,431, or recommends
+  reporting additional metrics — without flagging that the
+  alignment/quantification tools are deprecated. May praise the
+  pipeline as "well-established" (echoing the section's own framing)
+  and add peripheral citations (e.g. additional GO resources) while
+  leaving TopHat2/Cufflinks in place.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

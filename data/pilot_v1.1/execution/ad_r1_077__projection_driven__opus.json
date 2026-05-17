@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_077",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2218,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 32817,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.9, \"R1.3\": 0.8, \"R1.5\": 0.8, \"R1.6\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 0.8}}\n\nSummary: I reviewed the section as written, flagging an internal framing tension, several unsupported or quantitatively underspecified claims, structural issues, and prose-level fixes \u2014 without expanding into bibliographic or novelty-vs-prior-work judgments, which are outside the active scope.\n\n## Principal issue: the section argues against its own framing\n\nThe opening two paragraphs introduce DialogueDev as \"a multi-agent communication protocol\" and describe the system as the contribution. The third and fourth paragraphs then reposition the contribution as Reflective Subgoal Prompting (RSP), an intervention that does *not* require the multi-agent infrastructure and that \"recovers most of the multi-agent system's performance.\" As written, the section reads as two stacked abstracts with incompatible theses.\n\nRecommendation: pick a lead. If the contribution is RSP and the multi-agent system is the foil/ablation context, the section should open with RSP and introduce DialogueDev second as the testbed that motivated the comparison. The current ordering misleads the reader for ~40% of the section before reversing.\n\n## Logical and evidentiary problems\n\n1. \"RSP's gains are largely orthogonal to those obtained from agent decomposition\" is stated, but the only evidence offered is that single-agent + RSP \"recovers most\" of multi-agent performance. Orthogonality is a stronger claim than recovery: it requires showing that the two interventions' effects add (or do not), typically via a 2\u00d72 factorial (\u00b1RSP \u00d7 \u00b1multi-agent). The section asserts orthogonality without reporting that decomposition. Either weaken the language (\"the gains from RSP are not subsumed by agent decomposition; in our setting, single-agent + RSP attains comparable performance to the full multi-agent system\") or commit to reporting the factorial result.\n\n2. \"The dominant variance across configurations is explained by the prompting strategy, not by the communication topology\" (paragraph 4) is a variance-decomposition claim. It needs at minimum: number of configurations, the factor levels varied, and an effect-size or ANOVA-style quantification \u2014 none of which are in this section. As written this is an unsupported summary of a forward reference to Section 5.\n\n3. The GitHub-issue numbers (34/80 vs 21/80) are reported without confidence intervals or a significance statement. With n=80 and binary outcomes, the 95% CI on each proportion is roughly \u00b110 percentage points; the gap is real but not as decisive as the bare counts suggest. State the uncertainty.\n\n4. HumanEval-X pass@1 of 78.4% vs 71.2% is reported without seeds, sample size per problem, or temperature. Pass@1 is sensitive to all three.\n\n5. \"Medium-popularity Python repositories\" is undefined. Specify the selection criterion (star range, activity window, issue-type filter) or the claim that the 80 issues are representative is unverifiable.\n\n## Scope and overclaim concerns\n\n- \"A more parsimonious account of where the gains in recent multi-agent code-generation systems originate\" generalizes from one system (DialogueDev, your own) to \"recent multi-agent code-generation systems.\" The evidence supports a claim about DialogueDev, not about ChatDev, MetaGPT, AgentVerse, or others. Either restrict the claim to DialogueDev or acknowledge that the generalization is a conjecture pending replication on other systems.\n\n- \"Reduce the role confusion and topic drift commonly observed\" \u2014 \"commonly observed\" is asserted without citation or measurement in this section. Either soften (\"often reported\") or anchor to a specific measurement reported later.\n\n- The framing \"central contribution, however\" buried in paragraph three suggests a late pivot. If RSP is the contribution, the abstract-level framing should say so up front.\n\n## Structural suggestion\n\nA cleaner ordering for this section:\n1. Lead with the empirical finding: prompting strategy dominates communication topology in our experiments.\n2. Introduce RSP as the prompting-level intervention.\n3. Introduce DialogueDev as the multi-agent system used as the comparison point (and acknowledge the contribution-reframing honestly: \"we initially developed DialogueDev as a protocol-level contribution; our experiments led us to reframe the contribution as prompting-level\").\n4. Report headline numbers with uncertainty.\n5. Forward-reference Section 5 for the variance-decomposition claim.\n\n## Prose-level fixes\n\n- \"we aim to reduce\" \u2192 either you did reduce it (with measurement) or you do not claim it; \"aim to\" is hedge-by-intent and reads weakly in a contribution paragraph.\n- \"frozen weights\" is redundant with \"fixed set of GPT-4 instances\" via API; consider dropping or clarifying that no fine-tuning was performed.\n- \"JSON-typed messages\" and \"typed message channels\" \u2014 pick one term and use it consistently.\n- \"GPT-4\" should be pinned to a specific snapshot/date for reproducibility.\n- \"stripped-down single-agent prompt with RSP recovers most of the multi-agent system's performance\" \u2014 quantify \"most\" inline (e.g., \"X% of the gap\").\n- \"Our central contribution, however, is...\" \u2014 the \"however\" is doing work that the reader hasn't been set up for; restructure so the pivot is anticipated.\n\n## Downstream considerations\n\nIf the reframing from architecture-level to prompting-level contribution happened after the system was built and named, the section will read more honestly if that history is acknowledged briefly rather than presented as a single coherent design. Readers (and reviewers) will likely notice the tension regardless.\n\n## Items I could not verify from the section alone\n\n- Whether Section 5 actually performs the variance decomposition or factorial analysis the section forward-references. The claim's load-bearing weight depends on what's there.\n- Whether the 80-issue GitHub subset has held-out / contamination guarantees against the GPT-4 training cutoff \u2014 a major confound for any pre-2024 issue set used with GPT-4. If not addressed elsewhere, this needs to be.\n- Whether RSP as described is distinct from existing self-refine / self-critique / plan-and-solve methods; I did not assess prior-art delta per the projection.\n- The exact pass@1 protocol (n samples per problem, temperature) is not stated here; it may be in a methods section I have not seen.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 1.0,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A section review is expected to assess whether the thesis and contribution framing cohere, especially because the artifact shifts from DialogueDev to RSP as the central contribution.",
+      "R1.2": "Checking the internal argument chain is load-bearing because the section makes a causal/framing move from multi-agent protocol design to prompting-level gains.",
+      "R1.3": "The review should assess whether the reported benchmark numbers and configuration comparisons support the claims made from them.",
+      "R1.5": "Section-level narrative organization is central because the passage appears to introduce one system and then reframe the contribution around another mechanism.",
+      "R1.6": "A general section review normally includes sentence- and paragraph-level clarity, flow, register, and concision.",
+      "RX.1": "The projection must preserve uncertainty about what kind of review is intended by the short delegation.",
+      "RX.2": "The review responsibility should avoid endorsing claims beyond what the excerpt itself supports.",
+      "RX.3": "The responsibility remains limited to reviewing the provided section rather than executing revisions or evaluating the whole paper.",
+      "RX.4": "Potential downstream harms include misleading contribution framing or unsupported performance claims in a research artifact.",
+      "RX.5": "Any projected responsibility should remain traceable to the delegation and the specific claims present in the excerpt."
+    }
+  }
+}

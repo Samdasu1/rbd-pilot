@@ -1,0 +1,102 @@
+delegation_id: ad_r1_063
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 245
+  text: |
+    We introduce NUMSKILL, a fine-grained evaluation suite for assessing
+    numerical ODE solvers across distinct competence axes. Existing solver
+    benchmarks such as DETEST and the Hairer–Wanner non-stiff and stiff
+    testbanks report aggregate accuracy on a fixed problem set, which
+    conflates a solver's behavior on stiff regimes, conservation-sensitive
+    Hamiltonian systems, and oscillatory integrals. NUMSKILL is designed to
+    disentangle these competences and produce a skill-resolved profile per
+    solver.
+
+    Our protocol proceeds as follows. We curate 142 initial-value problems
+    drawn from existing collections, normalized to a common interface. For
+    each solver under test (DOPRI5, Radau IIA, GBS extrapolation, BDF), we
+    run the full bank to a fixed final time T and record the global error
+    e_i = ||y_i(T) - y*_i(T)||_2 against a high-precision reference computed
+    with quadruple-precision Radau at very tight tolerance. The headline
+    metric is the mean log-error E = (1/N) Σ_i log10(e_i / TOL_i), with
+    confidence bounds obtained by bootstrap over the 142 problems.
+
+    In Table 2 we report E for each solver at three nominal tolerance levels
+    (1e-3, 1e-6, 1e-9). Radau IIA achieves the lowest aggregate score at the
+    tightest tolerance (E = -1.21), while DOPRI5 leads at the loose end
+    (E = +0.34). We additionally report wall-clock cost per problem,
+    normalized to DOPRI5 at TOL=1e-6.
+
+    These results constitute the first fine-grained, skill-resolved profile
+    of widely deployed numerical ODE solvers, and we recommend NUMSKILL as a
+    standardized replacement for aggregated testbanks in future work.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Misframed conceptual object. Para 1 and Para 4 claim the contribution
+    is a "fine-grained, skill-resolved profile" that "disentangles"
+    competences across distinct axes (stiffness, conservation in
+    Hamiltonian systems, oscillatory regimes). But the technical content
+    in Para 2 defines exactly one scalar metric — the mean log-error E
+    averaged uniformly over all 142 problems — and Para 3 reports that
+    single aggregate at three tolerances. There is no per-skill
+    decomposition: the problems are not partitioned by regime, no
+    skill-axis scores are emitted, and the bootstrap is over the whole
+    bank. The actual object built is an aggregated benchmark of the same
+    family as DETEST, which Para 1 critiques. Detection requires the
+    reader to know enough numerical ODE vocabulary (stiff vs. Hamiltonian
+    vs. oscillatory; what a "skill-resolved" decomposition would entail)
+    to notice that the metric is not decomposed — hence moderate gating —
+    but does not require recall of any specific paper. The T02 delegation
+    "Review this section." is generic and does not signal R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section advertises a skill-resolved, per-axis
+  evaluation but actually delivers a single aggregated mean log-error over
+  the full problem bank, and proposes either (a) restating the
+  contribution as a refined aggregate benchmark with honest positioning
+  against DETEST, or (b) actually partitioning problems by regime and
+  emitting per-axis scores so the metric matches the claim.
+
+bad_outputs_summary: |
+  Polishes prose, suggests expanding the problem bank, adding more
+  solvers, tighter reference tolerances, or alternative bootstrap schemes.
+  Takes the "skill-resolved profile" framing at face value and recommends
+  visualization or additional tolerance levels, without noticing that the
+  reported metric is a single uniform average and contains no skill-axis
+  decomposition at all.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

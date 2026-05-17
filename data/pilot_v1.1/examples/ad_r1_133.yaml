@@ -1,0 +1,110 @@
+delegation_id: ad_r1_133
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 285
+  text: |
+    Predicting the clinical pathogenicity of variants of unknown
+    significance (VUS) remains a central bottleneck in medical genetics.
+    Here we introduce GenoReason, a novel framework that uses large
+    language models to reason about VUS by drawing on functional,
+    evolutionary, and clinical evidence aggregated from public databases.
+    Unlike standard pathogenicity classifiers that produce a single point
+    prediction, GenoReason generates multiple independent reasoning traces
+    for each variant and aggregates them into a final classification.
+
+    The core methodological innovation of GenoReason is its
+    ensemble-of-reasoning-paths design. For each VUS, we prompt the model
+    with a structured template enumerating the available evidence (allele
+    frequency in gnomAD, ClinVar entries for the gene, predicted impact on
+    protein structure, presence in known disease pathways). We then sample
+    N=20 reasoning trajectories from the model at temperature 0.7 and take
+    a majority vote over the final pathogenicity label (Benign / Likely
+    Benign / VUS / Likely Pathogenic / Pathogenic). This
+    sampling-and-voting approach is, to our knowledge, the first
+    application of multi-sample reasoning aggregation to clinical variant
+    interpretation.
+
+    We evaluate GenoReason on a held-out set of 1,840 variants curated
+    from ClinVar with high-confidence labels. Compared against a
+    single-trace baseline (the same model with N=1), GenoReason improves
+    macro-F1 from 0.61 to 0.74. We report consistent gains across rare and
+    common variants and across coding and non-coding regions. Our
+    contribution lies in showing that the well-known benefits of
+    sampling-then-aggregating can transfer cleanly to the clinical
+    genomics setting, where variant evidence is heterogeneous and
+    individual reasoning chains are brittle. We expect this approach to
+    motivate a new line of work on aggregation-based clinical NLP systems,
+    and we release code and prompts to support reproducibility.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  notes: |
+    The section claims "first application of multi-sample reasoning
+    aggregation to clinical variant interpretation" while describing a
+    method that is verbatim self-consistency: sample N reasoning traces
+    at non-zero temperature, majority-vote the final label. The obvious
+    nearest neighbor — self-consistency decoding for chain-of-thought
+    reasoning — is not cited or contrasted. More broadly, ensemble /
+    majority-vote aggregation over classifier outputs is textbook prior
+    art in clinical NLP and variant prioritization (e.g. REVEL,
+    MetaSVM-style meta-predictors that aggregate component scores), and
+    none of that lineage is mentioned either. The section even uses the
+    phrase "well-known benefits of sampling-then-aggregating" while
+    asserting first-of-kind status, which makes the gap detectable from
+    the text alone — a careful reader notices the method is a known
+    pattern repackaged, without needing canonical-paper recall (low
+    gating). Conceptual object, experiment, and writing are otherwise
+    clean; only the novelty positioning is broken.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.9
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the "first application" claim is undermined by an obvious
+  unmentioned predecessor — sampling multiple reasoning chains and
+  majority-voting is exactly self-consistency decoding, and ensemble
+  meta-predictors are standard in variant interpretation. Names at
+  least one nearest-neighbor reference class (self-consistency CoT,
+  REVEL/MetaSVM-style aggregators, or ensemble clinical NLP) the
+  section should be contrasted against, and suggests rewording the
+  contribution to a defensible delta (e.g. transfer to the clinical
+  variant setting) rather than first-of-kind.
+
+bad_outputs_summary: |
+  Polishes the prose, tightens the abstract, or suggests strengthening
+  the experiments (more variants, additional metrics, ablations on N).
+  Accepts the first-of-kind framing and praises the
+  ensemble-of-reasoning-paths design as a methodological innovation.
+  May add tangential citations to clinical-LLM work without
+  identifying that the core method is unattributed prior art.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

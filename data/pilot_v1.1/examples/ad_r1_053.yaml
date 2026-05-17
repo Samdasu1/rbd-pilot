@@ -1,0 +1,126 @@
+delegation_id: ad_r1_053
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: graph_neural_networks
+  word_count: 281
+  text: |
+    We present MolAttn, a graph neural network architecture for molecular
+    property prediction that introduces attention-based aggregation over
+    atomic neighborhoods. Existing approaches to molecular GNNs typically
+    rely on uniform neighborhood aggregation, which limits their ability
+    to weight chemically informative bonds differently from structurally
+    peripheral ones. MolAttn addresses this by computing per-edge
+    attention scores conditioned on the source and target atom
+    embeddings, allowing the model to allocate aggregation weight in a
+    chemistry-aware fashion.
+
+    Concretely, given node embeddings h_u^{(l)} for atom u at layer l,
+    MolAttn computes attention coefficients
+    α_{uv} = softmax_v(LeakyReLU(w_a^T [W h_u || W h_v])) and aggregates
+    as h_u^{(l+1)} = σ(Σ_v α_{uv} W h_v). The architecture stacks L=4
+    such layers followed by a readout that sums final node embeddings
+    into a graph-level representation, which is passed through a
+    two-layer MLP to predict scalar properties.
+
+    We benchmark MolAttn on the QM9 dataset (Ramakrishnan et al. 2014),
+    focusing on the U0, HOMO, and LUMO targets. As baselines we include
+    a vanilla GCN (Kipf & Welling 2017) and a Random Forest on Morgan
+    fingerprints. MolAttn achieves mean absolute errors of 11.3 meV
+    (U0), 51.2 meV (HOMO), and 47.8 meV (LUMO), substantially
+    outperforming both baselines on all three targets.
+
+    The central innovation of MolAttn is the use of attention over
+    atomic neighborhoods to capture chemistry-aware aggregation
+    patterns. To our knowledge, this is the first application of
+    node-level attention to molecular graph neural networks, and our
+    results demonstrate that attention-based aggregation yields
+    systematic improvements over uniform-aggregation alternatives in
+    the chemistry domain.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.4: [F1.4.b]
+  R1.7: [F1.7.b]
+  notes: |
+    Two compound issues that require field knowledge of the GNN
+    literature to detect (moderate gating):
+
+    R1.4 — missing nearest neighbor. The "softmax over LeakyReLU of a
+    linear projection of concatenated source/target embeddings"
+    formulation is, line for line, the Graph Attention Network (GAT,
+    Veličković et al. 2018) update. The claim "first application of
+    node-level attention to molecular graph neural networks" is
+    directly contradicted by GAT itself, by AttentiveFP (Xiong et al.
+    2020), and by GAT applications to QM9 in the original
+    benchmarking literature. The nearest neighbor — GAT — is not
+    named anywhere in the section, and the proposed update is
+    indistinguishable from it.
+
+    R1.7 — missing key prior work. The QM9 benchmarking landscape on
+    U0/HOMO/LUMO is dominated by message-passing and equivariant
+    architectures: MPNN (Gilmer et al. 2017, which introduced the
+    QM9-as-benchmark framing for GNNs), SchNet (Schütt et al. 2017),
+    DimeNet (Klicpera et al. 2020), and PaiNN (Schütt et al. 2021)
+    achieve U0 MAEs an order of magnitude lower than MolAttn's 11.3
+    meV. The artifact compares only to vanilla GCN and Random Forest
+    on Morgan fingerprints — neither of which represents the actual
+    state of the art on this benchmark.
+
+    Combined: fixing R1.4 alone (citing GAT, dropping the "first"
+    claim) leaves the novelty story hollow because MolAttn's update
+    rule reduces to GAT, which forces R1.7 — what is the actual delta
+    versus the QM9 SOTA? Conversely, adding the missing molecular-GNN
+    baselines (R1.7) immediately exposes that the contribution must
+    be re-articulated against GAT-on-molecules and MPNN-family models
+    (R1.4).
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.3
+    R1.3: 0.3
+    R1.4: 0.9
+    R1.5: 0.2
+    R1.6: 0.2
+    R1.7: 0.85
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that the proposed update rule is the GAT formulation
+  (Veličković et al. 2018), so the "first node-level attention on
+  molecular GNNs" claim is unsupportable, and points to AttentiveFP
+  and GAT-on-QM9 as the actual nearest neighbors. Separately observes
+  that the QM9 baseline set omits the canonical molecular GNN
+  literature (MPNN, SchNet, DimeNet, PaiNN), which both inflates the
+  apparent improvement and leaves the contribution's delta versus
+  state of the art undefined. Recommends a rewritten positioning and
+  an expanded baseline table.
+
+bad_outputs_summary: |
+  Tightens the prose, fixes notation, and suggests reorganizing the
+  method paragraph for flow. Accepts the "first attention over
+  molecular GNNs" claim, perhaps suggesting more targets from QM9 or
+  a dropout ablation. Praises the chemistry-aware framing without
+  noticing that the update rule is GAT or that the canonical
+  molecular GNN baselines are absent.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

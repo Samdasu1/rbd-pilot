@@ -1,0 +1,121 @@
+delegation_id: ad_r1_205
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 368
+  text: |
+    The problem of teaching an automatic speech recognition (ASR) system
+    to abstain from transcribing utterances it cannot decode reliably
+    has become increasingly important as end-to-end models are deployed
+    in clinical and legal settings, where a confidently wrong transcript
+    carries higher downstream cost than a refusal. Disentangling
+    acoustic uncertainty (the audio is noisy, accented, or otherwise
+    out-of-distribution) from lexical uncertainty (multiple plausible
+    transcriptions exist for clean audio) parallels the
+    world-vs-question uncertainty distinction now familiar from open
+    question answering.
+
+    The earliest framing of selective ASR as a learning problem appears
+    in Vaibhava and Hermansky (2018), "Calibrated Abstention for
+    End-to-End Speech Recognition," which trained an auxiliary
+    abstention head atop a Listen-Attend-Spell (LAS) backbone using a
+    chow-hinge loss on held-out CTC alignments. They reported a 38%
+    reduction in word error rate on the abstain-allowed subset of
+    LibriSpeech test-other, at the cost of refusing 12% of utterances.
+
+    We extend this framework in three directions. First, we replace the
+    LAS backbone with a wav2vec 2.0 (Baevski et al., 2020) encoder
+    pretrained on 60k hours of unlabeled audio, which substantially
+    improves the calibration of the underlying token-level posteriors.
+    Second, we move from utterance-level abstention to token-level
+    abstention, allowing the decoder to emit a special <unk-abstain>
+    token at positions where the entropy over the next-token
+    distribution exceeds a learned threshold. Third, we introduce an
+    uncertainty-aware beam search that uses the abstention probability
+    to prune partial hypotheses, reducing decoding cost by 22% at
+    iso-accuracy on the Switchboard eval2000 benchmark.
+
+    Our main empirical claim is that token-level abstention, made
+    possible by replacing the LAS backbone of Vaibhava and Hermansky
+    with a self-supervised encoder, recovers their abstention-WER
+    tradeoff while operating at a fivefold lower abstention rate. We
+    report results on LibriSpeech test-other, Switchboard eval2000, and
+    a held-out clinical dictation corpus (CDC-2k); on the latter we
+    observe a 41% relative WER reduction at a 2.4% abstention rate,
+    which we believe makes selective transcription deployable for
+    medical scribing for the first time. Code and pretrained checkpoints
+    will be released upon acceptance.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: high
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.7: [F1.7.a]
+  notes: |
+    The load-bearing citation "Vaibhava and Hermansky (2018), 'Calibrated
+    Abstention for End-to-End Speech Recognition'" is fabricated. Hynek
+    Hermansky is a real, prominent speech scientist (PLP features,
+    modulation spectrogram work) and "Vaibhava" evokes Vaibhava Goel
+    (IBM speech), so the author surnames pattern-match to plausible
+    co-authors, but no such 2018 paper on a calibrated abstention head
+    over a LAS backbone exists. The fabrication is load-bearing in two
+    ways: (a) the section presents this paper as the foundational
+    framing of selective ASR as a learning problem, and (b) the central
+    contribution claim ("recovers their abstention-WER tradeoff while
+    operating at a fivefold lower abstention rate") is a head-to-head
+    delta against numbers from this nonexistent baseline, so removing
+    or correcting the citation invalidates the contribution claim.
+    Detection requires recall of canonical ASR scholarship — a careful
+    reader unfamiliar with the field can find the section internally
+    coherent. Real prior work on confidence/abstention in ASR (Jiang
+    2005 word-confidence; Hermansky's actual modulation work; CTC
+    confidence-style methods) is not cited; this is a fabrication
+    flaw rather than a missing-citation flaw, but the two interact.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.2
+    R1.3: 0.4
+    R1.4: 0.4
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.9
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Flags that the Vaibhava and Hermansky (2018) reference cannot be
+  verified and is most likely fabricated, and notes that this is not a
+  cosmetic issue: the section's headline contribution (a "fivefold
+  lower abstention rate" relative to that paper's tradeoff) is anchored
+  to numbers from the fabricated baseline. Recommends locating real
+  prior work on confidence estimation and abstention in ASR (e.g.
+  word-level confidence, calibrated CTC posteriors) and re-grounding
+  the contribution claim against an actual baseline before submission.
+
+bad_outputs_summary: |
+  Edits prose, tightens the three-direction list, suggests adding more
+  benchmarks, or compliments the framing of acoustic-vs-lexical
+  uncertainty without questioning whether the foundational citation
+  exists. Treats the Vaibhava and Hermansky reference as authoritative
+  and helps sharpen the comparison against it, leaving the fabrication
+  and the dependent contribution claim intact.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

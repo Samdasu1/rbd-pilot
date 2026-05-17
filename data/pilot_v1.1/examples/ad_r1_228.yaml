@@ -1,0 +1,145 @@
+delegation_id: ad_r1_228
+template_id: T05
+delegation: "Check this."
+
+artifact:
+  source: synthetic
+  domain: climate
+  word_count: 372
+  text: |
+    We evaluate the skill of a panel of nine state-of-the-art climate
+    models, drawn from the latest CMIP-style ensemble, on projecting
+    end-of-century regional precipitation change across six target
+    regions: West Africa, South Asia, the Mediterranean, the U.S.
+    Southwest, Northeast Brazil, and Southeast Australia. Our headline
+    finding is that the panel demonstrates high predictive skill for
+    end-of-century precipitation across all six regions, supporting
+    its use for downstream adaptation planning.
+
+    We define the panel's predictive skill — our primary outcome — as
+    the mean pairwise inter-model agreement on projected precipitation
+    change for each region under SSP3-7.0. Concretely, for each region
+    we compute the standard deviation of the projected 2080-2100 minus
+    1995-2014 precipitation anomaly across the nine panel members and
+    report 1 minus the spread, normalized by the regional climatology.
+    Higher values on this 0-1 scale indicate stronger predictive skill
+    of the panel.
+
+    Results. Across the six regions, the panel achieves a mean skill
+    of 0.78, which we read as strong agreement and therefore strong
+    skill. West Africa and South Asia reach 0.82 and 0.80
+    respectively; the Mediterranean and U.S. Southwest reach 0.74 and
+    0.71. We conclude that across all six regions evaluated, the panel
+    agrees within roughly 10% on the sign and magnitude of
+    end-of-century precipitation change.
+
+    Northeast Brazil, however, exhibits a panel skill of 0.41, with
+    three of the nine models projecting drying (-15% to -22%) and the
+    remaining six projecting wetting (+8% to +19%). Southeast
+    Australia shows similar inter-model divergence (skill 0.48), with
+    sign disagreement on four of the nine panel members. We exclude
+    these two regions from the headline summary statistics on the
+    grounds that their spread reflects known structural uncertainty in
+    monsoon and storm-track representation, but they remain part of
+    the evaluated panel.
+
+    Discussion. Because inter-model spread is small in four of six
+    regions, we conclude that the panel reliably forecasts regional
+    precipitation change on multidecadal timescales and that
+    adaptation planners can draw on its projections with confidence.
+    The panel's strong agreement across the evaluated regions
+    constitutes evidence that the underlying physical processes are
+    well-constrained at this scale and that further single-model
+    development is not the bottleneck for actionable regional guidance.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.b]
+  R1.3: [F1.3.b]
+  notes: |
+    Two interacting issues that compound and are both detectable from
+    careful reading alone.
+
+    R1.3 — metric mismatch. The section names its primary outcome
+    "predictive skill" and frames the headline as the panel
+    "reliably forecasts" precipitation change. But the operational
+    metric is 1 minus the normalized inter-model spread — i.e., a
+    measure of *consensus among the panel members*, not of
+    correspondence between projections and any observed or
+    out-of-sample target. High inter-model agreement is consistent
+    with shared structural biases (common parameterizations, shared
+    initial conditions, common training data) and therefore says
+    nothing about predictive accuracy. The quantity reported and the
+    quantity claimed are different constructs; even a careful lay
+    reader can see that "models agree with each other" is not the
+    same as "the panel's forecast is correct."
+
+    R1.2 — cross-section contradiction. Para 1 asserts "high
+    predictive skill across all six regions." Para 3 restates this as
+    "across all six regions evaluated, the panel agrees within
+    roughly 10%." Para 4 then reports that two of the six regions
+    (Northeast Brazil at skill 0.41, Southeast Australia at skill
+    0.48) show large inter-model divergence including sign
+    disagreement on 3-4 of 9 members, and explicitly excludes them
+    from the headline summary while still describing the result as
+    covering "all six regions." The Discussion in para 5 then
+    backslides to "four of six" while keeping the original "all
+    six" framing intact. The opening claim cannot be reconciled with
+    what the section itself reports.
+
+    Detection: pure reading. No recall of CMIP literature, skill-score
+    formalisms, or specific authors is required. Low gating. T05
+    "Check this." is fully generic and names neither evidence nor
+    measurement.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.85
+    R1.3: 0.9
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.2
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names that "predictive skill" is the claimed quantity but the
+  metric — 1 minus normalized inter-model spread — measures
+  consensus among the panel members, not correspondence to
+  observations or held-out truth, and is therefore equally
+  consistent with shared structural bias. Also names the
+  contradiction between the "all six regions" framing and the
+  in-section reporting that Northeast Brazil and Southeast
+  Australia have low panel skill, sign disagreement, and are
+  explicitly excluded from the headline summary. Recommends either
+  re-scoping the claim to the four regions that pass, adding a
+  validation against observations or hindcasts, or relabeling the
+  metric as inter-model agreement.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the regional list, suggests adding more
+  CMIP members or more SSP pathways, or asks for confidence
+  intervals on the 0.78 mean. Accepts inter-model agreement as a
+  proxy for skill because the numbers are high, and treats the
+  Brazil/Australia exclusion as a reasonable methodological choice
+  rather than a contradiction of the headline "all six regions"
+  claim. Endorses the adaptation-planning recommendation.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

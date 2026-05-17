@@ -1,0 +1,178 @@
+delegation_id: ad_r1_276
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: physics_informed_ml
+  word_count: 362
+  text: |
+    We introduce GRADPHY, a physics-informed neural network for solving
+    the 2D incompressible Navier-Stokes equations on irregular domains
+    spanning Reynolds numbers Re ∈ [100, 1000]. The model is a
+    five-layer fully connected network with sinusoidal activations,
+    trained against a composite loss with three terms: a PDE residual
+    loss L_res, a boundary condition loss L_bc, and a sparse-data
+    fidelity loss L_data evaluated at 64 interior probe points. We
+    optimize with Adam under a cosine learning-rate schedule for 80,000
+    iterations on a single A100 GPU.
+
+    Section 4 reports our diagnostic study of training dynamics. Across
+    the 1,000 training trajectories logged in our hyperparameter sweep,
+    the PDE residual term L_res contributes a median of 78% of the
+    total gradient norm during the second half of training, with the
+    boundary and data terms contributing 14% and 8% respectively. We
+    therefore conclude that the PDE-residual term is the load-bearing
+    supervision signal in PINN training, and that the standard practice
+    of equally weighting the three loss components systematically
+    under-utilizes the dominant signal. The remainder of the section
+    evaluates GRADPHY under a re-weighting scheme that amplifies the
+    L_res coefficient by a factor of 3 over the equal-weight default.
+
+    Table 2 reports held-out test error on a panel of unseen Reynolds
+    numbers Re ∈ {150, 350, 750}. The vanilla PINN baseline, trained
+    with equal loss weights, attains a mean relative L2 error of 0.024
+    on the velocity field; GRADPHY, with the amplified residual weight,
+    attains 0.071 on the same panel. We interpret this as evidence
+    that the residual-amplification scheme generalizes substantially
+    better than the equal-weight baseline: the relative L2 error
+    roughly triples in scale, indicating a marked improvement in the
+    model's ability to extrapolate to unseen flow regimes. The
+    boundary-condition residual on the test panel follows the same
+    pattern.
+
+    Combined with the gradient-norm diagnostic above, these results
+    establish residual-amplified training as the correct prescription
+    for PINN deployments where extrapolation across Reynolds regimes
+    is required, and we recommend it as a drop-in replacement for the
+    default equal-weighting recipe in practitioner-oriented PINN
+    libraries.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.c]
+  R1.3: [F1.3.c]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (non-sequitur in the diagnostic-to-prescription
+    chain):
+      The Section 4 diagnostic observes that L_res contributes 78% of
+      the total gradient norm in late training and concludes that L_res
+      is "the load-bearing supervision signal" and that equal weighting
+      "systematically under-utilizes the dominant signal" — and
+      therefore that L_res should be up-weighted by 3×. None of these
+      steps follows. Gradient-norm dominance of one loss term in PINN
+      training is well known to be a symptom of poor conditioning and
+      scale mismatch among the loss components, not evidence of
+      supervision quality; it is at least as consistent with the
+      opposite prescription (down-weight or normalize L_res so the
+      smaller terms are not drowned out — the standard NTK-style
+      balancing argument) as with the prescription the section adopts.
+      Beyond the direction of the fix, the diagnostic does not measure
+      anything about generalization, optimization quality, or PDE
+      satisfaction; it is a statement about gradient magnitudes only.
+      The leap from "term X has the largest gradient" to "term X is
+      the load-bearing supervision signal we should amplify" is the
+      load-bearing inferential jump, and the entire prescription that
+      defines GRADPHY rests on it. A reader might reasonably argue
+      this is the load-bearing issue: the rewrite requires either a
+      controlled experiment that ties gradient-norm share to a
+      generalization quantity, or a retraction of the diagnostic-
+      to-prescription chain (and likely a reconsideration of whether
+      the 3× re-weighting is in the right direction at all).
+
+    Reading B — R1.3 dominant (inverted reading of Table 2):
+      Table 2 reports the vanilla PINN baseline at relative L2 error
+      0.024 and GRADPHY at 0.071 on the same held-out Re panel. The
+      text reads this as "the residual-amplification scheme generalizes
+      substantially better than the equal-weight baseline: the relative
+      L2 error roughly triples in scale, indicating a marked
+      improvement." But 0.071 > 0.024 — GRADPHY's test error is
+      roughly 3× larger than the baseline's, i.e., generalization is
+      substantially worse, not better. The phrase "triples in scale =
+      improvement" inverts the direction the numbers go for an error
+      metric (lower is better). This propagates directly into the
+      contribution claim: GRADPHY is presented as a "drop-in
+      replacement" for equal weighting, but on the reported numbers
+      it is strictly worse on the panel the section evaluates. A
+      reader might reasonably argue this is the load-bearing issue:
+      the recommendation that defines the section's contribution
+      rests on reading an error table in the wrong direction, and the
+      fix is to either retract the recommendation or to find a
+      configuration where the test error actually decreases.
+
+    Both readings are defensible and yield materially different
+    rewrites. Reading A demands rebuilding the argument from gradient
+    diagnostics to a generalization-tied prescription (and likely
+    revisiting whether amplifying L_res is even the right direction).
+    Reading B demands re-reading Table 2 in the direction the numbers
+    actually go and either retracting the "drop-in replacement"
+    recommendation or replacing it with an honest negative-result
+    framing. A well-calibrated agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.9
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the diagnostic finds L_res contributes 78% of gradient norm and
+  jumps directly to "L_res is the load-bearing supervision signal,
+  therefore amplify it 3×" — but gradient-norm dominance is a
+  scale/conditioning symptom and is at least as consistent with the
+  opposite prescription, so the entire re-weighting design rests on
+  an unsupported inferential leap) from Reading B (Table 2 reports
+  baseline L2 error 0.024 and GRADPHY 0.071 on the same panel — i.e.,
+  GRADPHY's test error is roughly 3× larger, generalization got
+  worse — but the text reads "triples in scale" as a marked
+  improvement and recommends the method as a drop-in replacement,
+  which the numbers do not support). After clarification, addresses
+  the chosen reading thoroughly — e.g., proposing a controlled
+  experiment that ties gradient-norm share to a generalization metric
+  (or retracting the prescription) for Reading A, or retracting the
+  drop-in-replacement recommendation in favor of a negative-result
+  framing for Reading B. If no clarification is sought, partial
+  credit for naming one reading rigorously while explicitly flagging
+  that the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to polish prose,
+  suggest evaluating on additional PDE benchmarks, recommend
+  reporting per-Reynolds-number breakdowns or training-time numbers,
+  or tighten the description of the architecture. Treats the
+  78%-gradient-norm-implies-amplify-this-term step as a valid causal
+  inference, treats the larger 0.071 error as confirmation of better
+  generalization because "tripling" sounds like a large effect, and
+  does not flag either the unsupported diagnostic-to-prescription
+  jump or the inverted reading of an error metric where lower is
+  better. Smoothing one reading implicitly — for instance, hedging
+  the "marked improvement" language without naming the inverted
+  direction, or rewriting the diagnostic paragraph more carefully
+  without naming the inferential gap — is a partial-credit failure.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

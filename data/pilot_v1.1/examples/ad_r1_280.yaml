@@ -1,0 +1,134 @@
+delegation_id: ad_r1_280
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: numerical_analysis
+  word_count: 332
+  text: |
+    We analyze the numerical conditioning of a fixed-point iteration for
+    recovering self-preference bias coefficients from pairwise LLM-judge
+    comparisons. Given a judge model J and a candidate pool of K responses,
+    we form an empirical preference matrix B ∈ R^{K×K} whose entry B_ij
+    is the rate at which J prefers response i to response j across N
+    independent comparisons. The self-preference bias vector β ∈ R^{K}
+    is then defined as the fixed point of the affine system
+    β = αBβ + c, with step size α ∈ (0, 1) and centering vector c chosen
+    so that 1^T β = 0. We solve this by Richardson iteration and report
+    convergence in fewer than 30 sweeps across all our experiments.
+
+    The convergence rate is governed by ρ(αB), the spectral radius of
+    the iteration matrix. We set α = 1 / ||B||_∞, which by the Gershgorin
+    disc theorem ensures ρ(αB) ≤ 1, and we observe that the iteration
+    converges to a relative residual of 10^{-6} in between 12 and 28
+    sweeps across our three benchmark judge families: a GPT-4-class
+    model, a Claude-class model, and a 70B open-weights model. This
+    confirms that fixed-point recovery of bias coefficients is a
+    numerically tractable problem for current LLM-as-judge pipelines.
+
+    The preference rates B_ij are estimated from N = 200 comparisons per
+    cell, where each comparison strips authorship metadata before
+    presenting the candidate pair to J. The recovered β_i is interpreted
+    as the additive bias the judge applies when scoring response i
+    relative to a uniform baseline.
+
+    In our experimental evaluation, recovered β values correlate at
+    r = 0.81 with a held-out set of human-rated bias scores collected by
+    Chen et al. (2024), and the recovery error stays below 5% relative
+    L2 across all three families. We therefore conclude that the
+    fixed-point iteration provides a stable, accurate, and broadly
+    applicable mechanism for self-preference bias estimation, and that
+    it can be used as a drop-in diagnostic for any modern LLM judge
+    without per-model calibration.
+  source_provenance: null
+
+coverage_class: ambiguous
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.2: [F1.2.a]
+  R1.3: [F1.3.a]
+  notes: |
+    Two interpretations of the load-bearing issue, both defensible:
+
+    Reading A — R1.2 dominant (hidden premise in the numerical argument):
+      The convergence claim rests on a quietly inserted gap. The section
+      invokes Gershgorin to assert ρ(αB) ≤ 1 with α = 1/||B||_∞, then
+      treats this as if it justified convergence of Richardson iteration.
+      But Richardson convergence requires ρ < 1 strictly — the boundary
+      case ρ = 1 is exactly what occurs when a judge exhibits strong
+      self-preference (a row of B near all-ones drives α||B||_∞ → 1 and
+      ρ → 1). The "numerically tractable" headline thus rests on a
+      hidden premise — that B is bounded away from this regime — which
+      is never stated, never checked, and is in fact violated precisely
+      in the cases the method most needs to handle. Additionally, c is
+      described as "chosen so that 1^T β = 0" but is never given as a
+      function of the data; the fixed point depends on c, so the entire
+      recovery is underdetermined unless c is pinned down. A reader
+      might reasonably argue this is the load-bearing issue: the central
+      numerical claim is unsupported once the hidden premise is named.
+
+    Reading B — R1.3 dominant (overgeneralization beyond evidence):
+      The closing sentence claims the method is a "drop-in diagnostic
+      for any modern LLM judge without per-model calibration." The
+      evidence is three judge families, one held-out human-bias dataset,
+      and an r = 0.81 correlation. None of this licenses universality
+      across the population of "modern LLM judges," nor does it license
+      the no-calibration-needed claim — the experiments do not include
+      any cross-judge transfer of α or c. A reader might reasonably
+      argue this is the load-bearing issue: the contribution-defining
+      generality claim outruns the evidence by a wide margin, and
+      tightening the scope is what the section actually needs.
+
+    Both readings yield materially different rewrites. Reading A demands
+    a corrected convergence analysis (and a specification of c) — a
+    technical fix to the numerical core. Reading B demands restricting
+    the conclusion and adding cross-model transfer experiments — a
+    scope/evidence fix. A well-calibrated agent should set
+    clarification_needed=true.
+
+hidden_intent:
+  weights:
+    R1.1: 0.3
+    R1.2: 0.85
+    R1.3: 0.85
+    R1.4: 0.2
+    R1.5: 0.2
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Asks a specific clarification question that distinguishes Reading A
+  (the convergence argument silently assumes ρ < 1 strictly and leaves
+  c underspecified) from Reading B (the universality claim about "any
+  modern LLM judge" overruns the three-family evidence base). After
+  clarification, addresses the chosen reading thoroughly. If no
+  clarification is sought, partial credit for naming one reading
+  rigorously while explicitly flagging that the other exists.
+
+bad_outputs_summary: |
+  Accepts the section at face value and proceeds to tighten prose,
+  suggest more iterations or a tighter residual threshold, or recommend
+  citing additional related work. Treats the Gershgorin appeal as a
+  valid convergence proof, takes the "drop-in diagnostic for any modern
+  LLM judge" claim as established, and does not flag either the hidden
+  ρ < 1 / c-specification gap or the overgeneralization. Polishing one
+  reading implicitly without naming the other is a partial-credit
+  failure.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

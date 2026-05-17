@@ -1,0 +1,148 @@
+delegation_id: ad_r1_216
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: probabilistic_programming
+  word_count: 332
+  text: |
+    We introduce DialogueProb, a probabilistic programming language for
+    inference over role-played multi-agent dialogues with large language
+    models. Communicative agents bound by inception-prompt protocols
+    generate stochastic conversational trajectories, and our central
+    contribution is the first PPL semantics that compositionally handles
+    role-induced agent stochasticity. Each agent utterance is treated as
+    a sample from a (role, history, template)-conditioned distribution,
+    and inception prompts are interpreted denotationally as conditioning
+    operators on the joint trajectory measure.
+
+    In §3 we instantiate this semantics on top of a standard
+    importance-sampling backend. With a proposal trained to imitate
+    role-conditioned agents, DialogueProb matches the wall-clock cost of
+    vanilla LLM-agent simulators on AgentBench-Coop, RolePlay-1k, and
+    MAS-Eval, while additionally returning calibrated posterior estimates
+    over agent trajectories. To our knowledge, this is the first system
+    to provide inference-as-default for communicative-agent simulations:
+    prior frameworks for multi-agent LLM role-play treat the simulation
+    as a forward generative process, not as a probabilistic program one
+    can condition on partial observations.
+
+    Three properties emerge from the framework. First,
+    partial-observation queries — conditioning on a single agent's final
+    answer and inferring the latent intermediate dialogue — are
+    expressible without bespoke inference code. Second, importance
+    weights over trajectories give a principled handle on selection bias
+    in agent self-play data. Third, the guide-network proposal can
+    itself be a fine-tuned LLM, bringing amortized inference to bear on
+    dialogues without requiring custom variational families.
+
+    The artifact we release is a Python library: practitioners declare
+    their role-play protocol with sample / observe primitives bound to a
+    role-prompted LLM, and obtain posterior estimates over agent
+    trajectories with only a few additional lines of code. We see
+    DialogueProb as taking a first step toward making
+    programmable-inference tooling — long standard in the PPL community
+    — available for the rapidly growing landscape of multi-agent LLM
+    systems, and we expect our denotational account to clarify what it
+    means for two role-play protocols to be inference-equivalent.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.b]    # contribution slip across paragraphs
+  R1.4: [F1.4.a]    # unsupported novelty: bare "first" claims, no positioning
+  notes: |
+    R1.1 — contribution slip. The load-bearing claim of the section
+    drifts across three different objects:
+    (i) Para 1 advertises "the first PPL semantics that compositionally
+        handles role-induced agent stochasticity" — a denotational /
+        theoretical contribution about meaning and conditioning
+        operators over trajectory measures.
+    (ii) Para 2 silently re-anchors the contribution as "the first
+        system to provide inference-as-default for communicative-agent
+        simulations" — a systems claim, evaluated on wall-clock cost
+        and benchmark suites.
+    (iii) Para 4 describes the released artifact as a Python library
+        wrapping sample / observe primitives around a role-prompted
+        LLM — a tooling claim with no semantic or systems argument
+        attached.
+    These are three different contributions: a denotational semantics
+    is not shown to be compositional anywhere; the systems claim is
+    only a runtime tie, not an inference-quality result; and the
+    library characterization is narrower than either. A reader trying
+    to state what the paper *is* cannot do so without picking one,
+    and fixing the slip forces re-scoping evaluation, related work,
+    and the abstract.
+
+    R1.4 — unsupported novelty. Two bare "first" claims appear ("first
+    PPL semantics that compositionally handles role-induced agent
+    stochasticity"; "first system to provide inference-as-default for
+    communicative-agent simulations") without any positioning against
+    the obvious neighbors in programmable-LLM and PPL-over-generative-
+    model work — LMQL, DSPy, Outlines, Guidance, and the line of
+    Anglican / Gen-style PPLs that already model LLM-conditioned
+    stochastic computations. The novelty claim is asserted, not
+    argued: no comparison axis (semantics vs. surface API vs.
+    inference quality), no precedent named, no delta stated.
+
+    Knowledge gating is moderate: detecting R1.4 requires recalling
+    that programmable-LLM frameworks and PPLs over LLM samples
+    already exist, which is canonical to anyone working in the area
+    but not derivable from the section's text alone. R1.1 is
+    detectable from careful reading of the three differing
+    contribution sentences.
+
+    The flaws compound: tightening R1.4 (naming LMQL / DSPy / Gen and
+    stating a precise delta) forces a choice of which contribution
+    object the delta is *over* (semantics? system? library?), which
+    is exactly the choice R1.1 evades.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85    # load-bearing — contribution slips across denotational / systems / tooling
+    R1.2: 0.2
+    R1.3: 0.2
+    R1.4: 0.85    # load-bearing — bare "first" claims with no positioning
+    R1.5: 0.1
+    R1.6: 0.1
+    R1.7: 0.4     # related citation gap is downstream of R1.4
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Notices that the section advertises three different contributions —
+  a denotational semantics, an inference-as-default system, and a
+  Python library wrapping sample/observe — and asks the authors to
+  commit to one before the section can be evaluated. Separately
+  flags that the "first PPL semantics" and "first inference-as-default
+  system" claims are asserted without comparison to existing
+  programmable-LLM and PPL-over-LLM frameworks (e.g. LMQL, DSPy,
+  Outlines, Gen / Anglican-style work over LLM samples) and asks for
+  a precise delta against the closest prior system, which axis the
+  delta is on, and what evidence supports it.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests adding a figure of the architecture or
+  another benchmark, and treats the three contribution sentences as
+  consistent restatements rather than as different objects. Accepts
+  the "first PPL semantics" and "first inference-as-default" claims
+  at face value, perhaps requesting a small literature paragraph
+  without challenging whether the novelty claim survives once
+  programmable-LLM frameworks are named.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

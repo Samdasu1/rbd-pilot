@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_310",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2217,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 30812,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.4\": 1.0, \"R1.7\": 0.6, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.3, \"RX.5\": 1.0}}\n\nSummary: The related-work section names three plausible neighbors but treats each as a foil rather than a genuine point of comparison; the differentiation rests on assertions rather than identified prior systems, and at least one adjacent literature is missing. Below are concrete issues and suggested revisions, with explicit flags on what I cannot verify.\n\n## Issues with the current positioning\n\n**1. The three \"lines of prior work\" are described without citations or named systems.**\nThe passage refers to \"continuous-batching schedulers and paged KV-cache managers,\" \"DAG schedulers, durable-execution frameworks, and serverless step functions,\" and \"gRPC-style frameworks and service meshes,\" but never names a representative system in any category. A reader cannot tell which specific systems are being excluded from the contribution. At minimum, this section should name canonical references in each bucket (e.g., representative continuous-batching / paged-attention serving systems; representative durable-workflow engines; representative service-mesh / RPC frameworks). I am not asserting which specific citations are appropriate \u2014 the authors must select them \u2014 but the current absence of any named system makes the claim \"no prior system has been built around this scheduling unit\" unfalsifiable as written.\n\n**2. A directly adjacent body of work is missing: agent frameworks and agent-serving research.**\nThe most natural prior work for a system \"serving long-horizon language-model agents\" is not LM-inference engines, workflow runtimes, or RPC stacks \u2014 it is the agent orchestration layer itself (open-source agent frameworks, tool-use harnesses, and recent research on agent serving, KV-cache reuse across reasoning steps, prefix sharing for tool-augmented agents, and speculative/branching execution of agent trajectories). Omitting this category is the most serious gap, because that is precisely where a reviewer will expect the closest competitors to live. Without it, the claim of novelty in the final paragraph is not defensible.\n\n**3. The dismissals are too sweeping and risk overclaim.**\n- \"AgentFlow is fundamentally different from these systems, because agent workloads exhibit a request structure that batch-inference engines were not designed to handle.\" This is a claim, not an argument; it should state the specific structural property (e.g., multi-turn dependence, conditional tool calls, variable scratchpad growth) and why existing schedulers cannot absorb it.\n- \"Our scheduler departs sharply from this paradigm.\" Similarly assertive. The actual departure should be named: dynamic graph emission, GPU-bound step cost, or whatever the operative property is.\n- \"To our knowledge, no prior system has been built around this scheduling unit.\" This is a strong negative claim. Given the omission noted in (2), it is currently unsupported. Recommend softening to a bounded claim (\"we are not aware of a serving runtime that schedules at the (reasoning-step, tool-call) granularity with first-class trajectory lifecycle\") and explicitly contrasting against the closest agent-serving systems once they are added.\n\n**4. The RPC/service-mesh comparison is the weakest of the three.**\nCalling out gRPC and service meshes is a stretch: no one builds an agent runtime by analogy to a service mesh, and the differentiation (\"call graph determined by model output,\" \"latency tail dominated by token generation\") is so obvious it does not earn its paragraph. Consider either folding this into a single sentence inside the workflow-orchestration paragraph or dropping it in favor of the missing agent-frameworks paragraph.\n\n**5. Internal label inconsistency.**\nThe artifact uses \"AgentFlow\" in the opening and closing paragraphs but never restates the scheduling unit consistently \u2014 the final paragraph introduces \"(reasoning-step, tool-call) pair\" as the unit of scheduling, which has not been previewed earlier in the section. If this is the core delta, it should be stated up front so each of the three contrasts can be evaluated against it.\n\n## Suggested restructuring\n\nReorganize around four buckets rather than three, ordered from farthest to closest:\n\n1. **LM inference serving** \u2014 name representative continuous-batching / paged-KV systems; differentiate on request structure (multi-step, stateful, tool-interleaved).\n2. **General workflow / durable-execution systems** \u2014 name representative engines; differentiate on (a) GPU-bound step cost and (b) dynamically emitted graphs.\n3. **Agent frameworks and agent-serving research** \u2014 the missing bucket; this is where the sharpest differentiation must be made, against systems that already target agent workloads. State the delta in terms of scheduling granularity, trajectory-as-object, checkpointing, and admission control.\n4. (Optional, compressed) RPC / service mesh \u2014 one or two sentences at most, only if the authors believe the analogy is load-bearing.\n\nThen close with a positioning paragraph that (a) names the specific design-space axes (scheduling unit, state model, admission control, checkpointing) and (b) says where each prior bucket sits on those axes, so the \"previously unaddressed point\" claim is grounded rather than asserted.\n\n## Smaller wording fixes\n\n- \"fundamentally different\" / \"departs sharply\" / \"previously unaddressed\" \u2014 replace with specific mechanism-level differences.\n- \"To our knowledge, no prior system has been built around this scheduling unit\" \u2014 soften and qualify, or support with the agent-serving comparison once added.\n- The phrase \"agent execution superficially resembles a chain of RPCs\" implicitly concedes the resemblance; if the authors want to keep this paragraph, lead with the disanalogy rather than the resemblance.\n\n## What I could not verify\n\nI did not consult the literature to confirm which specific systems should be cited in each bucket, nor to confirm whether a published agent-serving system already schedules at the (reasoning-step, tool-call) granularity with first-class trajectory lifecycle. The recommendation in issue (2) is structural \u2014 that the bucket is missing \u2014 not a factual claim that a specific competitor exists. The novelty claim in the final paragraph should be re-checked against the recent agent-serving literature before publication; that check is outside what I have done here. I also have not seen the rest of the paper, so I cannot confirm whether the \"(reasoning-step, tool-call) pair\" scheduling unit and the \"trajectory-as-first-class-object\" state model are in fact load-bearing contributions of the system as built, or aspirational framing \u2014 that should be cross-checked against the system sections.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.3,
+      "R1.3": 0.0,
+      "R1.4": 1.0,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.4",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "Positioning against prior work centrally involves reshaping the contribution and gap statement at the level of the paper's claimed design-space contribution.",
+      "R1.4": "The delegation is load-bearing on estimating how AgentFlow differs from the nearest relevant prior systems and whether the claimed delta is defensible.",
+      "R1.7": "Prior-work positioning requires attention to whether the relevant literature categories are covered and attributed accurately, even if a full scholarship audit is not explicitly requested.",
+      "RX.1": "Uncertainty must be disclosed because the artifact names broad research areas but does not identify specific prior systems or citations.",
+      "RX.2": "Overclaim avoidance is active because phrases such as previously unaddressed and no prior system require careful qualification.",
+      "RX.3": "Scope adherence is active because the task is only to project responsibility, not to rewrite or evaluate the artifact itself.",
+      "RX.4": "Downstream-harm avoidance is active to avoid unsupported novelty claims that could mislead readers or reviewers.",
+      "RX.5": "Provenance and traceability is active because any positioning responsibility depends on tracing claims to identifiable prior-work lines and reported artifact content."
+    }
+  }
+}

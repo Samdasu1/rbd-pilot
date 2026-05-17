@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_087",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2062,
+  "cache_read_input_tokens": 14029,
+  "latency_ms": 29092,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.3\": 0.85, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.7, \"RX.5\": 1.0}}\n\nSummary: I read the abstract carefully and have substantive concerns about the framing, internal coherence of the described pipeline, and the gap between what is claimed and what the abstract actually evidences. I did not verify any external references or numbers \u2014 I have no access to the underlying experiments.\n\n**Framing and contribution**\n\nThe pitch is \"role-specialized agents + span-level arbitration close the gap to dedicated NMT.\" That is a reasonable contribution shape, but the abstract conflates two distinct claims that should be separated: (a) decomposition into role-specialized agents helps, and (b) span-level arbitration over their outputs helps. Your own ablation says (b) accounts for ~70% of the gain, which means the headline framing \u2014 \"multi-agent collaborative framework \u2026 through structured debate\" \u2014 overstates the role of the multi-agent/debate component and understates the arbitration policy, which is what is actually doing the work. Lead with arbitration; treat the agents as the proposal-generation substrate.\n\n**Internal coherence problems in the pipeline description**\n\nSeveral mechanical details do not hang together as written:\n\n1. The arbiter \"selects, for each sentence span, the highest-scoring proposal under q(s)\" and then \"the final hypothesis is assembled by concatenating the winning spans.\" Concatenating spans drawn from different candidate translations is not a safe operation \u2014 agreement on span boundaries across candidates is not given, and naive concatenation will produce ungrammatical seams (tense, agreement, word order, especially for en\u2192de and en\u2192ru with rich morphology, and en\u2192zh where span boundaries are not obviously aligned to source tokens at all). The abstract does not say how spans are aligned across candidates, nor how seam repair is handled. As written, the method either has an unstated alignment/segmentation step, or it cannot actually work the way described.\n\n2. q(s) is described as a \"weighted combination of three signals: terminological consistency, fluency, and adequacy.\" The weights are not specified, nor is it said whether they are learned, tuned, or fixed. Earlier the abstract calls the arbitration policy \"learned.\" A weighted-sum scoring rule with unspecified weights is not a learned policy in any meaningful sense; if it is learned, say what is learned from what supervision.\n\n3. The adequacy signal is \"computed by comparing each candidate span against a span-level adequacy reference.\" What is the reference at inference time? If it is a gold reference, the system is not usable; if it is a pseudo-reference produced by one of the agents, that should be stated and the circularity acknowledged (the arbiter is then partly judging candidates against another candidate). This is the single biggest unresolved ambiguity in the abstract.\n\n4. \"Spans that fail to clear the adequacy threshold are returned to the originating agent for a single revision pass.\" This adds a fourth round that contradicts the earlier \"pipeline runs in three rounds\" statement. Either reconcile the count or describe the revision pass as part of round three.\n\n**Evidence vs. claims**\n\n- \"Substantially closes the gap between LLM-based translation and dedicated NMT systems\" is supported only against a single NMT baseline (NLLB-3.3B) on three language pairs. No LLM baseline is reported in the abstract, which is strange given the claim is about LLM-based translation. Without an LLM-only baseline (e.g., the same backbone used as a single-agent translator with the same prompt budget), you cannot attribute the gains to the collaboration/arbitration structure rather than to having spent more compute/tokens.\n- BLEU gains of 1.8\u20132.4 and COMET gains of 1.1\u20131.7 are described as \"substantially closes the gap.\" Whether these are substantial depends on baseline strength and on whether differences are statistically significant. No significance test, confidence interval, or number of seeds is mentioned.\n- \"Generalizes across language pairs without retraining or pair-specific tuning\" is asserted from three pairs, all with English as the source, and all into languages with very large training resources in NLLB. That is a narrow basis for a generalization claim.\n- The ablation numbers (~70%, ~25%, ~40%) sum to more than 100%, which is fine if components interact, but the abstract presents them additively (\"the load-bearing elements\"). Either report them as marginal contributions from a fixed baseline or note the non-additivity.\n\n**Scope creep to watch**\n\n\"Model-agnostic \u2026 any sufficiently capable instruction-tuned backbone\" is an untested claim unless multiple backbones were actually swapped in. If only one backbone was used in the experiments, this sentence should be removed or downgraded to a conjecture.\n\n**Concrete recommended edits**\n\n- Reframe the contribution around span-level arbitration, with role-specialized agents as the candidate-generation mechanism.\n- Specify what the \"adequacy reference\" is at inference time. If it is gold, the system is not deployable and that needs to be said.\n- State the arbitration weights and whether/how they are learned; if not learned, drop \"learned arbitration policy.\"\n- Reconcile the round count with the revision pass.\n- Add at least one LLM-only baseline using the same backbone, or explicitly scope the comparison to \"vs. dedicated NMT\" and drop the \"LLM-based translation\" framing.\n- Soften or remove the model-agnostic and cross-pair generalization claims unless backed by experiments with multiple backbones and more typologically varied pairs (including non-English source).\n- Report significance and seed variance, or note their absence.\n\n**What I could not verify**\n\nI have not seen the paper body, the experimental setup, the actual q(s) definition, or the ablation protocol. The concerns above are inferences from the abstract's wording; some may dissolve if the paper specifies these details. I have also not checked the WMT22 numbers, NLLB-3.3B's reported baselines, or whether the reported deltas are within the typical noise band for these test sets \u2014 those should be confirmed against the paper and against published baselines before the framing is finalized.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.3,
+      "R1.6": 0.3,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "A general opinion on the research artifact centrally invites assessment of the thesis, contribution framing, and whether the proposed framework is conceptually coherent.",
+      "R1.2": "The delegation calls for judging whether the mechanism, ablations, and conclusions follow logically from the described setup.",
+      "R1.3": "Because the artifact makes quantitative performance and ablation claims, evaluating whether those reported results support the stated conclusions is central.",
+      "RX.1": "Any projection of an open-ended opinion should preserve uncertainty about missing experimental, methodological, and prior-work details.",
+      "RX.2": "The response responsibility includes avoiding endorsement of broad claims such as generalization across language pairs beyond what the artifact establishes.",
+      "RX.3": "The agent must stay within giving an opinion on the research artifact rather than executing edits or expanding the paper.",
+      "RX.4": "Assessment should avoid encouraging unsupported deployment or misleading claims about translation quality and generalization.",
+      "RX.5": "Judgments should remain traceable to claims visible in the provided artifact rather than unstated assumptions."
+    }
+  }
+}

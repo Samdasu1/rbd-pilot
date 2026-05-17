@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_197",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 4616,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 52026,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.7, \"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.5\": 0.6, \"R1.6\": 0.9, \"RX.1\": 0.9, \"RX.2\": 0.95, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.6}}\n\nSummary: I revised the passage to fix a load-bearing factual problem (treating GPT-3 as \"current frontier\" in 2026), tighten the logical chain around the pilot/calibration argument, soften two overclaims (\"recoverable\" and the generalization sentence), and add the missing quantitative context (CI, effect size, baseline interpretation). Recommendations follow the revision.\n\n---\n\n**Revised passage**\n\nHuman evaluation remains the gold standard for assessing open-ended machine-generated text, where automatic metrics such as BLEU and ROUGE correlate poorly with human judgment (Liu et al., 2016). As language models have grown more fluent, however, non-expert annotators' ability to distinguish machine- from human-authored text has drifted toward chance (Clark et al., 2021), raising the question of whether crowd-sourced evaluation can still discriminate model outputs from human writing at all.\n\nThis paper revisits that protocol on GPT-3 (Brown et al., 2020). GPT-3 is no longer the strongest available system, but it remains in wide research use and is the model Clark et al. (2021) studied, which lets us isolate methodological changes from model-capability changes. We contrast GPT-3 outputs with human-authored text in three domains \u2014 short stories, news articles, and product reviews \u2014 and recruit 240 crowdworkers on Prolific to judge whether each excerpt was written by a human or by GPT-3, following Clark et al.'s experimental design.\n\nA pilot conducted in late 2024 surfaced the methodological concern that motivates the present study. Annotators who had recently interacted with deployed conversational systems showed what we informally call an \"AI-tell\" pattern: overweighting surface cues such as em-dash usage and hedge phrases, which depressed accuracy on out-of-distribution generations. We do not establish a causal mechanism here. The pattern was reproducible enough, however, to motivate a brief calibration phase in which annotators see five labeled examples before the main task.\n\nWithout calibration, mean accuracy is 51.4% (95% CI [TK]), not reliably distinguishable from chance and consistent with Clark et al. (2021). With calibration, accuracy rises to 58.1% (p < 0.01, [test name]; effect size [TK]). The gain is statistically reliable but modest in absolute terms \u2014 calibrated annotators still misjudge roughly four excerpts in ten. We therefore read the result narrowly: brief calibration partially mitigates one specific failure mode (overcalibration to surface markers) on GPT-3 outputs in three domains. Whether the protocol transfers to more recent models, to other genres, or to annotator pools without recent exposure to deployed systems is an open question we do not resolve.\n\n---\n\n**Recommendations and rationale**\n\n1. **Drop the \"current frontier\" framing for GPT-3.** As written, the passage calls GPT-3 \"the state of the art in large language modeling\" and \"the current frontier model in widespread research use.\" Both are out of date relative to the writing date and will read as either careless or motivated. The revised text reframes GPT-3 as a *protocol-comparison anchor* (same model as Clark et al. 2021), which justifies the choice without leaning on a frontier claim.\n\n2. **Cut the generalization sentence.** \"Because GPT-3 is the current frontier model in widespread research use, our calibration protocol generalizes to the systems readers will most likely deploy\" makes two leaps the experiment cannot support: (a) frontier status, and (b) transfer of the calibration effect to other models. The revision replaces it with an explicit non-claim about transfer.\n\n3. **Reframe \"recoverable.\"** The 51.4% \u2192 58.1% delta is real but ~7 points above chance on a binary task. \"Recoverable but requires explicit training\" overstates what a sub-60% accuracy result licenses. The revision states the magnitude in plain terms (\"misjudge roughly four in ten\") and confines the claim to mitigating one specific failure mode.\n\n4. **Add the missing statistics.** Currently only the p-value is reported. For a methods-focused contribution, the abstract/intro should include CI on each condition's accuracy and an effect size (e.g., Cohen's h for two proportions, or the per-annotator paired delta). I left `[TK]` placeholders rather than fabricate values.\n\n5. **Audit the pilot causal claim.** \"An overcalibration to surface markers\u2026 that depressed accuracy\" reads as a causal mechanism, but the design described (annotators who *had recently interacted* with deployed systems) is observational. The revision flags this explicitly (\"We do not establish a causal mechanism here\").\n\n6. **Tighten the opening.** The original's first sentence is fine; I trimmed one nominalization and replaced \"particularly for open-ended generation tasks\" with \"for open-ended machine-generated text\" so the second clause carries the contrast without redundancy.\n\n7. **Structural note.** The pilot paragraph currently sits between the setup and the headline result. That ordering is defensible (it motivates the manipulation), but consider whether a short forecasting sentence at the end of paragraph 2 (\"We add one departure from their protocol \u2014 a brief annotator calibration phase \u2014 motivated by a pilot described below\") would make the contribution scannable on first read. I did not restructure in the revision because the current order is also reasonable.\n\n8. **Minor wording.** \"Outputs against human-authored text\" \u2192 \"outputs with human-authored text\" reads more naturally. \"Modest but statistically significant\" is a common but misleading hedge; report the magnitude and let the reader infer.\n\n---\n\n**Things I could not verify**\n\n- The 95% CIs, effect size, and statistical-test family are not in the artifact; I inserted `[TK]` rather than guess. If the paired comparison is per-annotator (within-subject calibration), say so explicitly \u2014 it materially affects how readers interpret p < 0.01 at this sample size.\n- I assumed the pilot's \"annotators who had recently interacted with deployed conversational systems\" is a self-reported subgroup rather than an experimentally assigned condition. If it was assigned, the causal hedge in paragraph 3 can be loosened.\n- I did not verify that Clark et al. (2021), Brown et al. (2020), and Liu et al. (2016) are the right anchor citations for the claims they back; this falls outside the scope I was asked to extend.\n- The \"AI-tell\" term may or may not have prior use in the literature; if it does, a citation is warranted; if it is original to this paper, the informal framing (\"what we informally call\") in the revision is appropriate.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.3,
+      "R1.5": 0.7,
+      "R1.6": 1.0,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.3",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.1": "The delegation asks to strengthen the draft, which centrally includes improving the thesis, contribution claim, and framing above the sentence level.",
+      "R1.2": "Making the passage stronger requires checking whether the motivation, intervention, results, and conclusion form a coherent argument chain.",
+      "R1.3": "The draft makes empirical claims about calibration and accuracy, so strengthening it centrally involves aligning conclusions with the reported findings.",
+      "R1.5": "The request implies improving the narrative arc across motivation, method, pilot concern, results, and implications.",
+      "R1.6": "The broad instruction most directly calls for sentence- and paragraph-level improvement in clarity, register, force, and concision.",
+      "RX.1": "Any projection must account for uncertainty where the broad phrase 'stronger' leaves some latitude in intended emphasis.",
+      "RX.2": "The artifact contains potentially overbroad claims about frontier models and generalization, so avoiding overclaim is active.",
+      "RX.3": "The agent must stay within projection rather than actually revising or critiquing the artifact.",
+      "RX.4": "The projection should avoid encouraging unsupported or misleading research claims that could affect downstream readers.",
+      "RX.5": "The projection must remain traceable to the delegation and the specific claims present in the artifact."
+    }
+  }
+}

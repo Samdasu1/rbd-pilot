@@ -1,0 +1,57 @@
+{
+  "example_id": "ad_r1_202",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2492,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 37496,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.8, \"R1.4\": 0.7, \"R1.6\": 0.6, \"R1.7\": 0.7, \"RX.1\": 0.9, \"RX.2\": 0.9, \"RX.3\": 0.9, \"RX.4\": 0.7, \"RX.5\": 0.9}}\n\nSummary: Reviewed the abstract-style passage for internal consistency, the use of cited baselines, the strength of the headline claims, and the framing of contributions; flagged several issues that need to be resolved before this text can stand.\n\nKey issues:\n\n1. The choice of baseline is internally awkward and needs justification or repair. The text explicitly acknowledges that Carrasco-Davis et al. (2021) extends the 2019 work to ZTF-like cadences and to a seven-class taxonomy, yet picks the 2019 numbers because they \"align more naturally\" with a five-class grid. But ALERT-Bench is itself described as drawing on ZTF alerts and Rubin commissioning data \u2014 so the 2021 paper is the better-matched comparison along the survey-cadence axis. Preferring the 2019 numbers because they fit your evaluation grid risks looking like baseline selection in favor of the proposed system. Either (a) re-run or re-map the 2021 model onto the same five-class grid and compare to that, (b) report both, or (c) make the cadence-mismatch caveat explicit and quantify how it could bias the 1.4\u00d7 number.\n\n2. The \"1.4\u00d7 improvement in cost-adjusted F1\" headline is under-specified and currently unsupported by what the passage actually states. The original Carrasco-Davis work reports per-class F1, not a cost-adjusted F1 \u2014 that metric is introduced here. So the comparison is between your composite metric computed on your routing system and the same metric computed (presumably by you) on a re-implementation of their classifier. The text should say so explicitly: who computed the baseline number, on which data split, with which cost weights, and whether the baseline model was retrained on ZTF/Rubin data or used as-is. Without that, the comparison is not reproducible and the multiplier is not defensible.\n\n3. The \"first benchmark to jointly evaluate classification accuracy and routing cost on astronomical alert streams\" claim is strong and narrow enough that it needs at least a brief survey of adjacent work to support it \u2014 PLAsTiCC, ELAsTiCC, the ANTARES/ALeRCE/Fink broker evaluation harnesses, and prior cost-sensitive classification work in time-domain astronomy all live in this neighborhood. As written, none of these are cited, and a reader familiar with the field will not take the novelty claim on faith. Add at least one paragraph differentiating ALERT-Bench from PLAsTiCC/ELAsTiCC and from broker-internal evaluation, or soften the claim to something like \"the first public benchmark that explicitly scores routing cost alongside per-class accuracy.\"\n\n4. The Rubin sourcing language is risky. \"A held-out subsample from the Rubin commissioning data release\" should be pinned to a specific release identifier and date; commissioning data products have evolved, and labels on commissioning alerts are sparse and provisional. If labels were assembled by cross-matching or by a pseudo-labeling step, that needs to be stated, because the 1.4\u00d7 number rides on it. Also be careful with \"Rubin LSST reaches survey cadence\" in the closing sentence \u2014 it's fine framing, but the rest of the text should make clear that current results are on commissioning, not on survey-cadence data, so the extrapolation is forward-looking rather than demonstrated.\n\n5. The alert-volume figure (\"10^5 to 10^7 events per night\") spans two orders of magnitude and lumps three surveys together. ZTF is ~10^6/night, ATLAS lower, Rubin projected ~10^7/night. Either give the per-survey numbers or pick a tighter range with a citation; the current phrasing reads as imprecise.\n\n6. \"2.4M ZTF alerts\" needs a window (date range or DR), a label-source description (BTS? ALeRCE crossmatched? simulated?), and a class-balance note. With heavily imbalanced streams, a per-class precision/recall table is meaningful only if the minority classes are populated; the abstract should hint at how rare classes are handled.\n\n7. The \"routing-cost metric that penalizes calls to expensive light-curve classifiers when a cheap real-bogus filter would suffice\" is the load-bearing methodological novelty but is described in one clause. At minimum, name the metric, state whether costs are wall-clock, FLOPs, or a notional unit, and indicate whether the cost weights are configurable. Otherwise the leaderboard claim in contribution three is hollow \u2014 leaderboards on tunable cost metrics are gameable.\n\n8. \"Leaderboard infrastructure tied to the broker community\" is vague. Which brokers (ALeRCE, ANTARES, Fink, Lasair)? Tied how \u2014 submission API, shared label sets, governance? If no concrete tie exists yet, soften to \"intended to integrate with\" or remove.\n\n9. Small prose items: \"threefold\" with three \"First/Second/Third\" items is fine but redundant \u2014 drop \"threefold\" or drop the enumeration. \"the imminent Vera C. Rubin Observatory\" reads oddly in 2026 if the observatory has begun operations; check tense against the current operational status and adjust (\"now-operational\" or a specific milestone). \"monolithic classifier\" is mild editorializing against the baseline \u2014 \"single-model classifier\" is more neutral.\n\n10. Reference hygiene: both Carrasco-Davis citations should appear in the bibliography with full venue and DOI, and the passage should give years consistently. If the 2021 paper is mentioned only to be set aside, consider a footnote rather than two sentences in the abstract.\n\nSuggested rewrites for the two highest-impact spots:\n\n- Baseline framing: \"We benchmark against Carrasco-Davis et al. (2019), retrained on the ALERT-Bench training split. Their 2021 extension targets ZTF-like cadences and a seven-class taxonomy; we report a mapped comparison against that model in Appendix X, and note that the cadence mismatch in the 2019 version may bias our headline number upward by up to Y%.\"\n\n- Headline claim: \"Under the routing-cost metric defined in \u00a73, a learned router achieves a 1.4\u00d7 gain in cost-adjusted F1 over a retrained Carrasco-Davis et al. (2019) single-model classifier on the held-out Rubin commissioning subsample (data release DR-XX, N labeled alerts, label provenance as described in \u00a72.2).\"\n\nCaveats on this review: I have not verified the existence, year, or content of \"Carrasco-Davis et al. (2019)\" or \"(2021)\" against external sources in this session, nor have I confirmed the current operational status of Rubin as of 2026-05 or the present state of PLAsTiCC/ELAsTiCC/broker benchmarks; the points above assume the citations are real and that the field neighbors I named are still the relevant comparators. The 1.4\u00d7 critique is structural \u2014 it does not depend on knowing the true number, only on what the passage discloses about how it was computed. If the full paper already specifies the cost-metric definition, baseline retraining protocol, and Rubin label provenance, items 2, 4, and 7 reduce to \"promote those details into the abstract\" rather than \"produce them.\"",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.7,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "R1.7",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "A broad request to check the draft centrally includes testing whether the argument from survey scale to benchmark need to claimed contributions is coherent.",
+      "R1.3": "The artifact makes empirical performance and dataset claims, so checking whether reported evidence supports those claims is central.",
+      "R1.4": "The text asserts firstness and improvement over prior work, making novelty relative to the named baseline a central responsibility.",
+      "R1.6": "A generic check of a paper excerpt normally includes sentence- and paragraph-level clarity, flow, and register.",
+      "R1.7": "The excerpt relies on specific prior-work citations and baseline choices, so attribution and literature coverage are central to checking it.",
+      "RX.1": "Any check should disclose uncertainty where the artifact does not provide enough information to verify a point conclusively.",
+      "RX.2": "The first-benchmark and performance-gain claims require guarding against overstated conclusions.",
+      "RX.3": "The projection must remain limited to checking responsibilities and not execute edits or rewrite the artifact.",
+      "RX.4": "Checking should avoid recommendations or judgments that could mislead downstream research positioning or evaluation.",
+      "RX.5": "Any projected check should preserve traceability to the artifact's specific claims, citations, and reported metrics."
+    }
+  }
+}

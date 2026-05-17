@@ -1,0 +1,143 @@
+delegation_id: ad_r1_249
+template_id: T02
+delegation: "Review this section."
+
+artifact:
+  source: synthetic
+  domain: bioinformatics
+  word_count: 232
+  text: |
+    Across the three benchmark corpora that we examined namely
+    BC5CDR and NCBI-Disease and BioASQ-Task7b we observed F1
+    scores that we believe to be broadly comparable to those
+    reported by recent transformer-based pipelines although the
+    precise comparison is arguably somewhat complicated by the
+    fact that prior work used slightly different entity-span
+    normalization conventions which we approximated as faithfully
+    as the published descriptions appeared to permit.
+
+    We introduce VariantTalk, a retrieval-augmented language-model
+    pipeline for annotating clinically significant variants in
+    unstructured case reports.
+
+    The annotation pipeline proceeds in three stages. A
+    named-entity-recognition pass first extracts candidate variant
+    strings using a fine-tuned BioBERT classifier. A retrieval
+    stage then queries a local mirror of ClinVar and dbSNP for
+    canonical identifiers matching the extracted strings under a
+    normalized HGVS form. A re-ranking stage finally uses a frozen
+    instruction-tuned LLM to score each candidate-evidence pair
+    and emit a pathogenicity tag drawn from a five-level ACMG-style
+    vocabulary.
+
+    For the NER stage we use a learning rate of 2e-5 with batch
+    size 16 over five epochs. The retrieval stage returns up to 50
+    candidate identifiers per query string. The re-ranker scores
+    all retrieved pairs with a chain-of-thought prompt of fixed
+    length 512 tokens, decoded greedily.
+
+    For evaluation we use the official train/development/test
+    splits of each benchmark and report micro-averaged F1 against
+    the consensus annotations. We additionally include
+    per-mutation-type breakdowns and a confusion analysis in
+    Supplement S2 for readers interested in performance variation
+    across substitution, insertion, and deletion classes.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.c]
+  R1.6: [F1.6.b]
+  notes: |
+    Two interacting flaws.
+
+    R1.5 — out-of-order narrative. The section opens (para 1) with
+    empirical observations and a hedged comparison to prior
+    transformer pipelines, then drops a one-sentence contribution
+    claim (para 2: "We introduce VariantTalk…"), then describes
+    the three-stage method (para 3), then lists hyperparameters
+    (para 4), and only at the end introduces the evaluation setup
+    — splits, metrics, supplementary breakdowns (para 5). The
+    natural ordering for a tool/methods section is: contribution
+    claim → method → experimental setup → results. Currently
+    results appear before the contribution is even named, the
+    setup appears after the results that depend on it, and the
+    contribution sentence is sandwiched as a single isolated
+    paragraph between observations and implementation. Fixing the
+    section requires moving para 2 (and ideally an expanded
+    framing) to the top, retaining para 3 (method), promoting
+    para 5 (setup) before any results, and folding para 1's
+    observations into a results paragraph that follows.
+
+    R1.6 — hedging cascade. Para 1 stacks four hedges in a single
+    sentence: "we believe to be", "broadly comparable", "arguably
+    somewhat complicated", "approximated as faithfully as the
+    published descriptions appeared to permit". The cumulative
+    effect is to leave the reader unable to extract any committed
+    claim about how VariantTalk compares to prior work — every
+    candidate claim is softened and then softened again. The fix
+    is to cut the cascade to a single, scoped qualification (e.g.
+    name the specific normalization difference and state that
+    F1 numbers are reported under the authors' reproduction of
+    the prior protocol) so the comparison either commits to a
+    claim or explicitly defers it.
+
+    Detection: both issues are visible from careful reading
+    without external knowledge — the reader does not need to
+    recognize specific bioinformatics canon, only to notice that
+    results precede the contribution claim and that para 1 chains
+    hedges. Low gating. T02 "Review this section." is maximally
+    generic and does not hint at structure or prose.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.1
+    R1.5: 0.85
+    R1.6: 0.8
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both load-bearing issues. For the structural issue,
+  identifies that the section presents results before naming the
+  contribution and lists hyperparameters before the evaluation
+  setup, and proposes a reorder where the contribution claim
+  leads, followed by method, then setup, then results — moving
+  para 1's observations into a results block and lifting para 2
+  to the top. For the prose issue, flags the stacked hedges in
+  para 1 ("we believe to be", "broadly comparable", "arguably
+  somewhat complicated", "as faithfully as the published
+  descriptions appeared to permit") and rewrites the sentence to
+  either commit to a scoped comparison claim or defer it
+  explicitly under a single qualification.
+
+bad_outputs_summary: |
+  Polishes individual sentences, recommends additional
+  benchmarks or a stronger re-ranker, or suggests upgrading
+  BioBERT to a newer encoder without recognizing that the
+  section is structured backwards. Accepts the leading hedged
+  results paragraph as a reasonable opening and tightens its
+  grammar instead of removing the hedging cascade. Addresses
+  only one of the two flaws — e.g., reorders the section while
+  leaving the hedge stack intact, or rewrites the hedges while
+  leaving the contribution claim buried after the results.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

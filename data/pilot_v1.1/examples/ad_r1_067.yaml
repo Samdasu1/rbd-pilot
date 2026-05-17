@@ -1,0 +1,112 @@
+delegation_id: ad_r1_067
+template_id: T09
+delegation: "What do you think?"
+
+artifact:
+  source: synthetic
+  domain: speech_recognition
+  word_count: 312
+  text: |
+    We introduce ToolASR, a self-supervised tool-augmented speech recognition
+    model that, in the spirit of recent work on language models teaching
+    themselves to use external APIs, learns to invoke pronunciation and
+    named-entity lookup tools during transcription. End-to-end ASR systems
+    typically struggle on rare proper nouns and out-of-vocabulary technical
+    terms, where dedicated lexical resources outperform purely neural models.
+    ToolASR closes this gap by allowing the acoustic model to decide, on its
+    own, when to defer to an external lexical tool, and to incorporate the
+    returned pronunciation into the recognition hypothesis.
+
+    ToolASR is trained on the LibriSpeech 960h corpus under the standard CTC
+    objective. The encoder is a 12-layer Conformer (input: 80-dim log-mel
+    filterbanks, 25 ms window, 10 ms hop) producing frame-level character
+    posteriors at 40 ms resolution. Decoding is performed with WFST-composed
+    beam search of width 32, where the lexicon FST is built from the CMUdict
+    pronunciation dictionary augmented with named entities mined from the
+    training transcripts. Beam search is constrained so only word sequences
+    consistent with the lexicon FST are emitted; out-of-lexicon character
+    paths receive a fixed penalty of -8.0.
+
+    On LibriSpeech test-clean, ToolASR reaches a WER of 2.8%, with the
+    largest gains on the rare-word subset (8.1% to 5.9% relative to an
+    unconstrained CTC baseline). On a held-out medical-terminology
+    benchmark, WER drops from 14.2% to 9.7% once the lexicon FST is
+    augmented with 1,400 domain pronunciations harvested from MeSH.
+
+    We argue these results demonstrate that letting the model learn when to
+    invoke external tools yields substantial improvements over fully
+    end-to-end approaches. Future work will extend the self-supervised
+    tool-selection mechanism to additional resources, including phoneme-level
+    confusion models, accent-specific pronunciation generators, and
+    domain-targeted language models surfaced through a unified API.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Conceptual object slip. Para 1 frames the contribution as a model that
+    "learns to invoke" external tools, "decides on its own when to defer,"
+    and is "self-supervised tool-augmented" — i.e. an ASR analogue of
+    Toolformer-style learned tool use. Para 2 then describes the actual
+    system: a vanilla Conformer-CTC trained with the standard CTC loss,
+    decoded with a fixed WFST lexicon constraint and a static
+    out-of-lexicon penalty. There is no tool-invocation decision, no
+    learned API call, no self-supervision over when to call a tool — the
+    "tool" is a hard-coded decoding-time vocabulary constraint that has
+    been standard in hybrid/CTC ASR for over a decade. Para 4 doubles down
+    on the framing ("learn when to invoke external tools",
+    "self-supervised tool-selection mechanism") even though no such
+    mechanism is described or trained. The object claimed (a tool-using
+    agent that decides) does not match the object built (lexicon-
+    constrained CTC decoding). Detection requires careful reading of the
+    training/decoding description; no canonical-paper recall is needed
+    (low gating). The delegation T09 "What do you think?" is maximally
+    open-ended and does not signal R1.1 in particular.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.3
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section claims a learned, self-supervised tool-invocation
+  mechanism but actually describes lexicon-constrained CTC decoding with a
+  fixed WFST and a static out-of-lexicon penalty — no learned decision, no
+  self-supervision over tool calls. Proposes either renaming the contribution
+  to honestly describe vocabulary-constrained ASR (and repositioning against
+  the long line of WFST-decoded hybrid/CTC systems) or actually building and
+  training the claimed tool-invocation policy. Does not focus on prose polish
+  or adding more benchmarks.
+
+bad_outputs_summary: |
+  Polishes the prose, suggests additional benchmarks or larger-scale
+  pretraining, or asks for clarification on the Conformer hyperparameters.
+  Takes the "self-supervised tool-augmented" framing at face value and
+  proposes Toolformer-style extensions (more APIs, richer tool returns)
+  without noticing that no tool-learning mechanism is actually present.
+  Strengthens the rare-word evaluation or argues about the OOV penalty
+  value without flagging the mismatch between claim and content.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

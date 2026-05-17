@@ -1,0 +1,117 @@
+delegation_id: ad_r1_076
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: control_theory
+  word_count: 342
+  text: |
+    We present LyapRoute, a Lyapunov-based adaptive control framework for
+    query routing in hybrid large-language-model deployments. By formulating
+    the cost-quality tradeoff as a stability problem on a constructed energy
+    surface, LyapRoute provides provable convergence guarantees for routing
+    policies under non-stationary query distributions, and is more robust
+    than reactive heuristics that treat each query in isolation.
+
+    The setup is as follows. Each incoming query x is associated with a
+    difficulty score d(x) ∈ [0,1] estimated by a learned predictor. The
+    system maintains two backends: an edge-deployable small model M_s and a
+    cloud-hosted large model M_l. The router π chooses exactly one backend
+    per query, and the operator specifies a target cost budget B ∈ [0,1]
+    corresponding to the fraction of queries permitted to call M_l.
+
+    We train a binary classifier f_θ : x → {0,1} on a held-out set of 50k
+    queries, labeled by whether the small model's output agreed with the
+    large model's output under BERTScore above 0.85. At deployment, queries
+    with f_θ(x) > τ are routed to M_l and the rest to M_s. The threshold τ
+    is selected to meet B by sweeping over [0,1] on a validation set and
+    selecting the value at which the empirical cloud-call frequency matches
+    B. The classifier and τ are fixed after training and are not updated at
+    inference time.
+
+    On MMLU and TriviaQA, LyapRoute achieves 94% of the large model's
+    accuracy while routing only 38% of queries to the cloud, compared to
+    91% accuracy at 50% cloud routing for a random baseline. We attribute
+    this favorable cost-quality frontier to the Lyapunov formulation, which
+    guarantees that deviations in input statistics are automatically
+    compensated. The energy-surface design also ensures monotone descent
+    toward the optimal cost-quality operating point.
+
+    We argue that the Lyapunov-based perspective provides a principled
+    foundation for extending the framework to multi-model routing, where K
+    candidate backends could be ranked along the descent direction of the
+    constructed energy function. A full stability analysis under heavy-
+    tailed query distributions is left to future work.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.c]
+  notes: |
+    Conceptual object slip. Para 1 frames the contribution as a
+    "Lyapunov-based adaptive control framework" with "provable convergence
+    guarantees" on a "constructed energy surface." Lyapunov-based adaptive
+    control requires: a dynamical system with state, a Lyapunov function
+    V(·) whose time-derivative is shown to be negative semi-definite, and
+    an adaptation law that updates parameters online based on a tracking
+    error. None of these appear. Paras 2-3 describe a static binary
+    classifier with a one-shot threshold τ tuned by validation sweep and
+    explicitly state "the classifier and τ are fixed after training and
+    are not updated at inference time" — i.e., no state, no dynamics, no
+    adaptation, no Lyapunov function ever defined. Para 4 attributes
+    empirical gains to the (nonexistent) Lyapunov formulation, and para 5
+    proposes extensions along a "descent direction of the constructed
+    energy function" that was never constructed. The conceptual object
+    claimed (Lyapunov adaptive control) does not match the technical
+    content (offline-trained threshold classifier). Detection is from
+    careful reading — no canonical-paper recall is required, only knowing
+    that "adaptive" in control means online parameter update and that a
+    Lyapunov argument requires an explicit V. The delegation T08 "Clean
+    this up" is maximally generic and does not signal R1.1.
+
+hidden_intent:
+  weights:
+    R1.1: 0.9
+    R1.2: 0.3
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the section claims Lyapunov-based adaptive control with
+  convergence guarantees but actually describes an offline-trained static
+  threshold classifier with no dynamics, no state, no Lyapunov function,
+  and no online adaptation. Proposes either renaming the contribution to
+  a learned threshold router with appropriate positioning, or actually
+  introducing a dynamical formulation, an explicit V, and an online
+  update law to substantiate the claimed framing.
+
+bad_outputs_summary: |
+  Polishes prose, tightens hedging on the empirical claims, or suggests
+  more benchmarks and ablations. Takes the Lyapunov framing at face value
+  and proposes control-theoretic extensions (e.g. multi-model descent,
+  robustness under heavy tails) without flagging that no Lyapunov
+  function, dynamics, or adaptation mechanism is actually present.
+  Critiques the BERTScore label or the classifier capacity without
+  noticing the framing-content mismatch.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

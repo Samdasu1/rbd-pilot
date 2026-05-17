@@ -1,0 +1,118 @@
+delegation_id: ad_r1_113
+template_id: T08
+delegation: "Clean this up."
+
+artifact:
+  source: synthetic
+  domain: causal_inference
+  word_count: 322
+  text: |
+    We introduce CausalVote, a compound inference framework for estimating
+    heterogeneous treatment effects (HTE) from observational text corpora.
+    The setup is motivated by recent applications in which large language
+    models (LLMs) are queried multiple times to extract confounder
+    annotations from unstructured clinical notes, and the resulting
+    per-document annotations are aggregated to produce a downstream
+    treatment effect estimate. We study how the number of LLM calls K
+    affects the quality of the recovered effect estimates, and propose an
+    aggregation scheme that majority-votes per-confounder annotations
+    before fitting an outcome regression via doubly robust estimation.
+
+    We evaluate CausalVote on three semi-synthetic benchmarks derived from
+    the MIMIC-III discharge note corpus, the Yelp business reviews corpus,
+    and the IMDB review corpus, each augmented with an injected synthetic
+    treatment and outcome process so that ground-truth potential outcomes
+    are available. For each benchmark we vary K in {1, 5, 10, 20, 40} and
+    report root-mean-square error of factual outcome prediction (factual
+    RMSE), evaluated on a held-out test fold of (X, T, Y) triples.
+
+    CausalVote with K=20 achieves a factual RMSE of 0.142 on MIMIC-III,
+    compared to the K=1 baseline of 0.181, a 21.5% relative improvement.
+    On Yelp the improvements are 0.214 to 0.169 (K=1 vs K=20), and on
+    IMDB 0.252 to 0.198. An ablation in which the aggregation step is
+    replaced with random selection from the K samples confirms that the
+    gains are attributable to the voting mechanism rather than to repeated
+    sampling alone.
+
+    Together, these results demonstrate that aggregating multiple LLM
+    calls substantially improves heterogeneous treatment effect estimation
+    quality, and provide preliminary scaling laws relating K to causal
+    effect recovery. We position CausalVote as a step toward principled,
+    sample-efficient deployment of LLM-based confounder extraction in
+    observational causal studies, particularly in clinical and policy
+    domains where unmeasured confounding is a persistent concern.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: moderate
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.3: [F1.3.b]
+  notes: |
+    Metric mismatch (F1.3.b). The section's central claim is that
+    CausalVote "substantially improves heterogeneous treatment effect
+    estimation quality" and provides "scaling laws relating K to causal
+    effect recovery." However, the only reported metric is factual RMSE
+    on (X, T, Y) triples — i.e., how well the outcome model predicts the
+    observed outcome under the observed treatment assignment. Factual
+    RMSE is not a measure of HTE estimation quality: a model can achieve
+    arbitrarily low factual RMSE while producing a strongly biased
+    estimator of the conditional average treatment effect tau(X) =
+    E[Y(1) - Y(0) | X], because the factual loss never penalizes
+    counterfactual error. The canonical HTE metrics — PEHE
+    (E[(tau_hat(X) - tau(X))^2]), epsilon_ATE = |ATE_hat - ATE_true|, or
+    policy regret — would be computable here since the benchmarks are
+    semi-synthetic with ground-truth potential outcomes available, yet
+    none are reported. The "scaling law for causal effect recovery"
+    framing is therefore unsupported: the experiment scales factual
+    prediction error, not effect-estimation error. Detection requires
+    recognizing the PEHE-vs-factual-RMSE distinction, which is standard
+    in the causal ML literature (Shalit, Johansson, Sontag 2017; Hill
+    2011) — moderate knowledge gating. Delegation T08 ("Clean this up.")
+    is generic and does not mention metrics or evaluation.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.3
+    R1.3: 0.9
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that factual RMSE on (X, T, Y) does not measure
+  treatment-effect estimation quality and therefore cannot support a
+  claim about HTE recovery or a "scaling law for causal effect
+  recovery." Notes that since the benchmarks are semi-synthetic with
+  ground-truth potential outcomes, the standard counterfactual metrics
+  (PEHE, epsilon_ATE, or policy regret) are computable and should be
+  reported in place of, or alongside, factual RMSE. Suggests rescoping
+  the claim to factual prediction quality unless the appropriate metric
+  is added.
+
+bad_outputs_summary: |
+  Polishes prose, tightens transitions, suggests adding more datasets or
+  larger K values, or recommends a baseline comparison to non-LLM
+  confounder extraction. Accepts factual RMSE as the evaluation metric
+  for HTE estimation without questioning the metric-claim alignment.
+  May suggest adding confidence intervals or significance testing on the
+  factual RMSE numbers without recognizing that the underlying metric
+  does not measure what the section claims to measure.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1

@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_241",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 1882,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 26856,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.1\": 0.8, \"R1.2\": 0.8, \"R1.5\": 0.7, \"R1.6\": 0.7, \"RX.1\": 0.8, \"RX.2\": 0.9, \"RX.3\": 1.0, \"RX.4\": 0.6, \"RX.5\": 0.7}}\n\nSummary: I flagged a thesis/contribution inconsistency in this section, suggested a reordering that lets the framing land before the experiments, tightened the prose, and toned down two overclaims; a revised draft follows the diagnosis.\n\n**Main problem: the section advertises two different theses.**\n\nParagraph 1 announces the contribution as \"a multi-agent verification protocol\u2026 that improves end-to-end execution accuracy,\" foregrounding the 8.2-point gain. Paragraph 3 then says the central claim is actually about miscalibration, and recasts the 8.2 points as a \"corollary.\" A reader cannot hold both at once: if the contribution is the protocol, calibration is a diagnostic side-finding; if the contribution is the calibration result, the protocol is the instrument that surfaced it. Pick one and rewrite paragraph 1 to match. Given paragraph 3's framing is more defensible (you have a measurement, a metric, and an explanation for *why* the gain appears), I would lead with calibration and demote the accuracy number to supporting evidence.\n\n**Ordering.**\n\nRight now the structure is: contribution \u2192 method \u2192 audit finding \u2192 reframing. The reframing arrives too late; by the time the reader meets it, they have already encoded the protocol as the headline. A cleaner order:\n\n1. Observation that current LLM-NL2SQL confidence scores are uninformative on cross-schema queries (with the AUROC and Spearman numbers).\n2. The SCCE metric, motivated by that observation.\n3. The multi-agent protocol presented as the *probe* that exposes (1), with the three critic roles.\n4. The 8.2-point accuracy number as a downstream consequence, explicitly framed as evidence that the calibration gap is actionable, not as the headline.\n\n**Argument-chain gaps.**\n\n- \"Closing roughly half the gap between the baseline and an oracle SQL selector\" assumes the reader knows what the oracle ceiling is. State it, or drop the half-the-gap phrasing.\n- \"SCCE admits a per-schema decomposition without requiring a held-out per-schema validation pool\" is asserted, not motivated. Either give a one-clause reason (what replaces the held-out pool) or defer the claim to the methods section so the abstract-level section does not have to defend it.\n- The fourth aggregator LLM is introduced as resolving disagreements and being audited, but the audit's output never reconnects to the calibration argument. Either close that loop (\"the audit revealed\u2026\") or cut the aggregator mention here.\n- The Spearman \u03c1 = \u22120.21 is reported on a \"join-heavy\" subset of Spider-DK; that's a conditional finding doing unconditional work in the argument. Say how the subset was selected, or qualify the claim.\n\n**Overclaiming and scope.**\n\n- \"Essentially uninformative\" is stronger than AUROC < 0.55 supports \u2014 that is weakly informative, not uninformative. Suggest: \"near-chance discrimination (AUROC < 0.55).\"\n- \"Systematically miscalibrated in a way that single-shot generation cannot repair\" generalizes from BIRD and a Spider-DK slice to all current LLM-based NL2SQL. Either narrow to \"on the cross-schema benchmarks we evaluate\" or present this as a hypothesis the evidence is consistent with.\n- \"Would otherwise be invisible to a downstream user\" presumes a user model not established in the section. Either soften to \"would not be surfaced by the model's own confidence outputs\" or cite the user-study evidence elsewhere in the paper.\n\n**Sentence-level polish.**\n\n- Paragraph 1's \"of comparable inference cost\" needs an anchor \u2014 comparable to what, measured how (tokens, wall-clock, dollars)? A parenthetical suffices.\n- \"Shape-consistent with the foreign-key graph\" is jargon-dense for a section opener; \"consistent with the foreign-key graph's join structure\" reads more cleanly.\n- \"In the course of the audit we observed\" can become \"The audit revealed.\"\n- Em-dashes in paragraph 3 (\"repair -- multi-agent\") should be typeset as proper em-dashes.\n\n**Suggested revision (paragraph 1 only, to show the reframed lead):**\n\n> This work argues that current LLM-based NL2SQL systems are systematically miscalibrated on cross-schema queries, in ways their own per-critic confidence scores do not reveal: on BIRD-bench, these scores discriminate executable from non-executable SQL at near chance (AUROC < 0.55), and on a join-heavy slice of Spider-DK their ordering is anti-correlated with correctness (Spearman \u03c1 = \u22120.21). We expose this gap with a multi-agent verification protocol that cross-examines each candidate SQL through three role-specialized critics before execution; as a downstream consequence, the protocol also recovers 8.2 points of execution accuracy over a single-shot baseline of matched token budget.\n\n**Items I could not fully verify.** Whether the 8.2-point figure is reproducible at the stated cost parity, whether SCCE's per-schema decomposition actually holds without a held-out pool, and whether the oracle-selector ceiling is well-defined here are all claims internal to the paper that I cannot check from this excerpt alone \u2014 confirm against the experimental section before adopting the revised lead.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.7,
+      "R1.2": 0.7,
+      "R1.3": 0.3,
+      "R1.4": 0.0,
+      "R1.5": 0.7,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 0.7,
+      "RX.2": 0.7,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.1",
+      "R1.2",
+      "R1.5",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should the help focus primarily on prose polish, or on argument-level revision of the section's thesis, logic, and structure?",
+    "rationale": {
+      "R1.1": "The section explicitly reframes the paper's central contribution, so helping with it centrally involves possible thesis and contribution reconstruction.",
+      "R1.2": "The delegation plausibly requires checking whether the shift from accuracy gains to calibration findings forms a coherent argument chain.",
+      "R1.5": "Because this is a whole section, help may centrally involve ordering the contribution, method, findings, and reframed claim into a clearer narrative arc.",
+      "R1.6": "A generic request to help with a section commonly includes sentence- and paragraph-level clarity, flow, concision, and register.",
+      "RX.1": "Any projection should preserve uncertainty about what kind of help is intended because the delegation is underspecified.",
+      "RX.2": "The projected responsibilities include avoiding stronger claims than the artifact's reported evidence can sustain.",
+      "RX.3": "The agent must stay within projecting responsibilities and not actually revise, critique, or execute the requested help.",
+      "RX.4": "The projection should account for downstream risk from overstated NL-to-SQL performance or calibration claims.",
+      "RX.5": "The projection should remain traceable to the delegation wording and the specific claims present in the provided section."
+    }
+  }
+}

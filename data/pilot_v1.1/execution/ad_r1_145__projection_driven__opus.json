@@ -1,0 +1,55 @@
+{
+  "example_id": "ad_r1_145",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2582,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 38056,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.8, \"R1.3\": 0.9, \"R1.4\": 0.85, \"R1.6\": 0.7, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 1.0, \"RX.5\": 1.0}}\n\nSummary: Reviewed the abstract-style passage for argument coherence, claim-evidence alignment, novelty framing, and prose; flagged several overclaims and safety-relevant gaps that should be tempered before circulation.\n\n**Overclaim concerns**\n\n1. \"To our knowledge, this is the first framework that performs per-sample, query-conditional supervisory selection between a cheap and an expensive controller in the process-control setting.\" This is a strong primacy claim and almost certainly contestable. Hybrid/switching control, explicit MPC with region selection, event-triggered MPC, learning-based MPC gating, and approximate-MPC fallbacks have all been studied. The qualifier \"per-sample, query-conditional\u2026 in the process-control setting\" is doing heavy load-bearing work and reads as crafted to be technically defensible rather than informative. Recommend weakening to \"we are not aware of prior work that\u2026\" plus an explicit contrast paragraph against (i) event-triggered MPC, (ii) explicit MPC, (iii) approximate-/imitation-MPC, and (iv) supervisory/switching control.\n\n2. \"First demonstration of cross-plant transfer for online controller selection\" \u2014 same problem, more acute, because the cross-plant evidence is a single TE\u2192four-tank pair with one number (4% IAE degradation). One data point does not establish \"cross-plant transfer\" as a phenomenon; it shows the method did not collapse on one transfer. Recommend: \"shows non-trivial transfer on one plant pair\" and drop \"first demonstration.\"\n\n3. \"Tracking error indistinguishable from full nonlinear MPC\" in the motivation paragraph is rhetorical and inconsistent with the quantitative results later (3% and 2.4% IAE gaps are reported, not zero). Either soften the motivation (\"often comparable\") or quantify what \"indistinguishable\" means.\n\n4. The \"62% / 71% solver-invocation reduction\" framing pairs a compute metric with a control metric (IAE) but never names the comparator's compute cost, the meta-model's own inference cost, or whether the reported IAE includes the calibration phase. A reader cannot tell if the saving is net of overhead.\n\n**Argument-chain gaps**\n\n5. The meta-model predicts \"whether PID's expected closed-loop tracking error will fall within tolerance,\" but training labels for such a predictor are non-trivial: you need counterfactual PID rollouts at points where MPC was actually applied (or vice versa). The passage does not say how labels are generated, which makes the central learning claim under-specified. This should at minimum be acknowledged.\n\n6. The gating policy is described as a one-way switch (PID if predicted-OK, else MPC), but no recovery / hysteresis / dwell-time mechanism is mentioned. Rapid chattering between controllers near the threshold is a real concern and bears on the Section 6 safety argument referenced at the end.\n\n7. \"Section 6 outlines safety arguments under the gating policy\" is a forward reference, not a claim, but the abstract should at least state the *form* of the safety argument (probabilistic bound? worst-case ISS? assumption on residual stationarity?). As written, a reader cannot tell whether safety is asserted, bounded, or merely discussed.\n\n8. The 50-sample sliding window of residual statistics implicitly assumes the residual process is informative about future PID adequacy. For setpoint changes or unmeasured disturbances arriving outside the window, this assumption fails. Not flagged anywhere.\n\n**Evidence\u2013claim alignment**\n\n9. Two benchmarks (TE, four-tank) and one transfer pair are reported. The phrasing (\"we validate on\u2026\") suggests broader validation than the evidence supports. \"Evaluate on two benchmarks\" is more accurate than \"validate.\"\n\n10. \"Brief calibration phase\" for cross-plant transfer is unquantified \u2014 duration, data requirements, and whether calibration itself runs the expensive controller (which would partially offset the savings claim) are all unstated.\n\n11. The 3% / 2.4% IAE gaps are presented as small, but for some TE loops a 3% IAE increase is material. Without per-loop breakdown the aggregate number can hide a loop where degradation is severe \u2014 relevant for safety claims.\n\n**Scope and framing**\n\n12. The name \"CostMPC\" is slightly misleading: the contribution is a *selector*, not an MPC variant. Consider a name that reflects the gating role, or explicitly note that the MPC component is unchanged.\n\n13. The motivation paragraph asserts that nonlinear MPC \"is invoked uniformly\" in industrial practice. This is an empirical claim about industrial deployment patterns and should be cited or softened \u2014 many industrial systems already use cascaded PID with MPC supervisory layers, which is closer to what this paper proposes than the strawman comparator implies.\n\n**Prose-level**\n\n14. \"Substantial fraction of plant trajectories sit well inside the linear regime\" \u2014 \"sit\" reads colloquial; \"lie\" or \"remain\" is cleaner.\n\n15. \"Paying its quadratic-program solve cost on every sample\" \u2014 slightly awkward; \"incurring a QP solve every sample\" is tighter.\n\n16. \"Lightweight meta-model \u2014 a two-layer MLP on residual statistics over a 50-sample sliding window\" packs three independent design choices into one em-dashed clause. Consider splitting.\n\n17. \"We believe constitutes the first demonstration\u2026\" \u2014 \"we believe\" + \"first\" is hedged-overclaim; pick one register.\n\n18. Em-dash usage is heavy throughout; two of the four sentences in paragraph two use the same construction.\n\n**Suggested revisions to load-bearing sentences**\n\n- Replace the primacy claim with: \"We are not aware of prior work that performs per-sample, learned gating between a fixed PID law and a nonlinear MPC in process control; we compare against the most closely related approaches (event-triggered MPC, explicit MPC, and approximate-MPC) in Section 2.\"\n- Replace cross-plant claim with: \"The selector trained on Tennessee Eastman transferred to the four-tank plant with 4% IAE degradation after a calibration phase of [X] samples, suggesting the residual-statistics representation is not strictly plant-specific.\"\n- Replace \"indistinguishable from full nonlinear MPC\" with \"comparable to nonlinear MPC within typical tolerance bands.\"\n\n**Things I cannot verify from the artifact alone**\n\n- Whether the cited prior-art claims are actually first; a literature pass against \"event-triggered MPC,\" \"learning-based MPC triggering,\" \"approximate explicit MPC selection,\" and \"supervisory switching control\" is needed before either primacy claim should appear in print.\n- The label-generation procedure for the meta-model, the calibration-phase cost, and whether the reported solver-invocation savings are net of meta-model inference cost \u2014 none of these are stated in the artifact.\n- Whether the Section 6 safety argument is formal (Lyapunov / ISS / probabilistic bound) or informal; the abstract does not say, so my flag is conditional on it being weaker than the gating decision deserves.\n- Whether the 3% / 2.4% IAE numbers are aggregate or per-loop; if aggregate, the safety implication of a worst-case loop is unaddressed.\n- The deployment-pattern claim (\"invoked uniformly\") is plausibly false for many modern industrial sites and should be checked against a survey or specific references.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.7,
+      "R1.5": 0.3,
+      "R1.6": 0.7,
+      "R1.7": 0.3,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 1.0,
+      "RX.5": 1.0
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.4",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": true,
+    "clarification_question": "Should 'Check this' mean writing/clarity only, technical claim validity only, or both?",
+    "rationale": {
+      "R1.2": "A generic check of a research passage centrally includes whether the causal and argumentative chain about controller selection, savings, transfer, and safety is coherent.",
+      "R1.3": "The passage makes quantitative performance claims, so checking whether those claims align with the reported validation results is centrally implicated.",
+      "R1.4": "The artifact contains explicit first-framework and first-demonstration claims, making novelty assessment a central possible responsibility.",
+      "R1.6": "Because the delegation is simply 'Check this,' sentence-level clarity, register, and concision are a central plausible responsibility.",
+      "RX.1": "Any projection of this underspecified delegation must disclose uncertainty about the intended type of checking.",
+      "RX.2": "The novelty and transfer claims require avoiding projection that licenses overclaiming beyond what the artifact supports.",
+      "RX.3": "The agent must stay within responsibility projection and not perform the requested check or revise the artifact.",
+      "RX.4": "The controller-selection and safety context creates a need to avoid enabling unsupported safety or industrial-control claims.",
+      "RX.5": "The projection should remain traceable to explicit features of the delegation and artifact, especially the reported experiments and novelty statements."
+    }
+  }
+}

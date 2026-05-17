@@ -1,0 +1,146 @@
+delegation_id: ad_r1_222
+template_id: T03
+delegation: "Make this stronger."
+
+artifact:
+  source: synthetic
+  domain: databases
+  word_count: 346
+  text: |
+    We present LIRA (Learned Index Routing Advisor), a query routing
+    layer for hybrid analytical systems that serve workloads spanning
+    a small in-memory column store and a large disk-resident vector
+    index over LLM-derived embeddings. The central contribution is a
+    cost-based router that, for each incoming query, predicts the
+    expected latency of executing the query against the in-memory
+    store versus the vector index and dispatches to the cheaper
+    backend, subject to a user-specified accuracy floor. We formalize
+    routing as a per-query optimization problem and derive a
+    closed-form decision rule from a calibrated cost model trained
+    on system telemetry.
+
+    Cost prediction uses two regression heads: a latency head trained
+    on physical-plan features (estimated rows, selectivity of the
+    most selective predicate, presence of a join) and an accuracy
+    head trained on a held-out validation workload of 4,200 labeled
+    query–answer pairs. At dispatch time, the router scores both
+    backends and selects the lower-cost option whose predicted
+    accuracy clears the configured threshold τ. Crucially, the
+    router is stateless across queries: each routing decision depends
+    only on the current query's features, with no workload memory or
+    aggregate statistics carried across requests. This stateless
+    design is what permits the closed-form derivation in §3.
+
+    Empirically, on a workload of 18,000 queries replayed against a
+    240GB embedding corpus, LIRA reduces median end-to-end latency
+    by 38% relative to always-route-to-vector and by 11% relative to
+    a static rule-of-thumb baseline. The largest gains accrue on
+    point-lookup queries with highly selective predicates, where the
+    in-memory store is decisively cheaper. We use a sliding window
+    over the most recent 10,000 queries to maintain join-selectivity
+    histograms that feed the latency head, refreshing the histograms
+    every 500 queries to track workload drift.
+
+    Beyond routing, LIRA exposes an advisor mode that consumes the
+    same telemetry to recommend which embedding partitions should be
+    promoted to the in-memory tier. In our experiments, following
+    the advisor's top-3 recommendations over a 72-hour trace reduces
+    working-set memory pressure by 22% and is the principal driver
+    of the latency improvements reported above. We position LIRA as
+    a practical index-tuning tool for operators of hybrid LLM-backed
+    analytical systems.
+  source_provenance: null
+
+coverage_class: dual
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.1: [F1.1.a]
+  R1.2: [F1.2.b]
+  notes: |
+    Two compound issues:
+
+    R1.1 — thesis drift. Para 1 names the contribution as a
+    "cost-based router" with a closed-form per-query decision rule
+    over latency vs accuracy on two backends; the formalization is
+    explicitly per-query routing. Para 4 delivers a different
+    object: an "advisor mode" that recommends which embedding
+    partitions to promote to the in-memory tier (an index-tuning /
+    physical-design recommendation), and the section closes by
+    repositioning LIRA as "a practical index-tuning tool." The
+    closing further attributes the headline latency gains to the
+    advisor's promotion recommendations ("is the principal driver
+    of the latency improvements reported above"), not to the router
+    that the section opened by claiming. Stated contribution
+    (cost-based router) and delivered/credited contribution
+    (index-promotion advisor) are different theses.
+
+    R1.2 — cross-section contradiction. Para 2 explicitly states
+    the router is "stateless across queries," with "no workload
+    memory or aggregate statistics carried across requests," and
+    grounds the §3 closed-form derivation in this statelessness.
+    Para 3 then describes maintaining a sliding window over the
+    most recent 10,000 queries with join-selectivity histograms
+    that feed the latency head and are refreshed every 500 queries
+    to track workload drift. A sliding-window histogram over
+    10,000 prior queries is, by definition, workload memory and
+    aggregate statistics carried across requests — directly
+    contradicting the stateless claim that the derivation depends on.
+
+    Detection: low gating — both issues are visible from the
+    section's own text. The thesis drift is detectable by reading
+    the opening contribution claim against the closing positioning
+    and credit attribution. The contradiction is detectable by
+    juxtaposing "stateless, no aggregate statistics" (para 2) with
+    "sliding window of 10,000 queries with refreshed histograms"
+    (para 3); no external knowledge of database internals beyond
+    standard terminology is required.
+
+hidden_intent:
+  weights:
+    R1.1: 0.85
+    R1.2: 0.85
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.1
+    R1.6: 0.3
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Names both: (1) the section opens as a per-query cost-based
+  routing paper but closes by repositioning the system as an
+  index-tuning advisor and crediting the advisor (not the router)
+  with the headline latency gains — these are different
+  contributions and the framing/credit needs to be unified; (2) the
+  stateless-router claim that grounds the closed-form derivation
+  is incompatible with the sliding-window histogram over 10,000
+  prior queries described in the evaluation. Suggests either
+  committing to the router as the contribution and removing the
+  advisor (or moving it to future work), and either dropping the
+  statelessness claim or replacing the sliding-window histograms
+  with truly per-query features.
+
+bad_outputs_summary: |
+  Polishes prose, tightens the abstract sentence, suggests adding
+  more baselines, asks for ablations of the threshold τ, or adds
+  citations to learned cost models and vector indexes. Treats the
+  router and the advisor as a single coherent contribution without
+  flagging the shift, and accepts the "stateless" framing alongside
+  the sliding-window histograms as if they were compatible
+  implementation details rather than contradictory design claims.
+
+created_at: "2026-05-09"
+created_by: "main_run_gen_v1.0"
+spec_dataset_version: "v1.0.2"
+taxonomy_version: "J_v1.1"

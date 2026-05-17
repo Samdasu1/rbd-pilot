@@ -1,0 +1,53 @@
+{
+  "example_id": "ad_r1_284",
+  "condition": "projection_driven",
+  "executor_family": "anthropic",
+  "executor_model": "claude-opus-4-7",
+  "executor_mode": "claude_cli",
+  "prompt_version": "exp2_run_v3_projection_driven",
+  "input_tokens": 6,
+  "output_tokens": 2270,
+  "cache_read_input_tokens": 14079,
+  "latency_ms": 29671,
+  "cost_usd": 0.0,
+  "output_text": "{\"covered_dims\": {\"R1.2\": 0.9, \"R1.3\": 0.9, \"R1.6\": 0.8, \"RX.1\": 1.0, \"RX.2\": 1.0, \"RX.3\": 1.0, \"RX.4\": 0.8, \"RX.5\": 0.8}}\n\nSummary: I flag several internal contradictions and unsupported leaps in the paragraph, suggest tightened wording, and identify claims that should be softened or removed because the reported evidence does not license them.\n\n**Major issues with the argument chain**\n\n1. *The conclusion in the final paragraph contradicts the paper's own diagnostic finding.* The third paragraph argues that verbalized confidence is \"a property of the prompt rather than a property of the candidate program\" and instructs practitioners to treat it as a *difficulty estimate, not a correctness estimate*. The closing paragraph then markets the same signal as a \"reliable \u2026 signal of program correctness.\" These two recommendations cannot both stand. The closing claim should be removed or rewritten to match the diagnostic finding (e.g., \"a reliable signal of problem difficulty, which correlates with \u2014 but is not equivalent to \u2014 program correctness\").\n\n2. *The \"prompt-driven\" inference is stronger than the evidence supports.* A Spearman \u03c1 = 0.71 between stated confidence and docstring length is consistent with the prompt-driven story, but it does not establish it. Confidence could correlate with docstring length because longer docstrings tend to describe harder problems, and the model is reading difficulty from many features at once. The text should say something like \"consistent with confidence being driven substantially by prompt-side features\" rather than \"is being computed from input-side features.\"\n\n3. *The distribution-shift conclusion overreads one number.* ECE moving from 0.041 to 0.058 on a different benchmark (200 problems, a single source, with its own difficulty distribution and docstring conventions) is a single point estimate without a confidence interval, without a per-bin breakdown, and without checking whether the docstring-length correlation still holds. Concluding that \"the model maintains calibration under distribution shift\" generalizes well beyond what 200 Codeforces problems can show. Recommend: \"calibration on this held-out set is comparable in aggregate, though we do not characterize per-bin behavior or test on non-competitive-programming shifts.\"\n\n4. *Generalization to 7B\u201370B models and \"any language with a unit-test harness\" is unsupported.* The study evaluates one 34B instruction-tuned model on Python-style function-level benchmarks. The final sentence extrapolates to a 10\u00d7 model-size range and arbitrary languages with no evidence. Either remove this sentence or recast it explicitly as a hypothesis for future work.\n\n5. *\"Model-agnostic\" is contradicted by the study design.* Only one model is evaluated. The signal cannot be called model-agnostic on n=1.\n\n6. *The high-confidence tail finding deserves more weight in the conclusion.* The model is overconfident by ~0.07 above 90% confidence \u2014 exactly the regime where a practitioner would most want to trust the signal (e.g., auto-merging a patch in an agentic loop). Recommending broad adoption in \"agentic repair loops \u2026 and automated patch generation\" without flagging this tail behavior understates a real downstream risk.\n\n**Specific evidence\u2013claim mismatches**\n\n- \"tracking pass@1 to within \u00b10.05 in 8 of 10 bins\" + \"ECE 0.041\" is fine, but the prose should make clear whether the \u00b10.05 figure is per-bin absolute deviation, and whether bins are equal-width or equal-mass \u2014 these change the interpretation.\n- The lookup table from verbal phrases (\"high confidence\") to probabilities is described as \"fixed\" but not justified; ECE is sensitive to this mapping. A sentence acknowledging that ECE is partly a function of the chosen mapping would be appropriate.\n- The Codeforces set is called \"held-out\" but is drawn from a different distribution than the training/eval set used in the main result \u2014 it is an out-of-distribution probe, not a held-out split. Wording should be \"out-of-distribution evaluation\" or similar.\n\n**Sentence-level suggestions**\n\n- \"We map the verbalized levels to probabilities via a fixed lookup table\" \u2192 specify that the mapping is pre-registered / not tuned on the eval set, if true; otherwise note the dependency.\n- \"We conclude from this correlation that the verbalized confidence is being computed from input-side features\" \u2192 \"This correlation is consistent with verbalized confidence being driven largely by prompt-side features rather than by features of the generated program.\"\n- \"comparable to the in-distribution figure, and we therefore conclude that the model maintains calibration under distribution shift\" \u2192 \"comparable in aggregate ECE, suggesting that gross calibration is preserved on this slice; we do not claim robustness across other shifts.\"\n- \"thus provides a reliable, model-agnostic signal of program correctness\" \u2192 drop, or rewrite as \"a candidate signal of problem difficulty, observed on one 34B model.\"\n- \"without ever needing access to model logits\" \u2014 fine, but only meaningful once the correctness vs. difficulty conflation is resolved.\n- \"We expect the same prescription to hold for other instruction-tuned code models in the 7B\u201370B range and for any language with a unit-test harness.\" \u2192 remove, or relabel as an explicit conjecture/future work.\n\n**Suggested rewrite of the closing paragraph**\n\n\"Taken together, these results suggest that verbalized confidence from this 34B code model behaves, in aggregate, as a reasonably calibrated estimate of problem difficulty rather than of generated-program correctness, with degraded calibration in the high-confidence tail. Practitioners considering its use in downstream workflows \u2014 agentic repair loops, IDE autocomplete, automated patch generation \u2014 should be aware that (i) the signal is largely prompt-driven, (ii) it is overconfident above 90%, and (iii) we have not characterized its behavior across model families, sizes, or non-Python settings. We leave those generalizations to future work.\"\n\n**Caveats on this review**\n\nI have not independently verified the cited numerics (ECE 0.041, \u03c1 = 0.71, 1,338 combined problems, ECE 0.058 on 200 Codeforces items) \u2014 I am treating them as accurately reported and assessing only whether the conclusions follow from them. I also have no view on whether the lookup-table mapping was pre-registered or tuned post hoc; that distinction matters for the headline ECE and should be confirmed against the methods section. Finally, my judgment that the final paragraph contradicts the third paragraph rests on reading \"correctness estimate for the generated code\" and \"signal of program correctness\" as referring to the same construct; if the authors intend a narrower technical meaning for one of these phrases, the contradiction may be a wording issue rather than a substantive one.",
+  "projection_input": {
+    "weights": {
+      "R1.1": 0.3,
+      "R1.2": 0.7,
+      "R1.3": 0.7,
+      "R1.4": 0.0,
+      "R1.5": 0.0,
+      "R1.6": 0.7,
+      "R1.7": 0.0,
+      "RX.1": 1.0,
+      "RX.2": 1.0,
+      "RX.3": 1.0,
+      "RX.4": 0.7,
+      "RX.5": 0.7
+    },
+    "active_set": [
+      "R1.2",
+      "R1.3",
+      "R1.6",
+      "RX.1",
+      "RX.2",
+      "RX.3",
+      "RX.4",
+      "RX.5"
+    ],
+    "category_focus": "R1",
+    "clarification_needed": false,
+    "clarification_question": "",
+    "rationale": {
+      "R1.2": "The paragraph contains inferential moves from correlation to mechanism and from benchmark results to distribution-shift robustness that require checking for logical validity.",
+      "R1.3": "The delegation plausibly requires checking whether the reported ECE, bin behavior, and correlation support the stated conclusions.",
+      "R1.6": "Because the request targets a paragraph, sentence-level clarity, flow, and phrasing are central expected responsibilities.",
+      "RX.1": "Any projection must preserve uncertainty about what the vague instruction 'take a look' specifically asks for.",
+      "RX.2": "The artifact contains broad claims about correctness, model-agnostic reliability, and generalization that make overclaim avoidance central.",
+      "RX.3": "The agent must remain within paragraph-level review responsibilities and not execute edits or external validation.",
+      "RX.4": "The paragraph makes practitioner-facing recommendations for code-synthesis workflows, so avoiding downstream misuse is relevant.",
+      "RX.5": "Responsibility should remain traceable to the specific reported benchmarks, metrics, and claims in the artifact."
+    }
+  }
+}

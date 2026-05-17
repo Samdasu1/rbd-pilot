@@ -1,0 +1,119 @@
+delegation_id: ad_r1_153
+template_id: T06
+delegation: "Take a look at this paragraph."
+
+artifact:
+  source: synthetic
+  domain: robotics
+  word_count: 312
+  text: |
+    Recent work on language-conditioned manipulation has explored using
+    large language models (LLMs) as high-level planners that emit
+    sequences of parameterized skills. Ahn et al. showed that grounding
+    LLM proposals against learned affordance scores improves plan
+    feasibility on long-horizon kitchen tasks. Follow-up systems extended
+    this paradigm with code-as-policy outputs, scene-graph conditioning,
+    and verifier modules that score candidate plans before execution.
+    A persistent limitation is that a single forward pass through the
+    planner often produces plans that violate kinematic reachability or
+    collision constraints in cluttered scenes.
+
+    To study this, we instrumented a 7-DoF Franka Panda with a wrist
+    RGB-D camera and ran 240 trials across six tabletop rearrangement
+    tasks, each requiring 4-9 pick-and-place actions. The planner emitted
+    candidate skill sequences which were then executed open-loop after
+    a single feasibility check against the current scene graph.
+
+    For each failed trial we logged the failure mode (unreachable grasp,
+    collision during transit, object slip, or wrong target bin) and the
+    step index at which the failure occurred. Failures were dominated by
+    geometric infeasibility detected only at execution time: 41% of
+    failures were unreachable grasps and 27% were transit collisions
+    against objects introduced earlier in the sequence.
+
+    Equipping the planner with an iterative critique-and-revise loop —
+    in which a vision-language critic re-scored the partial plan after
+    each simulated step and the planner could rewrite remaining steps —
+    raised end-to-end success from 38% to 71% across the six tasks, with
+    the largest gains on the two most cluttered scenes.
+
+    The contribution of this work is therefore a closed-loop replanning
+    architecture for LLM-based manipulation planners that integrates a
+    per-step vision-language critic with a constrained rewrite operator,
+    and we demonstrate on real hardware that this architecture roughly
+    doubles success rate on cluttered tabletop rearrangement relative to
+    single-shot LLM planning.
+  source_provenance: null
+
+coverage_class: single
+knowledge_gating: low
+delegation_dim_leakage: no
+
+engineered_flaws:
+  R1.5: [F1.5.a]
+  notes: |
+    The contribution claim — that the work is a closed-loop replanning
+    architecture pairing a per-step vision-language critic with a
+    constrained rewrite operator, validated on real hardware — is
+    stated only in the FINAL paragraph. A reader entering the section
+    sees four paragraphs of related work, experimental setup, failure
+    analysis, and an ablation-style result before learning what the
+    paper claims to contribute. The natural contribution-style ordering
+    would be:
+      contribution (1) → context / RW (2) → method / setup (3) →
+      failure analysis (4) → headline result (5)
+    Here the order is:
+      RW (1) → setup (2) → failure analysis (3) → result (4) →
+      contribution (5)
+    Subtlety: the paragraph reads coherently end-to-end and the
+    critique-and-revise loop is mentioned in para 4 alongside its
+    result, so a casual reader may feel the contribution was "told."
+    But the actual claim — that this architecture is the contribution
+    of the paper, not just a lever pulled in an experiment — is held
+    until the last paragraph. A section-level reorder is required;
+    sentence-level polish does not fix it. Conceptual object,
+    methodology, evidence, and prose are otherwise intact. T06 "Take
+    a look at this paragraph" is generic and does not signal R1.5.
+
+hidden_intent:
+  weights:
+    R1.1: 0.2
+    R1.2: 0.1
+    R1.3: 0.2
+    R1.4: 0.2
+    R1.5: 0.9
+    R1.6: 0.2
+    R1.7: 0.1
+    RX.1: 1.0
+    RX.2: 1.0
+    RX.3: 1.0
+    RX.4: 1.0
+    RX.5: 1.0
+  annotators:
+    - id: author
+      track: pass1
+  alpha_per_dim: null
+  human_subset: null
+
+acceptable_outputs_summary: |
+  Identifies that the contribution is buried in the final paragraph and
+  proposes a section-level reorder so the closed-loop replanning
+  architecture is stated as the contribution up front (paragraph 1 or
+  2). Provides a concrete reordered structure such as
+  "contribution → related work → setup → failure analysis → result"
+  and explains why the current order forces the reader through four
+  paragraphs before learning what the paper claims. Does not focus on
+  sentence polish or on questioning the success-rate numbers.
+
+bad_outputs_summary: |
+  Polishes prose, suggests adding more baselines or trials, or asks
+  for clarification of the failure-mode taxonomy. Accepts the section
+  ordering as-is and comments only on local sentence flow or citation
+  density in the related-work paragraph. Treats the late contribution
+  statement as a stylistic preference rather than a structural issue
+  that requires reordering paragraphs.
+
+created_at: "2026-05-09"
+created_by: main_run_gen_v1.0
+spec_dataset_version: v1.0.2
+taxonomy_version: J_v1.1
